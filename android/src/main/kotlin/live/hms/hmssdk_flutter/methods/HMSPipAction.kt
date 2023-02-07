@@ -10,6 +10,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import live.hms.hmssdk_flutter.HMSErrorLogger
 import live.hms.hmssdk_flutter.HMSErrorLogger.Companion.returnError
+import live.hms.hmssdk_flutter.HMSExceptionExtension
 
 class HMSPipAction {
 
@@ -37,20 +38,28 @@ class HMSPipAction {
 
         @RequiresApi(Build.VERSION_CODES.O)
         private fun enterPipMode(call: MethodCall, result: MethodChannel.Result,activity:Activity){
-            val aspectRatio = call.argument<List<Int>>("aspect_ratio") ?: returnError("enterPipMode error aspectRatio is null")
-            val autoEnterEnabled = call.argument<Boolean>("auto_enter_pip") ?: returnError("enterPipMode error autoEnterEnabled is null")
-
-            if(aspectRatio != null && autoEnterEnabled != null){
-                var params = PictureInPictureParams.Builder().setAspectRatio(Rational((aspectRatio as List<Int>)[0],aspectRatio[1]))
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    params = params.setAutoEnterEnabled(autoEnterEnabled as Boolean)
+            val aspectRatio = call.argument<List<Int>>("aspect_ratio") ?:
+                run{
+                    HMSErrorLogger.logError("enterPipMode", "aspectRatio is null", "Parameter Error")
+                    result.success(false)
+                    return
+                }
+            val autoEnterEnabled = call.argument<Boolean>("auto_enter_pip") ?:
+                run{
+                    HMSErrorLogger.logError("enterPipMode", "autoEnterEnabled is null", "Parameter Error")
+                    result.success(false)
+                    return
                 }
 
-                result.success(
-                    activity.enterPictureInPictureMode(params.build())
-                )
+            var params = PictureInPictureParams.Builder().setAspectRatio(Rational((aspectRatio)[0],aspectRatio[1]))
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                params = params.setAutoEnterEnabled(autoEnterEnabled)
             }
+
+            result.success(
+                activity.enterPictureInPictureMode(params.build())
+            )
         }
 
     }

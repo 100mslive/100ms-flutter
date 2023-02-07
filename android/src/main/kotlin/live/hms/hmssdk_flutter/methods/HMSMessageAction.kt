@@ -30,32 +30,52 @@ class HMSMessageAction {
 
 
         private fun sendBroadCastMessage(call: MethodCall, result: Result,hmssdk:HMSSDK) {
-            val message = call.argument<String>("message") ?: returnError("sendBroadCastMessage error message is null")
-            val type = call.argument<String>("type") ?: "chat"
-            if(message != null){
-                hmssdk.sendBroadcastMessage(message as String, type, getMessageResultListener(result))
+            val message = call.argument<String>("message") ?:
+            run{
+                HMSErrorLogger.logError("sendBroadCastMessage", "message is null", "Parameter Error")
+                result.success(HMSExceptionExtension.getError("message is null in sendBroadCastMessage"))
+                return
             }
+            val type = call.argument<String>("type") ?: "chat"
+            hmssdk.sendBroadcastMessage(message, type, getMessageResultListener(result))
         }
 
         private fun sendGroupMessage(call: MethodCall, result: Result,hmssdk:HMSSDK) {
-            val message = call.argument<String>("message") ?: returnError("sendGroupMessage error message is null")
+            val message = call.argument<String>("message") ?:
+            run{
+                HMSErrorLogger.logError("sendGroupMessage", "message is null", "Parameter Error")
+                result.success(HMSExceptionExtension.getError("message is null in sendGroupMessage"))
+                return
+            }
             val roles: List<String>? = call.argument<List<String>>("roles")
             val type = call.argument<String>("type") ?: "chat"
 
             val hmsRoles = hmssdk.getRoles().filter { roles?.contains(it.name)!! }
 
-            hmssdk.sendGroupMessage(message as String, type, hmsRoles, getMessageResultListener(result))
+            hmssdk.sendGroupMessage(message, type, hmsRoles, getMessageResultListener(result))
         }
 
         private fun sendDirectMessage(call: MethodCall, result: Result,hmssdk:HMSSDK) {
-            val message = call.argument<String>("message") ?: returnError("sendDirectMessage error message is null")
-            val peerId = call.argument<String>("peer_id") ?: returnError("sendDirectMessage error peerId is null")
-            val type = call.argument<String>("type") ?: "chat"
-
-            if(message != null && peerId != null){
-                val peer = HMSCommonAction.getPeerById(peerId as String,hmssdk)
-                hmssdk.sendDirectMessage(message as String, type, peer!!, getMessageResultListener(result))
+            val message = call.argument<String>("message") ?:
+            run{
+                HMSErrorLogger.logError("sendDirectMessage", "message is null", "Parameter Error")
+                result.success(HMSExceptionExtension.getError("message is null in sendDirectMessage"))
+                return
             }
+            val peerId = call.argument<String>("peer_id") ?:
+            run {
+                HMSErrorLogger.logError("sendDirectMessage", "peerId is null", "Parameter Error")
+                result.success(HMSExceptionExtension.getError("peerId is null in sendDirectMessage"))
+                return
+            }
+            val type = call.argument<String>("type") ?: "chat"
+            val peer = HMSCommonAction.getPeerById(peerId,hmssdk)
+            peer ?: run{
+                HMSErrorLogger.logError("sendDirectMessage", "peer is null", "changeRole Error")
+                result.success(HMSExceptionExtension.getError("peer is null in sendDirectMessage"))
+                return
+            }
+            hmssdk.sendDirectMessage(message, type, peer, getMessageResultListener(result))
         }
 
         private fun getMessageResultListener(result: Result) = object: HMSMessageResultListener {

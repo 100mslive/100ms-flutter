@@ -1,10 +1,6 @@
 package live.hms.hmssdk_flutter
 
-import live.hms.video.media.codec.HMSVideoCodec
 import live.hms.video.media.settings.HMSVideoTrackSettings
-import live.hms.video.media.tracks.HMSTrack
-import live.hms.video.media.tracks.HMSVideoTrack
-import live.hms.video.utils.HMSLogger
 
 class HMSVideoTrackSettingsExtension {
     companion object{

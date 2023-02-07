@@ -46,29 +46,34 @@ class HMSVideoAction {
         }
 
         private fun switchVideo(call: MethodCall, result: Result, hmssdk: HMSSDK) {
-            val argsIsOn = call.argument<Boolean>("is_on") ?: returnError("switchVideo error argsIsOn is null")
-
-            if(argsIsOn != null){
-                val peer = hmssdk.getLocalPeer()
-                val videoTrack = peer?.videoTrack
-                if (videoTrack != null) {
-                    videoTrack.setMute(argsIsOn as Boolean)
-                    result.success(true)
-                } else {
-                    result.success(false)
-                }
+            val argsIsOn = call.argument<Boolean>("is_on") ?:
+            run{
+                logError("switchVideo","argsIsOn is null","Parameter Error")
+                result.success(false)
+                return
             }
+            val peer = hmssdk.getLocalPeer()
+            val videoTrack = peer?.videoTrack
+            videoTrack ?:
+            run {
+                logError("switchVideo","videoTrack is null","Null Error")
+                result.success(false)
+                return
+            }
+            videoTrack.setMute(argsIsOn)
+            result.success(true)
         }
 
         private fun toggleCameraMuteState(result: Result, hmssdk: HMSSDK) {
             val peer = hmssdk.getLocalPeer()
-            val videoTrack = peer?.videoTrack
-            if (videoTrack != null) {
-                videoTrack.setMute(!(videoTrack.isMute))
-                result.success(true)
-            } else {
+            val videoTrack = peer?.videoTrack ?:
+            run {
+                logError("toggleCameraMuteState","videoTrack is null","Null Error")
                 result.success(false)
+                return
             }
+            videoTrack.setMute(!(videoTrack.isMute))
+            result.success(true)
         }
 
         private fun switchCamera(result: Result, hmssdk: HMSSDK) {
@@ -77,6 +82,7 @@ class HMSVideoAction {
             CoroutineScope(Dispatchers.Default).launch {
                 videoTrack?.switchCamera(onAction = HMSCommonAction.getActionListener(result))
             }
+            result.success(null)
         }
 
         private fun isVideoMute(call: MethodCall, hmssdk: HMSSDK): Boolean {
@@ -95,18 +101,20 @@ class HMSVideoAction {
 
         private fun toggleVideoMuteAll(shouldMute: Boolean, result: Result, hmssdk: HMSSDK) {
             val room: HMSRoom? = hmssdk.getRoom()
-            if (room != null) {
-                val videoTracks: List<HMSVideoTrack> = HmsUtilities.getAllVideoTracks(room)
-                videoTracks.forEach { it ->
-                    if (it is HMSRemoteVideoTrack) {
-                        it.isPlaybackAllowed = (!shouldMute)
-                    }
+            room ?:
+            run {
+                logError("toggleVideoMuteAll","room is null","Null Error")
+                result.success(false)
+                return
+            }
+            val videoTracks: List<HMSVideoTrack> = HmsUtilities.getAllVideoTracks(room)
+            videoTracks.forEach { it ->
+                if (it is HMSRemoteVideoTrack) {
+                    it.isPlaybackAllowed = (!shouldMute)
                 }
-                HMSCommonAction.getLocalPeer(hmssdk)!!.videoTrack?.setMute((shouldMute))
             }
-            else{
-                logError("toggleVideoMuteAll","Room is null","Null Error")
-            }
+            HMSCommonAction.getLocalPeer(hmssdk)!!.videoTrack?.setMute((shouldMute))
+            result.success(true)
         }
     }
 }

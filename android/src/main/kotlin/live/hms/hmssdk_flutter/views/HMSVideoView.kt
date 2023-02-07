@@ -6,11 +6,9 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.util.Base64
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
-import live.hms.hmssdk_flutter.HMSErrorLogger
 import live.hms.hmssdk_flutter.HMSErrorLogger.Companion.logError
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.hmssdk_flutter.R
@@ -60,28 +58,31 @@ class HMSVideoView(
 
     private fun captureSnapshot() {
         var byteArray: ByteArray?
-        if (hmsVideoView != null) {
-            hmsVideoView?.captureBitmap({ bitmap ->
-                if (bitmap != null) {
-                    val stream = ByteArrayOutputStream()
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                    byteArray = stream.toByteArray()
-                    bitmap.recycle()
-                    val data = Base64.encodeToString(byteArray, Base64.DEFAULT)
-                    if (HmssdkFlutterPlugin.hmssdkFlutterPlugin != null) {
-                        if (HmssdkFlutterPlugin.hmssdkFlutterPlugin?.hmsVideoViewResult != null) {
-                            HmssdkFlutterPlugin.hmssdkFlutterPlugin?.hmsVideoViewResult?.success(data)
-                        } else {
-                            logError("HMSVideoView captureSnapshot","hmsVideoViewResult is null","Receiver error")
-                        }
-                    } else {
-                        logError("HMSVideoView captureSnapshot","hmssdkFlutterPlugin is null","Receiver error")
-                    }
-                }
-            })
-        } else {
+        hmsVideoView ?:
+        run {
             logError("HMSVideoView captureSnapshot","hmsVideoView is null","Receiver error")
+            return
         }
+        hmsVideoView?.captureBitmap({ bitmap ->
+            if (bitmap != null) {
+                val stream = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                byteArray = stream.toByteArray()
+                bitmap.recycle()
+                val data = Base64.encodeToString(byteArray, Base64.DEFAULT)
+                HmssdkFlutterPlugin.hmssdkFlutterPlugin?.
+                let {
+                    HmssdkFlutterPlugin.hmssdkFlutterPlugin?.hmsVideoViewResult ?.
+                    let {
+                        HmssdkFlutterPlugin.hmssdkFlutterPlugin?.hmsVideoViewResult?.success(data)
+                    }?: run{
+                        logError("HMSVideoView captureSnapshot","hmsVideoViewResult is null","Receiver error")
+                    }
+                }?: run{
+                    logError("HMSVideoView captureSnapshot","hmssdkFlutterPlugin is null","Receiver error")
+                }
+            }
+        })
     }
 
     fun onDisposeCalled() {
@@ -98,20 +99,22 @@ class HMSVideoView(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (track != null) {
-            hmsVideoView?.addTrack(track)
-            context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId))
-        } else {
+        track ?:
+        run {
             logError("HMSVideoView onAttachedToWindow","track is null, cannot attach null track","HMSVideoView error")
+            return
         }
+        hmsVideoView?.addTrack(track)
+        context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId))
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        if (hmsVideoView != null) {
-            hmsVideoView?.removeTrack()
-        } else {
+        hmsVideoView ?:
+        run {
             logError("HMSVideoView onDetachedFromWindow","hmsVideoView is null","HMSVideoView error")
+            return
         }
+        hmsVideoView?.removeTrack()
     }
 }

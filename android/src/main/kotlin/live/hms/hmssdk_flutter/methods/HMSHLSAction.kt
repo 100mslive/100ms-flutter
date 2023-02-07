@@ -1,12 +1,10 @@
 package live.hms.hmssdk_flutter
 
-import android.util.Log
 import live.hms.video.sdk.HMSSDK
 import live.hms.video.sdk.models.HMSHLSConfig
 import live.hms.video.sdk.models.HMSHLSMeetingURLVariant
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
-import live.hms.hmssdk_flutter.HMSErrorLogger.Companion.returnError
 import live.hms.video.sdk.models.HMSHlsRecordingConfig
 
 class HMSHLSAction {
@@ -36,7 +34,7 @@ class HMSHLSAction {
             var hlsConfig: HMSHLSConfig? = null
             if(meetingUrlVariantsList!=null) {
                 meetingUrlVariant = ArrayList()
-                (meetingUrlVariantsList as List<Map<String,String>>).forEach {
+                (meetingUrlVariantsList).forEach {
                     meetingUrlVariant.add(
                         HMSHLSMeetingURLVariant(
                             meetingUrl = it["meeting_url"]!!,
@@ -47,7 +45,7 @@ class HMSHLSAction {
             }
             if(recordingConfig!=null){
                 hmsHLSRecordingConfig = HMSHlsRecordingConfig(
-                    singleFilePerLayer = (recordingConfig as Map<String,Boolean>)["single_file_per_layer"]!!,
+                    singleFilePerLayer = (recordingConfig)["single_file_per_layer"]!!,
                     videoOnDemand = recordingConfig["video_on_demand"]!!
                 )
             }
@@ -63,7 +61,7 @@ class HMSHLSAction {
             val meetingUrlVariant1 : ArrayList<HMSHLSMeetingURLVariant> = ArrayList()
 
             if(meetingUrlVariantsList != null){
-                (meetingUrlVariantsList as List<Map<String,String>>).forEach {
+                (meetingUrlVariantsList).forEach {
                     meetingUrlVariant1.add(
                         HMSHLSMeetingURLVariant(
                             meetingUrl = it["meeting_url"]!!,

@@ -19,7 +19,6 @@ class HMSCommonAction {
             peers.forEach {
                 if (it.peerID == id) return it
             }
-
             return null
         }
 

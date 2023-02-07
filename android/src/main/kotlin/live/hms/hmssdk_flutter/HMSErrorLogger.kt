@@ -15,5 +15,6 @@ class HMSErrorLogger {
             Log.e("FL_HMSSDK Args Error",errorMessage)
             return null
         }
+
     }
 }

@@ -21,7 +21,7 @@ class HMSExceptionExtension {
             return errorArgs
         }
 
-        fun getError(description:String,message:String):HashMap<String,Any>{
+        fun getError(description:String,message:String = "Check logs for more info"):HashMap<String,Any>{
             val args=HashMap<String,Any>()
 
             args["action"] = "Check logs for more info"

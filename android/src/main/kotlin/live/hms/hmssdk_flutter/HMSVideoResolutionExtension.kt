@@ -13,7 +13,7 @@ class HMSVideoResolutionExtension {
             args["height"] = hmsVideoResolution.height/1.0
             args["width"] = hmsVideoResolution.width/1.0
 
-            return args;
+            return args
         }
     }
 }

@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Build
-import android.util.Log
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -203,6 +202,7 @@ class HmssdkFlutterPlugin :
         }
         else{
             logError(call.method,"hmssdk is null","HMSSDK Error")
+            result.success(HMSExceptionExtension.getError("hmssdk is null in ${call.method}"))
             return
         }
     }
@@ -276,7 +276,6 @@ class HmssdkFlutterPlugin :
             "change_name" -> {
                 changeName(call, result)
             }
-
             else -> {
                 result.notImplemented()
             }
@@ -310,13 +309,12 @@ class HmssdkFlutterPlugin :
             }
 
             "is_screen_share_active" -> {
-                if(hmssdk != null){
-                    result.success(hmssdk!!.isScreenShared())
-                }
-                else{
-                    logError("screenshareActions","hmssdk is null","HMSSDK Error")
+                hmssdk ?: run {
+                    logError("screenshareActions", "hmssdk is null", "HMSSDK Error")
                     result.success(false)
+                    return
                 }
+                result.success(hmssdk!!.isScreenShared())
             }
             else -> {
                 result.notImplemented()
@@ -325,22 +323,24 @@ class HmssdkFlutterPlugin :
     }
 
     private fun statsListenerAction(call: MethodCall, result: Result) {
-        if(hmssdk != null){
-            when (call.method) {
-                "start_stats_listener" -> {
-                    hmssdk!!.addRtcStatsObserver(this.hmsStatsListener)
-
-                }
-                "remove_stats_listener" -> {
-                    hmssdk!!.removeRtcStatsObserver()
-                }
-                else -> {
-                    result.notImplemented()
-                }
-            }
+        hmssdk ?:
+        run {
+            logError("statsListenerAction", "hmssdk is null", "HMSSDK Error")
+            result.success(HMSExceptionExtension.getError("hmssdk is null in statsListenerAction","Check logs for more info"))
+            return
         }
-        else{
-            logError("statsListenerAction","hmssdk is null","HMSSDK Error")
+        when (call.method) {
+            "start_stats_listener" -> {
+                hmssdk!!.addRtcStatsObserver(this.hmsStatsListener)
+                result.success(null)
+            }
+            "remove_stats_listener" -> {
+                hmssdk!!.removeRtcStatsObserver()
+                result.success(null)
+            }
+            else -> {
+                result.notImplemented()
+            }
         }
     }
 
@@ -349,7 +349,6 @@ class HmssdkFlutterPlugin :
             "start_audio_share" -> {
                 startAudioShare(call, result)
             }
-
             "stop_audio_share" -> {
                 stopAudioShare(result)
             }
@@ -364,34 +363,36 @@ class HmssdkFlutterPlugin :
     }
 
     private fun trackSettings(call: MethodCall, result: Result) {
-        if(hmssdk != null){
-            when (call.method) {
-                "get_track_settings" -> {
-                    result.success(HMSTrackSettingsExtension.toDictionary(hmssdk!!))
-                }
-            }
-        }
-        else{
+       hmssdk ?:
+        run{
             logError("trackSettings","hmssdk is null","HMSSDK Error")
+            result.success(HMSExceptionExtension.getError("hmssdk is null in trackSettings"))
+            return
+        }
+        when (call.method) {
+            "get_track_settings" -> {
+                result.success(HMSTrackSettingsExtension.toDictionary(hmssdk!!))
+            }
         }
     }
 
     //Gets called when flutter plugin is removed from engine so setting the channels,sink to null
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-        if (hmssdkFlutterPlugin != null) {
-            channel?.setMethodCallHandler(null) ?: logError( "onDetachedFromEngine","Event channel not found","Channel Error")
-            meetingEventChannel?.setStreamHandler(null) ?:  logError("onDetachedFromEngine","Meeting event channel not found","Channel Error")
-            previewChannel?.setStreamHandler(null) ?: logError("onDetachedFromEngine","Preview channel not found","Channel Error")
-            logsEventChannel?.setStreamHandler(null) ?: logError("onDetachedFromEngine","Logs event channel not found","Channel Error")
-            rtcStatsChannel?.setStreamHandler(null) ?:  logError("onDetachedFromEngine","RTC Stats channel not found","Channel Error")
-            eventSink = null
-            previewSink = null
-            rtcSink = null
-            logsSink = null
-            hmssdkFlutterPlugin = null
-        } else {
+        hmssdkFlutterPlugin ?:
+        run {
             logError( "onDetachedFromEngine"," hmssdkFlutterPlugin is null in onDetachedFromEngine","Plugin Error")
+            return
         }
+        channel?.setMethodCallHandler(null) ?: logError( "onDetachedFromEngine","Event channel not found","Channel Error")
+        meetingEventChannel?.setStreamHandler(null) ?:  logError("onDetachedFromEngine","Meeting event channel not found","Channel Error")
+        previewChannel?.setStreamHandler(null) ?: logError("onDetachedFromEngine","Preview channel not found","Channel Error")
+        logsEventChannel?.setStreamHandler(null) ?: logError("onDetachedFromEngine","Logs event channel not found","Channel Error")
+        rtcStatsChannel?.setStreamHandler(null) ?:  logError("onDetachedFromEngine","RTC Stats channel not found","Channel Error")
+        eventSink = null
+        previewSink = null
+        rtcSink = null
+        logsSink = null
+        hmssdkFlutterPlugin = null
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
@@ -410,22 +411,24 @@ class HmssdkFlutterPlugin :
 
     private fun join(call: MethodCall, result: Result) {
         val config = getConfig(call)
-        if(hmssdk != null){
-            // Checking that config is not null as it's required to join
-            if(config != null){
-                hmssdk!!.join(config, this.hmsUpdateListener)
-                hmssdk!!.setAudioDeviceChangeListener(audioDeviceChangeListener)
-                result.success(null)
+
+        hmssdk ?:
+            run{
+                logError("join","hmssdk is null","HMSSDK Error")
+                result.success(HMSExceptionExtension.getError("hmssdk is null in join","Please check hmssdk is initialized properly"))
+                return
             }
-            else{
+
+        // Checking that config is not null as it's required to join
+        config ?:
+            run{
                 logError("join","config is null","HMSConfig Error")
                 result.success(HMSExceptionExtension. getError("Could not join room, invalid parameters passed in getConfig","Please Check the config parameters"))
+                return
             }
-        }
-        else{
-            logError("join","hmssdk is null","HMSSDK Error")
-            result.success(HMSExceptionExtension.getError("hmssdk is null in join","Please check hmssdk is initialized properly"))
-        }
+        hmssdk!!.join(config, this.hmsUpdateListener)
+        hmssdk!!.setAudioDeviceChangeListener(audioDeviceChangeListener)
+        result.success(null)
     }
 
     private fun getConfig(
@@ -491,14 +494,13 @@ class HmssdkFlutterPlugin :
     }
 
     private fun leave(result: Result) {
-        if(hmssdk != null){
-            hmssdk!!.leave(hmsActionResultListener = HMSCommonAction.getActionListener(result))
-            result.success(null)
-        }
-        else{
-            logError("leave","hmssdk is null","HMSSDK Error")
-            result.success(HMSExceptionExtension.getError("hmssdk is null in leave","Please check hmssdk is initialized properly"))
-        }
+        hmssdk ?:
+            run{
+                logError("leave","hmssdk is null","HMSSDK Error")
+                result.success(HMSExceptionExtension.getError("hmssdk is null in leave","Please check hmssdk is initialized properly"))
+                return
+            }
+        hmssdk!!.leave(hmsActionResultListener = HMSCommonAction.getActionListener(result))
     }
 
     private fun destroy() {
@@ -509,24 +511,23 @@ class HmssdkFlutterPlugin :
         //To check whether the arguments contain arguments
         if((arguments as HashMap<*, *>).containsKey("name")){
             val nameOfEventSink = (arguments)["name"]
-            if(nameOfEventSink != null){
-                when (nameOfEventSink) {
-                    "meeting" -> {
-                        this.eventSink = events
-                    }
-                    "preview" -> {
-                        this.previewSink = events
-                    }
-                    "logs" -> {
-                        this.logsSink = events
-                    }
-                    "rtc_stats" -> {
-                        this.rtcSink = events
-                    }
-                }
+            nameOfEventSink ?:run{
+                logError("onListen","nameOfEventSink is null","Null Error")
+                return
             }
-            else{
-                logError("onListen","nameOfEventSink is null","Sink Error")
+            when (nameOfEventSink) {
+                "meeting" -> {
+                    this.eventSink = events
+                }
+                "preview" -> {
+                    this.previewSink = events
+                }
+                "logs" -> {
+                    this.logsSink = events
+                }
+                "rtc_stats" -> {
+                    this.rtcSink = events
+                }
             }
         }
         else{
@@ -538,129 +539,171 @@ class HmssdkFlutterPlugin :
 
     private fun getPeerById(id: String): HMSPeer? {
         if (id == "") return getLocalPeer()
-        if(hmssdk != null){
+        hmssdk?.let{
             val peers = hmssdk!!.getPeers()
             peers.forEach {
                 if (it.peerID == id) return it
             }
         }
-        else{
-            logError("getPeerById","hmssdk is null","HMSSDK Error")
-        }
+        logError("getPeerById","hmssdk is null","HMSSDK Error")
         return null
     }
 
     private fun getAllTracks(): ArrayList<HMSTrack>? {
-        return if(hmssdk != null){
+
+        hmssdk?.let {
             val room = hmssdk!!.getRoom()
             val allTracks = ArrayList<HMSTrack>()
+
             //To check whether room is null or not as it's absurd to look for tracks in a null room
-            if (room != null) {
+            //If room is not null return all the tracks
+            //In case of empty room return empty list of HMSTrack
+            room?.let{
                 allTracks.addAll(HmsUtilities.getAllAudioTracks(room))
                 allTracks.addAll(HmsUtilities.getAllVideoTracks(room))
+                return allTracks
             }
-            else{
-                logError("getAllTracks","room is null","Null Error")
-            }
-            allTracks
-        } else{
-            logError("getAllTracks","hmssdk is null","HMSSDK Error")
-            null
+            logError("getAllTracks","room is null","Null Error")
+            return allTracks
         }
+        logError("getAllTracks","hmssdk is null","HMSSDK Error")
+        return null
     }
 
     private fun preview(call: MethodCall, result: Result) {
         val config = getConfig(call)
-        if(hmssdk != null){
-            // Checking that config is not null as it's required to preview
-            if(config != null){
-                hmssdk!!.preview(config, this.hmsPreviewListener)
-                hmssdk!!.setAudioDeviceChangeListener(audioPreviewDeviceChangeListener)
-                result.success(null)
-            }
-            else{
-                logError("preview","config is null","HMSConfig Error")
-                result.success(HMSExceptionExtension.getError("Could not join room, invalid parameters passed in getConfig","Please Check the config parameters"))
-            }
-        }
-        else{
+        hmssdk ?:
+        run{
             logError("preview","hmssdk is null","HMSSDK Error")
             result.success(HMSExceptionExtension.getError("hmssdk is null in preview","Please check hmssdk is initialized properly"))
+            return
         }
+
+        // Checking that config is not null as it's required to preview
+        config ?:
+        run{
+            logError("preview","config is null","HMSConfig Error")
+            result.success(HMSExceptionExtension.getError("Could not join room, invalid parameters passed in getConfig","Please Check the config parameters"))
+            return
+        }
+        hmssdk!!.preview(config, this.hmsPreviewListener)
+        hmssdk!!.setAudioDeviceChangeListener(audioPreviewDeviceChangeListener)
+        result.success(null)
     }
 
     private fun getLocalPeer(): HMSLocalPeer? {
-        return if(hmssdk != null){
-            hmssdk!!.getLocalPeer()
-        } else{
-            logError("getLocalPeer","hmssdk is null","HMSSDK Error")
-            null
+        hmssdk?.let {
+            return hmssdk!!.getLocalPeer()
         }
+        logError("getLocalPeer","hmssdk is null","HMSSDK Error")
+        return null
     }
 
     private fun changeRole(call: MethodCall, result: Result) {
         // Checking roleUWant,peerId,forceChange as they are required for changeRole if not logging respective logs
-        val roleUWant = call.argument<String>("role_name")?:returnError("changeRole error roleUWant is null")
-        val peerId = call.argument<String>("peer_id")?:returnError("changeRole error peerId is null")
-        val forceChange = call.argument<Boolean>("force_change")?:returnError("changeRole error forceChange is null")
-
-        if(hmssdk != null){
-            val roles = hmssdk!!.getRoles()
-            try{
-              val roleToChangeTo  = roles.first {
-                    it.name == roleUWant
-                }
-                val peer: HMSPeer? = getPeerById(peerId as String)
-                if(peer != null){
-                    hmssdk?.changeRole(
-                        peer,
-                        roleToChangeTo,
-                        (forceChange as Boolean),
-                        hmsActionResultListener = HMSCommonAction.getActionListener(result)
-                    )
-                }
-                else{
-                    logError("changeRole","peer is null","changeRole Error")
-                }
-            }
-            catch (exception:Exception){
-                logError("changeRole",exception.message?:"No message found","Exception Occurred")
-            }
+        val roleUWant = call.argument<String>("role_name")?:run{
+            logError("changeRole","roleUWant is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("roleUWant is null in changeRole"))
+            return
         }
-        else{
-            logError("changeRole","hmssdk is null","HMSSDK Error")
+        val peerId = call.argument<String>("peer_id")?:
+        run {
+            logError("changeRole","peerId is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("peerId is null in changeRole"))
+            return
+        }
+
+        val forceChange = call.argument<Boolean>("force_change")?:
+        run {
+            logError("changeRole","forceChange is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("forceChange is null in changeRole"))
+            return
+        }
+
+        hmssdk ?:
+        run{
+            logError("changeRoleOfPeer","hmssdk is null","HMSSDK Error")
+            result.success(HMSExceptionExtension.getError("hmssdk is null in changeRole"))
+            return
+        }
+        val roles = hmssdk!!.getRoles()
+        try{
+            val roleToChangeTo  = roles.first {
+                it.name == roleUWant
+            }
+            val peer: HMSPeer? = getPeerById(peerId)
+            peer ?:
+                run{
+                    logError("changeRole","peer is null","changeRole Error")
+                    result.success(HMSExceptionExtension.getError("peer is null in changeRole"))
+                    return
+                }
+            hmssdk?.changeRole(
+                peer,
+                roleToChangeTo,
+                (forceChange),
+                hmsActionResultListener = HMSCommonAction.getActionListener(result)
+            )
+        }
+        catch (exception:Exception){
+            logError("changeRole",exception.message?:"No message found","Exception Occurred")
+            result.success(HMSExceptionExtension.getError(exception.message?:"No message found"))
+            return
         }
     }
 
     private fun changeRoleOfPeer(call: MethodCall, result: Result) {
+
         // Checking roleUWant,peerId,forceChange as they are required for changeRoleOfPeer if not logging respective logs
-        val roleUWant = call.argument<String>("role_name")?:returnError("changeRoleOfPeer error roleUWant is null")
-        val peerId = call.argument<String>("peer_id")?:returnError("changeRoleOfPeer error peerId is null")
-        val forceChange = call.argument<Boolean>("force_change")?:returnError("changeRoleOfPeer error forceChange is null")
-        if(hmssdk != null) {
-            val roles = hmssdk!!.getRoles()
-            try {
-                val roleToChangeTo: HMSRole = roles.first {
-                    it.name == roleUWant
-                }
-                val peer: HMSPeer? = getPeerById(peerId as String)
-                if (peer != null) {
-                    hmssdk!!.changeRoleOfPeer(
-                        peer,
-                        roleToChangeTo,
-                        forceChange as Boolean,
-                        hmsActionResultListener = HMSCommonAction.getActionListener(result)
-                    )
-                } else {
-                    logError("changeRoleOfPeer","peer is null","changeRoleOfPeer Error")
-                }
-            }
-            catch (exception:Exception){
-                logError("changeRoleOfPeer",exception.message?:"No message found","Exception Occurred")
-            }
+        val roleUWant = call.argument<String>("role_name")?:run{
+            logError("changeRoleOfPeer","roleUWant is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("roleUWant is null in changeRoleOfPeer"))
+            return
         }
-        else{
+        val peerId = call.argument<String>("peer_id")?:
+        run {
+            logError("changeRoleOfPeer","peerId is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("peerId is null in changeRoleOfPeer"))
+            return
+        }
+
+        val forceChange = call.argument<Boolean>("force_change")?:
+        run {
+            logError("changeRoleOfPeer","forceChange is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("forceChange is null in changeRoleOfPeer"))
+            return
+        }
+
+        hmssdk?:
+        run{
             logError("changeRoleOfPeer","hmssdk is null","HMSSDK Error")
+            result.success(HMSExceptionExtension.getError("hmssdk is null in changeRoleOfPeer"))
+            return
+        }
+
+        val roles = hmssdk!!.getRoles()
+        try {
+            val roleToChangeTo: HMSRole = roles.first {
+                it.name == roleUWant
+            }
+            val peer: HMSPeer? = getPeerById(peerId)
+            peer ?:
+            run {
+                logError("changeRoleOfPeer","peer is null","changeRoleOfPeer Error")
+                result.success(HMSExceptionExtension.getError("peer is null in changeRoleOfPeer"))
+                return
+            }
+            hmssdk!!.changeRoleOfPeer(
+                peer,
+                roleToChangeTo,
+                forceChange,
+                hmsActionResultListener = HMSCommonAction.getActionListener(result)
+            )
+        }
+        catch (exception:Exception){
+            logError("changeRoleOfPeer",exception.message?:"No message found","Exception Occurred")
+            result.success(HMSExceptionExtension.getError("${exception.message?:"No message found"} in changeRoleOfPeer"))
+            return
         }
     }
 
@@ -668,42 +711,44 @@ class HmssdkFlutterPlugin :
         val args = HashMap<String, Any?>()
         val roles = ArrayList<Any>()
 
-        if(hmssdk!= null){
-            hmssdk!!.getRoles().forEach {
-                roles.add(HMSRoleExtension.toDictionary(it)!!)
-            }
-            args["roles"] = roles
-            result.success(args)
-        }
-        else{
+        hmssdk ?:
+        run{
             logError("getRoles","hmssdk is null","HMSSDK Error")
+            result.success(HMSExceptionExtension.getError("hmssdk is null in getRoles"))
+            return
         }
+        hmssdk!!.getRoles().forEach {
+            roles.add(HMSRoleExtension.toDictionary(it)!!)
+        }
+        args["roles"] = roles
+        result.success(args)
     }
 
     private fun acceptChangeRole(result: Result) {
-        //Checking whether requestChange is null or not to handle the consecutive calls when previous call is not answered
-        if (requestChange != null) {
-            if(hmssdk != null){
-                hmssdk!!.acceptChangeRole(
-                    this.requestChange!!,
-                    hmsActionResultListener = HMSCommonAction.getActionListener(result)
-                )
-                requestChange = null
-            }
-            else{
+        //Checking whether requestChange is null or not to handle the consecutive calls when previous role change request is not answered
+        requestChange?.let {
+            hmssdk?:
+            run{
                 logError("acceptChangeRole","hmssdk is null","HMSSDK Error")
+                result.success(HMSExceptionExtension.getError("hmssdk is null in acceptChangeRole"))
+                return
             }
-        } else {
-            val hmsException = HMSException(
-                action = "Resend Role Change Request",
-                code = 6004,
-                description = "Role Change Request is Expired.",
-                message = "Role Change Request is Expired.",
-                name = "Role Change Request Error"
+            hmssdk!!.acceptChangeRole(
+                this.requestChange!!,
+                hmsActionResultListener = HMSCommonAction.getActionListener(result)
             )
-            val args = HMSExceptionExtension.toDictionary(hmsException)
-            result.success(args)
+            requestChange = null
+            return
         }
+        val hmsException = HMSException(
+            action = "Resend Role Change Request",
+            code = 6004,
+            description = "Role Change Request is Expired.",
+            message = "Role Change Request is Expired.",
+            name = "Role Change Request Error"
+        )
+        val args = HMSExceptionExtension.toDictionary(hmsException)
+        result.success(args)
     }
 
     var hmsAudioListener = object : HMSAudioListener {
@@ -738,8 +783,18 @@ class HmssdkFlutterPlugin :
 
     private fun changeTrackState(call: MethodCall, result: Result) {
         // Checking trackId, mute as they are required for calling changeTrackState if not present logging respective logs
-        val trackId = call.argument<String>("track_id")?:returnError("changeTrackState error trackId is null")
-        val mute = call.argument<Boolean>("mute")?:returnError("changeTrackState error mute is null")
+        val trackId = call.argument<String>("track_id")?:
+        run {
+            logError("changeTrackState","trackId is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("trackId is null in changeTrackState"))
+            return
+        }
+        val mute = call.argument<Boolean>("mute")?:
+        run {
+            logError("changeTrackState","mute is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("mute is null in changeTrackState"))
+            return
+        }
 
         val tracks = getAllTracks()
 
@@ -747,49 +802,52 @@ class HmssdkFlutterPlugin :
             val track = tracks?.first {
                 it.trackId == trackId
             }
-            if (mute != null) {
-                if (hmssdk != null) {
-                    hmssdk!!.changeTrackState(
-                        track!!,
-                        (mute as Boolean),
-                        hmsActionResultListener = HMSCommonAction.getActionListener(result)
-                    )
-                } else {
-                    logError("changeTrackState","hmssdk is null","HMSSDK Error")
-                }
+            hmssdk ?:
+            run {
+                logError("changeTrackState","hmssdk is null","HMSSDK Error")
+                result.success(HMSExceptionExtension.getError("hmssdk is null in changeTrackState"))
+                return
             }
-            else{
-                logError("changeTrackState"," mute is null","Null error")
-            }
+            hmssdk!!.changeTrackState(
+                track!!,
+                (mute),
+                hmsActionResultListener = HMSCommonAction.getActionListener(result)
+            )
         }
         catch (exception:Exception){
             logError("changeTrackState",exception.message?:"No message found","Exception Occurred")
+            result.success(HMSExceptionExtension.getError(exception.message?:"No message found"))
         }
     }
 
     private fun removePeer(call: MethodCall, result: Result) {
         // Checking peerId as it is required for calling removePeer if not present logging respective logs
-        val peerId = call.argument<String>("peer_id")?:returnError("removePeer error peerId is null")
-        val reason = call.argument<String>("reason") ?: "Removed from room"
-
-        if(peerId != null){
-            val peer = getPeerById(peerId as String) as HMSRemotePeer?
-            if(peer != null){
-                if(hmssdk != null){
-                    hmssdk?.removePeerRequest(
-                        peer = peer,
-                        hmsActionResultListener = HMSCommonAction.getActionListener(result),
-                        reason = reason
-                    )
-                }
-                else{
-                    logError("removePeer","hmssdk is null","HMSSDK Error")
-                }
-            }
-            else{
-                logError("removePeer","No peer found with $peerId","Peer Error")
-            }
+        val peerId = call.argument<String>("peer_id")?:
+        run {
+            logError("removePeer","peerId is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("peerId is null in removePeer"))
+            return
         }
+
+        val reason = call.argument<String>("reason") ?: "Removed from room"
+        val peer = getPeerById(peerId) as HMSRemotePeer?
+        peer ?:
+            run{
+                logError("removePeer","No peer found with $peerId","Peer Error")
+                result.success(HMSExceptionExtension.getError("\"No peer found with $peerId in removePeer"))
+                return
+            }
+        hmssdk ?:
+            run{
+                logError("removePeer","hmssdk is null","HMSSDK Error")
+                result.success(HMSExceptionExtension.getError("hmssdk is null in removePeer"))
+                return
+            }
+        hmssdk!!.removePeerRequest(
+            peer = peer,
+            hmsActionResultListener = HMSCommonAction.getActionListener(result),
+            reason = reason
+        )
     }
 
     private fun removeHMSLogger() {
@@ -799,137 +857,157 @@ class HmssdkFlutterPlugin :
     private fun endRoom(call: MethodCall, result: Result) {
         val lock = call.argument<Boolean>("lock") ?: false
         val reason = call.argument<String>("reason") ?: "End room invoked"
-        if(hmssdk != null){
-            hmssdk!!.endRoom(
-                lock = lock,
-                reason = reason,
-                hmsActionResultListener = HMSCommonAction.getActionListener(result)
-            )
-        }
-        else{
-            logError("endRoom","hmssdk is null","HMSSDK Error")
-        }
+        hmssdk ?:
+            run{
+                logError("endRoom","hmssdk is null","HMSSDK Error")
+                result.success(HMSExceptionExtension.getError("hmssdk is null in endRoom"))
+                return
+            }
+        hmssdk!!.endRoom(
+            lock = lock,
+            reason = reason,
+            hmsActionResultListener = HMSCommonAction.getActionListener(result)
+        )
     }
 
     private fun changeTrackStateForRole(call: MethodCall, result: Result) {
         // Checking mute as it is required for calling changeTrackStateForRole if not present logging respective logs
-        val mute = call.argument<Boolean>("mute")?:returnError("changeTrackStateForRole error: mute is null")
+        val mute = call.argument<Boolean>("mute")?:
+        run {
+            logError("changeTrackStateForRole","mute is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("mute is null in changeTrackStateForRole"))
+            return
+        }
         val type = call.argument<String>("type")
         val source = call.argument<String>("source")
         val roles: List<String>? = call.argument<List<String>>("roles")
-        if(hmssdk != null) {
-            val hmsRoles: List<HMSRole>? = if (roles != null) {
-                hmssdk!!.getRoles().filter { roles.contains(it.name) }
-            } else {
-                null
+
+        hmssdk ?:
+            run{
+                logError("changeTrackStateForRole","hmssdk is null","HMSSDK Error")
+                result.success(HMSExceptionExtension.getError("hmssdk is null in changeTrackStateForRole"))
+                return
             }
-            if(mute != null){
-                hmssdk!!.changeTrackState(
-                    mute = mute as Boolean,
-                    type = HMSTrackExtension.getKindFromString(type),
-                    source = source,
-                    roles = hmsRoles,
-                    hmsActionResultListener = HMSCommonAction.getActionListener(result)
-                )
-            }
-            else{
-                logError("changeTrackStateForRole","mute is null","Null error")
-            }
+        val hmsRoles: List<HMSRole>? = if (roles != null) {
+            hmssdk!!.getRoles().filter { roles.contains(it.name) }
+        } else {
+            null
         }
-        else{
-            logError("changeTrackStateForRole","hmssdk is null","HMSSDK Error")
-        }
+
+        hmssdk!!.changeTrackState(
+            mute = mute,
+            type = HMSTrackExtension.getKindFromString(type),
+            source = source,
+            roles = hmsRoles,
+            hmsActionResultListener = HMSCommonAction.getActionListener(result)
+        )
     }
 
     private fun changeRoleOfPeersWithRoles(call: MethodCall, result: Result) {
-        // Checking roleString as it is required for calling changeRoleOfPeersWithRoles if not present logging respective logs
-        val roleString = call.argument<String>("to_role")?:returnError("changeRoleOfPeersWithRoles error: roleString is null")
-        val ofRoleString: List<String>? = call.argument<List<String>>("of_roles")
 
-        if(hmssdk != null) {
-            val roles = hmssdk!!.getRoles()
-            try {
-                val toRole: HMSRole = roles.first {
-                    it.name == roleString
-                }
-                if(ofRoleString != null){
-                    val ofRoles: List<HMSRole> =
-                        hmssdk!!.getRoles().filter { ofRoleString.contains(it.name) }
-                    hmssdk!!.changeRoleOfPeersWithRoles(
-                        toRole = toRole,
-                        ofRoles = ofRoles,
-                        hmsActionResultListener = HMSCommonAction.getActionListener(result)
-                    )
-                }
-                else{
-                    logError("changeRoleOfPeersWithRoles","ofRoleString is null","Null error")
-                }
-            }
-            catch (exception:Exception){
-                logError("changeRoleOfPeersWithRoles",exception.message?:"No message found","Exception Occurred")
-            }
+        // Checking roleString as it is required for calling changeRoleOfPeersWithRoles if not present logging respective logs
+        val roleString = call.argument<String>("to_role")?:
+        run {
+            logError("changeRoleOfPeersWithRoles","roleString is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("roleString is null in changeRoleOfPeersWithRoles"))
+            return
         }
-        else{
+        val ofRoleString: List<String> = call.argument<List<String>>("of_roles")  ?:
+        run {
+            logError("changeRoleOfPeersWithRoles","ofRoleString is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("ofRoleString is null in changeRoleOfPeersWithRoles"))
+            return
+        }
+
+        hmssdk?:
+        run{
             logError("changeRoleOfPeersWithRoles","hmssdk is null","HMSSDK Error")
+            result.success(HMSExceptionExtension.getError("hmssdk is null in changeRoleOfPeersWithRoles"))
+            return
+        }
+        val roles = hmssdk!!.getRoles()
+        try {
+            val toRole: HMSRole = roles.first {
+                it.name == roleString
+            }
+            val ofRoles: List<HMSRole> =
+                hmssdk!!.getRoles().filter { ofRoleString.contains(it.name) }
+                hmssdk!!.changeRoleOfPeersWithRoles(
+                    toRole = toRole,
+                    ofRoles = ofRoles,
+                    hmsActionResultListener = HMSCommonAction.getActionListener(result)
+                )
+        }
+        catch (exception:Exception){
+            logError("changeRoleOfPeersWithRoles",exception.message?:"No message found","Exception Occurred")
+            result.success(HMSExceptionExtension.getError(exception.message?:"No message found"))
         }
     }
 
     private fun build(activity: Activity, call: MethodCall, result: Result) {
+
         // Checking dartSDKVersion,hmsSDKVersion as they are required for calling build if not present logging respective logs
-        val dartSDKVersion = call.argument<String>("dart_sdk_version")?:returnError("build error:dartSDKVersion is null")
-        val hmsSDKVersion = call.argument<String>("hmssdk_version")?:returnError("build error:hmsSDKVersion is null")
-
-        if(dartSDKVersion != null && hmsSDKVersion != null ){
-            val framework = FrameworkInfo(framework = AgentType.FLUTTER, frameworkVersion = dartSDKVersion as String, frameworkSdkVersion = hmsSDKVersion as String)
-            val builder = HMSSDK.Builder(activity).setFrameworkInfo(framework)
-
-            val hmsTrackSettingMap =
-                call.argument<HashMap<String, HashMap<String, Any?>?>?>("hms_track_setting")
-
-            if (hmsTrackSettingMap != null) {
-                val hmsAudioTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["audio_track_setting"]
-                val hmsVideoTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["video_track_setting"]
-                val hmsTrackSettings = HMSTrackSettingsExtension.setTrackSettings(hmsAudioTrackHashMap, hmsVideoTrackHashMap)
-                builder.setTrackSettings(hmsTrackSettings)
-            }
-
-            val hmsLogSettingsMap =
-                call.argument<HashMap<String, Any>?>("hms_log_settings")
-
-            if (hmsLogSettingsMap != null) {
-                val maxDirSizeInBytes: Double = hmsLogSettingsMap["max_dir_size_in_bytes"] as Double
-                val isLogStorageEnabled: Boolean = hmsLogSettingsMap["log_storage_enabled"] as Boolean
-                val level: String = hmsLogSettingsMap["log_level"] as String
-                val logSettings = HMSLogSettings.setLogSettings(maxDirSizeInBytes, isLogStorageEnabled, level)
-                builder.setLogSettings(logSettings)
-            }
-
-            hmssdk = builder.build()
-            result.success(true)
+        val dartSDKVersion = call.argument<String>("dart_sdk_version")?:
+        run {
+            logError("build","dartSDKVersion is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("dartSDKVersion is null in build"))
+            return
         }
-        else{
-            result.success(false)
+
+        val hmsSDKVersion = call.argument<String>("hmssdk_version")?:
+        run {
+            logError("build","hmsSDKVersion is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("hmsSDKVersion is null in build"))
+            return
         }
+
+        val framework = FrameworkInfo(framework = AgentType.FLUTTER, frameworkVersion = dartSDKVersion, frameworkSdkVersion = hmsSDKVersion)
+        val builder = HMSSDK.Builder(activity).setFrameworkInfo(framework)
+        val hmsTrackSettingMap =
+            call.argument<HashMap<String, HashMap<String, Any?>?>?>("hms_track_setting")
+
+        if (hmsTrackSettingMap != null) {
+            val hmsAudioTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["audio_track_setting"]
+            val hmsVideoTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["video_track_setting"]
+            val hmsTrackSettings = HMSTrackSettingsExtension.setTrackSettings(hmsAudioTrackHashMap, hmsVideoTrackHashMap)
+            builder.setTrackSettings(hmsTrackSettings)
+        }
+
+        val hmsLogSettingsMap =
+            call.argument<HashMap<String, Any>?>("hms_log_settings")
+
+        if (hmsLogSettingsMap != null) {
+            val maxDirSizeInBytes: Double = hmsLogSettingsMap["max_dir_size_in_bytes"] as Double
+            val isLogStorageEnabled: Boolean = hmsLogSettingsMap["log_storage_enabled"] as Boolean
+            val level: String = hmsLogSettingsMap["log_level"] as String
+            val logSettings = HMSLogSettings.setLogSettings(maxDirSizeInBytes, isLogStorageEnabled, level)
+            builder.setLogSettings(logSettings)
+        }
+
+        hmssdk = builder.build()
+        result.success(true)
     }
 
-    private var hasChangedMetadata: Boolean = false
-
     private fun changeMetadata(call: MethodCall, result: Result) {
-        hasChangedMetadata = !hasChangedMetadata
-        // Checking metadata as it is required for calling changeMetadata if not present logging respective logs
-        val metadata = call.argument<String>("metadata")?:returnError("changeMetadata error:metadata is null")
 
-        if(metadata != null){
-            if(hmssdk != null){
-                hmssdk!!.changeMetadata(
-                    metadata as String,
-                    hmsActionResultListener = HMSCommonAction.getActionListener(result)
-                )
-            }
-            else{
-                logError("changeMetadata","hmssdk is null","HMSSDK Error")
-            }
+        // Checking metadata as it is required for calling changeMetadata if not present logging respective logs
+        val metadata = call.argument<String>("metadata")?:
+        run {
+            logError("changeMetadata","metadata is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("metadata is null in changeMetadata"))
+            return
         }
+
+       hmssdk ?:
+           run{
+               logError("changeMetadata","hmssdk is null","HMSSDK Error")
+               result.success(HMSExceptionExtension.getError("hmssdk is null in changeMetadata","Check logs for more info"))
+               return
+           }
+        hmssdk!!.changeMetadata(
+            metadata,
+            hmsActionResultListener = HMSCommonAction.getActionListener(result)
+        )
     }
 
     private val hmsUpdateListener = object : HMSUpdateListener {
@@ -958,23 +1036,23 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onJoin(room: HMSRoom) {
-            if(hmssdk != null){
-                //Adding audio observer for sending audio level updates for each peer
-                hmssdk!!.addAudioObserver(hmsAudioListener)
-                val args = HashMap<String, Any?>()
-                args["event_name"] = "on_join_room"
-
-                val roomArgs = HashMap<String, Any?>()
-                roomArgs["room"] = HMSRoomExtension.toDictionary(room)
-                args["data"] = roomArgs
-                if (roomArgs["room"] != null) {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        eventSink?.success(args)
-                    }
-                }
-            }
-            else{
+            hmssdk ?:
+            run{
                 logError("onJoin","hmssdk is null","HMSSDK Error")
+                return
+            }
+            //Adding audio observer for sending audio level updates for each peer
+            hmssdk!!.addAudioObserver(hmsAudioListener)
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_join_room"
+
+            val roomArgs = HashMap<String, Any?>()
+            roomArgs["room"] = HMSRoomExtension.toDictionary(room)
+            args["data"] = roomArgs
+            if (roomArgs["room"] != null) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    eventSink?.success(args)
+                }
             }
         }
 
@@ -1167,18 +1245,22 @@ class HmssdkFlutterPlugin :
 
     private fun changeName(call: MethodCall, result: Result) {
         // Checking name as it is required for calling changeName if not present logging respective logs
-        val name = call.argument<String>("name")?:returnError("changeName error:name is null")
-        if(name != null){
-            if(hmssdk != null){
-                hmssdk!!.changeName(
-                    name = name as String,
-                    hmsActionResultListener = HMSCommonAction.getActionListener(result)
-                )
-            }
-            else{
-                logError("changeName","hmssdk is null","HMSSDK Error")
-            }
+        val name = call.argument<String>("name")?:
+        run {
+            logError("changeName","name is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("name is null in changeName"))
+            return
         }
+       hmssdk?:
+        run{
+            logError("changeName","hmssdk is null","HMSSDK Error")
+            result.success(HMSExceptionExtension.getError("hmssdk is null in changeName"))
+            return
+        }
+        hmssdk!!.changeName(
+            name = name,
+            hmsActionResultListener = HMSCommonAction.getActionListener(result)
+        )
     }
 
     fun onVideoViewError(args: HashMap<String, Any?>) {
@@ -1203,39 +1285,39 @@ class HmssdkFlutterPlugin :
     }
 
     fun requestScreenShare(data: Intent?) {
-        if(hmssdk != null){
-            hmssdk!!.startScreenshare(
-                object : HMSActionResultListener {
-
-                    override fun onError(error: HMSException) {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            androidScreenshareResult?.success(HMSExceptionExtension.toDictionary(error))
-                            androidScreenshareResult = null
-                        }
-                    }
-
-                    override fun onSuccess() {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            androidScreenshareResult?.success(null)
-                            androidScreenshareResult = null
-                        }
-                    }
-                },
-                data
-            )
-        }
-        else{
+        hmssdk ?:
+        run{
             logError("requestScreenShare","hmssdk is null","HMSSDK Error")
+            return
         }
+        hmssdk!!.startScreenshare(
+            object : HMSActionResultListener {
+                override fun onError(error: HMSException) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        androidScreenshareResult?.success(HMSExceptionExtension.toDictionary(error))
+                        androidScreenshareResult = null
+                    }
+                }
+
+                override fun onSuccess() {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        androidScreenshareResult?.success(null)
+                        androidScreenshareResult = null
+                    }
+                }
+            },
+            data
+        )
     }
 
     private fun stopScreenShare(result: Result) {
-        if(hmssdk != null){
-            hmssdk!!.stopScreenshare(HMSCommonAction.getActionListener(result))
-        }
-        else{
+        hmssdk ?:
+        run{
             logError("stopScreenShare","hmssdk is null","HMSSDK Error")
+            result.success(HMSExceptionExtension.getError("hmssdk is null in stopScreenShare"))
+            return
         }
+        hmssdk!!.stopScreenshare(HMSCommonAction.getActionListener(result))
     }
 
     private var androidAudioShareResult: Result? = null
@@ -1253,146 +1335,177 @@ class HmssdkFlutterPlugin :
     }
 
     fun requestAudioShare(data: Intent?) {
-        if(hmssdk != null){
-            hmssdk!!.startAudioshare(
-                object : HMSActionResultListener {
-                    override fun onError(error: HMSException) {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            androidAudioShareResult?.success(HMSExceptionExtension.toDictionary(error))
-                            androidAudioShareResult = null
-                        }
-                    }
-
-                    override fun onSuccess() {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            androidAudioShareResult?.success(null)
-                            androidAudioShareResult = null
-                        }
-                    }
-                },
-                data,
-                audioMixingMode = AudioMixingMode.valueOf(mode!!)
-            )
-        }
-        else{
+        hmssdk ?:
+        run{
             logError("requestAudioShare","hmssdk is null","HMSSDK Error")
+            return
         }
+        hmssdk!!.startAudioshare(
+            object : HMSActionResultListener {
+                override fun onError(error: HMSException) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        androidAudioShareResult?.success(HMSExceptionExtension.toDictionary(error))
+                        androidAudioShareResult = null
+                    }
+                }
+
+                override fun onSuccess() {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        androidAudioShareResult?.success(null)
+                        androidAudioShareResult = null
+                    }
+                }
+            },
+            data,
+            audioMixingMode = AudioMixingMode.valueOf(mode!!)
+        )
     }
 
     private fun stopAudioShare(result: Result) {
-        if(hmssdk != null){
-            hmssdk!!.stopAudioshare(HMSCommonAction.getActionListener(result))
-        }
-        else{
+        hmssdk ?:
+        run{
             logError("stopAudioShare","hmssdk is null","HMSSDK Error")
+            result.success(HMSExceptionExtension.getError("hmssdk is null in stopAudioShare"))
+            return
         }
+        hmssdk!!.stopAudioshare(HMSCommonAction.getActionListener(result))
+
     }
 
     private fun setAudioMixingMode(call: MethodCall, result: Result) {
-        val mode = call.argument<String>("audio_mixing_mode") ?: returnError("setAudioMixingMode error: mode is null")
-        if (mode != null) {
-            val audioMixingMode: AudioMixingMode = AudioMixingMode.valueOf(mode as String)
-            if(hmssdk != null){
-                hmssdk!!.setAudioMixingMode(audioMixingMode)
-                result.success(null)
-            }
-            else{
-                logError("setAudioMixingMode","hmssdk is null","HMSSDK Error")
-            }
+        val mode = call.argument<String>("audio_mixing_mode") ?:
+        run{
+            logError("setAudioMixingMode","mode is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("mode is null in setAudioMixingMode"))
+            return
         }
+        val audioMixingMode: AudioMixingMode = AudioMixingMode.valueOf(mode)
+        hmssdk ?:
+        run{
+            logError("setAudioMixingMode","hmssdk is null","HMSSDK Error")
+            result.success(HMSExceptionExtension.getError("hmssdk is null in setAudioMixingMode"))
+            return
+        }
+        hmssdk!!.setAudioMixingMode(audioMixingMode)
+        result.success(null)
     }
 
     private fun getAllTracks(call: MethodCall, result: Result) {
 
         // Checking peerId as it is required for calling getAllTracks if not present logging respective logs
-        val peerId = call.argument<String>("peer_id")?:returnError("getAllTracks error: peerId is null")
+        val peerId = call.argument<String>("peer_id")?:
+        run{
+            logError("getAllTracks","peerId is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("peerId is null in getAllTracks"))
+            return
+        }
 
-        if(peerId != null){
-            val peer: HMSPeer? = getPeerById(peerId as String)
-            if(peer != null){
-                val args = ArrayList<Any>()
-                //HMSTrackExtension.toDictionary can return null so adding let check
-                peer.getAllTracks().forEach {
-                    HMSTrackExtension.toDictionary(it)?.let { it1 -> args.add(it1) }
-                }
-                result.success(args)
-            }
-            else{
-                logError("getAllTracks","No peer exists with peerId:$peerId","Null Error")
-            }
+        val peer: HMSPeer? = getPeerById(peerId)
+       peer ?:
+        run{
+            logError("getAllTracks","No peer exists with peerId:$peerId","Null Error")
+            result.success(HMSExceptionExtension.getError("peer is null in getAllTracks"))
+            return
         }
-        else{
-            logError("getAllTracks","peerId is null","Null Error")
+        val args = ArrayList<Any>()
+        //HMSTrackExtension.toDictionary can return null so adding let check
+        peer.getAllTracks().forEach {
+            HMSTrackExtension.toDictionary(it)?.let { it1 -> args.add(it1) }
         }
+        result.success(args)
+
     }
 
     private fun getTrackById(call: MethodCall, result: Result) {
 
         // Checking peerId,trackId as they are required for calling getTrackById if not present logging respective logs
-        val peerId = call.argument<String>("peer_id")?:returnError("getTrackById error: peerId is null")
-        val trackId = call.argument<String>("track_id")?: returnError("getTrackById error: trackId is null")
-        if(peerId != null && trackId != null){
-            val peer: HMSPeer? = getPeerById(peerId as String)
-            if(peer != null){
-                result.success(HMSTrackExtension.toDictionary(peer.getTrackById(trackId as String)))
-            }
-            else{
-                logError("getTrackById","No peer exists with peerId:$peerId","Null Error")
-            }
+        val peerId = call.argument<String>("peer_id")?:
+        run{
+            logError("getTrackById","peerId is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("peerId is null in getTrackById"))
+            return
         }
+        val trackId = call.argument<String>("track_id")?:
+        run{
+            logError("getTrackById","trackId is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("trackId is null in getTrackById"))
+            return
+        }
+
+        val peer: HMSPeer? = getPeerById(peerId)
+        peer?: run{
+            logError("getTrackById","No peer exists with peerId:$peerId","Null Error")
+            result.success(HMSExceptionExtension.getError("peer is null in getAllTracks"))
+            return
+        }
+        result.success(HMSTrackExtension.toDictionary(peer.getTrackById(trackId)))
+
     }
 
     var hmsVideoViewResult: Result? = null
     private fun captureSnapshot(call: MethodCall, result: Result) {
 
         // Checking trackId as it is required for calling captureSnapshot if not present logging respective logs
-        val trackId = call.argument<String>("track_id")?:returnError("captureSnapshot error: trackId is null")
-        if (trackId != null) {
-            hmsVideoViewResult = result
-            activity.sendBroadcast(Intent(trackId as String).putExtra("method_name", "CAPTURE_SNAPSHOT"))
+        val trackId = call.argument<String>("track_id")?:
+        run{
+            logError("captureSnapshot","trackId is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("trackId is null in captureSnapshot"))
+            return
         }
+        hmsVideoViewResult = result
+        activity.sendBroadcast(Intent(trackId).putExtra("method_name", "CAPTURE_SNAPSHOT"))
     }
 
     private fun setPlaybackAllowedForTrack(call: MethodCall, result: Result) {
 
         // Checking trackId,isPlaybackAllowed,trackKind as they are required for calling captureSnapshot if not present logging respective logs
-        val trackId = call.argument<String>("track_id")?:returnError("setPlaybackAllowedForTrack error: trackId is null")
-        val isPlaybackAllowed = call.argument<Boolean>("is_playback_allowed")?:returnError("setPlaybackAllowedForTrack error: isPlaybackAllowed is null")
-        val trackKind = call.argument<String>("track_kind")?:returnError("setPlaybackAllowedForTrack error: trackKind is null")
-
-        if(trackId != null && isPlaybackAllowed != null && trackKind != null){
-            if(hmssdk != null){
-                val room: HMSRoom? = hmssdk!!.getRoom()
-                if (room != null) {
-                    if (HMSTrackExtension.getKindFromString(trackKind as String)!! == HMSTrackType.AUDIO) {
-                        val audioTrack: HMSAudioTrack? = HmsUtilities.getAudioTrack(trackId as String, room)
-                        if (audioTrack != null && audioTrack is HMSRemoteAudioTrack) {
-                            audioTrack.isPlaybackAllowed = isPlaybackAllowed as Boolean
-                            result.success(null)
-                            return
-                        }
-                    } else if (HMSTrackExtension.getKindFromString(trackKind)!! == HMSTrackType.VIDEO) {
-                        val videoTrack: HMSVideoTrack? = HmsUtilities.getVideoTrack(trackId as String, room)
-                        if (videoTrack != null && videoTrack is HMSRemoteVideoTrack) {
-                            videoTrack.isPlaybackAllowed = isPlaybackAllowed as Boolean
-                            result.success(null)
-                            return
-                        }
-                    }
-                }
-            }
-            else{
-                logError("setPlaybackAllowedForTrack","hmssdk is null","HMSSDK Error")
-            }
+        val trackId = call.argument<String>("track_id")?:
+        run{
+            logError("setPlaybackAllowedForTrack","trackId is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("trackId is null in setPlaybackAllowedForTrack"))
+            return
+        }
+        val isPlaybackAllowed = call.argument<Boolean>("is_playback_allowed")?:
+        run{
+            logError("setPlaybackAllowedForTrack","isPlaybackAllowed is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("isPlaybackAllowed is null in setPlaybackAllowedForTrack"))
+            return
+        }
+        val trackKind = call.argument<String>("track_kind")?:
+        run{
+            logError("setPlaybackAllowedForTrack","trackKind is null","Parameter Error")
+            result.success(HMSExceptionExtension.getError("trackKind is null in setPlaybackAllowedForTrack"))
+            return
         }
 
-        val map = HashMap<String, Map<String, String>>()
-        val error = HashMap<String, String>()
-        error["message"] = "Could not set isPlaybackAllowed for track"
-        error["action"] = "NONE"
-        error["description"] = "Check logs for more info"
-        map["error"] = error
-        result.success(map)
+        hmssdk ?:
+            run{
+                logError("setPlaybackAllowedForTrack","hmssdk is null","HMSSDK Error")
+                result.success(HMSExceptionExtension.getError("hmssdk is null in setPlaybackAllowedForTrack"))
+                return
+            }
+        val room: HMSRoom? = hmssdk!!.getRoom()
+        room ?:
+            run{
+                logError("setPlaybackAllowedForTrack","room is null","Null Error")
+                result.success(HMSExceptionExtension.getError("room is null in setPlaybackAllowedForTrack"))
+                return
+            }
+        if (HMSTrackExtension.getKindFromString(trackKind) == HMSTrackType.AUDIO) {
+            val audioTrack: HMSAudioTrack? = HmsUtilities.getAudioTrack(trackId, room)
+            if (audioTrack != null && audioTrack is HMSRemoteAudioTrack) {
+                audioTrack.isPlaybackAllowed = isPlaybackAllowed
+                result.success(null)
+                return
+            }
+        } else if (HMSTrackExtension.getKindFromString(trackKind) == HMSTrackType.VIDEO) {
+            val videoTrack: HMSVideoTrack? = HmsUtilities.getVideoTrack(trackId, room)
+            if (videoTrack != null && videoTrack is HMSRemoteVideoTrack) {
+                videoTrack.isPlaybackAllowed = isPlaybackAllowed
+                result.success(null)
+                return
+            }
+        }
     }
 
     private val hmsStatsListener = object : HMSStatsObserver {
@@ -1402,12 +1515,12 @@ class HmssdkFlutterPlugin :
             hmsTrack: HMSTrack?,
             hmsPeer: HMSPeer?
         ) {
-            if (hmsPeer == null) {
+            hmsPeer ?: run {
                 logError("RemoteVideoStats","Peer is null","Stats Error")
                 return
             }
 
-            if (hmsTrack == null) {
+            hmsTrack ?: run{
                 logError("RemoteVideoStats","Video Track is null","Stats Error")
                 return
             }
@@ -1431,12 +1544,12 @@ class HmssdkFlutterPlugin :
             hmsTrack: HMSTrack?,
             hmsPeer: HMSPeer?
         ) {
-            if (hmsPeer == null) {
+            hmsPeer ?: run {
                 logError("RemoteAudioStats","Peer is null","Stats Error")
                 return
             }
 
-            if (hmsTrack == null) {
+            hmsTrack ?: run{
                 logError("RemoteAudioStats","Audio Track is null","Stats Error")
                 return
             }
@@ -1461,12 +1574,12 @@ class HmssdkFlutterPlugin :
             hmsTrack: HMSTrack?,
             hmsPeer: HMSPeer?
         ) {
-            if (hmsPeer == null) {
+            hmsPeer ?: run {
                 logError("LocalVideoStats","Peer is null","Stats Error")
                 return
             }
 
-            if (hmsTrack == null) {
+            hmsTrack ?: run{
                 logError("LocalVideoStats","Video Track is null","Stats Error")
                 return
             }
@@ -1491,12 +1604,12 @@ class HmssdkFlutterPlugin :
             hmsTrack: HMSTrack?,
             hmsPeer: HMSPeer?
         ) {
-            if (hmsPeer == null) {
+            hmsPeer ?: run {
                 logError("LocalAudioStats","Peer is null","Stats Error")
                 return
             }
 
-            if (hmsTrack == null) {
+            hmsTrack ?: run {
                 logError("LocalAudioStats","Audio Track is null","Stats Error")
                 return
             }
@@ -1547,13 +1660,13 @@ class HmssdkFlutterPlugin :
             }
             if (p1 != null) {
                 val audioDevicesList = ArrayList<String>()
-                if(hmssdk != null){
-                    for (device in hmssdk!!.getAudioDevicesList()) {
-                        audioDevicesList.add(device.name)
+                hmssdk ?:
+                    run{
+                        logError("onAudioDeviceChanged","hmssdk is null in preview","HMSSDK Error")
+                        return
                     }
-                }
-                else{
-                    logError("onAudioDeviceChanged","hmssdk is null","HMSSDK Error")
+                for (device in hmssdk!!.getAudioDevicesList()) {
+                    audioDevicesList.add(device.name)
                 }
                 dict["available_audio_device"] = audioDevicesList
             }
@@ -1588,13 +1701,13 @@ class HmssdkFlutterPlugin :
             }
             if (p1 != null) {
                 val audioDevicesList = ArrayList<String>()
-                if(hmssdk != null){
-                    for (device in hmssdk!!.getAudioDevicesList()) {
-                        audioDevicesList.add(device.name)
+                hmssdk ?:
+                    run{
+                        logError("onAudioDeviceChanged","hmssdk is null in room","HMSSDK Error")
+                        return
                     }
-                }
-                else{
-                    logError("onAudioDeviceChanged","hmssdk is null","HMSSDK Error")
+                for (device in hmssdk!!.getAudioDevicesList()) {
+                    audioDevicesList.add(device.name)
                 }
                 dict["available_audio_device"] = audioDevicesList
             }

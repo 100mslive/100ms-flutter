@@ -48,11 +48,12 @@ class HMSVideoViewWidget(
                 FrameLayout.LayoutParams.WRAP_CONTENT
             )
         }
-        if (view != null) {
-            view?.layoutParams = frameLayoutParams
-        } else {
+        view ?:
+        run {
             logError("HMSVideoView onFlutterViewAttached","view is null","HMSVideoView Error")
+            return
         }
+        view?.layoutParams = frameLayoutParams
     }
 
     override fun dispose() {

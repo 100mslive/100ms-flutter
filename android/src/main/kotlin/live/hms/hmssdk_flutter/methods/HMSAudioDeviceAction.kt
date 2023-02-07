@@ -1,15 +1,8 @@
 package live.hms.hmssdk_flutter
-import android.util.Log
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import live.hms.video.audio.HMSAudioManager
-import live.hms.video.media.tracks.*
 import live.hms.video.sdk.*
-import live.hms.video.sdk.models.*
-
 
 
 class HMSAudioDeviceAction {
@@ -17,10 +10,10 @@ class HMSAudioDeviceAction {
         fun audioDeviceActions(call: MethodCall, result: Result,hmssdk:HMSSDK) {
             when (call.method) {
                 "get_audio_devices_list" -> {
-                    getAudioDevicesList(call, result,hmssdk)
+                    getAudioDevicesList(result, hmssdk)
                 }
                 "get_current_audio_device"-> {
-                    getCurrentDevice(call,result,hmssdk)
+                    getCurrentDevice(result, hmssdk)
                 }
                 "switch_audio_output" -> {
                     switchAudioOutput(call,result,hmssdk)
@@ -31,29 +24,28 @@ class HMSAudioDeviceAction {
             }
         }
 
-        private fun getAudioDevicesList(call: MethodCall, result: Result,hmssdk:HMSSDK){
-            val audioDevicesList = ArrayList<String>();
+        private fun getAudioDevicesList(result: Result, hmssdk: HMSSDK){
+            val audioDevicesList = ArrayList<String>()
             for (device in hmssdk.getAudioDevicesList()){
-                audioDevicesList.add(device.name);
+                audioDevicesList.add(device.name)
             }
-            CoroutineScope(Dispatchers.Main).launch {
-                result.success(audioDevicesList)
-            }
+            result.success(audioDevicesList)
         }
 
-        private fun getCurrentDevice(call: MethodCall, result: Result,hmssdk:HMSSDK){
-            CoroutineScope(Dispatchers.Main).launch {
+        private fun getCurrentDevice(result: Result, hmssdk: HMSSDK){
                 result.success(hmssdk.getAudioOutputRouteType().name)
-            }
         }
 
         private fun switchAudioOutput(call: MethodCall, result: Result,hmssdk:HMSSDK){
-            var argument = call.argument<String>("audio_device_name")?:HMSErrorLogger.returnError("switchAudioOutput error argument is null")
-            if(argument!=null){
-                var audioDevice:HMSAudioManager.AudioDevice = HMSAudioManager.AudioDevice.valueOf(argument as String)
-                hmssdk.switchAudioOutput(audioDevice)
+            val argument = call.argument<String>("audio_device_name")?:
+            run{
+                HMSErrorLogger.logError("switchAudioOutput", "argument is null", "Parameter Error")
+                result.success(HMSExceptionExtension.getError("argument is null in switchAudioOutput"))
+                return
             }
-
+            val audioDevice:HMSAudioManager.AudioDevice = HMSAudioManager.AudioDevice.valueOf(argument)
+            hmssdk.switchAudioOutput(audioDevice)
+            result.success(null)
         }
     }
 }
