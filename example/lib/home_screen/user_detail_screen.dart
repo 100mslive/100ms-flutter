@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -55,8 +58,10 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
 
     HMSVirtualBackgroundPlugin? virtualBackgroundPlugin;
     if (isVirtualBackgroundEnable) {
-      virtualBackgroundPlugin =
-          HMSVirtualBackgroundPlugin(backgroundImage: null, blurRadius: 20);
+      Uint8List imageData =
+          (await rootBundle.load("assets/img_forest.jpg")).buffer.asUint8List();
+      virtualBackgroundPlugin = HMSVirtualBackgroundPlugin(
+          backgroundImage: imageData, blurRadius: 20);
     }
 
     _hmsSDKInteractor = HMSSDKInteractor(

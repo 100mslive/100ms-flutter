@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.util.Log
@@ -28,6 +30,7 @@ import live.hms.video.connection.stats.*
 import live.hms.video.error.HMSException
 import live.hms.video.events.AgentType
 import live.hms.video.media.tracks.*
+import live.hms.video.plugin.video.HMSVideoPlugin
 import live.hms.video.sdk.*
 import live.hms.video.sdk.models.*
 import live.hms.video.sdk.models.enums.AudioMixingMode
@@ -57,7 +60,8 @@ class HmssdkFlutterPlugin :
     private var logsSink: EventChannel.EventSink? = null
     private var rtcSink: EventChannel.EventSink? = null
     private lateinit var activity: Activity
-    var hmssdk: HMSSDK? = null
+    public var hmssdk: HMSSDK? = null
+    public var vbImage: Bitmap? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
     companion object {
@@ -189,6 +193,10 @@ class HmssdkFlutterPlugin :
             }
             "capture_snapshot" -> {
                 captureSnapshot(call, result)
+            }
+
+            "change_virtual_background_image","activate_virtual_background_image","deactivate_virtual_background_image"->{
+                virtualBackgroundAction(call,result)
             }
             else -> {
                 result.notImplemented()
@@ -671,6 +679,7 @@ class HmssdkFlutterPlugin :
         hmssdk!!.changeRoleOfPeersWithRoles(toRole = toRole, ofRoles = ofRoles, hmsActionResultListener = HMSCommonAction.getActionListener(result))
     }
 
+    var virtualBackgroundMap: HashMap<String, Any?>? = null
     fun build(activity: Activity, call: MethodCall, result: Result) {
         val dartSDKVersion = call.argument<String>("dart_sdk_version")
         val hmsSDKVersion = call.argument<String>("hmssdk_version")
@@ -680,9 +689,13 @@ class HmssdkFlutterPlugin :
         val hmsTrackSettingMap =
             call.argument<HashMap<String, HashMap<String, Any?>?>?>("hms_track_setting")
 
+
         if (hmsTrackSettingMap != null) {
             val hmsAudioTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["audio_track_setting"]
             val hmsVideoTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["video_track_setting"]
+            if(hmsVideoTrackHashMap!=null && hmsVideoTrackHashMap.containsKey("virtual_background_plugin")){
+                virtualBackgroundMap = hmsVideoTrackHashMap["virtual_background_plugin"] as HashMap<String, Any?>?
+            }
             val hmsTrackSettings = HMSTrackSettingsExtension.setTrackSettings(hmsAudioTrackHashMap, hmsVideoTrackHashMap)
             builder.setTrackSettings(hmsTrackSettings)
         }
@@ -712,6 +725,48 @@ class HmssdkFlutterPlugin :
             metadata!!,
             hmsActionResultListener = HMSCommonAction.getActionListener(result)
         )
+    }
+
+    private fun virtualBackgroundAction(call: MethodCall, result: Result){
+        when (call.method) {
+            "change_virtual_background_image" -> {
+                changeVirtualBackgroundImage(call)
+            }
+
+            "activate_virtual_background_image" -> {
+                activateVirtualBackground()
+            }
+            "deactivate_virtual_background_image" -> {
+                deactivateVirtualBackground()
+            }
+
+            else -> {
+                result.notImplemented()
+            }
+        }
+    }
+    var videoPlugin: HMSVideoPlugin? = null
+    fun vbSetup(plugin: HMSVideoPlugin) {
+        videoPlugin = plugin
+        hmssdk?.addPlugin(videoPlugin!!, HMSCommonAction.getActionListener(null))
+    }
+
+    private fun activateVirtualBackground(){
+        if(videoPlugin!=null) {
+            hmssdk?.addPlugin(videoPlugin!!, HMSCommonAction.getActionListener(null))
+        }
+    }
+
+    private fun deactivateVirtualBackground(){
+        if(videoPlugin!=null) {
+            hmssdk?.removePlugin(videoPlugin!!, HMSCommonAction.getActionListener(null));
+        }
+    }
+
+    private fun changeVirtualBackgroundImage(call: MethodCall){
+        val imageUint: ByteArray? = call.argument<ByteArray?>("background_image")
+        vbImage = BitmapFactory.decodeByteArray(imageUint!!, 0, imageUint.size)
+        activity.sendBroadcast(Intent("virtual_background").putExtra("method_call","changeVB"))
     }
 
     private val hmsUpdateListener = object : HMSUpdateListener {
@@ -747,6 +802,11 @@ class HmssdkFlutterPlugin :
             val roomArgs = HashMap<String, Any?>()
             roomArgs.put("room", HMSRoomExtension.toDictionary(room))
             args.put("data", roomArgs)
+            if(virtualBackgroundMap!=null && virtualBackgroundMap!!.containsKey("background_image")) {
+                var imageUint: ByteArray? = virtualBackgroundMap!!["background_image"] as ByteArray?
+                vbImage = BitmapFactory.decodeByteArray(imageUint!!, 0, imageUint.size)
+                activity.sendBroadcast(Intent("virtual_background").putExtra("method_call","setupVB"))
+            }
             if (roomArgs["room"] != null) {
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)

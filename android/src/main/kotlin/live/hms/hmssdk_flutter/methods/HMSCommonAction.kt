@@ -1,4 +1,5 @@
 package live.hms.hmssdk_flutter
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,16 +24,21 @@ class HMSCommonAction {
             return null
         }
 
-        fun getActionListener(result: Result) = object: HMSActionResultListener {
+        fun getActionListener(result: Result?) = object: HMSActionResultListener {
+
             override fun onError(error: HMSException) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    result.success(HMSExceptionExtension.toDictionary(error))
-                }
+               if(result!=null) {
+                   CoroutineScope(Dispatchers.Main).launch {
+                       result.success(HMSExceptionExtension.toDictionary(error))
+                   }
+               }
             }
 
             override fun onSuccess() {
-                CoroutineScope(Dispatchers.Main).launch {
-                    result.success(null)
+                if(result!=null) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        result.success(null)
+                    }
                 }
             }
         }

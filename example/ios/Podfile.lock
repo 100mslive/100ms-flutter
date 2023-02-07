@@ -190,6 +190,8 @@ PODS:
   - HMSWebRTC (1.0.5113)
   - image_gallery_saver (1.5.0):
     - Flutter
+  - image_picker_ios (0.0.1):
+    - Flutter
   - MTBBarcodeScanner (5.0.11)
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
@@ -248,6 +250,7 @@ DEPENDENCIES:
   - HMSBroadcastExtensionSDK
   - hmssdk_flutter (from `.symlinks/plugins/hmssdk_flutter/ios`)
   - image_gallery_saver (from `.symlinks/plugins/image_gallery_saver/ios`)
+  - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
@@ -314,6 +317,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/hmssdk_flutter/ios"
   image_gallery_saver:
     :path: ".symlinks/plugins/image_gallery_saver/ios"
+  image_picker_ios:
+    :path: ".symlinks/plugins/image_picker_ios/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
@@ -368,6 +373,7 @@ SPEC CHECKSUMS:
   hmssdk_flutter: 8001a65f8ef725e1619d04805e6cdb7ee853289e
   HMSWebRTC: 6bd851709766bf4b28fd89046a65654e86741aed
   image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
+  image_picker_ios: b786a5dcf033a8336a657191401bfdf12017dabb
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e

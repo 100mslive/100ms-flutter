@@ -645,8 +645,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               letterSpacing: 0.25,
                               fontWeight: FontWeight.w600),
                         )),
-                  if (Platform.isIOS &&
-                      context.read<MeetingStore>().isVirtualBackgroundEnable)
+                  if (context.read<MeetingStore>().isVirtualBackgroundEnable)
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
@@ -680,8 +679,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               letterSpacing: 0.25,
                               fontWeight: FontWeight.w600),
                         )),
-                  if (Platform.isIOS &&
-                      context.read<MeetingStore>().isVirtualBackgroundEnable)
+                  if (context.read<MeetingStore>().isVirtualBackgroundEnable)
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {

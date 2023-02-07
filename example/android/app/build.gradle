@@ -70,6 +70,9 @@ flutter {
 dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.firebase:firebase-crashlytics:18.3.2'
+    implementation "live.100ms:virtual-background:2.5.7"
+    implementation "live.100ms:android-sdk:2.5.7"
+
 }
 
 apply plugin: 'com.google.gms.google-services'

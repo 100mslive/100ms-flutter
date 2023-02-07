@@ -1499,27 +1499,20 @@ class MeetingStore extends ChangeNotifier
   }
 
   void activateVirtualBackground() {
-    if (Platform.isIOS) {
-      _hmsSDKInteractor.activateVirtualBackground();
-      isVirtualBackgroundActive = true;
-    }
+    _hmsSDKInteractor.activateVirtualBackground();
+    isVirtualBackgroundActive = true;
   }
 
   void deactivateVirtualBackground() {
-    if (Platform.isIOS) {
-      _hmsSDKInteractor.deactivateVirtualBackground();
-      isVirtualBackgroundActive = false;
-    }
+    _hmsSDKInteractor.deactivateVirtualBackground();
+    isVirtualBackgroundActive = false;
   }
 
   void changeVirtualBackground() async {
-    if (Platform.isIOS) {
-      XFile? result =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (result != null) {
-        final bytes = await result.readAsBytes();
-        _hmsSDKInteractor.changeVirtualBackground(bytes);
-      }
+    XFile? result = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (result != null) {
+      final bytes = await result.readAsBytes();
+      _hmsSDKInteractor.changeVirtualBackground(bytes);
     }
   }
 
