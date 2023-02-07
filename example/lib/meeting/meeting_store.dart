@@ -179,7 +179,7 @@ class MeetingStore extends ChangeNotifier
 
   HMSVideoTrack? currentPIPtrack;
 
-  bool isVirtualBackgroundActive = false;
+  bool isVirtualBackgroundActive = Platform.isAndroid;
 
   bool isVirtualBackgroundEnable = true;
 

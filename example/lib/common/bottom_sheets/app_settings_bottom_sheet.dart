@@ -388,35 +388,34 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               setState(() {})
                             }),
                   ),
-                  if (Platform.isIOS)
-                    ListTile(
-                      horizontalTitleGap: 2,
-                      enabled: true,
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        'assets/icons/virtual_background.svg',
-                        color: themeDefaultColor,
-                      ),
-                      title: Text(
-                        "Virtual Background Enable",
-                        semanticsLabel: "fl_virtual_background_setting",
-                        style: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: themeDefaultColor,
-                            letterSpacing: 0.25,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      trailing: CupertinoSwitch(
-                          activeColor: hmsdefaultColor,
-                          value: isVirutalBackgroundEnable,
-                          onChanged: (value) => {
-                                isVirutalBackgroundEnable = value,
-                                Utilities.saveBoolData(
-                                    key: 'virtual-background-enable',
-                                    value: value),
-                                setState(() {})
-                              }),
+                  ListTile(
+                    horizontalTitleGap: 2,
+                    enabled: true,
+                    contentPadding: EdgeInsets.zero,
+                    leading: SvgPicture.asset(
+                      'assets/icons/virtual_background.svg',
+                      color: themeDefaultColor,
                     ),
+                    title: Text(
+                      "Virtual Background Enable",
+                      semanticsLabel: "fl_virtual_background_setting",
+                      style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: themeDefaultColor,
+                          letterSpacing: 0.25,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    trailing: CupertinoSwitch(
+                        activeColor: hmsdefaultColor,
+                        value: isVirutalBackgroundEnable,
+                        onChanged: (value) => {
+                              isVirutalBackgroundEnable = value,
+                              Utilities.saveBoolData(
+                                  key: 'virtual-background-enable',
+                                  value: value),
+                              setState(() {})
+                            }),
+                  ),
                   ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
