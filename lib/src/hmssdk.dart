@@ -1293,7 +1293,7 @@ class HMSSDK {
   /// Change Virtual Background Image [iOS only]
   ///
   /// Refer [Virtual Background guide here]("")
-  changeVirtualBackgroundImage(Uint8List? image) {
+  changeVirtualBackgroundImage(Uint8List image) {
     PlatformService.invokeMethod(PlatformMethod.changeVirtualBackgroundImage,
         arguments: {"background_image": image});
   }
