@@ -8,17 +8,20 @@ class LocalPeerTileDialog extends StatefulWidget {
   final String peerName;
   final bool isAudioMode;
   final bool roles;
+  final bool? isCaptureSnapshot;
   final Function() toggleCamera;
   final Function() changeName;
   final Function() changeRole;
-  const LocalPeerTileDialog({
-    required this.isAudioMode,
-    required this.toggleCamera,
-    required this.peerName,
-    required this.changeRole,
-    required this.roles,
-    required this.changeName,
-  });
+  final Function()? captureSnapshot;
+  const LocalPeerTileDialog(
+      {required this.isAudioMode,
+      required this.toggleCamera,
+      required this.peerName,
+      required this.changeRole,
+      required this.roles,
+      required this.changeName,
+      this.captureSnapshot,
+      this.isCaptureSnapshot});
 
   @override
   _LocalPeerTileDialogState createState() => _LocalPeerTileDialogState();
@@ -105,6 +108,27 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                       ),
                       Text(
                         "Change Role",
+                        style: GoogleFonts.inter(color: iconColor),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            if (widget.isCaptureSnapshot != null && widget.isCaptureSnapshot!)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: GestureDetector(
+                  onTap: () {
+                    widget.captureSnapshot!();
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.camera_alt),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      Text(
+                        "Capture Snapshot",
                         style: GoogleFonts.inter(color: iconColor),
                       )
                     ],

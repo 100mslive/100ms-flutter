@@ -4,6 +4,7 @@ import HMSSDK
 import ReplayKit
 import AVKit
 import MediaPlayer
+import SwiftUI
 
 public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener, FlutterStreamHandler, HMSPreviewListener, HMSLogger {
 
@@ -55,8 +56,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 meetingEventChannel: FlutterEventChannel,
                 previewEventChannel: FlutterEventChannel,
                 logsEventChannel: FlutterEventChannel,
-                rtcStatsEventChannel: FlutterEventChannel
-    ) {
+                rtcStatsEventChannel: FlutterEventChannel) {
 
         self.channel = channel
         self.meetingEventChannel = meetingEventChannel
@@ -89,31 +89,31 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     public func onCancel(withArguments arguments: Any?) -> FlutterError? {
-        eventSink = nil
-        previewSink = nil
-        logsSink = nil
-        rtcSink = nil
         return nil
     }
 
     public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
         if meetingEventChannel != nil {
             meetingEventChannel!.setStreamHandler(nil)
+            eventSink = nil
         } else {
-           print("meetingEventChannel not found", #function)
+            print("meetingEventChannel not found", #function)
         }
         if previewEventChannel != nil {
             previewEventChannel!.setStreamHandler(nil)
+            previewSink = nil
         } else {
             print("previewEventChannel not found", #function)
         }
         if logsEventChannel != nil {
             logsEventChannel!.setStreamHandler(nil)
+            logsSink = nil
         } else {
             print("logsEventChannel not found", #function)
         }
         if rtcStatsEventChannel != nil {
             rtcStatsEventChannel!.setStreamHandler(nil)
+            rtcSink = nil
         } else {
             print("rtcStatsEventChannel not found", #function)
         }
@@ -198,6 +198,16 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "set_simulcast_layer", "get_layer", "get_layer_definition":
             HMSRemoteVideoTrackExtension.remoteVideoTrackActions(call, result, hmsSDK!)
+
+        case "setup_pip", "start_pip", "stop_pip", "is_pip_available", "is_pip_active", "change_track_pip", "change_text_pip", "destroy_pip":
+            guard #available(iOS 15.0, *) else {
+                print(#function, HMSErrorExtension.getError("iOS 15 or above is required"))
+                        result(HMSErrorExtension.getError("iOS 15 or above is required"))
+                        return }
+            HMSPIPAction.pipAction(call, result, hmsSDK, self)
+
+        case "capture_snapshot":
+            captureSnapshot(call, result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -550,6 +560,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
+                if #available(iOS 15.0, *) {
+                    if HMSPIPAction.pipController != nil {
+                        HMSPIPAction.disposePIP(nil)
+                    }
+                }
                 result(nil)
             }
         }
@@ -595,14 +610,17 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     private func acceptChangeRole(_ result: @escaping FlutterResult) {
-
-        hmsSDK?.accept(changeRole: roleChangeRequest!) { [weak self] _, error in
-            if let error = error {
-                result(HMSErrorExtension.toDictionary(error))
-            } else {
-                self?.roleChangeRequest = nil
-                result(nil)
+        if let request = roleChangeRequest {
+            hmsSDK?.accept(changeRole: request) { [weak self] _, error in
+                if let error = error {
+                    result(HMSErrorExtension.toDictionary(error))
+                } else {
+                    self?.roleChangeRequest = nil
+                    result(nil)
+                }
             }
+        } else {
+            result(HMSErrorExtension.getError("Role Change Request is Expired."))
         }
     }
 
@@ -819,7 +837,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         hmsSDK?.getSessionMetadata(completion: { metadata, _ in
             if let metadata = metadata {
                 let data = [
-                        "event_name": "session_metadata",
+                    "event_name": "session_metadata",
                     "data": [
                         "metadata": metadata
                     ]
@@ -883,6 +901,17 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result(HMSErrorExtension.getError("Could not set isPlaybackAllowed for track in \(#function)"))
     }
 
+    private func captureSnapshot(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        let arguments = call.arguments as! [AnyHashable: Any]
+
+        guard let trackID = arguments["track_id"] as? String
+        else {
+            result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
+            return
+        }
+        NotificationCenter.default.post(name: NSNotification.Name(trackID), object: nil, userInfo: ["result": result])
+    }
+
     // MARK: - 100ms SDK Delegate Callbacks
 
     public func onPreview(room: HMSRoom, localTracks: [HMSTrack]) {
@@ -897,16 +926,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "local_tracks": tracks
             ]
         ] as [String: Any]
-
+        previewEnded = false
         previewSink?(data)
     }
-
+    var previewEnded = false
     public func on(join room: HMSRoom) {
-        if previewEventChannel != nil {
-            previewEventChannel!.setStreamHandler(nil)
-        } else {
-            print("previewEventChannel not found", #function)
-        }
+        previewEnded = true
         let data = [
             "event_name": "on_join_room",
             "data": [
@@ -925,9 +950,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "update": HMSRoomExtension.getValueOf(update)
             ]
         ] as [String: Any]
-
-        previewSink?(data)
-        eventSink?(data)
+        if previewEnded {
+            eventSink?(data)
+        } else {
+            previewSink?(data)
+        }
     }
 
     public func on(peer: HMSPeer, update: HMSPeerUpdate) {
@@ -942,8 +969,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
-        previewSink?(data)
-        eventSink?(data)
+        if previewEnded {
+            eventSink?(data)
+        } else {
+            previewSink?(data)
+        }
     }
 
     public func on(track: HMSTrack, update: HMSTrackUpdate, for peer: HMSPeer) {
@@ -1040,6 +1070,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
+        if #available(iOS 15.0, *) {
+            if HMSPIPAction.pipController != nil {
+                HMSPIPAction.disposePIP(nil)
+            }
+        }
         eventSink?(data)
     }
 

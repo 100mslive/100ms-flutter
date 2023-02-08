@@ -11,8 +11,6 @@
 
 # 100ms Flutter SDK 🎉
 
-Here you will find everything you need to build experiences with video using 100ms Flutter Package. Dive into our SDKs, Quickstart Guides, add Real-Time Video, Voice, Live Streaming to your mobile applications.
-
 📖 Read the Complete Documentation here: https://www.100ms.live/docs/flutter/v2/guides/quickstart
 
 📲 Download the Sample iOS app here: <https://testflight.apple.com/join/Uhzebmut>

@@ -11,15 +11,15 @@ import HMSSDK
 class  HMSPeerExtension {
 
     static func toDictionary(_ peer: HMSPeer) -> [String: Any] {
-
+        
         var dict = [
             "peer_id": peer.peerID,
             "name": peer.name,
             "is_local": peer.isLocal,
             "customer_description": peer.metadata ?? "",
             "customer_user_id": peer.customerUserID ?? "",
-            "joined_at": "\(peer.joinedAt)",
-            "updated_at": "\(peer.updatedAt)"
+            "joined_at": HMSUtilitiesExtension.toLocalDate(peer.joinedAt),
+            "updated_at": HMSUtilitiesExtension.toLocalDate(peer.updatedAt),
         ] as [String: Any]
 
         if let metadata = peer.metadata {

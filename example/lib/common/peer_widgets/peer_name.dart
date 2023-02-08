@@ -22,7 +22,7 @@ class _PeerNameState extends State<PeerName> {
         builder: (_, data, __) {
           return Container(
             constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.4),
+                maxWidth: MediaQuery.of(context).size.width * 0.3),
             child: Text(
               "${data.item2 ? "You (" : ""}${data.item1.trim()}${data.item2 ? ")" : ""}",
               maxLines: 1,

@@ -60,7 +60,6 @@ class HmssdkFlutterPlugin :
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
-
     companion object {
         var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
     }
@@ -187,6 +186,9 @@ class HmssdkFlutterPlugin :
             }
             "set_simulcast_layer", "get_layer", "get_layer_definition" -> {
                 HMSRemoteVideoTrackAction.remoteVideoTrackActions(call, result, hmssdk!!)
+            }
+            "capture_snapshot" -> {
+                captureSnapshot(call, result)
             }
             else -> {
                 result.notImplemented()
@@ -355,6 +357,10 @@ class HmssdkFlutterPlugin :
             previewChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Preview channel not found")
             logsEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Logs event channel not found")
             rtcStatsChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "RTC Stats channel not found")
+            eventSink = null
+            previewSink = null
+            rtcSink = null
+            logsSink = null
             hmssdkFlutterPlugin = null
         } else {
             Log.e("Plugin Error", "hmssdkFlutterPlugin is null in onDetachedFromEngine")
@@ -456,9 +462,7 @@ class HmssdkFlutterPlugin :
         }
     }
 
-    override fun onCancel(arguments: Any?) {
-        this.eventSink = null
-    }
+    override fun onCancel(arguments: Any?) {}
 
     fun getPeerById(id: String): HMSPeer? {
         if (id == "") return getLocalPeer()
@@ -538,11 +542,23 @@ class HmssdkFlutterPlugin :
     }
 
     private fun acceptChangeRole(result: Result) {
-        hmssdk!!.acceptChangeRole(
-            this.requestChange!!,
-            hmsActionResultListener = HMSCommonAction.getActionListener(result)
-        )
-        requestChange = null
+        if (requestChange != null) {
+            hmssdk!!.acceptChangeRole(
+                this.requestChange!!,
+                hmsActionResultListener = HMSCommonAction.getActionListener(result)
+            )
+            requestChange = null
+        } else {
+            val hmsException = HMSException(
+                action = "Resend Role Change Request",
+                code = 6004,
+                description = "Role Change Request is Expired.",
+                message = "Role Change Request is Expired.",
+                name = "Role Change Request Error"
+            )
+            val args = HMSExceptionExtension.toDictionary(hmsException)
+            result.success(args)
+        }
     }
 
     var hmsAudioListener = object : HMSAudioListener {
@@ -724,9 +740,7 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onJoin(room: HMSRoom) {
-//            hasJoined = true
             hmssdk!!.addAudioObserver(hmsAudioListener)
-            previewChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Preview channel not found")
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_join_room")
 
@@ -1047,6 +1061,15 @@ class HmssdkFlutterPlugin :
         val trackId: String? = call.argument<String>("track_id")
         val peer: HMSPeer? = getPeerById(peerId!!)
         result.success(HMSTrackExtension.toDictionary(peer?.getTrackById(trackId!!)))
+    }
+
+    var hmsVideoViewResult: Result? = null
+    private fun captureSnapshot(call: MethodCall, result: Result) {
+        val trackId: String? = call.argument<String>("track_id")
+        if (trackId != null) {
+            hmsVideoViewResult = result
+            activity.sendBroadcast(Intent(trackId).putExtra("method_name", "CAPTURE_SNAPSHOT"))
+        }
     }
 
     private fun setPlaybackAllowedForTrack(call: MethodCall, result: Result) {

@@ -1,10 +1,11 @@
 import 'dart:io';
 
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/app_dialogs/stats_for_nerds.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/notification_settings_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/participants_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/service/constant.dart';
@@ -106,16 +107,20 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Badge(
-                                badgeColor: hmsdefaultColor,
+                              badge.Badge(
+                                badgeStyle: badge.BadgeStyle(
+                                    badgeColor: hmsdefaultColor),
                                 badgeContent: Text(context
                                     .read<MeetingStore>()
                                     .peers
                                     .length
                                     .toString()),
-                                child: SvgPicture.asset(
-                                  "assets/icons/participants.svg",
-                                  color: themeDefaultColor,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SvgPicture.asset(
+                                    "assets/icons/participants.svg",
+                                    color: themeDefaultColor,
+                                  ),
                                 ),
                               ),
                               SizedBox(height: 10),
@@ -321,8 +326,15 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                   ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                        _meetingStore.changeStatsVisible();
                         Navigator.pop(context);
+                        showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (_) => ListenableProvider.value(
+                                value: _meetingStore,
+                                child: StatsForNerds(
+                                  peerTrackNode: _meetingStore.peerTracks,
+                                )));
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
@@ -331,7 +343,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         color: themeDefaultColor,
                       ),
                       title: Text(
-                        "${_meetingStore.isStatsVisible ? "Hide" : "Show"} Stats",
+                        "Stats for nerds",
                         semanticsLabel: "fl_stats_list_tile",
                         style: GoogleFonts.inter(
                             fontSize: 14,
@@ -420,8 +432,13 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                   if (urls != null) {
                                     _meetingStore.startRtmpOrRecording(
                                         meetingUrl: Constant.streamingUrl,
-                                        toRecord: false,
+                                        toRecord: data["toRecord"] ?? false,
                                         rtmpUrls: urls);
+                                  } else if (data["toRecord"] ?? false) {
+                                    _meetingStore.startRtmpOrRecording(
+                                        meetingUrl: Constant.streamingUrl,
+                                        toRecord: data["toRecord"] ?? false,
+                                        rtmpUrls: null);
                                   }
                                 }
                               },
@@ -611,7 +628,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         horizontalTitleGap: 2,
                         onTap: () async {
                           Navigator.pop(context);
-                          context.read<MeetingStore>().enterPipMode();
+                          context.read<MeetingStore>().enterPipModeOnAndroid();
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(

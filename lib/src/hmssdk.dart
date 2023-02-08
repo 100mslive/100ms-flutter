@@ -1236,13 +1236,14 @@ class HMSSDK {
   ///
   ///**Parameters**:
   ///
-  ///**aspectRatio** - Ratio for PIP window
+  ///**aspectRatio** - Ratio for PIP window,List of int indicating ratio for PIP window as [width,height]
   ///
   ///**autoEnterPip** - Enable [autoEnterPip] will start pip mode automatically when app minimized.
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   ///
   ///`Note: Minimum version required to support PiP is Android 8.0 (API level 26)`
+  @Deprecated('use [HMSPIPAndroidController] class')
   Future<bool> enterPipMode(
       {List<int>? aspectRatio, bool? autoEnterPip}) async {
     final bool? result = await PlatformService.invokeMethod(
@@ -1257,6 +1258,7 @@ class HMSSDK {
   ///Method to check whether pip mode is active currently
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
+  @Deprecated('use [HMSPIPAndroidController] class')
   Future<bool> isPipActive() async {
     final bool? result =
         await PlatformService.invokeMethod(PlatformMethod.isPipActive);
@@ -1266,6 +1268,7 @@ class HMSSDK {
   ///Method to check whether pip mode is available for the current device
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
+  @Deprecated('use [HMSPIPAndroidController] class')
   Future<bool> isPipAvailable() async {
     final bool? result =
         await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -242,9 +242,11 @@ class _PreviewPageState extends State<PreviewPage> {
                                       SizedBox(
                                         width: 10,
                                       ),
-                                      Badge(
-                                        animationType: BadgeAnimationType.fade,
-                                        badgeColor: hmsdefaultColor,
+                                      badge.Badge(
+                                        badgeAnimation:
+                                            badge.BadgeAnimation.fade(),
+                                        badgeStyle: badge.BadgeStyle(
+                                            badgeColor: hmsdefaultColor),
                                         badgeContent: Text(
                                             "${_previewStore.peerCount.toString()}"),
                                         child: HMSEmbeddedButton(
@@ -442,7 +444,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                       value: _meetingStore,
                                                       child: ScreenController(
                                                         streamUrl: _previewStore
-                                                                .isStreamingStarted
+                                                                .isHLSStreamingStarted
                                                             ? _previewStore
                                                                 .room
                                                                 ?.hmshlsStreamingState
