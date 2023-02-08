@@ -766,7 +766,7 @@ class HmssdkFlutterPlugin :
     private fun changeVirtualBackgroundImage(call: MethodCall){
         val imageUint: ByteArray? = call.argument<ByteArray?>("background_image")
         vbImage = BitmapFactory.decodeByteArray(imageUint!!, 0, imageUint.size)
-        activity.sendBroadcast(Intent("virtual_background").putExtra("method_call","changeVB"))
+        activity.sendBroadcast(Intent(Constants.VIRTUAL_BACKGROUND).putExtra(Constants.METHOD_CALL,Constants.CHANGE_VIRTUAL_BACKGROUND))
     }
 
     private val hmsUpdateListener = object : HMSUpdateListener {
@@ -805,7 +805,7 @@ class HmssdkFlutterPlugin :
             if(virtualBackgroundMap!=null && virtualBackgroundMap!!.containsKey("background_image")) {
                 var imageUint: ByteArray? = virtualBackgroundMap!!["background_image"] as ByteArray?
                 vbImage = BitmapFactory.decodeByteArray(imageUint!!, 0, imageUint.size)
-                activity.sendBroadcast(Intent("virtual_background").putExtra("method_call","setupVB"))
+                activity.sendBroadcast(Intent(Constants.VIRTUAL_BACKGROUND).putExtra(Constants.METHOD_CALL,Constants.SETUP_VIRTUAL_BACKGROUND))
             }
             if (roomArgs["room"] != null) {
                 CoroutineScope(Dispatchers.Main).launch {
