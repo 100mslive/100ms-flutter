@@ -138,7 +138,6 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                       showDialog(
                           context: context,
                           builder: (_) => AspectRatioOptionDialog(
-                          key:  GlobalKey<ScaffoldState>(),
                                 availableAspectRatios: [
                                   "16:9",
                                   "4:3",
