@@ -138,20 +138,14 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                       showDialog(
                           context: context,
                           builder: (_) => AspectRatioOptionDialog(
-                                  availableAspectRatios: [
-                                    "16:9",
-                                    "4:3",
-                                    "1:1",
-                                    "3:4",
-                                    "9:16"
-                                  ],
-                                  setAspectRatio: (double aspectRatio) {
-                                    context
-                                        .read<MeetingStore>()
-                                        .setPIPVideoController(true,
-                                            aspectRatio: aspectRatio);
-                                    Navigator.pop(context);
-                                  }));
+                                availableAspectRatios: [
+                                  "16:9",
+                                  "4:3",
+                                  "1:1",
+                                  "3:4",
+                                  "9:16"
+                                ],
+                          meetingStore: context.read<MeetingStore>(),));
                     },
                     child: Container(
                       decoration: BoxDecoration(
