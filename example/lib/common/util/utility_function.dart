@@ -99,10 +99,6 @@ class Utilities {
     while ((await Permission.bluetoothConnect.isDenied)) {
       await Permission.bluetoothConnect.request();
     }
-    // storage permission is required to save Snapshot to device gallery.
-    while ((await Permission.storage.isDenied)) {
-      await Permission.storage.request();
-    }
     return true;
   }
 
