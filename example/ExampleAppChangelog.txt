@@ -5,4 +5,4 @@
 
 Flutter SDK: 1.4.0
 Android SDK: 2.5.7
-iOS SDK: 0.6.2
+iOS SDK: 0.6.3
