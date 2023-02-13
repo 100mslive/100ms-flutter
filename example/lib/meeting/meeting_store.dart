@@ -50,7 +50,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isHLSLoading = false;
 
-  String streamUrl = "";
+  String? streamUrl;
 
   bool isHLSLink = false;
 
@@ -457,7 +457,7 @@ class MeetingStore extends ChangeNotifier
     hmsRoom = room;
     if (room.hmshlsStreamingState?.running ?? false) {
       hasHlsStarted = true;
-      streamUrl = room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? "";
+      streamUrl = room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl;
     } else {
       hasHlsStarted = false;
     }
@@ -549,8 +549,8 @@ class MeetingStore extends ChangeNotifier
         streamingType["hls"] = room.hmshlsStreamingState?.running ?? false;
         hasHlsStarted = room.hmshlsStreamingState?.running ?? false;
         streamUrl = hasHlsStarted
-            ? room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl ?? ""
-            : "";
+            ? room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl
+            : null;
         Utilities.showToast(room.hmshlsStreamingState?.running ?? false
             ? "HLS Streaming Started"
             : "HLS Streaming Stopped");
@@ -1422,7 +1422,8 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  void setPIPVideoController(bool reinitialise, {double? aspectRatio}) {
+  void setPIPVideoController(bool reinitialise,
+      {double? aspectRatio, String? hlsStreamUrl}) {
     if (hlsVideoController != null) {
       hlsVideoController!.dispose(forceDispose: true);
       hlsVideoController = null;
@@ -1464,8 +1465,13 @@ class MeetingStore extends ChangeNotifier
                 enableOverflowMenu: false,
                 enableSkips: false,
                 playerTheme: PipFlutterPlayerTheme.cupertino));
+
+    if (streamUrl == null && hlsStreamUrl == null) {
+      Utilities.showToast("Stream URL is null",time: 5);
+    }
     PipFlutterPlayerDataSource dataSource = PipFlutterPlayerDataSource(
-        PipFlutterPlayerDataSourceType.network, streamUrl,
+        PipFlutterPlayerDataSourceType.network,
+        ((streamUrl == null) ? hlsStreamUrl : streamUrl) ?? "",
         liveStream: true);
     hlsVideoController =
         PipFlutterPlayerController(pipFlutterPlayerConfiguration);
