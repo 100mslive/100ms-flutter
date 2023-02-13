@@ -50,26 +50,26 @@ PODS:
   - Firebase/Performance (10.3.0):
     - Firebase/CoreOnly
     - FirebasePerformance (~> 10.3.0)
-  - firebase_analytics (10.1.0):
+  - firebase_analytics (10.1.1):
     - Firebase/Analytics (= 10.3.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.4.1):
+  - firebase_core (2.5.0):
     - Firebase/CoreOnly (= 10.3.0)
     - Flutter
-  - firebase_crashlytics (3.0.11):
+  - firebase_crashlytics (3.0.12):
     - Firebase/Crashlytics (= 10.3.0)
     - firebase_core
     - Flutter
-  - firebase_dynamic_links (5.0.11):
+  - firebase_dynamic_links (5.0.12):
     - Firebase/DynamicLinks (= 10.3.0)
     - firebase_core
     - Flutter
-  - firebase_performance (0.9.0-10):
+  - firebase_performance (0.9.0-11):
     - Firebase/Performance (= 10.3.0)
     - firebase_core
     - Flutter
-  - FirebaseABTesting (10.4.0):
+  - FirebaseABTesting (10.5.0):
     - FirebaseCore (~> 10.0)
   - FirebaseAnalytics (10.3.0):
     - FirebaseAnalytics/AdIdSupport (= 10.3.0)
@@ -93,7 +93,7 @@ PODS:
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/Logger (~> 7.8)
-  - FirebaseCoreInternal (10.4.0):
+  - FirebaseCoreInternal (10.5.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
   - FirebaseCrashlytics (10.3.0):
     - FirebaseCore (~> 10.0)
@@ -104,7 +104,7 @@ PODS:
     - PromisesObjC (~> 2.1)
   - FirebaseDynamicLinks (10.3.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseInstallations (10.4.0):
+  - FirebaseInstallations (10.5.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
@@ -118,7 +118,7 @@ PODS:
     - GoogleUtilities/ISASwizzler (~> 7.8)
     - GoogleUtilities/MethodSwizzler (~> 7.8)
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - FirebaseRemoteConfig (10.4.0):
+  - FirebaseRemoteConfig (10.5.0):
     - FirebaseABTesting (~> 10.0)
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
@@ -181,12 +181,12 @@ PODS:
     - GCDWebServer (~> 3.5)
     - PINCache (>= 3.0.1-beta.3)
   - HMSBroadcastExtensionSDK (0.0.7)
-  - HMSSDK (0.6.2):
+  - HMSSDK (0.6.3):
     - HMSWebRTC (= 1.0.5113)
   - hmssdk_flutter (1.4.0):
     - Flutter
     - HMSBroadcastExtensionSDK (= 0.0.7)
-    - HMSSDK (= 0.6.2)
+    - HMSSDK (= 0.6.3)
   - HMSWebRTC (1.0.5113)
   - image_gallery_saver (1.5.0):
     - Flutter
@@ -219,9 +219,9 @@ PODS:
   - qr_code_scanner (0.2.0):
     - Flutter
     - MTBBarcodeScanner
-  - SDWebImage (5.15.0):
-    - SDWebImage/Core (= 5.15.0)
-  - SDWebImage/Core (5.15.0)
+  - SDWebImage (5.15.2):
+    - SDWebImage/Core (= 5.15.2)
+  - SDWebImage/Core (5.15.2)
   - share_plus (0.0.1):
     - Flutter
   - shared_preferences_ios (0.0.1):
@@ -341,20 +341,20 @@ SPEC CHECKSUMS:
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: ce3938a0df3cc1ef404671531facef740d03f920
   Firebase: f92fc551ead69c94168d36c2b26188263860acd9
-  firebase_analytics: 9f3a4cb560a59976b2c48707abae2d4cb94bcb3a
-  firebase_core: bf59c32d2e53814f558efa20840c1902fa2fe461
-  firebase_crashlytics: b19405931669c882e0d08542e69ae9e86633c636
-  firebase_dynamic_links: e5ca49679928f5d46e2db5168656975eae39d379
-  firebase_performance: 7746e15bd685debbfcb5e862b2ec720ba8f13979
-  FirebaseABTesting: ae3b32fe26e761fd54c68e37a632a0097b599c87
+  firebase_analytics: dac6569da61142e7148697efb8ace6bd37fe771d
+  firebase_core: f95c8bbe65213d406d592573ad42a12d64849cb8
+  firebase_crashlytics: 5d22873d5e7f8b807d1a787ed1cab903f1d83e5a
+  firebase_dynamic_links: e54ad1b1b2e5eb156d3a9df7373b68feef7293b3
+  firebase_performance: 456a6bbbca55888ed32b9d0dcd7f96738fe56f0d
+  FirebaseABTesting: 8cb5cc4e395c8dce8a2820a6a329020ead56fe2f
   FirebaseAnalytics: 036232b6a1e2918e5f67572417be1173576245f3
   FirebaseCore: 988754646ab3bd4bdcb740f1bfe26b9f6c0d5f2a
-  FirebaseCoreInternal: e301297f4c15a17489e48ed722d733b1578e0c02
+  FirebaseCoreInternal: e463f41bb935cd049505bf7e9a5bdd7dcea90df6
   FirebaseCrashlytics: f20d956f8229010b645e534693c39e0b7843c268
   FirebaseDynamicLinks: 51c81d07bd63155bb56d76b0abdda79c8a3d8d02
-  FirebaseInstallations: 36b38c733fd37e50857e5e8d74138648f466f18c
+  FirebaseInstallations: 935bc4abb6f7a035cab7a0c31cb777b2be3dd254
   FirebasePerformance: 8f1c8e5a4fcc5a68400835518ee63a6d63dbff0c
-  FirebaseRemoteConfig: bf23f54161ebad4fb4acb1ac44ad7783a784f3ab
+  FirebaseRemoteConfig: acc04f51d74adfd9d5439d32126e01b520983737
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_foreground_task: 21ef182ab0a29a3005cc72cd70e5f45cb7f7f817
   fluttertoast: eb263d302cc92e04176c053d2385237e9f43fad0
@@ -364,8 +364,8 @@ SPEC CHECKSUMS:
   GoogleUtilities: c2bdc4cf2ce786c4d2e6b3bcfd599a25ca78f06f
   HLSCachingReverseProxyServer: 59935e1e0244ad7f3375d75b5ef46e8eb26ab181
   HMSBroadcastExtensionSDK: d22df4b2c22843efe4a1779478889076db8eaabd
-  HMSSDK: c995b000287512ae30cba17605f5dd0cec7cd994
-  hmssdk_flutter: 8001a65f8ef725e1619d04805e6cdb7ee853289e
+  HMSSDK: bf4375d20b228caf3bd261e04d2807793b2d1d00
+  hmssdk_flutter: f91fc37d7bcda00c201868ef3888fd05df83b452
   HMSWebRTC: 6bd851709766bf4b28fd89046a65654e86741aed
   image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
@@ -378,13 +378,13 @@ SPEC CHECKSUMS:
   pip_flutter: ab714aa0773b07b3e8c41a5ab314c8e22fd53c25
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
-  SDWebImage: 9bec4c5cdd9579e1f57104735ee0c37df274d593
+  SDWebImage: 8ab87d4b3e5cc4927bd47f78db6ceb0b94442577
   share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
-  url_launcher_ios: ae1517e5e344f5544fb090b079e11f399dfbe4d2
+  url_launcher_ios: fb12c43172927bb5cf75aeebd073f883801f1993
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
 
 PODFILE CHECKSUM: a4e0ce5440474afffb268291c564e1deff633820
