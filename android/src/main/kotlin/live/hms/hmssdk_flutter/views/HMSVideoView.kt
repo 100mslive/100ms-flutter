@@ -108,15 +108,8 @@ class HMSVideoView(
         super.onDetachedFromWindow()
         if (hmsVideoView != null) {
             hmsVideoView?.removeTrack()
-            hmsVideoView = null
         } else {
-            Log.e("HMSVideoView error", "onDetachedFromWindow error hmsVideoView is null")
-        }
-        if(view != null){
-            this.removeView(view)
-            view = null
-        } else{
-            Log.e("HMSVideoView error", "onDetachedFromWindow error view is null")
+            Log.i("HMSVideoView error", "onDetachedFromWindow error hmsVideoView is null")
         }
     }
 }
