@@ -1,43 +1,43 @@
+# HMSSDK Example App 🚀
+
 <a href="https://100ms.live/">
 <p align="center">
 <img src="https://user-images.githubusercontent.com/93931528/215852257-01264905-edd4-477f-8672-bb3e0287202a.svg" title="100ms logo" float=center height=150 >
 </p>
 </a>
 
-## HMSSDK Sample App 🚀
-
 Clone the Example app provided in the repo [here](https://github.com/100mslive/100ms-flutter/tree/main).
 
-The *"example"* folder contains code relevant to the Example app.
+The _"example"_ folder contains code relevant to the Example app.
 
 The Example application contains the implementation of all the features provided by `HMSSDK` some of which are listed below
 
-* 🙏 Join a room
-* 🎞 Join with a preview
-* 👋 Leave room
-* 🙊 Mute/Unmute local audio
-* 🙈 Mute/Unmute local video
-* 🖖 Mute Audio/Video for other roles and peers
-* 🎞 Display video tracks
-* 🔁 Change role
-* 📨 Chat messaging
-* 📲 Screen share
-* 🎶 Audio share
-* 🔊 Audio output routing
-* 🙋‍♂️ Hand Raise
-* 🏃‍♀️ BRB(Be Right Back sign)
-* ❌ Remove Peer
-* 📡 HLS Streaming
-* 📱 PIP Mode
-* And many more...
-
+- 🙏 Join a room
+- 🎞 Join with a preview
+- 👋 Leave room
+- 🙊 Mute/Unmute local audio
+- 🙈 Mute/Unmute local video
+- 🖖 Mute Audio/Video for other roles and peers
+- 🎞 Display video tracks
+- 🔁 Change role
+- 📨 Chat messaging
+- 📲 Screen share
+- 🎶 Audio share
+- 🔊 Audio output routing
+- 🙋‍♂️ Hand Raise
+- 🏃‍♀️ BRB(Be Right Back sign)
+- ❌ Remove Peer
+- 📡 HLS Streaming
+- 📱 PIP Mode
+- And many more...
 
 ## Sample app architecture
+
 The sample app uses a provider as its state management library. We have created separate `changeNotifier` classes namely:
 
-* PreviewStore for Preview
-* MeetingStore for Meeting room
-* PeerTrackNode for individual peers
+- PreviewStore for Preview
+- MeetingStore for Meeting room
+- PeerTrackNode for individual peers
 
 ### PreviewStore
 
@@ -60,7 +60,7 @@ class MeetingStore extends ChangeNotifier
 
 ### PeerTrackNode
 
-PeerTrackNode acts as a data store for each peer. One peerTrackNode object contains info about one peer. We are using this 
+PeerTrackNode acts as a data store for each peer. One peerTrackNode object contains info about one peer. We are using this
 so that the update related to a peer is not transmitted to other peers. It contains info about peers, track, on-screen status etc.
 
 ```dart
@@ -171,10 +171,10 @@ hmsSDK.build();
 
 How this is done in the example app can be found [here](https://github.com/100mslive/100ms-flutter/blob/main/example/lib/hms_sdk_interactor.dart)
 
-
 Let's dive deeper into each feature and its implementation.
 
-#### 1. Join a room
+### 1. Join a room
+
 `HMSSDK` provides a join room method to join the room.` join` method requires `HMSConfig` as a parameter used while joining the room.
 Before calling the join method it's recommended to attach the `HMSUpdateListener` So that once the join is successful we can get the callbacks.`HMSUpdateListener` can be attached as follows:
 
@@ -209,7 +209,7 @@ We need to pass the `HMSConfig` object to the join method while joining the room
 If the join is successful we will get an `onJoin` callback and in case of an error, we will get an `onHMSError` callback. So the UI can be handled accordingly.
 
 Let's understand `onJoin` method and what is expected to be done in this callback.
-So,`onJoin` callback contains the `HMSRoom` object which can be used to get the recording/streaming state of the room along with the list of peers in the room. The `HMSRoom` object has the following info: 
+So,`onJoin` callback contains the `HMSRoom` object which can be used to get the recording/streaming state of the room along with the list of peers in the room. The `HMSRoom` object has the following info:
 
 ```dart
 class HMSRoom {
@@ -234,7 +234,7 @@ class HMSRoom {
 
 We can extract the peers from the `peers` list and set it accordingly. More information about how this should be handled can be found in `onJoin` method [here](https://github.com/100mslive/100ms-flutter/blob/main/example/lib/data_store/meeting_store.dart)
 
-#### 2. Join a room with a preview
+### 2. Join a room with a preview
 
 In some use cases, it is required to show a preview before joining the room so that the user can set the camera, audio device, microphone etc.
 HMSSDK provides a `preview` method that can be called before `join`. With a preview included the subsequent join request becomes faster.
@@ -248,28 +248,29 @@ After attaching `HMSPreviewListener` we are good to call the `preview` method.
 ```dart
 HMSSDK.preview(config: config);
 ```
+
 Similar to `onJoin` here we have `onPreview` callback which gets called when the `preview` gets succeeded and `onHMSError` in case the `preview` fails.
 
 After preview `join` method can be called similar to the steps mentioned above in [1](#1-join-a-room).
 
-#### 3. Leave Room
+### 3. Leave Room
 
-`HMSSDK` provides `leave` the method to leave the room. `leave` method has an optional parameter `HMSActionResultListener` which provides callbacks as `onSuccess` for successful execution and 
+`HMSSDK` provides `leave` the method to leave the room. `leave` method has an optional parameter `HMSActionResultListener` which provides callbacks as `onSuccess` for successful execution and
 `onException` in case of error.
 More info on `HMSActionResultListener` can be found [here](https://www.100ms.live/docs/flutter/v2/features/action-result-listeners)
 
 `leave` method can be called as :
 
 ```dart
-//`this` is used here since MeetingStore already implements 
+//`this` is used here since MeetingStore already implements
 //HMSActionResultListener
 HMSSDK.leave(hmsActionResultListener:this);
 ```
 
 We will get an `onSuccess` callback if `leave` is successful so that we can perform the complete cleanup of resources and `onException` in case of an error.
 
-#### 4. Mute/Unmute local audio
- 
+### 4. Mute/Unmute local audio
+
 Audio mute/unmute can be performed using `switchAudio` method
 of `HMSSDK`
 
@@ -278,7 +279,7 @@ of `HMSSDK`
 HMSSDK.switchAudio(isOn: isOn);
 ```
 
-#### 5. Mute/Unmute local video
+### 5. Mute/Unmute local video
 
 Video mute/unmute can be performed using `switchVideo` method
 of `HMSSDK`
@@ -288,9 +289,10 @@ of `HMSSDK`
 HMSSDK.switchVideo(isOn: isOn);
 ```
 
-#### 6. Mute Audio/Video for other roles and peers
+### 6. Mute Audio/Video for other roles and peers
 
 `HMSSDK` provides dedicated methods to mute/unmute:
+
 - Individual peer
 - Specific role
 
@@ -319,6 +321,7 @@ HMSSDK.changeTrackState(
         mute: mute,
         hmsActionResultListener: this);
 ```
+
 If the `changeTrackState` method is successful we will get the `onSuccess` callback and track update in `onTrackUpdate`.
 
 - Specific role
@@ -329,10 +332,10 @@ We can use the `changeTrackStateForRole` method to mute/unmute peers under speci
 // Set [mute] true if the track needs to be muted, false otherwise
   // [type] is the HMSTrackType which should be affected. If this and source are specified, it is considered an AND operation. If not specified, all track sources are affected.
   // [source] is the HMSTrackSource which should be affected. If this and type are specified, it is considered an AND operation. If not specified, all track types are affected.
-  // [roles] is a list of roles, may have a single item in a list, whose tracks should be affected. 
+  // [roles] is a list of roles, may have a single item in a list, whose tracks should be affected.
   //If not specified, all roles are affected.
   // [hmsActionResultListener] - the callback that would be called by SDK in case of a success or failure.
-  /// `this` is used here since MeetingStore already implements 
+  /// `this` is used here since MeetingStore already implements
   if(
     //peer has permission to change track state
     localPeer?.role.permissions.mute
@@ -344,14 +347,15 @@ We can use the `changeTrackStateForRole` method to mute/unmute peers under speci
         roles: roles,
         hmsActionResultListener: this);
 ```
+
 If the `changeTrackStateForRole` method is successful we will get the `onSuccess` callback and track update in `onTrackUpdate` similar to `changeTrackState`.
 
-> If *roles* is passed as empty list then all the roles will get affected.
+> If _roles_ is passed as empty list then all the roles will get affected.
 
 Let's turn the table now to what happens if a remote peer wishes to mute/unmute our audio/video.
 
-- In case when remote peer mutes our audio/video `HMSSDK` performs it automatically without asking permission In another case, we get the `onChangeTrackStateRequest` if 
-we accept the request we need to call `switchVideo` or `switchAudio` according to the request.
+- In case when remote peer mutes our audio/video `HMSSDK` performs it automatically without asking permission In another case, we get the `onChangeTrackStateRequest` if
+  we accept the request we need to call `switchVideo` or `switchAudio` according to the request.
 
 ```dart
  @override
@@ -361,7 +365,7 @@ we accept the request we need to call `switchVideo` or `switchAudio` according t
 
 How this is implemented in the example app can be found [here](https://github.com/100mslive/100ms-flutter/blob/main/example/lib/data_store/meeting_store.dart)
 
-#### 7. Display video tracks
+### 7. Display video tracks
 
 To display video tracks `HMSSDK` provides the `HMSVideoView` widget.
 
@@ -388,25 +392,25 @@ class HMSVideoView extends StatelessWidget {
 Let's understand the `ScaleType` property a bit more. The `ScaleType` property decides how much space the video will take from the available space.
 
 ```dart
-enum ScaleType { 
-  
+enum ScaleType {
+
   //Video maintains the aspect ratio so it only occupies space based on aspect ratio
-  SCALE_ASPECT_FIT, 
-  
-  //Video occupies all the available space may get cropped 
-  SCALE_ASPECT_FILL, 
+  SCALE_ASPECT_FIT,
+
+  //Video occupies all the available space may get cropped
+  SCALE_ASPECT_FILL,
 
   //Video aspect ratio is balanced similar to SCALE_ASPECT_FIT
-  SCALE_ASPECT_BALANCED 
+  SCALE_ASPECT_BALANCED
 }
 ```
 
-> 🔑  Note: `SCALE_ASPECT_FIT` is the default scaleType for HMSVideoView
+> 🔑 Note: `SCALE_ASPECT_FIT` is the default scaleType for HMSVideoView
 
 It is always advised to stop rendering video when it is not required to save bandwidth consumption.
 This is done in the example app by setting the `isOffscreen` property of `PeerTrackNode` as true when the peer tile is off-screen. So that app does not download the video track when the tile is off-screen.
 
-#### 8. Change role
+### 8. Change role
 
 Consider a seminar use case where participants(with no audio/video publish permissions) wish to ask questions.
 The host(with audio/video publish permissions) can permit them to publish audio so that they can ask questions and then revoke it after they have asked the question.`changeRole` method comes to the rescue.
@@ -443,6 +447,7 @@ Similar to mute/unmute request we get the `onRoleChangeRequest` as:
    @override
   void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {}
 ```
+
 If we accept the role change we will need to call the `acceptChangeRole` method of `HMSSDK`.
 
 ```dart
@@ -454,14 +459,13 @@ HMSSDK.acceptChangeRole(
 
 If we get an `onSuccess` callback then role change is performed successfully.
 
-
-#### 9. Chat messaging
+### 9. Chat messaging
 
 Chats are one of the most important parts of any conferencing or live-streaming application.`HMSSDK` provides inbuilt methods for a chat as well.
 
 There are three types of methods based on whom to send a message
 
-- Broadcast Message 
+- Broadcast Message
 
 When we need to send messages to everyone we can use the `sendBroadcastMessage` method.
 
@@ -474,7 +478,7 @@ HMSSDK.sendBroadcastMessage(
     hmsActionResultListener: this);
 ```
 
-- Group Message 
+- Group Message
 
 When we need to send messages to specific roles we can use the `sendGroupMessage` method.
 
@@ -513,7 +517,7 @@ void onMessage({required HMSMessage message}) {}
 
 To know more about chat messaging please head over to the docs [here](https://www.100ms.live/docs/flutter/v2/features/chat)
 
-#### 10. Screen share
+### 10. Screen share
 
 `HMSSDK` offers methods to share screen for both iOS and android.
 The setup required for screen share can be found [here](https://www.100ms.live/docs/flutter/v2/features/screen-share).
@@ -532,7 +536,7 @@ HMSSDK.stopScreenShare(hmsActionResultListener: this);
 
 If the method execution is successful we will get an `onSuccess` callback So that UI can be handled accordingly.
 
-#### 11. Audio share
+### 11. Audio share
 
 Sometimes we need to share audio from our phones we can do so using the audio share feature of `HMSSDK`.
 
@@ -555,16 +559,16 @@ If we only want to share device audio or only share microphone audio or both at 
 `setAudioMixingMode` method takes `HMSAudioMixingMode` as the parameter which has the following modes:
 
 ```dart
-enum HMSAudioMixingMode { 
-  
+enum HMSAudioMixingMode {
+
   //Only microphone audio
-  TALK_ONLY, 
+  TALK_ONLY,
 
   //Both device and microphone audio
-  TALK_AND_MUSIC, 
+  TALK_AND_MUSIC,
 
   //Only device audio
-  MUSIC_ONLY, 
+  MUSIC_ONLY,
   UNKNOWN }
 
 ```
@@ -577,7 +581,7 @@ HMSSDK.setAudioMixingMode(audioMixingMode: audioMixingMode);
 
 More info about audio share can be found [here](https://www.100ms.live/docs/flutter/v2/features/audio_sharing)
 
-#### 12. Audio output routing
+### 12. Audio output routing
 
 > This is only supported in Android platform.
 
@@ -587,14 +591,14 @@ Consider a scenario where Bluetooth earphones are connected to the phone but you
 <img src="https://user-images.githubusercontent.com/93931528/215852939-395e4791-937d-4538-922f-8a5b8ed87f97.png" title="audio-device-setting" height=300>
 </p>
 
-`HMSSDK` has `switchAudioOutput` method to do so. It takes 
+`HMSSDK` has `switchAudioOutput` method to do so. It takes
 `HMSAudioDevice` as a parameter which is an enum as:
 
 ```dart
 enum HMSAudioDevice {
   //Route audio to
 
-  //External Speaker 
+  //External Speaker
   SPEAKER_PHONE,
 
   //Wired headsets or earphones
@@ -634,7 +638,7 @@ void onAudioDeviceChanged(
 
 More about this can be found [here](https://www.100ms.live/docs/flutter/v2/features/audio-output-routing).
 
-#### 13. Hand Raise and BRB
+### 13. Hand Raise and BRB
 
 Let's take the seminar case again where someone has a question so how will the host know about it, hand raise feature comes to the rescue.
 
@@ -646,7 +650,6 @@ Suppose you are in a meeting and someone's at the door unmuting and informing or
 <img src="https://user-images.githubusercontent.com/93931528/215853073-f5595833-b89c-4836-80c6-1744c07651fd.png" title="brb" height=300>
 </p>
 
-
 Hand raise and BRB feature can be implemented using HMSPeer's metadata property as:
 
 ```dart
@@ -654,14 +657,14 @@ Hand raise and BRB feature can be implemented using HMSPeer's metadata property 
 //Set isHandRaised to true for handRaise
 //Set isBRBOn to true for setting BRB status on your tile
 HMSSDK.changeMetadata(
-        metadata: 
+        metadata:
         "{\"isHandRaised\":true,\"isBRBOn\":false}"
         , hmsActionResultListener: this);
 ```
 
 If `changeMetadata` is successful we will get an update in the `onSuccess` method so we can update our UI accordingly.
 
-#### 14. Remove peer
+### 14. Remove peer
 
 `HMSSDK` provides a way to remove peers from the room. This can be done using the `removePeer` method.
 
@@ -688,7 +691,7 @@ HMSSDK.removePeer(
 
 If the `removePeer` method is successful we will get an `onSuccess` callback and `onPeerUpdate`.
 
-#### 15. HLS Streaming
+### 15. HLS Streaming
 
 In today's world, there are endless scenarios where a user broadcasts its stream and thousands of user consumes it.`HMSSDK` provides a `startHLSStreaming` method to handle such scenarios where a user with publish permissions publishes the content and a user with `hls-viewer`` consumes the stream.
 
@@ -699,9 +702,9 @@ hmsSDK.startHlsStreaming(
     hmsActionResultListener: this);
 ```
 
-After calling `startHLSStreaming` we will get an `onSuccess` callback if the method invocation is successful. It takes around 5-6 seconds for HLS to start. 
+After calling `startHLSStreaming` we will get an `onSuccess` callback if the method invocation is successful. It takes around 5-6 seconds for HLS to start.
 
-#### 16. PIP Mode
+### 16. PIP Mode
 
 100ms Flutter SDK provides support for creating a Picture in Picture mode experience for video calls.
 
@@ -739,7 +742,7 @@ Error codes and their description can be found [here](https://www.100ms.live/doc
 
 There are two ways in which SDK provides error callbacks as:
 
-- `onHMSError` method of `HMSUpdateListener``onHMSError` callbacks is received when there is some issue with the methods like join, connection errors or errors related to SDK.
+- `onHMSError` method of ` HMSUpdateListener``onHMSError ` callbacks is received when there is some issue with the methods like join, connection errors or errors related to SDK.
 
 ```dart
 @override
@@ -756,7 +759,7 @@ void onHMSError({required HMSException error}) {
       {HMSActionResultListenerMethod methodType =
           HMSActionResultListenerMethod.unknown,
       Map<String, dynamic>? arguments,
-      required HMSException hmsException}){} 
+      required HMSException hmsException}){}
 ```
 
 These callbacks should be handled properly and UI should be updated accordingly.
@@ -781,7 +784,7 @@ To verify the token which is being passed in `HMSConfig` please visit [jwt.io](h
 
 For Video rendering optimizations please follow [7](#7-display-video-tracks)
 
---- 
+---
 
 Please make sure that the application is using the same `HMSSDK` instance across the app otherwise it will not get SDK updates as expected.
 

@@ -71,7 +71,7 @@ class _PipViewState extends State<PipView> {
                               peerTrackNode.track?.isMute ?? true),
                           builder: (_, peerTrackToDisplay, __) {
                             return (peerTrackToDisplay.item1 == null ||
-                                    peerTrackToDisplay.item2)
+                                    peerTrackToDisplay.item2 || peerTrackToDisplay.item1?.isDegraded==true)
                                 ? Semantics(
                                     label: "fl_video_off",
                                     child: AudioLevelAvatar())

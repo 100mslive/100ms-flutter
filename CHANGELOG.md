@@ -1,3 +1,34 @@
+## 1.3.0 - 2023-02-01
+
+### Breaking
+
+- Removed Start / Stop Capturing APIs on Local Video Tracks. Use `toggleCameraMuteState` to mute / unmute video of local peer as mentioned in Guide [here](https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/mute).
+
+### Added
+
+- Added support for PIP Mode on iOS
+
+- Added `HMSPIPAndroidController` to configure & use PIP Mode on Android. Refer the Guide [here](https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/render-video/pip-mode)
+
+- Added Capture Snapshot API to capture a frame of the video track being rendered
+
+### Deprecated
+
+- Deprecated direct passing of AppGroup & PreferredExtension while building HMSSDK for iOS Screenshare. Use [HMSIOSScreenshareConfig](https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/screen-share) for starting Screenshare from iOS Devices.
+
+- Deprecated `switchAudio` and `switchVideo` functions to mute/unmute Audio/Video of local peer. Use `toggleMicMuteState` and `toggleCameraMuteState` functions as mentioned in the Guide [here](https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/mute).
+
+### Fixed
+
+- Corrected an issue where doing multiple Role Changes stopped working
+- Corrected an issue where video views were getting recreated
+
+
+Updated to Android SDK 2.5.7 & iOS SDK 0.6.2
+
+Full Changelog: [1.2.0...1.3.0](https://github.com/100mslive/100ms-flutter/compare/1.2.0...1.3.0)
+
+
 ## 1.2.0 - 2023-01-13
 
 ### Breaking

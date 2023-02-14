@@ -600,7 +600,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                     result(nil)
                 }
             }
-        }else {
+        } else {
             result(HMSErrorExtension.getError("Role Change Request is Expired."))
         }
     }

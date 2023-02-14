@@ -7,12 +7,13 @@ import android.os.Build
 import android.util.Rational
 import androidx.annotation.RequiresApi
 import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.MethodChannel.Result
 
 class HMSPipAction {
 
     companion object {
-        fun pipActions(call: MethodCall, result: MethodChannel.Result, activity : Activity){
+        var pipResult: Result? = null
+        fun pipActions(call: MethodCall, result: Result, activity : Activity){
             when(call.method){
                 "enter_pip_mode"->{
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -42,7 +43,7 @@ class HMSPipAction {
         }
 
         @RequiresApi(Build.VERSION_CODES.O)
-        private fun enterPipMode(call: MethodCall, result: MethodChannel.Result,activity:Activity){
+        private fun enterPipMode(call: MethodCall, result: Result,activity:Activity){
             val aspectRatio = call.argument<List<Int>>("aspect_ratio")
             val autoEnterEnabled = call.argument<Boolean>("auto_enter_pip")
 
@@ -51,11 +52,8 @@ class HMSPipAction {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 params = params.setAutoEnterEnabled(autoEnterEnabled!!)
             }
-
-            result.success(
-                activity.enterPictureInPictureMode(params.build())
-            )
-
+            pipResult = result
+            activity.enterPictureInPictureMode(params.build())
         }
 
     }
