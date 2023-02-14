@@ -64,10 +64,6 @@ class MeetingStore extends ChangeNotifier
 
   bool isScreenShareOn = false;
 
-  List<HMSTrack?> screenShareTrack = [];
-
-  HMSTrack? curentScreenShareTrack;
-
   bool reconnecting = false;
 
   bool reconnected = false;
@@ -98,8 +94,6 @@ class MeetingStore extends ChangeNotifier
 
   bool isActiveSpeakerMode = true;
 
-  List<HMSTrack> audioTracks = [];
-
   List<HMSMessage> messages = [];
 
   List<PeerTrackNode> peerTracks = [];
@@ -107,8 +101,6 @@ class MeetingStore extends ChangeNotifier
   List<String> activeSpeakerIds = [];
 
   HMSRoom? hmsRoom;
-
-  int? localPeerNetworkQuality;
 
   bool isStatsVisible = false;
 
@@ -118,13 +110,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isNewMessageReceived = false;
 
-  int firstTimeBuild = 0;
-
-  String message = "";
-
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
-
-  ScrollController controller = ScrollController();
 
   MeetingMode meetingMode = MeetingMode.Video;
 
@@ -149,16 +135,11 @@ class MeetingStore extends ChangeNotifier
 
   bool isRaisedHand = false;
 
-  int trackChange = -1;
-
-  // VideoPlayerController? hlsVideoController;
-
   PipFlutterPlayerController? hlsVideoController;
+
   final GlobalKey pipFlutterPlayerKey = GlobalKey();
 
   bool hlsStreamingRetry = false;
-
-  bool isTrackSettingApplied = false;
 
   double audioPlayerVolume = 1.0;
 
@@ -173,8 +154,6 @@ class MeetingStore extends ChangeNotifier
   bool lastVideoStatus = false;
 
   double hlsAspectRatio = 16 / 9;
-
-  bool showNotification = false;
 
   HMSVideoTrack? currentPIPtrack;
 
@@ -484,7 +463,7 @@ class MeetingStore extends ChangeNotifier
           peerTracks.add(PeerTrackNode(
               peer: each,
               uid: each.peerId + "mainVideo",
-              networkQuality: localPeerNetworkQuality,
+              networkQuality: each.networkQuality?.quality,
               stats: RTCStats()));
         localPeer = each;
         addPeer(localPeer!);
@@ -685,6 +664,7 @@ class MeetingStore extends ChangeNotifier
           peerTracks[index].setAudioLevel(-1);
         }
       });
+      activeSpeakerIds.clear();
     }
 
     updateSpeakers.forEach((element) {
@@ -1467,7 +1447,7 @@ class MeetingStore extends ChangeNotifier
                 playerTheme: PipFlutterPlayerTheme.cupertino));
 
     if (streamUrl == null && hlsStreamUrl == null) {
-      Utilities.showToast("Stream URL is null",time: 5);
+      Utilities.showToast("Stream URL is null", time: 5);
     }
     PipFlutterPlayerDataSource dataSource = PipFlutterPlayerDataSource(
         PipFlutterPlayerDataSourceType.network,
@@ -1541,10 +1521,9 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("Change role successful");
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
-        message = arguments!['roles'] == null
+        Utilities.showToast(arguments!['roles'] == null
             ? "Successfully Muted All"
-            : "Successfully Muted Role";
-        Utilities.showToast(message);
+            : "Successfully Muted Role");
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         if (arguments != null) {
