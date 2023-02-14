@@ -1214,8 +1214,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         eventSink?(data)
     }
-    
-    func destroyPIPController(){
+
+    func destroyPIPController() {
         if #available(iOS 15.0, *) {
             if HMSPIPAction.pipController != nil {
                 HMSPIPAction.disposePIP(nil)
