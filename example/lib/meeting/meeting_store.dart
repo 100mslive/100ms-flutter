@@ -1467,7 +1467,7 @@ class MeetingStore extends ChangeNotifier
                 playerTheme: PipFlutterPlayerTheme.cupertino));
 
     if (streamUrl == null && hlsStreamUrl == null) {
-      Utilities.showToast("Stream URL is null",time: 5);
+      Utilities.showToast("Stream URL is null", time: 5);
     }
     PipFlutterPlayerDataSource dataSource = PipFlutterPlayerDataSource(
         PipFlutterPlayerDataSourceType.network,
@@ -1524,8 +1524,16 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.endRoom:
-        this.isRoomEnded = true;
+        peerTracks.clear();
+        isRoomEnded = true;
+        screenShareCount = 0;
+        this.meetingMode = MeetingMode.Video;
+        isScreenShareOn = false;
+        isAudioShareStarted = false;
+        _hmsSDKInteractor.removeUpdateListener(this);
+        setLandscapeLock(false);
         notifyListeners();
+        FlutterForegroundTask.stopService();
         break;
       case HMSActionResultListenerMethod.removePeer:
         HMSPeer peer = arguments!['peer'];

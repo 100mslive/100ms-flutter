@@ -616,6 +616,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
+                if #available(iOS 15.0, *) {
+                    if HMSPIPAction.pipController != nil {
+                        HMSPIPAction.disposePIP(nil)
+                    }
+                }
                 result(nil)
             }
         }
