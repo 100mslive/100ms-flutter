@@ -93,7 +93,6 @@ Widget fullScreenMode(
               itemWidth: size.width,
             ));
       },
-      controller: Provider.of<MeetingStore>(context).controller,
       gridDelegate: SliverStairedGridDelegate(
           startCrossAxisDirectionReversed: false,
           pattern: [StairedGridTile(1, Utilities.getHLSRatio(size, context))]));
