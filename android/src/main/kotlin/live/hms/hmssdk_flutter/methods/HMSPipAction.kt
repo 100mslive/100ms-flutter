@@ -21,6 +21,9 @@ class HMSPipAction {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         enterPipMode(call, result, activity)
                     }
+                    else{
+                        result.success(false)
+                    }
                 }
                 "is_pip_active" -> {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
