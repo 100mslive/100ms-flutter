@@ -116,5 +116,6 @@ class HMSVideoView(
             return
         }
         hmsVideoView?.removeTrack()
+        context.unregisterReceiver(broadcastReceiver)
     }
 }

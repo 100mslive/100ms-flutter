@@ -19,25 +19,12 @@ class _PipViewState extends State<PipView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-          child: Selector<MeetingStore,
-                  Tuple4<List<PeerTrackNode>, bool, int, int>>(
-              selector: (_, meetingStore) => Tuple4(
-                  meetingStore.peerTracks,
-                  meetingStore.isHLSLink,
-                  meetingStore.screenShareCount,
-                  meetingStore.peerTracks.length),
+          child: Selector<MeetingStore, Tuple2<List<PeerTrackNode>, bool>>(
+              selector: (_, meetingStore) => Tuple2(
+                    meetingStore.peerTracks,
+                    meetingStore.isHLSLink,
+                  ),
               builder: (_, data, __) {
-                late int peerIndex;
-                if (!data.item2) {
-                  if (data.item4 != 1) {
-                    peerIndex = data.item1.indexWhere(
-                      (element) => (element.peer.isLocal == false ||
-                          element.track?.source != "REGULAR"),
-                    );
-                  } else {
-                    peerIndex = 0;
-                  }
-                }
                 return (data.item2)
                     ? Selector<MeetingStore, bool>(
                         selector: (_, meetingStore) =>
@@ -71,33 +58,38 @@ class _PipViewState extends State<PipView> {
                                   ),
                                 );
                         })
-                    : ChangeNotifierProvider.value(
-                        key: ValueKey(data.item1[peerIndex].uid + "video_view"),
-                        value: data.item1[peerIndex],
-                        child: Selector<PeerTrackNode,
-                            Tuple2<HMSVideoTrack?, bool>>(
-                          selector: (_, peerTrackNode) => Tuple2(
-                              peerTrackNode.track,
-                              peerTrackNode.track?.isMute ?? true),
-                          builder: (_, peerTrackToDisplay, __) {
-                            return (peerTrackToDisplay.item1 == null ||
-                                    peerTrackToDisplay.item2)
-                                ? Semantics(
-                                    label: "fl_video_off",
-                                    child: AudioLevelAvatar())
-                                : HMSVideoView(
-                                    key: Key(peerTrackToDisplay.item1!.trackId +
-                                        "pipView"),
-                                    track: peerTrackToDisplay.item1!,
-                                    scaleType:
-                                        (peerTrackToDisplay.item1!.source !=
-                                                "REGULAR")
-                                            ? ScaleType.SCALE_ASPECT_FIT
-                                            : ScaleType.SCALE_ASPECT_FILL,
-                                    setMirror: false,
-                                    matchParent: false);
-                          },
-                        ));
+                    : data.item1.length > 0
+                        ? ChangeNotifierProvider.value(
+                            key: ValueKey(data.item1[0].uid + "video_view"),
+                            value: data.item1[0],
+                            child: Selector<PeerTrackNode,
+                                Tuple2<HMSVideoTrack?, bool>>(
+                              selector: (_, peerTrackNode) => Tuple2(
+                                  peerTrackNode.track,
+                                  peerTrackNode.track?.isMute ?? true),
+                              builder: (_, peerTrackToDisplay, __) {
+                                return (peerTrackToDisplay.item1 == null ||
+                                        peerTrackToDisplay.item2 ||
+                                        peerTrackToDisplay.item1?.isDegraded ==
+                                            true)
+                                    ? Semantics(
+                                        label: "fl_video_off",
+                                        child: AudioLevelAvatar())
+                                    : HMSVideoView(
+                                        key: Key(
+                                            peerTrackToDisplay.item1!.trackId +
+                                                "pipView"),
+                                        track: peerTrackToDisplay.item1!,
+                                        scaleType:
+                                            (peerTrackToDisplay.item1!.source !=
+                                                    "REGULAR")
+                                                ? ScaleType.SCALE_ASPECT_FIT
+                                                : ScaleType.SCALE_ASPECT_FILL,
+                                        setMirror: false,
+                                        matchParent: false);
+                              },
+                            ))
+                        : Container();
               })),
     );
   }

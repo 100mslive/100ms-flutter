@@ -9,31 +9,45 @@ import androidx.annotation.RequiresApi
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import live.hms.hmssdk_flutter.HMSErrorLogger
-import live.hms.hmssdk_flutter.HMSErrorLogger.Companion.returnError
-import live.hms.hmssdk_flutter.HMSExceptionExtension
+import io.flutter.plugin.common.MethodChannel.Result
 
 class HMSPipAction {
 
     companion object {
-        fun pipActions(call: MethodCall, result: MethodChannel.Result, activity : Activity){
-            when(call.method){
-                "enter_pip_mode"->{
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                    enterPipMode(call,result,activity)
+        var pipResult: Result? = null
+        fun pipActions(call: MethodCall, result: Result, activity: Activity) {
+            when (call.method) {
+                "enter_pip_mode" -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        enterPipMode(call, result, activity)
+                    }
                 }
-                "is_pip_active"->{
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                    result.success(activity.isInPictureInPictureMode)
+                "is_pip_active" -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        result.success(activity.isInPictureInPictureMode)
+                    }
                 }
-                "is_pip_available"->{
-                    result.success(
-                        activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
-                    )
+                "is_pip_available" -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                        result.success(
+                            activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+                        )
+                    }
+                    else{
+                        result.success(false)
+                    }
                 }
                 else -> {
                     result.notImplemented()
                 }
             }
+        }
+
+        fun isPIPActive(activity: Activity): Boolean {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                return activity.isInPictureInPictureMode
+            }
+            return false
         }
 
         @RequiresApi(Build.VERSION_CODES.O)
@@ -56,11 +70,8 @@ class HMSPipAction {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 params = params.setAutoEnterEnabled(autoEnterEnabled)
             }
-
-            result.success(
-                activity.enterPictureInPictureMode(params.build())
-            )
+            pipResult = result
+            activity.enterPictureInPictureMode(params.build())
         }
-
     }
 }

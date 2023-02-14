@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/widgets/subtitle_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';

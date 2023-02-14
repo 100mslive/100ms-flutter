@@ -102,7 +102,6 @@ Widget heroMode(
               itemWidth: size.width,
             ));
       },
-      controller: Provider.of<MeetingStore>(context).controller,
       gridDelegate: SliverStairedGridDelegate(
           startCrossAxisDirectionReversed: false,
           pattern: isPortrait

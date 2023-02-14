@@ -2,6 +2,7 @@ package live.hms.hmssdk_flutter
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
@@ -501,6 +502,7 @@ class HmssdkFlutterPlugin :
                 return
             }
         hmssdk!!.leave(hmsActionResultListener = HMSCommonAction.getActionListener(result))
+        disposePIP()
     }
 
     private fun destroy() {
@@ -868,6 +870,7 @@ class HmssdkFlutterPlugin :
             reason = reason,
             hmsActionResultListener = HMSCommonAction.getActionListener(result)
         )
+        disposePIP()
     }
 
     private fun changeTrackStateForRole(call: MethodCall, result: Result) {
@@ -1117,6 +1120,10 @@ class HmssdkFlutterPlugin :
             args["event_name"] = "on_removed_from_room"
             args["data"] = HMSRemovedFromRoomExtension.toDictionary(notification)
 
+            if(HMSPipAction.isPIPActive(activity)){
+                activity.moveTaskToBack(true)
+                disposePIP()
+            }
             if (args["data"] != null) {
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
@@ -1505,6 +1512,12 @@ class HmssdkFlutterPlugin :
                 result.success(null)
                 return
             }
+        }
+    }
+
+    private fun disposePIP(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+            activity.setPictureInPictureParams(PictureInPictureParams.Builder().setAutoEnterEnabled(false).build())
         }
     }
 
