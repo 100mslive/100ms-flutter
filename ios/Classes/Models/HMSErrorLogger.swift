@@ -7,13 +7,13 @@
 
 import Foundation
 
-class HMSErrorLogger{
-    
-    static func logError(_ methodName:String,_ error: String,_ errorType: String){
+class HMSErrorLogger {
+
+    static func logError(_ methodName: String, _ error: String, _ errorType: String) {
         print("FL_HMSSDK Error \(errorType): { method -> \(methodName), error -> \(error) }")
     }
-    
-    static func returnError(errorMessage:String){
+
+    static func returnError(errorMessage: String) {
         print("FL_HMSSDK Args Error \(errorMessage)")
     }
 }

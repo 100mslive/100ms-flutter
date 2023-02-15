@@ -99,8 +99,8 @@ class HMSAudioAction {
     static private func setVolume(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
         let arguments = call.arguments as? [AnyHashable: Any]
 
-        guard hmsSDK.room != nil else{
-            HMSErrorLogger.logError(#function,"Room is null","Null Error")
+        guard hmsSDK.room != nil else {
+            HMSErrorLogger.logError(#function, "Room is null", "Null Error")
             result(HMSErrorExtension.getError("Room is Null"))
             return
         }

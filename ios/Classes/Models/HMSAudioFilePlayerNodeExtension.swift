@@ -14,9 +14,8 @@ class HMSAudioFilePlayerNodeExtension {
         do {
             if let fileUrlString = call["file_url"] as? String {
                 try playerNode.play(fileUrl: URL(string: fileUrlString)!, loops: call["loops"] as? Bool ?? false, interrupts: call["interrupts"] as? Bool ?? false)
-            }
-            else{
-                HMSErrorLogger.logError(#function,"fileUrlString is nil","Null Error")
+            } else {
+                HMSErrorLogger.logError(#function, "fileUrlString is nil", "Null Error")
             }
         } catch {
             result(HMSErrorExtension.toDictionary(error))
@@ -40,11 +39,10 @@ class HMSAudioFilePlayerNodeExtension {
     }
 
     static func setVolume(_ call: [AnyHashable: Any], _ playerNode: HMSAudioFilePlayerNode) {
-        if let volume = call["volume"] as? Double{
+        if let volume = call["volume"] as? Double {
             playerNode.volume = Float(volume)
-        }
-        else{
-            HMSErrorLogger.logError(#function,"Volume is nil","Null Error")
+        } else {
+            HMSErrorLogger.logError(#function, "Volume is nil", "Null Error")
         }
     }
 

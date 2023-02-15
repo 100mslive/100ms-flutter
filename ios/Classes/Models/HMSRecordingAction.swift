@@ -27,7 +27,7 @@ class HMSRecordingAction {
         let arguments = call.arguments as? [AnyHashable: Any]
 
         guard let record = arguments?["to_record"] as? Bool else {
-            HMSErrorLogger.logError(#function,"record is null","Null Error")
+            HMSErrorLogger.logError(#function, "record is null", "Null Error")
             result(HMSErrorExtension.getError("Record bool not found in \(#function)"))
             return
         }

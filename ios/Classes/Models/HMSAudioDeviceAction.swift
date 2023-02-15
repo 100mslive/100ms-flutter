@@ -23,7 +23,7 @@ class HMSAudioDeviceAction {
     }
 
     static private func getAudioDeviceList(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
-        var audioDevicesList = [String]()        
+        var audioDevicesList = [String]()
         for device in hmsSDK.getAudioOutputDeviceList() {
             audioDevicesList.append(getAudioDeviceName(device))
         }

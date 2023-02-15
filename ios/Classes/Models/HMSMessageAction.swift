@@ -29,7 +29,7 @@ class HMSMessageAction {
 
         guard let message = arguments?["message"] as? String
         else {
-            HMSErrorLogger.logError(#function,"message is null", "Null Error")
+            HMSErrorLogger.logError(#function, "message is null", "Null Error")
             result(HMSErrorExtension.getError("No message found in \(#function)"))
             return
         }
@@ -53,7 +53,7 @@ class HMSMessageAction {
               let peerID = arguments?["peer_id"] as? String,
               let peer = HMSCommonAction.getPeer(by: peerID, hmsSDK: hmsSDK)
         else {
-            HMSErrorLogger.logError(#function,"Invalid arguments passed", "Null Error")
+            HMSErrorLogger.logError(#function, "Invalid arguments passed", "Null Error")
             result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
             return
         }
@@ -76,7 +76,7 @@ class HMSMessageAction {
         guard let message = arguments?["message"] as? String,
               let rolesList = arguments?["roles"] as? [String]
         else {
-            HMSErrorLogger.logError(#function,"Invalid arguments passed", "Null Error")
+            HMSErrorLogger.logError(#function, "Invalid arguments passed", "Null Error")
             result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
             return
         }

@@ -103,8 +103,8 @@ class HMSVideoAction {
 
         let room = hmsSDK.room
         guard room != nil
-        else{
-            HMSErrorLogger.logError(#function,"room is null","Null Error")
+        else {
+            HMSErrorLogger.logError(#function, "room is null", "Null Error")
             result(HMSErrorExtension.getError("room is null"))
             return
         }

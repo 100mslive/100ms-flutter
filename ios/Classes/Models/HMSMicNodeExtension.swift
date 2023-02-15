@@ -11,9 +11,8 @@ class HMSMicNodeExtension {
     static func setVolume(_ call: [AnyHashable: Any], _ playerNode: HMSMicNode) {
         if let volume = call["volume"] as? Float {
             playerNode.volume = volume
-        }
-        else{
-            HMSErrorLogger.logError(#function,"Volume is nil","Null Error")
+        } else {
+            HMSErrorLogger.logError(#function, "Volume is nil", "Null Error")
         }
     }
 }
