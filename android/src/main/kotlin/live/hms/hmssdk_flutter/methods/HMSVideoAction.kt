@@ -82,7 +82,6 @@ class HMSVideoAction {
             CoroutineScope(Dispatchers.Default).launch {
                 videoTrack?.switchCamera(onAction = HMSCommonAction.getActionListener(result))
             }
-            result.success(null)
         }
 
         private fun isVideoMute(call: MethodCall, hmssdk: HMSSDK): Boolean {

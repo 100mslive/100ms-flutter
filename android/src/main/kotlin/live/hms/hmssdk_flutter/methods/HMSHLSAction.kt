@@ -57,26 +57,23 @@ class HMSHLSAction {
 
 
         private fun stopHLSStreaming(call: MethodCall,result: Result,hmssdk:HMSSDK) {
-            val meetingUrlVariantsList = call.argument<List<Map<String,String>>>("meeting_url_variants")
+            val meetingUrlVariantsList = call.argument<List<Map<String,String>> >("meeting_url_variants")
             val meetingUrlVariant1 : ArrayList<HMSHLSMeetingURLVariant> = ArrayList()
 
-            if(meetingUrlVariantsList != null){
-                (meetingUrlVariantsList).forEach {
-                    meetingUrlVariant1.add(
-                        HMSHLSMeetingURLVariant(
-                            meetingUrl = it["meeting_url"]!!,
-                            metadata = it["meta_data"]!!
-                        )
+            (meetingUrlVariantsList)?.forEach {
+                meetingUrlVariant1.add(
+                    HMSHLSMeetingURLVariant(
+                        meetingUrl = it["meet ing_url"]!!,
+                        metadata = it["meta_data"]!!
                     )
-                }
-
-                var hlsConfig : HMSHLSConfig? = null
-                if(meetingUrlVariant1.isNotEmpty())
-                    hlsConfig = HMSHLSConfig(meetingUrlVariant1)
-
-                hmssdk.stopHLSStreaming(config = hlsConfig, hmsActionResultListener = HMSCommonAction.getActionListener(result))
+                )
             }
-        }
 
+            var hlsConfig : HMSHLSConfig? = null
+            if(meetingUrlVariant1.isNotEmpty())
+                hlsConfig = HMSHLSConfig(meetingUrlVariant1)
+
+            hmssdk.stopHLSStreaming(config = hlsConfig, hmsActionResultListener = HMSCommonAction.getActionListener(result))
+        }
     }
 }
