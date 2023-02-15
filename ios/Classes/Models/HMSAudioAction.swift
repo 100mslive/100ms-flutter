@@ -35,9 +35,9 @@ class HMSAudioAction {
     }
 
     static private func switchAudio(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        guard let shouldMute = arguments["is_on"] as? Bool,
+        guard let shouldMute = arguments?["is_on"] as? Bool,
               let peer = hmsSDK.localPeer,
               let audio = peer.audioTrack as? HMSLocalAudioTrack else {
             result(false)
@@ -63,9 +63,9 @@ class HMSAudioAction {
     }
 
     static private func isAudioMute(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        if let peerID = arguments["peer_id"] as? String,
+        if let peerID = arguments?["peer_id"] as? String,
         let peer = HMSCommonAction.getPeer(by: peerID, hmsSDK: hmsSDK) {
             if let audio = peer.audioTrack {
                 result(audio.isMute())
@@ -88,8 +88,8 @@ class HMSAudioAction {
             let audioTracks = HMSUtilities.getAllAudioTracks(in: room!) as [HMSAudioTrack]?
 
             audioTracks?.forEach { track in
-                if track is HMSRemoteAudioTrack {
-                    (track as! HMSRemoteAudioTrack).setPlaybackAllowed(!shouldMute)
+                if let remoteTrack = track as? HMSRemoteAudioTrack {
+                    remoteTrack.setPlaybackAllowed(!shouldMute)
                 }
             }
         }
@@ -97,15 +97,15 @@ class HMSAudioAction {
     }
 
     static private func setVolume(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
         guard hmsSDK.room != nil else{
             HMSErrorLogger.logError(#function,"Room is null","Null Error")
             result(HMSErrorExtension.getError("Room is Null"))
             return
         }
-        guard let volume = arguments["volume"] as? Double,
-              let trackID = arguments["track_id"] as? String,
+        guard let volume = arguments?["volume"] as? Double,
+              let trackID = arguments?["track_id"] as? String,
               let track = HMSUtilities.getTrack(for: trackID, in: hmsSDK.room!)
         else {
             result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))

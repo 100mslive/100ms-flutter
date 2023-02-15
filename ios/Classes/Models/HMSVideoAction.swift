@@ -49,9 +49,9 @@ class HMSVideoAction {
 
     static private func switchVideo(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
 
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        guard let shouldMute = arguments["is_on"] as? Bool,
+        guard let shouldMute = arguments?["is_on"] as? Bool,
               let peer = hmsSDK.localPeer,
               let video = peer.videoTrack as? HMSLocalVideoTrack else {
             result(false)
@@ -77,9 +77,9 @@ class HMSVideoAction {
     }
 
     static private func isVideoMute(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        if let peerID = arguments["peer_id"] as? String, let peer = HMSCommonAction.getPeer(by: peerID, hmsSDK: hmsSDK) {
+        if let peerID = arguments?["peer_id"] as? String, let peer = HMSCommonAction.getPeer(by: peerID, hmsSDK: hmsSDK) {
             if let video = peer.videoTrack {
                 result(video.isMute())
                 return
@@ -110,10 +110,10 @@ class HMSVideoAction {
         }
             let videoTracks = HMSUtilities.getAllVideoTracks(in: room!) as [HMSVideoTrack]?
             videoTracks?.forEach { track in
-                if track is HMSRemoteVideoTrack {
-                    (track as! HMSRemoteVideoTrack).setPlaybackAllowed(!shouldMute)
+                if let remoteTrack = track as? HMSRemoteVideoTrack {
+                    remoteTrack.setPlaybackAllowed(!shouldMute)
                 }
-        }
+            }
         result(nil)
     }
 }

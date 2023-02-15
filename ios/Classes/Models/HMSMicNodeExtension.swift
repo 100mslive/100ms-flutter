@@ -9,6 +9,11 @@ import Foundation
 import HMSSDK
 class HMSMicNodeExtension {
     static func setVolume(_ call: [AnyHashable: Any], _ playerNode: HMSMicNode) {
-        playerNode.volume = call["volume"] as! Float
+        if let volume = call["volume"] as? Float {
+            playerNode.volume = volume
+        }
+        else{
+            HMSErrorLogger.logError(#function,"Volume is nil","Null Error")
+        }
     }
 }

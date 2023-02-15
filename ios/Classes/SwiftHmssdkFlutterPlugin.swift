@@ -344,40 +344,58 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     // MARK: - Audio Share
 
     private func audioShareAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        let arguments = call.arguments as! [AnyHashable: Any]
-        if let audioNode = audioMixerSourceMap[arguments["name"] as! String] {
-            switch call.method {
-            case "play_audio_share":
-                HMSAudioFilePlayerNodeExtension.play(arguments, audioNode as! HMSAudioFilePlayerNode, result)
-                break
-            case "stop_audio_share":
-                HMSAudioFilePlayerNodeExtension.stop(audioNode as! HMSAudioFilePlayerNode)
-                break
-            case "pause_audio_share":
-                HMSAudioFilePlayerNodeExtension.pause(audioNode as! HMSAudioFilePlayerNode)
-                break
-            case "resume_audio_share":
-                HMSAudioFilePlayerNodeExtension.resume(audioNode as! HMSAudioFilePlayerNode, result)
-                break
-            case "set_audio_share_volume":
-                if arguments["name"] as! String != "mic_node" {
-                    HMSAudioFilePlayerNodeExtension.setVolume(arguments, audioNode as! HMSAudioFilePlayerNode)
-                } else {
-                    HMSMicNodeExtension.setVolume(arguments, audioNode as! HMSMicNode)
+        if let arguments = call.arguments as? [AnyHashable: Any] {
+            if let nodeName = arguments["name"] as? String {
+                if let audioNode = audioMixerSourceMap[nodeName] {
+                    switch call.method {
+                    case "play_audio_share":
+                        HMSAudioFilePlayerNodeExtension.play(arguments, audioNode as! HMSAudioFilePlayerNode, result)
+                        break
+                    case "stop_audio_share":
+                        HMSAudioFilePlayerNodeExtension.stop(audioNode as! HMSAudioFilePlayerNode)
+                        break
+                    case "pause_audio_share":
+                        HMSAudioFilePlayerNodeExtension.pause(audioNode as! HMSAudioFilePlayerNode)
+                        break
+                    case "resume_audio_share":
+                        HMSAudioFilePlayerNodeExtension.resume(audioNode as! HMSAudioFilePlayerNode, result)
+                        break
+                    case "set_audio_share_volume":
+                        if arguments["name"] as! String != "mic_node" {
+                            HMSAudioFilePlayerNodeExtension.setVolume(arguments, audioNode as! HMSAudioFilePlayerNode)
+                        } else {
+                            HMSMicNodeExtension.setVolume(arguments, audioNode as! HMSMicNode)
+                        }
+                        break
+                    case "audio_share_playing":
+                        HMSAudioFilePlayerNodeExtension.isPlaying(audioNode as! HMSAudioFilePlayerNode, result)
+                        break
+                    case "audio_share_current_time":
+                        HMSAudioFilePlayerNodeExtension.currentDuration(audioNode as! HMSAudioFilePlayerNode, result)
+                        break
+                    case "audio_share_duration":
+                        HMSAudioFilePlayerNodeExtension.duration(audioNode as! HMSAudioFilePlayerNode, result)
+                        break
+                    default:
+                        result(FlutterMethodNotImplemented)
+                    }
                 }
-                break
-            case "audio_share_playing":
-                HMSAudioFilePlayerNodeExtension.isPlaying(audioNode as! HMSAudioFilePlayerNode, result)
-                break
-            case "audio_share_current_time":
-                HMSAudioFilePlayerNodeExtension.currentDuration(audioNode as! HMSAudioFilePlayerNode, result)
-                break
-            case "audio_share_duration":
-                HMSAudioFilePlayerNodeExtension.duration(audioNode as! HMSAudioFilePlayerNode, result)
-                break
-            default:
-                result(FlutterMethodNotImplemented)
+                else{
+                    HMSErrorLogger.logError(#function, "Invalid Arguments, audioNode is null","Null Error")
+                    result(HMSErrorExtension.getError("Could not start Audio Share, invalid parameters passed in \(#function)"))
+                    return
+                }
             }
+            else{
+                HMSErrorLogger.logError(#function, "Invalid Arguments, nodeName is null","Null Error")
+                result(HMSErrorExtension.getError("Could not start Audio Share, invalid parameters passed in \(#function)"))
+                return
+            }
+        }
+        else{
+            HMSErrorLogger.logError(#function, "Invalid Arguments","Null Error")
+            result(HMSErrorExtension.getError("Could not start Audio Share, invalid parameters passed in \(#function)"))
+            return
         }
     }
 
@@ -440,14 +458,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     // MARK: - Room Actions
     private func build(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
         // TODO: add checks for 100ms Extension Target
-        if let prefExtension = arguments["preferred_extension"] as? String {
+        if let prefExtension = arguments?["preferred_extension"] as? String {
             preferredExtension = prefExtension
         }
 
-        if let iOSScreenshareConfig = arguments["ios_screenshare_config"] as? [String: String] {
+        if let iOSScreenshareConfig = arguments?["ios_screenshare_config"] as? [String: String] {
             if let prefExtension = iOSScreenshareConfig["preferred_extension"] {
                 preferredExtension = prefExtension
             } else {
@@ -457,13 +475,17 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
 
         var setLogger = false
-        if let hmsLogSettings = arguments["hms_log_settings"] as? [AnyHashable: Any] {
-            let level = hmsLogSettings["log_level"] as! String
-            logLevel = getLogLevel(from: level)
-            setLogger = true
+        if let hmsLogSettings = arguments?["hms_log_settings"] as? [AnyHashable: Any] {
+            if let level = hmsLogSettings["log_level"] as? String{
+                logLevel = getLogLevel(from: level)
+                setLogger = true
+            }
+            else{
+                return HMSErrorLogger.returnError(errorMessage: "build error: null values for log level in \(#function)")
+            }
         }
-        guard let dartSDKVersion = arguments["dart_sdk_version"] as? String,
-              let hmsSDKVersion = arguments["hmssdk_version"] as? String
+        guard let dartSDKVersion = arguments?["dart_sdk_version"] as? String,
+              let hmsSDKVersion = arguments?["hmssdk_version"] as? String
         else {
             return HMSErrorLogger.returnError(errorMessage: "build error: null values for dartSDKVersion and hmsSDKVersion in \(#function)")
         }
@@ -477,11 +499,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 result(false)
                 return
             }
-            if let appGroup = arguments["app_group"] as? String {
+            if let appGroup = arguments?["app_group"] as? String {
                 sdk.appGroup = appGroup
             }
 
-            if let iOSScreenshareConfig = arguments["ios_screenshare_config"] as? [String: String] {
+            if let iOSScreenshareConfig = arguments?["ios_screenshare_config"] as? [String: String] {
                 if let appGroup = iOSScreenshareConfig["app_group"] {
                     sdk.appGroup = appGroup
                 } else {
@@ -497,7 +519,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
 
             var trackSettings: HMSTrackSettings?
-            if let settingsDict = arguments["hms_track_setting"] as? [AnyHashable: Any] {
+            if let settingsDict = arguments?["hms_track_setting"] as? [AnyHashable: Any] {
                 self.audioMixerSourceInit(settingsDict, sdk, result)
                 trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict, self.audioMixerSourceMap, result)
             }
@@ -512,23 +534,28 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     private func preview(_ call: FlutterMethodCall, _ result: FlutterResult) {
 
-        let arguments = call.arguments as! [AnyHashable: Any]
+        if let arguments = call.arguments as? [AnyHashable: Any]{
+                
+            guard let config = getConfig(from: arguments) else {
+                HMSErrorLogger.logError(#function,"Could not join room, invalid parameters passed in \(#function)","Config Error")
+                result(HMSErrorExtension.getError("Could not join room, invalid parameters passed in \(#function)"))
+                return
+            }
 
-        guard let config = getConfig(from: arguments) else {
+            guard hmsSDK != nil
+            else{
+                HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+                result(HMSErrorExtension.getError("hmsSDK is null in \(#function)"))
+                return
+            }
+            
+            hmsSDK!.preview(config: config, delegate: self)
+            result(nil)
+        }
+        else{
             HMSErrorLogger.logError(#function,"Could not join room, invalid parameters passed in \(#function)","Config Error")
             result(HMSErrorExtension.getError("Could not join room, invalid parameters passed in \(#function)"))
-            return
         }
-
-        guard hmsSDK != nil
-        else{
-            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
-            result(HMSErrorExtension.getError("hmsSDK is null in \(#function)"))
-            return
-        }
-        
-        hmsSDK!.preview(config: config, delegate: self)
-        result(nil)
     }
 
     /*
@@ -548,22 +575,27 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     private func join(_ call: FlutterMethodCall, _ result: FlutterResult) {
 
-        let arguments = call.arguments as! [AnyHashable: Any]
+        if let arguments = call.arguments as? [AnyHashable: Any]{
+            guard let config = getConfig(from: arguments) else {
+                HMSErrorLogger.logError(#function,"Could not join room, invalid parameters passed in \(#function)","Config Error")
+                result(HMSErrorExtension.getError("Could not join room, invalid parameters passed in \(#function)"))
+                return
+            }
 
-        guard let config = getConfig(from: arguments) else {
+            guard hmsSDK != nil
+            else{
+                HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
+                result(HMSErrorExtension.getError("hmsSDK is null in \(#function)"))
+                return
+            }
+            hmsSDK!.join(config: config, delegate: self)
+            result(nil)
+        }
+        else{
             HMSErrorLogger.logError(#function,"Could not join room, invalid parameters passed in \(#function)","Config Error")
             result(HMSErrorExtension.getError("Could not join room, invalid parameters passed in \(#function)"))
-            return
         }
 
-        guard hmsSDK != nil
-        else{
-            HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
-            result(HMSErrorExtension.getError("hmsSDK is null in \(#function)"))
-            return
-        }
-        hmsSDK!.join(config: config, delegate: self)
-        result(nil)
     }
 
     private func leave(_ result: @escaping FlutterResult) {
@@ -603,16 +635,16 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     private func changeRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
         guard hmsSDK != nil else{
             HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
             result(HMSErrorExtension.getError("hmsSDK is null in \(#function)"))
             return
         }
-        guard let peerID = arguments["peer_id"] as? String,
+        guard let peerID = arguments?["peer_id"] as? String,
               let peer = HMSCommonAction.getPeer(by: peerID, hmsSDK: hmsSDK!),
-              let roleString = arguments["role_name"] as? String,
+              let roleString = arguments?["role_name"] as? String,
               let role = HMSCommonAction.getRole(by: roleString, hmsSDK: hmsSDK!)
         else {
             HMSErrorLogger.logError(#function,"Invalid parameters for change role","Parameters Error")
@@ -620,7 +652,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return
         }
 
-        let force = arguments["force_change"] as? Bool ?? false
+        let force = arguments?["force_change"] as? Bool ?? false
             hmsSDK!.changeRole(for: peer, to: role, force: force) { _, error in
                 if let error = error {
                     result(HMSErrorExtension.toDictionary(error))
@@ -651,10 +683,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     private func endRoom(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        let lock = arguments["lock"] as? Bool ?? false
-        let reason = arguments["reason"] as? String ?? "End room invoked"
+        let lock = arguments?["lock"] as? Bool ?? false
+        let reason = arguments?["reason"] as? String ?? "End room invoked"
 
         guard hmsSDK != nil else{
             HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
@@ -673,7 +705,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     private func removePeer(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
         guard (hmsSDK != nil)
         else{
@@ -681,14 +713,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             result(HMSErrorExtension.getError("HMSSDK is null in \(#function)"))
             return
         }
-        guard let peerID = arguments["peer_id"] as? String,
+        guard let peerID = arguments?["peer_id"] as? String,
               let peer = HMSCommonAction.getPeer(by: peerID, hmsSDK: hmsSDK!)
         else {
             result(HMSErrorExtension.getError("Peer not found in \(#function)"))
             return
         }
 
-        let reason = (arguments["reason"] as? String) ?? "Removed from room"
+        let reason = (arguments?["reason"] as? String) ?? "Removed from room"
 
         hmsSDK!.removePeer(peer, reason: reason) { _, error in
             if let error = error {
@@ -700,21 +732,21 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     private func changeTrackState(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
         guard hmsSDK != nil else{
             HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
             result(HMSErrorExtension.getError("HMSSDK is null in \(#function)"))
             return
         }
-        guard let trackID = arguments["track_id"] as? String,
+        guard let trackID = arguments?["track_id"] as? String,
               let track = HMSUtilities.getTrack(for: trackID, in: hmsSDK!.room!)
         else {
             result(HMSErrorExtension.getError("Could not find track to change track in \(#function)"))
             return
         }
 
-        let mute = arguments["mute"] as? Bool ?? false
+        let mute = arguments?["mute"] as? Bool ?? false
 
         hmsSDK!.changeTrackState(for: track, mute: mute) { _, error in
             if let error = error {
@@ -727,19 +759,19 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     private func changeTrackStateForRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        guard let mute = arguments["mute"] as? Bool else {
+        guard let mute = arguments?["mute"] as? Bool else {
             result(HMSErrorExtension.getError("Could not find track to change track in \(#function)"))
             return
         }
 
         var trackKind: HMSTrackKind?
-        if let kindStr = arguments["type"] as? String {
+        if let kindStr = arguments?["type"] as? String {
             trackKind = kind(from: kindStr)
         }
 
-        let source = arguments["source"] as? String
+        let source = arguments?["source"] as? String
 
         guard hmsSDK != nil else{
             HMSErrorLogger.logError(#function,"hmsSDK is null","HMSSDK Error")
@@ -747,7 +779,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return
         }
             var roles: [HMSRole]?
-            if let rolesString = arguments["roles"] as? [String] {
+            if let rolesString = arguments?["roles"] as? [String] {
                 roles = hmsSDK!.roles.filter { rolesString.contains($0.name) }
             }
 
@@ -761,7 +793,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     private func changeRoleOfPeersWithRoles(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
         
         guard hmsSDK != nil
         else{
@@ -769,14 +801,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             result(HMSErrorExtension.getError("HMSSDK is null in \(#function)"))
             return
         }
-        guard let roleString = arguments["to_role"] as? String,
+        guard let roleString = arguments?["to_role"] as? String,
               let role = HMSCommonAction.getRole(by: roleString, hmsSDK: hmsSDK!) else {
             result(HMSErrorExtension.getError("Could not find role in \(#function)"))
             return
         }
 
             var ofRoles = [HMSRole]()
-            if let ofRolesString = arguments["of_roles"] as? [String] {
+            if let ofRolesString = arguments?["of_roles"] as? [String] {
                 ofRoles = hmsSDK!.roles.filter { ofRolesString.contains($0.name) }
             }
 
@@ -793,9 +825,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     private func changeMetadata(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        guard let metadata = arguments["metadata"] as? String else {
+        guard let metadata = arguments?["metadata"] as? String else {
             result(HMSErrorExtension.getError("No metadata found in \(#function)"))
             return
         }
@@ -821,9 +853,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     private func changeName(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
-        let arguments = call.arguments as![AnyHashable: Any]
+        let arguments = call.arguments as?[AnyHashable: Any]
 
-        guard let name = arguments["name"] as? String else {
+        guard let name = arguments?["name"] as? String else {
             result(HMSErrorExtension.getError("No name found in \(#function)"))
             return
         }
@@ -848,9 +880,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private var logLevel = HMSLogLevel.off
 
     private func startHMSLogger(_ call: FlutterMethodCall) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        guard let level = arguments["log_level"] as? String else {
+        guard let level = arguments?["log_level"] as? String else {
             return
         }
 
@@ -932,9 +964,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     private func setSessionMetadata(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        guard let metadata = arguments["session_metadata"] as? String? ?? "" else {
+        guard let metadata = arguments?["session_metadata"] as? String? ?? "" else {
             result(HMSErrorExtension.getError("No session metadata found in \(#function)"))
             return
         }
@@ -957,11 +989,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     private func setPlaybackAllowedForTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        guard let isPlaybackAllowed = arguments["is_playback_allowed"] as? Bool,
-              let trackID = arguments["track_id"] as? String,
-              let trackKind = arguments["track_kind"] as? String
+        guard let isPlaybackAllowed = arguments?["is_playback_allowed"] as? Bool,
+              let trackID = arguments?["track_id"] as? String,
+              let trackKind = arguments?["track_kind"] as? String
         else {
             result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
             return
@@ -996,9 +1028,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     private func captureSnapshot(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        guard let trackID = arguments["track_id"] as? String
+        guard let trackID = arguments?["track_id"] as? String
         else {
             result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
             return

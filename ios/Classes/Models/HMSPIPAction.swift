@@ -63,15 +63,15 @@ class HMSPIPAction {
         model = PiPModel()
         model?.pipViewEnabled = true
 
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        if let scaleType = arguments["scale_type"] as? Int {
+        if let scaleType = arguments?["scale_type"] as? Int {
             model?.scaleType = getViewContentMode(scaleType)
         } else {
             model?.scaleType = .scaleAspectFill
         }
 
-        if let color = arguments["color"] as? [Int] {
+        if let color = arguments?["color"] as? [Int] {
             let colour = Color(red: CGFloat(color[0])/255, green: CGFloat(color[1])/255, blue: CGFloat(color[2])/255)
             model?.color = colour
         } else {
@@ -82,7 +82,7 @@ class HMSPIPAction {
 
         pipVideoCallViewController.view.addConstrained(subview: controller.view)
 
-        if let ratio = arguments["ratio"] as? [Int], ratio.count == 2 {
+        if let ratio = arguments?["ratio"] as? [Int], ratio.count == 2 {
             pipVideoCallViewController.preferredContentSize = CGSize(width: ratio[1], height: ratio[0])
         } else {
             pipVideoCallViewController.preferredContentSize = CGSize(width: uiView.frame.size.width, height: uiView.frame.size.height)
@@ -96,7 +96,7 @@ class HMSPIPAction {
 
         pipController?.delegate = swiftHmssdkFlutterPlugin
 
-        if let autoEnterPIP = arguments["auto_enter_pip"] as? Bool {
+        if let autoEnterPIP = arguments?["auto_enter_pip"] as? Bool {
             pipController?.canStartPictureInPictureAutomaticallyFromInline = autoEnterPIP
         }
 
@@ -140,15 +140,15 @@ class HMSPIPAction {
     }
 
     static func changeTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        guard let trackID = arguments["track_id"] as? String,
+        guard let trackID = arguments?["track_id"] as? String,
               let track = HMSUtilities.getVideoTrack(for: trackID, in: (hmsSDK.room)!),
-              let alternativeText = arguments["alternative_text"] as? String,
-              let ratio = arguments["ratio"] as? [Int],
+              let alternativeText = arguments?["alternative_text"] as? String,
+              let ratio = arguments?["ratio"] as? [Int],
                 ratio.count == 2,
-              let scaleType = arguments["scale_type"] as? Int,
-              let color = arguments["color"] as? [Int]
+              let scaleType = arguments?["scale_type"] as? Int,
+              let color = arguments?["color"] as? [Int]
         else {
             result(HMSErrorExtension.getError("\(#function) Unable to find track ID, ratio, alternativeText or scaleType"))
             return
@@ -162,12 +162,12 @@ class HMSPIPAction {
     }
 
     static func changeText(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        guard let text = arguments["text"] as? String,
-              let ratio = arguments["ratio"] as? [Int],
+        guard let text = arguments?["text"] as? String,
+              let ratio = arguments?["ratio"] as? [Int],
                 ratio.count == 2,
-              let color = arguments["color"] as? [Int]
+              let color = arguments?["color"] as? [Int]
         else {
             result(HMSErrorExtension.getError("\(#function) Unable to find ratio"))
             return

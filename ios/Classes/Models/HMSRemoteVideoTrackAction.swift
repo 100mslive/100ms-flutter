@@ -26,11 +26,11 @@ class HMSRemoteVideoTrackExtension {
     }
 
     static private func setSimulcastLayer(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
-        let arguments = call.arguments as![AnyHashable: Any]
+        let arguments = call.arguments as?[AnyHashable: Any]
 
-        guard let trackIdString = arguments["track_id"] as? String,
+        guard let trackIdString = arguments?["track_id"] as? String,
               let trackId = HMSUtilities.getTrack(for: trackIdString, in: hmsSDK.room!),
-              let layer = arguments["layer"] as? String
+              let layer = arguments?["layer"] as? String
         else {
             result(HMSErrorExtension.getError("No track ID or HMSSimulcastLayer found in \(#function)"))
             return
@@ -45,9 +45,9 @@ class HMSRemoteVideoTrackExtension {
     }
 
     static private func getLayer(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
-        let arguments = call.arguments as![AnyHashable: Any]
+        let arguments = call.arguments as?[AnyHashable: Any]
 
-        guard let trackIdString = arguments["track_id"] as? String,
+        guard let trackIdString = arguments?["track_id"] as? String,
               let trackId = HMSUtilities.getTrack(for: trackIdString, in: hmsSDK.room!)
         else {
             result(nil)
@@ -61,9 +61,9 @@ class HMSRemoteVideoTrackExtension {
     }
 
     static private func getLayerDefinition(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
-        let arguments = call.arguments as![AnyHashable: Any]
+        let arguments = call.arguments as?[AnyHashable: Any]
 
-        guard let trackIdString = arguments["track_id"] as? String,
+        guard let trackIdString = arguments?["track_id"] as? String,
               let trackId = HMSUtilities.getTrack(for: trackIdString, in: hmsSDK.room!)
         else {
             result(nil)

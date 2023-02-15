@@ -31,9 +31,9 @@ class HMSAudioDeviceAction {
     }
 
     static private func switchAudioOutput(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        guard let audioDeviceName = arguments["audio_device_name"] as? String
+        guard let audioDeviceName = arguments?["audio_device_name"] as? String
         else {
             result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
             return

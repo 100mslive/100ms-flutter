@@ -24,21 +24,21 @@ class HMSRecordingAction {
 
     static private func startRtmpOrRecording(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK) {
 
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        guard let record = arguments["to_record"] as? Bool else {
+        guard let record = arguments?["to_record"] as? Bool else {
             HMSErrorLogger.logError(#function,"record is null","Null Error")
             result(HMSErrorExtension.getError("Record bool not found in \(#function)"))
             return
         }
 
         var meetingURL: URL?
-        if let meetingURLStr = arguments["meeting_url"] as? String {
+        if let meetingURLStr = arguments?["meeting_url"] as? String {
             meetingURL = URL(string: meetingURLStr)
         }
 
         var rtmpURLs: [URL]?
-        if let strings = arguments["rtmp_urls"] as? [String] {
+        if let strings = arguments?["rtmp_urls"] as? [String] {
             for string in strings {
                 if let url = URL(string: string) {
                     if rtmpURLs == nil {
