@@ -60,9 +60,7 @@ class HmssdkFlutterPlugin :
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
-    companion object {
-        var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
-    }
+    var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         if (hmssdkFlutterPlugin == null) {
@@ -289,6 +287,7 @@ class HmssdkFlutterPlugin :
 
     // MARK: Screenshare
     private fun screenshareActions(call: MethodCall, result: Result) {
+        return
         when (call.method) {
             "start_screen_share" -> {
                 startScreenShare(result)
@@ -324,6 +323,7 @@ class HmssdkFlutterPlugin :
     }
 
     private fun audioShare(call: MethodCall, result: Result) {
+        return
         when (call.method) {
             "start_audio_share" -> {
                 startAudioShare(call, result)
