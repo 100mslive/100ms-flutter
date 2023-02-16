@@ -37,7 +37,7 @@ class HMSVideoView(
                     }
                 }
             } else {
-                Log.i("Receiver error", "No receiver found for given action")
+                Log.e("Receiver error", "No receiver found for given action")
             }
         }
     }
@@ -53,7 +53,7 @@ class HMSVideoView(
                 hmsVideoView?.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
             }
         } else {
-            Log.i("HMSVideoView Error", "HMSVideoView init error view is null")
+            Log.e("HMSVideoView Error", "HMSVideoView init error view is null")
         }
     }
 
@@ -75,7 +75,7 @@ class HMSVideoView(
                 }
             })
         } else {
-            Log.i("Receiver error", "hmsVideoView is null")
+            Log.e("Receiver error", "hmsVideoView is null")
         }
     }
 
@@ -83,7 +83,7 @@ class HMSVideoView(
         if (hmsVideoView != null) {
             hmsVideoView?.removeTrack()
         } else {
-            Log.i("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
+            Log.e("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
         }
         this.removeView(view)
         view = null
@@ -94,8 +94,13 @@ class HMSVideoView(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         if (track != null) {
-            hmsVideoView?.addTrack(track)
-            context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId))
+            if(hmsVideoView != null){
+                hmsVideoView?.addTrack(track)
+                context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId))
+            }
+            else{
+                Log.e("HMSVideoView Error", "onAttachedToWindow error hmsVideoView is null")
+            }
         } else {
             Log.e("HMSVideoView Error", "onAttachedToWindow error track is null, cannot attach null track")
         }
@@ -105,8 +110,9 @@ class HMSVideoView(
         super.onDetachedFromWindow()
         if (hmsVideoView != null) {
             hmsVideoView?.removeTrack()
+            context.unregisterReceiver(broadcastReceiver)
         } else {
-            Log.i("HMSVideoView error", "onDetachedFromWindow error hmsVideoView is null")
+            Log.e("HMSVideoView error", "onDetachedFromWindow error hmsVideoView is null")
         }
     }
 }

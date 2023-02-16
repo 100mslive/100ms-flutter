@@ -32,8 +32,8 @@ android {
         applicationId "live.hms.flutter"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 198
-        versionName "1.4.63"
+        versionCode 200
+        versionName "1.4.65"
     }
 
     signingConfigs {
@@ -70,6 +70,7 @@ flutter {
 dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.firebase:firebase-crashlytics:18.3.2'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 }
 
 apply plugin: 'com.google.gms.google-services'

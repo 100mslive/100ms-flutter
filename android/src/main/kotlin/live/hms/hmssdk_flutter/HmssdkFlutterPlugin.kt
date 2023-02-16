@@ -2,6 +2,7 @@ package live.hms.hmssdk_flutter
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
@@ -442,6 +443,7 @@ class HmssdkFlutterPlugin :
 
     private fun leave(result: Result) {
         hmssdk!!.leave(hmsActionResultListener = HMSCommonAction.getActionListener(result))
+        disposePIP()
     }
 
     private fun destroy(result: Result) {
@@ -634,6 +636,7 @@ class HmssdkFlutterPlugin :
             reason = reason,
             hmsActionResultListener = HMSCommonAction.getActionListener(result)
         )
+        disposePIP()
     }
 
     private fun isAllowedToEndMeeting(): Boolean? {
@@ -814,7 +817,10 @@ class HmssdkFlutterPlugin :
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_removed_from_room")
             args.put("data", HMSRemovedFromRoomExtension.toDictionary(notification))
-
+            if(HMSPipAction.isPIPActive(activity)){
+                activity.moveTaskToBack(true)
+                disposePIP()
+            }
             if (args["data"] != null) {
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
@@ -1104,6 +1110,12 @@ class HmssdkFlutterPlugin :
         error["description"] = "Track not found to set isPlaybackAllowed"
         map["error"] = error
         result.success(map)
+    }
+
+    private fun disposePIP(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+            activity.setPictureInPictureParams(PictureInPictureParams.Builder().setAutoEnterEnabled(false).build())
+        }
     }
 
     private val hmsStatsListener = object : HMSStatsObserver {

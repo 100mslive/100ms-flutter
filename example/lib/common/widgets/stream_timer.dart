@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter_example/common/widgets/subtitle_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -26,14 +24,8 @@ class _HMSStreamTimerState extends State<HMSStreamTimer> {
     return StreamBuilder(
       stream: Stream.periodic(const Duration(seconds: 1)),
       builder: (context, snapshot) {
-        if (Platform.isIOS)
-          return SubtitleText(
-              text: format(DateTime.now().toUtc().difference(
-                  widget.startedAt.add(DateTime.now().timeZoneOffset))),
-              textColor: themeSubHeadingColor);
         return SubtitleText(
-            text: format(
-                DateTime.now().toUtc().difference(widget.startedAt.toUtc())),
+            text: format(DateTime.now().difference(widget.startedAt)),
             textColor: themeSubHeadingColor);
       },
     );

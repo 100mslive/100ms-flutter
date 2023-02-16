@@ -21,7 +21,7 @@ class HMSHLSVariantExtension {
         dict["hls_stream_url"] = hmshlsVariant.url.absoluteString
 
         if let startedAt = hmshlsVariant.startedAt {
-            dict["started_at"] = "\(startedAt)"
+            dict["started_at"] = HMSUtilitiesExtension.toLocalDate(startedAt)
         }
 
         return dict

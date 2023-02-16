@@ -18,7 +18,7 @@ class HMSMessageExtension {
 
         dict["type"] = message.type
 
-        dict["time"] = "\(message.time)"
+        dict["time"] = HMSUtilitiesExtension.toLocalDate(message.time)
 
         dict["hms_message_recipient"] = HMSMessageRecipientExtension.toDictionary(message.recipient)
 
