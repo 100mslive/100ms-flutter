@@ -9,33 +9,31 @@ import live.hms.hmssdk_flutter.Constants
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.hmssdk_flutter.methods.HMSPipAction
 
-class MainActivity: FlutterActivity() {
+class MainActivity : FlutterActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == Constants.SCREEN_SHARE_INTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+        if (requestCode == Constants.SCREEN_SHARE_INTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             HmssdkFlutterPlugin.hmssdkFlutterPlugin?.requestScreenShare(data)
         }
 
-        if (requestCode == Constants.AUDIO_SHARE_INTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+        if (requestCode == Constants.AUDIO_SHARE_INTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             HmssdkFlutterPlugin.hmssdkFlutterPlugin?.requestAudioShare(data)
         }
-
     }
 
     override fun onPictureInPictureModeChanged(
         isInPictureInPictureMode: Boolean,
         newConfig: Configuration?
     ) {
-        if(isInPictureInPictureMode){
-            if(HMSPipAction.pipResult != null){
-                HMSPipAction.pipResult?.success(true);
+        if (isInPictureInPictureMode) {
+            if (HMSPipAction.pipResult != null) {
+                HMSPipAction.pipResult?.success(true)
                 HMSPipAction.pipResult = null
             }
-        }
-        else{
-            Log.i("PIP Mode","Exited PIP Mode")
+        } else {
+            Log.i("PIP Mode", "Exited PIP Mode")
         }
     }
 }

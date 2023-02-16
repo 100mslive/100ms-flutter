@@ -817,7 +817,7 @@ class HmssdkFlutterPlugin :
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_removed_from_room")
             args.put("data", HMSRemovedFromRoomExtension.toDictionary(notification))
-            if(HMSPipAction.isPIPActive(activity)){
+            if (HMSPipAction.isPIPActive(activity)) {
                 activity.moveTaskToBack(true)
                 disposePIP()
             }
@@ -1112,8 +1112,8 @@ class HmssdkFlutterPlugin :
         result.success(map)
     }
 
-    private fun disposePIP(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+    private fun disposePIP() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             activity.setPictureInPictureParams(PictureInPictureParams.Builder().setAutoEnterEnabled(false).build())
         }
     }
