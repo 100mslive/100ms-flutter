@@ -37,7 +37,7 @@ dependencies:
   avatar_glow:
   flutter_svg:
   google_fonts:
-  fluttertoast:
+  bot_toast:
   qr_code_scanner:
   shared_preferences: 2.0.15
   uni_links:
