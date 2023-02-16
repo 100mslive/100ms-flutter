@@ -2,6 +2,7 @@
 import 'dart:async';
 
 //Package imports
+import 'package:bot_toast/bot_toast.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -180,6 +181,8 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      builder: BotToastInit(), //1. call BotToastInit
+      navigatorObservers: [BotToastNavigatorObserver()],
       home: HomePage(
         deepLinkURL: _currentURI == null ? null : _currentURI.toString(),
       ),
