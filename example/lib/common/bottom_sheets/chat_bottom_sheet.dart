@@ -390,11 +390,12 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                             style: GoogleFonts.inter(color: iconColor),
                           ));
                         _scrollToEnd();
-                        return ListView(
-                          controller: _scrollController,
-                          children: List.generate(
-                              data.item2,
-                              (index) => Container(
+                        return ListView.builder(
+                            controller: _scrollController,
+                            shrinkWrap: true,
+                            itemCount: data.item1.length,
+                            itemBuilder: (_, index) {
+                              return Container(
                                   padding: EdgeInsets.fromLTRB(
                                     (data.item1[index].sender?.isLocal ?? false)
                                         ? 50.0
@@ -412,8 +413,9 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                 false
                                             ? true
                                             : false,
-                                    message:
-                                        data.item1[index].message.toString(),
+                                    message: data.item1[index].message
+                                        .trim()
+                                        .toString(),
                                     senderName:
                                         data.item1[index].sender?.name ??
                                             "Anonymous",
@@ -425,8 +427,8 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                             ? ""
                                             : sender(data.item1[index]
                                                 .hmsMessageRecipient!),
-                                  ))),
-                        );
+                                  ));
+                            });
                       },
                     ),
                   ),
