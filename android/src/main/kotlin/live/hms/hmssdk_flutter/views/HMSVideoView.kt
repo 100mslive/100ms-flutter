@@ -94,11 +94,10 @@ class HMSVideoView(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         if (track != null) {
-            if(hmsVideoView != null){
+            if (hmsVideoView != null) {
                 hmsVideoView?.addTrack(track)
                 context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId))
-            }
-            else{
+            } else {
                 Log.e("HMSVideoView Error", "onAttachedToWindow error hmsVideoView is null")
             }
         } else {
