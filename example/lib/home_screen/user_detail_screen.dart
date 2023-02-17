@@ -59,7 +59,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
     HMSVirtualBackgroundPlugin? virtualBackgroundPlugin;
     if (isVirtualBackgroundEnable) {
       Uint8List imageData =
-          (await rootBundle.load("assets/img_forest.jpg")).buffer.asUint8List();
+          (await rootBundle.load("assets/virtual_background.jpg"))
+              .buffer
+              .asUint8List();
       virtualBackgroundPlugin = HMSVirtualBackgroundPlugin(
           backgroundImage: imageData, blurRadius: 20);
     }
