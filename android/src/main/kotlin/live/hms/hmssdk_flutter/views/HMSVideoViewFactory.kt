@@ -13,58 +13,6 @@ import live.hms.video.error.HMSException
 import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.video.utils.HmsUtilities
 
-class HMSVideoViewWidget(
-    private val context: Context,
-    id: Int,
-    creationParams: Map<String?, Any?>?,
-    track: HMSVideoTrack?,
-    setMirror: Boolean,
-    scaleType: Int?,
-    private val matchParent: Boolean? = true,
-    disableAutoSimulcastLayerSelect: Boolean
-) : PlatformView {
-
-    private var hmsVideoView: HMSVideoView? = null
-
-    init {
-        if (hmsVideoView == null) {
-            hmsVideoView = HMSVideoView(context, setMirror, scaleType, track, disableAutoSimulcastLayerSelect)
-        }
-    }
-
-    override fun getView(): View? {
-        return hmsVideoView
-    }
-
-    override fun onFlutterViewAttached(flutterView: View) {
-        super.onFlutterViewAttached(flutterView)
-        var frameLayoutParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT
-        )
-        if (matchParent == false) {
-            frameLayoutParams = FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT
-            )
-        }
-        if (view != null) {
-            view?.layoutParams = frameLayoutParams
-        } else {
-            Log.e("HMSVideoView error", "onFlutterViewAttached error view is null")
-        }
-    }
-
-    override fun dispose() {
-        if (hmsVideoView != null) {
-            hmsVideoView?.onDisposeCalled()
-        } else {
-            Log.e("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
-        }
-        hmsVideoView = null
-    }
-}
-
 class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
 
     PlatformViewFactory(StandardMessageCodec.INSTANCE) {
@@ -96,6 +44,6 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
         }
         val disableAutoSimulcastLayerSelect = args!!["disable_auto_simulcast_layer_select"] as? Boolean ?: false
 
-        return HMSVideoViewWidget(requireNotNull(context), viewId, creationParams, track, setMirror!!, scaleType, matchParent, disableAutoSimulcastLayerSelect)
+        return  HMSVideoView(viewId,context!!, setMirror!!, scaleType, track, disableAutoSimulcastLayerSelect,matchParent!!)
     }
 }

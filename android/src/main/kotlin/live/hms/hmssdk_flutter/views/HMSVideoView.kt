@@ -7,26 +7,27 @@ import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.util.Base64
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import io.flutter.plugin.platform.PlatformView
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
-import live.hms.hmssdk_flutter.R
 import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.videoview.HMSVideoView
 import org.webrtc.RendererCommon
 import java.io.ByteArrayOutputStream
 
 class HMSVideoView(
-    context: Context,
-    private val setMirror: Boolean,
-    private val scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
+    id: Int,
+    private val context: Context,
+    setMirror: Boolean,
+    scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
     private val track: HMSVideoTrack?,
-    private val disableAutoSimulcastLayerSelect: Boolean
-) : FrameLayout(context, null) {
+    disableAutoSimulcastLayerSelect: Boolean,
+    matchParent:Boolean
+) : PlatformView{
 
     private var hmsVideoView: HMSVideoView? = null
-    private var view: View? = null
+
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(contxt: Context?, intent: Intent?) {
             if (intent?.action == track?.trackId) {
@@ -41,18 +42,25 @@ class HMSVideoView(
         }
     }
     init {
-        view =
-            (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.hms_video_view, this)
-        if (view != null) {
-            hmsVideoView = view?.findViewById(R.id.hmsVideoView)
-            hmsVideoView?.setEnableHardwareScaler(false)
-            hmsVideoView?.setMirror(setMirror)
-            hmsVideoView?.disableAutoSimulcastLayerSelect(disableAutoSimulcastLayerSelect)
-            if ((scaleType ?: 0) <= RendererCommon.ScalingType.values().size) {
-                hmsVideoView?.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
-            }
-        } else {
-            Log.e("HMSVideoView Error", "HMSVideoView init error view is null")
+        hmsVideoView = HMSVideoView(context)
+        hmsVideoView?.id = id
+        Log.e("HMSVIDEOVIEW","init called for view with id:${hmsVideoView?.id}")
+        var frameLayoutParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT
+        )
+        if (!matchParent) {
+            frameLayoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+        hmsVideoView?.layoutParams = frameLayoutParams
+        hmsVideoView?.setEnableHardwareScaler(false)
+        hmsVideoView?.setMirror(setMirror)
+        hmsVideoView?.disableAutoSimulcastLayerSelect(disableAutoSimulcastLayerSelect)
+        if ((scaleType ?: 0) <= RendererCommon.ScalingType.values().size) {
+            hmsVideoView?.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
         }
     }
 
@@ -82,39 +90,29 @@ class HMSVideoView(
         }
     }
 
-    fun onDisposeCalled() {
-        if (hmsVideoView != null) {
-            hmsVideoView?.removeTrack()
-        } else {
-            Log.e("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
+    override fun onFlutterViewAttached(flutterView: View) {
+        super.onFlutterViewAttached(flutterView)
+        if(track != null){
+            hmsVideoView?.addTrack(track)
+            context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId))
         }
-        this.removeView(view)
-        view = null
-        hmsVideoView = null
+    }
+
+    override fun onFlutterViewDetached() {
+        super.onFlutterViewDetached()
+        hmsVideoView?.removeTrack()
         context.unregisterReceiver(broadcastReceiver)
+        hmsVideoView = null
+    }
+    override fun getView(): View? {
+        return hmsVideoView
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        if (track != null) {
-            if (hmsVideoView != null) {
-                hmsVideoView?.addTrack(track)
-                context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId))
-            } else {
-                Log.e("HMSVideoView Error", "onAttachedToWindow error hmsVideoView is null")
-            }
-        } else {
-            Log.e("HMSVideoView Error", "onAttachedToWindow error track is null, cannot attach null track")
-        }
+    override fun dispose() {
+        Log.e("HMSVIDEOVIEW","Dispose called for view with id:${hmsVideoView?.id}")
+        hmsVideoView?.removeTrack()
+        context.unregisterReceiver(broadcastReceiver)
+        hmsVideoView = null
     }
 
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        if (hmsVideoView != null) {
-            hmsVideoView?.removeTrack()
-            context.unregisterReceiver(broadcastReceiver)
-        } else {
-            Log.e("HMSVideoView error", "onDetachedFromWindow error hmsVideoView is null")
-        }
-    }
 }
