@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_svg/svg.dart';
@@ -232,7 +234,7 @@ class _MeetingPageState extends State<MeetingPage> {
                 return Selector<MeetingStore, bool>(
                     selector: (_, meetingStore) => meetingStore.isPipActive,
                     builder: (_, isPipActive, __) {
-                      return isPipActive
+                      return isPipActive && Platform.isAndroid
                           ? PipView()
                           : Scaffold(
                               resizeToAvoidBottomInset: false,

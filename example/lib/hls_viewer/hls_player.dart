@@ -7,8 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class HLSPlayer extends StatefulWidget {
-  HLSPlayer({Key? key}) : super(key: key);
 
+  final String? streamUrl;
+  HLSPlayer({Key? key,this.streamUrl}) : super(key: key);
   @override
   _HLSPlayerState createState() => _HLSPlayerState();
 }
@@ -26,9 +27,11 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
     );
     fadeInFadeOut = Tween<double>(begin: 0.0, end: 1).animate(animation);
 
-    context
-        .read<MeetingStore>()
-        .setPIPVideoController(false, aspectRatio: 16 / 9);
+    context.read<MeetingStore>().setPIPVideoController(
+          false,
+          aspectRatio: 16 / 9,
+          hlsStreamUrl: widget.streamUrl
+    );
     animation.forward();
   }
 
@@ -64,7 +67,7 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
                           animation.reverse();
                           context
                               .read<MeetingStore>()
-                              .setPIPVideoController(true);
+                              .setPIPVideoController(true,hlsStreamUrl: widget.streamUrl);
                           animation.forward();
                         },
                         child: Container(

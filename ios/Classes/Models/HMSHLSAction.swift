@@ -22,9 +22,9 @@ class HMSHLSAction {
     }
 
     static private func startHlsStreaming(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
-        let arguments = call.arguments as! [AnyHashable: Any]
-        let meetingUrlVariantsList = arguments["meeting_url_variants"] as? [[String: String]]? ?? nil
-        let recordingConfig = arguments["recording_config"] as? [String: Bool]? ?? nil
+        let arguments = call.arguments as? [AnyHashable: Any]
+        let meetingUrlVariantsList = arguments?["meeting_url_variants"] as? [[String: String]]? ?? nil
+        let recordingConfig = arguments?["recording_config"] as? [String: Bool]? ?? nil
 
         var meetingUrlVariant: [HMSHLSMeetingURLVariant]?
         var hmsHLSRecordingConfig: HMSHLSRecordingConfig?
