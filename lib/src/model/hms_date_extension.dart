@@ -7,13 +7,14 @@ class HMSDateExtension {
     List<String> dateList = dateTimeSeprate[0].split("-");
     List<String> timeList = dateTimeSeprate[1].split(":");
 
+    List<String> seconds = timeList[2].split("+");
     DateTime _dateTime = DateTime(
       int.parse(dateList[0]),
       int.parse(dateList[1]),
       int.parse(dateList[2]),
       int.parse(timeList[0]),
       int.parse(timeList[1]),
-      int.parse(timeList[2]),
+      int.parse(seconds[0]),
     );
     return _dateTime;
   }

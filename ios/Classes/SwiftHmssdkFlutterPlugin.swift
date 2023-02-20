@@ -541,11 +541,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
-                if #available(iOS 15.0, *) {
-                    if HMSPIPAction.pipController != nil {
-                        HMSPIPAction.disposePIP(nil)
-                    }
-                }
+                self.destroyPIPController()
                 result(nil)
             }
         }
@@ -616,6 +612,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
+                self.destroyPIPController()
                 result(nil)
             }
         }
@@ -1051,11 +1048,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
-        if #available(iOS 15.0, *) {
-            if HMSPIPAction.pipController != nil {
-                HMSPIPAction.disposePIP(nil)
-            }
-        }
+        destroyPIPController()
         eventSink?(data)
     }
 
@@ -1220,5 +1213,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         ] as [String: Any]
 
         eventSink?(data)
+    }
+    
+    func destroyPIPController(){
+        if #available(iOS 15.0, *) {
+            if HMSPIPAction.pipController != nil {
+                HMSPIPAction.disposePIP(nil)
+            }
+        }
     }
 }

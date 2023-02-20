@@ -8,13 +8,14 @@ import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 //Project imports
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class AspectRatioOptionDialog extends StatefulWidget {
   final List<String> availableAspectRatios;
-  final Function(double aspectRatio) setAspectRatio;
+   MeetingStore meetingStore;
   AspectRatioOptionDialog({
     required this.availableAspectRatios,
-    required this.setAspectRatio,
+    required this.meetingStore,
   });
 
   @override
@@ -154,7 +155,7 @@ class _AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
                   double ratio =
                       double.parse(number[0]) / double.parse(number[1]);
                   print("aspect ratio:" + ratio.toString());
-                  widget.setAspectRatio(ratio);
+                  widget.meetingStore.setPIPVideoController(true,aspectRatio: ratio);
                   Navigator.pop(context);
                 }
               },
