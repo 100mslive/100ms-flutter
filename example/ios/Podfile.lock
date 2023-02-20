@@ -127,9 +127,6 @@ PODS:
   - Flutter (1.0.0)
   - flutter_foreground_task (0.0.1):
     - Flutter
-  - fluttertoast (0.0.2):
-    - Flutter
-    - Toast
   - GCDWebServer (3.5.4):
     - GCDWebServer/Core (= 3.5.4)
   - GCDWebServer/Core (3.5.4)
@@ -227,7 +224,6 @@ PODS:
   - shared_preferences_ios (0.0.1):
     - Flutter
   - SwiftyGif (5.4.4)
-  - Toast (4.0.0)
   - uni_links (0.0.1):
     - Flutter
   - url_launcher_ios (0.0.1):
@@ -244,7 +240,6 @@ DEPENDENCIES:
   - firebase_performance (from `.symlinks/plugins/firebase_performance/ios`)
   - Flutter (from `Flutter`)
   - flutter_foreground_task (from `.symlinks/plugins/flutter_foreground_task/ios`)
-  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - HMSBroadcastExtensionSDK
   - hmssdk_flutter (from `.symlinks/plugins/hmssdk_flutter/ios`)
   - image_gallery_saver (from `.symlinks/plugins/image_gallery_saver/ios`)
@@ -289,7 +284,6 @@ SPEC REPOS:
     - PromisesObjC
     - SDWebImage
     - SwiftyGif
-    - Toast
 
 EXTERNAL SOURCES:
   file_picker:
@@ -308,8 +302,6 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_foreground_task:
     :path: ".symlinks/plugins/flutter_foreground_task/ios"
-  fluttertoast:
-    :path: ".symlinks/plugins/fluttertoast/ios"
   hmssdk_flutter:
     :path: ".symlinks/plugins/hmssdk_flutter/ios"
   image_gallery_saver:
@@ -357,7 +349,6 @@ SPEC CHECKSUMS:
   FirebaseRemoteConfig: acc04f51d74adfd9d5439d32126e01b520983737
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_foreground_task: 21ef182ab0a29a3005cc72cd70e5f45cb7f7f817
-  fluttertoast: eb263d302cc92e04176c053d2385237e9f43fad0
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   GoogleAppMeasurement: c7d6fff39bf2d829587d74088d582e32d75133c3
   GoogleDataTransport: ea169759df570f4e37bdee1623ec32a7e64e67c4
@@ -382,7 +373,6 @@ SPEC CHECKSUMS:
   share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
-  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher_ios: ae1517e5e344f5544fb090b079e11f399dfbe4d2
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f

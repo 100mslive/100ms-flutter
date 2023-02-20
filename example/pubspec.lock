@@ -57,6 +57,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  bot_toast:
+    dependency: "direct main"
+    description:
+      name: bot_toast
+      sha256: "19306147033316a7873c5d261b874fca3f341c05e4e1c12be56153ad11187edd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.3"
   characters:
     dependency: transitive
     description:
@@ -360,14 +368,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.8.5+3"
-  fluttertoast:
-    dependency: "direct main"
-    description:
-      name: fluttertoast
-      sha256: "7cc92eabe01e3f1babe1571c5560b135dfc762a34e41e9056881e2196b178ec1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "8.1.2"
   focus_detector:
     dependency: "direct main"
     description:
