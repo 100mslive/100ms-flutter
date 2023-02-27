@@ -1,8 +1,9 @@
 //Package imports
 import 'dart:io';
 
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/service/constant.dart';
@@ -66,7 +67,7 @@ class Utilities {
   }
 
   static double getHLSRatio(Size size, BuildContext context) {
-    return (size.height) / (size.width);
+    return (size.height - 1) / (size.width);
   }
 
   static void setRTMPUrl(String roomUrl) {
@@ -99,10 +100,7 @@ class Utilities {
     while ((await Permission.bluetoothConnect.isDenied)) {
       await Permission.bluetoothConnect.request();
     }
-    // storage permission is required to save Snapshot to device gallery.
-    while ((await Permission.storage.isDenied)) {
-      await Permission.storage.request();
-    }
+
     return true;
   }
 
@@ -131,10 +129,11 @@ class Utilities {
   }
 
   static void showToast(String message, {int time = 1}) {
-    Fluttertoast.showToast(
-        msg: message,
-        backgroundColor: Colors.black87,
-        timeInSecForIosWeb: time);
+    BotToast.showText(
+        textStyle: GoogleFonts.inter(fontSize: 14),
+        text: message,
+        contentColor: Colors.black87,
+        duration: Duration(seconds: time));
   }
 
   static Future<String> getStringData({required String key}) async {

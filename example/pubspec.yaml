@@ -37,7 +37,7 @@ dependencies:
   avatar_glow:
   flutter_svg:
   google_fonts:
-  fluttertoast:
+  bot_toast:
   qr_code_scanner:
   shared_preferences: 2.0.15
   uni_links:
@@ -46,7 +46,7 @@ dependencies:
   badges:
   url_launcher:
   pip_flutter:
-  share_plus:
+  share_plus: 6.3.0
   flutter_linkify:
   flutter_foreground_task: ^3.10.0
   image_gallery_saver:

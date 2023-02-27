@@ -11,6 +11,7 @@ enum HMSAudioDevice {
 extension HMSAudioDeviceValues on HMSAudioDevice {
   static HMSAudioDevice getHMSAudioDeviceFromName(String name) {
     switch (name) {
+
       ///front camera is being used
       case 'SPEAKER_PHONE':
         return HMSAudioDevice.SPEAKER_PHONE;

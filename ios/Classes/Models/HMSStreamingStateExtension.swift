@@ -15,7 +15,7 @@ class HMSStreamingStateExtension {
 
         dict["running"] = rtmp.running
         if let startedAt = rtmp.startedAt {
-            dict["started_at"] = "\(startedAt)"
+            dict["started_at"] = HMSUtilitiesExtension.toLocalDate(startedAt)
         }
         if let error = rtmp.error {
             dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
@@ -29,7 +29,7 @@ class HMSStreamingStateExtension {
 
         dict["running"] = server.running
         if let startedAt = server.startedAt {
-            dict["started_at"] = "\(startedAt)"
+            dict["started_at"] = HMSUtilitiesExtension.toLocalDate(startedAt)
         }
         if let error = server.error {
             dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
@@ -44,7 +44,7 @@ class HMSStreamingStateExtension {
 
         dict["running"] = browser.running
         if let startedAt = browser.startedAt {
-            dict["started_at"] = "\(startedAt)"
+            dict["started_at"] = HMSUtilitiesExtension.toLocalDate(startedAt)
         }
         if let error = browser.error {
             dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
@@ -71,7 +71,7 @@ class HMSStreamingStateExtension {
 
         dict["running"] = hlsRecording.running
         if let startedAt = hlsRecording.startedAt {
-            dict["started_at"] = "\(startedAt)"
+            dict["started_at"] = HMSUtilitiesExtension.toLocalDate(startedAt)
         }
         if let error = hlsRecording.error {
             dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
