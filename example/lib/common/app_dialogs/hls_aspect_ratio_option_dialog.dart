@@ -12,7 +12,7 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class AspectRatioOptionDialog extends StatefulWidget {
   final List<String> availableAspectRatios;
-   MeetingStore meetingStore;
+  MeetingStore meetingStore;
   AspectRatioOptionDialog({
     required this.availableAspectRatios,
     required this.meetingStore,
@@ -155,7 +155,8 @@ class _AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
                   double ratio =
                       double.parse(number[0]) / double.parse(number[1]);
                   print("aspect ratio:" + ratio.toString());
-                  widget.meetingStore.setPIPVideoController(true,aspectRatio: ratio);
+                  widget.meetingStore
+                      .setPIPVideoController(true, aspectRatio: ratio);
                   Navigator.pop(context);
                 }
               },

@@ -65,18 +65,18 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
       scaffoldBackgroundColor: Colors.black);
 
   ThemeData _lightTheme = ThemeData(
-    bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: themeDefaultColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        elevation: 5),
-    primaryTextTheme: TextTheme(bodyLarge: TextStyle(color: themeSurfaceColor)),
-    primaryColor: hmsdefaultColor,
-    brightness: Brightness.light,
-    scaffoldBackgroundColor: Colors.white,
-    dividerColor: Colors.white54
-  );
+      bottomSheetTheme: BottomSheetThemeData(
+          backgroundColor: themeDefaultColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          elevation: 5),
+      primaryTextTheme:
+          TextTheme(bodyLarge: TextStyle(color: themeSurfaceColor)),
+      primaryColor: hmsdefaultColor,
+      brightness: Brightness.light,
+      scaffoldBackgroundColor: Colors.white,
+      dividerColor: Colors.white54);
 
   @override
   void initState() {

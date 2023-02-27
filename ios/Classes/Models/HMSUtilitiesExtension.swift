@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 class HMSUtilitiesExtension {
     static func toLocalDate(_ date: Date) -> String {
         let localISOFormatter = ISO8601DateFormatter()

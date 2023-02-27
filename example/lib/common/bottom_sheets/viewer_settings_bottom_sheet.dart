@@ -145,7 +145,8 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                                   "3:4",
                                   "9:16"
                                 ],
-                          meetingStore: context.read<MeetingStore>(),));
+                                meetingStore: context.read<MeetingStore>(),
+                              ));
                     },
                     child: Container(
                       decoration: BoxDecoration(
