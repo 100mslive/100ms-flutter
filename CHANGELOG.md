@@ -1,3 +1,14 @@
+## 1.3.1 - 2023-02-27
+
+### Changed
+- Performance improvements for PIP Mode on iOS
+- Improved Disconnected State detection on certain Networks
+- Gracefully handling of null objects
+
+Updated to Android SDK 2.5.7 & iOS SDK 0.6.4
+
+Full Changelog: [1.3.0...1.3.1](https://github.com/100mslive/100ms-flutter/compare/1.3.0...1.3.1)
+
 ## 1.3.0 - 2023-02-01
 
 ### Breaking
