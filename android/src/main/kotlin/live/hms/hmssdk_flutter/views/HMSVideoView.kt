@@ -101,6 +101,7 @@ class HMSVideoView(
     override fun onFlutterViewDetached() {
         super.onFlutterViewDetached()
         hmsVideoView?.removeTrack()
+        hmsVideoView?.visibility = View.GONE
         context.unregisterReceiver(broadcastReceiver)
         hmsVideoView = null
     }
@@ -111,6 +112,7 @@ class HMSVideoView(
     override fun dispose() {
         Log.e("HMSVIDEOVIEW","Dispose called for view with id:${hmsVideoView?.id}")
         hmsVideoView?.removeTrack()
+        hmsVideoView?.visibility = View.GONE
         context.unregisterReceiver(broadcastReceiver)
         hmsVideoView = null
     }
