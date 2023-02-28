@@ -45,6 +45,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
     return WillPopScope(
       onWillPop: () async {
         _previewStore.removePreviewListener();
+        _previewStore.leave();
         return true;
       },
       child: Scaffold(
@@ -89,9 +90,6 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    // if (context.read<PreviewStore>().peer != null &&
-                    //     context.read<PreviewStore>().peer!.role.publishSettings!.allowed
-                    //         .contains("video"))
                     (_previewStore.peer != null &&
                             _previewStore.peer!.role.publishSettings!.allowed
                                 .contains("video"))
@@ -99,8 +97,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                             onTap: _previewStore.localTracks.isEmpty
                                 ? null
                                 : () async {
-                                    _previewStore.switchVideo(
-                                        isOn: _previewStore.isVideoOn);
+                                    _previewStore.toggleCameraMuteState();
                                   },
                             child: CircleAvatar(
                               radius: 25,
@@ -146,7 +143,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                                 .contains("audio"))
                         ? GestureDetector(
                             onTap: () async {
-                              _previewStore.switchAudio();
+                              _previewStore.toggleMicMuteState();
                             },
                             child: CircleAvatar(
                                 radius: 25,

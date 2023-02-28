@@ -39,7 +39,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
     if (ans == false) {
       Navigator.of(context).pop();
     }
-    if (!widget.isAudioOn) ref.read(meetingStoreProvider).switchAudio();
+    if (!widget.isAudioOn) ref.read(meetingStoreProvider).toggleMicMuteState();
   }
 
   @override
@@ -101,14 +101,19 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
   void _onItemTapped(int index) {
     switch (index) {
       case 0:
-        ref.read(meetingStoreProvider).switchAudio();
+        ref.read(meetingStoreProvider).toggleMicMuteState();
 
         break;
       case 1:
-        ref.read(meetingStoreProvider).switchVideo();
+        ref.read(meetingStoreProvider).toggleCameraMuteState();
 
         break;
       case 2:
+        if (Platform.isIOS) {
+          ref.read(meetingStoreProvider).leave();
+          Navigator.pop(context);
+          return;
+        }
         if (!ref.read(meetingStoreProvider).isScreenShareOn) {
           ref.read(meetingStoreProvider).startScreenShare();
         } else {

@@ -73,24 +73,20 @@ class PreviewStore extends ChangeNotifier
     hmsSDKInteractor.removePreviewListener(this);
   }
 
-  void stopCapturing() {
-    hmsSDKInteractor.stopCapturing();
-  }
-
-  void startCapturing() {
-    hmsSDKInteractor.startCapturing();
-  }
-
-  void switchVideo({bool isOn = false}) {
-    hmsSDKInteractor.switchVideo(isOn: isOn);
+  void toggleCameraMuteState() {
+    hmsSDKInteractor.toggleCameraMuteState();
     isVideoOn = !isVideoOn;
     notifyListeners();
   }
 
-  void switchAudio({bool isOn = false}) {
-    hmsSDKInteractor.switchAudio(isOn: isOn);
+  void toggleMicMuteState() {
+    hmsSDKInteractor.toggleMicMuteState();
     isAudioOn = !isAudioOn;
     notifyListeners();
+  }
+
+  void leave() {
+    hmsSDKInteractor.leave();
   }
 
   void addLogsListener(HMSLogListener hmsLogListener) {}

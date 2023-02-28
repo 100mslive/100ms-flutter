@@ -67,14 +67,14 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
   }
 
-  Future<void> switchAudio() async {
-    await _hmsSDKInteractor.switchAudio(isOn: isMicOn);
+  Future<void> toggleMicMuteState() async {
+    _hmsSDKInteractor.toggleMicMuteState();
     isMicOn = !isMicOn;
     notifyListeners();
   }
 
-  Future<void> switchVideo() async {
-    await _hmsSDKInteractor.switchVideo(isOn: isVideoOn);
+  Future<void> toggleCameraMuteState() async {
+    _hmsSDKInteractor.toggleCameraMuteState();
     isVideoOn = !isVideoOn;
     notifyListeners();
   }
@@ -109,14 +109,6 @@ class MeetingStore extends ChangeNotifier
 
   Future<bool> isVideoMute(HMSPeer? peer) async {
     return await _hmsSDKInteractor.isVideoMute(peer);
-  }
-
-  Future<bool> startCapturing() async {
-    return await _hmsSDKInteractor.startCapturing();
-  }
-
-  void stopCapturing() {
-    _hmsSDKInteractor.stopCapturing();
   }
 
   void removePeer(HMSPeer peer) {
@@ -496,22 +488,20 @@ class MeetingStore extends ChangeNotifier
             }
           });
         } else {
-          if ((element.videoTrack != null && isVideoOn)) startCapturing();
+          if ((element.videoTrack != null && isVideoOn)) {
+            toggleCameraMuteState();
+          }
         }
       });
     } else if (state == AppLifecycleState.paused) {
       HMSLocalPeer? localPeer = await getLocalPeer();
       if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
-        stopCapturing();
+        toggleCameraMuteState();
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
         peerTrackNode.setOffScreenStatus(true);
       }
     } else if (state == AppLifecycleState.inactive) {
-      HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
-        stopCapturing();
-      }
       for (PeerTrackNode peerTrackNode in peerTracks) {
         peerTrackNode.setOffScreenStatus(true);
       }

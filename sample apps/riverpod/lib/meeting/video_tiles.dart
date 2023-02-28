@@ -29,23 +29,19 @@ class VideoTiles extends StatelessWidget {
                     scaleType: ScaleType.SCALE_ASPECT_FILL,
                   );
                 } else {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                        child: CircleAvatar(
-                            backgroundColor: Utilities.getBackgroundColour(
+                  return Center(
+                      child: CircleAvatar(
+                          backgroundColor: Utilities.getBackgroundColour(
+                              ref.read(peerTrackProvider).peer.name),
+                          radius: 36,
+                          child: Text(
+                            Utilities.getAvatarTitle(
                                 ref.read(peerTrackProvider).peer.name),
-                            radius: 36,
-                            child: Text(
-                              Utilities.getAvatarTitle(
-                                  ref.read(peerTrackProvider).peer.name),
-                              style: const TextStyle(
-                                fontSize: 36,
-                                color: Colors.white,
-                              ),
-                            ))),
-                  );
+                            style: const TextStyle(
+                              fontSize: 36,
+                              color: Colors.white,
+                            ),
+                          )));
                 }
               },
             ),
