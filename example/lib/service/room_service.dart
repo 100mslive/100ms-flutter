@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 //Package imports
+import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:http/http.dart' as http;
 
@@ -28,7 +29,7 @@ class RoomService {
       var body = json.decode(response.body);
       return [body['token'], codeAndDomain[2]!.trim()];
     } catch (e) {
-      return null;
+      return [e.toString()];
     }
   }
 

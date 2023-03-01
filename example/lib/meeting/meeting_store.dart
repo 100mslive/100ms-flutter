@@ -178,10 +178,14 @@ class MeetingStore extends ChangeNotifier
 
   HMSVideoTrack? currentPIPtrack;
 
-  Future<bool> join(String user, String roomUrl) async {
+  Future<String?>? join(String user, String roomUrl) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
-    if (token == null) return false;
+    
+    if (token == null) return "Please check the meeting link";
+    if (token.length == 1 || token[0] == null) {
+      return token[0]??"Token is null";
+    }
     HMSConfig config = HMSConfig(
       authToken: token[0]!,
       userName: user,
@@ -194,7 +198,7 @@ class MeetingStore extends ChangeNotifier
     WidgetsBinding.instance.addObserver(this);
     _hmsSDKInteractor.join(config: config);
     this.meetingUrl = roomUrl;
-    return true;
+    return null;
   }
 
   //HMSSDK Methods

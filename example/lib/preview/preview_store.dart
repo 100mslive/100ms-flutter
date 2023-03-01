@@ -100,8 +100,10 @@ class PreviewStore extends ChangeNotifier
     List<String?>? token =
         await RoomService().getToken(user: user, room: meetingLink);
 
-    if (token == null) return "Connection Error";
-    if (token[0] == null) return "Token Error";
+    if (token == null) return "Please check the meeting link";
+    if (token.length == 1 || token[0] == null) {
+      return token[0]??"Token is null";
+    }
     FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
     HMSConfig config = HMSConfig(
       authToken: token[0]!,

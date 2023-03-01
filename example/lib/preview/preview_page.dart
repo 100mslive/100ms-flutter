@@ -60,11 +60,20 @@ class _PreviewPageState extends State<PreviewPage> {
             action: () {
               Navigator.of(context).popUntil((route) => route.isFirst);
             });
-      } else {
+      } else if(ans.contains("Token")){
         UtilityComponents.showErrorDialog(
             context: context,
             errorMessage: "Please check the meeting URL",
             errorTitle: ans,
+            actionMessage: "OK",
+            action: () {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            });
+      } else{
+            UtilityComponents.showErrorDialog(
+            context: context,
+            errorMessage: ans,
+            errorTitle: "Error Occured",
             actionMessage: "OK",
             action: () {
               Navigator.of(context).popUntil((route) => route.isFirst);

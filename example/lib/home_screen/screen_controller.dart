@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
@@ -42,12 +43,18 @@ class _ScreenControllerState extends State<ScreenController> {
   }
 
   void initMeeting() async {
-    bool ans = await context
+    String? ans = await context
         .read<MeetingStore>()
         .join(widget.user, widget.meetingLink);
-    if (!ans) {
-      Utilities.showToast("Unable to Join");
-      Navigator.of(context).pop();
+    if (ans != null) {
+    UtilityComponents.showErrorDialog(
+            context: context,
+            errorMessage: ans,
+            errorTitle: "Error Occured",
+            actionMessage: "OK",
+            action: () {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            });
     }
   }
 

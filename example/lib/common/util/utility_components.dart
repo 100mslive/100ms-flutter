@@ -1032,11 +1032,13 @@ class UtilityComponents {
                       fontWeight: FontWeight.w600),
                 ),
               ),
-              content: Text(errorMessage,
-                  style: GoogleFonts.inter(
-                      color: themeDefaultColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400)),
+              content: SingleChildScrollView(
+                child: Text(errorMessage,
+                    style: GoogleFonts.inter(
+                        color: themeDefaultColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400)),
+              ),
               actions: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
