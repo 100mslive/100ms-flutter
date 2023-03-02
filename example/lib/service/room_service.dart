@@ -29,7 +29,9 @@ class RoomService {
       var body = json.decode(response.body);
       return [body['token'], codeAndDomain[2]!.trim()];
     } catch (e) {
-      return [e.toString()];
+      var eToString = e.toString();
+      var errorMsg = 'user: $user, room: $room, error: $eToString';
+      return [errorMsg];
     }
   }
 
