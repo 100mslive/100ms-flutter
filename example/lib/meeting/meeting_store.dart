@@ -182,9 +182,9 @@ class MeetingStore extends ChangeNotifier
     List<String?>? token =
         await RoomService().getToken(user: user, room: roomUrl);
     
-    if (token == null) return "Please check the meeting link";
+    if (token == null) return "user: $user, room: $roomUrl, error: Please check the meeting link";
     if (token.length == 1 || token[0] == null) {
-      return token[0]??"Token is null";
+      return token[0]??"user: $user, room: $roomUrl, error: Token is null";
     }
     HMSConfig config = HMSConfig(
       authToken: token[0]!,

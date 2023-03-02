@@ -47,23 +47,14 @@ class _PreviewPageState extends State<PreviewPage> {
   }
 
   void initPreview() async {
-    String ans = await context
+    String? ans = await context
         .read<PreviewStore>()
         .startPreview(user: widget.name, meetingLink: widget.meetingLink);
-    if (ans != "") {
-      if (ans.contains("Connection")) {
+    if (ans != null) {
+      if(ans.contains("Token")){
         UtilityComponents.showErrorDialog(
             context: context,
-            errorMessage: "Please Check the internet connection",
-            errorTitle: ans,
-            actionMessage: "OK",
-            action: () {
-              Navigator.of(context).popUntil((route) => route.isFirst);
-            });
-      } else if(ans.contains("Token")){
-        UtilityComponents.showErrorDialog(
-            context: context,
-            errorMessage: "Please check the meeting URL",
+            errorMessage: "user: ${widget.name}, room:${widget.meetingLink}, error: Please check the meeting URL",
             errorTitle: ans,
             actionMessage: "OK",
             action: () {

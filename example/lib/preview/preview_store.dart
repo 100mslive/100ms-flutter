@@ -95,12 +95,12 @@ class PreviewStore extends ChangeNotifier
     notifyListeners();
   }
 
-  Future<String> startPreview(
+  Future<String?> startPreview(
       {required String user, required String meetingLink}) async {
     List<String?>? token =
         await RoomService().getToken(user: user, room: meetingLink);
 
-    if (token == null) return "Please check the meeting link";
+    if (token == null) return "user: $user, room:$meetingLink, Please Check the domain of meeting URL";
     if (token.length == 1 || token[0] == null) {
       return token[0]??"Token is null";
     }
@@ -115,7 +115,7 @@ class PreviewStore extends ChangeNotifier
     hmsSDKInteractor.addPreviewListener(this);
     hmsSDKInteractor.preview(config: config);
     meetingUrl = meetingLink;
-    return "";
+    return null;
   }
 
   @override

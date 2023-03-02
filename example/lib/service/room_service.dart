@@ -38,6 +38,9 @@ class RoomService {
   List<String?>? getCode(String roomUrl) {
     String url = roomUrl;
     if (url == "") return [];
+    if (!roomUrl.contains("app.100ms.live")) {
+      return [];
+    }
     url = url.trim();
     bool isQa = url.contains("qa-app");
     bool isProd = url.contains(".app");
