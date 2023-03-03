@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("riverpod Clone"),
+        title: const Text("Riverpod 100ms"),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

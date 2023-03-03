@@ -17,8 +17,12 @@ class HMSSDKInteractor {
   bool skipPreview = false;
 
   HMSSDKInteractor() {
+    initHMSSDK();
+  }
+
+  void initHMSSDK() async {
     hmsSDK = HMSSDK();
-    hmsSDK.build();
+    await hmsSDK.build();
   }
 
   void join({required HMSConfig config}) async {
@@ -26,16 +30,8 @@ class HMSSDKInteractor {
     hmsSDK.join(config: this.config);
   }
 
-  void leave({required HMSActionResultListener hmsActionResultListener}) async {
+  void leave({HMSActionResultListener? hmsActionResultListener}) async {
     hmsSDK.leave(hmsActionResultListener: hmsActionResultListener);
-  }
-
-  Future<HMSException?> switchAudio({bool isOn = false}) async {
-    return await hmsSDK.switchAudio(isOn: isOn);
-  }
-
-  Future<HMSException?> switchVideo({bool isOn = false}) async {
-    return await hmsSDK.switchVideo(isOn: isOn);
   }
 
   Future<void> switchCamera() async {
@@ -120,16 +116,8 @@ class HMSSDKInteractor {
         hmsActionResultListener: hmsActionResultListener);
   }
 
-  void stopCapturing() {
-    hmsSDK.stopCapturing();
-  }
-
   Future<HMSLocalPeer?> getLocalPeer() async {
     return await hmsSDK.getLocalPeer();
-  }
-
-  Future<bool> startCapturing() async {
-    return await hmsSDK.startCapturing();
   }
 
   Future<HMSPeer?> getPeer({required String peerId}) async {
@@ -144,6 +132,14 @@ class HMSSDKInteractor {
         forRemoteTrack: forRemoteTrack,
         mute: mute,
         hmsActionResultListener: hmsActionResultListener);
+  }
+
+  void toggleCameraMuteState() {
+    hmsSDK.toggleCameraMuteState();
+  }
+
+  void toggleMicMuteState() {
+    hmsSDK.toggleMicMuteState();
   }
 
   void endRoom(bool lock, String reason,

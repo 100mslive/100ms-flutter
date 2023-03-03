@@ -107,8 +107,12 @@ class _MeetingPageState extends State<MeetingPage>
   @override
   void initState() {
     super.initState();
+    initHMSSDK();
+  }
+
+  void initHMSSDK() async {
     hmsSDK = HMSSDK();
-    hmsSDK.build();
+    await hmsSDK.build();
     hmsSDK.addUpdateListener(listener: this);
     hmsSDK.join(config: HMSConfig(authToken: authToken, userName: userName));
   }
@@ -327,6 +331,7 @@ class _MeetingPageState extends State<MeetingPage>
       child: (videoTrack != null && !(videoTrack.isMute))
           ? HMSVideoView(
               track: videoTrack,
+              scaleType: ScaleType.SCALE_ASPECT_FILL,
             )
           : Center(
               child: Container(

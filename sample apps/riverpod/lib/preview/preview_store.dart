@@ -52,12 +52,11 @@ class PreviewStore extends ChangeNotifier
 
   Future<bool> startPreview(
       {required String user, required String roomId}) async {
-    List<String?>? token =
+    String? token =
         await RoomService().getToken(user: user, room: roomId);
 
     if (token == null) return false;
-    if (token[0] == null) return false;
-    HMSConfig config = HMSConfig(authToken: token[0]!, userName: user);
+    HMSConfig config = HMSConfig(authToken: token, userName: user);
     hmsSDKInteractor.addPreviewListener(this);
     hmsSDKInteractor.preview(config: config);
     return true;
@@ -73,24 +72,20 @@ class PreviewStore extends ChangeNotifier
     hmsSDKInteractor.removePreviewListener(this);
   }
 
-  void stopCapturing() {
-    hmsSDKInteractor.stopCapturing();
-  }
-
-  void startCapturing() {
-    hmsSDKInteractor.startCapturing();
-  }
-
-  void switchVideo({bool isOn = false}) {
-    hmsSDKInteractor.switchVideo(isOn: isOn);
+  void toggleCameraMuteState() {
+    hmsSDKInteractor.toggleCameraMuteState();
     isVideoOn = !isVideoOn;
     notifyListeners();
   }
 
-  void switchAudio({bool isOn = false}) {
-    hmsSDKInteractor.switchAudio(isOn: isOn);
+  void toggleMicMuteState() {
+    hmsSDKInteractor.toggleMicMuteState();
     isAudioOn = !isAudioOn;
     notifyListeners();
+  }
+
+  void leave() {
+    hmsSDKInteractor.leave();
   }
 
   void addLogsListener(HMSLogListener hmsLogListener) {}

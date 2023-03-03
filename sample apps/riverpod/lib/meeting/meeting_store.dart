@@ -10,7 +10,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class MeetingStore extends ChangeNotifier
     with WidgetsBindingObserver
-    implements HMSUpdateListener, HMSActionResultListener, HMSStatsListener {
+    implements HMSUpdateListener, HMSActionResultListener{
   late HMSSDKInteractor _hmsSDKInteractor;
 
   MeetingStore({required HMSSDKInteractor hmsSDKInteractor}) {
@@ -50,10 +50,10 @@ class MeetingStore extends ChangeNotifier
   bool isScreenShareOn = false;
 
   Future<bool> join(String user, String roomUrl) async {
-    List<String?>? token =
+    String? token =
         await RoomService().getToken(user: user, room: roomUrl);
     if (token == null) return false;
-    HMSConfig config = HMSConfig(authToken: token[0]!, userName: user);
+    HMSConfig config = HMSConfig(authToken: token, userName: user);
 
     _hmsSDKInteractor.addUpdateListener(this);
     WidgetsBinding.instance.addObserver(this);
@@ -62,19 +62,18 @@ class MeetingStore extends ChangeNotifier
   }
 
   void leave() async {
-    _hmsSDKInteractor.removeStatsListener(this);
     WidgetsBinding.instance.removeObserver(this);
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
   }
 
-  Future<void> switchAudio() async {
-    await _hmsSDKInteractor.switchAudio(isOn: isMicOn);
+  Future<void> toggleMicMuteState() async {
+    _hmsSDKInteractor.toggleMicMuteState();
     isMicOn = !isMicOn;
     notifyListeners();
   }
 
-  Future<void> switchVideo() async {
-    await _hmsSDKInteractor.switchVideo(isOn: isVideoOn);
+  Future<void> toggleCameraMuteState() async {
+    _hmsSDKInteractor.toggleCameraMuteState();
     isVideoOn = !isVideoOn;
     notifyListeners();
   }
@@ -109,14 +108,6 @@ class MeetingStore extends ChangeNotifier
 
   Future<bool> isVideoMute(HMSPeer? peer) async {
     return await _hmsSDKInteractor.isVideoMute(peer);
-  }
-
-  Future<bool> startCapturing() async {
-    return await _hmsSDKInteractor.startCapturing();
-  }
-
-  void stopCapturing() {
-    _hmsSDKInteractor.stopCapturing();
   }
 
   void removePeer(HMSPeer peer) {
@@ -405,33 +396,6 @@ class MeetingStore extends ChangeNotifier
   }
 
   @override
-  void onLocalAudioStats(
-      {required HMSLocalAudioStats hmsLocalAudioStats,
-      required HMSLocalAudioTrack track,
-      required HMSPeer peer}) {}
-
-  @override
-  void onLocalVideoStats(
-      {required List<HMSLocalVideoStats> hmsLocalVideoStats,
-      required HMSLocalVideoTrack track,
-      required HMSPeer peer}) {}
-
-  @override
-  void onRemoteAudioStats(
-      {required HMSRemoteAudioStats hmsRemoteAudioStats,
-      required HMSRemoteAudioTrack track,
-      required HMSPeer peer}) {}
-
-  @override
-  void onRemoteVideoStats(
-      {required HMSRemoteVideoStats hmsRemoteVideoStats,
-      required HMSRemoteVideoTrack track,
-      required HMSPeer peer}) {}
-
-  @override
-  void onRTCStats({required HMSRTCStatsReport hmsrtcStatsReport}) {}
-
-  @override
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice}) {}
@@ -496,22 +460,20 @@ class MeetingStore extends ChangeNotifier
             }
           });
         } else {
-          if ((element.videoTrack != null && isVideoOn)) startCapturing();
+          if ((element.videoTrack != null && isVideoOn)) {
+            toggleCameraMuteState();
+          }
         }
       });
     } else if (state == AppLifecycleState.paused) {
       HMSLocalPeer? localPeer = await getLocalPeer();
       if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
-        stopCapturing();
+        toggleCameraMuteState();
       }
       for (PeerTrackNode peerTrackNode in peerTracks) {
         peerTrackNode.setOffScreenStatus(true);
       }
     } else if (state == AppLifecycleState.inactive) {
-      HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
-        stopCapturing();
-      }
       for (PeerTrackNode peerTrackNode in peerTracks) {
         peerTrackNode.setOffScreenStatus(true);
       }
