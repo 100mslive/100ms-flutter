@@ -1,21 +1,10 @@
 ///100ms HMSDateExtension
 ///
-///[HMSDateExtension] is used to covert android and ios native time format to DateTime format.
+///[HMSDateExtension] is used to covert android and ios native time format to DateTime format
+///in local time zone format.
 class HMSDateExtension {
   static DateTime convertDate(String date) {
-    List<String> dateTimeSeprate = date.split(" ");
-    List<String> dateList = dateTimeSeprate[0].split("-");
-    List<String> timeList = dateTimeSeprate[1].split(":");
-
-    List<String> seconds = timeList[2].split("+");
-    DateTime _dateTime = DateTime(
-      int.parse(dateList[0]),
-      int.parse(dateList[1]),
-      int.parse(dateList[2]),
-      int.parse(timeList[0]),
-      int.parse(timeList[1]),
-      int.parse(seconds[0]),
-    );
+    DateTime _dateTime = DateTime.parse(date).toLocal();
     return _dateTime;
   }
 }

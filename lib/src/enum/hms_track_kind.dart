@@ -4,7 +4,6 @@ enum HMSTrackKind { kHMSTrackKindAudio, kHMSTrackKindVideo, unknown }
 extension HMSTrackKindValue on HMSTrackKind {
   static HMSTrackKind getHMSTrackKindFromName(String name) {
     switch (name) {
-
       ///IOS
       case 'kHMSTrackKindAudio':
         return HMSTrackKind.kHMSTrackKindAudio;
