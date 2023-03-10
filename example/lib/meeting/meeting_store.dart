@@ -50,7 +50,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isHLSLoading = false;
 
-  String? streamUrl;
+  String? streamUrl = "";
 
   bool isHLSLink = false;
 
@@ -63,6 +63,10 @@ class MeetingStore extends ChangeNotifier
   bool isMicOn = true;
 
   bool isScreenShareOn = false;
+
+  List<HMSTrack?> screenShareTrack = [];
+
+  HMSTrack? curentScreenShareTrack;
 
   bool reconnecting = false;
 
@@ -94,6 +98,8 @@ class MeetingStore extends ChangeNotifier
 
   bool isActiveSpeakerMode = true;
 
+  List<HMSTrack> audioTracks = [];
+
   List<HMSMessage> messages = [];
 
   List<PeerTrackNode> peerTracks = [];
@@ -101,6 +107,8 @@ class MeetingStore extends ChangeNotifier
   List<String> activeSpeakerIds = [];
 
   HMSRoom? hmsRoom;
+
+  int? localPeerNetworkQuality;
 
   bool isStatsVisible = false;
 
@@ -110,7 +118,13 @@ class MeetingStore extends ChangeNotifier
 
   bool isNewMessageReceived = false;
 
+  int firstTimeBuild = 0;
+
+  String message = "";
+
   final DateFormat formatter = DateFormat('d MMM y h:mm:ss a');
+
+  ScrollController controller = ScrollController();
 
   MeetingMode meetingMode = MeetingMode.Video;
 
@@ -135,11 +149,16 @@ class MeetingStore extends ChangeNotifier
 
   bool isRaisedHand = false;
 
-  PipFlutterPlayerController? hlsVideoController;
+  int trackChange = -1;
 
+  // VideoPlayerController? hlsVideoController;
+
+  PipFlutterPlayerController? hlsVideoController;
   final GlobalKey pipFlutterPlayerKey = GlobalKey();
 
   bool hlsStreamingRetry = false;
+
+  bool isTrackSettingApplied = false;
 
   double audioPlayerVolume = 1.0;
 
@@ -154,6 +173,8 @@ class MeetingStore extends ChangeNotifier
   bool lastVideoStatus = false;
 
   double hlsAspectRatio = 16 / 9;
+
+  bool showNotification = false;
 
   HMSVideoTrack? currentPIPtrack;
 
@@ -187,6 +208,7 @@ class MeetingStore extends ChangeNotifier
       hlsVideoController = null;
     }
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
+    _hmsSDKInteractor.destroy();
   }
 
   Future<void> toggleMicMuteState() async {
@@ -462,7 +484,7 @@ class MeetingStore extends ChangeNotifier
           peerTracks.add(PeerTrackNode(
               peer: each,
               uid: each.peerId + "mainVideo",
-              networkQuality: each.networkQuality?.quality,
+              networkQuality: localPeerNetworkQuality,
               stats: RTCStats()));
         localPeer = each;
         addPeer(localPeer!);
@@ -663,7 +685,6 @@ class MeetingStore extends ChangeNotifier
           peerTracks[index].setAudioLevel(-1);
         }
       });
-      activeSpeakerIds.clear();
     }
 
     updateSpeakers.forEach((element) {
@@ -879,6 +900,20 @@ class MeetingStore extends ChangeNotifier
   }
 
 // Helper Methods
+
+  void clearRoomState() {
+    _hmsSDKInteractor.destroy();
+    peerTracks.clear();
+    isRoomEnded = true;
+    screenShareCount = 0;
+    this.meetingMode = MeetingMode.Video;
+    isScreenShareOn = false;
+    isAudioShareStarted = false;
+    _hmsSDKInteractor.removeUpdateListener(this);
+    setLandscapeLock(false);
+    notifyListeners();
+    FlutterForegroundTask.stopService();
+  }
 
   void toggleScreenShare() {
     if (!isScreenShareOn) {
@@ -1441,7 +1476,6 @@ class MeetingStore extends ChangeNotifier
                 enableOverflowMenu: false,
                 enableSkips: false,
                 playerTheme: PipFlutterPlayerTheme.cupertino));
-
     if (streamUrl == null && hlsStreamUrl == null) {
       Utilities.showToast("Stream URL is null", time: 5);
     }
@@ -1473,21 +1507,8 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  clearRoomState() {
-    _hmsSDKInteractor.destroy();
-    peerTracks.clear();
-    isRoomEnded = true;
-    screenShareCount = 0;
-    this.meetingMode = MeetingMode.Video;
-    isScreenShareOn = false;
-    isAudioShareStarted = false;
-    _hmsSDKInteractor.removeUpdateListener(this);
-    setLandscapeLock(false);
-    notifyListeners();
-    FlutterForegroundTask.stopService();
-  }
-
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
+
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
@@ -1520,9 +1541,10 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("Change role successful");
         break;
       case HMSActionResultListenerMethod.changeTrackStateForRole:
-        Utilities.showToast(arguments!['roles'] == null
+        message = arguments!['roles'] == null
             ? "Successfully Muted All"
-            : "Successfully Muted Role");
+            : "Successfully Muted Role";
+        Utilities.showToast(message);
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         if (arguments != null) {
@@ -1714,12 +1736,10 @@ class MeetingStore extends ChangeNotifier
       return;
     }
     if (state == AppLifecycleState.resumed) {
-      if (Platform.isAndroid) {
-        isPipActive = await HMSAndroidPIPController.isActive();
-      } else if (Platform.isIOS) {
+      if (isPipActive) {
         isPipActive = false;
+        notifyListeners();
       }
-      notifyListeners();
 
       if (lastVideoStatus && !reconnecting) {
         toggleCameraMuteState();

@@ -1,9 +1,8 @@
-//Dart import
+//Package imports
 import 'dart:io';
 
-//Package import
-import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -101,6 +100,7 @@ class Utilities {
     while ((await Permission.bluetoothConnect.isDenied)) {
       await Permission.bluetoothConnect.request();
     }
+
     return true;
   }
 
@@ -131,9 +131,9 @@ class Utilities {
   static void showToast(String message, {int time = 1}) {
     BotToast.showText(
         textStyle: GoogleFonts.inter(fontSize: 14),
-        text:message,
+        text: message,
         contentColor: Colors.black87,
-        duration: Duration(seconds:time));
+        duration: Duration(seconds: time));
   }
 
   static Future<String> getStringData({required String key}) async {

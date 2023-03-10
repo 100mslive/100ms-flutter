@@ -30,7 +30,7 @@ dependencies:
   package_info_plus:
   logger:
   path_provider:
-  dropdown_button2:
+  dropdown_button2: 1.9.4
   focus_detector:
   flutter_staggered_grid_view:
   tuple:
@@ -46,7 +46,7 @@ dependencies:
   badges:
   url_launcher:
   pip_flutter:
-  share_plus:
+  share_plus: 6.3.0
   flutter_linkify:
   flutter_foreground_task: ^3.10.0
   image_gallery_saver:
