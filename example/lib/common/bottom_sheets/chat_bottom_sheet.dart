@@ -138,27 +138,30 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                         builder: (context, data, _) {
                                           List<HMSRole> roles = data.item1;
                                           return DropdownButton2(
-                                            selectedItemHighlightColor:
-                                                hmsdefaultColor,
+                                            dropdownStyleData:
+                                                DropdownStyleData(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.4,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  color: themeSurfaceColor),
+                                              offset: Offset(-10, -10),
+                                            ),
+                                            buttonStyleData: ButtonStyleData(
+                                                width: 100, height: 35),
+                                            iconStyleData: IconStyleData(
+                                                icon: Icon(
+                                                    Icons.keyboard_arrow_down),
+                                                iconEnabledColor: iconColor),
+                                            menuItemStyleData:
+                                                MenuItemStyleData(
+                                              height: 45,
+                                            ),
                                             isExpanded: true,
-                                            dropdownWidth:
-                                                MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.4,
-                                            buttonWidth: 100,
-                                            buttonHeight: 35,
-                                            itemHeight: 45,
                                             value: valueChoose,
-                                            icon:
-                                                Icon(Icons.keyboard_arrow_down),
-                                            dropdownDecoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                color: themeSurfaceColor),
-                                            offset: Offset(-10, -10),
-                                            iconEnabledColor: iconColor,
-                                            // selectedItemHighlightColor: Colors.blue,
                                             onChanged: (dynamic newvalue) {
                                               setState(() {
                                                 this.valueChoose =

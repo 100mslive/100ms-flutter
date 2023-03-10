@@ -74,22 +74,28 @@ class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
             child: DropdownButtonHideUnderline(
                 child: DropdownButton2(
               isExpanded: true,
-              dropdownWidth: width * 0.7,
-              buttonWidth: width * 0.7,
-              buttonHeight: 48,
-              itemHeight: 48,
-              value: valueChoose,
-              icon: Icon(Icons.keyboard_arrow_down),
-              buttonDecoration: BoxDecoration(
-                color: themeSurfaceColor,
+              dropdownStyleData: DropdownStyleData(
+                width: width * 0.7,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: themeSurfaceColor,
+                    border: Border.all(color: borderColor)),
+                offset: Offset(-10, -10),
               ),
-              dropdownDecoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
+              buttonStyleData: ButtonStyleData(
+                width: width * 0.7,
+                height: 48,
+                decoration: BoxDecoration(
                   color: themeSurfaceColor,
-                  border: Border.all(color: borderColor)),
-              offset: Offset(-10, -10),
-              iconEnabledColor: themeDefaultColor,
-              selectedItemHighlightColor: hmsdefaultColor,
+                ),
+              ),
+              iconStyleData: IconStyleData(
+                icon: Icon(Icons.keyboard_arrow_down),
+                iconEnabledColor: themeDefaultColor,
+              ),
+              menuItemStyleData: MenuItemStyleData(
+                height: 48,
+              ),
               onChanged: (dynamic newvalue) {
                 setState(() {
                   valueChoose = newvalue;

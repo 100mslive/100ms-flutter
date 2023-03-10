@@ -71,22 +71,30 @@ class _ShareLinkOptionDialogState extends State<ShareLinkOptionDialog> {
             child: DropdownButtonHideUnderline(
                 child: DropdownButton2(
               isExpanded: true,
-              dropdownWidth: width * 0.7,
-              buttonWidth: width * 0.7,
-              buttonHeight: 48,
-              itemHeight: 48,
-              value: valueChoose,
-              icon: Icon(Icons.keyboard_arrow_down),
-              buttonDecoration: BoxDecoration(
-                color: themeSurfaceColor,
-              ),
-              dropdownDecoration: BoxDecoration(
+              dropdownStyleData: DropdownStyleData(
+                width: width * 0.7,
+                decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: themeSurfaceColor,
-                  border: Border.all(color: borderColor)),
-              offset: Offset(-10, -10),
-              iconEnabledColor: themeDefaultColor,
-              selectedItemHighlightColor: hmsdefaultColor,
+                  border: Border.all(color: borderColor),
+                ),
+                offset: Offset(-10, -10),
+              ),
+              buttonStyleData: ButtonStyleData(
+                height: 48,
+                width: width * 0.7,
+                decoration: BoxDecoration(
+                  color: themeSurfaceColor,
+                ),
+              ),
+              menuItemStyleData: MenuItemStyleData(
+                height: 48,
+              ),
+              iconStyleData: IconStyleData(
+                icon: Icon(Icons.keyboard_arrow_down),
+                iconEnabledColor: themeDefaultColor,
+              ),
+              value: valueChoose,
               onChanged: (dynamic newvalue) {
                 setState(() {
                   valueChoose = newvalue;

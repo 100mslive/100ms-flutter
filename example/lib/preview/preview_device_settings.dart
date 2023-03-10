@@ -116,16 +116,20 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                         child: DropdownButton2(
                       key: dropdownKey,
                       isExpanded: true,
-                      buttonHeight: 48,
-                      itemHeight: 45,
-                      selectedItemHighlightColor: hmsdefaultColor,
+                      buttonStyleData: ButtonStyleData(height: 48),
+                      menuItemStyleData: MenuItemStyleData(
+                        height: 45,
+                      ),
+                      iconStyleData: IconStyleData(
+                          icon: Icon(Icons.keyboard_arrow_down),
+                          iconEnabledColor: iconColor),
+                      dropdownStyleData: DropdownStyleData(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: themeSurfaceColor),
+                        offset: Offset(-10, -10),
+                      ),
                       value: Platform.isAndroid ? data.item3 : data.item1[0],
-                      icon: Icon(Icons.keyboard_arrow_down),
-                      dropdownDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: themeSurfaceColor),
-                      offset: Offset(-10, -10),
-                      iconEnabledColor: iconColor,
                       onChanged: (dynamic newvalue) {
                         if (newvalue != null)
                           context
