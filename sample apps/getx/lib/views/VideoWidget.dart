@@ -31,40 +31,45 @@ class VideoWidget extends StatelessWidget {
                 : !user.value.isMute)
             ? ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
-                child: Column(
+                child: Stack(
                   children: [
-                    SizedBox(
-                      height: 200.0,
-                      width: 400.0,
-                      child: VideoView(
-                          user.value.hmsVideoTrack, user.value.peer.name),
-                    ),
-                    Text(
-                      user.value.peer.name,
+                    VideoView(user.value.hmsVideoTrack, user.value.peer.name),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                        user.value.peer.name,
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
                     )
                   ],
                 ),
               )
             : Container(
-                height: 200.0,
-                width: 400.0,
                 alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Stack(
                   children: [
-                    CircleAvatar(
-                        backgroundColor: Colors.green,
-                        radius: 36,
-                        child: Text(
-                          user.value.peer.name[0],
-                          style: const TextStyle(
-                              fontSize: 36, color: Colors.white),
-                        )),
-                    const SizedBox(
-                      height: 20.0,
+                    Align(
+                      alignment: Alignment.center,
+                      child: CircleAvatar(
+                          backgroundColor: Colors.green,
+                          radius: 36,
+                          child: Text(
+                            user.value.peer.name[0],
+                            style: const TextStyle(
+                                fontSize: 36, color: Colors.white),
+                          )),
                     ),
-                    Text(
-                      user.value.peer.name,
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          user.value.peer.name,
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     )
                   ],
                 ));

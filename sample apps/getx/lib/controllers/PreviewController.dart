@@ -20,19 +20,14 @@ class PreviewController extends GetxController
 
   @override
   void onInit() async {
+    await hmsSdk.build();
     hmsSdk.addPreviewListener(listener: this);
-
-    hmsSdk.build();
-    List<String?>? token = await RoomService().getToken(user: name, room: url);
-
-    //print("Success ${token?.length} ${token?[0]}");
-
+    String? token = await RoomService().getToken(user: name, room: url);
     if (token == null) return;
-    if (token[0] == null) return;
 
     HMSConfig config = Get.put(
         HMSConfig(
-          authToken: token[0]!,
+          authToken: token,
           userName: name,
         ),
         tag: "");
@@ -47,14 +42,14 @@ class PreviewController extends GetxController
   }
 
   void toggleAudio() async {
-    var result = await hmsSdk.switchAudio(isOn: isLocalAudioOn.value);
+    var result = await hmsSdk.toggleMicMuteState();
     if (result == null) {
       isLocalAudioOn.toggle();
     }
   }
 
   void toggleVideo() async {
-    var result = await hmsSdk.switchVideo(isOn: isLocalVideoOn.value);
+    var result = await hmsSdk.toggleCameraMuteState();
 
     if (result == null) {
       isLocalVideoOn.toggle();

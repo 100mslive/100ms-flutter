@@ -15,7 +15,10 @@ class _VideoViewState extends State<VideoView> {
   Widget build(BuildContext context) {
     return HMSVideoView(
       track: widget.track,
-      matchParent: true,
+      matchParent: false,
+      scaleType: widget.track.source == "REGULAR"
+          ? ScaleType.SCALE_ASPECT_FILL
+          : ScaleType.SCALE_ASPECT_FIT,
     );
   }
 }

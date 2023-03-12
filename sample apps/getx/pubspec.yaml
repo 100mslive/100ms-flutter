@@ -32,8 +32,7 @@ dependencies:
     sdk: flutter
 
 
-  hmssdk_flutter:
-    path: ../../
+  hmssdk_flutter: 1.3.2
 
   cupertino_icons:
   get:

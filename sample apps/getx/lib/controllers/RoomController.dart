@@ -24,15 +24,12 @@ class RoomController extends GetxController
   @override
   void onInit() async {
     hmsSdk.addUpdateListener(listener: this);
-
-    hmsSdk.build();
-    List<String?>? token = await RoomService().getToken(user: name, room: url);
+    String? token = await RoomService().getToken(user: name, room: url);
 
     if (token == null) return;
-    if (token[0] == null) return;
 
     HMSConfig config = HMSConfig(
-      authToken: token[0]!,
+      authToken: token,
       userName: name,
     );
 
@@ -64,8 +61,8 @@ class RoomController extends GetxController
     isLocalVideoOn.value = isVideoOnPreview.value;
     isLocalVideoOn.refresh();
 
-    hmsSdk.switchAudio(isOn: !isLocalAudioOn.value);
-    hmsSdk.switchVideo(isOn: !isLocalVideoOn.value);
+    hmsSdk.toggleMicMuteState();
+    hmsSdk.toggleCameraMuteState();
   }
 
   @override
@@ -113,7 +110,7 @@ class RoomController extends GetxController
             peer.peerId +
                 ((track.source == "REGULAR") ? "mainVideo" : track.trackId) ==
             element.value.uid);
-      } else if (trackUpdate == HMSTrackUpdate.trackAdded) {
+      } else {
         bool isRegular = (track.source == "REGULAR");
         int index = peerTrackList.indexWhere((element) =>
             element.value.peer.peerId +
@@ -149,14 +146,14 @@ class RoomController extends GetxController
   }
 
   void toggleAudio() async {
-    var result = await hmsSdk.switchAudio(isOn: isLocalAudioOn.value);
+    var result = await hmsSdk.toggleMicMuteState();
     if (result == null) {
       isLocalAudioOn.toggle();
     }
   }
 
   void toggleVideo() async {
-    var result = await hmsSdk.switchVideo(isOn: isLocalVideoOn.value);
+    var result = await hmsSdk.toggleCameraMuteState();
 
     if (result == null) {
       isLocalVideoOn.toggle();
@@ -188,42 +185,6 @@ class RoomController extends GetxController
     Get.off(() => const HomePage());
   }
 
-  @override
-  void onLocalAudioStats(
-      {required HMSLocalAudioStats hmsLocalAudioStats,
-      required HMSLocalAudioTrack track,
-      required HMSPeer peer}) {
-    // TODO: implement onLocalAudioStats
-  }
-
-  @override
-  void onLocalVideoStats(
-      {required HMSLocalVideoStats hmsLocalVideoStats,
-      required HMSLocalVideoTrack track,
-      required HMSPeer peer}) {
-    // TODO: implement onLocalVideoStats
-  }
-
-  @override
-  void onRTCStats({required HMSRTCStatsReport hmsrtcStatsReport}) {
-    // TODO: implement onRTCStats
-  }
-
-  @override
-  void onRemoteAudioStats(
-      {required HMSRemoteAudioStats hmsRemoteAudioStats,
-      required HMSRemoteAudioTrack track,
-      required HMSPeer peer}) {
-    // TODO: implement onRemoteAudioStats
-  }
-
-  @override
-  void onRemoteVideoStats(
-      {required HMSRemoteVideoStats hmsRemoteVideoStats,
-      required HMSRemoteVideoTrack track,
-      required HMSPeer peer}) {
-    // TODO: implement onRemoteVideoStats
-  }
   @override
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
