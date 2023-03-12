@@ -1660,7 +1660,9 @@ class MeetingStore extends ChangeNotifier
       required HMSException hmsException}) {
     this.hmsException = hmsException;
     log("ActionResultListener onException-> method: ${methodType.toString()} , Error code : ${hmsException.code} , Description : ${hmsException.description} , Message : ${hmsException.message}");
-    FirebaseCrashlytics.instance.log(hmsException.toString());
+    if (Constant.appFlavor == AppFlavors.prod) {
+      FirebaseCrashlytics.instance.log(hmsException.toString());
+    }
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
         break;

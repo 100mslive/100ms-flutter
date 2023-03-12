@@ -11,6 +11,8 @@ import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+enum AppFlavors { prod, dev }
+
 class Utilities {
   static RegExp REGEX_EMOJI = RegExp(
       r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])');
@@ -245,5 +247,20 @@ class Utilities {
                     ? HMSTrackInitState.MUTED
                     : HMSTrackInitState.UNMUTED,
                 forceSoftwareDecoder: isSoftwareDecoderDisabled));
+  }
+
+  static void getFlavor() {
+    const flavor = String.fromEnvironment('APP_FLAVOR');
+    print("Flavor is $flavor");
+    switch (flavor) {
+      case "prod":
+        Constant.appFlavor = AppFlavors.prod;
+        break;
+      case "dev":
+        Constant.appFlavor = AppFlavors.dev;
+        break;
+      default:
+        Constant.appFlavor = AppFlavors.prod;
+    }
   }
 }

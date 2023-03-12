@@ -29,11 +29,8 @@ android {
 
 
     defaultConfig {
-        applicationId "live.hms.flutter"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 206
-        versionName "1.4.71"
     }
 
     signingConfigs {
@@ -57,6 +54,29 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
+    flavorDimensions "app"
+    productFlavors {
+ 
+        prod {
+            dimension "app"
+            applicationIdSuffix ""
+            versionCode 206
+            versionName "1.4.71"
+            dependencies {
+                implementation 'com.google.firebase:firebase-crashlytics:18.3.2'
+            }
+            resValue "string", "app_name", "100ms Video Calling Streaming"
+        }
+        dev {
+            dimension "app"
+            applicationIdSuffix ".dev"
+            versionCode 1
+            versionName "1.0.0"
+            resValue "string", "app_name", "100ms Video Calling Streaming[Dev]"
+
+        }
+    }
     lint {
         checkDependencies true
     }
@@ -69,9 +89,12 @@ flutter {
 
 dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.firebase:firebase-crashlytics:18.3.2'
 }
 
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'com.google.firebase.firebase-perf'
+if (getGradle().getStartParameter().getTaskRequests()
+        .toString().contains("Prod")){
+            apply plugin: 'com.google.gms.google-services'
+            apply plugin: 'com.google.firebase.crashlytics'
+            apply plugin: 'com.google.firebase.firebase-perf'
+}
+
