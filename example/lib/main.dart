@@ -28,6 +28,8 @@ StreamSubscription? _streamSubscription;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  const flavor = String.fromEnvironment("APP_FLAVOR");
+  print("Hey there $flavor");
   await Firebase.initializeApp();
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   Wakelock.enable();
