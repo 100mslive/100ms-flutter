@@ -51,7 +51,7 @@ class HMSVideoViewWidget(
         if (view != null) {
             view?.layoutParams = frameLayoutParams
         } else {
-            Log.i("HMSVideoView error", "onFlutterViewAttached error view is null")
+            Log.e("HMSVideoView error", "onFlutterViewAttached error view is null")
         }
     }
 
@@ -59,7 +59,7 @@ class HMSVideoViewWidget(
         if (hmsVideoView != null) {
             hmsVideoView?.onDisposeCalled()
         } else {
-            Log.i("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
+            Log.e("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
         }
         hmsVideoView = null
     }

@@ -103,7 +103,6 @@ Widget basicGridView(
               itemWidth: size.width,
             ));
       },
-      controller: Provider.of<MeetingStore>(context).controller,
       gridDelegate: SliverStairedGridDelegate(
           startCrossAxisDirectionReversed: true,
           pattern: isPortrait
