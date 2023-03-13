@@ -9,8 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class MeetingStore extends ChangeNotifier
-    with WidgetsBindingObserver
-    implements HMSUpdateListener, HMSActionResultListener{
+    implements HMSUpdateListener, HMSActionResultListener {
   late HMSSDKInteractor _hmsSDKInteractor;
 
   MeetingStore({required HMSSDKInteractor hmsSDKInteractor}) {
@@ -21,19 +20,9 @@ class MeetingStore extends ChangeNotifier
 
   HMSException? hmsException;
 
-  bool isMeetingStarted = false;
-
   bool isVideoOn = true;
 
   bool isMicOn = true;
-
-  bool reconnecting = false;
-
-  bool reconnected = false;
-
-  bool isRoomEnded = false;
-
-  List<HMSRole> roles = [];
 
   List<HMSPeer> peers = [];
 
@@ -45,24 +34,19 @@ class MeetingStore extends ChangeNotifier
 
   HMSRoom? hmsRoom;
 
-  int firstTimeBuild = 0;
-
   bool isScreenShareOn = false;
 
   Future<bool> join(String user, String roomUrl) async {
-    String? token =
-        await RoomService().getToken(user: user, room: roomUrl);
+    String? token = await RoomService().getToken(user: user, room: roomUrl);
     if (token == null) return false;
     HMSConfig config = HMSConfig(authToken: token, userName: user);
 
     _hmsSDKInteractor.addUpdateListener(this);
-    WidgetsBinding.instance.addObserver(this);
     _hmsSDKInteractor.join(config: config);
     return true;
   }
 
   void leave() async {
-    WidgetsBinding.instance.removeObserver(this);
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
   }
 
@@ -79,7 +63,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   Future<void> switchCamera() async {
-    await _hmsSDKInteractor.switchCamera();
+    await _hmsSDKInteractor.switchCamera(hmsActionResultListener: this);
   }
 
   void sendBroadcastMessage(String message) {
@@ -102,17 +86,8 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.stopScreenShare(hmsActionResultListener: this);
   }
 
-  Future<bool> isAudioMute(HMSPeer? peer) async {
-    return await _hmsSDKInteractor.isAudioMute(peer);
-  }
-
-  Future<bool> isVideoMute(HMSPeer? peer) async {
-    return await _hmsSDKInteractor.isVideoMute(peer);
-  }
-
   void removePeer(HMSPeer peer) {
     peers.remove(peer);
-    // removeTrackWithPeerId(peer.peerId);
   }
 
   void addPeer(HMSPeer peer) {
@@ -131,7 +106,6 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onJoin({required HMSRoom room}) async {
-    isMeetingStarted = true;
     hmsRoom = room;
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
@@ -164,7 +138,6 @@ class MeetingStore extends ChangeNotifier
         break;
       }
     }
-    roles = await getRoles();
     notifyListeners();
   }
 
@@ -248,16 +221,10 @@ class MeetingStore extends ChangeNotifier
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {}
 
   @override
-  void onReconnecting() {
-    reconnected = false;
-    reconnecting = true;
-  }
+  void onReconnecting() {}
 
   @override
-  void onReconnected() {
-    reconnecting = false;
-    reconnected = true;
-  }
+  void onReconnected() {}
 
   int trackChange = -1;
 
@@ -280,7 +247,6 @@ class MeetingStore extends ChangeNotifier
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
     peerTracks.clear();
-    isRoomEnded = true;
     notifyListeners();
   }
 
@@ -293,10 +259,6 @@ class MeetingStore extends ChangeNotifier
         forPeer: peer,
         force: forceChange,
         hmsActionResultListener: this);
-  }
-
-  Future<List<HMSRole>> getRoles() async {
-    return await _hmsSDKInteractor.getRoles();
   }
 
   void changeTrackState(HMSTrack track, bool mute) {
@@ -382,23 +344,11 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  Future<HMSLocalPeer?> getLocalPeer() async {
-    return await _hmsSDKInteractor.getLocalPeer();
-  }
-
-  Future<HMSRoom?> getRoom() async {
-    HMSRoom? room = await _hmsSDKInteractor.getRoom();
-    return room;
-  }
-
-  Future<HMSPeer?> getPeer({required String peerId}) async {
-    return await _hmsSDKInteractor.getPeer(peerId: peerId);
-  }
-
   @override
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice}) {}
+
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
@@ -407,15 +357,13 @@ class MeetingStore extends ChangeNotifier
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
         peerTracks.clear();
-        isRoomEnded = true;
-        notifyListeners();
+        break;
+      case HMSActionResultListenerMethod.switchCamera:
         break;
       case HMSActionResultListenerMethod.changeMetadata:
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.endRoom:
-        isRoomEnded = true;
-        notifyListeners();
         break;
       case HMSActionResultListenerMethod.startScreenShare:
         isScreenShareOn = true;
@@ -438,45 +386,5 @@ class MeetingStore extends ChangeNotifier
       Map<String, dynamic>? arguments,
       required HMSException hmsException}) {
     this.hmsException = hmsException;
-  }
-
-  Future<List<HMSPeer>?> getPeers() async {
-    return await _hmsSDKInteractor.getPeers();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.resumed) {
-      List<HMSPeer>? peersList = await getPeers();
-
-      peersList?.forEach((element) {
-        if (!element.isLocal) {
-          (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
-          element.auxiliaryTracks?.forEach((element) {
-            if (element.kind == HMSTrackKind.kHMSTrackKindAudio) {
-              (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
-            }
-          });
-        } else {
-          if ((element.videoTrack != null && isVideoOn)) {
-            toggleCameraMuteState();
-          }
-        }
-      });
-    } else if (state == AppLifecycleState.paused) {
-      HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
-        toggleCameraMuteState();
-      }
-      for (PeerTrackNode peerTrackNode in peerTracks) {
-        peerTrackNode.setOffScreenStatus(true);
-      }
-    } else if (state == AppLifecycleState.inactive) {
-      for (PeerTrackNode peerTrackNode in peerTracks) {
-        peerTrackNode.setOffScreenStatus(true);
-      }
-    }
   }
 }

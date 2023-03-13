@@ -9,13 +9,6 @@ class HMSSDKInteractor {
   late List<HMSMessage> messages;
   late HMSSDK hmsSDK;
 
-  //Contains the default local camera mirroring settings
-  bool mirrorCamera = true;
-  //Contains the default RTC stats setting
-  bool showStats = false;
-  //Contains the default setting to jump directly in meeting i.e. skipping preview
-  bool skipPreview = false;
-
   HMSSDKInteractor() {
     initHMSSDK();
   }
@@ -34,8 +27,10 @@ class HMSSDKInteractor {
     hmsSDK.leave(hmsActionResultListener: hmsActionResultListener);
   }
 
-  Future<void> switchCamera() async {
-    return await hmsSDK.switchCamera();
+  Future<void> switchCamera(
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    return await hmsSDK.switchCamera(
+        hmsActionResultListener: hmsActionResultListener);
   }
 
   Future<bool> isScreenShareActive() async {
@@ -118,12 +113,6 @@ class HMSSDKInteractor {
 
   Future<HMSLocalPeer?> getLocalPeer() async {
     return await hmsSDK.getLocalPeer();
-  }
-
-  Future<HMSPeer?> getPeer({required String peerId}) async {
-    List<HMSPeer>? peers = await hmsSDK.getPeers();
-
-    return peers?.firstWhere((element) => element.peerId == peerId);
   }
 
   void changeTrackState(HMSTrack forRemoteTrack, bool mute,
@@ -259,10 +248,6 @@ class HMSSDKInteractor {
         source: source,
         roles: roles,
         hmsActionResultListener: hmsActionResultListener);
-  }
-
-  Future<List<HMSPeer>?> getPeers() async {
-    return await hmsSDK.getPeers();
   }
 
   void addStatsListener(HMSStatsListener listener) {

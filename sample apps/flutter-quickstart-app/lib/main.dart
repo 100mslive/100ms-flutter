@@ -331,7 +331,6 @@ class _MeetingPageState extends State<MeetingPage>
       child: (videoTrack != null && !(videoTrack.isMute))
           ? HMSVideoView(
               track: videoTrack,
-              scaleType: ScaleType.SCALE_ASPECT_FILL,
             )
           : Center(
               child: Container(

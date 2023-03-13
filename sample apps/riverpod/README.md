@@ -125,12 +125,6 @@ implements HMSUpdateListener, HMSActionResultListener, HMSStatsListener {
 
     bool isMicOn = true;
 
-    bool reconnecting = false;
-
-    bool reconnected = false;
-
-    bool isRoomEnded = false;
-
     List<HMSRole> roles = [];
 
     List<HMSPeer> peers = [];
@@ -146,6 +140,8 @@ implements HMSUpdateListener, HMSActionResultListener, HMSStatsListener {
     int firstTimeBuild = 0;
 
     bool isScreenShareOn = false;
+
+}
 
 ```
       

@@ -134,7 +134,11 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                             },
                             child: const Text(
                               'Join Now',
-                              style: TextStyle(height: 1, fontSize: 18),
+                              style: TextStyle(
+                                  height: 1,
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
                             ),
                           )
                         : const SizedBox(),

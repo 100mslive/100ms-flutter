@@ -4,8 +4,7 @@ import 'package:example_riverpod/service/room_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
-class PreviewStore extends ChangeNotifier
-    implements HMSPreviewListener, HMSLogListener {
+class PreviewStore extends ChangeNotifier implements HMSPreviewListener {
   late HMSSDKInteractor hmsSDKInteractor;
 
   PreviewStore() {
@@ -24,11 +23,9 @@ class PreviewStore extends ChangeNotifier
 
   bool isAudioOn = true;
 
-  int? networkQuality;
-
   @override
   void onHMSError({required HMSException error}) {
-    updateError(error);
+    this.error = error;
   }
 
   @override
@@ -52,8 +49,7 @@ class PreviewStore extends ChangeNotifier
 
   Future<bool> startPreview(
       {required String user, required String roomId}) async {
-    String? token =
-        await RoomService().getToken(user: user, room: roomId);
+    String? token = await RoomService().getToken(user: user, room: roomId);
 
     if (token == null) return false;
     HMSConfig config = HMSConfig(authToken: token, userName: user);
@@ -72,6 +68,11 @@ class PreviewStore extends ChangeNotifier
     hmsSDKInteractor.removePreviewListener(this);
   }
 
+  @override
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice}) {}
+
   void toggleCameraMuteState() {
     hmsSDKInteractor.toggleCameraMuteState();
     isVideoOn = !isVideoOn;
@@ -86,23 +87,5 @@ class PreviewStore extends ChangeNotifier
 
   void leave() {
     hmsSDKInteractor.leave();
-  }
-
-  void addLogsListener(HMSLogListener hmsLogListener) {}
-
-  void removeLogsListener(HMSLogListener hmsLogListener) {}
-
-  @override
-  void onLogMessage({required hmsLogList}) {}
-
-  void updateError(HMSException error) {
-    this.error = error;
-  }
-
-  @override
-  void onAudioDeviceChanged(
-      {HMSAudioDevice? currentAudioDevice,
-      List<HMSAudioDevice>? availableAudioDevice}) {
-    // TODO: implement onAudioDeviceChanged
   }
 }

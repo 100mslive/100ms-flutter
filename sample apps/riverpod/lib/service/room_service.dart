@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 class RoomService {
   //This function gets the token from the meeting URL
   Future<String?> getToken({required String user, required String room}) async {
-
     //codeAndDomain stores the subDomain & code
     List<String?> codeAndDomain = getCode(room) ?? [];
     if (codeAndDomain.isEmpty) {
