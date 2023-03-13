@@ -58,26 +58,25 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
       WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
 
   ThemeData _darkTheme = ThemeData(
-    bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: themeBottomSheetColor, elevation: 5),
-    brightness: Brightness.dark,
-    primaryColor: Color.fromARGB(255, 13, 107, 184),
-    scaffoldBackgroundColor: Colors.black,
-  );
+      bottomSheetTheme: BottomSheetThemeData(
+          backgroundColor: themeBottomSheetColor, elevation: 5),
+      brightness: Brightness.dark,
+      primaryColor: Color.fromARGB(255, 13, 107, 184),
+      scaffoldBackgroundColor: Colors.black);
 
   ThemeData _lightTheme = ThemeData(
-    bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: themeDefaultColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        elevation: 5),
-    primaryTextTheme: TextTheme(bodyLarge: TextStyle(color: themeSurfaceColor)),
-    primaryColor: hmsdefaultColor,
-    brightness: Brightness.light,
-    scaffoldBackgroundColor: Colors.white,
-    dividerColor: Colors.white54,
-  );
+      bottomSheetTheme: BottomSheetThemeData(
+          backgroundColor: themeDefaultColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          elevation: 5),
+      primaryTextTheme:
+          TextTheme(bodyLarge: TextStyle(color: themeSurfaceColor)),
+      primaryColor: hmsdefaultColor,
+      brightness: Brightness.light,
+      scaffoldBackgroundColor: Colors.white,
+      dividerColor: Colors.white54);
 
   @override
   void initState() {

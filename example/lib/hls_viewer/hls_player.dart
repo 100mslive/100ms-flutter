@@ -9,7 +9,6 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 class HLSPlayer extends StatefulWidget {
   final String? streamUrl;
   HLSPlayer({Key? key, this.streamUrl}) : super(key: key);
-
   @override
   _HLSPlayerState createState() => _HLSPlayerState();
 }

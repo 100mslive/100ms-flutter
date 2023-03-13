@@ -1,7 +1,18 @@
-## 1.3.1 - 2023-02-16
+## 1.3.2 - 2023-03-09
+
+### Fixed
+
+- Corrected an issue with `DateTime` parsing where joining failed on iOS devices behind UTC Timezone
+
+
+Updated to Android SDK 2.5.7 & iOS SDK 0.6.4
+
+Full Changelog: [1.3.1...1.3.2](https://github.com/100mslive/100ms-flutter/compare/1.3.1...1.3.2)
+
+
+## 1.3.1 - 2023-02-27
 
 ### Changed
-
 - Performance improvements for PIP Mode on iOS
 - Improved Disconnected State detection on certain Networks
 - Gracefully handling of null objects
@@ -9,7 +20,6 @@
 Updated to Android SDK 2.5.7 & iOS SDK 0.6.4
 
 Full Changelog: [1.3.0...1.3.1](https://github.com/100mslive/100ms-flutter/compare/1.3.0...1.3.1)
-
 
 ## 1.3.0 - 2023-02-01
 

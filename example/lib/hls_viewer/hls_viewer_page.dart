@@ -122,8 +122,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                     child: HLSPlayer(
                                       streamUrl: widget.streamUrl,
                                     ),
-                                  ),
-                                )
+                                  ))
                               : Center(
                                   child: Padding(
                                       padding:

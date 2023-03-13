@@ -43,3 +43,5 @@ git add example/ios/Runner/Info.plist
 git add example/ios/Runner.xcodeproj/project.pbxproj
 
 git commit -m "released sample app version $versionCode ($buildNumber) 🍀"
+
+git push --verbose
