@@ -85,19 +85,21 @@ class RoomWidget extends StatelessWidget {
   void _onItemTapped(int index) {
     switch (index) {
       case 0:
-        roomController.toggleAudio();
+        roomController.toggleMicMuteState();
         break;
       case 1:
-        roomController.toggleVideo();
+        roomController.toggleCameraMuteState();
         break;
       case 2:
         if (Platform.isIOS) {
-        roomController.leaveMeeting();
+          roomController.leaveMeeting();
           return;
         }
         roomController.toggleScreenShare();
         break;
       case 3:
+        roomController.leaveMeeting();
+        break;
     }
   }
 }

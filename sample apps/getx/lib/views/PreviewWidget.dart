@@ -47,7 +47,7 @@ class PreviewWidget extends StatelessWidget {
                                         )),
                                   )
                                 : HMSVideoView(
-                                  scaleType: ScaleType.SCALE_ASPECT_FILL,
+                                    scaleType: ScaleType.SCALE_ASPECT_FILL,
                                     track: controller.localTracks[0],
                                     matchParent: false),
                             Positioned(
@@ -58,6 +58,7 @@ class PreviewWidget extends StatelessWidget {
                                     backgroundColor: Colors.blue,
                                     padding: const EdgeInsets.all(14)),
                                 onPressed: () {
+                                  controller.removePreviewListener();
                                   Get.off(
                                       () => RoomWidget(meetingUrl, userName));
                                 },
@@ -78,7 +79,7 @@ class PreviewWidget extends StatelessWidget {
                                   builder: (controller) {
                                 return IconButton(
                                     onPressed: () {
-                                      controller.toggleAudio();
+                                      controller.toggleMicMuteState();
                                     },
                                     icon: Icon(
                                       controller.isLocalAudioOn.value
@@ -96,7 +97,7 @@ class PreviewWidget extends StatelessWidget {
                                   builder: (controller) {
                                 return IconButton(
                                     onPressed: () {
-                                      controller.toggleVideo();
+                                      controller.toggleCameraMuteState();
                                     },
                                     icon: Icon(
                                       controller.isLocalVideoOn.value

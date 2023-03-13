@@ -26,19 +26,18 @@ class VideoWidget extends StatelessWidget {
       },
       child: Obx(() {
         var user = roomController.peerTrackList[index];
-        return (user.value.peer.isLocal
-                ? roomController.isLocalVideoOn.value
-                : !user.value.isMute)
+        return (user.value.hmsVideoTrack != null &&
+                !user.value.hmsVideoTrack!.isMute)
             ? ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                 child: Stack(
                   children: [
-                    VideoView(user.value.hmsVideoTrack, user.value.peer.name),
+                    VideoView(user.value.hmsVideoTrack!, user.value.peer.name),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Text(
                         user.value.peer.name,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     )

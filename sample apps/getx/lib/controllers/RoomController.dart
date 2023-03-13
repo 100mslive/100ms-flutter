@@ -8,8 +8,8 @@ import '../services/RoomService.dart';
 class RoomController extends GetxController
     implements HMSUpdateListener, HMSActionResultListener {
   RxList<Rx<PeerTrackNode>> peerTrackList = <Rx<PeerTrackNode>>[].obs;
-  RxBool isLocalVideoOn = false.obs;
-  RxBool isLocalAudioOn = false.obs;
+  RxBool isLocalVideoOn = true.obs;
+  RxBool isLocalAudioOn = true.obs;
   RxBool isScreenShareActive = false.obs;
   String url;
   String name;
@@ -17,9 +17,6 @@ class RoomController extends GetxController
   RoomController(this.url, this.name);
 
   HMSSDK hmsSdk = Get.find();
-
-  RxBool isVideoOnPreview = false.obs;
-  RxBool isAudioOnPreview = false.obs;
 
   @override
   void onInit() async {
@@ -35,16 +32,76 @@ class RoomController extends GetxController
 
     hmsSdk.join(config: config);
 
-    isVideoOnPreview = Get.find(tag: "isLocalVideoOn");
-    isAudioOnPreview = Get.find(tag: "isLocalAudioOn");
-
     super.onInit();
   }
 
   @override
-  void onChangeTrackStateRequest(
-      {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
-    // TODO: implement onChangeTrackStateRequest
+  void onJoin({required HMSRoom room}) {
+    peerTrackList.clear();
+
+    room.peers?.forEach((peer) {
+      if (peer.isLocal) {
+        isLocalAudioOn.value = !(peer.audioTrack?.isMute ?? true);
+        isLocalVideoOn.value = !(peer.videoTrack?.isMute ?? true);
+        peerTrackList.add(PeerTrackNode(
+                peer.peerId +
+                    ((peer.videoTrack?.source == "REGULAR")
+                        ? "mainVideo"
+                        : (peer.videoTrack?.trackId ?? "")),
+                peer.videoTrack,
+                peer.videoTrack?.isMute ?? false,
+                peer)
+            .obs);
+      }
+    });
+  }
+
+  @override
+  void onTrackUpdate(
+      {required HMSTrack track,
+      required HMSTrackUpdate trackUpdate,
+      required HMSPeer peer}) {
+    if (peer.isLocal) {
+      if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
+        isLocalAudioOn.value = !track.isMute;
+        isLocalAudioOn.refresh();
+      } else if (track.kind == HMSTrackKind.kHMSTrackKindVideo &&
+          track.source == "REGULAR") {
+        isLocalVideoOn.value == !track.isMute;
+        isLocalVideoOn.refresh();
+      }
+    }
+
+    if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
+      if (trackUpdate == HMSTrackUpdate.trackRemoved) {
+        peerTrackList.removeWhere((element) =>
+            peer.peerId +
+                ((track.source == "REGULAR") ? "mainVideo" : track.trackId) ==
+            element.value.uid);
+      } else {
+        bool isRegular = (track.source == "REGULAR");
+        int index = peerTrackList.indexWhere((element) =>
+            element.value.peer.peerId +
+                (isRegular
+                    ? "mainVideo"
+                    : (element.value.hmsVideoTrack?.trackId ?? "empty")) ==
+            peer.peerId + (isRegular ? "mainVideo" : track.trackId));
+        if (index != -1) {
+          peerTrackList[index](PeerTrackNode(
+              peer.peerId + (isRegular ? "mainVideo" : track.trackId),
+              track as HMSVideoTrack,
+              track.isMute,
+              peer));
+        } else {
+          peerTrackList.add(PeerTrackNode(
+                  peer.peerId + (isRegular ? "mainVideo" : track.trackId),
+                  track as HMSVideoTrack,
+                  track.isMute,
+                  peer)
+              .obs);
+        }
+      }
+    }
   }
 
   @override
@@ -52,17 +109,74 @@ class RoomController extends GetxController
     Get.snackbar("Error", error.message ?? "");
   }
 
+  void leaveMeeting() async {
+    hmsSdk.leave(hmsActionResultListener: this);
+  }
+
+  void toggleMicMuteState() async {
+    await hmsSdk.toggleMicMuteState();
+    isLocalAudioOn.toggle();
+  }
+
+  void toggleCameraMuteState() async {
+    await hmsSdk.toggleCameraMuteState();
+    isLocalVideoOn.toggle();
+  }
+
+  void toggleScreenShare() {
+    if (!isScreenShareActive.value) {
+      hmsSdk.startScreenShare(hmsActionResultListener: this);
+    } else {
+      hmsSdk.stopScreenShare(hmsActionResultListener: this);
+    }
+  }
+
   @override
-  void onJoin({required HMSRoom room}) {
-    peerTrackList.clear();
-    isLocalAudioOn.value = isAudioOnPreview.value;
-    isLocalAudioOn.refresh();
+  void onException(
+      {HMSActionResultListenerMethod? methodType,
+      Map<String, dynamic>? arguments,
+      required HMSException hmsException}) {
+    switch (methodType) {
+      case HMSActionResultListenerMethod.leave:
+        Get.snackbar("Leave Error", hmsException.message ?? "");
+        break;
+      case HMSActionResultListenerMethod.startScreenShare:
+        Get.snackbar("startScreenShare Error", hmsException.message ?? "");
 
-    isLocalVideoOn.value = isVideoOnPreview.value;
-    isLocalVideoOn.refresh();
+        break;
+      case HMSActionResultListenerMethod.stopScreenShare:
+        Get.snackbar("stopScreenShare Error", hmsException.message ?? "");
 
-    hmsSdk.toggleMicMuteState();
-    hmsSdk.toggleCameraMuteState();
+        break;
+    }
+    Get.snackbar("Error", hmsException.message ?? "");
+  }
+
+  @override
+  void onSuccess(
+      {HMSActionResultListenerMethod? methodType,
+      Map<String, dynamic>? arguments}) {
+    switch (methodType) {
+      case HMSActionResultListenerMethod.leave:
+        hmsSdk.removeUpdateListener(listener: this);
+        hmsSdk.destroy();
+        Get.back();
+        Get.off(() => const HomePage());
+        break;
+      case HMSActionResultListenerMethod.startScreenShare:
+        isScreenShareActive.toggle();
+        break;
+      case HMSActionResultListenerMethod.stopScreenShare:
+        isScreenShareActive.toggle();
+        break;
+    }
+  }
+
+  @override
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice}) {
+    // TODO: implement onAudioDeviceChanged
   }
 
   @override
@@ -100,95 +214,13 @@ class RoomController extends GetxController
   }
 
   @override
-  void onTrackUpdate(
-      {required HMSTrack track,
-      required HMSTrackUpdate trackUpdate,
-      required HMSPeer peer}) {
-    if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-      if (trackUpdate == HMSTrackUpdate.trackRemoved) {
-        peerTrackList.removeWhere((element) =>
-            peer.peerId +
-                ((track.source == "REGULAR") ? "mainVideo" : track.trackId) ==
-            element.value.uid);
-      } else {
-        bool isRegular = (track.source == "REGULAR");
-        int index = peerTrackList.indexWhere((element) =>
-            element.value.peer.peerId +
-                (isRegular
-                    ? "mainVideo"
-                    : element.value.hmsVideoTrack.trackId) ==
-            peer.peerId + (isRegular ? "mainVideo" : track.trackId));
-        if (index != -1) {
-          peerTrackList[index](PeerTrackNode(
-              peer.peerId + (isRegular ? "mainVideo" : track.trackId),
-              track as HMSVideoTrack,
-              track.isMute,
-              peer));
-        } else {
-          peerTrackList.add(PeerTrackNode(
-                  peer.peerId + (isRegular ? "mainVideo" : track.trackId),
-                  track as HMSVideoTrack,
-                  track.isMute,
-                  peer)
-              .obs);
-        }
-      }
-    }
+  void onChangeTrackStateRequest(
+      {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
+    // TODO: implement onChangeTrackStateRequest
   }
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     // TODO: implement onUpdateSpeakers
-  }
-
-  void leaveMeeting() async {
-    hmsSdk.leave(hmsActionResultListener: this);
-  }
-
-  void toggleAudio() async {
-    var result = await hmsSdk.toggleMicMuteState();
-    if (result == null) {
-      isLocalAudioOn.toggle();
-    }
-  }
-
-  void toggleVideo() async {
-    var result = await hmsSdk.toggleCameraMuteState();
-
-    if (result == null) {
-      isLocalVideoOn.toggle();
-    }
-  }
-
-  void toggleScreenShare() {
-    if (!isScreenShareActive.value) {
-      hmsSdk.startScreenShare();
-    } else {
-      hmsSdk.stopScreenShare();
-    }
-    isScreenShareActive.toggle();
-  }
-
-  @override
-  void onException(
-      {HMSActionResultListenerMethod? methodType,
-      Map<String, dynamic>? arguments,
-      required HMSException hmsException}) {
-    Get.snackbar("Error", hmsException.message ?? "");
-  }
-
-  @override
-  void onSuccess(
-      {HMSActionResultListenerMethod? methodType,
-      Map<String, dynamic>? arguments}) {
-    Get.back();
-    Get.off(() => const HomePage());
-  }
-
-  @override
-  void onAudioDeviceChanged(
-      {HMSAudioDevice? currentAudioDevice,
-      List<HMSAudioDevice>? availableAudioDevice}) {
-    // TODO: implement onAudioDeviceChanged
   }
 }

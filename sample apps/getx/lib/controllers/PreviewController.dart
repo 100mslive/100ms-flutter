@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
@@ -6,8 +5,8 @@ import '../services/RoomService.dart';
 
 class PreviewController extends GetxController
     implements HMSPreviewListener, HMSActionResultListener {
-  RxBool isLocalVideoOn = Get.put(false.obs, tag: "isLocalVideoOn");
-  RxBool isLocalAudioOn = Get.put(false.obs, tag: "isLocalAudioOn");
+  RxBool isLocalVideoOn = true.obs;
+  RxBool isLocalAudioOn = true.obs;
 
   List<HMSVideoTrack> localTracks = <HMSVideoTrack>[].obs;
 
@@ -41,23 +40,18 @@ class PreviewController extends GetxController
     hmsSdk.leave(hmsActionResultListener: this);
   }
 
-  void toggleAudio() async {
-    var result = await hmsSdk.toggleMicMuteState();
-    if (result == null) {
-      isLocalAudioOn.toggle();
-    }
+  void toggleMicMuteState() async {
+    await hmsSdk.toggleMicMuteState();
+    isLocalAudioOn.toggle();
   }
 
-  void toggleVideo() async {
-    var result = await hmsSdk.toggleCameraMuteState();
+  void toggleCameraMuteState() async {
+    await hmsSdk.toggleCameraMuteState();
+    isLocalVideoOn.toggle();
+  }
 
-    if (result == null) {
-      isLocalVideoOn.toggle();
-
-      if (kDebugMode) {
-        print("RESULT VIDEO ${isLocalVideoOn.value}");
-      }
-    }
+  void removePreviewListener() {
+    hmsSdk.removePreviewListener(listener: this);
   }
 
   @override
