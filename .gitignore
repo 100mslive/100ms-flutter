@@ -28,4 +28,5 @@ example/ios/fastlane/Pluginfile
 example/ios/fastlane/README.md
 /example/ios/fastlane/report.xml
 example/ios/Runner/GoogleService-Info.plist
+example/ios/config/GoogleService-Info.plist
 *.p8
