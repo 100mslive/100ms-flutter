@@ -356,7 +356,7 @@ SPEC CHECKSUMS:
   HLSCachingReverseProxyServer: 59935e1e0244ad7f3375d75b5ef46e8eb26ab181
   HMSBroadcastExtensionSDK: d22df4b2c22843efe4a1779478889076db8eaabd
   HMSSDK: 1e3fed1980927441f8d471816e90256c84a46e1e
-  hmssdk_flutter: 500949bb25c5a503151565f60e6a97a1295511b5
+  hmssdk_flutter: cfaa7e3a22f8092293b2d029ae290e3657fb2680
   HMSWebRTC: d74cd5e5ecfe701219dd4042ec67fed02ea5d6db
   image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
