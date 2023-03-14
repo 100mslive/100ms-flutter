@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/widgets/hms_dropdown.dart';
 import 'package:hmssdk_flutter_example/common/widgets/subtitle_text.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -27,6 +28,10 @@ class AudioDeviceChangeDialog extends StatefulWidget {
 
 class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
   HMSAudioDevice? valueChoose;
+
+  void _updateDropDownValue(dynamic newValue) {
+    valueChoose = newValue;
+  }
 
   @override
   void initState() {
@@ -72,48 +77,25 @@ class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
                   color: borderColor, style: BorderStyle.solid, width: 0.80),
             ),
             child: DropdownButtonHideUnderline(
-                child: DropdownButton2(
-              isExpanded: true,
-              dropdownStyleData: DropdownStyleData(
-                width: width * 0.7,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: themeSurfaceColor,
-                    border: Border.all(color: borderColor)),
-                offset: Offset(-10, -10),
-              ),
-              buttonStyleData: ButtonStyleData(
-                width: width * 0.7,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: themeSurfaceColor,
-                ),
-              ),
-              iconStyleData: IconStyleData(
-                icon: Icon(Icons.keyboard_arrow_down),
-                iconEnabledColor: themeDefaultColor,
-              ),
-              menuItemStyleData: MenuItemStyleData(
-                height: 48,
-              ),
-              onChanged: (dynamic newvalue) {
-                setState(() {
-                  valueChoose = newvalue;
-                });
-              },
-              items: <DropdownMenuItem>[
-                ...widget.audioDevicesList
-                    .map((device) => DropdownMenuItem(
-                          child: TitleText(
-                            text: device.name,
-                            textColor: themeDefaultColor,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          value: device,
-                        ))
-                    .toList(),
-              ],
-            )),
+                child: HMSDropDown(
+                    dropDownItems: <DropdownMenuItem>[
+                  ...widget.audioDevicesList
+                      .map((device) => DropdownMenuItem(
+                            child: TitleText(
+                              text: device.name,
+                              textColor: themeDefaultColor,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            value: device,
+                          ))
+                      .toList(),
+                ],
+                    iconStyleData: IconStyleData(
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      iconEnabledColor: themeDefaultColor,
+                    ),
+                    selectedValue: valueChoose,
+                    updateSelectedValue: _updateDropDownValue)),
           ),
         ],
       ),

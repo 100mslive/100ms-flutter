@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/widgets/hms_dropdown.dart';
 import 'package:hmssdk_flutter_example/common/widgets/subtitle_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
@@ -23,6 +24,14 @@ class AudioSettingsBottomSheet extends StatefulWidget {
 
 class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
   GlobalKey? dropdownKey;
+
+  void _updateDropDownValue(dynamic newValue) {
+    if (newValue != null) {
+      Navigator.pop(context);
+      context.read<MeetingStore>().switchAudioOutput(audioDevice: newValue);
+      dropdownKey = null;
+    }
+  }
 
   @override
   void initState() {
@@ -115,64 +124,47 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
                           width: 0.80),
                     ),
                     child: DropdownButtonHideUnderline(
-                        child: DropdownButton2(
-                      key: dropdownKey,
-                      isExpanded: true,
-                      dropdownStyleData: DropdownStyleData(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: themeSurfaceColor),
-                        offset: Offset(-10, -10),
-                      ),
-                      buttonStyleData: ButtonStyleData(
-                        height: 48,
-                      ),
-                      iconStyleData: IconStyleData(
-                        icon: Icon(Icons.keyboard_arrow_down),
-                        iconEnabledColor: iconColor,
-                      ),
-                      menuItemStyleData: MenuItemStyleData(
-                        height: 45,
-                      ),
-                      value: Platform.isAndroid
-                          ? data.item3
-                          : _meetingStore.currentAudioDeviceMode,
-                      onChanged: (dynamic newvalue) {
-                        if (newvalue != null) {
-                          Navigator.pop(context);
-                          context
-                              .read<MeetingStore>()
-                              .switchAudioOutput(audioDevice: newvalue);
-                          dropdownKey = null;
-                        }
-                      },
-                      items: <DropdownMenuItem>[
-                        ...data.item1
-                            .sortedBy((element) => element.toString())
-                            .map((device) => DropdownMenuItem(
-                                  key: UniqueKey(),
-                                  child: Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        "assets/icons/music_wave.svg",
-                                        color: themeDefaultColor,
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Container(
-                                        child: SubtitleText(
-                                          text: device.name,
-                                          textColor: themeDefaultColor,
+                        child: HMSDropDown(
+                            dropdownKey: dropdownKey,
+                            buttonStyleData: ButtonStyleData(
+                              height: 48,
+                            ),
+                            dropdownStyleData: DropdownStyleData(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: themeSurfaceColor),
+                              offset: Offset(-10, -10),
+                            ),
+                            dropDownItems: <DropdownMenuItem>[
+                              ...data.item1
+                                  .sortedBy((element) => element.toString())
+                                  .map((device) => DropdownMenuItem(
+                                        key: UniqueKey(),
+                                        child: Row(
+                                          children: [
+                                            SvgPicture.asset(
+                                              "assets/icons/music_wave.svg",
+                                              color: themeDefaultColor,
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Container(
+                                              child: SubtitleText(
+                                                text: device.name,
+                                                textColor: themeDefaultColor,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  value: device,
-                                ))
-                            .toList(),
-                      ],
-                    )),
+                                        value: device,
+                                      ))
+                                  .toList(),
+                            ],
+                            selectedValue: Platform.isAndroid
+                                ? data.item3
+                                : _meetingStore.currentAudioDeviceMode,
+                            updateSelectedValue: _updateDropDownValue)),
                   ),
                 ],
               );

@@ -2,6 +2,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/common/widgets/hms_dropdown.dart';
 import 'package:hmssdk_flutter_example/common/widgets/subtitle_text.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 
@@ -25,6 +26,10 @@ class AspectRatioOptionDialog extends StatefulWidget {
 
 class _AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
   String? valueChoose;
+
+  void _updateDropDownValue(dynamic newValue) {
+    valueChoose = newValue;
+  }
 
   @override
   void initState() {
@@ -70,49 +75,25 @@ class _AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
                   color: borderColor, style: BorderStyle.solid, width: 0.80),
             ),
             child: DropdownButtonHideUnderline(
-                child: DropdownButton2(
-              isExpanded: true,
-              dropdownStyleData: DropdownStyleData(
-                width: width * 0.7,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: themeSurfaceColor,
-                    border: Border.all(color: borderColor)),
-                offset: Offset(-10, -10),
-              ),
-              buttonStyleData: ButtonStyleData(
-                width: width * 0.7,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: themeSurfaceColor,
-                ),
-              ),
-              iconStyleData: IconStyleData(
-                icon: Icon(Icons.keyboard_arrow_down),
-                iconEnabledColor: themeDefaultColor,
-              ),
-              menuItemStyleData: MenuItemStyleData(
-                height: 48,
-              ),
-              value: valueChoose,
-              onChanged: (dynamic newvalue) {
-                setState(() {
-                  valueChoose = newvalue;
-                });
-              },
-              items: <DropdownMenuItem>[
-                ...widget.availableAspectRatios
-                    .map((aspectRatio) => DropdownMenuItem(
-                          child: TitleText(
-                            text: aspectRatio,
-                            textColor: themeDefaultColor,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          value: aspectRatio,
-                        ))
-                    .toList(),
-              ],
-            )),
+                child: HMSDropDown(
+                    dropDownItems: <DropdownMenuItem>[
+                  ...widget.availableAspectRatios
+                      .map((aspectRatio) => DropdownMenuItem(
+                            child: TitleText(
+                              text: aspectRatio,
+                              textColor: themeDefaultColor,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            value: aspectRatio,
+                          ))
+                      .toList(),
+                ],
+                    iconStyleData: IconStyleData(
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      iconEnabledColor: themeDefaultColor,
+                    ),
+                    selectedValue: valueChoose,
+                    updateSelectedValue: _updateDropDownValue)),
           ),
           SizedBox(
             height: 15,

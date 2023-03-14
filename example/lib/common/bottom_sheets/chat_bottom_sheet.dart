@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/common/widgets/hms_dropdown.dart';
 import 'package:hmssdk_flutter_example/common/widgets/message_container.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +34,10 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
     messageTextController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _updateDropDownValue(dynamic newValue) {
+    valueChoose = newValue;
   }
 
   void _scrollToEnd() {
@@ -137,99 +142,95 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                             meetingStore.peers),
                                         builder: (context, data, _) {
                                           List<HMSRole> roles = data.item1;
-                                          return DropdownButton2(
-                                            dropdownStyleData:
-                                                DropdownStyleData(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.4,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  color: themeSurfaceColor),
-                                              offset: Offset(-10, -10),
-                                            ),
-                                            buttonStyleData: ButtonStyleData(
-                                                width: 100, height: 35),
-                                            iconStyleData: IconStyleData(
-                                                icon: Icon(
-                                                    Icons.keyboard_arrow_down),
-                                                iconEnabledColor: iconColor),
-                                            menuItemStyleData:
-                                                MenuItemStyleData(
-                                              height: 45,
-                                            ),
-                                            isExpanded: true,
-                                            value: valueChoose,
-                                            onChanged: (dynamic newvalue) {
-                                              setState(() {
-                                                this.valueChoose =
-                                                    newvalue as String;
-                                              });
-                                            },
-                                            items: <DropdownMenuItem>[
-                                              DropdownMenuItem(
-                                                child: Text(
-                                                  "Everyone",
-                                                  style: GoogleFonts.inter(
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 12,
-                                                    letterSpacing: 0.4,
-                                                  ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 1,
-                                                ),
-                                                value: "Everyone",
+
+                                          return HMSDropDown(
+                                              selectedValue: valueChoose,
+                                              buttonStyleData: ButtonStyleData(
+                                                  width: 100, height: 35),
+                                              menuItemStyleData:
+                                                  MenuItemStyleData(
+                                                height: 45,
                                               ),
-                                              ...roles
-                                                  .sortedBy((element) => element
-                                                      .priority
-                                                      .toString())
-                                                  .map((role) =>
-                                                      DropdownMenuItem(
-                                                        child: Text(
-                                                          "${role.name}",
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          maxLines: 1,
-                                                          style:
-                                                              GoogleFonts.inter(
-                                                                  fontSize: 12,
-                                                                  color:
-                                                                      iconColor),
-                                                        ),
-                                                        value: role.name,
-                                                      ))
-                                                  .toList(),
-                                              ...data.item2
-                                                  .sortedBy(
-                                                      (element) => element.name)
-                                                  .map((peer) {
-                                                    return !peer.isLocal
-                                                        ? DropdownMenuItem(
-                                                            child: Text(
-                                                              "${peer.name} ${peer.isLocal ? "(You)" : ""}",
-                                                              style: GoogleFonts
-                                                                  .inter(
-                                                                      fontSize:
-                                                                          12,
-                                                                      color:
-                                                                          iconColor),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 1,
-                                                            ),
-                                                            value: peer.peerId,
-                                                          )
-                                                        : null;
-                                                  })
-                                                  .whereNotNull()
-                                                  .toList(),
-                                            ],
-                                          );
+                                              dropdownStyleData:
+                                                  DropdownStyleData(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.4,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                    color: themeSurfaceColor),
+                                                offset: Offset(-10, -10),
+                                              ),
+                                              dropDownItems: <DropdownMenuItem>[
+                                                DropdownMenuItem(
+                                                  child: Text(
+                                                    "Everyone",
+                                                    style: GoogleFonts.inter(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      fontSize: 12,
+                                                      letterSpacing: 0.4,
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                  ),
+                                                  value: "Everyone",
+                                                ),
+                                                ...roles
+                                                    .sortedBy((element) =>
+                                                        element.priority
+                                                            .toString())
+                                                    .map((role) =>
+                                                        DropdownMenuItem(
+                                                          child: Text(
+                                                            "${role.name}",
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            maxLines: 1,
+                                                            style: GoogleFonts
+                                                                .inter(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color:
+                                                                        iconColor),
+                                                          ),
+                                                          value: role.name,
+                                                        ))
+                                                    .toList(),
+                                                ...data.item2
+                                                    .sortedBy((element) =>
+                                                        element.name)
+                                                    .map((peer) {
+                                                      return !peer.isLocal
+                                                          ? DropdownMenuItem(
+                                                              child: Text(
+                                                                "${peer.name} ${peer.isLocal ? "(You)" : ""}",
+                                                                style: GoogleFonts
+                                                                    .inter(
+                                                                        fontSize:
+                                                                            12,
+                                                                        color:
+                                                                            iconColor),
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                maxLines: 1,
+                                                              ),
+                                                              value:
+                                                                  peer.peerId,
+                                                            )
+                                                          : null;
+                                                    })
+                                                    .whereNotNull()
+                                                    .toList(),
+                                              ],
+                                              updateSelectedValue:
+                                                  _updateDropDownValue);
                                         }),
                                   ),
                                 )

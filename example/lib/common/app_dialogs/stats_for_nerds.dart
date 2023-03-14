@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/common/widgets/hms_dropdown.dart';
 import 'package:hmssdk_flutter_example/common/widgets/subtitle_text.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
@@ -21,6 +22,34 @@ class _StatsForNerdsState extends State<StatsForNerds> {
   PeerTrackNode? valueChoose;
   String? statsType;
   late bool isStatsEnable;
+
+  void _updateDropDownValue(dynamic newValue) {
+    setState(() {
+      valueChoose = newValue;
+      if (valueChoose?.peer.isLocal ?? false) {
+        if (valueChoose?.stats?.hmsLocalAudioStats != null) {
+          statsType = "Regular Audio";
+        } else if (valueChoose?.stats?.hmsLocalVideoStats?.isNotEmpty != null) {
+          statsType =
+              "Regular Video - ${HMSSimulcastLayerValue.getValueFromHMSSimulcastLayer(valueChoose?.stats?.hmsLocalVideoStats?.first.hmsLayer)}";
+        } else {
+          statsType = null;
+        }
+      } else {
+        if (valueChoose?.stats?.hmsRemoteAudioStats != null) {
+          statsType = "Regular Audio";
+        } else if (valueChoose?.stats?.hmsRemoteVideoStats != null) {
+          statsType = "Regular Video";
+        } else {
+          statsType = null;
+        }
+      }
+    });
+  }
+
+  void _updateStatsTypeDropDownvalue(dynamic newValue) {
+    statsType = newValue;
+  }
 
   @override
   void initState() {
@@ -97,75 +126,30 @@ class _StatsForNerdsState extends State<StatsForNerds> {
                       width: 0.80),
                 ),
                 child: DropdownButtonHideUnderline(
-                    child: DropdownButton2(
-                  hint: TitleText(
-                    text: "Select Peer",
-                    textColor: themeDefaultColor,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  isExpanded: true,
-                  dropdownStyleData: DropdownStyleData(
-                    width: width * 0.7,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: themeSurfaceColor,
-                        border: Border.all(color: borderColor)),
-                    offset: Offset(-10, -10),
-                  ),
-                  buttonStyleData: ButtonStyleData(
-                    width: width * 0.7,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: themeSurfaceColor,
-                    ),
-                  ),
-                  iconStyleData: IconStyleData(
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    iconEnabledColor: themeDefaultColor,
-                  ),
-                  menuItemStyleData: MenuItemStyleData(
-                    height: 48,
-                  ),
-                  value: valueChoose,
-                  onChanged: (dynamic newvalue) {
-                    setState(() {
-                      valueChoose = newvalue;
-                      if (valueChoose?.peer.isLocal ?? false) {
-                        if (valueChoose?.stats?.hmsLocalAudioStats != null) {
-                          statsType = "Regular Audio";
-                        } else if (valueChoose
-                                ?.stats?.hmsLocalVideoStats?.isNotEmpty !=
-                            null) {
-                          statsType =
-                              "Regular Video - ${HMSSimulcastLayerValue.getValueFromHMSSimulcastLayer(valueChoose?.stats?.hmsLocalVideoStats?.first.hmsLayer)}";
-                        } else {
-                          statsType = null;
-                        }
-                      } else {
-                        if (valueChoose?.stats?.hmsRemoteAudioStats != null) {
-                          statsType = "Regular Audio";
-                        } else if (valueChoose?.stats?.hmsRemoteVideoStats !=
-                            null) {
-                          statsType = "Regular Video";
-                        } else {
-                          statsType = null;
-                        }
-                      }
-                    });
-                  },
-                  items: <DropdownMenuItem>[
-                    ...widget.peerTrackNode
-                        .map((peerNode) => DropdownMenuItem(
-                              child: TitleText(
-                                text: peerNode.peer.name,
-                                textColor: themeDefaultColor,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              value: peerNode,
-                            ))
-                        .toList(),
-                  ],
-                )),
+                    child: HMSDropDown(
+                        dropDownItems: <DropdownMenuItem>[
+                      ...widget.peerTrackNode
+                          .map((peerNode) => DropdownMenuItem(
+                                child: TitleText(
+                                  text: peerNode.peer.name,
+                                  textColor: themeDefaultColor,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                value: peerNode,
+                              ))
+                          .toList(),
+                    ],
+                        dropdownHint: TitleText(
+                          text: "Select Peer",
+                          textColor: themeDefaultColor,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        iconStyleData: IconStyleData(
+                          icon: Icon(Icons.keyboard_arrow_down),
+                          iconEnabledColor: themeDefaultColor,
+                        ),
+                        selectedValue: valueChoose,
+                        updateSelectedValue: _updateDropDownValue)),
               ),
               SizedBox(
                 height: 10,
@@ -182,72 +166,48 @@ class _StatsForNerdsState extends State<StatsForNerds> {
                         width: 0.80),
                   ),
                   child: DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                    isExpanded: true,
-                    dropdownStyleData: DropdownStyleData(
-                      width: width * 0.7,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: themeSurfaceColor,
-                          border: Border.all(color: borderColor)),
-                      offset: Offset(-10, -10),
-                    ),
-                    buttonStyleData: ButtonStyleData(
-                      width: width * 0.7,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: themeSurfaceColor,
-                      ),
-                    ),
-                    iconStyleData: IconStyleData(
-                      icon: Icon(Icons.keyboard_arrow_down),
-                      iconEnabledColor: themeDefaultColor,
-                    ),
-                    menuItemStyleData: MenuItemStyleData(
-                      height: 48,
-                    ),
-                    value: statsType,
-                    onChanged: (dynamic newvalue) {
-                      setState(() {
-                        statsType = newvalue;
-                      });
-                    },
-                    items: <DropdownMenuItem>[
-                      if (valueChoose!.stats?.hmsLocalAudioStats != null ||
-                          valueChoose!.stats?.hmsRemoteAudioStats != null)
-                        DropdownMenuItem(
-                          child: TitleText(
-                            text: "Regular Audio",
-                            textColor: themeDefaultColor,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          value: "Regular Audio",
-                        ),
-                      if (valueChoose!.stats?.hmsRemoteVideoStats != null)
-                        DropdownMenuItem(
-                          child: TitleText(
-                            text: "Regular Video",
-                            textColor: themeDefaultColor,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          value: "Regular Video",
-                        ),
-                      ...?valueChoose!.stats?.hmsLocalVideoStats
-                          ?.map(
-                            (localVideoStats) => DropdownMenuItem(
-                              child: TitleText(
-                                text:
-                                    "Regular Video - ${HMSSimulcastLayerValue.getValueFromHMSSimulcastLayer(localVideoStats.hmsLayer)}",
-                                textColor: themeDefaultColor,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              value:
-                                  "Regular Video - ${HMSSimulcastLayerValue.getValueFromHMSSimulcastLayer(localVideoStats.hmsLayer)}",
+                      child: HMSDropDown(
+                          dropDownItems: <DropdownMenuItem>[
+                        if (valueChoose!.stats?.hmsLocalAudioStats != null ||
+                            valueChoose!.stats?.hmsRemoteAudioStats != null)
+                          DropdownMenuItem(
+                            child: TitleText(
+                              text: "Regular Audio",
+                              textColor: themeDefaultColor,
+                              fontWeight: FontWeight.w400,
                             ),
-                          )
-                          .toList()
-                    ],
-                  )),
+                            value: "Regular Audio",
+                          ),
+                        if (valueChoose!.stats?.hmsRemoteVideoStats != null)
+                          DropdownMenuItem(
+                            child: TitleText(
+                              text: "Regular Video",
+                              textColor: themeDefaultColor,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            value: "Regular Video",
+                          ),
+                        ...?valueChoose!.stats?.hmsLocalVideoStats
+                            ?.map(
+                              (localVideoStats) => DropdownMenuItem(
+                                child: TitleText(
+                                  text:
+                                      "Regular Video - ${HMSSimulcastLayerValue.getValueFromHMSSimulcastLayer(localVideoStats.hmsLayer)}",
+                                  textColor: themeDefaultColor,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                value:
+                                    "Regular Video - ${HMSSimulcastLayerValue.getValueFromHMSSimulcastLayer(localVideoStats.hmsLayer)}",
+                              ),
+                            )
+                            .toList()
+                      ],
+                          iconStyleData: IconStyleData(
+                            icon: Icon(Icons.keyboard_arrow_down),
+                            iconEnabledColor: themeDefaultColor,
+                          ),
+                          selectedValue: statsType,
+                          updateSelectedValue: _updateStatsTypeDropDownvalue)),
                 ),
             ],
           ),
