@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/widgets/hms_dropdown.dart';
 import 'package:hmssdk_flutter_example/common/widgets/subtitle_text.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -32,6 +33,11 @@ class ChangeRoleOptionDialog extends StatefulWidget {
 class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
   late bool askPermission;
   HMSRole? valueChoose;
+
+  void _updateDropDownValue(dynamic newValue) {
+    valueChoose = newValue;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -77,43 +83,26 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                   color: borderColor, style: BorderStyle.solid, width: 0.80),
             ),
             child: DropdownButtonHideUnderline(
-                child: DropdownButton2(
-              isExpanded: true,
-              dropdownWidth: width * 0.7,
-              buttonWidth: width * 0.7,
-              buttonHeight: 48,
-              itemHeight: 48,
-              value: valueChoose,
-              icon: Icon(Icons.keyboard_arrow_down),
-              buttonDecoration: BoxDecoration(
-                color: themeSurfaceColor,
-              ),
-              dropdownDecoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: themeSurfaceColor,
-                  border: Border.all(color: borderColor)),
-              offset: Offset(-10, -10),
-              iconEnabledColor: themeDefaultColor,
-              selectedItemHighlightColor: hmsdefaultColor,
-              onChanged: (dynamic newvalue) {
-                setState(() {
-                  valueChoose = newvalue;
-                });
-              },
-              items: <DropdownMenuItem>[
-                ...widget.roles
-                    .sortedBy((element) => element.priority.toString())
-                    .map((role) => DropdownMenuItem(
-                          child: TitleText(
-                            text: role.name,
-                            textColor: themeDefaultColor,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          value: role,
-                        ))
-                    .toList(),
-              ],
-            )),
+                child: HMSDropDown(
+                    dropDownItems: <DropdownMenuItem>[
+                  ...widget.roles
+                      .sortedBy((element) => element.priority.toString())
+                      .map((role) => DropdownMenuItem(
+                            child: TitleText(
+                              text: role.name,
+                              textColor: themeDefaultColor,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            value: role,
+                          ))
+                      .toList(),
+                ],
+                    iconStyleData: IconStyleData(
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      iconEnabledColor: themeDefaultColor,
+                    ),
+                    selectedValue: valueChoose,
+                    updateSelectedValue: _updateDropDownValue)),
           ),
           SizedBox(
             height: 15,

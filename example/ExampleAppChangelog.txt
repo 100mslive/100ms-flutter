@@ -2,13 +2,17 @@
 
 2. Replaced `flutterToast` package with `bot_toast`
 
-3. Updated Native Android & iOS SDKs to their latest versions
+3. Updated Dropdown menu widget to the latest version
+
+4. Updated Native Android & iOS SDKs to their latest versions
 
 📝 Tickets
 
 1. https://github.com/100mslive/100ms-flutter/issues/1177
 
 2. https://github.com/100mslive/100ms-flutter/issues/1178
+
+3. https://github.com/100mslive/100ms-flutter/issues/1175
 
 
 Flutter SDK: 1.3.3
