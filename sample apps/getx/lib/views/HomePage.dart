@@ -12,23 +12,25 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final meetingTextController = TextEditingController(
-        text:
-            "https://yogi-livestreamingkit.app.100ms.live/meeting/xuq-zjx-ovh");
+        text: "https://yogi-live.app.100ms.live/streaming/meeting/qii-tow-sjq");
     final nameTextController = TextEditingController();
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          leading: Image.asset("assets/icons/hms_icon_1024.png"),
-          title: const Text("100ms and Getx Demo App"),
-          actions: [
-            Image.asset("assets/icons/getx_logo.webp"),
-          ],
-        ),
         body: Center(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Text(
+              "100ms Getx Example",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
             SizedBox(
               width: 300.0,
               child: TextField(
@@ -93,17 +95,8 @@ class HomePage extends StatelessWidget {
                   padding: const EdgeInsets.all(4.0),
                   decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(16))),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.video_call_outlined, size: 48),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text('Join Meeting',
-                          style: TextStyle(height: 1, fontSize: 24))
-                    ],
-                  ),
+                  child: const Text('Join Meeting',
+                      style: TextStyle(fontSize: 20, color: Colors.white)),
                 ),
               ),
             )

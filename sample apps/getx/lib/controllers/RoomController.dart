@@ -8,8 +8,8 @@ import '../services/RoomService.dart';
 class RoomController extends GetxController
     implements HMSUpdateListener, HMSActionResultListener {
   RxList<Rx<PeerTrackNode>> peerTrackList = <Rx<PeerTrackNode>>[].obs;
-  RxBool isLocalVideoOn = false.obs;
-  RxBool isLocalAudioOn = false.obs;
+  RxBool isLocalVideoOn = true.obs;
+  RxBool isLocalAudioOn = true.obs;
   RxBool isScreenShareActive = false.obs;
   String url;
   String name;
@@ -18,88 +18,42 @@ class RoomController extends GetxController
 
   HMSSDK hmsSdk = Get.find();
 
-  RxBool isVideoOnPreview = false.obs;
-  RxBool isAudioOnPreview = false.obs;
-
   @override
   void onInit() async {
     hmsSdk.addUpdateListener(listener: this);
-
-    hmsSdk.build();
-    List<String?>? token = await RoomService().getToken(user: name, room: url);
+    String? token = await RoomService().getToken(user: name, room: url);
 
     if (token == null) return;
-    if (token[0] == null) return;
 
     HMSConfig config = HMSConfig(
-      authToken: token[0]!,
+      authToken: token,
       userName: name,
     );
 
     hmsSdk.join(config: config);
 
-    isVideoOnPreview = Get.find(tag: "isLocalVideoOn");
-    isAudioOnPreview = Get.find(tag: "isLocalAudioOn");
-
     super.onInit();
-  }
-
-  @override
-  void onChangeTrackStateRequest(
-      {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
-    // TODO: implement onChangeTrackStateRequest
-  }
-
-  @override
-  void onHMSError({required HMSException error}) {
-    Get.snackbar("Error", error.message ?? "");
   }
 
   @override
   void onJoin({required HMSRoom room}) {
     peerTrackList.clear();
-    isLocalAudioOn.value = isAudioOnPreview.value;
-    isLocalAudioOn.refresh();
 
-    isLocalVideoOn.value = isVideoOnPreview.value;
-    isLocalVideoOn.refresh();
-
-    hmsSdk.switchAudio(isOn: !isLocalAudioOn.value);
-    hmsSdk.switchVideo(isOn: !isLocalVideoOn.value);
-  }
-
-  @override
-  void onMessage({required HMSMessage message}) {
-    // TODO: implement onMessage
-  }
-
-  @override
-  void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {}
-
-  @override
-  void onReconnected() {
-    // TODO: implement onReconnected
-  }
-
-  @override
-  void onReconnecting() {
-    // TODO: implement onReconnecting
-  }
-
-  @override
-  void onRemovedFromRoom(
-      {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
-    // TODO: implement onRemovedFromRoom
-  }
-
-  @override
-  void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
-    // TODO: implement onRoleChangeRequest
-  }
-
-  @override
-  void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
-    // TODO: implement onRoomUpdate
+    room.peers?.forEach((peer) {
+      if (peer.isLocal) {
+        isLocalAudioOn.value = !(peer.audioTrack?.isMute ?? true);
+        isLocalVideoOn.value = !(peer.videoTrack?.isMute ?? true);
+        peerTrackList.add(PeerTrackNode(
+                peer.peerId +
+                    ((peer.videoTrack?.source == "REGULAR")
+                        ? "mainVideo"
+                        : (peer.videoTrack?.trackId ?? "")),
+                peer.videoTrack,
+                peer.videoTrack?.isMute ?? false,
+                peer)
+            .obs);
+      }
+    });
   }
 
   @override
@@ -107,19 +61,30 @@ class RoomController extends GetxController
       {required HMSTrack track,
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
+    if (peer.isLocal) {
+      if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
+        isLocalAudioOn.value = !track.isMute;
+        isLocalAudioOn.refresh();
+      } else if (track.kind == HMSTrackKind.kHMSTrackKindVideo &&
+          track.source == "REGULAR") {
+        isLocalVideoOn.value == !track.isMute;
+        isLocalVideoOn.refresh();
+      }
+    }
+
     if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
       if (trackUpdate == HMSTrackUpdate.trackRemoved) {
         peerTrackList.removeWhere((element) =>
             peer.peerId +
                 ((track.source == "REGULAR") ? "mainVideo" : track.trackId) ==
             element.value.uid);
-      } else if (trackUpdate == HMSTrackUpdate.trackAdded) {
+      } else {
         bool isRegular = (track.source == "REGULAR");
         int index = peerTrackList.indexWhere((element) =>
             element.value.peer.peerId +
                 (isRegular
                     ? "mainVideo"
-                    : element.value.hmsVideoTrack.trackId) ==
+                    : (element.value.hmsVideoTrack?.trackId ?? "empty")) ==
             peer.peerId + (isRegular ? "mainVideo" : track.trackId));
         if (index != -1) {
           peerTrackList[index](PeerTrackNode(
@@ -140,36 +105,31 @@ class RoomController extends GetxController
   }
 
   @override
-  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
-    // TODO: implement onUpdateSpeakers
+  void onHMSError({required HMSException error}) {
+    // To know more about handling errors please checkout the docs here: https://www.100ms.live/docs/flutter/v2/how--to-guides/debugging/error-handling
+    Get.snackbar("Error", error.message ?? "");
   }
 
   void leaveMeeting() async {
     hmsSdk.leave(hmsActionResultListener: this);
   }
 
-  void toggleAudio() async {
-    var result = await hmsSdk.switchAudio(isOn: isLocalAudioOn.value);
-    if (result == null) {
-      isLocalAudioOn.toggle();
-    }
+  void toggleMicMuteState() async {
+    await hmsSdk.toggleMicMuteState();
+    isLocalAudioOn.toggle();
   }
 
-  void toggleVideo() async {
-    var result = await hmsSdk.switchVideo(isOn: isLocalVideoOn.value);
-
-    if (result == null) {
-      isLocalVideoOn.toggle();
-    }
+  void toggleCameraMuteState() async {
+    await hmsSdk.toggleCameraMuteState();
+    isLocalVideoOn.toggle();
   }
 
   void toggleScreenShare() {
     if (!isScreenShareActive.value) {
-      hmsSdk.startScreenShare();
+      hmsSdk.startScreenShare(hmsActionResultListener: this);
     } else {
-      hmsSdk.stopScreenShare();
+      hmsSdk.stopScreenShare(hmsActionResultListener: this);
     }
-    isScreenShareActive.toggle();
   }
 
   @override
@@ -177,6 +137,19 @@ class RoomController extends GetxController
       {HMSActionResultListenerMethod? methodType,
       Map<String, dynamic>? arguments,
       required HMSException hmsException}) {
+    switch (methodType) {
+      case HMSActionResultListenerMethod.leave:
+        Get.snackbar("Leave Error", hmsException.message ?? "");
+        break;
+      case HMSActionResultListenerMethod.startScreenShare:
+        Get.snackbar("startScreenShare Error", hmsException.message ?? "");
+
+        break;
+      case HMSActionResultListenerMethod.stopScreenShare:
+        Get.snackbar("stopScreenShare Error", hmsException.message ?? "");
+
+        break;
+    }
     Get.snackbar("Error", hmsException.message ?? "");
   }
 
@@ -184,50 +157,74 @@ class RoomController extends GetxController
   void onSuccess(
       {HMSActionResultListenerMethod? methodType,
       Map<String, dynamic>? arguments}) {
-    Get.back();
-    Get.off(() => const HomePage());
+    switch (methodType) {
+      case HMSActionResultListenerMethod.leave:
+        hmsSdk.removeUpdateListener(listener: this);
+        hmsSdk.destroy();
+        Get.back();
+        Get.off(() => const HomePage());
+        break;
+      case HMSActionResultListenerMethod.startScreenShare:
+        isScreenShareActive.toggle();
+        break;
+      case HMSActionResultListenerMethod.stopScreenShare:
+        isScreenShareActive.toggle();
+        break;
+    }
   }
 
-  @override
-  void onLocalAudioStats(
-      {required HMSLocalAudioStats hmsLocalAudioStats,
-      required HMSLocalAudioTrack track,
-      required HMSPeer peer}) {
-    // TODO: implement onLocalAudioStats
-  }
-
-  @override
-  void onLocalVideoStats(
-      {required HMSLocalVideoStats hmsLocalVideoStats,
-      required HMSLocalVideoTrack track,
-      required HMSPeer peer}) {
-    // TODO: implement onLocalVideoStats
-  }
-
-  @override
-  void onRTCStats({required HMSRTCStatsReport hmsrtcStatsReport}) {
-    // TODO: implement onRTCStats
-  }
-
-  @override
-  void onRemoteAudioStats(
-      {required HMSRemoteAudioStats hmsRemoteAudioStats,
-      required HMSRemoteAudioTrack track,
-      required HMSPeer peer}) {
-    // TODO: implement onRemoteAudioStats
-  }
-
-  @override
-  void onRemoteVideoStats(
-      {required HMSRemoteVideoStats hmsRemoteVideoStats,
-      required HMSRemoteVideoTrack track,
-      required HMSPeer peer}) {
-    // TODO: implement onRemoteVideoStats
-  }
   @override
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice}) {
-    // TODO: implement onAudioDeviceChanged
+    // Checkout the docs about handling onAudioDeviceChanged updates here: https://www.100ms.live/docs/flutter/v2/how--to-guides/listen-to-room-updates/update-listeners
+  }
+
+  @override
+  void onMessage({required HMSMessage message}) {
+    // Checkout the docs for chat messaging here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/chat
+  }
+
+  @override
+  void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
+    // Checkout the docs for peer updates here: https://www.100ms.live/docs/flutter/v2/how--to-guides/listen-to-room-updates/update-listeners
+  }
+
+  @override
+  void onReconnected() {
+    // Checkout the docs for reconnection handling here: https://www.100ms.live/docs/flutter/v2/how--to-guides/handle-interruptions/reconnection-handling
+  }
+
+  @override
+  void onReconnecting() {
+    // Checkout the docs for reconnection handling here: https://www.100ms.live/docs/flutter/v2/how--to-guides/handle-interruptions/reconnection-handling
+
+  }
+
+  @override
+  void onRemovedFromRoom(
+      {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
+    // Checkout the docs for handling the peer removal here: https://www.100ms.live/docs/flutter/v2/how--to-guides/interact-with-room/peer/remove-peer
+  }
+
+  @override
+  void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
+    // Checkout the docs for handling the role change request here: https://www.100ms.live/docs/flutter/v2/how--to-guides/interact-with-room/peer/change-role#accept-role-change-request
+  }
+
+  @override
+  void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
+    // Checkout the docs for room updates here: https://www.100ms.live/docs/flutter/v2/how--to-guides/listen-to-room-updates/update-listeners
+  }
+
+  @override
+  void onChangeTrackStateRequest(
+      {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
+    // Checkout the docs for handling the unmute request here: https://www.100ms.live/docs/flutter/v2/how--to-guides/interact-with-room/track/remote-mute-unmute
+  }
+
+  @override
+  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
+    // Checkout the docs for handling the updates regarding who is currently speaking here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/render-video/show-audio-level
   }
 }

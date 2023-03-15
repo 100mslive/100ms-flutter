@@ -1,7 +1,7 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class PeerTrackNode {
-  HMSVideoTrack hmsVideoTrack;
+  HMSVideoTrack? hmsVideoTrack;
   bool isMute = true;
   HMSPeer peer;
   bool isOffScreen = true;

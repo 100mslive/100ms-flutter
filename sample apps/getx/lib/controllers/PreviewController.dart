@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
@@ -6,8 +5,8 @@ import '../services/RoomService.dart';
 
 class PreviewController extends GetxController
     implements HMSPreviewListener, HMSActionResultListener {
-  RxBool isLocalVideoOn = Get.put(false.obs, tag: "isLocalVideoOn");
-  RxBool isLocalAudioOn = Get.put(false.obs, tag: "isLocalAudioOn");
+  RxBool isLocalVideoOn = true.obs;
+  RxBool isLocalAudioOn = true.obs;
 
   List<HMSVideoTrack> localTracks = <HMSVideoTrack>[].obs;
 
@@ -16,23 +15,20 @@ class PreviewController extends GetxController
 
   PreviewController(this.url, this.name);
 
+
+//To know more about HMSSDK setup and initialization checkout the docs here: https://www.100ms.live/docs/flutter/v2/how--to-guides/install-the-sdk/hmssdk
   HMSSDK hmsSdk = Get.put(HMSSDK());
 
   @override
   void onInit() async {
+    await hmsSdk.build();
     hmsSdk.addPreviewListener(listener: this);
-
-    hmsSdk.build();
-    List<String?>? token = await RoomService().getToken(user: name, room: url);
-
-    //print("Success ${token?.length} ${token?[0]}");
-
+    String? token = await RoomService().getToken(user: name, room: url);
     if (token == null) return;
-    if (token[0] == null) return;
 
     HMSConfig config = Get.put(
         HMSConfig(
-          authToken: token[0]!,
+          authToken: token,
           userName: name,
         ),
         tag: "");
@@ -46,23 +42,18 @@ class PreviewController extends GetxController
     hmsSdk.leave(hmsActionResultListener: this);
   }
 
-  void toggleAudio() async {
-    var result = await hmsSdk.switchAudio(isOn: isLocalAudioOn.value);
-    if (result == null) {
-      isLocalAudioOn.toggle();
-    }
+  void toggleMicMuteState() async {
+    await hmsSdk.toggleMicMuteState();
+    isLocalAudioOn.toggle();
   }
 
-  void toggleVideo() async {
-    var result = await hmsSdk.switchVideo(isOn: isLocalVideoOn.value);
+  void toggleCameraMuteState() async {
+    await hmsSdk.toggleCameraMuteState();
+    isLocalVideoOn.toggle();
+  }
 
-    if (result == null) {
-      isLocalVideoOn.toggle();
-
-      if (kDebugMode) {
-        print("RESULT VIDEO ${isLocalVideoOn.value}");
-      }
-    }
+  void removePreviewListener() {
+    hmsSdk.removePreviewListener(listener: this);
   }
 
   @override
@@ -99,23 +90,24 @@ class PreviewController extends GetxController
 
   @override
   void onHMSError({required HMSException error}) {
+    // To know more about handling errors please checkout the docs here: https://www.100ms.live/docs/flutter/v2/how--to-guides/debugging/error-handling
     Get.snackbar("Error", error.message ?? "");
   }
 
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
-    // TODO: implement onPeerUpdate
+    // Checkout the docs about handling peer updates in preview here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/preview
   }
 
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
-    // TODO: implement onRoomUpdate
+    // Checkout the docs about handling room updates in preview here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/preview
   }
 
   @override
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice}) {
-    // TODO: implement onAudioDeviceChanged
+    // Checkout the docs about handling onAudioDeviceChanged updates in preview here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/preview
   }
 }
