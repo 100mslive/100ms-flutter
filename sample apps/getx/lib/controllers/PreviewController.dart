@@ -93,18 +93,18 @@ class PreviewController extends GetxController
 
   @override
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
-    // TODO: implement onPeerUpdate
+    // Checkout the docs about handling peer updates in preview here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/preview
   }
 
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
-    // TODO: implement onRoomUpdate
+    // Checkout the docs about handling room updates in preview here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/preview
   }
 
   @override
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice}) {
-    // TODO: implement onAudioDeviceChanged
+    // Checkout the docs about handling onAudioDeviceChanged updates in preview here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/preview
   }
 }
