@@ -106,6 +106,7 @@ class RoomController extends GetxController
 
   @override
   void onHMSError({required HMSException error}) {
+    // To know more about handling errors please checkout the docs here: https://www.100ms.live/docs/flutter/v2/how--to-guides/debugging/error-handling
     Get.snackbar("Error", error.message ?? "");
   }
 
