@@ -110,6 +110,7 @@ class _MeetingPageState extends State<MeetingPage>
     initHMSSDK();
   }
 
+//To know more about HMSSDK setup and initialization checkout the docs here: https://www.100ms.live/docs/flutter/v2/how--to-guides/install-the-sdk/hmssdk
   void initHMSSDK() async {
     hmsSDK = HMSSDK();
     await hmsSDK.build();
@@ -216,36 +217,56 @@ class _MeetingPageState extends State<MeetingPage>
   @override
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
-      List<HMSAudioDevice>? availableAudioDevice}) {}
+      List<HMSAudioDevice>? availableAudioDevice}) {
+        // Checkout the docs about handling onAudioDeviceChanged updates here: https://www.100ms.live/docs/flutter/v2/how--to-guides/listen-to-room-updates/update-listeners
+      }
 
   @override
   void onChangeTrackStateRequest(
-      {required HMSTrackChangeRequest hmsTrackChangeRequest}) {}
+      {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
+    // Checkout the docs for handling the unmute request here: https://www.100ms.live/docs/flutter/v2/how--to-guides/interact-with-room/track/remote-mute-unmute
+      }
 
   @override
-  void onHMSError({required HMSException error}) {}
+  void onHMSError({required HMSException error}) {
+    // To know more about handling errors please checkout the docs here: https://www.100ms.live/docs/flutter/v2/how--to-guides/debugging/error-handling
+  }
 
   @override
-  void onMessage({required HMSMessage message}) {}
+  void onMessage({required HMSMessage message}) {
+    // Checkout the docs for chat messaging here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/chat
+  }
 
   @override
-  void onReconnected() {}
+  void onReconnected() {
+    // Checkout the docs for reconnection handling here: https://www.100ms.live/docs/flutter/v2/how--to-guides/handle-interruptions/reconnection-handling
+  }
 
   @override
-  void onReconnecting() {}
+  void onReconnecting() {
+    // Checkout the docs for reconnection handling here: https://www.100ms.live/docs/flutter/v2/how--to-guides/handle-interruptions/reconnection-handling
+  }
 
   @override
   void onRemovedFromRoom(
-      {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {}
+      {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
+    // Checkout the docs for handling the peer removal here: https://www.100ms.live/docs/flutter/v2/how--to-guides/interact-with-room/peer/remove-peer
+  }
 
   @override
-  void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {}
+  void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
+    // Checkout the docs for handling the role change request here: https://www.100ms.live/docs/flutter/v2/how--to-guides/interact-with-room/peer/change-role#accept-role-change-request
+  }
 
   @override
-  void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {}
+  void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
+    // Checkout the docs for room updates here: https://www.100ms.live/docs/flutter/v2/how--to-guides/listen-to-room-updates/update-listeners
+  }
 
   @override
-  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {}
+  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
+    // Checkout the docs for handling the updates regarding who is currently speaking here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/render-video/show-audio-level
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -329,6 +350,7 @@ class _MeetingPageState extends State<MeetingPage>
       key: key,
       color: Colors.black,
       child: (videoTrack != null && !(videoTrack.isMute))
+// To know more about HMSVideoView checkout the docs here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/render-video/overview
           ? HMSVideoView(
               track: videoTrack,
             )

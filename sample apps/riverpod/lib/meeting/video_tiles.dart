@@ -37,6 +37,7 @@ class VideoTiles extends StatelessWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     child: Stack(
                       children: [
+                        //To know more about HMSVideoView checkout the docs here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/render-video/overview
                         HMSVideoView(
                           track: videoTrack,
                           scaleType: ScaleType.SCALE_ASPECT_FILL,
