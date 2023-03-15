@@ -21,7 +21,7 @@ class RoomService {
      * code is abc-def-ghi
     */
     Constant.meetingCode = codeAndDomain[1] ?? '';
-    Uri endPoint = Uri.parse(Constant.prodTokenEndpoint);
+    Uri endPoint = Uri.parse(Constant.tokenEndpoint);
     http.Response response = await http.post(endPoint, body: {
       'code': (codeAndDomain[1] ?? "").trim(),
       'user_id': user,
