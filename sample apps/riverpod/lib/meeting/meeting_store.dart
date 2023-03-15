@@ -9,8 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class MeetingStore extends ChangeNotifier
-    with WidgetsBindingObserver
-    implements HMSUpdateListener, HMSActionResultListener, HMSStatsListener {
+    implements HMSUpdateListener, HMSActionResultListener {
   late HMSSDKInteractor _hmsSDKInteractor;
 
   MeetingStore({required HMSSDKInteractor hmsSDKInteractor}) {
@@ -21,19 +20,9 @@ class MeetingStore extends ChangeNotifier
 
   HMSException? hmsException;
 
-  bool isMeetingStarted = false;
-
   bool isVideoOn = true;
 
   bool isMicOn = true;
-
-  bool reconnecting = false;
-
-  bool reconnected = false;
-
-  bool isRoomEnded = false;
-
-  List<HMSRole> roles = [];
 
   List<HMSPeer> peers = [];
 
@@ -45,42 +34,38 @@ class MeetingStore extends ChangeNotifier
 
   HMSRoom? hmsRoom;
 
-  int firstTimeBuild = 0;
-
   bool isScreenShareOn = false;
 
+// Function calls*******************************************
+
   Future<bool> join(String user, String roomUrl) async {
-    List<String?>? token =
-        await RoomService().getToken(user: user, room: roomUrl);
+    String? token = await RoomService().getToken(user: user, room: roomUrl);
     if (token == null) return false;
-    HMSConfig config = HMSConfig(authToken: token[0]!, userName: user);
+    HMSConfig config = HMSConfig(authToken: token, userName: user);
 
     _hmsSDKInteractor.addUpdateListener(this);
-    WidgetsBinding.instance.addObserver(this);
     _hmsSDKInteractor.join(config: config);
     return true;
   }
 
   void leave() async {
-    _hmsSDKInteractor.removeStatsListener(this);
-    WidgetsBinding.instance.removeObserver(this);
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
   }
 
-  Future<void> switchAudio() async {
-    await _hmsSDKInteractor.switchAudio(isOn: isMicOn);
+  Future<void> toggleMicMuteState() async {
+    _hmsSDKInteractor.toggleMicMuteState();
     isMicOn = !isMicOn;
     notifyListeners();
   }
 
-  Future<void> switchVideo() async {
-    await _hmsSDKInteractor.switchVideo(isOn: isVideoOn);
+  Future<void> toggleCameraMuteState() async {
+    _hmsSDKInteractor.toggleCameraMuteState();
     isVideoOn = !isVideoOn;
     notifyListeners();
   }
 
   Future<void> switchCamera() async {
-    await _hmsSDKInteractor.switchCamera();
+    await _hmsSDKInteractor.switchCamera(hmsActionResultListener: this);
   }
 
   void sendBroadcastMessage(String message) {
@@ -103,25 +88,8 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.stopScreenShare(hmsActionResultListener: this);
   }
 
-  Future<bool> isAudioMute(HMSPeer? peer) async {
-    return await _hmsSDKInteractor.isAudioMute(peer);
-  }
-
-  Future<bool> isVideoMute(HMSPeer? peer) async {
-    return await _hmsSDKInteractor.isVideoMute(peer);
-  }
-
-  Future<bool> startCapturing() async {
-    return await _hmsSDKInteractor.startCapturing();
-  }
-
-  void stopCapturing() {
-    _hmsSDKInteractor.stopCapturing();
-  }
-
   void removePeer(HMSPeer peer) {
     peers.remove(peer);
-    // removeTrackWithPeerId(peer.peerId);
   }
 
   void addPeer(HMSPeer peer) {
@@ -138,161 +106,6 @@ class MeetingStore extends ChangeNotifier
     peers.insert(index, peer);
   }
 
-  @override
-  void onJoin({required HMSRoom room}) async {
-    isMeetingStarted = true;
-    hmsRoom = room;
-    for (HMSPeer each in room.peers!) {
-      if (each.isLocal) {
-        int index = peerTracks
-            .indexWhere((element) => element.uid == each.peerId + "mainVideo");
-        if (index == -1) {
-          peerTracks
-              .add(PeerTrackNode(peer: each, uid: each.peerId + "mainVideo"));
-        }
-        localPeer = each;
-        addPeer(localPeer!);
-        index = peerTracks
-            .indexWhere((element) => element.uid == each.peerId + "mainVideo");
-        if (each.videoTrack != null) {
-          if (each.videoTrack!.kind == HMSTrackKind.kHMSTrackKindVideo) {
-            peerTracks[index].track = each.videoTrack!;
-            if (each.videoTrack!.isMute) {
-              isVideoOn = false;
-            }
-          }
-        }
-        if (each.audioTrack != null) {
-          if (each.audioTrack!.kind == HMSTrackKind.kHMSTrackKindAudio) {
-            peerTracks[index].audioTrack = each.audioTrack!;
-            if (each.audioTrack!.isMute) {
-              isMicOn = false;
-            }
-          }
-        }
-        break;
-      }
-    }
-    roles = await getRoles();
-    notifyListeners();
-  }
-
-  @override
-  void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {}
-
-  @override
-  void onPeerUpdate(
-      {required HMSPeer peer, required HMSPeerUpdate update}) async {
-    peerOperation(peer, update);
-  }
-
-  @override
-  void onTrackUpdate(
-      {required HMSTrack track,
-      required HMSTrackUpdate trackUpdate,
-      required HMSPeer peer}) {
-    if (peer.isLocal) {
-      if (track.kind == HMSTrackKind.kHMSTrackKindAudio &&
-          track.source == "REGULAR") {
-        isMicOn = !track.isMute;
-      }
-      if (track.kind == HMSTrackKind.kHMSTrackKindVideo &&
-          track.source == "REGULAR") {
-        isVideoOn = !track.isMute;
-      }
-      notifyListeners();
-    }
-
-    if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
-      int index = peerTracks
-          .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
-      if (index != -1) {
-        PeerTrackNode peerTrackNode = peerTracks[index];
-        peerTrackNode.audioTrack = track as HMSAudioTrack;
-        peerTrackNode.notify();
-      }
-      return;
-    }
-
-    if (track.source == "REGULAR") {
-      int index = peerTracks
-          .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
-      if (index != -1) {
-        PeerTrackNode peerTrackNode = peerTracks[index];
-        peerTrackNode.track = track as HMSVideoTrack;
-        peerTrackNode.notify();
-      } else {
-        return;
-      }
-    } else {
-      if (trackUpdate == HMSTrackUpdate.trackAdded) {
-        peerTracks.add(PeerTrackNode(
-            peer: peer,
-            uid: peer.peerId + track.trackId,
-            track: track as HMSVideoTrack));
-      } else {
-        int index = peerTracks.indexWhere(
-            (element) => element.uid == peer.peerId + track.trackId);
-        if (index != -1) {
-          peerTracks.removeAt(index);
-        }
-      }
-      notifyListeners();
-    }
-  }
-
-  @override
-  void onHMSError({required HMSException error}) {
-    hmsException = hmsException;
-    notifyListeners();
-  }
-
-  @override
-  void onMessage({required HMSMessage message}) {}
-
-  @override
-  void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {}
-
-  @override
-  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {}
-
-  @override
-  void onReconnecting() {
-    reconnected = false;
-    reconnecting = true;
-  }
-
-  @override
-  void onReconnected() {
-    reconnecting = false;
-    reconnected = true;
-  }
-
-  int trackChange = -1;
-
-  @override
-  void onChangeTrackStateRequest(
-      {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
-    if (hmsTrackChangeRequest.track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-      isVideoOn = false;
-    } else {
-      isMicOn = false;
-    }
-    notifyListeners();
-  }
-
-  void rejectrequest() {
-    notifyListeners();
-  }
-
-  @override
-  void onRemovedFromRoom(
-      {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
-    peerTracks.clear();
-    isRoomEnded = true;
-    notifyListeners();
-  }
-
   void changeRole(
       {required HMSPeer peer,
       required HMSRole roleName,
@@ -302,10 +115,6 @@ class MeetingStore extends ChangeNotifier
         forPeer: peer,
         force: forceChange,
         hmsActionResultListener: this);
-  }
-
-  Future<List<HMSRole>> getRoles() async {
-    return await _hmsSDKInteractor.getRoles();
   }
 
   void changeTrackState(HMSTrack track, bool mute) {
@@ -391,50 +200,174 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  Future<HMSLocalPeer?> getLocalPeer() async {
-    return await _hmsSDKInteractor.getLocalPeer();
+// Listeners implementation*******************************************
+
+    @override
+  void onJoin({required HMSRoom room}) async {
+    hmsRoom = room;
+    for (HMSPeer each in room.peers!) {
+      if (each.isLocal) {
+        int index = peerTracks
+            .indexWhere((element) => element.uid == each.peerId + "mainVideo");
+        if (index == -1) {
+          peerTracks
+              .add(PeerTrackNode(peer: each, uid: each.peerId + "mainVideo"));
+        }
+        localPeer = each;
+        addPeer(localPeer!);
+        index = peerTracks
+            .indexWhere((element) => element.uid == each.peerId + "mainVideo");
+        if (each.videoTrack != null) {
+          if (each.videoTrack!.kind == HMSTrackKind.kHMSTrackKindVideo) {
+            peerTracks[index].track = each.videoTrack!;
+            if (each.videoTrack!.isMute) {
+              isVideoOn = false;
+            }
+          }
+        }
+        if (each.audioTrack != null) {
+          if (each.audioTrack!.kind == HMSTrackKind.kHMSTrackKindAudio) {
+            peerTracks[index].audioTrack = each.audioTrack!;
+            if (each.audioTrack!.isMute) {
+              isMicOn = false;
+            }
+          }
+        }
+        break;
+      }
+    }
+    notifyListeners();
   }
 
-  Future<HMSRoom?> getRoom() async {
-    HMSRoom? room = await _hmsSDKInteractor.getRoom();
-    return room;
+  @override
+  void onPeerUpdate(
+      {required HMSPeer peer, required HMSPeerUpdate update}) async {
+    // Checkout the docs for peer updates here: https://www.100ms.live/docs/flutter/v2/how--to-guides/listen-to-room-updates/update-listeners
+    peerOperation(peer, update);
   }
 
-  Future<HMSPeer?> getPeer({required String peerId}) async {
-    return await _hmsSDKInteractor.getPeer(peerId: peerId);
+  @override
+  void onTrackUpdate(
+      {required HMSTrack track,
+      required HMSTrackUpdate trackUpdate,
+      required HMSPeer peer}) {
+    if (peer.isLocal) {
+      if (track.kind == HMSTrackKind.kHMSTrackKindAudio &&
+          track.source == "REGULAR") {
+        isMicOn = !track.isMute;
+      }
+      if (track.kind == HMSTrackKind.kHMSTrackKindVideo &&
+          track.source == "REGULAR") {
+        isVideoOn = !track.isMute;
+      }
+      notifyListeners();
+    }
+
+    if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
+      int index = peerTracks
+          .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
+      if (index != -1) {
+        PeerTrackNode peerTrackNode = peerTracks[index];
+        peerTrackNode.audioTrack = track as HMSAudioTrack;
+        peerTrackNode.notify();
+      }
+      return;
+    }
+
+    if (track.source == "REGULAR") {
+      int index = peerTracks
+          .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
+      if (index != -1) {
+        PeerTrackNode peerTrackNode = peerTracks[index];
+        peerTrackNode.track = track as HMSVideoTrack;
+        peerTrackNode.notify();
+      } else {
+        return;
+      }
+    } else {
+      if (trackUpdate == HMSTrackUpdate.trackAdded) {
+        peerTracks.add(PeerTrackNode(
+            peer: peer,
+            uid: peer.peerId + track.trackId,
+            track: track as HMSVideoTrack));
+      } else {
+        int index = peerTracks.indexWhere(
+            (element) => element.uid == peer.peerId + track.trackId);
+        if (index != -1) {
+          peerTracks.removeAt(index);
+        }
+      }
+      notifyListeners();
+    }
   }
 
   @override
-  void onLocalAudioStats(
-      {required HMSLocalAudioStats hmsLocalAudioStats,
-      required HMSLocalAudioTrack track,
-      required HMSPeer peer}) {}
+  void onHMSError({required HMSException error}) {
+    // To know more about handling errors please checkout the docs here: https://www.100ms.live/docs/flutter/v2/how--to-guides/debugging/error-handling
+    hmsException = hmsException;
+    notifyListeners();
+  }
+
 
   @override
-  void onLocalVideoStats(
-      {required List<HMSLocalVideoStats> hmsLocalVideoStats,
-      required HMSLocalVideoTrack track,
-      required HMSPeer peer}) {}
+  void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
+    // Checkout the docs for room updates here: https://www.100ms.live/docs/flutter/v2/how--to-guides/listen-to-room-updates/update-listeners
+  }
 
   @override
-  void onRemoteAudioStats(
-      {required HMSRemoteAudioStats hmsRemoteAudioStats,
-      required HMSRemoteAudioTrack track,
-      required HMSPeer peer}) {}
+  void onMessage({required HMSMessage message}) {
+    // Checkout the docs for chat messaging here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/chat
+  }
 
   @override
-  void onRemoteVideoStats(
-      {required HMSRemoteVideoStats hmsRemoteVideoStats,
-      required HMSRemoteVideoTrack track,
-      required HMSPeer peer}) {}
+  void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
+    // Checkout the docs for handling the role change request here: https://www.100ms.live/docs/flutter/v2/how--to-guides/interact-with-room/peer/change-role#accept-role-change-request
+  }
 
   @override
-  void onRTCStats({required HMSRTCStatsReport hmsrtcStatsReport}) {}
+  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
+    // Checkout the docs for handling the updates regarding who is currently speaking here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/render-video/show-audio-level
+  }
+
+  @override
+  void onReconnecting() {
+    // Checkout the docs for reconnection handling here: https://www.100ms.live/docs/flutter/v2/how--to-guides/handle-interruptions/reconnection-handling
+  }
+
+  @override
+  void onReconnected() {
+    // Checkout the docs for reconnection handling here: https://www.100ms.live/docs/flutter/v2/how--to-guides/handle-interruptions/reconnection-handling
+  }
+
+  int trackChange = -1;
+
+  @override
+  void onChangeTrackStateRequest(
+      {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
+    // Checkout the docs for handling the unmute request here: https://www.100ms.live/docs/flutter/v2/how--to-guides/interact-with-room/track/remote-mute-unmute
+    if (hmsTrackChangeRequest.track.kind == HMSTrackKind.kHMSTrackKindVideo) {
+      isVideoOn = false;
+    } else {
+      isMicOn = false;
+    }
+    notifyListeners();
+  }
+
+  @override
+  void onRemovedFromRoom(
+      {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
+    // Checkout the docs for handling the peer removal here: https://www.100ms.live/docs/flutter/v2/how--to-guides/interact-with-room/peer/remove-peer
+    peerTracks.clear();
+    notifyListeners();
+  }
 
   @override
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
-      List<HMSAudioDevice>? availableAudioDevice}) {}
+      List<HMSAudioDevice>? availableAudioDevice}) {
+        // Checkout the docs about handling onAudioDeviceChanged updates here: https://www.100ms.live/docs/flutter/v2/how--to-guides/listen-to-room-updates/update-listeners
+      }
+
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
@@ -443,15 +376,13 @@ class MeetingStore extends ChangeNotifier
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
         peerTracks.clear();
-        isRoomEnded = true;
-        notifyListeners();
+        break;
+      case HMSActionResultListenerMethod.switchCamera:
         break;
       case HMSActionResultListenerMethod.changeMetadata:
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.endRoom:
-        isRoomEnded = true;
-        notifyListeners();
         break;
       case HMSActionResultListenerMethod.startScreenShare:
         isScreenShareOn = true;
@@ -474,47 +405,5 @@ class MeetingStore extends ChangeNotifier
       Map<String, dynamic>? arguments,
       required HMSException hmsException}) {
     this.hmsException = hmsException;
-  }
-
-  Future<List<HMSPeer>?> getPeers() async {
-    return await _hmsSDKInteractor.getPeers();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.resumed) {
-      List<HMSPeer>? peersList = await getPeers();
-
-      peersList?.forEach((element) {
-        if (!element.isLocal) {
-          (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
-          element.auxiliaryTracks?.forEach((element) {
-            if (element.kind == HMSTrackKind.kHMSTrackKindAudio) {
-              (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
-            }
-          });
-        } else {
-          if ((element.videoTrack != null && isVideoOn)) startCapturing();
-        }
-      });
-    } else if (state == AppLifecycleState.paused) {
-      HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
-        stopCapturing();
-      }
-      for (PeerTrackNode peerTrackNode in peerTracks) {
-        peerTrackNode.setOffScreenStatus(true);
-      }
-    } else if (state == AppLifecycleState.inactive) {
-      HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer != null && !(localPeer.videoTrack?.isMute ?? true)) {
-        stopCapturing();
-      }
-      for (PeerTrackNode peerTrackNode in peerTracks) {
-        peerTrackNode.setOffScreenStatus(true);
-      }
-    }
   }
 }

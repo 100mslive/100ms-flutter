@@ -45,6 +45,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
     return WillPopScope(
       onWillPop: () async {
         _previewStore.removePreviewListener();
+        _previewStore.leave();
         return true;
       },
       child: Scaffold(
@@ -53,7 +54,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
             (_previewStore.localTracks.isEmpty)
                 ? const Align(
                     alignment: Alignment.center,
-                    child: CircularProgressIndicator())
+                    child: CircularProgressIndicator(strokeWidth: 1,))
                 : SizedBox(
                     height: itemHeight,
                     width: itemWidth,
@@ -89,9 +90,6 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    // if (context.read<PreviewStore>().peer != null &&
-                    //     context.read<PreviewStore>().peer!.role.publishSettings!.allowed
-                    //         .contains("video"))
                     (_previewStore.peer != null &&
                             _previewStore.peer!.role.publishSettings!.allowed
                                 .contains("video"))
@@ -99,8 +97,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                             onTap: _previewStore.localTracks.isEmpty
                                 ? null
                                 : () async {
-                                    _previewStore.switchVideo(
-                                        isOn: _previewStore.isVideoOn);
+                                    _previewStore.toggleCameraMuteState();
                                   },
                             child: CircleAvatar(
                               radius: 25,
@@ -137,7 +134,11 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                             },
                             child: const Text(
                               'Join Now',
-                              style: TextStyle(height: 1, fontSize: 18),
+                              style: TextStyle(
+                                  height: 1,
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
                             ),
                           )
                         : const SizedBox(),
@@ -146,7 +147,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                                 .contains("audio"))
                         ? GestureDetector(
                             onTap: () async {
-                              _previewStore.switchAudio();
+                              _previewStore.toggleMicMuteState();
                             },
                             child: CircleAvatar(
                                 radius: 25,

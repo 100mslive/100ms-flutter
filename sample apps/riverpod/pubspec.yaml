@@ -30,11 +30,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-  hmssdk_flutter:
+  hmssdk_flutter: 1.3.2
   cupertino_icons:
-  flutter_riverpod:
-  http:
-  permission_handler:
+  flutter_riverpod: 2.3.0
+  http: 0.13.5
+  permission_handler: 10.2.0
 
 dev_dependencies:
   flutter_test:
