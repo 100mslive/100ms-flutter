@@ -15,23 +15,51 @@ A few resources to get you started if this is your first Flutter project:
 flutter packages pub run build_runner build --delete-conflicting-outputs 
 ```
 
-We have `MeetingStore` class to listen to all the callbacks and update the UI accordingly.
+## How to run the application
 
-To know more about 100ms usage with mobx checkout:[Build zoom clone in Flutter and mobx with 100ms SDK](https://www.100ms.live/blog/zoom-clone-in-flutter)
+- Clone the repo `git clone https://github.com/100mslive/100ms-flutter.git`
+- Navigate to `sample apps/mobx` folder
+- Run flutter pub get
+- Run code gen command
 
-Zoom is the most popular video and audio conferencing app. From interacting with co-workers to organizing events like workshops and webinars.
+```
+flutter packages pub run build_runner build --delete-conflicting-outputs 
+```
 
-This post will take you through a step by step guide on how to build a basic zoom like app using Flutter and 100ms' live audio-video SDK with steps to -
+- Add the meeting link in `main.dart` which you created from dashboard. To know about how to create room from dashboard checkout the docs here: https://www.100ms.live/docs/flutter/v2/get-started/token
+- Update the `tokenEndpoint` in `room_service.dart` file 
 
-* Add 100ms to a Flutter app
-* Join a room
-* Leave a room
-* Show video tiles with the user’s name
-* Show Screenshare tile
-* hand Raised
-* Mute/Unmute
-* Camera off/on
-* Toggle Front/Back camera
-* Chatting with everyone in the room
+```
+Uri endPoint = Uri.parse("Enter your endpoint here");`
+```
 
-![alt-text](https://github.com/govindmaheshwari2/mobx-example-app/blob/master/final.gif)
+- Run the application `flutter run`
+
+## How to use PeerTrackNode model class
+
+This model class is used for some changes in a Peer.So that getx can only rebuild that particular changes.
+
+```dart
+
+@observable
+class PeerTrackNode {
+  String uid;
+  HMSPeer peer;
+  @observable
+  String name;
+  bool isRaiseHand;
+  @observable
+  HMSVideoTrack? track;
+  @observable
+  bool isOffScreen;
+  PeerTrackNode(
+      { required this.uid,
+        required this.peer,
+      this.track,
+      this.name = "",
+      this.isRaiseHand = false,
+      this.isOffScreen = false});
+}
+```
+
+Marking the fields as observable makes them listenable, which is used to update the UI state.

@@ -17,8 +17,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: '100ms mobx',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+          primarySwatch: Colors.blue,
+          colorScheme: ColorScheme.dark(
+            primary: Colors.blue.shade700,
+          )),
       debugShowCheckedModeBanner: false,
       home: const HomePage(),
     );
@@ -51,63 +53,99 @@ class _HomePageState extends State<HomePage> {
     return true;
   }
 
-  TextEditingController txtName = TextEditingController(text: "");
-  TextEditingController txtId = TextEditingController(
+  TextEditingController nameTextController = TextEditingController(text: "");
+  TextEditingController meetingTextController = TextEditingController(
       text: "https://yogi-live.app.100ms.live/streaming/preview/qii-tow-sjq");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("mobx Clone"),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            "Name",
-            style: TextStyle(fontSize: 20),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: TextField(
-              controller: txtName,
-              decoration: const InputDecoration(hintText: 'Enter Your Name'),
+      body: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              "100ms Mobx Example",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          const Text(
-            "Enter Id",
-            style: TextStyle(fontSize: 20),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: TextField(
-              controller: txtId,
-              decoration: const InputDecoration(
-                  border: InputBorder.none, hintText: 'Enter Room Link'),
+            const SizedBox(
+              height: 20,
             ),
-          ),
-          ElevatedButton(
-              onPressed: () async {
-                if (await getPermissions()) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Meeting(
-                              name: txtName.text,
-                              roomLink: txtId.text,
-                            )),
-                  );
-                }
-              },
-              child: const Text(
-                "Join",
-                style: TextStyle(fontSize: 20),
-              ))
-        ],
+            SizedBox(
+              width: 300.0,
+              child: TextField(
+                controller: meetingTextController,
+                autofocus: true,
+                keyboardType: TextInputType.url,
+                decoration: InputDecoration(
+                    hintText: 'Enter Room URL',
+                    suffixIcon: IconButton(
+                      onPressed: meetingTextController.clear,
+                      icon: const Icon(Icons.clear),
+                    ),
+                    border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)))),
+              ),
+            ),
+            const SizedBox(
+              height: 30.0,
+            ),
+            SizedBox(
+              width: 300.0,
+              child: TextField(
+                controller: nameTextController,
+                autofocus: true,
+                keyboardType: TextInputType.url,
+                decoration: InputDecoration(
+                    hintText: 'Enter Name',
+                    suffixIcon: IconButton(
+                      onPressed: nameTextController.clear,
+                      icon: const Icon(Icons.clear),
+                    ),
+                    border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)))),
+              ),
+            ),
+            const SizedBox(
+              height: 30.0,
+            ),
+            SizedBox(
+              width: 300.0,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ))),
+                onPressed: () async {
+                  if (meetingTextController.text.isNotEmpty &&
+                      nameTextController.text.isNotEmpty) {
+                    bool res = await getPermissions();
+                    if (res) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Meeting(
+                                    name: nameTextController.text,
+                                    roomLink: meetingTextController.text,
+                                  )));
+                    }
+                  }
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(4.0),
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(16))),
+                  child: const Text('Join Meeting',
+                      style: TextStyle(fontSize: 20, color: Colors.white)),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
