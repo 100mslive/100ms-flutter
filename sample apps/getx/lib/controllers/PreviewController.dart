@@ -15,7 +15,6 @@ class PreviewController extends GetxController
 
   PreviewController(this.url, this.name);
 
-
 //To know more about HMSSDK setup and initialization checkout the docs here: https://www.100ms.live/docs/flutter/v2/how--to-guides/install-the-sdk/hmssdk
   HMSSDK hmsSdk = Get.put(HMSSDK());
 

@@ -19,7 +19,7 @@ A few resources to get you started if this is your first Flutter project:
 
 <img width="1512" alt="Screenshot 2023-03-15 at 3 50 13 PM" src="https://user-images.githubusercontent.com/93931528/225282064-42e26903-f81c-48db-ad13-359a47e95142.png">
 
-- Run the application
+- Run the application: `flutter run`
 
 ## How to use PeerTrackNode model class
 

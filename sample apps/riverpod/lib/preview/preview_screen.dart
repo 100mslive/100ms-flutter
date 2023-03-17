@@ -54,7 +54,9 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
             (_previewStore.localTracks.isEmpty)
                 ? const Align(
                     alignment: Alignment.center,
-                    child: CircularProgressIndicator(strokeWidth: 1,))
+                    child: CircularProgressIndicator(
+                      strokeWidth: 1,
+                    ))
                 : SizedBox(
                     height: itemHeight,
                     width: itemWidth,

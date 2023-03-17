@@ -198,7 +198,6 @@ class RoomController extends GetxController
   @override
   void onReconnecting() {
     // Checkout the docs for reconnection handling here: https://www.100ms.live/docs/flutter/v2/how--to-guides/handle-interruptions/reconnection-handling
-
   }
 
   @override

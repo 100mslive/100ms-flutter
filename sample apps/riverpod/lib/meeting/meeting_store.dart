@@ -202,7 +202,7 @@ class MeetingStore extends ChangeNotifier
 
 // Listeners implementation*******************************************
 
-    @override
+  @override
   void onJoin({required HMSRoom room}) async {
     hmsRoom = room;
     for (HMSPeer each in room.peers!) {
@@ -308,7 +308,6 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
     // Checkout the docs for room updates here: https://www.100ms.live/docs/flutter/v2/how--to-guides/listen-to-room-updates/update-listeners
@@ -345,12 +344,6 @@ class MeetingStore extends ChangeNotifier
   void onChangeTrackStateRequest(
       {required HMSTrackChangeRequest hmsTrackChangeRequest}) {
     // Checkout the docs for handling the unmute request here: https://www.100ms.live/docs/flutter/v2/how--to-guides/interact-with-room/track/remote-mute-unmute
-    if (hmsTrackChangeRequest.track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-      isVideoOn = false;
-    } else {
-      isMicOn = false;
-    }
-    notifyListeners();
   }
 
   @override
@@ -365,8 +358,8 @@ class MeetingStore extends ChangeNotifier
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice}) {
-        // Checkout the docs about handling onAudioDeviceChanged updates here: https://www.100ms.live/docs/flutter/v2/how--to-guides/listen-to-room-updates/update-listeners
-      }
+    // Checkout the docs about handling onAudioDeviceChanged updates here: https://www.100ms.live/docs/flutter/v2/how--to-guides/listen-to-room-updates/update-listeners
+  }
 
   @override
   void onSuccess(
