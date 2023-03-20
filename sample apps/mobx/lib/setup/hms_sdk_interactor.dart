@@ -8,8 +8,12 @@ class HMSSDKInteractor {
   late HMSSDK hmsSDK;
 
   HMSSDKInteractor() {
+    _initHMSSDK();
+  }
+
+  void _initHMSSDK() async {
     hmsSDK = HMSSDK();
-    hmsSDK.build();
+    await hmsSDK.build();
   }
 
   Future<void> join({required HMSConfig config}) async {
@@ -21,16 +25,22 @@ class HMSSDKInteractor {
     hmsSDK.leave(hmsActionResultListener: hmsActionResultListener);
   }
 
-  Future<HMSException?> switchAudio({bool isOn = false}) async {
-    return await hmsSDK.switchAudio(isOn: isOn);
+  void destroy() {
+    hmsSDK.destroy();
   }
 
-  Future<HMSException?> switchVideo({bool isOn = false}) async {
-    return await hmsSDK.switchVideo(isOn: isOn);
+  Future<HMSException?> toggleMicMuteStatus() async {
+    return await hmsSDK.toggleMicMuteState();
   }
 
-  Future<void> switchCamera() async {
-    return await hmsSDK.switchCamera();
+  Future<HMSException?> toggleCameraMuteState() async {
+    return await hmsSDK.toggleCameraMuteState();
+  }
+
+  Future<void> switchCamera(
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    return await hmsSDK.switchCamera(
+        hmsActionResultListener: hmsActionResultListener);
   }
 
   Future<bool> isScreenShareActive() async {
@@ -107,16 +117,8 @@ class HMSSDKInteractor {
         hmsActionResultListener: hmsActionResultListener);
   }
 
-  void stopCapturing() {
-    hmsSDK.stopCapturing();
-  }
-
   Future<HMSPeer?> getLocalPeer() async {
     return await hmsSDK.getLocalPeer();
-  }
-
-  Future<bool> startCapturing() async {
-    return await hmsSDK.startCapturing();
   }
 
   Future<HMSPeer?> getPeer({required String peerId}) async {
@@ -154,7 +156,7 @@ class HMSSDKInteractor {
       required HMSRole toRole,
       bool force = false,
       required HMSActionResultListener hmsActionResultListener}) {
-    hmsSDK.changeRole(
+    hmsSDK.changeRoleOfPeer(
         forPeer: forPeer,
         toRole: toRole,
         force: force,
