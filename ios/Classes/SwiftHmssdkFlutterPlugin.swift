@@ -5,6 +5,7 @@ import ReplayKit
 import AVKit
 import MediaPlayer
 import SwiftUI
+import HMSAnalyticsSDK
 
 public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListener, FlutterStreamHandler, HMSPreviewListener, HMSLogger {
 
