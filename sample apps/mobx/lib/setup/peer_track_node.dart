@@ -3,25 +3,29 @@ import 'package:mobx/mobx.dart';
 
 @observable
 class PeerTrackNode {
+  String uid;
   HMSPeer peer;
+  @observable
   String name;
   bool isRaiseHand;
   @observable
   HMSVideoTrack? track;
-  HMSTrack? audioTrack;
+  @observable
+  bool isOffScreen;
   PeerTrackNode(
-      {required this.peer,
+      {required this.uid,
+      required this.peer,
       this.track,
       this.name = "",
-      this.audioTrack,
-      this.isRaiseHand = false});
+      this.isRaiseHand = false,
+      this.isOffScreen = false});
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is PeerTrackNode &&
           runtimeType == other.runtimeType &&
-          peer.peerId == other.peer.peerId;
+          uid == other.uid;
 
   @override
   String toString() {
