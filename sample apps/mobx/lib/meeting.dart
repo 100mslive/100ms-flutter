@@ -1,8 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:mobx/mobx.dart';
-import 'package:mobx_example/message.dart';
 import 'package:mobx_example/setup/meeting_store.dart';
 import 'package:mobx_example/setup/peer_track_node.dart';
 
@@ -16,166 +17,123 @@ class Meeting extends StatefulWidget {
   _MeetingState createState() => _MeetingState();
 }
 
-class _MeetingState extends State<Meeting> with WidgetsBindingObserver {
+class _MeetingState extends State<Meeting> {
   late MeetingStore _meetingStore;
   bool raisedHand = false;
   bool selfLeave = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _meetingStore = MeetingStore();
+    initMeeting();
+  }
+
   initMeeting() async {
+    _meetingStore.addUpdateListener();
     bool ans = await _meetingStore.join(widget.name, widget.roomLink);
     if (!ans) {
       const SnackBar(content: Text("Unable to Join"));
       Navigator.of(context).pop();
     }
-    _meetingStore.addUpdateListener();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _meetingStore = MeetingStore();
-    initMeeting();
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      child: Scaffold(
-        backgroundColor: Colors.grey,
-        appBar: AppBar(
-          title: const Text("100ms mobx"),
-          automaticallyImplyLeading: false,
-          actions: [
-            IconButton(
-                onPressed: () {
-                  _meetingStore.switchCamera();
-                },
-                icon: const Icon(Icons.camera_front)),
-            IconButton(
-                onPressed: () {
-                  chatMessages(context, _meetingStore);
-                },
-                icon: const Icon(Icons.message))
-          ],
-        ),
-        body: Stack(
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-              child: Center(
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Column(
-                    children: [
-                      Flexible(
-                        child: Observer(
-                          builder: (_) {
-                            if (_meetingStore.isRoomEnded && !selfLeave) {
-                              Navigator.popUntil(
-                                  context, ModalRoute.withName('/main'));
-                            }
-                            if (_meetingStore.peerTracks.isEmpty) {
-                              return const Center(
-                                  child: Text('Waiting for others to join!'));
-                            }
-                            ObservableList<PeerTrackNode> peerFilteredList =
-                                _meetingStore.peerTracks;
-
-                            return videoPageView(
-                              filteredList: peerFilteredList,
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-                width: double.infinity,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Observer(builder: (context) {
-                      return CircleAvatar(
-                        backgroundColor: Colors.black,
-                        child: IconButton(
-                          icon: _meetingStore.isMicOn
-                              ? const Icon(Icons.mic)
-                              : const Icon(Icons.mic_off),
-                          onPressed: () {
-                            _meetingStore.switchAudio();
-                          },
-                          color: Colors.blue,
-                        ),
-                      );
-                    }),
-                    Observer(builder: (context) {
-                      return CircleAvatar(
-                        backgroundColor: Colors.black,
-                        child: IconButton(
-                          icon: _meetingStore.isVideoOn
-                              ? const Icon(Icons.videocam)
-                              : const Icon(Icons.videocam_off),
-                          onPressed: () {
-                            _meetingStore.switchVideo();
-                          },
-                          color: Colors.blue,
-                        ),
-                      );
-                    }),
-                    Observer(builder: (context) {
-                      return CircleAvatar(
-                        backgroundColor: Colors.black,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.screen_share,
-                            color: _meetingStore.isScreenShareOn
-                                ? Colors.green
-                                : Colors.grey,
-                          ),
-                          onPressed: () {
-                            if (!_meetingStore.isScreenShareOn) {
-                              _meetingStore.startScreenShare();
-                            } else {
-                              _meetingStore.stopScreenShare();
-                            }
-                          },
-                          color: Colors.blue,
-                        ),
-                      );
-                    }),
-                    CircleAvatar(
-                      backgroundColor: Colors.black,
-                      child: IconButton(
-                        icon: const Icon(Icons.call_end),
-                        onPressed: () {
-                          _meetingStore.leave();
-                          selfLeave = true;
-                          Navigator.pop(context);
-                        },
-                        color: Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
       onWillPop: () async {
         bool ans = await _onBackPressed();
         return ans;
       },
+      child: SafeArea(
+        child: Scaffold(
+          body: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height -
+                  kBottomNavigationBarHeight,
+              child: Observer(
+                name: "MeetingStore",
+                builder: (context) {
+                  if (_meetingStore.isRoomEnded && !selfLeave) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      Navigator.pop(context);
+                    });
+                  }
+                  if (_meetingStore.peerTracks.isEmpty) {
+                    return const Center(
+                        child: Text('Waiting for others to join!'));
+                  }
+                  ObservableList<PeerTrackNode> peerFilteredList =
+                      _meetingStore.peerTracks;
+
+                  return videoPageView(
+                    filteredList: peerFilteredList,
+                  );
+                },
+              )),
+          bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: Colors.black,
+              selectedItemColor: Colors.grey,
+              unselectedItemColor: Colors.grey,
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Observer(builder: (context) {
+                    return Icon(
+                        _meetingStore.isMicOn ? Icons.mic : Icons.mic_off);
+                  }),
+                  label: 'Mic',
+                ),
+                BottomNavigationBarItem(
+                  icon: Observer(builder: (context) {
+                    return Icon(_meetingStore.isVideoOn
+                        ? Icons.videocam
+                        : Icons.videocam_off);
+                  }),
+                  label: 'Camera',
+                ),
+                //For screenshare in iOS follow the steps here : https://www.100ms.live/docs/flutter/v2/features/Screen-Share
+                if (Platform.isAndroid)
+                  BottomNavigationBarItem(
+                      icon: Observer(builder: (context) {
+                        return Icon(
+                          Icons.screen_share,
+                          color: (_meetingStore.isScreenShareOn)
+                              ? Colors.green
+                              : Colors.grey,
+                        );
+                      }),
+                      label: "ScreenShare"),
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.cancel),
+                  label: 'Leave',
+                ),
+              ],
+              onTap: (index) => _onItemTapped(index)),
+        ),
+      ),
     );
+  }
+
+  void _onItemTapped(int index) async {
+    switch (index) {
+      case 0:
+        _meetingStore.toggleMicMuteStatus();
+        break;
+      case 1:
+        _meetingStore.toggleCameraMuteStatus();
+        break;
+      case 2:
+        if (Platform.isIOS) {
+          _onBackPressed();
+          return;
+        }
+        _meetingStore.toggleScreenShare();
+        break;
+      case 3:
+        _onBackPressed();
+        break;
+    }
   }
 
   Future<dynamic> _onBackPressed() {
@@ -203,17 +161,6 @@ class _MeetingState extends State<Meeting> with WidgetsBindingObserver {
 
   Widget videoPageView({required List<PeerTrackNode> filteredList}) {
     List<Widget> pageChild = [];
-    if (_meetingStore.curentScreenShareTrack != null) {
-      pageChild.add(RotatedBox(
-        quarterTurns: 1,
-        child: Container(
-            margin:
-                const EdgeInsets.only(bottom: 0, left: 0, right: 100, top: 0),
-            child: Observer(builder: (context) {
-              return HMSVideoView(track: _meetingStore.curentScreenShareTrack!);
-            })),
-      ));
-    }
     for (int i = 0; i < filteredList.length; i = i + 6) {
       if (filteredList.length - i > 5) {
         Widget temp = singleVideoPageView(6, i, filteredList);
@@ -232,12 +179,9 @@ class _MeetingState extends State<Meeting> with WidgetsBindingObserver {
   Widget singleVideoPageView(int count, int index, List<PeerTrackNode> tracks) {
     return Align(
         alignment: Alignment.center,
-        child: Container(
-            margin: const EdgeInsets.only(
-                bottom: 100, left: 10, right: 10, top: 10),
-            child: Observer(builder: (context) {
-              return videoViewGrid(count, index, tracks);
-            })));
+        child: Observer(builder: (context) {
+          return videoViewGrid(count, index, tracks);
+        }));
   }
 
   Widget videoViewGrid(int count, int start, List<PeerTrackNode> tracks) {
@@ -248,115 +192,78 @@ class _MeetingState extends State<Meeting> with WidgetsBindingObserver {
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (itemBuilder, index) {
         return Observer(builder: (context) {
-          return videoTile(
-              tracks[start + index],
-              !(tracks[start + index].peer.isLocal
-                  ? !_meetingStore.isVideoOn
-                  : (trackUpdate[tracks[start + index].peer.peerId]) ==
-                      HMSTrackUpdate.trackMuted),
-              MediaQuery.of(context).size.width / 2 - 25,
-              tracks[start + index].isRaiseHand);
+          return Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            elevation: 5,
+            child: videoTile(
+                tracks[start + index],
+                (trackUpdate[tracks[start + index].uid] ==
+                    HMSTrackUpdate.trackMuted)),
+          );
         });
       },
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          mainAxisSpacing: 5,
-          crossAxisSpacing: 5,
-          childAspectRatio: 0.88),
+          childAspectRatio: MediaQuery.of(context).size.width /
+              (MediaQuery.of(context).size.height -
+                  kBottomNavigationBarHeight -
+                  25)),
     );
   }
 
-  Widget videoTile(
-      PeerTrackNode track, bool isVideoMuted, double size, bool isHandRaised) {
-    return Stack(
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: SizedBox(
-                width: size,
-                height: size,
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: (track.track != null && isVideoMuted)
-                        ? HMSVideoView(
-                            track: track.track as HMSVideoTrack,
-                            scaleType: ScaleType.SCALE_ASPECT_FILL)
-                        : Container(
-                            width: 200,
-                            height: 200,
-                            color: Colors.black,
-                            child: Center(
-                              child: CircleAvatar(
-                                radius: 50,
-                                backgroundColor: Colors.green,
-                                child: track.name.contains(" ")
-                                    ? Text(
-                                        (track.name.toString().substring(0, 1) +
-                                                track.name
-                                                    .toString()
-                                                    .split(" ")[1]
-                                                    .substring(0, 1))
-                                            .toUpperCase(),
-                                        style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w700),
-                                      )
-                                    : Text(track.name
-                                        .toString()
-                                        .substring(0, 1)
-                                        .toUpperCase()),
-                              ),
-                            ))),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Text(
-                track.name,
-                style: const TextStyle(fontWeight: FontWeight.w700),
-              ),
-            )
-          ],
-        ),
-        Align(
-          alignment: Alignment.topLeft,
-          child: isHandRaised
-              ? Container(
-                  margin: const EdgeInsets.all(10),
-                  child: Image.asset(
-                    'assets/raise_hand.png',
-                    scale: 2,
+  Widget videoTile(PeerTrackNode track, bool isVideoMuted) {
+    return (track.track != null && !isVideoMuted)
+        ? ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            child: Stack(
+              children: [
+                //To know more about HMSVideoView checkout the docs here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/render-video/overview
+                HMSVideoView(
+                    key: Key(track.uid),
+                    track: track.track as HMSVideoTrack,
+                    matchParent: false,
+                    scaleType: track.track?.source == "REGULAR"
+                        ? ScaleType.SCALE_ASPECT_FILL
+                        : ScaleType.SCALE_ASPECT_FIT),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                    track.name,
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 )
-              : Container(),
-        ),
-      ],
-    );
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
-      if (_meetingStore.isVideoOn) {
-        _meetingStore.startCapturing();
-      } else {
-        _meetingStore.stopCapturing();
-      }
-    } else if (state == AppLifecycleState.paused) {
-      if (_meetingStore.isVideoOn) {
-        _meetingStore.stopCapturing();
-      }
-    } else if (state == AppLifecycleState.inactive) {
-      if (_meetingStore.isVideoOn) {
-        _meetingStore.stopCapturing();
-      }
-    }
+              ],
+            ),
+          )
+        : Container(
+            alignment: Alignment.center,
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: CircleAvatar(
+                      backgroundColor: Colors.green,
+                      radius: 36,
+                      child: Text(
+                        track.name[0],
+                        style:
+                            const TextStyle(fontSize: 36, color: Colors.white),
+                      )),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      track.name,
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
+            ));
   }
 }

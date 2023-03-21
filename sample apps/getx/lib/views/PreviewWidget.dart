@@ -33,9 +33,23 @@ class PreviewWidget extends StatelessWidget {
                         width: itemWidth,
                         child: Stack(
                           children: [
-                            HMSVideoView(
-                                track: controller.localTracks[0],
-                                matchParent: true),
+                            (!controller.isLocalVideoOn.value ||
+                                    controller.localTracks.isEmpty)
+                                ? const Center(
+                                    child: CircleAvatar(
+                                        backgroundColor: Colors.green,
+                                        radius: 36,
+                                        child: Text(
+                                          "T",
+                                          style: TextStyle(
+                                              fontSize: 36,
+                                              color: Colors.white),
+                                        )),
+                                  )
+                                : HMSVideoView(
+                                    scaleType: ScaleType.SCALE_ASPECT_FILL,
+                                    track: controller.localTracks[0],
+                                    matchParent: false),
                             Positioned(
                               bottom: 20.0,
                               left: itemWidth / 2 - 50.0,
@@ -44,12 +58,17 @@ class PreviewWidget extends StatelessWidget {
                                     backgroundColor: Colors.blue,
                                     padding: const EdgeInsets.all(14)),
                                 onPressed: () {
+                                  controller.removePreviewListener();
                                   Get.off(
                                       () => RoomWidget(meetingUrl, userName));
                                 },
                                 child: const Text(
                                   "Join Now",
-                                  style: TextStyle(height: 1, fontSize: 18),
+                                  style: TextStyle(
+                                      height: 1,
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),
@@ -60,7 +79,7 @@ class PreviewWidget extends StatelessWidget {
                                   builder: (controller) {
                                 return IconButton(
                                     onPressed: () {
-                                      controller.toggleAudio();
+                                      controller.toggleMicMuteState();
                                     },
                                     icon: Icon(
                                       controller.isLocalAudioOn.value
@@ -78,7 +97,7 @@ class PreviewWidget extends StatelessWidget {
                                   builder: (controller) {
                                 return IconButton(
                                     onPressed: () {
-                                      controller.toggleVideo();
+                                      controller.toggleCameraMuteState();
                                     },
                                     icon: Icon(
                                       controller.isLocalVideoOn.value
@@ -95,7 +114,9 @@ class PreviewWidget extends StatelessWidget {
                     : SizedBox(
                         height: itemHeight / 1.3,
                         child: const Center(
-                          child: CircularProgressIndicator(),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 1,
+                          ),
                         ),
                       ),
               );

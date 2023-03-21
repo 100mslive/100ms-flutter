@@ -4,8 +4,7 @@ import 'package:example_riverpod/service/room_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
-class PreviewStore extends ChangeNotifier
-    implements HMSPreviewListener, HMSLogListener {
+class PreviewStore extends ChangeNotifier implements HMSPreviewListener {
   late HMSSDKInteractor hmsSDKInteractor;
 
   PreviewStore() {
@@ -24,11 +23,9 @@ class PreviewStore extends ChangeNotifier
 
   bool isAudioOn = true;
 
-  int? networkQuality;
-
   @override
   void onHMSError({required HMSException error}) {
-    updateError(error);
+    this.error = error;
   }
 
   @override
@@ -52,12 +49,10 @@ class PreviewStore extends ChangeNotifier
 
   Future<bool> startPreview(
       {required String user, required String roomId}) async {
-    List<String?>? token =
-        await RoomService().getToken(user: user, room: roomId);
+    String? token = await RoomService().getToken(user: user, room: roomId);
 
     if (token == null) return false;
-    if (token[0] == null) return false;
-    HMSConfig config = HMSConfig(authToken: token[0]!, userName: user);
+    HMSConfig config = HMSConfig(authToken: token, userName: user);
     hmsSDKInteractor.addPreviewListener(this);
     hmsSDKInteractor.preview(config: config);
     return true;
@@ -73,41 +68,24 @@ class PreviewStore extends ChangeNotifier
     hmsSDKInteractor.removePreviewListener(this);
   }
 
-  void stopCapturing() {
-    hmsSDKInteractor.stopCapturing();
-  }
+  @override
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice}) {}
 
-  void startCapturing() {
-    hmsSDKInteractor.startCapturing();
-  }
-
-  void switchVideo({bool isOn = false}) {
-    hmsSDKInteractor.switchVideo(isOn: isOn);
+  void toggleCameraMuteState() {
+    hmsSDKInteractor.toggleCameraMuteState();
     isVideoOn = !isVideoOn;
     notifyListeners();
   }
 
-  void switchAudio({bool isOn = false}) {
-    hmsSDKInteractor.switchAudio(isOn: isOn);
+  void toggleMicMuteState() {
+    hmsSDKInteractor.toggleMicMuteState();
     isAudioOn = !isAudioOn;
     notifyListeners();
   }
 
-  void addLogsListener(HMSLogListener hmsLogListener) {}
-
-  void removeLogsListener(HMSLogListener hmsLogListener) {}
-
-  @override
-  void onLogMessage({required hmsLogList}) {}
-
-  void updateError(HMSException error) {
-    this.error = error;
-  }
-
-  @override
-  void onAudioDeviceChanged(
-      {HMSAudioDevice? currentAudioDevice,
-      List<HMSAudioDevice>? availableAudioDevice}) {
-    // TODO: implement onAudioDeviceChanged
+  void leave() {
+    hmsSDKInteractor.leave();
   }
 }
