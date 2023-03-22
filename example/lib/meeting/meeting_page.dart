@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
@@ -337,14 +338,11 @@ class _MeetingPageState extends State<MeetingPage> {
                                           }
                                           return Selector<
                                                   MeetingStore,
-                                                  Tuple3<MeetingMode, HMSPeer?,
-                                                      int>>(
+                                                  Tuple2<MeetingMode, HMSPeer?>>(
                                               selector: (_, meetingStore) =>
-                                                  Tuple3(
+                                                  Tuple2(
                                                       meetingStore.meetingMode,
-                                                      meetingStore.localPeer,
-                                                      meetingStore
-                                                          .peers.length),
+                                                      meetingStore.localPeer),
                                               builder: (_, modeData, __) {
                                                 Size size = Size(
                                                     MediaQuery.of(context)
@@ -378,13 +376,14 @@ class _MeetingPageState extends State<MeetingPage> {
                                                         ? 108
                                                         : 68,
                                                     child: Container(
-                                                        child: ((modeData.item1 == MeetingMode.Video) &&
+                                                        child: 
+                                                        (modeData.item1 == MeetingMode.ActiveSpeaker)?
+                                                        basicGridView(peerTracks: data.item1.sublist(0,min(data.item1.length,data.item4 + 4)), itemCount: min(data.item3,data.item4 + 4), screenShareCount: data.item4, context: context, isPortrait: true, size: size)
+                                                        :((modeData.item1 == MeetingMode.OneToOne) &&
                                                                 (data.item3 ==
                                                                     2) &&
                                                                 (modeData.item2 !=
-                                                                    null) &&
-                                                                (modeData.item3 ==
-                                                                    2))
+                                                                    null))
                                                             ? OneToOneMode(
                                                                 bottomMargin: (widget.isStreamingLink && (modeData.item2?.role.permissions.hlsStreaming == true))
                                                                     ? 272

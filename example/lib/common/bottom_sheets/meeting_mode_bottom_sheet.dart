@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
@@ -83,31 +84,63 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                        if (_meetingStore.meetingMode != MeetingMode.Video ||
-                            _meetingStore.isActiveSpeakerMode) {
-                          _meetingStore.unMuteRoomVideoLocally();
+                        if (_meetingStore.meetingMode == MeetingMode.Grid) {
+                          Utilities.showToast(
+                              "Meeting mode is already set to Grid View");
+                          return;
                         }
-                        _meetingStore.setMode(MeetingMode.Video);
+                        _meetingStore.setMode(MeetingMode.Grid);
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
                         "assets/icons/role_change.svg",
                         semanticsLabel: "fl_normal_mode",
-                        color:
-                            (_meetingStore.meetingMode == MeetingMode.Video &&
-                                    !_meetingStore.isActiveSpeakerMode)
-                                ? errorColor
-                                : themeDefaultColor,
+                        color: (_meetingStore.meetingMode == MeetingMode.Grid)
+                            ? errorColor
+                            : themeDefaultColor,
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(
                         "Normal Mode",
                         style: GoogleFonts.inter(
                             fontSize: 14,
+                            color:
+                                (_meetingStore.meetingMode == MeetingMode.Grid)
+                                    ? errorColor
+                                    : themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        if (_meetingStore.meetingMode ==
+                            MeetingMode.ActiveSpeaker) {
+                          Utilities.showToast(
+                              "Meeting mode is already set to Active Speaker");
+                          return;
+                        }
+                        _meetingStore.setMode(MeetingMode.ActiveSpeaker);
+                        Navigator.pop(context);
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "assets/icons/participants.svg",
+                        semanticsLabel: "fl_active_speaker_mode",
+                        color: (_meetingStore.meetingMode ==
+                                MeetingMode.ActiveSpeaker)
+                            ? errorColor
+                            : themeDefaultColor,
+                        fit: BoxFit.scaleDown,
+                      ),
+                      title: Text(
+                        "Active Speaker Mode",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
                             color: (_meetingStore.meetingMode ==
-                                        MeetingMode.Video &&
-                                    !_meetingStore.isActiveSpeakerMode)
+                                    MeetingMode.ActiveSpeaker)
                                 ? errorColor
                                 : themeDefaultColor,
                             letterSpacing: 0.25,
@@ -118,39 +151,11 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       horizontalTitleGap: 2,
                       onTap: () async {
                         if (_meetingStore.meetingMode == MeetingMode.Audio) {
-                          _meetingStore.unMuteRoomVideoLocally();
+                          Utilities.showToast(
+                              "Meeting mode is already set to Audio Mode");
+                          return;
                         }
-                        if (!_meetingStore.isActiveSpeakerMode) {
-                          _meetingStore.setActiveSpeakerMode();
-                        }
-                        Navigator.pop(context);
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "assets/icons/participants.svg",
-                        semanticsLabel: "fl_active_speaker_mode",
-                        color: _meetingStore.isActiveSpeakerMode
-                            ? errorColor
-                            : themeDefaultColor,
-                        fit: BoxFit.scaleDown,
-                      ),
-                      title: Text(
-                        "Active Speaker Mode",
-                        style: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: _meetingStore.isActiveSpeakerMode
-                                ? errorColor
-                                : themeDefaultColor,
-                            letterSpacing: 0.25,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        if (_meetingStore.meetingMode != MeetingMode.Audio) {
-                          _meetingStore.setMode(MeetingMode.Audio);
-                        }
+                        _meetingStore.setMode(MeetingMode.Audio);
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
@@ -178,12 +183,12 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                        if (_meetingStore.meetingMode == MeetingMode.Audio) {
-                          _meetingStore.unMuteRoomVideoLocally();
+                         if (_meetingStore.meetingMode == MeetingMode.Hero) {
+                          Utilities.showToast(
+                              "Meeting mode is already set to Hero Mode");
+                          return;
                         }
-                        if (_meetingStore.meetingMode != MeetingMode.Hero) {
-                          _meetingStore.setMode(MeetingMode.Hero);
-                        }
+                        _meetingStore.setMode(MeetingMode.Hero);
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
@@ -209,12 +214,12 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                        if (_meetingStore.meetingMode == MeetingMode.Audio) {
-                          _meetingStore.unMuteRoomVideoLocally();
+                         if (_meetingStore.meetingMode == MeetingMode.Single) {
+                          Utilities.showToast(
+                              "Meeting mode is already set to Single Mode");
+                          return;
                         }
-                        if (_meetingStore.meetingMode != MeetingMode.Single) {
-                          _meetingStore.setMode(MeetingMode.Single);
-                        }
+                        _meetingStore.setMode(MeetingMode.Single);
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,

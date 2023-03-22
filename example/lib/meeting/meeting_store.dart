@@ -1,7 +1,8 @@
 //Package imports
+
 import 'dart:developer';
 import 'dart:io';
-
+import 'dart:math' as Math;
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -96,8 +97,6 @@ class MeetingStore extends ChangeNotifier
 
   HMSPeer? localPeer;
 
-  bool isActiveSpeakerMode = true;
-
   List<HMSTrack> audioTracks = [];
 
   List<HMSMessage> messages = [];
@@ -126,7 +125,7 @@ class MeetingStore extends ChangeNotifier
 
   ScrollController controller = ScrollController();
 
-  MeetingMode meetingMode = MeetingMode.Video;
+  MeetingMode meetingMode = MeetingMode.ActiveSpeaker;
 
   bool isLandscapeLocked = false;
 
@@ -678,6 +677,39 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
+    //To handle the active speaker mode scenario
+    if (meetingMode == MeetingMode.ActiveSpeaker) {
+      //Picking up the first four peers from the peerTracks list
+      List<PeerTrackNode> activeSpeakerList =
+          peerTracks.sublist(0, Math.min(peerTracks.length, 4));
+
+      /* Here we iterate through the updateSpeakers list
+       * and do the following:
+       *  - Whether the peer is already present on screen
+       *  - if not we find the peer's index from peerTracks list
+       *  - if peer is present in the peerTracks list(this is done just to make sure that peer is still in the room)
+       *  - Insert the peer after screenShare tracks and remove the peer from it's previous position
+      */
+      updateSpeakers.forEach((speaker) {
+        int index = activeSpeakerList.indexWhere((previousSpeaker) =>
+            previousSpeaker.uid == speaker.peer.peerId + "mainVideo");
+        if (index == -1) {
+          int peerIndex = peerTracks.indexWhere(
+              (node) => node.uid == speaker.peer.peerId + "mainVideo");
+          if (peerIndex != -1) {
+            peerTracks[peerIndex].isOffscreen = false;
+            peerTracks.insert(screenShareCount, peerTracks[peerIndex]);
+            peerTracks.removeAt(screenShareCount + peerIndex);
+          }
+        }
+      });
+      activeSpeakerList.clear();
+      notifyListeners();
+      return;
+    }
+
+    //This is to handle the other mode scenarios
+    //Reseting the borders of the tile everytime the update is received
     if (activeSpeakerIds.isNotEmpty) {
       activeSpeakerIds.forEach((key) {
         int index = peerTracks.indexWhere((element) => element.uid == key);
@@ -685,8 +717,10 @@ class MeetingStore extends ChangeNotifier
           peerTracks[index].setAudioLevel(-1);
         }
       });
+      activeSpeakerIds.clear();
     }
 
+    //Setting the border for peers who are speaking
     updateSpeakers.forEach((element) {
       activeSpeakerIds.add(element.peer.peerId + "mainVideo");
       int index = peerTracks
@@ -906,7 +940,7 @@ class MeetingStore extends ChangeNotifier
     peerTracks.clear();
     isRoomEnded = true;
     screenShareCount = 0;
-    this.meetingMode = MeetingMode.Video;
+    this.meetingMode = MeetingMode.ActiveSpeaker;
     isScreenShareOn = false;
     isAudioShareStarted = false;
     _hmsSDKInteractor.removeUpdateListener(this);
@@ -1217,25 +1251,20 @@ class MeetingStore extends ChangeNotifier
   // }
 
   void setMode(MeetingMode meetingMode) {
-    if (isActiveSpeakerMode) {
-      isActiveSpeakerMode = false;
+    //Turning the videos on if the previously mode was audio
+    if (this.meetingMode == MeetingMode.Audio &&
+        meetingMode != MeetingMode.Audio) {
+      unMuteRoomVideoLocally();
     }
+
     switch (meetingMode) {
-      case MeetingMode.Video:
-        break;
       case MeetingMode.Audio:
-        isActiveSpeakerMode = false;
+        //Muting the videos of peers in room locally
         muteRoomVideoLocally();
         break;
-      case MeetingMode.Hero:
-        if (this.meetingMode == MeetingMode.Audio) {
-          unMuteRoomVideoLocally();
-        }
-        break;
       case MeetingMode.Single:
-        if (this.meetingMode == MeetingMode.Audio) {
-          unMuteRoomVideoLocally();
-        }
+        //This is to place the peers with there videos ON
+        //in the beginning
         int type0 = 0;
         int type1 = peerTracks.length - 1;
         while (type0 < type1) {
@@ -1250,17 +1279,13 @@ class MeetingStore extends ChangeNotifier
           } else
             type0++;
         }
-        this.isActiveSpeakerMode = false;
         break;
       default:
+        //In Hero,Active Speaker and Grid mode there is nothing needs to be done
+        //Just setting the mode below
+        break;
     }
     this.meetingMode = meetingMode;
-    notifyListeners();
-  }
-
-  void setActiveSpeakerMode() {
-    this.isActiveSpeakerMode = !this.isActiveSpeakerMode;
-    this.meetingMode = MeetingMode.Video;
     notifyListeners();
   }
 
