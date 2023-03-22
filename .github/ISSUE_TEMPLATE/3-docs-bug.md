@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 # 📚 Documentation Issue Report
+<!-- Do read the 100ms Docs: https://www.100ms.live/docs -->
+<!-- You can ask your questions on 100ms Discord as well: https://100ms.live/discord -->
 
 ## **Describe the bug**
 <!-- A clear and concise description of what the bug is. -->

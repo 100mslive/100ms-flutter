@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 # ❓ Question or Support Request
-<!-- Do read the 100ms Docs at https://www.100ms.live/docs -->
+<!-- Do read the 100ms Docs: https://www.100ms.live/docs -->
 <!-- You can ask your questions on 100ms Discord as well: https://100ms.live/discord -->
 
 

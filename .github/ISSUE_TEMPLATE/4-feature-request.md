@@ -8,6 +8,8 @@ assignees: ''
 ---
 
 # 🚀 Feature Request
+<!-- Do read the 100ms Docs: https://www.100ms.live/docs -->
+<!-- You can ask your questions on 100ms Discord as well: https://100ms.live/discord -->
 
 ## Is your feature request related to a problem? Please describe
 <!-- A clear and concise description of what the problem is. Ex. I'm always frustrated when [...] -->
