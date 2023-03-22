@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/app_dialogs/change_role_option_dialog.dart';
+import 'package:hmssdk_flutter_example/common/widgets/hms_dropdown.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
@@ -21,6 +22,14 @@ class ParticipantsBottomSheet extends StatefulWidget {
 
 class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
   String valueChoose = "Everyone";
+
+  void _updateDropDownValue(dynamic newValue) {
+    context.read<MeetingStore>().getFilteredList(newValue);
+    context.read<MeetingStore>().selectedRoleFilter = newValue;
+    setState(() {
+      valueChoose = newValue;
+    });
+  }
 
   Widget _kebabMenu(HMSPeer peer) {
     final _meetingStore = context.read<MeetingStore>();
@@ -278,129 +287,119 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                       child: Selector<MeetingStore, List<HMSRole>>(
                           selector: (_, meetingStore) => meetingStore.roles,
                           builder: (context, roles, _) {
-                            return DropdownButton2(
-                              customButton: Container(
-                                padding: EdgeInsets.only(
-                                    left: 10, right: 8, top: 4, bottom: 4),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(
-                                        color: borderColor,
-                                        style: BorderStyle.solid,
-                                        width: 0.80)),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      valueChoose,
-                                      style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12,
-                                        letterSpacing: 0.4,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Icon(Icons.keyboard_arrow_down),
-                                  ],
-                                ),
-                              ),
-                              isExpanded: true,
-                              dropdownWidth:
-                                  MediaQuery.of(context).size.width * 0.4,
-                              buttonWidth: 100,
-                              buttonHeight: 35,
-                              itemHeight: 45,
-                              value: valueChoose,
-                              icon: Icon(Icons.keyboard_arrow_down),
-                              dropdownDecoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: themeSurfaceColor),
-                              offset: Offset(-10, -10),
-                              iconEnabledColor: iconColor,
-                              selectedItemHighlightColor: hmsdefaultColor,
-                              onChanged: (dynamic newvalue) {
-                                context
-                                    .read<MeetingStore>()
-                                    .getFilteredList(newvalue);
-                                context
-                                    .read<MeetingStore>()
-                                    .selectedRoleFilter = newvalue;
-                                setState(() {
-                                  this.valueChoose = newvalue as String;
-                                });
-                              },
-                              items: <DropdownMenuItem>[
-                                DropdownMenuItem(
-                                  child: Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        "assets/icons/participants.svg",
-                                        fit: BoxFit.scaleDown,
-                                        color: themeDefaultColor,
-                                        height: 16,
-                                      ),
-                                      SizedBox(
-                                        width: 11,
-                                      ),
-                                      Text(
-                                        "Everyone",
-                                        style: GoogleFonts.inter(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 12,
-                                          letterSpacing: 0.4,
+                            return HMSDropDown(
+                                dropDownItems: <DropdownMenuItem>[
+                                  DropdownMenuItem(
+                                    child: Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/icons/participants.svg",
+                                          fit: BoxFit.scaleDown,
+                                          color: themeDefaultColor,
+                                          height: 16,
                                         ),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                      ),
-                                    ],
-                                  ),
-                                  value: "Everyone",
-                                ),
-                                DropdownMenuItem(
-                                  child: Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        "assets/icons/hand_outline.svg",
-                                        fit: BoxFit.scaleDown,
-                                        color: themeDefaultColor,
-                                        height: 16,
-                                      ),
-                                      SizedBox(
-                                        width: 11,
-                                      ),
-                                      Text(
-                                        "Raised Hand",
-                                        style: GoogleFonts.inter(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 12,
-                                          letterSpacing: 0.4,
+                                        SizedBox(
+                                          width: 11,
                                         ),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                      ),
-                                    ],
-                                  ),
-                                  value: "Raised Hand",
-                                ),
-                                ...roles
-                                    .sortedBy((element) =>
-                                        element.priority.toString())
-                                    .map((role) => DropdownMenuItem(
-                                          child: Text(
-                                            "${role.name}",
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            style: GoogleFonts.inter(
-                                                fontSize: 12, color: iconColor),
+                                        Text(
+                                          "Everyone",
+                                          style: GoogleFonts.inter(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 12,
+                                            letterSpacing: 0.4,
                                           ),
-                                          value: role.name,
-                                        ))
-                                    .toList(),
-                              ],
-                            );
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      ],
+                                    ),
+                                    value: "Everyone",
+                                  ),
+                                  DropdownMenuItem(
+                                    child: Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/icons/hand_outline.svg",
+                                          fit: BoxFit.scaleDown,
+                                          color: themeDefaultColor,
+                                          height: 16,
+                                        ),
+                                        SizedBox(
+                                          width: 11,
+                                        ),
+                                        Text(
+                                          "Raised Hand",
+                                          style: GoogleFonts.inter(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 12,
+                                            letterSpacing: 0.4,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      ],
+                                    ),
+                                    value: "Raised Hand",
+                                  ),
+                                  ...roles
+                                      .sortedBy((element) =>
+                                          element.priority.toString())
+                                      .map((role) => DropdownMenuItem(
+                                            child: Text(
+                                              "${role.name}",
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              style: GoogleFonts.inter(
+                                                  fontSize: 12,
+                                                  color: iconColor),
+                                            ),
+                                            value: role.name,
+                                          ))
+                                      .toList(),
+                                ],
+                                dropdownButton: Container(
+                                  padding: EdgeInsets.only(
+                                      left: 10, right: 8, top: 4, bottom: 4),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                          color: borderColor,
+                                          style: BorderStyle.solid,
+                                          width: 0.80)),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        valueChoose,
+                                        style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 12,
+                                          letterSpacing: 0.4,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Icon(Icons.keyboard_arrow_down),
+                                    ],
+                                  ),
+                                ),
+                                dropdownStyleData: DropdownStyleData(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: themeSurfaceColor),
+                                  offset: Offset(-10, -10),
+                                ),
+                                buttonStyleData:
+                                    ButtonStyleData(width: 100, height: 35),
+                                menuItemStyleData: MenuItemStyleData(
+                                  height: 45,
+                                ),
+                                selectedValue: valueChoose,
+                                updateSelectedValue: _updateDropDownValue);
                           }),
                     ),
                     Expanded(

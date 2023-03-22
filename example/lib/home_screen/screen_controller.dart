@@ -52,8 +52,6 @@ class _ScreenControllerState extends State<ScreenController> {
   }
 
   void setInitValues() async {
-    context.read<MeetingStore>().localPeerNetworkQuality =
-        widget.localPeerNetworkQuality;
     context.read<MeetingStore>().setSettings();
   }
 

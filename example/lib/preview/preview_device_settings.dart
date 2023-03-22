@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/widgets/hms_dropdown.dart';
 import 'package:hmssdk_flutter_example/common/widgets/subtitle_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/preview/preview_store.dart';
@@ -22,6 +23,12 @@ class PreviewDeviceSettings extends StatefulWidget {
 
 class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
   GlobalKey? dropdownKey;
+
+  void _updateDropDownValue(dynamic newValue) {
+    if (newValue != null)
+      context.read<PreviewStore>().switchAudioOutput(audioDevice: newValue);
+    dropdownKey = null;
+  }
 
   @override
   void initState() {
@@ -113,53 +120,49 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                           width: 0.80),
                     ),
                     child: DropdownButtonHideUnderline(
-                        child: DropdownButton2(
-                      key: dropdownKey,
-                      isExpanded: true,
-                      buttonHeight: 48,
-                      itemHeight: 45,
-                      selectedItemHighlightColor: hmsdefaultColor,
-                      value: Platform.isAndroid ? data.item3 : data.item1[0],
-                      icon: Icon(Icons.keyboard_arrow_down),
-                      dropdownDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: themeSurfaceColor),
-                      offset: Offset(-10, -10),
-                      iconEnabledColor: iconColor,
-                      onChanged: (dynamic newvalue) {
-                        if (newvalue != null)
-                          context
-                              .read<PreviewStore>()
-                              .switchAudioOutput(audioDevice: newvalue);
-                        dropdownKey = null;
-                      },
-                      items: <DropdownMenuItem>[
-                        ...data.item1
-                            .sortedBy((element) => element.toString())
-                            .map((device) => DropdownMenuItem(
-                                  key: UniqueKey(),
-                                  child: Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        "assets/icons/music_wave.svg",
-                                        color: themeDefaultColor,
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Container(
-                                        child: SubtitleText(
-                                          text: device.name,
-                                          textColor: themeDefaultColor,
+                        child: HMSDropDown(
+                            dropDownItems: <DropdownMenuItem>[
+                          ...data.item1
+                              .sortedBy((element) => element.toString())
+                              .map((device) => DropdownMenuItem(
+                                    key: UniqueKey(),
+                                    child: Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/icons/music_wave.svg",
+                                          color: themeDefaultColor,
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  value: device,
-                                ))
-                            .toList(),
-                      ],
-                    )),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Container(
+                                          child: SubtitleText(
+                                            text: device.name,
+                                            textColor: themeDefaultColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    value: device,
+                                  ))
+                              .toList(),
+                        ],
+                            buttonStyleData: ButtonStyleData(height: 48),
+                            menuItemStyleData: MenuItemStyleData(
+                              height: 45,
+                            ),
+                            iconStyleData: IconStyleData(
+                                icon: Icon(Icons.keyboard_arrow_down),
+                                iconEnabledColor: iconColor),
+                            dropdownStyleData: DropdownStyleData(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: themeSurfaceColor),
+                              offset: Offset(-10, -10),
+                            ),
+                            selectedValue:
+                                Platform.isAndroid ? data.item3 : data.item1[0],
+                            updateSelectedValue: _updateDropDownValue)),
                   ),
                   SizedBox(
                     height: 10,

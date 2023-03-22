@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/app_dialogs/role_change_request_dialog.dart';
 import 'package:hmssdk_flutter_example/common/app_dialogs/track_change_request_dialog.dart';
+import 'package:hmssdk_flutter_example/common/widgets/hms_dropdown.dart';
 import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/common/widgets/subtitle_text.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
@@ -568,6 +569,11 @@ class UtilityComponents {
     double width = MediaQuery.of(context).size.width;
     List<HMSRole> _selectedRoles = [];
     HMSRole toRole = roles[0];
+
+    void _updateDropDownValue(dynamic newValue) {
+      toRole = newValue;
+    }
+
     showDialog(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
@@ -637,42 +643,25 @@ class UtilityComponents {
                                   width: 0.80),
                             ),
                             child: DropdownButtonHideUnderline(
-                                child: DropdownButton2(
-                              isExpanded: true,
-                              dropdownWidth: width * 0.7,
-                              buttonWidth: width * 0.7,
-                              buttonHeight: 48,
-                              itemHeight: 48,
-                              value: toRole,
-                              icon: Icon(Icons.keyboard_arrow_down),
-                              buttonDecoration: BoxDecoration(
-                                color: themeSurfaceColor,
-                              ),
-                              dropdownDecoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: themeSurfaceColor,
-                                  border: Border.all(color: borderColor)),
-                              offset: Offset(-10, -10),
-                              iconEnabledColor: themeDefaultColor,
-                              selectedItemHighlightColor: hmsdefaultColor,
-                              onChanged: (dynamic newvalue) {
-                                setState(() {
-                                  toRole = newvalue;
-                                });
-                              },
-                              items: roles
-                                  .sortedBy(
-                                      (element) => element.priority.toString())
-                                  .map((role) => DropdownMenuItem(
-                                        child: TitleText(
-                                          text: role.name,
-                                          textColor: themeDefaultColor,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                        value: role,
-                                      ))
-                                  .toList(),
-                            )),
+                                child: HMSDropDown(
+                                    dropDownItems: roles
+                                        .sortedBy((element) =>
+                                            element.priority.toString())
+                                        .map((role) => DropdownMenuItem(
+                                              child: TitleText(
+                                                text: role.name,
+                                                textColor: themeDefaultColor,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                              value: role,
+                                            ))
+                                        .toList(),
+                                    iconStyleData: IconStyleData(
+                                      icon: Icon(Icons.keyboard_arrow_down),
+                                      iconEnabledColor: themeDefaultColor,
+                                    ),
+                                    selectedValue: toRole,
+                                    updateSelectedValue: _updateDropDownValue)),
                           ),
                           SizedBox(
                             height: 8,
@@ -1376,6 +1365,11 @@ class UtilityComponents {
     HMSAudioMixingMode valueChoose = HMSAudioMixingMode.TALK_AND_MUSIC;
     double width = MediaQuery.of(context).size.width;
     MeetingStore _meetingStore = context.read<MeetingStore>();
+
+    void _updateDropDownValue(dynamic newValue) {
+      valueChoose = newValue;
+    }
+
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -1417,56 +1411,39 @@ class UtilityComponents {
                         width: 0.80),
                   ),
                   child: DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                    isExpanded: true,
-                    dropdownWidth: width * 0.7,
-                    buttonWidth: width * 0.7,
-                    buttonHeight: 48,
-                    itemHeight: 48,
-                    value: valueChoose,
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    buttonDecoration: BoxDecoration(
-                      color: themeSurfaceColor,
-                    ),
-                    dropdownDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: themeSurfaceColor,
-                        border: Border.all(color: borderColor)),
-                    offset: Offset(-10, -10),
-                    iconEnabledColor: themeDefaultColor,
-                    selectedItemHighlightColor: hmsdefaultColor,
-                    onChanged: (dynamic newvalue) {
-                      setState(() {
-                        valueChoose = newvalue;
-                      });
-                    },
-                    items: <DropdownMenuItem>[
-                      DropdownMenuItem(
-                        child: TitleText(
-                          text: HMSAudioMixingMode.TALK_AND_MUSIC.name,
-                          textColor: themeDefaultColor,
-                          fontWeight: FontWeight.w400,
+                      child: HMSDropDown(
+                          dropDownItems: <DropdownMenuItem>[
+                        DropdownMenuItem(
+                          child: TitleText(
+                            text: HMSAudioMixingMode.TALK_AND_MUSIC.name,
+                            textColor: themeDefaultColor,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          value: HMSAudioMixingMode.TALK_AND_MUSIC,
                         ),
-                        value: HMSAudioMixingMode.TALK_AND_MUSIC,
-                      ),
-                      DropdownMenuItem(
-                        child: TitleText(
-                          text: HMSAudioMixingMode.TALK_ONLY.name,
-                          textColor: themeDefaultColor,
-                          fontWeight: FontWeight.w400,
+                        DropdownMenuItem(
+                          child: TitleText(
+                            text: HMSAudioMixingMode.TALK_ONLY.name,
+                            textColor: themeDefaultColor,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          value: HMSAudioMixingMode.TALK_ONLY,
                         ),
-                        value: HMSAudioMixingMode.TALK_ONLY,
-                      ),
-                      DropdownMenuItem(
-                        child: TitleText(
-                          text: HMSAudioMixingMode.MUSIC_ONLY.name,
-                          textColor: themeDefaultColor,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        value: HMSAudioMixingMode.MUSIC_ONLY,
-                      )
-                    ],
-                  )),
+                        DropdownMenuItem(
+                          child: TitleText(
+                            text: HMSAudioMixingMode.MUSIC_ONLY.name,
+                            textColor: themeDefaultColor,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          value: HMSAudioMixingMode.MUSIC_ONLY,
+                        )
+                      ],
+                          iconStyleData: IconStyleData(
+                            icon: Icon(Icons.keyboard_arrow_down),
+                            iconEnabledColor: themeDefaultColor,
+                          ),
+                          selectedValue: valueChoose,
+                          updateSelectedValue: _updateDropDownValue)),
                 ),
                 actions: [
                   Row(
