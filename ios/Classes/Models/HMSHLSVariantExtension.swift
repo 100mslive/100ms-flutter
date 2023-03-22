@@ -8,27 +8,23 @@
 import Foundation
 import HMSSDK
 
-class HMSHLSVariantExtension{
-    
-    static func toDictionary(_ hmshlsVariant: HMSHLSVariant) -> [String:Any] {
-        
+class HMSHLSVariantExtension {
+
+    static func toDictionary(_ hmshlsVariant: HMSHLSVariant) -> [String: Any] {
+
         var dict = [String: Any]()
-        
+
         dict["meeting_url"] = hmshlsVariant.meetingURL.absoluteString
-                
-        if let metadata = hmshlsVariant.metadata  as? String {
-            dict["metadata"] = metadata
+
+        dict["metadata"] = hmshlsVariant.metadata
+
+        dict["hls_stream_url"] = hmshlsVariant.url.absoluteString
+
+        if let startedAt = hmshlsVariant.startedAt {
+            dict["started_at"] = "\(startedAt)"
         }
-        
-        if let _ =  hmshlsVariant.startedAt {
-            dict["started_at"] = Int(hmshlsVariant.startedAt!.timeIntervalSince1970)
-        }
-        
-        if let streamUrl =  hmshlsVariant.url.absoluteString as? String{
-            dict["hls_stream_url"] = streamUrl
-        }
-        
+
         return dict
     }
-    
+
 }

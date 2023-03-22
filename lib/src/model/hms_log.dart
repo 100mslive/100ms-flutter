@@ -1,6 +1,9 @@
 // Project imports:
 import 'package:hmssdk_flutter/src/enum/hms_log_level.dart';
 
+///100ms HMSLog
+///
+///[HMSLog] contains logLevel, tag, message and isWebRtcLog.
 class HMSLog {
   HMSLogLevel level;
   String tag;
@@ -16,7 +19,7 @@ class HMSLog {
   factory HMSLog.fromMap(Map map) {
     map = map["log"];
     return HMSLog(
-        level: HMSLogLevelValue.getHMSTrackKindFromName(map["level"]),
+        level: HMSLogLevelValue.getHMSLogLevelFromName(map["level"]),
         tag: map["tag"],
         message: map["message"],
         isWebRtcLog: map["is_web_rtc_log"]);

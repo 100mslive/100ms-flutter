@@ -1,6 +1,13 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+/// 100ms HMSPeerRemovedFromPeer
+///
+///when someone kicks you out or when someone ends the room at that time it is triggered
+///
+/// [HMSPeerRemovedFromPeer] it consists info about who removed you and why.
+///
+/// Refer [End Room guide here](https://www.100ms.live/docs/flutter/v2/features/end-room#how-to-handle-an-end-room-callback-for-receivers)
 class HMSPeerRemovedFromPeer {
   final HMSPeer? peerWhoRemoved;
   final String reason;

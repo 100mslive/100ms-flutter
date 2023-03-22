@@ -1,40 +1,48 @@
+///100ms HMSPermissions
+///
+///[HMSPermissions] contains permissions for local peer like end room, remove others, mute and unmute other peers, role change and other permissions.
 class HMSPermissions {
-  final bool? endRoom;
-  final bool? removeOthers;
-  final bool? stopPresentation;
-  final bool? mute;
-  final bool? unMute;
-  final bool? changeRoleForce;
+  final bool? browserRecording;
   final bool? changeRole;
+  final bool? endRoom;
+  final bool? hlsStreaming;
+  final bool? mute;
+  final bool? removeOthers;
+  final bool? rtmpStreaming;
+  final bool? unMute;
 
   HMSPermissions(
       {this.endRoom,
+      this.hlsStreaming,
+      this.rtmpStreaming,
       this.removeOthers,
-      this.stopPresentation,
+      this.browserRecording,
       this.mute,
       this.unMute,
-      this.changeRoleForce,
       this.changeRole});
 
   factory HMSPermissions.fromMap(Map map) {
     return HMSPermissions(
-        endRoom: map['end_room'],
-        removeOthers: map['remove_others'],
-        stopPresentation: map['stop_presentation'],
-        mute: map['mute'],
-        unMute: map['un_mute'],
-        changeRoleForce: map['change_role_force'],
-        changeRole: map['change_role']);
+      browserRecording: map["browser_recording"],
+      changeRole: map['change_role'],
+      endRoom: map['end_room'],
+      hlsStreaming: map['hls_streaming'],
+      mute: map['mute'],
+      removeOthers: map['remove_others'],
+      rtmpStreaming: map['rtmp_streaming'],
+      unMute: map['un_mute'],
+    );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'end_room': endRoom,
-      'stop_presentation': stopPresentation,
+      'browser_recording': browserRecording,
       'remove_others': removeOthers,
       'mute': mute,
       'un_mute': unMute,
-      'change_role_force': changeRoleForce,
+      'hls_streaming': hlsStreaming,
+      'rtmp_streaming': rtmpStreaming,
       'change_role': changeRole
     };
   }

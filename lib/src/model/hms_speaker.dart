@@ -1,19 +1,21 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///100ms HMSSpeaker
+///
+///[HMSSpeaker] contains the peer info, track info and audioLevel.
 class HMSSpeaker {
   final HMSPeer peer;
-  final HMSTrack? track;
+  final HMSTrack track;
   final int audioLevel;
 
   factory HMSSpeaker.fromMap(Map data) {
+    HMSPeer peer = HMSPeer.fromMap(data['peer']);
     return new HMSSpeaker(
-      peer: HMSPeer.fromMap(data['peer']),
-      track: data["track"] == null
-          ? null
-          : data['track']['instance_of']
-              ? HMSVideoTrack.fromMap(map: data['track'], peer: null)
-              : HMSAudioTrack.fromMap(map: data['track'], peer: null),
+      peer: peer,
+      track: data['track']['instance_of']
+          ? HMSVideoTrack.fromMap(map: data['track'], isLocal: peer.isLocal)
+          : HMSAudioTrack.fromMap(map: data['track'], isLocal: peer.isLocal),
       audioLevel: data['audioLevel'] as int,
     );
   }

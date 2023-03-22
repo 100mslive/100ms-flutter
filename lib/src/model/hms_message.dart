@@ -1,3 +1,10 @@
+// Dart imports:
+import 'dart:core';
+
+// Project imports:
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/model/hms_date_extension.dart';
+
 ///100ms HMSMessage
 ///
 ///To use, import package:`hmssdk_flutter/model/hms_message.dart`.
@@ -8,13 +15,8 @@
 ///You can see an example of every type of message (of the types below) being sent and displayed in the advanced sample app.
 ///
 /// You can use chat feature using this HMSMessage object it will contains each message with other relevant information.
-
-// Dart imports:
-import 'dart:core';
-
-// Project imports:
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-
+///
+///Refer [chat guide here](https://www.100ms.live/docs/flutter/v2/features/chat)
 class HMSMessage {
   ///[sender] id basically it is the peerId who is sending message.
   final HMSPeer? sender;
@@ -26,7 +28,7 @@ class HMSMessage {
   final String type;
 
   ///[time] at which [sender] sent the [message]
-  final String time;
+  final DateTime time;
 
   HMSMessageRecipient? hmsMessageRecipient;
   HMSMessage(
@@ -38,14 +40,16 @@ class HMSMessage {
 
   factory HMSMessage.fromMap(Map map) {
     Map messageMap = map;
-    HMSPeer sender = HMSPeer.fromMap(messageMap['sender']);
+    HMSPeer? sender = messageMap.containsKey("sender")
+        ? HMSPeer.fromMap(messageMap['sender'])
+        : null;
     HMSMessageRecipient recipient =
         HMSMessageRecipient.fromMap(messageMap['hms_message_recipient']);
     return HMSMessage(
         sender: sender,
         message: messageMap['message'] as String,
         type: messageMap['type'] as String,
-        time: messageMap['time'] as String,
+        time: HMSDateExtension.convertDate(messageMap['time']),
         hmsMessageRecipient: recipient);
   }
 

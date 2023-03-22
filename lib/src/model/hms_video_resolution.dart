@@ -1,11 +1,14 @@
-class HMSVideoResolution {
+///100ms HMSVideoResolution
+///
+///[HMSResolution] contains height and width of peer's video.
+class HMSResolution {
   final double height;
   final double width;
 
-  HMSVideoResolution({required this.height, required this.width});
+  HMSResolution({required this.height, required this.width});
 
-  factory HMSVideoResolution.fromMap(Map map) {
-    return HMSVideoResolution(height: map['height'], width: map['width']);
+  factory HMSResolution.fromMap(Map map) {
+    return HMSResolution(height: map['height'], width: map['width']);
   }
 
   Map<String, dynamic> toMap() {

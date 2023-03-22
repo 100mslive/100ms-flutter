@@ -1,11 +1,3 @@
-///VideoView used to render video in ios and android devices
-///
-/// To use,import package:`hmssdk_flutter/ui/meeting/video_view.dart`.
-///
-/// just pass the videotracks of local or remote peer and internally it passes [peer_id], [is_local] and [track_id] to specific views.
-///
-/// if you want to pass height and width you can pass as a map.
-
 // Dart imports:
 import 'dart:io' show Platform;
 
@@ -15,66 +7,117 @@ import 'package:flutter/services.dart' show StandardMessageCodec;
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/enum/hms_video_scale_type.dart';
 
+///100ms HMSVideoView
+///
+///HMSVideoView used to render video in ios and android devices
+///
+/// To use,import package:`hmssdk_flutter/ui/meeting/hms_video_view.dart`.
+///
+/// just pass the videotracks of local or remote peer and internally it passes [peer_id], [is_local] and [track_id] to specific views.
+///
+/// [HMSVideoView] will render video using trackId from HMSTrack
+///
+/// **parameters**
+///
+/// **track** - This will render video with trackId present in the track. Use video track only.
+///
+/// **matchParent** - To match the size of the parent widget.
+///
+/// **scaleType** - To set the video scaling. [SCALE_ASPECT_FIT, SCALE_ASPECT_FILL, SCALE_ASPECT_BALANCED]
+///
+/// **setMirror** - To set mirroring of video
+///
+/// **disableAutoSimulcastLayerSelect** -  To disable auto simulcast (Adaptive Bitrate)
+///
+/// **key** - [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
+/// Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
+///
+/// Refer [HMSVideoView guide here](https://www.100ms.live/docs/flutter/v2/features/render-video)
 class HMSVideoView extends StatelessWidget {
-  /// [HMSVideoView] will render video using trackId from HMSTrack
+  /// This will render video with trackId present in the track
+  /// [track] - the video track to be displayed
   final HMSVideoTrack track;
-  final matchParent;
 
-  /// [HMSVideoView] will use viewSize to get height and width of rendered video. If not passed, it will take whatever size is available to the widget.
-  final Size? viewSize;
+  /// [matchParent] - to match the size of the parent widget
+  final bool matchParent;
 
+  /// [scaleType] - To set the video scaling.
+  ///
+  /// ScaleType can be one of the following: [SCALE_ASPECT_FIT, SCALE_ASPECT_FILL, SCALE_ASPECT_BALANCED]
+  final ScaleType scaleType;
+
+  /// [setMirror] - To set mirroring of video
   final bool setMirror;
 
+  /// [disableAutoSimulcastLayerSelect] - To disable auto simulcast (Adaptive Bitrate)
+  final bool disableAutoSimulcastLayerSelect;
+
+  ///100ms HMSVideoView
+  ///
+  ///HMSVideoView used to render video in ios and android devices
+  ///
+  /// To use,import package:`hmssdk_flutter/ui/meeting/hms_video_view.dart`.
+  ///
+  /// just pass the videotracks of local or remote peer and internally it passes [peer_id], [is_local] and [track_id] to specific views.
+  ///
+  /// [HMSVideoView] will render video using trackId from HMSTrack
+  ///
+  /// **parameters**
+  ///
+  /// **track** - This will render video with trackId present in the track. Use video track only.
+  ///
+  /// **matchParent** - To match the size of the parent widget.
+  ///
+  /// **scaleType** - To set the video scaling.`[SCALE_ASPECT_FIT, SCALE_ASPECT_FILL, SCALE_ASPECT_BALANCED]`
+  ///
+  /// **setMirror** - To set mirroring of video
+  ///
+  /// **disableAutoSimulcastLayerSelect** -  To disable auto simulcast (Adaptive Bitrate)
+  ///
+  /// **key** - [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
+  /// Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
+  ///
+  /// Refer [HMSVideoView guide here](https://www.100ms.live/docs/flutter/v2/features/render-video)
   HMSVideoView(
       {Key? key,
       required this.track,
-      this.viewSize,
       this.setMirror = false,
-      this.matchParent = true})
+      this.matchParent = true,
+      this.scaleType = ScaleType.SCALE_ASPECT_FIT,
+      this.disableAutoSimulcastLayerSelect = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final tempViewSize = viewSize;
-    if (tempViewSize != null) {
-      return _PlatformView(
-        track: track,
-        matchParent: this.matchParent,
-        viewSize: tempViewSize,
-        setMirror: setMirror,
-      );
-    } else
-      return LayoutBuilder(builder: (_, constraints) {
-        return _PlatformView(
-          track: track,
-          matchParent: this.matchParent,
-          viewSize: Size(constraints.maxWidth, constraints.maxHeight),
-          setMirror: setMirror,
-        );
-      });
+    return _PlatformView(
+      track: track,
+      matchParent: this.matchParent,
+      setMirror: setMirror,
+      scaleType: this.scaleType,
+      disableAutoSimulcastLayerSelect: disableAutoSimulcastLayerSelect,
+    );
   }
 }
 
 class _PlatformView extends StatelessWidget {
   final HMSTrack track;
-  final Size viewSize;
 
   final bool setMirror;
   final bool matchParent;
+  final ScaleType scaleType;
+  final bool disableAutoSimulcastLayerSelect;
 
-  _PlatformView({
-    Key? key,
-    required this.track,
-    required this.viewSize,
-    this.setMirror = false,
-    this.matchParent = true,
-  }) : super(key: key);
+  _PlatformView(
+      {Key? key,
+      required this.track,
+      this.setMirror = false,
+      this.matchParent = true,
+      required this.scaleType,
+      this.disableAutoSimulcastLayerSelect = false})
+      : super(key: key);
 
-  void onPlatformViewCreated(int id) {
-    print('On PlatformView Created:: id:$id');
-  }
+  void onPlatformViewCreated(int id) {}
 
   @override
   Widget build(BuildContext context) {
@@ -85,43 +128,27 @@ class _PlatformView extends StatelessWidget {
         onPlatformViewCreated: onPlatformViewCreated,
         creationParamsCodec: StandardMessageCodec(),
         creationParams: {
-          'peer_id': track.peer?.peerId,
-          'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
-          'is_aux': track.source != "REGULAR",
-          'screen_share': track.source != "REGULAR",
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
-          'scale_type': track.source != "REGULAR"
-              ? ScalingType.SCALE_ASPECT_FIT.value
-              : ScalingType.SCALE_ASPECT_FILL.value,
+          'scale_type': scaleType.value,
           'match_parent': matchParent,
-        }..addAll({
-            'height': viewSize.height,
-            'width': viewSize.width,
-          }),
+          'disable_auto_simulcast_layer_select': disableAutoSimulcastLayerSelect
+        },
         gestureRecognizers: {},
       );
     } else if (Platform.isIOS) {
-      ///UiKitView for ios it uses VideoView provided by 100ms ios_sdk internally.
+      ///UIKitView for ios it uses VideoView provided by 100ms ios_sdk internally.
       return UiKitView(
         viewType: 'HMSFlutterPlatformView',
         onPlatformViewCreated: onPlatformViewCreated,
         creationParamsCodec: StandardMessageCodec(),
         creationParams: {
-          'peer_id': track.peer?.peerId,
-          'is_local': track.peer?.isLocal,
           'track_id': track.trackId,
-          'is_aux': track.source != "REGULAR",
-          'screen_share': track.source != "REGULAR",
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
-          'scale_type': track.source != "REGULAR"
-              ? ScalingType.SCALE_ASPECT_FIT.value
-              : ScalingType.SCALE_ASPECT_FILL.value,
+          'scale_type': scaleType.value,
           'match_parent': matchParent,
-        }..addAll({
-            'height': viewSize.height,
-            'width': viewSize.width,
-          }),
+          'disable_auto_simulcast_layer_select': disableAutoSimulcastLayerSelect
+        },
         gestureRecognizers: {},
       );
     } else {

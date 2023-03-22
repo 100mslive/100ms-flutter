@@ -4,29 +4,40 @@ import android.content.Context
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
-import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.common.StandardMessageCodec
+import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.platform.PlatformViewFactory
+import live.hms.hmssdk_flutter.HMSExceptionExtension
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
-import live.hms.video.media.tracks.HMSLocalTrack
-import live.hms.video.media.tracks.HMSLocalVideoTrack
+import live.hms.video.error.HMSException
 import live.hms.video.media.tracks.HMSVideoTrack
-import live.hms.video.sdk.models.HMSPeer
-import org.webrtc.SurfaceViewRenderer
+import live.hms.video.utils.HmsUtilities
 
-class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?, Any?>?, private val peer:HMSPeer?, private val trackId:String, private val  isAux:Boolean, private val setMirror:Boolean,
-                         private val scaleType : Int?,val screenShare:Boolean? = false,private val matchParent: Boolean? = true
+class HMSVideoViewWidget(
+    private val context: Context,
+    id: Int,
+    creationParams: Map<String?, Any?>?,
+    track: HMSVideoTrack?,
+    setMirror: Boolean,
+    scaleType: Int?,
+    private val matchParent: Boolean? = true,
+    disableAutoSimulcastLayerSelect: Boolean
 ) : PlatformView {
 
-    private val hmsVideoView: HMSVideoView = HMSVideoView(context,setMirror,scaleType)
+    private var hmsVideoView: HMSVideoView? = null
+
+    init {
+        if (hmsVideoView == null) {
+            hmsVideoView = HMSVideoView(context, setMirror, scaleType, track, disableAutoSimulcastLayerSelect)
+        }
+    }
+
+    override fun getView(): View? {
+        return hmsVideoView
+    }
 
     override fun onFlutterViewAttached(flutterView: View) {
         super.onFlutterViewAttached(flutterView)
-        renderVideo()
-    }
-
-    private fun renderVideo() {
-
         var frameLayoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
             FrameLayout.LayoutParams.MATCH_PARENT
@@ -37,74 +48,54 @@ class HMSVideoViewWidget(context: Context, id: Int, creationParams: Map<String?,
                 FrameLayout.LayoutParams.WRAP_CONTENT
             )
         }
-        view.layoutParams = frameLayoutParams
-
-        if (peer == null) return
-
-
-        if (hmsVideoView.currentVideoTrack != null) {
-            if (hmsVideoView.currentVideoTrack!!.trackId == trackId) {
-                return
-            }
-        }
-        val tracks = peer.auxiliaryTracks
-
-        if (tracks.isNotEmpty() && isAux) {
-            val track = tracks.first {
-                it.trackId == trackId
-            }
-
-            hmsVideoView.setVideoTrack((track as HMSVideoTrack))
-            return
+        if (view != null) {
+            view?.layoutParams = frameLayoutParams
         } else {
-            peer.videoTrack.let {
-                if (it?.trackId == trackId || peer.isLocal) {
-                    hmsVideoView.setVideoTrack(it)
-                    Log.i("HMSVideoViewFactory","### renderVideo regular ${peer!!.name} <> ${it!!.source} <> ${it!!.trackId} <> $trackId")
-                }
-            }
+            Log.e("HMSVideoView error", "onFlutterViewAttached error view is null")
         }
-    }
-
-    override fun getView(): View {
-        return hmsVideoView
     }
 
     override fun dispose() {
-        release()
-    }
-
-    private fun release() {
-        if (hmsVideoView.currentVideoTrack != null) {
-            if (hmsVideoView.currentVideoTrack!!.trackId == trackId) { // peer?.isLocal == true
-                hmsVideoView.currentVideoTrack!!.removeSink(hmsVideoView.surfaceViewRenderer)
-                hmsVideoView.surfaceViewRenderer.release()
-                hmsVideoView.currentVideoTrack = null
-            }
+        if (hmsVideoView != null) {
+            hmsVideoView?.onDisposeCalled()
+        } else {
+            Log.e("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
         }
+        hmsVideoView = null
     }
 }
-
 
 class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
 
     PlatformViewFactory(StandardMessageCodec.INSTANCE) {
-
-    override fun create(context: Context, viewId: Int, args: Any?): PlatformView {
-
+    override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
         val creationParams = args as Map<String?, Any?>?
 
-        val id=args!!["peer_id"] as? String ?: ""
-        val isLocal=args!!["is_local"] as? Boolean
-        val setMirror=args!!["set_mirror"] as? Boolean
-        val trackId=args!!["track_id"] as? String
-        val isAuxiliary = args!!["is_aux"] as? Boolean
+        val setMirror = args!!["set_mirror"] as? Boolean
+        val trackId = args!!["track_id"] as? String
+
         val scaleType = args!!["scale_type"] as? Int
-        val screenShare = args!!["screen_share"] as? Boolean
+
         val matchParent = args!!["match_parent"] as? Boolean
 
-        val peer = if(isLocal==null || isLocal) plugin.getLocalPeer()
-        else plugin.getPeerById(id!!)!!
-        return HMSVideoViewWidget(context, viewId, creationParams,peer,trackId!!,isAuxiliary!!,setMirror!!,scaleType,screenShare,matchParent)
+        val room = plugin.hmssdk!!.getRoom()
+
+        val track = HmsUtilities.getVideoTrack(trackId!!, room!!)
+        if (track == null) {
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_error"
+            val hmsException = HMSException(
+                action = "Check the trackId for the track",
+                code = 6004,
+                description = "There is no track corresponding to the given trackId",
+                message = "Video track is null for corresponding trackId",
+                name = "HMSVideoView Error"
+            )
+            args["data"] = HMSExceptionExtension.toDictionary(hmsException)
+            plugin.onVideoViewError(args)
+        }
+        val disableAutoSimulcastLayerSelect = args!!["disable_auto_simulcast_layer_select"] as? Boolean ?: false
+
+        return HMSVideoViewWidget(requireNotNull(context), viewId, creationParams, track, setMirror!!, scaleType, matchParent, disableAutoSimulcastLayerSelect)
     }
 }

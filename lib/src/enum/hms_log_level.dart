@@ -1,10 +1,6 @@
 enum HMSLogLevel {
   VERBOSE,
 
-  DEBUG,
-
-  INFO,
-
   WARN,
 
   ERROR,
@@ -14,23 +10,12 @@ enum HMSLogLevel {
   Unknown
 }
 
+///HMSLogLevel for android and ios
 extension HMSLogLevelValue on HMSLogLevel {
-  static HMSLogLevel getHMSTrackKindFromName(String name) {
+  static HMSLogLevel getHMSLogLevelFromName(String name) {
     switch (name) {
-
-      ///IOS
       case 'verbose':
         return HMSLogLevel.VERBOSE;
-
-      ///IOS
-      case 'debug':
-        return HMSLogLevel.DEBUG;
-
-      ///Android
-      case 'info':
-        return HMSLogLevel.INFO;
-
-      ///Android
       case 'warn':
         return HMSLogLevel.WARN;
       case 'error':
@@ -38,7 +23,7 @@ extension HMSLogLevelValue on HMSLogLevel {
       case 'off':
         return HMSLogLevel.OFF;
       default:
-        return HMSLogLevel.Unknown;
+        return HMSLogLevel.OFF;
     }
   }
 
@@ -46,18 +31,14 @@ extension HMSLogLevelValue on HMSLogLevel {
     switch (hmsLogLevel) {
       case HMSLogLevel.VERBOSE:
         return 'verbose';
-      case HMSLogLevel.DEBUG:
-        return 'debug';
       case HMSLogLevel.ERROR:
         return 'error';
-      case HMSLogLevel.INFO:
-        return 'info';
       case HMSLogLevel.OFF:
         return 'off';
       case HMSLogLevel.WARN:
         return 'warn';
       case HMSLogLevel.Unknown:
-        return '';
+        return 'off';
     }
   }
 }

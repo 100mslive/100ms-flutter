@@ -23,9 +23,13 @@ enum PlatformMethod {
   onError,
   onMessage,
 
-  ///when you want to send a message.
+  ///when you want to send a broadcast message.
   sendBroadcastMessage,
+
+  ///when you want to send a direct message.
   sendDirectMessage,
+
+  ///when you want to send a group message.
   sendGroupMessage,
   onUpdateSpeaker,
 
@@ -37,6 +41,8 @@ enum PlatformMethod {
 
   ///switch mic on/off.
   switchAudio,
+
+  ///switch video on/off
   switchVideo,
 
   ///switch your camera.
@@ -48,12 +54,6 @@ enum PlatformMethod {
   ///check whether video is mute or not.
   isVideoMute,
 
-  ///start capturing your video from your camera.
-  startCapturing,
-
-  ///stop capturing your video from your camera.
-  stopCapturing,
-
   ///get tracks for preview.
   preview,
 
@@ -62,6 +62,9 @@ enum PlatformMethod {
 
   ///change your peer role.
   changeRole,
+
+  ///change role for peer.
+  changeRoleOfPeer,
 
 // turn on screen share start
   startScreenShare,
@@ -75,28 +78,93 @@ enum PlatformMethod {
   ///get list of roles using this.
   getRoles,
   changeTrackState,
+
+  ///end room
   endRoom,
+
+  ///remove peer from room
   removePeer,
-  muteAll,
-  unMuteAll,
+  //mute all peers in room for yourself
+  muteRoomAudioLocally,
+  //unMute all peers in room for yourself
+  unMuteRoomAudioLocally,
+  //mute all peers video in room for yourself
+  muteRoomVideoLocally,
+  //unMute all peers video in room for yourself
+  unMuteRoomVideoLocally,
+  //get local peer
   getLocalPeer,
+  //get list of all remote peers
   getRemotePeers,
+  //get list of all peers
   getPeers,
   unknown,
   startHMSLogger,
   removeHMSLogger,
   changeTrackStateForRole,
+
+  ///start rtmp or recording
   startRtmpOrRecording,
+
+  ///stop rtmp and recording
   stopRtmpAndRecording,
   build,
   getRoom,
-  updateHMSLocalVideoTrackSettings,
+
+  ///change metadata for local peer
   changeMetadata,
-  setPlayBackAllowed,
   setVolume,
+
+  ///change name of local peer
   changeName,
+
+  ///start HLS Streaming
   startHlsStreaming,
+
+  ///stop HLS Streaming
   stopHlsStreaming,
+
+  ///Get List all tracks
+  getAllTracks,
+
+  ///Get track with the help of trackId
+  getTrackById,
+  startStatsListener,
+  removeStatsListener,
+  getAudioDevicesList,
+  getCurrentAudioDevice,
+  switchAudioOutput,
+  startAudioShare,
+  stopAudioShare,
+  setAudioMixingMode,
+  pauseAudioShare,
+  playAudioShare,
+  resumeAudioShare,
+  setAudioShareVolume,
+  audioSharePlaying,
+  audioShareCurrentTime,
+  audioShareDuration,
+  getTrackSettings,
+  destroy,
+  setSessionMetadata,
+  getSessionMetadata,
+  setPlaybackAllowedForTrack,
+  enterPipMode,
+  isPipActive,
+  isPipAvailable,
+  changeRoleOfPeersWithRoles,
+  setSimulcastLayer,
+  getLayer,
+  getLayerDefinition,
+  setupPIP,
+  startPIP,
+  stopPIP,
+  changeTrackPIP,
+  changeTextPIP,
+  destroyPIP,
+  toggleMicMuteState,
+  toggleCameraMuteState,
+  captureSnapshot
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -153,12 +221,6 @@ extension PlatformMethodValues on PlatformMethod {
       case PlatformMethod.isVideoMute:
         return 'is_video_mute';
 
-      case PlatformMethod.startCapturing:
-        return 'start_capturing';
-
-      case PlatformMethod.stopCapturing:
-        return 'stop_capturing';
-
       case PlatformMethod.getRoom:
         return "get_room";
 
@@ -180,6 +242,9 @@ extension PlatformMethodValues on PlatformMethod {
       case PlatformMethod.changeRole:
         return 'change_role';
 
+      case PlatformMethod.changeRoleOfPeer:
+        return 'change_role_of_peer';
+
       case PlatformMethod.getRoles:
         return 'get_roles';
 
@@ -192,11 +257,17 @@ extension PlatformMethodValues on PlatformMethod {
       case PlatformMethod.removePeer:
         return 'remove_peer';
 
-      case PlatformMethod.muteAll:
-        return 'mute_all';
+      case PlatformMethod.muteRoomAudioLocally:
+        return 'mute_room_audio_locally';
 
-      case PlatformMethod.unMuteAll:
-        return 'un_mute_all';
+      case PlatformMethod.unMuteRoomAudioLocally:
+        return 'un_mute_room_audio_locally';
+
+      case PlatformMethod.muteRoomVideoLocally:
+        return 'mute_room_video_locally';
+
+      case PlatformMethod.unMuteRoomVideoLocally:
+        return 'un_mute_room_video_locally';
 
       case PlatformMethod.getLocalPeer:
         return 'get_local_peer';
@@ -225,14 +296,8 @@ extension PlatformMethodValues on PlatformMethod {
       case PlatformMethod.build:
         return 'build';
 
-      case PlatformMethod.updateHMSLocalVideoTrackSettings:
-        return "update_hms_video_track_settings";
-
       case PlatformMethod.changeMetadata:
         return "change_metadata";
-
-      case PlatformMethod.setPlayBackAllowed:
-        return "set_playback_allowed";
 
       case PlatformMethod.setVolume:
         return "set_volume";
@@ -253,7 +318,82 @@ extension PlatformMethodValues on PlatformMethod {
 
       case PlatformMethod.isScreenShareActive:
         return 'is_screen_share_active';
-
+      case PlatformMethod.getAllTracks:
+        return "get_all_tracks";
+      case PlatformMethod.getTrackById:
+        return "get_track_by_id";
+      case PlatformMethod.startStatsListener:
+        return "start_stats_listener";
+      case PlatformMethod.removeStatsListener:
+        return "remove_stats_listener";
+      case PlatformMethod.getAudioDevicesList:
+        return "get_audio_devices_list";
+      case PlatformMethod.getCurrentAudioDevice:
+        return "get_current_audio_device";
+      case PlatformMethod.switchAudioOutput:
+        return "switch_audio_output";
+      case PlatformMethod.startAudioShare:
+        return "start_audio_share";
+      case PlatformMethod.stopAudioShare:
+        return "stop_audio_share";
+      case PlatformMethod.setAudioMixingMode:
+        return "set_audio_mixing_mode";
+      case PlatformMethod.pauseAudioShare:
+        return "pause_audio_share";
+      case PlatformMethod.playAudioShare:
+        return "play_audio_share";
+      case PlatformMethod.resumeAudioShare:
+        return "resume_audio_share";
+      case PlatformMethod.setAudioShareVolume:
+        return "set_audio_share_volume";
+      case PlatformMethod.audioSharePlaying:
+        return "audio_share_playing";
+      case PlatformMethod.audioShareCurrentTime:
+        return "audio_share_current_time";
+      case PlatformMethod.audioShareDuration:
+        return "audio_share_duration";
+      case PlatformMethod.getTrackSettings:
+        return "get_track_settings";
+      case PlatformMethod.destroy:
+        return "destroy";
+      case PlatformMethod.setSessionMetadata:
+        return "set_session_metadata";
+      case PlatformMethod.getSessionMetadata:
+        return "get_session_metadata";
+      case PlatformMethod.setPlaybackAllowedForTrack:
+        return "set_playback_allowed_for_track";
+      case PlatformMethod.enterPipMode:
+        return "enter_pip_mode";
+      case PlatformMethod.isPipActive:
+        return "is_pip_active";
+      case PlatformMethod.isPipAvailable:
+        return "is_pip_available";
+      case PlatformMethod.setSimulcastLayer:
+        return "set_simulcast_layer";
+      case PlatformMethod.changeRoleOfPeersWithRoles:
+        return "change_role_of_peers_with_roles";
+      case PlatformMethod.getLayer:
+        return "get_layer";
+      case PlatformMethod.getLayerDefinition:
+        return "get_layer_definition";
+      case PlatformMethod.setupPIP:
+        return "setup_pip";
+      case PlatformMethod.stopPIP:
+        return "stop_pip";
+      case PlatformMethod.startPIP:
+        return "start_pip";
+      case PlatformMethod.changeTrackPIP:
+        return "change_track_pip";
+      case PlatformMethod.changeTextPIP:
+        return "change_text_pip";
+      case PlatformMethod.destroyPIP:
+        return "destroy_pip";
+      case PlatformMethod.toggleMicMuteState:
+        return "toggle_mic_mute_state";
+      case PlatformMethod.toggleCameraMuteState:
+        return "toggle_camera_mute_state";
+      case PlatformMethod.captureSnapshot:
+        return "capture_snapshot";
       default:
         return 'unknown';
     }
@@ -315,12 +455,6 @@ extension PlatformMethodValues on PlatformMethod {
       case 'is_video_mute':
         return PlatformMethod.isVideoMute;
 
-      case 'stop_capturing':
-        return PlatformMethod.stopCapturing;
-
-      case 'start_capturing':
-        return PlatformMethod.startCapturing;
-
       case 'send_broadcast_message':
         return PlatformMethod.sendBroadcastMessage;
 
@@ -339,6 +473,9 @@ extension PlatformMethodValues on PlatformMethod {
       case 'change_role':
         return PlatformMethod.changeRole;
 
+      case 'change_role_of_peer':
+        return PlatformMethod.changeRoleOfPeer;
+
       case 'get_roles':
         return PlatformMethod.getRoles;
 
@@ -351,11 +488,17 @@ extension PlatformMethodValues on PlatformMethod {
       case 'remove_peer':
         return PlatformMethod.removePeer;
 
-      case 'mute_all':
-        return PlatformMethod.muteAll;
+      case 'mute_room_audio_locally':
+        return PlatformMethod.muteRoomAudioLocally;
 
-      case 'un_mute_all':
-        return PlatformMethod.unMuteAll;
+      case 'un_mute_room_audio_locally':
+        return PlatformMethod.unMuteRoomAudioLocally;
+
+      case 'mute_room_video_locally':
+        return PlatformMethod.muteRoomVideoLocally;
+
+      case 'un_mute_room_video_locally':
+        return PlatformMethod.unMuteRoomVideoLocally;
 
       case 'get_local_peer':
         return PlatformMethod.getLocalPeer;
@@ -387,14 +530,8 @@ extension PlatformMethodValues on PlatformMethod {
       case "get_room":
         return PlatformMethod.getRoom;
 
-      case "update_hms_video_track_settings":
-        return PlatformMethod.updateHMSLocalVideoTrackSettings;
-
       case "change_metadata":
         return PlatformMethod.changeMetadata;
-
-      case "set_playback_allowed":
-        return PlatformMethod.setPlayBackAllowed;
 
       case "set_volume":
         return PlatformMethod.setVolume;
@@ -416,7 +553,78 @@ extension PlatformMethodValues on PlatformMethod {
 
       case 'is_screen_share_active':
         return PlatformMethod.isScreenShareActive;
-
+      case "get_track_by_id":
+        return PlatformMethod.getTrackById;
+      case "get_all_tracks":
+        return PlatformMethod.getAllTracks;
+      case "start_stats_listener":
+        return PlatformMethod.startStatsListener;
+      case "remove_stats_listener":
+        return PlatformMethod.removeStatsListener;
+      case "get_audio_devices_list":
+        return PlatformMethod.getAudioDevicesList;
+      case "get_current_audio_device":
+        return PlatformMethod.getCurrentAudioDevice;
+      case "switch_audio_output":
+        return PlatformMethod.switchAudioOutput;
+      case "start_audio_share":
+        return PlatformMethod.startAudioShare;
+      case "stop_audio_share":
+        return PlatformMethod.stopAudioShare;
+      case "set_audio_mixing_mode":
+        return PlatformMethod.setAudioMixingMode;
+      case "pause_audio_share":
+        return PlatformMethod.pauseAudioShare;
+      case "play_audio_share":
+        return PlatformMethod.playAudioShare;
+      case "resume_audio_share":
+        return PlatformMethod.resumeAudioShare;
+      case "set_audio_share_volume":
+        return PlatformMethod.setAudioShareVolume;
+      case "audio_share_playing":
+        return PlatformMethod.audioSharePlaying;
+      case "audio_share_current_time":
+        return PlatformMethod.audioShareCurrentTime;
+      case "audio_share_duration":
+        return PlatformMethod.audioShareDuration;
+      case "get_track_settings":
+        return PlatformMethod.getTrackSettings;
+      case "destroy":
+        return PlatformMethod.destroy;
+      case "set_session_metadata":
+        return PlatformMethod.setSessionMetadata;
+      case "get_session_metadata":
+        return PlatformMethod.getSessionMetadata;
+      case "set_playback_allowed_for_track":
+        return PlatformMethod.setPlaybackAllowedForTrack;
+      case "enter_pip_mode":
+        return PlatformMethod.enterPipMode;
+      case "is_pip_active":
+        return PlatformMethod.isPipActive;
+      case "is_pip_available":
+        return PlatformMethod.isPipAvailable;
+      case "set_simulcast_layer":
+        return PlatformMethod.setSimulcastLayer;
+      case "change_role_of_peers_with_roles":
+        return PlatformMethod.changeRoleOfPeersWithRoles;
+      case "get_layer":
+        return PlatformMethod.getLayer;
+      case "get_layer_definition":
+        return PlatformMethod.getLayerDefinition;
+      case "setup_pip":
+        return PlatformMethod.setupPIP;
+      case "change_track_pip":
+        return PlatformMethod.changeTrackPIP;
+      case "change_text_pip":
+        return PlatformMethod.changeTextPIP;
+      case "destroy_pip":
+        return PlatformMethod.destroyPIP;
+      case "toggle_mic_mute_state":
+        return PlatformMethod.toggleMicMuteState;
+      case "toggle_camera_mute_state":
+        return PlatformMethod.toggleCameraMuteState;
+      case "capture_snapshot":
+        return PlatformMethod.captureSnapshot;
       default:
         return PlatformMethod.unknown;
     }

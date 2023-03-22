@@ -1,203 +1,516 @@
-//Package imports
-import 'package:connectivity_checker/connectivity_checker.dart';
+import 'dart:io';
+
+import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:mobx/mobx.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/widgets/hms_embedded_button.dart';
+import 'package:hmssdk_flutter_example/common/widgets/hms_button.dart';
+import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
+import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
+import 'package:hmssdk_flutter_example/home_screen/screen_controller.dart';
+import 'package:hmssdk_flutter_example/preview/preview_device_settings.dart';
+import 'package:hmssdk_flutter_example/preview/preview_participant_sheet.dart';
+import 'package:hmssdk_flutter_example/preview/preview_store.dart';
 import 'package:provider/provider.dart';
 
-//Project imports
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/offline_screen.dart';
-import 'package:hmssdk_flutter_example/common/ui/organisms/peer_item_organism.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
-import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/meeting/peerTrackNode.dart';
-import 'package:hmssdk_flutter_example/preview/preview_controller.dart';
-import 'package:hmssdk_flutter_example/preview/preview_store.dart';
-
 class PreviewPage extends StatefulWidget {
-  final String roomId;
-  final MeetingFlow flow;
-  final String user;
+  final String name;
+  final String meetingLink;
+  final MeetingFlow meetingFlow;
 
-  const PreviewPage(
-      {Key? key, required this.roomId, required this.flow, required this.user})
-      : super(key: key);
-
+  PreviewPage(
+      {required this.name,
+      required this.meetingLink,
+      required this.meetingFlow});
   @override
-  _PreviewPageState createState() => _PreviewPageState();
+  State<PreviewPage> createState() => _PreviewPageState();
 }
 
-class _PreviewPageState extends State<PreviewPage> with WidgetsBindingObserver {
-  late PreviewStore _previewStore;
-
+class _PreviewPageState extends State<PreviewPage> {
+  late MeetingStore _meetingStore;
   @override
   void initState() {
-    WidgetsBinding.instance!.addObserver(this);
-    _previewStore = PreviewStore();
-    _previewStore.previewController =
-        PreviewController(roomId: widget.roomId, user: widget.user);
     super.initState();
     initPreview();
-    reaction(
-        (_) => _previewStore.error,
-        (event) => {
-              UtilityComponents.showSnackBarWithString(
-                  (event as HMSException).message, context)
-            });
+  }
+
+  void setMeetingStore(PreviewStore _previewStore) {
+    _meetingStore = MeetingStore(
+      hmsSDKInteractor: _previewStore.hmsSDKInteractor,
+    );
   }
 
   void initPreview() async {
-    _previewStore.addPreviewListener();
-    bool ans = await _previewStore.startPreview();
-    if (ans == false) {
-      UtilityComponents.showSnackBarWithString("Unable to preview", context);
-      Navigator.of(context).pop();
+    String ans = await context
+        .read<PreviewStore>()
+        .startPreview(user: widget.name, meetingLink: widget.meetingLink);
+    if (ans != "") {
+      if (ans.contains("Connection")) {
+        UtilityComponents.showErrorDialog(
+            context: context,
+            errorMessage: "Please Check the internet connection",
+            errorTitle: ans,
+            actionMessage: "OK",
+            action: () {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            });
+      } else {
+        UtilityComponents.showErrorDialog(
+            context: context,
+            errorMessage: "Please check the meeting URL",
+            errorTitle: ans,
+            actionMessage: "OK",
+            action: () {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24);
-    final double itemWidth = size.width;
-    return ConnectivityAppWrapper(
-      app: ConnectivityWidgetWrapper(
-        offlineWidget: OfflineWidget(),
-        disableInteraction: true,
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text("Preview"),
-          ),
-          body: Container(
-            height: itemHeight,
-            width: itemWidth,
-            child: Column(
-              children: [
-                Flexible(
-                  fit: FlexFit.tight,
-                  child: Observer(
-                    builder: (_) {
-                      // if (_previewStore.localTracks.isEmpty) {
-                      //   return Column(children: [
-                      //     CupertinoActivityIndicator(radius: 124),
-                      //     SizedBox(
-                      //       height: 64.0,
-                      //     ),
-                      //     Text("No preview available") //
-                      //   ]);
-                      // }
-                      return Provider<MeetingStore>(
-                        create: (ctx) => MeetingStore(),
-                        child: PeerItemOrganism(
-                          observableMap: {"highestAudio": ""},
-                          key: UniqueKey(),
-                          height: itemHeight,
-                          width: itemWidth,
-                          peerTracKNode: new PeerTracKNode(
-                              peerId: _previewStore.peer?.peerId ?? "",
-                              name: _previewStore.peer?.name ?? widget.user,
-                              track: _previewStore.localTracks.isEmpty
-                                  ? null
-                                  : _previewStore.localTracks[0]),
-                          isVideoMuted: !_previewStore.videoOn,
+    final double height = size.height;
+    final double width = size.width;
+    final Orientation orientation = MediaQuery.of(context).orientation;
+    final _previewStore = context.watch<PreviewStore>();
+    return WillPopScope(
+      onWillPop: () async {
+        _previewStore.leave();
+        return true;
+      },
+      child: Selector<PreviewStore, HMSException?>(
+          selector: (_, previewStore) => previewStore.error,
+          builder: (_, error, __) {
+            if (error != null) {
+              if ((error.code?.errorCode == 1003) ||
+                  (error.code?.errorCode == 2000) ||
+                  (error.code?.errorCode == 4005)) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  UtilityComponents.showErrorDialog(
+                      context: context,
+                      errorMessage:
+                          "Error Code: ${error.code?.errorCode ?? ""} ${error.description}",
+                      errorTitle: error.message ?? "",
+                      actionMessage: "Leave Room",
+                      action: () {
+                        Navigator.of(context)
+                            .popUntil((route) => route.isFirst);
+                      });
+                });
+              } else {
+                Utilities.showToast(
+                    "Error : ${error.code?.errorCode ?? ""} ${error.description} ${error.message}",
+                    time: 5);
+              }
+            }
+            return Scaffold(
+              body: Stack(
+                children: [
+                  (_previewStore.peer == null)
+                      ? Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : (_previewStore.peer!.role.name.contains("hls-"))
+                          ? Container(
+                              child: Center(
+                                child: CircleAvatar(
+                                    backgroundColor: defaultAvatarColor,
+                                    radius: 40,
+                                    child: Text(
+                                      Utilities.getAvatarTitle(
+                                          _previewStore.peer!.name),
+                                      style: GoogleFonts.inter(
+                                        fontSize: 40,
+                                        color: Colors.white,
+                                      ),
+                                    )),
+                              ),
+                            )
+                          : (_previewStore.localTracks.isEmpty &&
+                                  _previewStore.isVideoOn)
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Container(
+                                  height: height,
+                                  width: width,
+                                  child: (_previewStore.isVideoOn)
+                                      ? HMSVideoView(
+                                          scaleType:
+                                              ScaleType.SCALE_ASPECT_FILL,
+                                          track: _previewStore.localTracks[0],
+                                          setMirror: true,
+                                          matchParent: false,
+                                        )
+                                      : Container(
+                                          child: Center(
+                                            child: CircleAvatar(
+                                                backgroundColor:
+                                                    defaultAvatarColor,
+                                                radius: 40,
+                                                child: Text(
+                                                  Utilities.getAvatarTitle(
+                                                      _previewStore.peer!.name),
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 40,
+                                                    color: Colors.white,
+                                                  ),
+                                                )),
+                                          ),
+                                        ),
+                                ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: orientation == Orientation.portrait
+                                    ? width * 0.1
+                                    : width * 0.05,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                          onPressed: () {
+                                            context
+                                                .read<PreviewStore>()
+                                                .leave();
+                                            Navigator.of(context).popUntil(
+                                                (route) => route.isFirst);
+                                          },
+                                          icon: Icon(Icons.arrow_back_ios)),
+                                      TitleText(
+                                          text: "Configure",
+                                          textColor: themeDefaultColor),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      HMSEmbeddedButton(
+                                        height: 40,
+                                        width: 40,
+                                        onTap: () async => Platform.isAndroid
+                                            ? showModalBottomSheet(
+                                                isScrollControlled: true,
+                                                backgroundColor:
+                                                    themeBottomSheetColor,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                context: context,
+                                                builder: (ctx) =>
+                                                    ChangeNotifierProvider.value(
+                                                        value: _previewStore,
+                                                        child:
+                                                            PreviewDeviceSettings()),
+                                              )
+                                            : _previewStore.toggleSpeaker(),
+                                        offColor: themeHintColor,
+                                        onColor: themeScreenBackgroundColor,
+                                        isActive: true,
+                                        child: SvgPicture.asset(
+                                          !_previewStore.isRoomMute
+                                              ? "assets/icons/speaker_state_on.svg"
+                                              : "assets/icons/speaker_state_off.svg",
+                                          color: themeDefaultColor,
+                                          fit: BoxFit.scaleDown,
+                                          semanticsLabel: "fl_mute_room_btn",
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      badge.Badge(
+                                        badgeAnimation:
+                                            badge.BadgeAnimation.fade(),
+                                        badgeStyle: badge.BadgeStyle(
+                                            badgeColor: hmsdefaultColor),
+                                        badgeContent: Text(
+                                            "${_previewStore.peerCount.toString()}"),
+                                        child: HMSEmbeddedButton(
+                                          height: 40,
+                                          width: 40,
+                                          onTap: () async =>
+                                              showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            backgroundColor:
+                                                themeBottomSheetColor,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            context: context,
+                                            builder: (ctx) =>
+                                                ChangeNotifierProvider.value(
+                                                    value: context
+                                                        .read<PreviewStore>(),
+                                                    child:
+                                                        PreviewParticipantSheet()),
+                                          ),
+                                          offColor: themeHintColor,
+                                          onColor: themeScreenBackgroundColor,
+                                          isActive: true,
+                                          child: SvgPicture.asset(
+                                            "assets/icons/participants.svg",
+                                            color: themeDefaultColor,
+                                            fit: BoxFit.scaleDown,
+                                            semanticsLabel:
+                                                "fl_participants_btn",
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    // if (_previewStore.peer != null &&
-                    //     _previewStore.peer!.role.publishSettings!.allowed
-                    //         .contains("video"))
-                    Observer(builder: (context) {
-                      return (_previewStore.peer != null &&
-                              _previewStore.peer!.role.publishSettings!.allowed
-                                  .contains("video"))
-                          ? GestureDetector(
-                              onTap: _previewStore.localTracks.isEmpty
-                                  ? null
-                                  : () async {
-                                      _previewStore.switchVideo();
-                                    },
-                              child: Icon(
-                                  _previewStore.videoOn
-                                      ? Icons.videocam
-                                      : Icons.videocam_off,
-                                  size: 48),
-                            )
-                          : Container();
-                    }),
-                    ElevatedButton(
-                      onPressed: () {
-                        _previewStore.removeListener();
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (_) => Provider<MeetingStore>(
-                                  create: (_) => MeetingStore(),
-                                  child: MeetingPage(
-                                      roomId: widget.roomId,
-                                      flow: widget.flow,
-                                      user: widget.user),
-                                )));
-                      },
-                      child: Text(
-                        'Join Now',
-                        style: TextStyle(height: 1, fontSize: 18),
                       ),
-                    ),
-                    Observer(builder: (context) {
-                      return (_previewStore.peer != null &&
-                              _previewStore.peer!.role.publishSettings!.allowed
-                                  .contains("audio"))
-                          ? GestureDetector(
-                              onTap: () async {
-                                _previewStore.switchAudio();
-                              },
-                              child: Icon(
-                                  (_previewStore.audioOn)
-                                      ? Icons.mic
-                                      : Icons.mic_off,
-                                  size: 48),
-                            )
-                          : Container();
-                    })
-                  ],
-                ),
-                SizedBox(
-                  height: 16,
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
+                      Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 15.0, left: 8, right: 8),
+                          child: (_previewStore.peer != null)
+                              ? Column(
+                                  children: [
+                                    if (_previewStore.peer != null &&
+                                        !_previewStore.peer!.role.name
+                                            .contains("hls-"))
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              if (_previewStore.peer != null &&
+                                                  context
+                                                      .read<PreviewStore>()
+                                                      .peer!
+                                                      .role
+                                                      .publishSettings!
+                                                      .allowed
+                                                      .contains("audio"))
+                                                HMSEmbeddedButton(
+                                                  height: 40,
+                                                  width: 40,
+                                                  onTap: () async =>
+                                                      _previewStore
+                                                          .toggleMicMuteState(),
+                                                  offColor: hmsWhiteColor,
+                                                  onColor: themeHMSBorderColor,
+                                                  isActive:
+                                                      _previewStore.isAudioOn,
+                                                  child: SvgPicture.asset(
+                                                    _previewStore.isAudioOn
+                                                        ? "assets/icons/mic_state_on.svg"
+                                                        : "assets/icons/mic_state_off.svg",
+                                                    color:
+                                                        _previewStore.isAudioOn
+                                                            ? themeDefaultColor
+                                                            : Colors.black,
+                                                    fit: BoxFit.scaleDown,
+                                                    semanticsLabel:
+                                                        "audio_mute_button",
+                                                  ),
+                                                ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              if (_previewStore.peer != null &&
+                                                  _previewStore.peer!.role
+                                                      .publishSettings!.allowed
+                                                      .contains("video"))
+                                                HMSEmbeddedButton(
+                                                  height: 40,
+                                                  width: 40,
+                                                  onTap: () async => (_previewStore
+                                                          .localTracks.isEmpty)
+                                                      ? null
+                                                      : _previewStore
+                                                          .toggleCameraMuteState(),
+                                                  offColor: hmsWhiteColor,
+                                                  onColor: themeHMSBorderColor,
+                                                  isActive:
+                                                      _previewStore.isVideoOn,
+                                                  child: SvgPicture.asset(
+                                                    _previewStore.isVideoOn
+                                                        ? "assets/icons/cam_state_on.svg"
+                                                        : "assets/icons/cam_state_off.svg",
+                                                    color:
+                                                        _previewStore.isVideoOn
+                                                            ? themeDefaultColor
+                                                            : Colors.black,
+                                                    fit: BoxFit.scaleDown,
+                                                    semanticsLabel:
+                                                        "video_mute_button",
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              if (_previewStore
+                                                          .networkQuality !=
+                                                      null &&
+                                                  _previewStore
+                                                          .networkQuality !=
+                                                      -1)
+                                                HMSEmbeddedButton(
+                                                    height: 40,
+                                                    width: 40,
+                                                    onTap: () {
+                                                      switch (_previewStore
+                                                          .networkQuality) {
+                                                        case 0:
+                                                          Utilities.showToast(
+                                                              "Very Bad network");
+                                                          break;
+                                                        case 1:
+                                                          Utilities.showToast(
+                                                              "Poor network");
+                                                          break;
+                                                        case 2:
+                                                          Utilities.showToast(
+                                                              "Bad network");
+                                                          break;
+                                                        case 3:
+                                                          Utilities.showToast(
+                                                              "Average network");
+                                                          break;
+                                                        case 4:
+                                                          Utilities.showToast(
+                                                              "Good network");
+                                                          break;
+                                                        case 5:
+                                                          Utilities.showToast(
+                                                              "Best network");
+                                                          break;
+                                                        default:
+                                                          break;
+                                                      }
+                                                    },
+                                                    offColor: dividerColor,
+                                                    onColor: dividerColor,
+                                                    isActive: true,
+                                                    child: SvgPicture.asset(
+                                                      'assets/icons/network_${_previewStore.networkQuality}.svg',
+                                                      fit: BoxFit.scaleDown,
+                                                      semanticsLabel:
+                                                          "network_button",
+                                                    )),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    SizedBox(
+                                      height: 30,
+                                    ),
+                                    HMSButton(
+                                      width: width * 0.5,
+                                      onPressed: () async => {
+                                        context
+                                            .read<PreviewStore>()
+                                            .removePreviewListener(),
+                                        setMeetingStore(_previewStore),
+                                        Navigator.of(context).pushReplacement(
+                                            MaterialPageRoute(
+                                                builder: (_) =>
+                                                    ListenableProvider.value(
+                                                      value: _meetingStore,
+                                                      child: ScreenController(
+                                                        streamUrl: _previewStore
+                                                                .isHLSStreamingStarted
+                                                            ? _previewStore
+                                                                .room
+                                                                ?.hmshlsStreamingState
+                                                                ?.variants[0]
+                                                                ?.hlsStreamUrl
+                                                            : null,
+                                                        isRoomMute:
+                                                            _previewStore
+                                                                .isRoomMute,
+                                                        isStreamingLink:
+                                                            widget.meetingFlow ==
+                                                                    MeetingFlow
+                                                                        .meeting
+                                                                ? false
+                                                                : true,
+                                                        meetingLink:
+                                                            widget.meetingLink,
+                                                        localPeerNetworkQuality:
+                                                            _previewStore
+                                                                .networkQuality,
+                                                        user: widget.name,
+                                                        role: _previewStore
+                                                            .peer?.role,
+                                                      ),
+                                                    )))
+                                        // }
+                                      },
+                                      childWidget: Container(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            8, 16, 8, 16),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8))),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text('Enter Studio',
+                                                style: GoogleFonts.inter(
+                                                    color: enabledTextColor,
+                                                    height: 1,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w600)),
+                                            SizedBox(
+                                              width: 4,
+                                            ),
+                                            Icon(
+                                              Icons.arrow_forward,
+                                              color: enabledTextColor,
+                                              size: 16,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : SizedBox())
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }),
     );
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (mounted) {
-      if (state == AppLifecycleState.resumed) {
-        if (_previewStore.videoOn) {
-          _previewStore.previewController.startCapturing();
-        }
-      } else if (state == AppLifecycleState.paused) {
-        if (_previewStore.videoOn) {
-          _previewStore.previewController.stopCapturing();
-        }
-      } else if (state == AppLifecycleState.inactive) {
-        if (_previewStore.videoOn) {
-          _previewStore.previewController.stopCapturing();
-        }
-      }
-    }
   }
 }

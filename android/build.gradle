@@ -1,11 +1,15 @@
+import groovy.json.JsonSlurper
+
+def sdkVersions = new JsonSlurper().parse file("../lib/assets/sdk-versions.json")
+
 group 'live.hms.hmssdk_flutter'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.5.0'
+    ext.kotlin_version = '+'
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
@@ -17,7 +21,7 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         maven { url 'https://jitpack.io' }
     }
 }
@@ -37,8 +41,8 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.github.100mslive:android-sdk:2.2.8'
+    implementation "live.100ms:android-sdk:${sdkVersions['android']}"
+    implementation "live.100ms:video-view:${sdkVersions['android']}"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
     implementation "org.jetbrains.kotlin:kotlin-script-runtime:1.5.0"

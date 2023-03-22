@@ -1,6 +1,11 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///100ms HMSMessageRecipient
+///
+///[HMSMessageRecipient] contains the value of recipient Peer[HMSPeer],list of recipient Roles[HMSRole] and Message Recipient Type[HMSMessageRecipientType].
+///
+///Refer [chat guide here](https://www.100ms.live/docs/flutter/v2/features/chat)
 class HMSMessageRecipient {
   HMSPeer? recipientPeer;
   List<HMSRole>? recipientRoles;

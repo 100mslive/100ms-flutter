@@ -10,12 +10,9 @@ class HMSAudioTrackSettingsExtension {
     companion object{
         fun toDictionary(hmsAudioTrackSettings: HMSAudioTrackSettings?):HashMap<String,Any>? {
             val map = HashMap<String,Any>()
-            map["max_bit_rate"] = hmsAudioTrackSettings?.maxBitrate!!
-            // map["track_description"] = hmsAudioTrackSettings?.track_description ?: ""
-            map["volume"] = hmsAudioTrackSettings.volume
-            map["codec"]=AudioParamsExtension.getValueOfHMSAudioCodec(hmsAudioTrackSettings.codec)
-            map["user_hardware_acoustic_echo_canceler"] = hmsAudioTrackSettings.useHardwareAcousticEchoCanceler
-            return  map
+            map["user_hardware_acoustic_echo_canceler"] = hmsAudioTrackSettings?.useHardwareAcousticEchoCanceler!!
+            map["track_initial_state"] = HMSTrackInitStateExtension.getValueFromHMSTrackInitState(hmsAudioTrackSettings.initialState)
+            return map
         }
     }
 }

@@ -5,7 +5,9 @@ enum HMSActionResultListenerMethod {
   endRoom,
   removePeer,
   acceptChangeRole,
+  @Deprecated('use [changeRoleOfPeer]')
   changeRole,
+  changeRoleOfPeer,
   changeTrackStateForRole,
   startRtmpOrRecording,
   stopRtmpAndRecording,
@@ -17,5 +19,10 @@ enum HMSActionResultListenerMethod {
   hlsStreamingStopped,
   startScreenShare,
   stopScreenShare,
+  startAudioShare,
+  stopAudioShare,
+  setSessionMetadata,
+  switchCamera,
+  changeRoleOfPeersWithRoles,
   unknown
 }

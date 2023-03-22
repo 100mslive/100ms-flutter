@@ -1,13 +1,18 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///100ms HMSTrackSetting
+///
+///[HMSTrackSetting] contains audioTrackSetting and videoTrackSetting.
+///
+///Refer [HMSTrackSetting guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/set-track-settings)
 class HMSTrackSetting {
-  final HMSAudioTrackSetting? audioTrackSetting;
-  final HMSVideoTrackSetting? videoTrackSetting;
+  HMSAudioTrackSetting? audioTrackSetting;
+  HMSVideoTrackSetting? videoTrackSetting;
 
   HMSTrackSetting({this.audioTrackSetting, this.videoTrackSetting});
 
-  factory HMSTrackSetting.fromMap(Map<String, dynamic> map) {
+  factory HMSTrackSetting.fromMap(Map map) {
     HMSAudioTrackSetting? audioTrackSetting;
     HMSVideoTrackSetting? videoTrackSetting;
     if (map.containsKey('audio_track_setting')) {
@@ -26,8 +31,8 @@ class HMSTrackSetting {
 
   Map<String, dynamic> toMap() {
     return {
-      'audio_track_setting': audioTrackSetting?.toMap() ?? {},
-      'video_track_setting': this.videoTrackSetting?.toMap() ?? {},
+      'audio_track_setting': audioTrackSetting?.toMap(),
+      'video_track_setting': videoTrackSetting?.toMap(),
     };
   }
 }

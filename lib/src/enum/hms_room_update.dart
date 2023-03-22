@@ -1,10 +1,29 @@
 enum HMSRoomUpdate {
+  ///When room is muted
   roomMuted,
+
+  ///When room is unmuted
   roomUnmuted,
+
+  ///When server recording state is updated
   serverRecordingStateUpdated,
-  browserRecordingStateUpdated,
+
+  ///When RTMP is started or stopped
   rtmpStreamingStateUpdated,
+
+  ///When HLS is started or stopped
   hlsStreamingStateUpdated,
+
+  ///When hls recording state is updated
+  hlsRecordingStateUpdated,
+
+  ///When browser recording state is changed
+  browserRecordingStateUpdated,
+
+  //When peer Count is changed
+  roomPeerCountUpdated,
+
+  ///Default Update
   defaultUpdate
 }
 
@@ -28,6 +47,12 @@ extension HMSRoomUpdateValues on HMSRoomUpdate {
 
       case 'hls_streaming_state_updated':
         return HMSRoomUpdate.hlsStreamingStateUpdated;
+
+      case 'hls_recording_state_updated':
+        return HMSRoomUpdate.hlsRecordingStateUpdated;
+
+      case 'room_peer_count_updated':
+        return HMSRoomUpdate.roomPeerCountUpdated;
 
       default:
         return HMSRoomUpdate.defaultUpdate;
@@ -53,6 +78,12 @@ extension HMSRoomUpdateValues on HMSRoomUpdate {
 
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         return 'hls_streaming_state_updated';
+
+      case HMSRoomUpdate.hlsRecordingStateUpdated:
+        return 'hls_recording_state_updated';
+
+      case HMSRoomUpdate.roomPeerCountUpdated:
+        return 'room_peer_count_updated';
 
       default:
         return 'defaultUpdate';

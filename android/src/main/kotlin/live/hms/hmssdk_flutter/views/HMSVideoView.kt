@@ -1,130 +1,120 @@
 package live.hms.hmssdk_flutter.views
 
+import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.res.Resources
-import android.graphics.Rect
-import android.os.Build
+import android.content.Intent
+import android.content.IntentFilter
+import android.graphics.Bitmap
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.LinearLayout
-import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
+import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.hmssdk_flutter.R
-import live.hms.hmssdk_flutter.views.HMSVideoView.Draggable.DRAG_TOLERANCE
 import live.hms.video.media.tracks.HMSVideoTrack
-import live.hms.video.sdk.models.HMSPeer
-import live.hms.video.utils.SharedEglContext
-import org.webrtc.EglBase
+import live.hms.videoview.HMSVideoView
 import org.webrtc.RendererCommon
-import org.webrtc.SurfaceViewRenderer
-import java.lang.Float.max
-import java.lang.Float.min
-import java.lang.Math.abs
+import java.io.ByteArrayOutputStream
 
 class HMSVideoView(
     context: Context,
-    setMirror: Boolean,
-    scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal
+    private val setMirror: Boolean,
+    private val scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
+    private val track: HMSVideoTrack?,
+    private val disableAutoSimulcastLayerSelect: Boolean
 ) : FrameLayout(context, null) {
 
-    var currentVideoTrack: HMSVideoTrack? = null
-
-    val surfaceViewRenderer: SurfaceViewRenderer
-
-    init {
-        val inflater =
-            getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val view = inflater.inflate(R.layout.hms_video_view, this)
-
-        surfaceViewRenderer = view.findViewById(R.id.surfaceViewRenderer)
-        surfaceViewRenderer.setEnableHardwareScaler(true)
-        surfaceViewRenderer.setMirror(setMirror)
-        if (scaleType ?: 0 <= RendererCommon.ScalingType.values().size) {
-            surfaceViewRenderer.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
-        }
-        surfaceViewRenderer.init(SharedEglContext.context, null)
-    }
-
-
-    private var draggableListener: DraggableListener? = null
-    private var widgetInitialX: Float = 0F
-    private var widgetDX: Float = 0F
-    private var widgetInitialY: Float = 0F
-    private var widgetDY: Float = 0F
-
-    @RequiresApi(Build.VERSION_CODES.N)
-    private fun draggableSetup() {
-        this.setOnTouchListener { v, event ->
-            val viewParent = v.parent as View
-            val parentHeight = viewParent.height
-            val parentWidth = viewParent.width
-            val xMax = parentWidth - v.width
-            val xMiddle = parentWidth / 2
-            val yMax = parentHeight - v.height
-
-            when (event.actionMasked) {
-                MotionEvent.ACTION_DOWN -> {
-                    widgetDX = v.x - event.rawX
-                    widgetDY = v.y - event.rawY
-                    widgetInitialX = v.x
-                    widgetInitialY = v.y
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    var newX = event.rawX + widgetDX
-                    newX = max(0F, newX)
-                    newX = min(xMax.toFloat(), newX)
-                    v.x = newX
-
-                    var newY = event.rawY + widgetDY
-                    newY = max(0F, newY)
-                    newY = min(yMax.toFloat(), newY)
-                    v.y = newY
-
-                    draggableListener?.onPositionChanged(v)
-                }
-                MotionEvent.ACTION_UP -> {
-                    if (event.rawX >= xMiddle) {
-                        v.animate().x(xMax.toFloat())
-                            .setDuration(Draggable.DURATION_MILLIS)
-                            .setUpdateListener { draggableListener?.onPositionChanged(v) }
-                            .start()
-                    } else {
-                        v.animate().x(0F).setDuration(Draggable.DURATION_MILLIS)
-                            .setUpdateListener { draggableListener?.onPositionChanged(v) }
-                            .start()
+    private var hmsVideoView: HMSVideoView? = null
+    private var view: View? = null
+    private val broadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(contxt: Context?, intent: Intent?) {
+            if (intent?.action == track?.trackId) {
+                when (intent?.extras?.getString("method_name")) {
+                    "CAPTURE_SNAPSHOT" -> {
+                        return captureSnapshot()
                     }
-                    if (abs(v.x - widgetInitialX) <= DRAG_TOLERANCE && abs(v.y - widgetInitialY) <= DRAG_TOLERANCE) {
-                        performClick()
-                    } else draggableListener?.xAxisChanged(event.rawX >= xMiddle)
                 }
-                else -> return@setOnTouchListener false
+            } else {
+                Log.e("Receiver error", "No receiver found for given action")
             }
-            true
+        }
+    }
+    init {
+        view =
+            (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.hms_video_view, this)
+        if (view != null) {
+            hmsVideoView = view?.findViewById(R.id.hmsVideoView)
+            hmsVideoView?.setEnableHardwareScaler(false)
+            hmsVideoView?.setMirror(setMirror)
+            hmsVideoView?.disableAutoSimulcastLayerSelect(disableAutoSimulcastLayerSelect)
+            if ((scaleType ?: 0) <= RendererCommon.ScalingType.values().size) {
+                hmsVideoView?.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
+            }
+        } else {
+            Log.e("HMSVideoView Error", "HMSVideoView init error view is null")
         }
     }
 
-    override fun performClick(): Boolean {
-        Log.d("DraggableImageView", "click")
-        return super.performClick()
+    private fun captureSnapshot() {
+        var byteArray: ByteArray?
+        if (hmsVideoView != null) {
+            hmsVideoView?.captureBitmap({ bitmap ->
+                if (bitmap != null) {
+                    val stream = ByteArrayOutputStream()
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                    byteArray = stream.toByteArray()
+                    bitmap.recycle()
+                    val data = Base64.encodeToString(byteArray, Base64.DEFAULT)
+                    if (HmssdkFlutterPlugin.hmssdkFlutterPlugin != null) {
+                        if (HmssdkFlutterPlugin.hmssdkFlutterPlugin?.hmsVideoViewResult != null) {
+                            HmssdkFlutterPlugin.hmssdkFlutterPlugin?.hmsVideoViewResult?.success(data)
+                        } else {
+                            Log.e("Receiver error", "hmsVideoViewResult is null")
+                        }
+                    } else {
+                        Log.e("Receiver error", "hmssdkFlutterPlugin is null")
+                    }
+                }
+            })
+        } else {
+            Log.e("Receiver error", "hmsVideoView is null")
+        }
     }
 
-    object Draggable {
-        const val DRAG_TOLERANCE = 16
-        const val DURATION_MILLIS = 250L
+    fun onDisposeCalled() {
+        if (hmsVideoView != null) {
+            hmsVideoView?.removeTrack()
+        } else {
+            Log.e("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
+        }
+        this.removeView(view)
+        view = null
+        hmsVideoView = null
+        context.unregisterReceiver(broadcastReceiver)
     }
 
-    interface DraggableListener {
-        fun onPositionChanged(view: View)
-        fun xAxisChanged(isInRightSide: Boolean)
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        if (track != null) {
+            if (hmsVideoView != null) {
+                hmsVideoView?.addTrack(track)
+                context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId))
+            } else {
+                Log.e("HMSVideoView Error", "onAttachedToWindow error hmsVideoView is null")
+            }
+        } else {
+            Log.e("HMSVideoView Error", "onAttachedToWindow error track is null, cannot attach null track")
+        }
     }
 
-    fun setVideoTrack(track: HMSVideoTrack?) {
-        currentVideoTrack = track
-        track?.addSink(surfaceViewRenderer)
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        if (hmsVideoView != null) {
+            hmsVideoView?.removeTrack()
+            context.unregisterReceiver(broadcastReceiver)
+        } else {
+            Log.e("HMSVideoView error", "onDetachedFromWindow error hmsVideoView is null")
+        }
     }
 }
-
-
