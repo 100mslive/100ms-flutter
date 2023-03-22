@@ -55,12 +55,12 @@ assignees: ''
 ### Your environment
 
 <!-- use all the applicable bulleted list elements for this specific issue,
-and remove all the bulleted list elements that are not relevant for this issue. -->
+and remove all the bulleted list elements that are not relevant to this issue. -->
 
 * OS: <!--[e.g. Android 13 / iOS 16 ...]-->
 * Device: <!--[e.g. Pixel 7 / iPhone 14 ...]-->
 * Package Version: <!--[hmssdk_flutter version e.g. 1.2.0 / 1.3.3 ...]-->
-* Flutter Doctor Summary: <!--[the `flutter doctor` command summary https://docs.flutter.dev/reference/flutter-cli#flutter-commands]-->
+* Flutter Doctor Summary: <!--[attach the `flutter doctor` command's summary. Refer: https://docs.flutter.dev/reference/flutter-cli#flutter-commands]-->
 
 ---
 
