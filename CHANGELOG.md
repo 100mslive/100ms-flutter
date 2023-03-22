@@ -4,6 +4,8 @@
 
 - Fixed an issue in Android PIP Mode wherein the PIP window showed black tile if the device is locked and then unlocked
 
+- Android PIP window will now automatically close if the Peer is removed from the Room
+
 - Updated the 100ms Quickstart, GetX, MobX & Riverpod based [Sample apps](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps)
 
 
