@@ -697,9 +697,10 @@ class MeetingStore extends ChangeNotifier
           int peerIndex = peerTracks.indexWhere(
               (node) => node.uid == speaker.peer.peerId + "mainVideo");
           if (peerIndex != -1) {
-            peerTracks[peerIndex].isOffscreen = false;
-            peerTracks.insert(screenShareCount, peerTracks[peerIndex]);
-            peerTracks.removeAt(screenShareCount + peerIndex);
+            PeerTrackNode activeSpeaker = peerTracks[peerIndex];
+            peerTracks.removeAt(peerIndex);
+            peerTracks.insert(screenShareCount, activeSpeaker);
+            peerTracks[screenShareCount].setOffScreenStatus(false);
           }
         }
       });

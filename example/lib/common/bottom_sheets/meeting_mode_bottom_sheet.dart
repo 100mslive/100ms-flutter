@@ -150,6 +150,39 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
+                        if (_meetingStore.meetingMode == MeetingMode.OneToOne) {
+                          Utilities.showToast(
+                              "Meeting mode is already set to One to one Mode");
+                          return;
+                        }
+                        _meetingStore.setMode(MeetingMode.OneToOne);
+                        Navigator.pop(context);
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "assets/icons/participants.svg",
+                        semanticsLabel: "fl_one_to_one_mode",
+                        color:
+                            (_meetingStore.meetingMode == MeetingMode.OneToOne)
+                                ? errorColor
+                                : themeDefaultColor,
+                        fit: BoxFit.scaleDown,
+                      ),
+                      title: Text(
+                        "One to One Mode",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: (_meetingStore.meetingMode ==
+                                    MeetingMode.OneToOne)
+                                ? errorColor
+                                : themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
                         if (_meetingStore.meetingMode == MeetingMode.Audio) {
                           Utilities.showToast(
                               "Meeting mode is already set to Audio Mode");
@@ -183,7 +216,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                         if (_meetingStore.meetingMode == MeetingMode.Hero) {
+                        if (_meetingStore.meetingMode == MeetingMode.Hero) {
                           Utilities.showToast(
                               "Meeting mode is already set to Hero Mode");
                           return;
@@ -214,7 +247,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                         if (_meetingStore.meetingMode == MeetingMode.Single) {
+                        if (_meetingStore.meetingMode == MeetingMode.Single) {
                           Utilities.showToast(
                               "Meeting mode is already set to Single Mode");
                           return;
