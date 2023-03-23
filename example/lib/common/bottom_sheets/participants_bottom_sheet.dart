@@ -27,7 +27,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
     context.read<MeetingStore>().getFilteredList(newValue);
     context.read<MeetingStore>().selectedRoleFilter = newValue;
     setState(() {
-      valueChoose = newValue;      
+      valueChoose = newValue;
     });
   }
 

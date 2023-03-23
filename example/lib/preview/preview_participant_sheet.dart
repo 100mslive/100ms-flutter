@@ -22,7 +22,7 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
 
   void _updateDropDownValue(dynamic newValue) {
     setState(() {
-      valueChoose = newValue;      
+      valueChoose = newValue;
     });
   }
 

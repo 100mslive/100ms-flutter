@@ -1,3 +1,19 @@
+## 1.3.3 - 2023-03-22
+
+### Fixed
+
+- Fixed an issue in Android PIP Mode wherein the PIP window showed black tile if the device is locked and then unlocked
+
+- Android PIP window will now automatically close if the Peer is removed from the Room
+
+- Updated the 100ms Quickstart, GetX, MobX & Riverpod based [Sample apps](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps)
+
+
+Updated to Android SDK 2.5.9 & iOS SDK 0.7.1
+
+Full Changelog: [1.3.2...1.3.3](https://github.com/100mslive/100ms-flutter/compare/1.3.2...1.3.3)
+
+
 ## 1.3.2 - 2023-03-09
 
 ### Fixed
