@@ -372,36 +372,43 @@ class _MeetingPageState extends State<MeetingPage> {
                                                     left: 0,
                                                     right: 0,
                                                     bottom: (widget.isStreamingLink &&
-                                                            (modeData
-                                                                    .item2
-                                                                    ?.role
-                                                                    .permissions
-                                                                    .hlsStreaming ==
+                                                            (modeData.item2?.role.permissions.hlsStreaming ==
                                                                 true))
                                                         ? 108
                                                         : 68,
+                                                    /***
+                                                     * The logic for gridview is as follows:
+                                                     * - Default mode is Active Speaker mode which displays only 4 tiles on screen without scroll and updates the tile according to who is currently speaking
+                                                     * - If there are only 2 peers in the room in which one is local peer then automatically the mode is switched to oneToOne mode
+                                                     * - As the peer count increases the mode is switched back to active speaker view in case of default mode
+                                                     * - Remaining as the mode from bottom sheet is selected corresponding grid layout is rendered
+                                                    */
                                                     child: Container(
-                                                        child: (modeData.item1 ==
-                                                                MeetingMode
-                                                                    .ActiveSpeaker)
-                                                            ? basicGridView(
-                                                                peerTracks: data.item1.sublist(
-                                                                    0,
-                                                                    min(
-                                                                        data.item1
-                                                                            .length,
-                                                                        data.item4 +
-                                                                            4)),
-                                                                itemCount: min(
-                                                                    data.item3,
-                                                                    data.item4 +
-                                                                        4),
-                                                                screenShareCount: data.item4,
-                                                                context: context,
-                                                                isPortrait: true,
+                                                        child: (((modeData.item1 == MeetingMode.OneToOne) || data.item3 == 2) &&
+                                                                (modeData.item2 !=
+                                                                    null))
+                                                            ? OneToOneMode(
+                                                                bottomMargin:
+                                                                    (widget.isStreamingLink && (modeData.item2?.role.permissions.hlsStreaming == true))
+                                                                        ? 272
+                                                                        : 235,
+                                                                peerTracks:
+                                                                    data.item1,
+                                                                screenShareCount:
+                                                                    data.item4,
+                                                                context:
+                                                                    context,
                                                                 size: size)
-                                                            : ((modeData.item1 == MeetingMode.OneToOne) && (modeData.item2 != null))
-                                                                ? OneToOneMode(bottomMargin: (widget.isStreamingLink && (modeData.item2?.role.permissions.hlsStreaming == true)) ? 272 : 235, peerTracks: data.item1, screenShareCount: data.item4, context: context, size: size)
+                                                            : (modeData.item1 ==
+                                                                    MeetingMode
+                                                                        .ActiveSpeaker)
+                                                                ? basicGridView(
+                                                                    peerTracks: data.item1.sublist(0, min(data.item1.length, data.item4 + 4)),
+                                                                    itemCount: min(data.item3, data.item4 + 4),
+                                                                    screenShareCount: data.item4,
+                                                                    context: context,
+                                                                    isPortrait: true,
+                                                                    size: size)
                                                                 : (modeData.item1 == MeetingMode.Hero)
                                                                     ? heroMode(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: isPortraitMode, size: size)
                                                                     : (modeData.item1 == MeetingMode.Audio)

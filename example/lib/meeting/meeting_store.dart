@@ -706,10 +706,9 @@ class MeetingStore extends ChangeNotifier
       });
       activeSpeakerList.clear();
       notifyListeners();
-      return;
     }
 
-    //This is to handle the other mode scenarios
+    //This is to handle the borders around the tiles of peers who are currently speaking
     //Reseting the borders of the tile everytime the update is received
     if (activeSpeakerIds.isNotEmpty) {
       activeSpeakerIds.forEach((key) {
