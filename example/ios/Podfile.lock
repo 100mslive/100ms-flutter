@@ -191,13 +191,13 @@ PODS:
     - PINCache (>= 3.0.1-beta.3)
   - HMSAnalyticsSDK (0.0.2)
   - HMSBroadcastExtensionSDK (0.0.8)
-  - HMSSDK (0.7.1):
+  - HMSSDK (0.8.1):
     - HMSAnalyticsSDK (= 0.0.2)
     - HMSWebRTC (= 1.0.5115)
   - hmssdk_flutter (1.4.0):
     - Flutter
     - HMSBroadcastExtensionSDK (= 0.0.8)
-    - HMSSDK (= 0.7.1)
+    - HMSSDK (= 0.8.1)
   - HMSWebRTC (1.0.5115)
   - image_gallery_saver (1.5.0):
     - Flutter
@@ -378,8 +378,8 @@ SPEC CHECKSUMS:
   HLSCachingReverseProxyServer: 59935e1e0244ad7f3375d75b5ef46e8eb26ab181
   HMSAnalyticsSDK: 4d2a88a729b1eb42f3d25f217c28937ec318a5b7
   HMSBroadcastExtensionSDK: 4393faac38999d01bae8e411d0564a577ad9d89a
-  HMSSDK: f69f495c57eddf3a53acd9fa6817347ecc971345
-  hmssdk_flutter: fafc0ceea29eca745c61dc9f53ad371eb80d2f62
+  HMSSDK: 919db6a109e4e386125cac2d067feb5b95c75a32
+  hmssdk_flutter: 8b1a8acb1822953b4164795166668372b541bdd0
   HMSWebRTC: d74cd5e5ecfe701219dd4042ec67fed02ea5d6db
   image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
