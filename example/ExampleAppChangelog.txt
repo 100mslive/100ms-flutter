@@ -1,20 +1,13 @@
-1. Fixed an issue in Android PIP Mode wherein the PIP window showed black tile if the device is locked and then unlocked
+1. Updated Active Speaker Layout
 
-2. Replaced `flutterToast` package with `bot_toast`
-
-3. Updated Dropdown menu widget to the latest version
-
-4. Updated Native Android & iOS SDKs to their latest versions
+2. Updated Android URL Query Permissions in manifest files
 
 📝 Tickets
 
-1. https://github.com/100mslive/100ms-flutter/issues/1177
+1. https://github.com/100mslive/100ms-flutter/issues/1188
 
-2. https://github.com/100mslive/100ms-flutter/issues/1178
+2. https://github.com/100mslive/100ms-flutter/issues/1194
 
-3. https://github.com/100mslive/100ms-flutter/issues/1175
-
-
-Flutter SDK: 1.3.3
+Flutter SDK: 1.4.0
 Android SDK: 2.5.9
-iOS SDK: 0.7.1
+iOS SDK: 0.8.1
