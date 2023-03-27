@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
+import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 
 class PreviewStore extends ChangeNotifier
@@ -102,7 +103,9 @@ class PreviewStore extends ChangeNotifier
 
     if (token == null) return "Connection Error";
     if (token[0] == null) return "Token Error";
-    FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
+    if (Constant.appFlavor == AppFlavors.hmsInternal) {
+      FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
+    }
     HMSConfig config = HMSConfig(
       authToken: token[0]!,
       userName: user,
