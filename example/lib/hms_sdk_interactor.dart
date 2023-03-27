@@ -7,7 +7,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 
 class HMSSDKInteractor {
-  late HMSConfig config;
+  HMSConfig? config;
   late List<HMSMessage> messages;
   late HMSSDK hmsSDK;
 
@@ -44,7 +44,7 @@ class HMSSDKInteractor {
 
   void join({required HMSConfig config}) {
     this.config = config;
-    hmsSDK.join(config: this.config);
+    hmsSDK.join(config: config);
   }
 
   void leave({HMSActionResultListener? hmsActionResultListener}) {
@@ -350,5 +350,11 @@ class HMSSDKInteractor {
         toRole: toRole,
         ofRoles: ofRoles,
         hmsActionResultListener: hmsActionResultListener);
+  }
+
+  Future<HMSTokenResult?> getAuthToken(
+      String roomCode, String? userId, String? endPoint) async {
+    return await hmsSDK.getAuthToken(
+        roomCode: roomCode, userId: userId, endPoint: endPoint);
   }
 }

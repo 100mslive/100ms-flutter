@@ -98,20 +98,32 @@ class PreviewStore extends ChangeNotifier
 
   Future<String> startPreview(
       {required String user, required String meetingLink}) async {
-    List<String?>? token =
-        await RoomService().getToken(user: user, room: meetingLink);
+    List<String?>? _roomData = RoomService().getCode(meetingLink);
 
-    if (token == null) return "Connection Error";
-    if (token[0] == null) return "Token Error";
-    if (Constant.appFlavor == AppFlavors.hmsInternal) {
-      FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
+    if (_roomData?.length == 0) {
+      return "Meeting URL Error";
     }
+
+    String _endPoint = _roomData?[2] == "true"
+        ? Constant.prodTokenEndpoint
+        : Constant.qaTokenEndPoint;
+
+    Constant.meetingCode = _roomData?[1] ?? '';
+    HMSTokenResult? _tokenData = await hmsSDKInteractor.getAuthToken(
+        Constant.meetingCode, user, _endPoint);
+
+    if (_tokenData == null) return "Connection Error";
+    if (_tokenData.authToken == null) return "Token Error";
+    FirebaseCrashlytics.instance
+        .setUserIdentifier(_tokenData.authToken ?? "Token error");
+
     HMSConfig config = HMSConfig(
-      authToken: token[0]!,
+      authToken: _tokenData.authToken!,
       userName: user,
       captureNetworkQualityInPreview: true,
       // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
-      endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
+      endPoint:
+          _roomData?[2] == "true" ? "" : "https://qa-init.100ms.live/init",
     );
     hmsSDKInteractor.addPreviewListener(this);
     hmsSDKInteractor.preview(config: config);

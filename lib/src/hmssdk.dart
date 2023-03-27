@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/model/hms_session_metadata.dart';
+import 'package:hmssdk_flutter/src/model/hms_token_result.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../hmssdk_flutter.dart';
 
@@ -71,6 +72,24 @@ class HMSSDK {
       this.hmsLogSettings,
       @Deprecated("Use iOSScreenshareConfig") this.appGroup,
       @Deprecated("Use iOSScreenshareConfig") this.preferredExtension});
+
+  ///[getAuthToken] is used to get the authentication token to join the room
+  ///
+  ///This returns an object of [HMSTokenResult]
+  Future<HMSTokenResult?> getAuthToken(
+      {required String roomCode, String? userId, String? endPoint}) async {
+    var arguments = {
+      "room_code": roomCode,
+      "user_id": userId,
+      "endPoint": endPoint
+    };
+    var result = await PlatformService.invokeMethod(PlatformMethod.getAuthToken,
+        arguments: arguments);
+    if (result != null) {
+      return HMSTokenResult.fromMap(result);
+    }
+    return null;
+  }
 
   /// The build function should be called after creating an instance of the [HMSSDK].
   ///
