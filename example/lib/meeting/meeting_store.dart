@@ -178,20 +178,39 @@ class MeetingStore extends ChangeNotifier
   HMSVideoTrack? currentPIPtrack;
 
   Future<bool> join(String user, String roomUrl) async {
-    List<String?>? token =
-        await RoomService().getToken(user: user, room: roomUrl);
-    if (token == null) return false;
-    HMSConfig config = HMSConfig(
-      authToken: token[0]!,
-      userName: user,
-      captureNetworkQualityInPreview: true,
-      // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
-      endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
-    );
+    if (_hmsSDKInteractor.config == null) {
+      List<String?>? _roomData = RoomService().getCode(roomUrl);
+
+      if (_roomData?.length == 0) {
+        return false;
+      }
+
+      String _endPoint = _roomData?[2] == "true"
+          ? Constant.prodTokenEndpoint
+          : Constant.qaTokenEndPoint;
+
+      Constant.meetingCode = _roomData?[1] ?? '';
+      HMSTokenResult? _tokenData = await _hmsSDKInteractor.getAuthToken(
+          Constant.meetingCode, user, _endPoint);
+
+      if (_tokenData == null) return false;
+      if (_tokenData.authToken == null) return false;
+      FirebaseCrashlytics.instance
+          .setUserIdentifier(_tokenData.authToken ?? "Token error");
+
+      _hmsSDKInteractor.config = HMSConfig(
+        authToken: _tokenData.authToken!,
+        userName: user,
+        captureNetworkQualityInPreview: true,
+        // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
+        endPoint:
+            _roomData?[2] == "true" ? "" : "https://qa-init.100ms.live/init",
+      );
+    }
 
     _hmsSDKInteractor.addUpdateListener(this);
     WidgetsBinding.instance.addObserver(this);
-    _hmsSDKInteractor.join(config: config);
+    _hmsSDKInteractor.join(config: _hmsSDKInteractor.config!);
     this.meetingUrl = roomUrl;
     return true;
   }
