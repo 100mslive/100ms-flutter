@@ -7,9 +7,9 @@
 
 import Foundation
 
-class HMSTokenResultExtension{
-    
-    static func toDictionary(_ hmsTokenResult: String?)  -> [String: String?] {
+class HMSTokenResultExtension {
+
+    static func toDictionary(_ hmsTokenResult: String?) -> [String: String?] {
         var dict = [String: String?]()
 
         dict["auth_token"] = hmsTokenResult

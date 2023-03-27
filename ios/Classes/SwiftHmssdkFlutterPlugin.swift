@@ -126,7 +126,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: Room Actions
 
-        case "build", "preview", "join", "leave", "destroy","get_auth_token":
+        case "build", "preview", "join", "leave", "destroy", "get_auth_token":
             buildActions(call, result)
 
             // MARK: Room Actions
@@ -232,10 +232,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "destroy":
             destroy(result)
-        
+
         case "get_auth_token":
-            getAuthToken(call,result)
-            
+            getAuthToken(call, result)
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -565,19 +565,19 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         result(["roles": roles])
     }
-    
-    private func getAuthToken(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
-        
+
+    private func getAuthToken(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+
         let arguments = call.arguments as! [AnyHashable: Any]
-        
+
         guard let roomCode = arguments["room_code"] as? String,
               let userId = arguments["user_id"] as? String?
-        else{
+        else {
             result(HMSErrorExtension.getError("Invalid parameters for getAuthToken in \(#function)"))
             return
         }
-                
-        HMSSDK.getAuthTokenByRoomCode(roomCode,userID: userId,completion:{ authToken, error in
+
+        HMSSDK.getAuthTokenByRoomCode(roomCode, userID: userId, completion: { authToken, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {

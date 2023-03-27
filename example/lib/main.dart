@@ -39,8 +39,7 @@ void main() async {
         await FirebaseDynamicLinks.instance.getInitialLink();
     runZonedGuarded(() => runApp(HMSExampleApp(initialLink: initialLink?.link)),
         FirebaseCrashlytics.instance.recordError);
-  }
-  else {
+  } else {
     runZonedGuarded(() => runApp(HMSExampleApp(initialLink: null)),
         (error, stackTrack) => print(error.toString()));
   }
