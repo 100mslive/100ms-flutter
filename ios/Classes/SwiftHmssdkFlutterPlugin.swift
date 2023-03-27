@@ -126,7 +126,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: Room Actions
 
-        case "build", "preview", "join", "leave", "destroy", "get_auth_token":
+        case "build", "preview", "join", "leave", "destroy", "get_auth_token_by_room_code":
             buildActions(call, result)
 
             // MARK: Room Actions
@@ -233,8 +233,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "destroy":
             destroy(result)
 
-        case "get_auth_token":
-            getAuthToken(call, result)
+        case "get_auth_token_by_room_code":
+            getAuthTokenByRoomCode(call, result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -566,7 +566,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result(["roles": roles])
     }
 
-    private func getAuthToken(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+    private func getAuthTokenByRoomCode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
         let arguments = call.arguments as! [AnyHashable: Any]
 
@@ -579,9 +579,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         HMSSDK.getAuthTokenByRoomCode(roomCode, userID: userId, completion: { authToken, error in
             if let error = error {
-                result(HMSErrorExtension.toDictionary(error))
+                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.toDictionary(error)))
             } else {
-                result(HMSTokenResultExtension.toDictionary(authToken))
+                result(HMSResultExtension.toDictionary(true, HMSTokenResultExtension.toDictionary(authToken)))
             }
         })
     }

@@ -73,24 +73,6 @@ class HMSSDK {
       @Deprecated("Use iOSScreenshareConfig") this.appGroup,
       @Deprecated("Use iOSScreenshareConfig") this.preferredExtension});
 
-  ///[getAuthToken] is used to get the authentication token to join the room
-  ///
-  ///This returns an object of [HMSTokenResult]
-  Future<HMSTokenResult?> getAuthToken(
-      {required String roomCode, String? userId, String? endPoint}) async {
-    var arguments = {
-      "room_code": roomCode,
-      "user_id": userId,
-      "endPoint": endPoint
-    };
-    var result = await PlatformService.invokeMethod(PlatformMethod.getAuthToken,
-        arguments: arguments);
-    if (result != null) {
-      return HMSTokenResult.fromMap(result);
-    }
-    return null;
-  }
-
   /// The build function should be called after creating an instance of the [HMSSDK].
   ///
   /// Await the result & if true then create [HMSConfig] object to join or preview a room.

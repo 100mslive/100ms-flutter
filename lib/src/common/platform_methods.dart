@@ -165,7 +165,7 @@ enum PlatformMethod {
   toggleMicMuteState,
   toggleCameraMuteState,
   captureSnapshot,
-  getAuthToken
+  getAuthTokenByRoomCode
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -395,8 +395,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "toggle_camera_mute_state";
       case PlatformMethod.captureSnapshot:
         return "capture_snapshot";
-      case PlatformMethod.getAuthToken:
-        return "get_auth_token";
+      case PlatformMethod.getAuthTokenByRoomCode:
+        return "get_auth_token_by_room_code";
       default:
         return 'unknown';
     }
@@ -628,8 +628,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.toggleCameraMuteState;
       case "capture_snapshot":
         return PlatformMethod.captureSnapshot;
-      case "get_auth_token":
-        return PlatformMethod.getAuthToken;
+      case "get_auth_token_by_room_code":
+        return PlatformMethod.getAuthTokenByRoomCode;
       default:
         return PlatformMethod.unknown;
     }
