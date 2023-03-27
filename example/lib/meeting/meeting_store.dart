@@ -177,12 +177,17 @@ class MeetingStore extends ChangeNotifier
 
   HMSVideoTrack? currentPIPtrack;
 
-  Future<bool> join(String user, String roomUrl) async {
-    if (_hmsSDKInteractor.config == null) {
+  Future<HMSException?> join(String user, String roomUrl,
+      {HMSConfig? roomConfig}) async {
+    if (roomConfig == null) {
       List<String?>? _roomData = RoomService().getCode(roomUrl);
 
       if (_roomData?.length == 0) {
-        return false;
+        return HMSException(
+            message: "Invalid meeting URL",
+            description: "Provided meeting URL is invalid",
+            action: "Please Check the meeting URL",
+            isTerminal: false);
       }
 
       String _endPoint = _roomData?[2] == "true"
@@ -190,29 +195,29 @@ class MeetingStore extends ChangeNotifier
           : Constant.qaTokenEndPoint;
 
       Constant.meetingCode = _roomData?[1] ?? '';
-      HMSTokenResult? _tokenData = await _hmsSDKInteractor.getAuthToken(
+      dynamic _tokenData = await _hmsSDKInteractor.getAuthTokenByRoomCode(
           Constant.meetingCode, user, _endPoint);
 
-      if (_tokenData == null) return false;
-      if (_tokenData.authToken == null) return false;
-      FirebaseCrashlytics.instance
-          .setUserIdentifier(_tokenData.authToken ?? "Token error");
-
-      _hmsSDKInteractor.config = HMSConfig(
-        authToken: _tokenData.authToken!,
-        userName: user,
-        captureNetworkQualityInPreview: true,
-        // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
-        endPoint:
-            _roomData?[2] == "true" ? "" : "https://qa-init.100ms.live/init",
-      );
+      if (_tokenData is HMSTokenResult && _tokenData.authToken != null) {
+        roomConfig = HMSConfig(
+          authToken: _tokenData.authToken!,
+          userName: user,
+          captureNetworkQualityInPreview: true,
+          // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
+          endPoint:
+              _roomData?[2] == "true" ? "" : "https://qa-init.100ms.live/init",
+        );
+      } else {
+        FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
+        return _tokenData;
+      }
     }
 
     _hmsSDKInteractor.addUpdateListener(this);
     WidgetsBinding.instance.addObserver(this);
-    _hmsSDKInteractor.join(config: _hmsSDKInteractor.config!);
+    _hmsSDKInteractor.join(config: roomConfig);
     this.meetingUrl = roomUrl;
-    return true;
+    return null;
   }
 
   //HMSSDK Methods

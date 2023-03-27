@@ -108,7 +108,7 @@ class HmssdkFlutterPlugin :
             }
 
             // MARK: Build Actions
-            "build", "preview", "join", "leave", "destroy","get_auth_token" -> {
+            "build", "preview", "join", "leave", "destroy","get_auth_token_by_room_code" -> {
                 buildActions(call, result)
             }
 
@@ -220,8 +220,8 @@ class HmssdkFlutterPlugin :
             "destroy" -> {
                 destroy(result)
             }
-            "get_auth_token" -> {
-                getAuthToken(call,result)
+            "get_auth_token_by_room_code" -> {
+                getAuthTokenByRoomCode(call,result)
             }
             else -> {
                 result.notImplemented()
@@ -501,7 +501,7 @@ class HmssdkFlutterPlugin :
         result.success(null)
     }
 
-    private fun getAuthToken(call: MethodCall,result: Result){
+    private fun getAuthTokenByRoomCode(call: MethodCall,result: Result){
         val roomCode = call.argument<String>("room_code")
         val userId = call.argument<String?>("user_id")
         val endPoint = call.argument<String?>("end_point")

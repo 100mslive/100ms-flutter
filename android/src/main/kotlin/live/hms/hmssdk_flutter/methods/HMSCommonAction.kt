@@ -41,11 +41,11 @@ class HMSCommonAction {
 
         fun getTokenListener(result: Result) = object : HMSTokenListener {
             override fun onError(error: HMSException) {
-                result.success(null)
+                result.success(HMSResultExtension.toDictionary(success = false, data = HMSExceptionExtension.toDictionary(error)))
             }
 
             override fun onTokenSuccess(tokenResult: TokenResult) {
-                result.success(HMSTokenResultExtension.toDictionary(tokenResult))
+                result.success(HMSResultExtension.toDictionary(success = true, data = HMSTokenResultExtension.toDictionary(tokenResult)))
             }
 
         }
