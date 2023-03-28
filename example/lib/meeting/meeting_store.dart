@@ -7,6 +7,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:hmssdk_flutter_example/app_secrets.dart';
 import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -195,15 +196,17 @@ class MeetingStore extends ChangeNotifier
             isTerminal: false);
       }
 
-      String _endPoint = _roomData?[1] == "true"
-          ? Constant.prodTokenEndpoint
-          : Constant.qaTokenEndPoint;
+      //qaTokenEndPoint is only required for 100ms internal testing
+      //It can be removed and should not affect the join method call
+      //For _endPoint just pass it as null
+      //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
+      String? _endPoint = _roomData?[1] == "true" ? null : '$qaTokenEndPoint';
 
       Constant.meetingCode = _roomData?[0] ?? '';
 
       //We use this to get the auth token from room code
       dynamic _tokenData = await _hmsSDKInteractor.getAuthTokenByRoomCode(
-          Constant.meetingCode, user, "https://auth-nonprod.100ms.live");
+          Constant.meetingCode, user, _endPoint);
 
       if (_tokenData is HMSTokenResult && _tokenData.authToken != null) {
         roomConfig = HMSConfig(
@@ -211,8 +214,9 @@ class MeetingStore extends ChangeNotifier
           userName: user,
           captureNetworkQualityInPreview: true,
           // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
-          endPoint:
-              _roomData?[1] == "true" ? "" : "https://qa-init.100ms.live/init",
+          //This is only for 100ms internal testing, endPoint can be safely removed from
+          //the HMSConfig for external usage
+          endPoint: _roomData?[1] == "true" ? "" : '$qaInitEndPoint',
         );
       } else {
         FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());

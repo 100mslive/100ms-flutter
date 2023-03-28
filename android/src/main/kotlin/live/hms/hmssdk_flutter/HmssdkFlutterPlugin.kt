@@ -518,7 +518,7 @@ class HmssdkFlutterPlugin :
                 name = "Room code null error"
             )
             val args = HMSExceptionExtension.toDictionary(hmsException)
-            result.success(args)
+            result.success(HMSResultExtension.toDictionary(false,args))
         }
     }
 

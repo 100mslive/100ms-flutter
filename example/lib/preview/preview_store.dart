@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/app_secrets.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/service/constant.dart';
@@ -112,9 +113,11 @@ class PreviewStore extends ChangeNotifier
           isTerminal: false);
     }
 
-    String _endPoint = _roomData?[1] == "true"
-        ? Constant.prodTokenEndpoint
-        : Constant.qaTokenEndPoint;
+    //qaTokenEndPoint is only required for 100ms internal testing
+    //It can be removed and should not affect the join method call
+    //For _endPoint just pass it as null
+    //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
+    String? _endPoint = _roomData?[1] == "true" ? null : '$qaTokenEndPoint';
 
     Constant.meetingCode = _roomData?[0] ?? '';
 
@@ -128,8 +131,9 @@ class PreviewStore extends ChangeNotifier
         userName: user,
         captureNetworkQualityInPreview: true,
         // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
-        endPoint:
-            _roomData?[1] == "true" ? "" : "https://qa-init.100ms.live/init",
+        //This is only for 100ms internal testing, endPoint can be safely removed from
+        //the HMSConfig for external usage
+        endPoint: _roomData?[1] == "true" ? "" : '$qaInitEndPoint',
       );
       hmsSDKInteractor.addPreviewListener(this);
       hmsSDKInteractor.preview(config: roomConfig!);

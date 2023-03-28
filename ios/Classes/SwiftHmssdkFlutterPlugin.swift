@@ -568,19 +568,25 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     private func getAuthTokenByRoomCode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
         
-        let arguments = call.arguments as? [AnyHashable: Any]
-        
-        guard let roomCode = arguments?["room_code"] as? String,
-              let userId = arguments?["user_id"] as? String?,
-              let endPoint = arguments?["end_point"] as? String?
+        guard let arguments = call.arguments as? [AnyHashable: Any]
         else{
-            result(HMSErrorExtension.getError("Invalid parameters for getAuthToken in \(#function)"))
+            result(HMSResultExtension.toDictionary(false,HMSErrorExtension.getError("Invalid parameters for getAuthToken in \(#function)")))
             return
         }
-           
+        
+        guard let roomCode = arguments["room_code"] as? String
+        else{
+            result(HMSResultExtension.toDictionary(false,HMSErrorExtension.getError("Invalid parameters for getAuthToken in \(#function)")))
+            return
+        }
+        
+        let userId = arguments["user_id"] as? String? ?? nil
+        let endPoint = arguments["end_point"] as? String? ?? nil
+
+        
         //This is to make the QA links work
         if (endPoint != nil && endPoint!.contains("nonprod")){
-            UserDefaults.standard.set("https://auth-nonprod.100ms.live/", forKey: "HMSAuthTokenEndpointOverride")
+                UserDefaults.standard.set(endPoint, forKey: "HMSAuthTokenEndpointOverride")
         }
         else {
             UserDefaults.standard.removeObject(forKey: "HMSAuthTokenEndpointOverride")
