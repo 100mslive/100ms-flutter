@@ -1,9 +1,8 @@
 //Class contains the constants used throughout the application
 class Constant {
-  static String prodTokenEndpoint =
-      "https://prod-in.100ms.live/hmsapi/get-token";
+  static String prodTokenEndpoint = "";
 
-  static String qaTokenEndPoint = "https://qa-in.100ms.live/hmsapi/get-token";
+  static String qaTokenEndPoint = "https://auth-nonprod.100ms.live";
 
   static String tokenQuery = "api/token";
 

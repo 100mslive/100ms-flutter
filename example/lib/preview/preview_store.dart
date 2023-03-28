@@ -102,6 +102,8 @@ class PreviewStore extends ChangeNotifier
       {required String user, required String meetingLink}) async {
     List<String?>? _roomData = RoomService().getCode(meetingLink);
 
+    //If the link is not valid then we might not get the code and whether the link is a
+    //PROD or QA so we return the error in this case
     if (_roomData?.length == 0) {
       return HMSException(
           message: "Invalid meeting URL",
@@ -110,11 +112,13 @@ class PreviewStore extends ChangeNotifier
           isTerminal: false);
     }
 
-    String _endPoint = _roomData?[2] == "true"
+    String _endPoint = _roomData?[1] == "true"
         ? Constant.prodTokenEndpoint
         : Constant.qaTokenEndPoint;
 
-    Constant.meetingCode = _roomData?[1] ?? '';
+    Constant.meetingCode = _roomData?[0] ?? '';
+
+    //We use this to get the auth token from room code
     dynamic _tokenData = await hmsSDKInteractor.getAuthTokenByRoomCode(
         Constant.meetingCode, user, _endPoint);
 
@@ -125,7 +129,7 @@ class PreviewStore extends ChangeNotifier
         captureNetworkQualityInPreview: true,
         // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
         endPoint:
-            _roomData?[2] == "true" ? "" : "https://qa-init.100ms.live/init",
+            _roomData?[1] == "true" ? "" : "https://qa-init.100ms.live/init",
       );
       hmsSDKInteractor.addPreviewListener(this);
       hmsSDKInteractor.preview(config: roomConfig!);

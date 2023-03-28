@@ -568,15 +568,24 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     
     private func getAuthTokenByRoomCode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
         
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
         
-        guard let roomCode = arguments["room_code"] as? String,
-              let userId = arguments["user_id"] as? String?
+        guard let roomCode = arguments?["room_code"] as? String,
+              let userId = arguments?["user_id"] as? String?,
+              let endPoint = arguments?["end_point"] as? String?
         else{
             result(HMSErrorExtension.getError("Invalid parameters for getAuthToken in \(#function)"))
             return
         }
-                
+           
+        //This is to make the QA links work
+        if (endPoint != nil && endPoint!.contains("nonprod")){
+            UserDefaults.standard.set("https://auth-nonprod.100ms.live/", forKey: "HMSAuthTokenEndpointOverride")
+        }
+        else {
+            UserDefaults.standard.removeObject(forKey: "HMSAuthTokenEndpointOverride")
+        }
+        
         HMSSDK.getAuthTokenByRoomCode(roomCode,userID: userId,completion:{ authToken, error in
             if let error = error {
                 result(HMSResultExtension.toDictionary(false,HMSErrorExtension.toDictionary(error)))

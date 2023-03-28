@@ -179,9 +179,14 @@ class MeetingStore extends ChangeNotifier
 
   Future<HMSException?> join(String user, String roomUrl,
       {HMSConfig? roomConfig}) async {
+    //If roomConfig is null then only we call the methods to get the authToken
+    //If we are joining the room from preview we already have authToken so we don't
+    //need to call the getAuthTokenByRoomCode method
     if (roomConfig == null) {
       List<String?>? _roomData = RoomService().getCode(roomUrl);
 
+      //If the link is not valid then we might not get the code and whether the link is a
+      //PROD or QA so we return the error in this case
       if (_roomData?.length == 0) {
         return HMSException(
             message: "Invalid meeting URL",
@@ -190,13 +195,15 @@ class MeetingStore extends ChangeNotifier
             isTerminal: false);
       }
 
-      String _endPoint = _roomData?[2] == "true"
+      String _endPoint = _roomData?[1] == "true"
           ? Constant.prodTokenEndpoint
           : Constant.qaTokenEndPoint;
 
-      Constant.meetingCode = _roomData?[1] ?? '';
+      Constant.meetingCode = _roomData?[0] ?? '';
+
+      //We use this to get the auth token from room code
       dynamic _tokenData = await _hmsSDKInteractor.getAuthTokenByRoomCode(
-          Constant.meetingCode, user, _endPoint);
+          Constant.meetingCode, user, "https://auth-nonprod.100ms.live");
 
       if (_tokenData is HMSTokenResult && _tokenData.authToken != null) {
         roomConfig = HMSConfig(
@@ -205,7 +212,7 @@ class MeetingStore extends ChangeNotifier
           captureNetworkQualityInPreview: true,
           // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
           endPoint:
-              _roomData?[2] == "true" ? "" : "https://qa-init.100ms.live/init",
+              _roomData?[1] == "true" ? "" : "https://qa-init.100ms.live/init",
         );
       } else {
         FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
