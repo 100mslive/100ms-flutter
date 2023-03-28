@@ -12,6 +12,7 @@ private_key.pepk
 100msKeyStore
 example/ios/Runner.app.dSYM.zip
 example/ios/Runner.ipa
+example/lib/app_secrets.dart
 launch.json
 ./documentation
 
