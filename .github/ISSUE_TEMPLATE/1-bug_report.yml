@@ -58,7 +58,7 @@ body:
         which is capable of creating and running small Flutter apps.
         Without this we will unlikely be able to progress on the issue, and because of that
         we regretfully will have to close it.
-        value: |
+      value: |
         <details>
         <summary>Code sample</summary>
 
