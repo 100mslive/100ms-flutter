@@ -141,7 +141,9 @@ class PreviewStore extends ChangeNotifier
       return null;
     }
 
-    FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
+    if (Constant.appFlavor == AppFlavors.hmsInternal) {
+      FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
+    }
     return _tokenData;
   }
 
@@ -229,7 +231,9 @@ class PreviewStore extends ChangeNotifier
 
   @override
   void onLogMessage({required hmsLogList}) {
-    FirebaseCrashlytics.instance.log(hmsLogList.toString());
+    if (Constant.appFlavor == AppFlavors.hmsInternal) {
+      FirebaseCrashlytics.instance.log(hmsLogList.toString());
+    }
   }
 
   void destroy() {
