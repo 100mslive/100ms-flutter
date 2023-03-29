@@ -2,7 +2,7 @@
 name: "📚 Documentation issue report"
 about: "Report an issue in the documentation."
 title: ""
-labels: "documentation"
+labels: ["Needs Triage 🔍"]
 assignees: ''
 
 ---
