@@ -34,6 +34,17 @@ body:
     validations:
       required: true
   - type: textarea
+    id: expected
+    attributes:
+      label: Expected results
+      description: What did you want to see?
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
     id: extra
     attributes:
       label: Code example, screenshot, or link to a repository
@@ -41,7 +52,28 @@ body:
         Please provide a minimal code example that reproduces the problem or a link to a repository on GitHub.
         You may provide a screenshot of the application if you think it is relevant to your bug report.
         Here are some tips for providing a minimal example: https://stackoverflow.com/help/mcve
-        Please note that a reproducer is **mandatory**. Issues without reproducer are more likely to stall and will be closed.
+
+        You can use `flutter create bug` command and update the `main.dart` file.
+        Alternatively, you can use https://dartpad.dev/
+        which is capable of creating and running small Flutter apps.
+        Without this we will unlikely be able to progress on the issue, and because of that
+        we regretfully will have to close it.
+        value: |
+        <details>
+        <summary>Code sample</summary>
+
+        <!--
+              Please create a minimal reproducible sample that shows the problem
+              and attach it below between the lines with the backticks.
+              To create it you can use `flutter create bug` command and update the `main.dart` file.
+              Alternatively, you can use https://dartpad.dev/
+              which is capable of creating and running small Flutter apps.
+              Without this we will unlikely be able to progress on the issue, and because of that
+              we regretfully will have to close it.
+        -->
+
+        ```dart
+        ```
     validations:
       required: true    
   - type: textarea
