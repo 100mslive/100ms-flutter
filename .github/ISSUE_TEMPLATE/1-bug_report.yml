@@ -1,6 +1,6 @@
 name: 🐛 Bug Report
 description: Report a reproducible bug or regression in 100ms Flutter Package
-labels: ["Needs: Triage :mag:"]
+labels: ["Needs Triage 🔍"]
 body:
   - type: markdown
     attributes:
