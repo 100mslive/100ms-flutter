@@ -1,8 +1,4 @@
-# **Name of PR**
-
-<!-- This PR fixes #NUMBER_OF_THE_ISSUE, and fixes #NUMBER_OF_THE_ISSUE -->
-
-## **Description**
+# Description
 
 *Replace this paragraph with a description of what this PR is changing or adding, and why. Consider including before/after screenshots.*
 
@@ -10,13 +6,13 @@
 
 ---
 
-### **Additional context**
+## Additional context
 
 <!-- Add any other context or additional information about the pull request.-->
 
 *
 
-## Pre-launch Checklist
+### Pre-launch Checklist
 
 - [ ] The [Documentation] is updated accordingly, or this PR doesn't require it.
 - [ ] I updated/added relevant documentation (doc comments with `///`).
