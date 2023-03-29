@@ -61,6 +61,14 @@ android {
     flavorDimensions "app"
     productFlavors {
 
+        external {
+            dimension "app"
+            applicationIdSuffix ".external"
+            versionCode 1
+            versionName "1.0.0"
+            resValue "string", "app_name", "[External] 100ms Video Calling Streaming"
+        }
+
         hmsInternal {
             dimension "app"
             applicationIdSuffix ""
@@ -70,14 +78,6 @@ android {
                 implementation 'com.google.firebase:firebase-crashlytics:18.3.2'
             }
             resValue "string", "app_name", "100ms Video Calling Streaming"
-        }
-        external {
-            dimension "app"
-            applicationIdSuffix ".external"
-            versionCode 1
-            versionName "1.0.0"
-            resValue "string", "app_name", "[External] 100ms Video Calling Streaming"
-
         }
     }
 
