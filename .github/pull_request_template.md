@@ -4,12 +4,9 @@
 
 ## **Description**
 
-<!--  📛📛
-Please include a summary of the change and/or which issue is fixed.
-List any dependencies required for this change, if there are any.
-📛📛 -->
+*Replace this paragraph with a description of what this PR is changing or adding, and why. Consider including before/after screenshots.*
 
-*
+*List which issues are fixed by this PR. You must list at least one issue.*
 
 ---
 
@@ -19,14 +16,16 @@ List any dependencies required for this change, if there are any.
 
 *
 
-- [ ] The change doesn't require a change to the documentation.
-- [ ] The documentation is updated accordingly.
+## Pre-launch Checklist
 
+- [ ] The [Documentation] is updated accordingly, or this PR doesn't require it.
+- [ ] I updated/added relevant documentation (doc comments with `///`).
+- [ ] I listed at least one issue that this PR fixes in the description above.
+- [ ] I read and followed the [Flutter Style Guide], including [Features we expect every widget to implement].
+- [ ] I added new tests to check the change I am making, or this PR is test-exempt.
+- [ ] All existing and new tests are passing.
 
-<!-- 📛📛📛📛
-If it fixes any current issue please let us know this way:
-Uncomment the comment above "description", then add your number of issues after the "#".
-Example: # **This pull request fixes #NUMBER_OF_THE_ISSUE issue**
-If there are multiple issues to be closed with the merge of this pull request
-please do it like so: **This pull request fixes #NUMBER_OF_THE_ISSUE, fixes #NUMBER_OF_THE_ISSUE and fixes #NUMBER_OF_THE_ISSUE issue**.
-📛📛📛📛 -->
+<!-- Links -->
+[Documentation]: https://www.100ms.live/docs
+[Flutter Style Guide]: https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo
+[Features we expect every widget to implement]: https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo#features-we-expect-every-widget-to-implement
