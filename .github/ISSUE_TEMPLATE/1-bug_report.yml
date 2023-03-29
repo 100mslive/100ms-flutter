@@ -6,6 +6,7 @@ body:
     attributes:
       value: |
         Please provide all the information requested. Issues that do not follow this format are likely to stall.
+        You can ask your questions on 100ms Discord as well: https://100ms.live/discord
   - type: textarea
     id: description
     attributes:
@@ -32,19 +33,12 @@ body:
         3. ...
     validations:
       required: true
-  # - type: textarea
-  #   id: react-native-info
-  #   attributes:
-  #     label: Output of `npx react-native info`
-  #     description: Run `npx react-native info` in your terminal, copy and paste the results here.
-  #   validations:
-  #     required: true
   - type: textarea
     id: extra
     attributes:
-      label: Snack, code example, screenshot, or link to a repository
+      label: Code example, screenshot, or link to a repository
       description: |
-        Please provide a Snack (https://snack.expo.dev/), a link to a repository on GitHub, or provide a minimal code example that reproduces the problem.
+        Please provide a minimal code example that reproduces the problem or a link to a repository on GitHub.
         You may provide a screenshot of the application if you think it is relevant to your bug report.
         Here are some tips for providing a minimal example: https://stackoverflow.com/help/mcve
         Please note that a reproducer is **mandatory**. Issues without reproducer are more likely to stall and will be closed.
@@ -58,9 +52,6 @@ body:
         with the backticks below. If you are running any `flutter` commands,
         please include the output of running them with `--verbose`; for example,
         the output of running `flutter --verbose create foo`.
-
-        Please provide a minimal code example that reproduces the problem.
-        You may provide a screenshot of the application if you think it is relevant to your bug report.
 
         If the logs are too large to be uploaded to Github, you may upload
         them as a `txt` file or use online tools like https://pastebin.com to
