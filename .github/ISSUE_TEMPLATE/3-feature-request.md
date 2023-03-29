@@ -2,7 +2,7 @@
 name: "🚀🆕 Feature Request"
 about: "Suggest an idea or possible new feature for this project."
 title: ""
-labels: "Type: enhancement"
+labels: ["Needs Triage 🔍"]
 assignees: ''
 
 ---
@@ -31,6 +31,12 @@ assignees: ''
 *
 
 ---
+
+### Any Media to attach?
+<!-- If applicable, add screenshots or videos to help explain your request. -->
+
+---
+
 
 ### **Additional context**
 <!-- Add any other context or additional information about the problem here.-->
