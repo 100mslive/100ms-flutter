@@ -40,7 +40,6 @@ class _AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
   @override
   Widget build(BuildContext context) {
     String message = "Select aspect ratio of HLS player";
-    double width = MediaQuery.of(context).size.width;
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       actionsPadding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
@@ -139,10 +138,16 @@ class _AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
                 if (valueChoose == null) {
                   Utilities.showToast("Please select a aspect ratio");
                 } else {
-                  List number = valueChoose!.split(":");
-                  double ratio =
-                      double.parse(number[0]) / double.parse(number[1]);
-                  print("aspect ratio:" + ratio.toString());
+                  double ratio;
+                  if (valueChoose!.contains("Default")) {
+                    ratio = MediaQuery.of(context).size.width /
+                        (MediaQuery.of(context).size.height - 100);
+                  } else {
+                    List number = valueChoose!.split(":");
+                    ratio = double.parse(number[0]) / double.parse(number[1]);
+                  }
+                  Utilities.showToast(
+                      "Player aspect ratio changed to $valueChoose");
                   widget.meetingStore
                       .setPIPVideoController(true, aspectRatio: ratio);
                   Navigator.pop(context);

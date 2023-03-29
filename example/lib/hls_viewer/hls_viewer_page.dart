@@ -121,6 +121,11 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                   child: Center(
                                     child: HLSPlayer(
                                       streamUrl: widget.streamUrl,
+                                      ratio: MediaQuery.of(context).size.width /
+                                              MediaQuery.of(context)
+                                                  .size
+                                                  .height -
+                                          100,
                                     ),
                                   ))
                               : Center(

@@ -277,7 +277,17 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                   .height *
                                                               0.735,
                                                           child: Center(
-                                                            child: HLSPlayer(),
+                                                            child: HLSPlayer(
+                                                              ratio: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width /
+                                                                  (MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .height -
+                                                                      100),
+                                                            ),
                                                           ),
                                                         )
                                                       : Container(
