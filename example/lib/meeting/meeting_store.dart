@@ -172,7 +172,7 @@ class MeetingStore extends ChangeNotifier
 
   bool lastVideoStatus = false;
 
-  double hlsAspectRatio = 16 / 9;
+  double hlsAspectRatio = 9 / 16;
 
   bool showNotification = false;
 
