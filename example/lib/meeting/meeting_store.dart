@@ -32,7 +32,11 @@ import 'package:pip_flutter/pipflutter_player_theme.dart';
 
 class MeetingStore extends ChangeNotifier
     with WidgetsBindingObserver
-    implements HMSUpdateListener, HMSActionResultListener, HMSStatsListener {
+    implements
+        HMSUpdateListener,
+        HMSActionResultListener,
+        HMSStatsListener,
+        HMSLogListener {
   late HMSSDKInteractor _hmsSDKInteractor;
 
   MeetingStore({required HMSSDKInteractor hmsSDKInteractor}) {
@@ -190,6 +194,7 @@ class MeetingStore extends ChangeNotifier
     );
 
     _hmsSDKInteractor.addUpdateListener(this);
+    _hmsSDKInteractor.addLogsListener(this);
     WidgetsBinding.instance.addObserver(this);
     _hmsSDKInteractor.join(config: config);
     this.meetingUrl = roomUrl;
@@ -936,6 +941,7 @@ class MeetingStore extends ChangeNotifier
 // Helper Methods
 
   void clearRoomState() {
+    _hmsSDKInteractor.removeHMSLogger();
     _hmsSDKInteractor.destroy();
     peerTracks.clear();
     isRoomEnded = true;
@@ -944,6 +950,7 @@ class MeetingStore extends ChangeNotifier
     isScreenShareOn = false;
     isAudioShareStarted = false;
     _hmsSDKInteractor.removeUpdateListener(this);
+    _hmsSDKInteractor.removeLogsListener(this);
     setLandscapeLock(false);
     notifyListeners();
     FlutterForegroundTask.stopService();
@@ -1226,29 +1233,6 @@ class MeetingStore extends ChangeNotifier
       default:
     }
   }
-
-  // Logs are currently turned Off
-  // @override
-  // void onLogMessage({required dynamic HMSLogList}) async {
-  // StaticLogger.logger?.v(HMSLogList.toString());
-  //   FirebaseCrashlytics.instance.log(HMSLogList.toString());
-  // }
-
-  // void startHMSLogger(HMSLogLevel webRtclogLevel, HMSLogLevel logLevel) {
-  //   HmsSdkManager.hmsSdkInteractor?.startHMSLogger(webRtclogLevel, logLevel);
-  // }
-  //
-  // void addLogsListener() {
-  //   HmsSdkManager.hmsSdkInteractor?.addLogsListener(this);
-  // }
-  //
-  // void removeLogsListener() {
-  //   HmsSdkManager.hmsSdkInteractor?.removeLogsListener(this);
-  // }
-  //
-  // void removeHMSLogger() {
-  //   HmsSdkManager.hmsSdkInteractor?.removeHMSLogger();
-  // }
 
   void setMode(MeetingMode meetingMode) {
     //Turning the videos on if the previously mode was audio
@@ -1820,5 +1804,11 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
       }
     }
+  }
+
+  @override
+  void onLogMessage({required hmsLogList}) {
+    FirebaseCrashlytics.instance.log(hmsLogList.toString());
+    log(hmsLogList.toString());
   }
 }

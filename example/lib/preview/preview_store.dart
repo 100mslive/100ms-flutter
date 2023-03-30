@@ -112,6 +112,7 @@ class PreviewStore extends ChangeNotifier
     );
     hmsSDKInteractor.addPreviewListener(this);
     hmsSDKInteractor.preview(config: config);
+    hmsSDKInteractor.startHMSLogger(HMSLogLevel.ERROR,HMSLogLevel.ERROR);
     meetingUrl = meetingLink;
     return "";
   }
