@@ -1467,7 +1467,7 @@ class MeetingStore extends ChangeNotifier
             aspectRatio: ratio,
             alternativeText: alternativeText,
             scaleType: ScaleType.SCALE_ASPECT_FILL,
-            backgroundColor: Utilities.getBackgroundColour(alternativeText));
+            backgroundColor: Color(0xFF6554C0));
         currentPIPtrack = track;
       }
     }
@@ -1481,7 +1481,7 @@ class MeetingStore extends ChangeNotifier
         HMSIOSPIPController.changeText(
             text: text,
             aspectRatio: ratio,
-            backgroundColor: Utilities.getBackgroundColour(text));
+            backgroundColor: Color(0xFF6554C0));
         currentPIPtrack = null;
       }
     }
