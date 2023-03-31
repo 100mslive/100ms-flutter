@@ -170,7 +170,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - Logging
 
-        case "start_hms_logger", "remove_hms_logger","get_all_logs":
+        case "start_hms_logger", "remove_hms_logger", "get_all_logs":
             loggingActions(call, result)
 
             // MARK: - Stats Listener
@@ -298,7 +298,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "get_all_logs":
             getAllLogs(result)
-            
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -790,7 +790,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
 
-
     var logsBuffer = [Any]()
     var logsDump = [Any?]()
     public func log(_ message: String, _ level: HMSLogLevel) {
@@ -808,15 +807,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
 
     }
-    
-    private func getAllLogs(_ result: @escaping FlutterResult){
+
+    private func getAllLogs(_ result: @escaping FlutterResult) {
         result(logsDump)
     }
 
     private func removeHMSLogger() {
         logLevel = .off
         logsDump.removeAll()
-        logsBuffer.removeAll()        
+        logsBuffer.removeAll()
         hmsSDK?.logger = nil
     }
 
