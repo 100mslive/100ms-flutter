@@ -59,7 +59,6 @@ export 'src/model/hms_track_change_request.dart';
 export 'src/model/hms_peer_removed_from_room.dart';
 export 'src/model/hms_message_recipient.dart';
 export 'src/model/hms_logs_listener.dart';
-export 'src/model/hms_log.dart';
 export 'src/model/hms_actions_result_listener.dart';
 export 'src/model/hms_message_result_listener.dart';
 export 'src/enum/hms_action_result_listener_method.dart';
