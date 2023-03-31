@@ -1,4 +1,6 @@
 //Class contains the constants used throughout the application
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
 class Constant {
   static String prodTokenEndpoint =
       "https://prod-in.100ms.live/hmsapi/get-token";
@@ -21,4 +23,7 @@ class Constant {
   static String meetingUrl = defaultMeetingLink;
   static String meetingCode = "";
   static String streamingUrl = "";
+
+  static HMSLogLevel webRTCLogLevel = HMSLogLevel.VERBOSE;
+  static HMSLogLevel sdkLogLevel = HMSLogLevel.VERBOSE;
 }

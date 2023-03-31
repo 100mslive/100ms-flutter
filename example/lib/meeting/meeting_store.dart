@@ -3,6 +3,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as Math;
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -181,6 +182,8 @@ class MeetingStore extends ChangeNotifier
   bool showNotification = false;
 
   HMSVideoTrack? currentPIPtrack;
+
+  HMSLogList? applicationLogs;
 
   Future<bool> join(String user, String roomUrl) async {
     List<String?>? token =
@@ -945,6 +948,7 @@ class MeetingStore extends ChangeNotifier
     HMSLogList? _logsDump = await _hmsSDKInteractor.getAllogs();
     await deleteFile();
     writeLogs(_logsDump);
+    applicationLogs = null;
     _hmsSDKInteractor.removeHMSLogger();
     _hmsSDKInteractor.destroy();
     peerTracks.clear();
@@ -1813,6 +1817,9 @@ class MeetingStore extends ChangeNotifier
   @override
   void onLogMessage({required HMSLogList hmsLogList}) {
     FirebaseCrashlytics.instance.log(hmsLogList.toString());
-    log(hmsLogList.toString());
+    FirebaseAnalytics.instance.logEvent(
+        name: "SDK_Logs", parameters: {"data": hmsLogList.toString()});
+    applicationLogs = hmsLogList;
+    notifyListeners();
   }
 }

@@ -1,11 +1,13 @@
 //Package imports
 import 'dart:developer';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
+import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 
 class PreviewStore extends ChangeNotifier
@@ -112,7 +114,8 @@ class PreviewStore extends ChangeNotifier
     );
     hmsSDKInteractor.addPreviewListener(this);
     hmsSDKInteractor.preview(config: config);
-    hmsSDKInteractor.startHMSLogger(HMSLogLevel.ERROR, HMSLogLevel.VERBOSE);
+    hmsSDKInteractor.startHMSLogger(
+        Constant.webRTCLogLevel, Constant.sdkLogLevel);
     meetingUrl = meetingLink;
     return "";
   }
@@ -202,6 +205,8 @@ class PreviewStore extends ChangeNotifier
   @override
   void onLogMessage({required HMSLogList hmsLogList}) {
     FirebaseCrashlytics.instance.log(hmsLogList.toString());
+    FirebaseAnalytics.instance.logEvent(
+        name: "SDK_Logs", parameters: {"data": hmsLogList.toString()});
   }
 
   void destroy() {
