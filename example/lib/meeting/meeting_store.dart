@@ -7,6 +7,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:hmssdk_flutter_example/common/util/log_writer.dart';
 import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -940,7 +941,10 @@ class MeetingStore extends ChangeNotifier
 
 // Helper Methods
 
-  void clearRoomState() {
+  void clearRoomState() async {
+    HMSLogList? _logsDump = await _hmsSDKInteractor.getAllogs();
+    await deleteFile();
+    writeLogs(_logsDump);
     _hmsSDKInteractor.removeHMSLogger();
     _hmsSDKInteractor.destroy();
     peerTracks.clear();
@@ -1807,7 +1811,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   @override
-  void onLogMessage({required hmsLogList}) {
+  void onLogMessage({required HMSLogList hmsLogList}) {
     FirebaseCrashlytics.instance.log(hmsLogList.toString());
     log(hmsLogList.toString());
   }

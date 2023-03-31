@@ -351,4 +351,8 @@ class HMSSDKInteractor {
         ofRoles: ofRoles,
         hmsActionResultListener: hmsActionResultListener);
   }
+
+  Future<HMSLogList?> getAllogs() async {
+    return await hmsSDK.getAllLogs();
+  }
 }

@@ -170,7 +170,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - Logging
 
-        case "start_hms_logger", "remove_hms_logger":
+        case "start_hms_logger", "remove_hms_logger","get_all_logs":
             loggingActions(call, result)
 
             // MARK: - Stats Listener
@@ -296,6 +296,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "remove_hms_logger":
             removeHMSLogger()
 
+        case "get_all_logs":
+            getAllLogs(result)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -787,28 +790,33 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
 
-    var finalargs = [Any]()
+
+    var logsBuffer = [Any]()
+    var logsDump = [Any?]()
     public func log(_ message: String, _ level: HMSLogLevel) {
         guard level.rawValue <= logLevel.rawValue else { return }
 
-        var args = [String: Any]()
-        args["event_name"] = "on_logs_update"
-
-        var logArgs = [String: Any]()
-        logArgs["log"] = ["message": message, "level": level.rawValue]
-        args["data"] = logArgs
-
-        if finalargs.count<1000 {
-            finalargs.append(args)
+        if logsBuffer.count<10 {
+            logsBuffer.append(message)
+            logsDump.append(message)
         } else {
-            logsSink?(finalargs)
-            finalargs = []
+            var args = [String: Any]()
+            args["event_name"] = "on_logs_update"
+            args["data"] = logsBuffer
+            logsSink?(args)
+            logsBuffer = []
         }
 
+    }
+    
+    private func getAllLogs(_ result: @escaping FlutterResult){
+        result(logsDump)
     }
 
     private func removeHMSLogger() {
         logLevel = .off
+        logsDump.removeAll()
+        logsBuffer.removeAll()        
         hmsSDK?.logger = nil
     }
 

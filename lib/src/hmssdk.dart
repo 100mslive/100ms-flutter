@@ -1075,6 +1075,15 @@ class HMSSDK {
     PlatformService.removeLogsListener(hmsLogListener);
   }
 
+  ///Method to get all the logs from the SDK
+  Future<HMSLogList?> getAllLogs() async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.getAllLogs);
+    if (result != null) {
+      return HMSLogList.fromMap(result);
+    }
+    return null;
+  }
+
   ///Method to get available audio devices
   ///
   ///Refer [audio output routing guide here](https://www.100ms.live/docs/flutter/v2/features/audio-output-routing)

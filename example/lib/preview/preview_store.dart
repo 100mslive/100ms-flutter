@@ -112,7 +112,7 @@ class PreviewStore extends ChangeNotifier
     );
     hmsSDKInteractor.addPreviewListener(this);
     hmsSDKInteractor.preview(config: config);
-    hmsSDKInteractor.startHMSLogger(HMSLogLevel.ERROR,HMSLogLevel.ERROR);
+    hmsSDKInteractor.startHMSLogger(HMSLogLevel.ERROR, HMSLogLevel.VERBOSE);
     meetingUrl = meetingLink;
     return "";
   }
@@ -200,7 +200,7 @@ class PreviewStore extends ChangeNotifier
   }
 
   @override
-  void onLogMessage({required hmsLogList}) {
+  void onLogMessage({required HMSLogList hmsLogList}) {
     FirebaseCrashlytics.instance.log(hmsLogList.toString());
   }
 
