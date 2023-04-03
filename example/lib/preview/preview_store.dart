@@ -125,9 +125,9 @@ class PreviewStore extends ChangeNotifier
     dynamic _tokenData = await hmsSDKInteractor.getAuthTokenByRoomCode(
         Constant.meetingCode, user, _endPoint);
 
-    if (_tokenData is HMSTokenResult && _tokenData.authToken != null) {
+    if ((_tokenData is String?) && _tokenData != null) {
       roomConfig = HMSConfig(
-        authToken: _tokenData.authToken!,
+        authToken: _tokenData,
         userName: user,
         captureNetworkQualityInPreview: true,
         // endPoint is only required by 100ms Team. Client developers should not use `endPoint`

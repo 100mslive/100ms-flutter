@@ -592,11 +592,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             UserDefaults.standard.removeObject(forKey: "HMSAuthTokenEndpointOverride")
         }
         
-        HMSSDK.getAuthTokenByRoomCode(roomCode,userID: userId,completion:{ authToken, error in
+        hmsSDK?.getAuthTokenByRoomCode(roomCode,userID: userId,completion:{ authToken, error in
             if let error = error {
                 result(HMSResultExtension.toDictionary(false,HMSErrorExtension.toDictionary(error)))
             } else {
-                result(HMSResultExtension.toDictionary(true,HMSTokenResultExtension.toDictionary(authToken)))
+                result(HMSResultExtension.toDictionary(true,authToken))
             }
         })
     }

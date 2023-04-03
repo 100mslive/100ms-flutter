@@ -43,8 +43,9 @@ class HMSCommonAction {
                 result.success(HMSResultExtension.toDictionary(success = false, data = HMSExceptionExtension.toDictionary(error)))
             }
 
-            override fun onTokenSuccess(tokenResult: TokenResult) {
-                result.success(HMSResultExtension.toDictionary(success = true, data = HMSTokenResultExtension.toDictionary(tokenResult)))
+            override fun onTokenSuccess(string: String) {
+                result.success(HMSResultExtension.toDictionary(success = true, data = string))
+
             }
         }
     }

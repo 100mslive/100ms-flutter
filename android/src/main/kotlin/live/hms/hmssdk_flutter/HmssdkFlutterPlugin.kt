@@ -41,7 +41,6 @@ import live.hms.video.signal.init.TokenRequest
 import live.hms.video.signal.init.TokenRequestOptions
 import live.hms.video.utils.HMSLogger
 import live.hms.video.utils.HmsUtilities
-import live.hms.video.utils.TokenUtils
 
 /** HmssdkFlutterPlugin */
 @SuppressLint("StaticFieldLeak")
@@ -505,7 +504,7 @@ class HmssdkFlutterPlugin :
         val endPoint = call.argument<String?>("end_point")
         if (roomCode != null) {
             val tokenRequest = TokenRequest(roomCode, userId)
-            TokenUtils.getAuthTokenByRoomCode(tokenRequest, TokenRequestOptions(endPoint), HMSCommonAction.getTokenListener(result))
+            hmssdk?.getAuthTokenByRoomCode(tokenRequest, TokenRequestOptions(endPoint), HMSCommonAction.getTokenListener(result))
         } else {
             val hmsException = HMSException(
                 action = "Please send a non-null room-code",

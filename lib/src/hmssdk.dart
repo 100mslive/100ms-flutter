@@ -80,6 +80,33 @@ class HMSSDK {
         appGroup, preferredExtension, hmsLogSettings);
   }
 
+  ///[getAuthTokenByRoomCode] is used to get the authentication token to join the room
+  ///using room codes.
+  ///
+  ///This returns an object of Future<dynamic> which can be either
+  ///of HMSException type or HMSTokenResult type based on whether
+  ///method execution is completed successfully or not
+  Future<dynamic> getAuthTokenByRoomCode(
+      {required String roomCode, String? userId, String? endPoint}) async {
+    var arguments = {
+      "room_code": roomCode,
+      "user_id": userId,
+      "end_point": endPoint
+    };
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.getAuthTokenByRoomCode,
+        arguments: arguments);
+
+    //If the method is executed successfully we get the "success":"true"
+    //Hence we parse the map with HMSTokenResult
+    //Else we parse it with HMSException
+    if (result["success"]) {
+      return result["data"];
+    } else {
+      return HMSException.fromMap(result["data"]["error"]);
+    }
+  }
+
   ///add UpdateListener it will add all the listeners.
   ///
   ///HMSSDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing HMSUpdateListener.
