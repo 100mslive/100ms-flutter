@@ -1301,8 +1301,10 @@ class HmssdkFlutterPlugin :
             }
             if (p1 != null) {
                 val audioDevicesList = ArrayList<String>()
-                for (device in hmssdk!!.getAudioDevicesList()) {
-                    audioDevicesList.add(device.name)
+                hmssdk?.getAudioDevicesList()?.let { audioDevices ->
+                    audioDevices.forEach{ device ->
+                        audioDevicesList.add(device.name)
+                    }
                 }
                 dict["available_audio_device"] = audioDevicesList
             }
@@ -1337,8 +1339,10 @@ class HmssdkFlutterPlugin :
             }
             if (p1 != null) {
                 val audioDevicesList = ArrayList<String>()
-                for (device in hmssdk!!.getAudioDevicesList()) {
-                    audioDevicesList.add(device.name)
+                hmssdk?.getAudioDevicesList()?.let { audioDevices ->
+                    audioDevices.forEach{ device ->
+                        audioDevicesList.add(device.name)
+                    }
                 }
                 dict["available_audio_device"] = audioDevicesList
             }
