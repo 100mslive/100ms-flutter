@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
 import 'package:hmssdk_flutter/src/model/hms_session_metadata.dart';
-import 'package:hmssdk_flutter/src/model/hms_token_result.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../hmssdk_flutter.dart';
 
@@ -79,6 +78,33 @@ class HMSSDK {
   Future<void> build() async {
     await HmsSdkManager().createHMSSdk(hmsTrackSetting, iOSScreenshareConfig,
         appGroup, preferredExtension, hmsLogSettings);
+  }
+
+  ///[getAuthTokenByRoomCode] is used to get the authentication token to join the room
+  ///using room codes.
+  ///
+  ///This returns an object of Future<dynamic> which can be either
+  ///of HMSException type or HMSTokenResult type based on whether
+  ///method execution is completed successfully or not
+  Future<dynamic> getAuthTokenByRoomCode(
+      {required String roomCode, String? userId, String? endPoint}) async {
+    var arguments = {
+      "room_code": roomCode,
+      "user_id": userId,
+      "end_point": endPoint
+    };
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.getAuthTokenByRoomCode,
+        arguments: arguments);
+
+    //If the method is executed successfully we get the "success":"true"
+    //Hence we parse the map with HMSTokenResult
+    //Else we parse it with HMSException
+    if (result["success"]) {
+      return result["data"];
+    } else {
+      return HMSException.fromMap(result["data"]["error"]);
+    }
   }
 
   ///add UpdateListener it will add all the listeners.

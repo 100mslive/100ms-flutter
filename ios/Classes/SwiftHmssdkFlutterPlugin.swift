@@ -126,7 +126,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: Room Actions
 
-        case "build", "preview", "join", "leave", "destroy", "get_auth_token_by_room_code":
+        case "build", "preview", "join", "leave", "destroy","get_auth_token_by_room_code":
             buildActions(call, result)
 
             // MARK: Room Actions
@@ -232,10 +232,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "destroy":
             destroy(result)
-
+        
         case "get_auth_token_by_room_code":
-            getAuthTokenByRoomCode(call, result)
-
+            getAuthTokenByRoomCode(call,result)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -592,11 +592,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             UserDefaults.standard.removeObject(forKey: "HMSAuthTokenEndpointOverride")
         }
         
-        HMSSDK.getAuthTokenByRoomCode(roomCode,userID: userId,completion:{ authToken, error in
+        hmsSDK?.getAuthTokenByRoomCode(roomCode,userID: userId,completion:{ authToken, error in
             if let error = error {
-                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.toDictionary(error)))
+                result(HMSResultExtension.toDictionary(false,HMSErrorExtension.toDictionary(error)))
             } else {
-                result(HMSResultExtension.toDictionary(true, HMSTokenResultExtension.toDictionary(authToken)))
+                result(HMSResultExtension.toDictionary(true,authToken))
             }
         })
     }

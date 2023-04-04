@@ -172,7 +172,7 @@ class MeetingStore extends ChangeNotifier
 
   bool lastVideoStatus = false;
 
-  double hlsAspectRatio = 16 / 9;
+  double hlsAspectRatio = 9 / 16;
 
   bool showNotification = false;
 
@@ -208,9 +208,9 @@ class MeetingStore extends ChangeNotifier
       dynamic _tokenData = await _hmsSDKInteractor.getAuthTokenByRoomCode(
           Constant.meetingCode, user, _endPoint);
 
-      if (_tokenData is HMSTokenResult && _tokenData.authToken != null) {
+      if ((_tokenData is String?) && _tokenData != null) {
         roomConfig = HMSConfig(
-          authToken: _tokenData.authToken!,
+          authToken: _tokenData,
           userName: user,
           captureNetworkQualityInPreview: true,
           // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
@@ -219,9 +219,7 @@ class MeetingStore extends ChangeNotifier
           endPoint: _roomData?[1] == "true" ? "" : '$qaInitEndPoint',
         );
       } else {
-        if (Constant.appFlavor == AppFlavors.hmsInternal) {
-          FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
-        }
+        FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
         return _tokenData;
       }
     }
@@ -554,7 +552,10 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
 
     if (Platform.isIOS && !(isHLSLink)) {
-      HMSIOSPIPController.setup(autoEnterPip: true, aspectRatio: [9, 16]);
+      HMSIOSPIPController.setup(
+          autoEnterPip: true,
+          aspectRatio: [9, 16],
+          backgroundColor: Colors.black);
     }
 
     FlutterForegroundTask.startService(
@@ -1108,7 +1109,9 @@ class MeetingStore extends ChangeNotifier
               HMSIOSPIPController.destroy();
             } else {
               HMSIOSPIPController.setup(
-                  autoEnterPip: true, aspectRatio: [9, 16]);
+                  autoEnterPip: true,
+                  aspectRatio: [9, 16],
+                  backgroundColor: Colors.black);
             }
           }
         }
@@ -1469,7 +1472,7 @@ class MeetingStore extends ChangeNotifier
             aspectRatio: ratio,
             alternativeText: alternativeText,
             scaleType: ScaleType.SCALE_ASPECT_FILL,
-            backgroundColor: Color(0xFF6554C0));
+            backgroundColor: Colors.black);
         currentPIPtrack = track;
       }
     }
@@ -1481,9 +1484,7 @@ class MeetingStore extends ChangeNotifier
       isPipActive = await isPIPActive();
       if (isPipActive) {
         HMSIOSPIPController.changeText(
-            text: text,
-            aspectRatio: ratio,
-            backgroundColor: Color(0xFF6554C0));
+            text: text, aspectRatio: ratio, backgroundColor: Colors.black);
         currentPIPtrack = null;
       }
     }
@@ -1722,9 +1723,7 @@ class MeetingStore extends ChangeNotifier
       required HMSException hmsException}) {
     this.hmsException = hmsException;
     log("ActionResultListener onException-> method: ${methodType.toString()} , Error code : ${hmsException.code} , Description : ${hmsException.description} , Message : ${hmsException.message}");
-    if (Constant.appFlavor == AppFlavors.hmsInternal) {
-      FirebaseCrashlytics.instance.log(hmsException.toString());
-    }
+    FirebaseCrashlytics.instance.log(hmsException.toString());
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
         break;

@@ -28,7 +28,7 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
     fadeInFadeOut = Tween<double>(begin: 0.0, end: 1).animate(animation);
 
     context.read<MeetingStore>().setPIPVideoController(false,
-        aspectRatio: widget.ratio ?? (16 / 9), hlsStreamUrl: widget.streamUrl);
+        aspectRatio: widget.ratio ?? (9 / 16), hlsStreamUrl: widget.streamUrl);
     animation.forward();
   }
 

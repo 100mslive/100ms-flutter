@@ -140,8 +140,8 @@ class _AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
                 } else {
                   double ratio;
                   if (valueChoose!.contains("Default")) {
-                    ratio = MediaQuery.of(context).size.width /
-                        (MediaQuery.of(context).size.height - 100);
+                    ratio = Utilities.getHLSPlayerDefaultRatio(
+                        MediaQuery.of(context).size);
                   } else {
                     List number = valueChoose!.split(":");
                     ratio = double.parse(number[0]) / double.parse(number[1]);

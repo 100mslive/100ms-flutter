@@ -1,16 +1,19 @@
-1. Added support for Room Codes
+📝 Changelog with Tickets
 
-2. Updated Active Speaker Layout
+- Updated Active Speaker Layout
+  https://github.com/100mslive/100ms-flutter/issues/1188
 
-3. Updated Android URL Query Permissions in manifest files
+  
+- Updated Android URL Query Permissions in manifest files
+  https://github.com/100mslive/100ms-flutter/issues/1194
 
-📝 Tickets
 
-1. https://github.com/100mslive/100ms-flutter/issues/1088
+- Correct the default HLS Player Aspect Ratios
+  https://github.com/100mslive/100ms-flutter/issues/1191
 
-2. https://github.com/100mslive/100ms-flutter/issues/1188
 
-3. https://github.com/100mslive/100ms-flutter/issues/1194
+- Corrected default iOS PIP Window background colors
+  https://github.com/100mslive/100ms-flutter/issues/1203  
 
 
 Flutter SDK: 1.4.0

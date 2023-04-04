@@ -125,9 +125,9 @@ class PreviewStore extends ChangeNotifier
     dynamic _tokenData = await hmsSDKInteractor.getAuthTokenByRoomCode(
         Constant.meetingCode, user, _endPoint);
 
-    if (_tokenData is HMSTokenResult && _tokenData.authToken != null) {
+    if ((_tokenData is String?) && _tokenData != null) {
       roomConfig = HMSConfig(
-        authToken: _tokenData.authToken!,
+        authToken: _tokenData,
         userName: user,
         captureNetworkQualityInPreview: true,
         // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
@@ -141,9 +141,7 @@ class PreviewStore extends ChangeNotifier
       return null;
     }
 
-    if (Constant.appFlavor == AppFlavors.hmsInternal) {
-      FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
-    }
+    FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
     return _tokenData;
   }
 
@@ -231,9 +229,7 @@ class PreviewStore extends ChangeNotifier
 
   @override
   void onLogMessage({required hmsLogList}) {
-    if (Constant.appFlavor == AppFlavors.hmsInternal) {
-      FirebaseCrashlytics.instance.log(hmsLogList.toString());
-    }
+    FirebaseCrashlytics.instance.log(hmsLogList.toString());
   }
 
   void destroy() {

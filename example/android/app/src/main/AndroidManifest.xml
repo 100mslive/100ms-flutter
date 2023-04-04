@@ -1,5 +1,4 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="live.hms.flutter">
 
     <queries>
@@ -25,8 +24,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     
    <application
-        tools:replace="android:label"
-        android:label="@string/app_name"
+        android:label="100ms Video Calling Streaming"
         android:icon="@mipmap/ic_launcher"
         android:hardwareAccelerated="true"
         android:requestLegacyExternalStorage="true">
