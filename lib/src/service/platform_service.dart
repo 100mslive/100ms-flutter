@@ -407,8 +407,8 @@ class PlatformService {
 
       HMSLogsUpdateListenerMethod method =
           HMSLogsUpdateListenerMethodValues.getMethodFromName(
-              event[0]['event_name']);
-      data = event;
+              event['event_name']);
+      data = event["data"];
       return HMSLogsUpdateListenerMethodResponse(
           method: method, data: data, response: event);
     }).listen((event) {

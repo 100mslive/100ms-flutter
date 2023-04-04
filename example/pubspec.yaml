@@ -28,7 +28,6 @@ dependencies:
   firebase_dynamic_links:
   flutter_launcher_icons:
   package_info_plus:
-  logger:
   path_provider:
   dropdown_button2: 
   focus_detector:
