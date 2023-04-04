@@ -1,21 +1,21 @@
-📝 Changelog with Tickets
-
 - Updated Active Speaker Layout
-  https://github.com/100mslive/100ms-flutter/issues/1188
-
-  
+ https://github.com/100mslive/100ms-flutter/issues/1188
+ 
 - Updated Android URL Query Permissions in manifest files
-  https://github.com/100mslive/100ms-flutter/issues/1194
+ https://github.com/100mslive/100ms-flutter/issues/1194
 
+ - Correct the default HLS Player Aspect Ratios
+ https://github.com/100mslive/100ms-flutter/issues/1191
 
-- Correct the default HLS Player Aspect Ratios
-  https://github.com/100mslive/100ms-flutter/issues/1191
+ - Corrected default iOS PIP Window background colors
+ https://github.com/100mslive/100ms-flutter/issues/1203  
 
+ - Added support for joining a room using short codes
+ https://github.com/100mslive/100ms-flutter/issues/1088
 
-- Corrected default iOS PIP Window background colors
-  https://github.com/100mslive/100ms-flutter/issues/1203  
+ - Changed APIs to get all session logs from SDK
+ https://github.com/100mslive/100ms-flutter/pull/1205
 
-
-Flutter SDK: 1.4.0
-Android SDK: 2.5.9
-iOS SDK: 0.8.1
+ Flutter SDK: 1.4.0
+Android SDK: 2.6.0
+iOS SDK: 0.9.1
