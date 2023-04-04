@@ -351,6 +351,7 @@ class HMSSDKInteractor {
   Future<HMSLogList?> getAllogs() async {
     return await hmsSDK.getAllLogs();
   }
+
   Future<dynamic> getAuthTokenByRoomCode(
       String roomCode, String? userId, String? endPoint) async {
     return await hmsSDK.getAuthTokenByRoomCode(

@@ -150,7 +150,7 @@ class HmssdkFlutterPlugin :
             }
 
             // MARK: Logger
-            "start_hms_logger", "remove_hms_logger","get_all_logs" -> {
+            "start_hms_logger", "remove_hms_logger", "get_all_logs" -> {
                 loggerActions(call, result)
             }
 
@@ -974,7 +974,7 @@ class HmssdkFlutterPlugin :
         }
     }
 
-    private fun getAllLogs(result: Result){
+    private fun getAllLogs(result: Result) {
         result.success(logsDump)
     }
 
@@ -1302,7 +1302,7 @@ class HmssdkFlutterPlugin :
             if (p1 != null) {
                 val audioDevicesList = ArrayList<String>()
                 hmssdk?.getAudioDevicesList()?.let { audioDevices ->
-                    audioDevices.forEach{ device ->
+                    audioDevices.forEach { device ->
                         audioDevicesList.add(device.name)
                     }
                 }
@@ -1340,7 +1340,7 @@ class HmssdkFlutterPlugin :
             if (p1 != null) {
                 val audioDevicesList = ArrayList<String>()
                 hmssdk?.getAudioDevicesList()?.let { audioDevices ->
-                    audioDevices.forEach{ device ->
+                    audioDevices.forEach { device ->
                         audioDevicesList.add(device.name)
                     }
                 }

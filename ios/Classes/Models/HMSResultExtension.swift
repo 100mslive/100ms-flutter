@@ -7,14 +7,14 @@
 
 import Foundation
 
-class HMSResultExtension{
+class HMSResultExtension {
 
-    static func toDictionary(_ success:Bool,_ data: Any?) -> [String: Any?]{
+    static func toDictionary(_ success: Bool, _ data: Any?) -> [String: Any?] {
         let dict = [
-            "success":success,
+            "success": success,
             "data": data
         ]
         return dict
     }
-    
+
 }

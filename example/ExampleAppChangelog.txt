@@ -16,6 +16,6 @@
  - Changed APIs to get all session logs from SDK
  https://github.com/100mslive/100ms-flutter/pull/1205
 
- Flutter SDK: 1.4.0
+Flutter SDK: 1.4.0
 Android SDK: 2.6.0
 iOS SDK: 0.9.1

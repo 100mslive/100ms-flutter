@@ -7,7 +7,6 @@ import live.hms.video.error.HMSException
 import live.hms.video.sdk.*
 import live.hms.video.sdk.models.*
 import live.hms.video.signal.init.HMSTokenListener
-import live.hms.video.signal.init.TokenResult
 
 class HMSCommonAction {
     companion object {
@@ -45,7 +44,6 @@ class HMSCommonAction {
 
             override fun onTokenSuccess(string: String) {
                 result.success(HMSResultExtension.toDictionary(success = true, data = string))
-
             }
         }
     }

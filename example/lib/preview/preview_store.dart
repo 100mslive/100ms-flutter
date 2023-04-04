@@ -137,7 +137,7 @@ class PreviewStore extends ChangeNotifier
         endPoint: _roomData?[1] == "true" ? "" : '$qaInitEndPoint',
       );
       hmsSDKInteractor.startHMSLogger(
-        Constant.webRTCLogLevel, Constant.sdkLogLevel);
+          Constant.webRTCLogLevel, Constant.sdkLogLevel);
       hmsSDKInteractor.addPreviewListener(this);
       hmsSDKInteractor.preview(config: roomConfig!);
       meetingUrl = meetingLink;
