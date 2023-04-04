@@ -4,8 +4,10 @@ import 'dart:developer';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/app_secrets.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
+import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 
 class PreviewStore extends ChangeNotifier
@@ -53,6 +55,8 @@ class PreviewStore extends ChangeNotifier
 
   int peerCount = 0;
 
+  HMSConfig? roomConfig;
+
   @override
   void onHMSError({required HMSException error}) {
     this.error = error;
@@ -95,25 +99,52 @@ class PreviewStore extends ChangeNotifier
     notifyListeners();
   }
 
-  Future<String> startPreview(
+  Future<HMSException?> startPreview(
       {required String user, required String meetingLink}) async {
-    List<String?>? token =
-        await RoomService().getToken(user: user, room: meetingLink);
+    List<String?>? _roomData = RoomService().getCode(meetingLink);
 
-    if (token == null) return "Connection Error";
-    if (token[0] == null) return "Token Error";
-    FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
-    HMSConfig config = HMSConfig(
-      authToken: token[0]!,
-      userName: user,
-      captureNetworkQualityInPreview: true,
-      // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
-      endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
-    );
-    hmsSDKInteractor.addPreviewListener(this);
-    hmsSDKInteractor.preview(config: config);
-    meetingUrl = meetingLink;
-    return "";
+    //If the link is not valid then we might not get the code and whether the link is a
+    //PROD or QA so we return the error in this case
+    if (_roomData?.length == 0) {
+      return HMSException(
+          message: "Invalid meeting URL",
+          description: "Provided meeting URL is invalid",
+          action: "Please Check the meeting URL",
+          isTerminal: false);
+    }
+
+    //qaTokenEndPoint is only required for 100ms internal testing
+    //It can be removed and should not affect the join method call
+    //For _endPoint just pass it as null
+    //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
+    String? _endPoint = _roomData?[1] == "true" ? null : '$qaTokenEndPoint';
+
+    Constant.meetingCode = _roomData?[0] ?? '';
+
+    //We use this to get the auth token from room code
+    dynamic _tokenData = await hmsSDKInteractor.getAuthTokenByRoomCode(
+        Constant.meetingCode, user, _endPoint);
+
+    if (_tokenData is HMSTokenResult && _tokenData.authToken != null) {
+      roomConfig = HMSConfig(
+        authToken: _tokenData.authToken!,
+        userName: user,
+        captureNetworkQualityInPreview: true,
+        // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
+        //This is only for 100ms internal testing, endPoint can be safely removed from
+        //the HMSConfig for external usage
+        endPoint: _roomData?[1] == "true" ? "" : '$qaInitEndPoint',
+      );
+      hmsSDKInteractor.addPreviewListener(this);
+      hmsSDKInteractor.preview(config: roomConfig!);
+      meetingUrl = meetingLink;
+      return null;
+    }
+
+    if (Constant.appFlavor == AppFlavors.hmsInternal) {
+      FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
+    }
+    return _tokenData;
   }
 
   @override
@@ -200,7 +231,9 @@ class PreviewStore extends ChangeNotifier
 
   @override
   void onLogMessage({required hmsLogList}) {
-    FirebaseCrashlytics.instance.log(hmsLogList.toString());
+    if (Constant.appFlavor == AppFlavors.hmsInternal) {
+      FirebaseCrashlytics.instance.log(hmsLogList.toString());
+    }
   }
 
   void destroy() {

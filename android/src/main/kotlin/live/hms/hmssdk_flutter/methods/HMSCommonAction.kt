@@ -6,6 +6,8 @@ import live.hms.video.error.HMSException
 import live.hms.video.sdk.*
 import live.hms.video.sdk.models.*
 import io.flutter.plugin.common.MethodChannel.Result
+import live.hms.video.signal.init.HMSTokenListener
+import live.hms.video.signal.init.TokenResult
 
 
 class HMSCommonAction {
@@ -35,6 +37,17 @@ class HMSCommonAction {
                     result.success(null)
                 }
             }
+        }
+
+        fun getTokenListener(result: Result) = object : HMSTokenListener {
+            override fun onError(error: HMSException) {
+                result.success(HMSResultExtension.toDictionary(success = false, data = HMSExceptionExtension.toDictionary(error)))
+            }
+
+            override fun onTokenSuccess(tokenResult: TokenResult) {
+                result.success(HMSResultExtension.toDictionary(success = true, data = HMSTokenResultExtension.toDictionary(tokenResult)))
+            }
+
         }
     }
 }

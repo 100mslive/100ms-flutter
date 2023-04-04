@@ -7,6 +7,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:hmssdk_flutter_example/app_secrets.dart';
 import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -177,23 +178,59 @@ class MeetingStore extends ChangeNotifier
 
   HMSVideoTrack? currentPIPtrack;
 
-  Future<bool> join(String user, String roomUrl) async {
-    List<String?>? token =
-        await RoomService().getToken(user: user, room: roomUrl);
-    if (token == null) return false;
-    HMSConfig config = HMSConfig(
-      authToken: token[0]!,
-      userName: user,
-      captureNetworkQualityInPreview: true,
-      // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
-      endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
-    );
+  Future<HMSException?> join(String user, String roomUrl,
+      {HMSConfig? roomConfig}) async {
+    //If roomConfig is null then only we call the methods to get the authToken
+    //If we are joining the room from preview we already have authToken so we don't
+    //need to call the getAuthTokenByRoomCode method
+    if (roomConfig == null) {
+      List<String?>? _roomData = RoomService().getCode(roomUrl);
+
+      //If the link is not valid then we might not get the code and whether the link is a
+      //PROD or QA so we return the error in this case
+      if (_roomData?.length == 0) {
+        return HMSException(
+            message: "Invalid meeting URL",
+            description: "Provided meeting URL is invalid",
+            action: "Please Check the meeting URL",
+            isTerminal: false);
+      }
+
+      //qaTokenEndPoint is only required for 100ms internal testing
+      //It can be removed and should not affect the join method call
+      //For _endPoint just pass it as null
+      //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
+      String? _endPoint = _roomData?[1] == "true" ? null : '$qaTokenEndPoint';
+
+      Constant.meetingCode = _roomData?[0] ?? '';
+
+      //We use this to get the auth token from room code
+      dynamic _tokenData = await _hmsSDKInteractor.getAuthTokenByRoomCode(
+          Constant.meetingCode, user, _endPoint);
+
+      if (_tokenData is HMSTokenResult && _tokenData.authToken != null) {
+        roomConfig = HMSConfig(
+          authToken: _tokenData.authToken!,
+          userName: user,
+          captureNetworkQualityInPreview: true,
+          // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
+          //This is only for 100ms internal testing, endPoint can be safely removed from
+          //the HMSConfig for external usage
+          endPoint: _roomData?[1] == "true" ? "" : '$qaInitEndPoint',
+        );
+      } else {
+        if (Constant.appFlavor == AppFlavors.hmsInternal) {
+          FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
+        }
+        return _tokenData;
+      }
+    }
 
     _hmsSDKInteractor.addUpdateListener(this);
     WidgetsBinding.instance.addObserver(this);
-    _hmsSDKInteractor.join(config: config);
+    _hmsSDKInteractor.join(config: roomConfig);
     this.meetingUrl = roomUrl;
-    return true;
+    return null;
   }
 
   //HMSSDK Methods
@@ -1685,7 +1722,9 @@ class MeetingStore extends ChangeNotifier
       required HMSException hmsException}) {
     this.hmsException = hmsException;
     log("ActionResultListener onException-> method: ${methodType.toString()} , Error code : ${hmsException.code} , Description : ${hmsException.description} , Message : ${hmsException.message}");
-    FirebaseCrashlytics.instance.log(hmsException.toString());
+    if (Constant.appFlavor == AppFlavors.hmsInternal) {
+      FirebaseCrashlytics.instance.log(hmsException.toString());
+    }
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
         break;

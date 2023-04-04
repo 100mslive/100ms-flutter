@@ -138,7 +138,10 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                       showDialog(
                           context: context,
                           builder: (_) => AspectRatioOptionDialog(
+                                //Default mode takes the height and width of the device and
+                                //sets up the player according to device height and width
                                 availableAspectRatios: [
+                                  "Default",
                                   "16:9",
                                   "4:3",
                                   "1:1",
