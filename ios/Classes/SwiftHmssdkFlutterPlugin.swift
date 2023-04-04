@@ -126,7 +126,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: Room Actions
 
-        case "build", "preview", "join", "leave", "destroy":
+        case "build", "preview", "join", "leave", "destroy","get_auth_token_by_room_code":
             buildActions(call, result)
 
             // MARK: Room Actions
@@ -232,7 +232,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "destroy":
             destroy(result)
-
+        
+        case "get_auth_token_by_room_code":
+            getAuthTokenByRoomCode(call,result)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -564,6 +567,41 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         hmsSDK?.roles.forEach { roles.append(HMSRoleExtension.toDictionary($0)) }
 
         result(["roles": roles])
+    }
+    
+    private func getAuthTokenByRoomCode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+        
+        guard let arguments = call.arguments as? [AnyHashable: Any]
+        else{
+            result(HMSResultExtension.toDictionary(false,HMSErrorExtension.getError("Invalid parameters for getAuthToken in \(#function)")))
+            return
+        }
+        
+        guard let roomCode = arguments["room_code"] as? String
+        else{
+            result(HMSResultExtension.toDictionary(false,HMSErrorExtension.getError("Invalid parameters for getAuthToken in \(#function)")))
+            return
+        }
+        
+        let userId = arguments["user_id"] as? String? ?? nil
+        let endPoint = arguments["end_point"] as? String? ?? nil
+
+        
+        //This is to make the QA links work
+        if (endPoint != nil && endPoint!.contains("nonprod")){
+                UserDefaults.standard.set(endPoint, forKey: "HMSAuthTokenEndpointOverride")
+        }
+        else {
+            UserDefaults.standard.removeObject(forKey: "HMSAuthTokenEndpointOverride")
+        }
+        
+        hmsSDK?.getAuthTokenByRoomCode(roomCode,userID: userId,completion:{ authToken, error in
+            if let error = error {
+                result(HMSResultExtension.toDictionary(false,HMSErrorExtension.toDictionary(error)))
+            } else {
+                result(HMSResultExtension.toDictionary(true,authToken))
+            }
+        })
     }
 
     private func changeRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {

@@ -7,8 +7,6 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 
 class HMSSDKInteractor {
-  late HMSConfig config;
-  late List<HMSMessage> messages;
   late HMSSDK hmsSDK;
 
   /// [iOSScreenshareConfig] is optional values only required for implementing Screen Share on iOS. They are not required for Android.
@@ -43,8 +41,7 @@ class HMSSDKInteractor {
   }
 
   void join({required HMSConfig config}) {
-    this.config = config;
-    hmsSDK.join(config: this.config);
+    hmsSDK.join(config: config);
   }
 
   void leave({HMSActionResultListener? hmsActionResultListener}) {
@@ -99,7 +96,6 @@ class HMSSDKInteractor {
   }
 
   Future<void> preview({required HMSConfig config}) {
-    this.config = config;
     return hmsSDK.preview(config: config);
   }
 
@@ -354,5 +350,10 @@ class HMSSDKInteractor {
 
   Future<HMSLogList?> getAllogs() async {
     return await hmsSDK.getAllLogs();
+  }
+  Future<dynamic> getAuthTokenByRoomCode(
+      String roomCode, String? userId, String? endPoint) async {
+    return await hmsSDK.getAuthTokenByRoomCode(
+        roomCode: roomCode, userId: userId, endPoint: endPoint);
   }
 }

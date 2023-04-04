@@ -205,7 +205,8 @@ class _MeetingPageState extends State<MeetingPage> {
                 if (data.item2 != null) {
                   if (data.item2?.code?.errorCode == 1003 ||
                       data.item2?.code?.errorCode == 2000 ||
-                      data.item2?.code?.errorCode == 4005) {
+                      data.item2?.code?.errorCode == 4005 ||
+                      data.item2?.code?.errorCode == 424) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       UtilityComponents.showErrorDialog(
                           context: context,
@@ -277,7 +278,13 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                   .height *
                                                               0.735,
                                                           child: Center(
-                                                            child: HLSPlayer(),
+                                                            child: HLSPlayer(
+                                                              ratio: Utilities
+                                                                  .getHLSPlayerDefaultRatio(
+                                                                      MediaQuery.of(
+                                                                              context)
+                                                                          .size),
+                                                            ),
                                                           ),
                                                         )
                                                       : Container(

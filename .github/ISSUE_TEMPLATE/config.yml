@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+    - name: 💬 Join the 100ms Discord
+      url: https://100ms.live/discord
+      about: Ask questions and discuss with 100ms Team in Real Time.
+    - name: 📃 100ms Documentation
+      url: https://www.100ms.live/docs
+      about: Explore the 100ms capabilities with our Popular Guides, Demos & Blogs on 100ms Documentation page
+    - name: 💫 Register on 100ms Dashboard
+      url: https://dashboard.100ms.live/register
+      about: Try the gold-standard for adding live audio-video to your apps for free.
+    - name: 🗣️ Talk to us
+      url: https://www.100ms.live/contact
+      about: Get in touch with the 100ms team today! We are committed to helping our customers maximize the potential of our cutting-edge live video platform. Whether you need advice on how to leverage live streaming for your business, pricing information, or want to learn more about the 100ms platform, our team is here to answer all your questions and provide tailored solutions to meet your unique needs.

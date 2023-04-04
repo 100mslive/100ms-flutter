@@ -37,6 +37,8 @@ import live.hms.video.sdk.models.enums.HMSRoomUpdate
 import live.hms.video.sdk.models.enums.HMSTrackUpdate
 import live.hms.video.sdk.models.role.HMSRole
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
+import live.hms.video.signal.init.TokenRequest
+import live.hms.video.signal.init.TokenRequestOptions
 import live.hms.video.utils.HMSLogger
 import live.hms.video.utils.HmsUtilities
 
@@ -103,7 +105,7 @@ class HmssdkFlutterPlugin :
             }
 
             // MARK: Build Actions
-            "build", "preview", "join", "leave", "destroy" -> {
+            "build", "preview", "join", "leave", "destroy", "get_auth_token_by_room_code" -> {
                 buildActions(call, result)
             }
 
@@ -214,6 +216,9 @@ class HmssdkFlutterPlugin :
             }
             "destroy" -> {
                 destroy(result)
+            }
+            "get_auth_token_by_room_code" -> {
+                getAuthTokenByRoomCode(call, result)
             }
             else -> {
                 result.notImplemented()
@@ -491,10 +496,29 @@ class HmssdkFlutterPlugin :
 
     private fun preview(call: MethodCall, result: Result) {
         val config = getConfig(call)
-
         hmssdk!!.preview(config, this.hmsPreviewListener)
         hmssdk!!.setAudioDeviceChangeListener(audioPreviewDeviceChangeListener)
         result.success(null)
+    }
+
+    private fun getAuthTokenByRoomCode(call: MethodCall, result: Result) {
+        val roomCode = call.argument<String>("room_code")
+        val userId = call.argument<String?>("user_id")
+        val endPoint = call.argument<String?>("end_point")
+        if (roomCode != null) {
+            val tokenRequest = TokenRequest(roomCode, userId)
+            hmssdk?.getAuthTokenByRoomCode(tokenRequest, TokenRequestOptions(endPoint), HMSCommonAction.getTokenListener(result))
+        } else {
+            val hmsException = HMSException(
+                action = "Please send a non-null room-code",
+                code = 6004,
+                description = "Room code is null",
+                message = "Room code is null",
+                name = "Room code null error"
+            )
+            val args = HMSExceptionExtension.toDictionary(hmsException)
+            result.success(HMSResultExtension.toDictionary(false, args))
+        }
     }
 
     fun getLocalPeer(): HMSLocalPeer? {
