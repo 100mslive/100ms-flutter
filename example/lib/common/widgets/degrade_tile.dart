@@ -30,7 +30,7 @@ class _DegradeTileState extends State<DegradeTile> {
     return Selector<PeerTrackNode, bool>(
         builder: (_, data, __) {
           return Visibility(
-              visible: !data,
+              visible: data,
               child: Container(
                 height: widget.itemHeight + 110,
                 width: widget.itemWidth - 4,
