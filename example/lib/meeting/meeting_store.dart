@@ -1522,7 +1522,7 @@ class MeetingStore extends ChangeNotifier
               if (event.pipFlutterPlayerEventType ==
                       PipFlutterPlayerEventType.initialized &&
                   isPipActive) {
-                hlsVideoController!.enablePictureInPicture(pipFlutterPlayerKey);
+                hlsVideoController?.enablePictureInPicture(pipFlutterPlayerKey);
               }
             },
             controlsConfiguration: PipFlutterPlayerControlsConfiguration(
@@ -1823,32 +1823,36 @@ class MeetingStore extends ChangeNotifier
         toggleCameraMuteState();
         lastVideoStatus = true;
       }
-      if (screenShareCount == 0 || isScreenShareOn) {
-        int peerIndex = peerTracks.indexWhere((element) =>
-            (!(element.track?.isMute ?? true) && !element.peer.isLocal));
-        if (peerIndex != -1) {
-          changePIPWindowTrackOnIOS(
-              track: peerTracks[peerIndex].track,
-              alternativeText: peerTracks[peerIndex].peer.name,
-              ratio: [9, 16]);
+
+      if (Platform.isIOS) {
+        if (screenShareCount == 0 || isScreenShareOn) {
+          int peerIndex = peerTracks.indexWhere((element) =>
+              (!(element.track?.isMute ?? true) && !element.peer.isLocal));
+          if (peerIndex != -1) {
+            changePIPWindowTrackOnIOS(
+                track: peerTracks[peerIndex].track,
+                alternativeText: peerTracks[peerIndex].peer.name,
+                ratio: [9, 16]);
+          } else {
+            changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
+          }
         } else {
-          changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
+          int peerIndex = peerTracks.indexWhere((element) =>
+              element.uid ==
+              element.peer.peerId + (element.track?.trackId ?? ""));
+          if (peerIndex != -1)
+            changePIPWindowTrackOnIOS(
+                track: peerTracks[peerIndex].track,
+                alternativeText: peerTracks[peerIndex].peer.name,
+                ratio: [9, 16]);
         }
-      } else {
-        int peerIndex = peerTracks.indexWhere((element) =>
-            element.uid ==
-            element.peer.peerId + (element.track?.trackId ?? ""));
-        if (peerIndex != -1)
-          changePIPWindowTrackOnIOS(
-              track: peerTracks[peerIndex].track,
-              alternativeText: peerTracks[peerIndex].peer.name,
-              ratio: [9, 16]);
       }
     } else if (state == AppLifecycleState.inactive) {
-      if (Platform.isAndroid && isPipAutoEnabled && !isPipActive) {
+      if (Platform.isAndroid && !isPipActive && !isHLSLink) {
+        HMSAndroidPIPController.start(autoEnterPip: isPipAutoEnabled);
         isPipActive = true;
-        notifyListeners();
       }
+      notifyListeners();
     }
   }
 
