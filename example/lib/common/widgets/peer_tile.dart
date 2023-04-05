@@ -89,6 +89,7 @@ class _PeerTileState extends State<PeerTile> {
                         label:
                             "fl_${context.read<PeerTrackNode>().peer.name}_degraded_tile",
                         child: DegradeTile(
+                          isOneToOne: widget.isOneToOne,
                           itemHeight: widget.itemHeight,
                           itemWidth: widget.itemWidth,
                         ),

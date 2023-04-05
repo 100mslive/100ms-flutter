@@ -11,13 +11,14 @@ import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 
 class DegradeTile extends StatefulWidget {
   final double itemHeight;
-
   final double itemWidth;
-  DegradeTile({
-    Key? key,
-    this.itemHeight = 200,
-    this.itemWidth = 200,
-  }) : super(key: key);
+  final bool isOneToOne;
+  DegradeTile(
+      {Key? key,
+      this.itemHeight = 200,
+      this.itemWidth = 200,
+      this.isOneToOne = false})
+      : super(key: key);
 
   @override
   State<DegradeTile> createState() => _DegradeTileState();
@@ -29,7 +30,7 @@ class _DegradeTileState extends State<DegradeTile> {
     return Selector<PeerTrackNode, bool>(
         builder: (_, data, __) {
           return Visibility(
-              visible: data,
+              visible: !data,
               child: Container(
                 height: widget.itemHeight + 110,
                 width: widget.itemWidth - 4,
@@ -39,22 +40,25 @@ class _DegradeTileState extends State<DegradeTile> {
                 child: Stack(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 45.0),
+                      padding: EdgeInsets.only(
+                          bottom: widget.isOneToOne ? 18 : 45.0),
                       child: Align(
-                        child: SubtitleText(
-                            text: "DEGRADED", textColor: Colors.white),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (!widget.isOneToOne)
+                              Padding(
+                                padding: const EdgeInsets.only(right: 5),
+                                child: SvgPicture.asset(
+                                  'assets/icons/degrade.svg',
+                                ),
+                              ),
+                            SubtitleText(
+                                text: "DEGRADED", textColor: Colors.white),
+                          ],
+                        ),
                         alignment: Alignment.bottomCenter,
                       ),
-                    ),
-                    Positioned(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                        child: SvgPicture.asset(
-                          'assets/icons/degrade.svg',
-                        ),
-                      ),
-                      bottom: 5.0,
-                      right: 5.0,
                     ),
                     AudioLevelAvatar()
                   ],
