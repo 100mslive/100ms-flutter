@@ -1,3 +1,24 @@
+## 1.4.0 - 2023-04-06
+
+### Added
+
+- Join using Room Codes
+  - Room Codes is a streamlined and secure way to manage user authentication in Rooms.
+  - By generating short codes via `getAuthTokenByRoomCode` API, you can easily manage user access with one code per role for each room, without the need for server infrastructure
+  - This feature ensures a smoother login experience for users while enhancing security.
+  
+  You can read more about Room Codes [here](https://www.100ms.live/docs/concepts/v2/concepts/rooms/room-codes/room-codes).
+
+### Changed
+
+- Improved Logging capabilities to help you diagnose and debug performance and user-reported issues more effectively
+
+
+Updated to Android SDK 2.6.0 & iOS SDK 0.9.1
+
+Full Changelog: [1.3.3...1.4.0](https://github.com/100mslive/100ms-flutter/compare/1.3.3...1.4.0)
+
+
 ## 1.3.3 - 2023-03-22
 
 ### Fixed

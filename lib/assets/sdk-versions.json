@@ -1,6 +1,6 @@
 {
-  "flutter": "1.3.3",
-  "ios": "0.7.1",
+  "flutter": "1.4.0",
+  "ios": "0.9.1",
   "iOSBroadcastExtension": "0.0.8",
-  "android": "2.5.9"
+  "android": "2.6.0"
 }

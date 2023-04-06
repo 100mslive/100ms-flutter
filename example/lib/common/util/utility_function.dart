@@ -70,6 +70,14 @@ class Utilities {
     return (size.height - 1) / (size.width);
   }
 
+  static double getHLSPlayerDefaultRatio(Size size) {
+    if (Platform.isAndroid) {
+      return size.width / (size.height - 100);
+    } else {
+      return 9 / 16;
+    }
+  }
+
   static void setRTMPUrl(String roomUrl) {
     if (roomUrl.contains("flutterhms.page.link") &&
         roomUrl.contains("meetingUrl")) {

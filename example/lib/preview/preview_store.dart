@@ -1,11 +1,14 @@
 //Package imports
 import 'dart:developer';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/app_secrets.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
+import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
 
 class PreviewStore extends ChangeNotifier
@@ -53,6 +56,8 @@ class PreviewStore extends ChangeNotifier
 
   int peerCount = 0;
 
+  HMSConfig? roomConfig;
+
   @override
   void onHMSError({required HMSException error}) {
     this.error = error;
@@ -95,25 +100,52 @@ class PreviewStore extends ChangeNotifier
     notifyListeners();
   }
 
-  Future<String> startPreview(
-      {required String user, required String meetingLink}) async {
-    List<String?>? token =
-        await RoomService().getToken(user: user, room: meetingLink);
+  Future<HMSException?> startPreview(
+      {required String userName, required String meetingLink}) async {
+    List<String?>? _roomData = RoomService().getCode(meetingLink);
 
-    if (token == null) return "Connection Error";
-    if (token[0] == null) return "Token Error";
-    FirebaseCrashlytics.instance.setUserIdentifier(token[0]!);
-    HMSConfig config = HMSConfig(
-      authToken: token[0]!,
-      userName: user,
-      captureNetworkQualityInPreview: true,
-      // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
-      endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
-    );
-    hmsSDKInteractor.addPreviewListener(this);
-    hmsSDKInteractor.preview(config: config);
-    meetingUrl = meetingLink;
-    return "";
+    //If the link is not valid then we might not get the code and whether the link is a
+    //PROD or QA so we return the error in this case
+    if (_roomData?.length == 0) {
+      return HMSException(
+          message: "Invalid meeting URL",
+          description: "Provided meeting URL is invalid",
+          action: "Please Check the meeting URL",
+          isTerminal: false);
+    }
+
+    //qaTokenEndPoint is only required for 100ms internal testing
+    //It can be removed and should not affect the join method call
+    //For _endPoint just pass it as null
+    //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
+    String? _endPoint = _roomData?[1] == "true" ? null : '$qaTokenEndPoint';
+
+    Constant.meetingCode = _roomData?[0] ?? '';
+
+    //We use this to get the auth token from room code
+    dynamic _tokenData = await hmsSDKInteractor.getAuthTokenByRoomCode(
+        roomCode: Constant.meetingCode, endPoint: _endPoint);
+
+    if ((_tokenData is String?) && _tokenData != null) {
+      roomConfig = HMSConfig(
+        authToken: _tokenData,
+        userName: userName,
+        captureNetworkQualityInPreview: true,
+        // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
+        //This is only for 100ms internal testing, endPoint can be safely removed from
+        //the HMSConfig for external usage
+        endPoint: _roomData?[1] == "true" ? "" : '$qaInitEndPoint',
+      );
+      hmsSDKInteractor.startHMSLogger(
+          Constant.webRTCLogLevel, Constant.sdkLogLevel);
+      hmsSDKInteractor.addPreviewListener(this);
+      hmsSDKInteractor.preview(config: roomConfig!);
+      meetingUrl = meetingLink;
+      return null;
+    }
+
+    FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
+    return _tokenData;
   }
 
   @override
@@ -199,8 +231,10 @@ class PreviewStore extends ChangeNotifier
   }
 
   @override
-  void onLogMessage({required hmsLogList}) {
+  void onLogMessage({required HMSLogList hmsLogList}) {
     FirebaseCrashlytics.instance.log(hmsLogList.toString());
+    FirebaseAnalytics.instance.logEvent(
+        name: "SDK_Logs", parameters: {"data": hmsLogList.toString()});
   }
 
   void destroy() {

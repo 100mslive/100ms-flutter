@@ -47,29 +47,18 @@ class _PreviewPageState extends State<PreviewPage> {
   }
 
   void initPreview() async {
-    String ans = await context
+    HMSException? ans = await context
         .read<PreviewStore>()
-        .startPreview(user: widget.name, meetingLink: widget.meetingLink);
-    if (ans != "") {
-      if (ans.contains("Connection")) {
-        UtilityComponents.showErrorDialog(
-            context: context,
-            errorMessage: "Please Check the internet connection",
-            errorTitle: ans,
-            actionMessage: "OK",
-            action: () {
-              Navigator.of(context).popUntil((route) => route.isFirst);
-            });
-      } else {
-        UtilityComponents.showErrorDialog(
-            context: context,
-            errorMessage: "Please check the meeting URL",
-            errorTitle: ans,
-            actionMessage: "OK",
-            action: () {
-              Navigator.of(context).popUntil((route) => route.isFirst);
-            });
-      }
+        .startPreview(userName: widget.name, meetingLink: widget.meetingLink);
+    if (ans != null) {
+      UtilityComponents.showErrorDialog(
+          context: context,
+          errorMessage: "ACTION: ${ans.action} DESCRIPTION: ${ans.description}",
+          errorTitle: ans.message ?? "Join Error",
+          actionMessage: "OK",
+          action: () {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          });
     }
   }
 
@@ -468,6 +457,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         user: widget.name,
                                                         role: _previewStore
                                                             .peer?.role,
+                                                        config: _previewStore
+                                                            .roomConfig,
                                                       ),
                                                     )))
                                         // }

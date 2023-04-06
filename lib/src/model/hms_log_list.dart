@@ -1,23 +1,18 @@
-// Project imports:
-import 'package:hmssdk_flutter/src/model/hms_custom_log.dart';
-
 ///100ms HMSLogList
 ///
-///HMSLogList contains the list of [HMSCustomLog].
+///HMSLogList contains the list of [String].
 class HMSLogList {
-  late List<HMSCustomLog> hmsLog;
+  late List<String> hmsLog;
 
   HMSLogList({required this.hmsLog});
 
   factory HMSLogList.fromMap(List<dynamic> logs) {
-    List<HMSCustomLog> listHMSLog = [];
+    List<String> listHMSLog = [];
 
     logs.forEach((element) {
-      Map data = {};
-      (element['data'] as Map).forEach((key, value) {
-        data[key] = value;
-      });
-      listHMSLog.add(HMSCustomLog.fromMap(data));
+      if (element != null) {
+        listHMSLog.add(element);
+      }
     });
 
     return HMSLogList(hmsLog: listHMSLog);
@@ -27,7 +22,7 @@ class HMSLogList {
   String toString() {
     String result = "";
     hmsLog.forEach((element) {
-      result += element.toMap().toString() + "\n";
+      result += element + "\n";
     });
     return result;
   }

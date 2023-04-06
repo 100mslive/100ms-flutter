@@ -1,20 +1,24 @@
-1. Fixed an issue in Android PIP Mode wherein the PIP window showed black tile if the device is locked and then unlocked
+- Updated Active Speaker Layout
+ https://github.com/100mslive/100ms-flutter/issues/1188
+ 
+- Updated Android URL Query Permissions in manifest files
+ https://github.com/100mslive/100ms-flutter/issues/1194
 
-2. Replaced `flutterToast` package with `bot_toast`
+- Correct the default HLS Player Aspect Ratios
+ https://github.com/100mslive/100ms-flutter/issues/1191
 
-3. Updated Dropdown menu widget to the latest version
+- Corrected default iOS PIP Window background colors
+ https://github.com/100mslive/100ms-flutter/issues/1203  
 
-4. Updated Native Android & iOS SDKs to their latest versions
+- Added support for joining a room using short codes
+ https://github.com/100mslive/100ms-flutter/issues/1088
 
-📝 Tickets
+- Changed APIs to get all session logs from SDK
+ https://github.com/100mslive/100ms-flutter/pull/1205
 
-1. https://github.com/100mslive/100ms-flutter/issues/1177
+- Added auto enter pip for all android versions (#1213)
+ https://github.com/100mslive/100ms-flutter/issues/1209
 
-2. https://github.com/100mslive/100ms-flutter/issues/1178
-
-3. https://github.com/100mslive/100ms-flutter/issues/1175
-
-
-Flutter SDK: 1.3.3
-Android SDK: 2.5.9
-iOS SDK: 0.7.1
+Flutter SDK: 1.4.0
+Android SDK: 2.6.0
+iOS SDK: 0.9.1

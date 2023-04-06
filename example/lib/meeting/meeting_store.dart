@@ -1,11 +1,15 @@
 //Package imports
+
 import 'dart:developer';
 import 'dart:io';
-
+import 'dart:math' as Math;
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:hmssdk_flutter_example/common/util/log_writer.dart';
+import 'package:hmssdk_flutter_example/app_secrets.dart';
 import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -31,7 +35,11 @@ import 'package:pip_flutter/pipflutter_player_theme.dart';
 
 class MeetingStore extends ChangeNotifier
     with WidgetsBindingObserver
-    implements HMSUpdateListener, HMSActionResultListener, HMSStatsListener {
+    implements
+        HMSUpdateListener,
+        HMSActionResultListener,
+        HMSStatsListener,
+        HMSLogListener {
   late HMSSDKInteractor _hmsSDKInteractor;
 
   MeetingStore({required HMSSDKInteractor hmsSDKInteractor}) {
@@ -96,8 +104,6 @@ class MeetingStore extends ChangeNotifier
 
   HMSPeer? localPeer;
 
-  bool isActiveSpeakerMode = true;
-
   List<HMSTrack> audioTracks = [];
 
   List<HMSMessage> messages = [];
@@ -126,7 +132,7 @@ class MeetingStore extends ChangeNotifier
 
   ScrollController controller = ScrollController();
 
-  MeetingMode meetingMode = MeetingMode.Video;
+  MeetingMode meetingMode = MeetingMode.ActiveSpeaker;
 
   bool isLandscapeLocked = false;
 
@@ -172,29 +178,66 @@ class MeetingStore extends ChangeNotifier
 
   bool lastVideoStatus = false;
 
-  double hlsAspectRatio = 16 / 9;
+  double hlsAspectRatio = 9 / 16;
 
   bool showNotification = false;
 
   HMSVideoTrack? currentPIPtrack;
 
-  Future<bool> join(String user, String roomUrl) async {
-    List<String?>? token =
-        await RoomService().getToken(user: user, room: roomUrl);
-    if (token == null) return false;
-    HMSConfig config = HMSConfig(
-      authToken: token[0]!,
-      userName: user,
-      captureNetworkQualityInPreview: true,
-      // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
-      endPoint: token[1] == "true" ? "" : "https://qa-init.100ms.live/init",
-    );
+  HMSLogList? applicationLogs;
+
+  Future<HMSException?> join(String userName, String roomUrl,
+      {HMSConfig? roomConfig}) async {
+    //If roomConfig is null then only we call the methods to get the authToken
+    //If we are joining the room from preview we already have authToken so we don't
+    //need to call the getAuthTokenByRoomCode method
+    if (roomConfig == null) {
+      List<String?>? _roomData = RoomService().getCode(roomUrl);
+
+      //If the link is not valid then we might not get the code and whether the link is a
+      //PROD or QA so we return the error in this case
+      if (_roomData?.length == 0) {
+        return HMSException(
+            message: "Invalid meeting URL",
+            description: "Provided meeting URL is invalid",
+            action: "Please Check the meeting URL",
+            isTerminal: false);
+      }
+
+      //qaTokenEndPoint is only required for 100ms internal testing
+      //It can be removed and should not affect the join method call
+      //For _endPoint just pass it as null
+      //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
+      String? _endPoint = _roomData?[1] == "true" ? null : '$qaTokenEndPoint';
+
+      Constant.meetingCode = _roomData?[0] ?? '';
+
+      //We use this to get the auth token from room code
+      dynamic _tokenData = await _hmsSDKInteractor.getAuthTokenByRoomCode(
+          roomCode: Constant.meetingCode, endPoint: _endPoint);
+
+      if ((_tokenData is String?) && _tokenData != null) {
+        roomConfig = HMSConfig(
+          authToken: _tokenData,
+          userName: userName,
+          captureNetworkQualityInPreview: true,
+          // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
+          //This is only for 100ms internal testing, endPoint can be safely removed from
+          //the HMSConfig for external usage
+          endPoint: _roomData?[1] == "true" ? "" : '$qaInitEndPoint',
+        );
+      } else {
+        FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
+        return _tokenData;
+      }
+    }
 
     _hmsSDKInteractor.addUpdateListener(this);
+    _hmsSDKInteractor.addLogsListener(this);
     WidgetsBinding.instance.addObserver(this);
-    _hmsSDKInteractor.join(config: config);
+    _hmsSDKInteractor.join(config: roomConfig);
     this.meetingUrl = roomUrl;
-    return true;
+    return null;
   }
 
   //HMSSDK Methods
@@ -518,7 +561,10 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
 
     if (Platform.isIOS && !(isHLSLink)) {
-      HMSIOSPIPController.setup(autoEnterPip: true, aspectRatio: [9, 16]);
+      HMSIOSPIPController.setup(
+          autoEnterPip: true,
+          aspectRatio: [9, 16],
+          backgroundColor: Colors.black);
     }
 
     FlutterForegroundTask.startService(
@@ -678,6 +724,39 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
+    //To handle the active speaker mode scenario
+    if (meetingMode == MeetingMode.ActiveSpeaker) {
+      //Picking up the first four peers from the peerTracks list
+      List<PeerTrackNode> activeSpeakerList =
+          peerTracks.sublist(screenShareCount, Math.min(peerTracks.length, 4));
+
+      /* Here we iterate through the updateSpeakers list
+       * and do the following:
+       *  - Whether the peer is already present on screen
+       *  - if not we find the peer's index from peerTracks list
+       *  - if peer is present in the peerTracks list(this is done just to make sure that peer is still in the room)
+       *  - Insert the peer after screenShare tracks and remove the peer from it's previous position
+      */
+      updateSpeakers.forEach((speaker) {
+        int index = activeSpeakerList.indexWhere((previousSpeaker) =>
+            previousSpeaker.uid == speaker.peer.peerId + "mainVideo");
+        if (index == -1) {
+          int peerIndex = peerTracks.indexWhere(
+              (node) => node.uid == speaker.peer.peerId + "mainVideo");
+          if (peerIndex != -1) {
+            PeerTrackNode activeSpeaker = peerTracks[peerIndex];
+            peerTracks.removeAt(peerIndex);
+            peerTracks.insert(screenShareCount, activeSpeaker);
+            peerTracks[screenShareCount].setOffScreenStatus(false);
+          }
+        }
+      });
+      activeSpeakerList.clear();
+      notifyListeners();
+    }
+
+    //This is to handle the borders around the tiles of peers who are currently speaking
+    //Reseting the borders of the tile everytime the update is received
     if (activeSpeakerIds.isNotEmpty) {
       activeSpeakerIds.forEach((key) {
         int index = peerTracks.indexWhere((element) => element.uid == key);
@@ -685,8 +764,10 @@ class MeetingStore extends ChangeNotifier
           peerTracks[index].setAudioLevel(-1);
         }
       });
+      activeSpeakerIds.clear();
     }
 
+    //Setting the border for peers who are speaking
     updateSpeakers.forEach((element) {
       activeSpeakerIds.add(element.peer.peerId + "mainVideo");
       int index = peerTracks
@@ -901,15 +982,21 @@ class MeetingStore extends ChangeNotifier
 
 // Helper Methods
 
-  void clearRoomState() {
+  void clearRoomState() async {
+    HMSLogList? _logsDump = await _hmsSDKInteractor.getAllogs();
+    await deleteFile();
+    writeLogs(_logsDump);
+    applicationLogs = null;
+    _hmsSDKInteractor.removeHMSLogger();
     _hmsSDKInteractor.destroy();
     peerTracks.clear();
     isRoomEnded = true;
     screenShareCount = 0;
-    this.meetingMode = MeetingMode.Video;
+    this.meetingMode = MeetingMode.ActiveSpeaker;
     isScreenShareOn = false;
     isAudioShareStarted = false;
     _hmsSDKInteractor.removeUpdateListener(this);
+    _hmsSDKInteractor.removeLogsListener(this);
     setLandscapeLock(false);
     notifyListeners();
     FlutterForegroundTask.stopService();
@@ -1037,7 +1124,9 @@ class MeetingStore extends ChangeNotifier
               HMSIOSPIPController.destroy();
             } else {
               HMSIOSPIPController.setup(
-                  autoEnterPip: true, aspectRatio: [9, 16]);
+                  autoEnterPip: true,
+                  aspectRatio: [9, 16],
+                  backgroundColor: Colors.black);
             }
           }
         }
@@ -1193,49 +1282,21 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  // Logs are currently turned Off
-  // @override
-  // void onLogMessage({required dynamic HMSLogList}) async {
-  // StaticLogger.logger?.v(HMSLogList.toString());
-  //   FirebaseCrashlytics.instance.log(HMSLogList.toString());
-  // }
-
-  // void startHMSLogger(HMSLogLevel webRtclogLevel, HMSLogLevel logLevel) {
-  //   HmsSdkManager.hmsSdkInteractor?.startHMSLogger(webRtclogLevel, logLevel);
-  // }
-  //
-  // void addLogsListener() {
-  //   HmsSdkManager.hmsSdkInteractor?.addLogsListener(this);
-  // }
-  //
-  // void removeLogsListener() {
-  //   HmsSdkManager.hmsSdkInteractor?.removeLogsListener(this);
-  // }
-  //
-  // void removeHMSLogger() {
-  //   HmsSdkManager.hmsSdkInteractor?.removeHMSLogger();
-  // }
-
   void setMode(MeetingMode meetingMode) {
-    if (isActiveSpeakerMode) {
-      isActiveSpeakerMode = false;
+    //Turning the videos on if the previously mode was audio
+    if (this.meetingMode == MeetingMode.Audio &&
+        meetingMode != MeetingMode.Audio) {
+      unMuteRoomVideoLocally();
     }
+
     switch (meetingMode) {
-      case MeetingMode.Video:
-        break;
       case MeetingMode.Audio:
-        isActiveSpeakerMode = false;
+        //Muting the videos of peers in room locally
         muteRoomVideoLocally();
         break;
-      case MeetingMode.Hero:
-        if (this.meetingMode == MeetingMode.Audio) {
-          unMuteRoomVideoLocally();
-        }
-        break;
       case MeetingMode.Single:
-        if (this.meetingMode == MeetingMode.Audio) {
-          unMuteRoomVideoLocally();
-        }
+        //This is to place the peers with there videos ON
+        //in the beginning
         int type0 = 0;
         int type1 = peerTracks.length - 1;
         while (type0 < type1) {
@@ -1250,17 +1311,13 @@ class MeetingStore extends ChangeNotifier
           } else
             type0++;
         }
-        this.isActiveSpeakerMode = false;
         break;
       default:
+        //In Hero,Active Speaker and Grid mode there is nothing needs to be done
+        //Just setting the mode below
+        break;
     }
     this.meetingMode = meetingMode;
-    notifyListeners();
-  }
-
-  void setActiveSpeakerMode() {
-    this.isActiveSpeakerMode = !this.isActiveSpeakerMode;
-    this.meetingMode = MeetingMode.Video;
     notifyListeners();
   }
 
@@ -1407,7 +1464,7 @@ class MeetingStore extends ChangeNotifier
             aspectRatio: ratio,
             alternativeText: alternativeText,
             scaleType: ScaleType.SCALE_ASPECT_FILL,
-            backgroundColor: Utilities.getBackgroundColour(alternativeText));
+            backgroundColor: Colors.black);
         currentPIPtrack = track;
       }
     }
@@ -1419,9 +1476,7 @@ class MeetingStore extends ChangeNotifier
       isPipActive = await isPIPActive();
       if (isPipActive) {
         HMSIOSPIPController.changeText(
-            text: text,
-            aspectRatio: ratio,
-            backgroundColor: Utilities.getBackgroundColour(text));
+            text: text, aspectRatio: ratio, backgroundColor: Colors.black);
         currentPIPtrack = null;
       }
     }
@@ -1467,7 +1522,7 @@ class MeetingStore extends ChangeNotifier
               if (event.pipFlutterPlayerEventType ==
                       PipFlutterPlayerEventType.initialized &&
                   isPipActive) {
-                hlsVideoController!.enablePictureInPicture(pipFlutterPlayerKey);
+                hlsVideoController?.enablePictureInPicture(pipFlutterPlayerKey);
               }
             },
             controlsConfiguration: PipFlutterPlayerControlsConfiguration(
@@ -1768,32 +1823,45 @@ class MeetingStore extends ChangeNotifier
         toggleCameraMuteState();
         lastVideoStatus = true;
       }
-      if (screenShareCount == 0 || isScreenShareOn) {
-        int peerIndex = peerTracks.indexWhere((element) =>
-            (!(element.track?.isMute ?? true) && !element.peer.isLocal));
-        if (peerIndex != -1) {
-          changePIPWindowTrackOnIOS(
-              track: peerTracks[peerIndex].track,
-              alternativeText: peerTracks[peerIndex].peer.name,
-              ratio: [9, 16]);
+
+      if (Platform.isIOS) {
+        if (screenShareCount == 0 || isScreenShareOn) {
+          int peerIndex = peerTracks.indexWhere((element) =>
+              (!(element.track?.isMute ?? true) && !element.peer.isLocal));
+          if (peerIndex != -1) {
+            changePIPWindowTrackOnIOS(
+                track: peerTracks[peerIndex].track,
+                alternativeText: peerTracks[peerIndex].peer.name,
+                ratio: [9, 16]);
+          } else {
+            changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
+          }
         } else {
-          changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
+          int peerIndex = peerTracks.indexWhere((element) =>
+              element.uid ==
+              element.peer.peerId + (element.track?.trackId ?? ""));
+          if (peerIndex != -1)
+            changePIPWindowTrackOnIOS(
+                track: peerTracks[peerIndex].track,
+                alternativeText: peerTracks[peerIndex].peer.name,
+                ratio: [9, 16]);
         }
-      } else {
-        int peerIndex = peerTracks.indexWhere((element) =>
-            element.uid ==
-            element.peer.peerId + (element.track?.trackId ?? ""));
-        if (peerIndex != -1)
-          changePIPWindowTrackOnIOS(
-              track: peerTracks[peerIndex].track,
-              alternativeText: peerTracks[peerIndex].peer.name,
-              ratio: [9, 16]);
       }
     } else if (state == AppLifecycleState.inactive) {
-      if (Platform.isAndroid && isPipAutoEnabled && !isPipActive) {
+      if (Platform.isAndroid && !isPipActive && !isHLSLink) {
+        HMSAndroidPIPController.start(autoEnterPip: isPipAutoEnabled);
         isPipActive = true;
-        notifyListeners();
       }
+      notifyListeners();
     }
+  }
+
+  @override
+  void onLogMessage({required HMSLogList hmsLogList}) {
+    FirebaseCrashlytics.instance.log(hmsLogList.toString());
+    FirebaseAnalytics.instance.logEvent(
+        name: "SDK_Logs", parameters: {"data": hmsLogList.toString()});
+    applicationLogs = hmsLogList;
+    notifyListeners();
   }
 }
