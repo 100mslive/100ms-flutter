@@ -86,6 +86,7 @@ class HMSSDK {
   ///This returns an object of Future<dynamic> which can be either
   ///of HMSException type or String type based on whether
   ///method execution is completed successfully or not
+  ///To know more about the implementation checkout [getAuthTokenByRoomCode](https://www.100ms.live/docs/flutter/v2/get-started/quickstart#fetch-token-using-room-code-methodrecommended)
   Future<dynamic> getAuthTokenByRoomCode(
       {required String roomCode, String? userId, String? endPoint}) async {
     var arguments = {
