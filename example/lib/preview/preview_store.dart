@@ -123,7 +123,8 @@ class PreviewStore extends ChangeNotifier
     Constant.meetingCode = _roomData?[0] ?? '';
 
     //We use this to get the auth token from room code
-    dynamic _tokenData = await hmsSDKInteractor.getAuthTokenByRoomCode(roomCode: Constant.meetingCode, endPoint: _endPoint);
+    dynamic _tokenData = await hmsSDKInteractor.getAuthTokenByRoomCode(
+        roomCode: Constant.meetingCode, endPoint: _endPoint);
 
     if ((_tokenData is String?) && _tokenData != null) {
       roomConfig = HMSConfig(
