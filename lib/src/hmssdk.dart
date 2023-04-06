@@ -84,7 +84,7 @@ class HMSSDK {
   ///using room codes.
   ///
   ///This returns an object of Future<dynamic> which can be either
-  ///of HMSException type or HMSTokenResult type based on whether
+  ///of HMSException type or String type based on whether
   ///method execution is completed successfully or not
   Future<dynamic> getAuthTokenByRoomCode(
       {required String roomCode, String? userId, String? endPoint}) async {
@@ -98,7 +98,7 @@ class HMSSDK {
         arguments: arguments);
 
     //If the method is executed successfully we get the "success":"true"
-    //Hence we parse the map with HMSTokenResult
+    //Hence we pass the String directly
     //Else we parse it with HMSException
     if (result["success"]) {
       return result["data"];
