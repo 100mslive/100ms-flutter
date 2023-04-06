@@ -352,9 +352,8 @@ class HMSSDKInteractor {
     return await hmsSDK.getAllLogs();
   }
 
-  Future<dynamic> getAuthTokenByRoomCode(
-      String roomCode, String? endPoint) async {
+  Future<dynamic> getAuthTokenByRoomCode({required String roomCode, String? userId, String? endPoint}) async {
     return await hmsSDK.getAuthTokenByRoomCode(
-        roomCode: roomCode, endPoint: endPoint);
+        roomCode: roomCode, userId: userId, endPoint: endPoint);
   }
 }
