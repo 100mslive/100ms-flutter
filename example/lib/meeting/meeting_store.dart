@@ -186,7 +186,7 @@ class MeetingStore extends ChangeNotifier
 
   HMSLogList? applicationLogs;
 
-  Future<HMSException?> join(String user, String roomUrl,
+  Future<HMSException?> join(String userName, String roomUrl,
       {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
     //If we are joining the room from preview we already have authToken so we don't
@@ -213,13 +213,12 @@ class MeetingStore extends ChangeNotifier
       Constant.meetingCode = _roomData?[0] ?? '';
 
       //We use this to get the auth token from room code
-      dynamic _tokenData = await _hmsSDKInteractor.getAuthTokenByRoomCode(
-          Constant.meetingCode, user, _endPoint);
+      dynamic _tokenData = await _hmsSDKInteractor.getAuthTokenByRoomCode(roomCode: Constant.meetingCode, endPoint: _endPoint);
 
       if ((_tokenData is String?) && _tokenData != null) {
         roomConfig = HMSConfig(
           authToken: _tokenData,
-          userName: user,
+          userName: userName,
           captureNetworkQualityInPreview: true,
           // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
           //This is only for 100ms internal testing, endPoint can be safely removed from
