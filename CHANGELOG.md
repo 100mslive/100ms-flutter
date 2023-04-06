@@ -3,12 +3,12 @@
 ### Added
 
 - Join using Room Codes
-  - Room Codes is a streamlined and secure way to manage user authentication in Rooms. 
+  - Room Codes is a streamlined and secure way to manage user authentication in Rooms.
   - By generating short codes via `getAuthTokenByRoomCode` API, you can easily manage user access with one code per role for each room, without the need for server infrastructure
   - This feature ensures a smoother login experience for users while enhancing security.
   
   You can read more about Room Codes [here](https://www.100ms.live/docs/concepts/v2/concepts/rooms/room-codes/room-codes).
-  
+
 ### Changed
 
 - Improved Logging capabilities to help you diagnose and debug performance and user-reported issues more effectively
