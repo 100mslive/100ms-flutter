@@ -49,7 +49,7 @@ class _PreviewPageState extends State<PreviewPage> {
   void initPreview() async {
     HMSException? ans = await context
         .read<PreviewStore>()
-        .startPreview(user: widget.name, meetingLink: widget.meetingLink);
+        .startPreview(userName: widget.name, meetingLink: widget.meetingLink);
     if (ans != null) {
       UtilityComponents.showErrorDialog(
           context: context,
