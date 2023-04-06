@@ -728,7 +728,7 @@ class MeetingStore extends ChangeNotifier
     if (meetingMode == MeetingMode.ActiveSpeaker) {
       //Picking up the first four peers from the peerTracks list
       List<PeerTrackNode> activeSpeakerList =
-          peerTracks.sublist(0, Math.min(peerTracks.length, 4));
+          peerTracks.sublist(screenShareCount, Math.min(peerTracks.length, 4));
 
       /* Here we iterate through the updateSpeakers list
        * and do the following:
