@@ -11,6 +11,10 @@
 
 # 100ms Flutter SDK 🎉
 
+Integrate Real Time Audio and Video conferencing, Interactive Live Streaming, and Chat in your apps with 100ms Flutter SDK.
+
+With support for HLS and RTMP Live Streaming and Recording, Picture-in-Picture (PiP), CallKit, VoIP, one-to-one Video Call Modes, Audio Rooms, Video Player and much more, add immersive real-time communications to your apps.
+
 📖 Read the Complete Documentation here: https://www.100ms.live/docs/flutter/v2/guides/quickstart
 
 📲 Download the Sample iOS app here: <https://testflight.apple.com/join/Uhzebmut>
