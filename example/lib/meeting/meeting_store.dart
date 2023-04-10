@@ -46,8 +46,6 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor = hmsSDKInteractor;
   }
 
-  // HMSLogListener
-
   bool isSpeakerOn = true;
 
   int screenShareCount = 0;
