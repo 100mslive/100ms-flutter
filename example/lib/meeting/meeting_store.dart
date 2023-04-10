@@ -174,7 +174,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isPipActive = false;
 
-  bool isPipAutoEnabled = false;
+  bool isPipAutoEnabled = true;
 
   bool lastVideoStatus = false;
 
@@ -560,11 +560,15 @@ class MeetingStore extends ChangeNotifier
     getAudioDevicesList();
     notifyListeners();
 
-    if (Platform.isIOS && !(isHLSLink)) {
-      HMSIOSPIPController.setup(
-          autoEnterPip: true,
-          aspectRatio: [9, 16],
-          backgroundColor: Colors.black);
+    if (!(isHLSLink)) {
+      if (Platform.isIOS) {
+        HMSIOSPIPController.setup(
+            autoEnterPip: true,
+            aspectRatio: [9, 16],
+            backgroundColor: Colors.black);
+      } else if (Platform.isAndroid) {
+        HMSAndroidPIPController.setup();
+      }
     }
 
     FlutterForegroundTask.startService(
@@ -1425,8 +1429,7 @@ class MeetingStore extends ChangeNotifier
       bool _isPipAvailable = await HMSAndroidPIPController.isAvailable();
       if (_isPipAvailable) {
         //[isPipActive] method can also be used to check whether application is in pip Mode or not
-        isPipActive =
-            await HMSAndroidPIPController.start(autoEnterPip: isPipAutoEnabled);
+        isPipActive = await HMSAndroidPIPController.start();
         notifyListeners();
       }
     }
@@ -1848,9 +1851,8 @@ class MeetingStore extends ChangeNotifier
         }
       }
     } else if (state == AppLifecycleState.inactive) {
-      if (Platform.isAndroid && !isPipActive && !isHLSLink) {
-        HMSAndroidPIPController.start(autoEnterPip: isPipAutoEnabled);
-        isPipActive = true;
+      if (Platform.isAndroid && !isPipActive) {
+        isPipActive = await HMSAndroidPIPController.isActive();
       }
       notifyListeners();
     }
