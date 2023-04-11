@@ -193,6 +193,9 @@ class HmssdkFlutterPlugin :
             "capture_snapshot" -> {
                 captureSnapshot(call, result)
             }
+            "is_tap_to_focus_supported" -> {
+
+            }
             else -> {
                 result.notImplemented()
             }
