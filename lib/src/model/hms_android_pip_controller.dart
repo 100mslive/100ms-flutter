@@ -21,7 +21,7 @@ class HMSAndroidPIPController {
       final bool? result = await PlatformService.invokeMethod(
           PlatformMethod.enterPipMode,
           arguments: {
-            "aspect_ratio": aspectRatio ?? null,
+            "aspect_ratio": aspectRatio ?? [16,9],
             "auto_enter_pip": autoEnterPip ?? true
           });
       return result ?? false;
