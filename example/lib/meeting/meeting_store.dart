@@ -182,7 +182,7 @@ class MeetingStore extends ChangeNotifier
 
   HMSVideoTrack? currentPIPtrack;
 
-  HMSLogList? applicationLogs;
+  HMSLogList applicationLogs = HMSLogList(hmsLog: []);
 
   Future<HMSException?> join(String userName, String roomUrl,
       {HMSConfig? roomConfig}) async {
@@ -988,7 +988,6 @@ class MeetingStore extends ChangeNotifier
     HMSLogList? _logsDump = await _hmsSDKInteractor.getAllogs();
     await deleteFile();
     writeLogs(_logsDump);
-    applicationLogs = null;
     _hmsSDKInteractor.removeHMSLogger();
     _hmsSDKInteractor.destroy();
     peerTracks.clear();
@@ -1861,7 +1860,7 @@ class MeetingStore extends ChangeNotifier
     FirebaseCrashlytics.instance.log(hmsLogList.toString());
     FirebaseAnalytics.instance.logEvent(
         name: "SDK_Logs", parameters: {"data": hmsLogList.toString()});
-    applicationLogs = hmsLogList;
+    applicationLogs.hmsLog.addAll(hmsLogList.hmsLog);
     notifyListeners();
   }
 }
