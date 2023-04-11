@@ -300,7 +300,7 @@ To join a Room, your app should have -
 
 To join a room we need an authentication token as mentioned above. There are two methods to get the token:
 
-#### Fetch token using room-code method(Recommended) 
+#### Fetch token using room-code method (Recommended) 
 
 We can get the authentication token using room-code from meeting URL.
 
