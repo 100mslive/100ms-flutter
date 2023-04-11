@@ -184,7 +184,7 @@ class HmssdkFlutterPlugin :
             "set_playback_allowed_for_track" -> {
                 setPlaybackAllowedForTrack(call, result)
             }
-            "enter_pip_mode", "is_pip_active", "is_pip_available" -> {
+            "enter_pip_mode", "is_pip_active", "is_pip_available","setup_pip" -> {
                 HMSPipAction.pipActions(call, result, this.activity)
             }
             "set_simulcast_layer", "get_layer", "get_layer_definition" -> {

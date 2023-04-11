@@ -176,6 +176,65 @@ Let's dive deeper into each feature and its implementation.
 ### 1. Join a room
 
 `HMSSDK` provides a join room method to join the room.` join` method requires `HMSConfig` as a parameter used while joining the room.
+
+`HMSConfig` requires `authToken` which is an authentication token required to join the room. We can get auth token as below:
+
+#### 🔑 [Get Authentication token](https://www.100ms.live/docs/flutter/v2/get-started/quickstart#fetch-token-to-join-the-room)
+
+To join a room we need an authentication token as mentioned above. There are two methods to get the token:
+
+#### Fetch token using room-code method(Recommended) 
+
+We can get the authentication token using room-code from meeting URL.
+
+Let's understand the subdomain and code from the sample URL
+In this URL: `http://100ms-rocks.app.100ms.live/meeting/abc-defg-hij`
+ -  Subdomain is `100ms-rocks`
+ -  Room code is `abc-defg-ghi`
+
+Now to get the room-code from meeting URL we can write our own logic or use the `getCode` method from [here](https://github.com/100mslive/100ms-flutter/blob/main/example/lib/service/room_service.dart)
+
+To generate token we will be using `getAuthTokenByRoomCode` method of `HMSSDK`. This method has `roomCode` as a required
+parameter, `userId` & `endPoint` as optional parameter.
+
+> This method should be called after calling the `build` method.
+
+Let's checkout the implementation:
+
+```dart
+  //This returns an object of Future<dynamic> which can be either
+  //of HMSException type or String? type based on whether
+  //method execution is completed successfully or not
+
+  dynamic authToken = await hmsSDK.getAuthTokenByRoomCode(roomCode: 'YOUR_ROOM_CODE');
+
+  if(authToken is String){
+    HMSConfig roomConfig = HMSConfig(
+        authToken: authToken,
+        userName: userName,
+      );
+
+    hmsSDK.join(config: roomConfig);
+  }
+  else if(authToken is HMSException){
+    // Handle the error
+  }
+```
+
+#### Get temporary token from dashboard
+
+To test audio/video functionality, you need to connect to a 100ms room; please check the following steps for the same:
+
+1. Navigate to your [100ms dashboard](https://dashboard.100ms.live/dashboard) or [create an account](https://dashboard.100ms.live/register) if you don't have one.
+2. Use the `Video Conferencing Starter Kit` to create a room with a default template assigned to it to test this app quickly.
+3. Go to the [Rooms page](https://dashboard.100ms.live/rooms) in your dashboard, click on the `Room Id` of the room you created above, and click on the `Join Room` button on the top right.
+4. In the Join with SDK section you can find the `Auth Token for role` ; you can click on the 'copy' icon to copy the authentication token.  
+
+> Token from 100ms dashboard is for testing purposes only, For production applications you must generate tokens on your own server.
+> Refer to the [Management Token section](/flutter/v2/foundation/security-and-tokens#management-token) in Authentication and Tokens guide for more information.
+
+Now we have the authentication token ready.
+
 Before calling the join method it's recommended to attach the `HMSUpdateListener` So that once the join is successful we can get the callbacks.`HMSUpdateListener` can be attached as follows:
 
 Methods that need to be overridden while implementing `HMSUpdateListener` can be found [here](https://www.100ms.live/docs/flutter/v2/features/update-listeners)
