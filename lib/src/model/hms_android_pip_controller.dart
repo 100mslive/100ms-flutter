@@ -1,5 +1,5 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
+import 'package:hmssdk_flutter/src/common/hms_logger.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 /// [HMSAndroidPIPController] is used to setup and start the PIP in android. To know more visit [here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode).
@@ -21,15 +21,12 @@ class HMSAndroidPIPController {
       final bool? result = await PlatformService.invokeMethod(
           PlatformMethod.enterPipMode,
           arguments: {
-            "aspect_ratio": aspectRatio ?? [16, 9],
+            "aspect_ratio": aspectRatio ?? null,
             "auto_enter_pip": autoEnterPip ?? true
           });
       return result ?? false;
-    } catch (e) {
-      PlatformService.notifyLogsUpdateListeners(
-          HMSLogsUpdateListenerMethod.onLogsUpdate, [
-        "HMSException occured in HMSAndroidPIPController start exception: $e"
-      ]);
+    } catch (exception) {
+      logException(PlatformMethod.enterPipMode, exception);
       return false;
     }
   }
@@ -42,11 +39,8 @@ class HMSAndroidPIPController {
       final bool? result =
           await PlatformService.invokeMethod(PlatformMethod.isPipActive);
       return result ?? false;
-    } catch (e) {
-      PlatformService.notifyLogsUpdateListeners(
-          HMSLogsUpdateListenerMethod.onLogsUpdate, [
-        "HMSException occured in HMSAndroidPIPController isActive exception: $e"
-      ]);
+    } catch (exception) {
+      logException(PlatformMethod.isPipActive, exception);
       return false;
     }
   }
@@ -59,11 +53,8 @@ class HMSAndroidPIPController {
       final bool? result =
           await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);
       return result ?? false;
-    } catch (e) {
-      PlatformService.notifyLogsUpdateListeners(
-          HMSLogsUpdateListenerMethod.onLogsUpdate, [
-        "HMSException occured in HMSAndroidPIPController isAvailable exception: $e"
-      ]);
+    } catch (exception) {
+      logException(PlatformMethod.isPipAvailable, exception);
       return false;
     }
   }

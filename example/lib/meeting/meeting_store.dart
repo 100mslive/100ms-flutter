@@ -1859,6 +1859,9 @@ class MeetingStore extends ChangeNotifier
     FirebaseCrashlytics.instance.log(hmsLogList.toString());
     FirebaseAnalytics.instance.logEvent(
         name: "SDK_Logs", parameters: {"data": hmsLogList.toString()});
+    if (applicationLogs == null) {
+      applicationLogs = HMSLogList(hmsLog: []);
+    }
     applicationLogs?.hmsLog.addAll(hmsLogList.hmsLog);
     notifyListeners();
   }
