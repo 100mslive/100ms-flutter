@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/common/hms_logger.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 /// [HMSIOSPIPController] is used to setup and start the PIP in iOS. To know more visit [here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode).
@@ -27,24 +28,29 @@ class HMSIOSPIPController {
       List<int>? aspectRatio,
       ScaleType scaleType = ScaleType.SCALE_ASPECT_FILL,
       Color backgroundColor = Colors.black}) async {
-    var result =
-        await PlatformService.invokeMethod(PlatformMethod.setupPIP, arguments: {
-      "auto_enter_pip": autoEnterPip ?? true,
-      "ratio": (aspectRatio != null && aspectRatio.length == 2)
-          ? aspectRatio
-          : [16, 9],
-      "scale_type": scaleType.value,
-      "color": [
-        backgroundColor.red,
-        backgroundColor.green,
-        backgroundColor.blue
-      ]
-    });
-    if (result != null) {
-      return HMSException.fromMap(result["error"]);
+    try {
+      var result = await PlatformService.invokeMethod(PlatformMethod.setupPIP,
+          arguments: {
+            "auto_enter_pip": autoEnterPip ?? true,
+            "ratio": (aspectRatio != null && aspectRatio.length == 2)
+                ? aspectRatio
+                : [16, 9],
+            "scale_type": scaleType.value,
+            "color": [
+              backgroundColor.red,
+              backgroundColor.green,
+              backgroundColor.blue
+            ]
+          });
+      if (result != null) {
+        return HMSException.fromMap(result["error"]);
+      }
+      _isPIPSetupDone = true;
+      return null;
+    } catch (exception) {
+      logException(PlatformMethod.setupPIP, exception);
+      return null;
     }
-    _isPIPSetupDone = true;
-    return null;
   }
 
   /// [start] is used to start PIP manually.
@@ -53,8 +59,12 @@ class HMSIOSPIPController {
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   static void start() {
-    if (_isPIPSetupDone) {
-      PlatformService.invokeMethod(PlatformMethod.startPIP);
+    try {
+      if (_isPIPSetupDone) {
+        PlatformService.invokeMethod(PlatformMethod.startPIP);
+      }
+    } catch (exception) {
+      logException(PlatformMethod.startPIP, exception);
     }
   }
 
@@ -64,8 +74,12 @@ class HMSIOSPIPController {
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   static void stop() {
-    if (_isPIPSetupDone) {
-      PlatformService.invokeMethod(PlatformMethod.stopPIP);
+    try {
+      if (_isPIPSetupDone) {
+        PlatformService.invokeMethod(PlatformMethod.stopPIP);
+      }
+    } catch (exception) {
+      logException(PlatformMethod.stopPIP, exception);
     }
   }
 
@@ -92,35 +106,40 @@ class HMSIOSPIPController {
       required String alternativeText,
       ScaleType scaleType = ScaleType.SCALE_ASPECT_FILL,
       Color backgroundColor = Colors.black}) async {
-    if (_isPIPSetupDone) {
-      var result = await PlatformService.invokeMethod(
-          PlatformMethod.changeTrackPIP,
-          arguments: {
-            "track_id": track.trackId,
-            "ratio": (aspectRatio != null && aspectRatio.length == 2)
-                ? aspectRatio
-                : [16, 9],
-            "alternative_text": alternativeText,
-            "scale_type": scaleType.value,
-            "color": [
-              backgroundColor.red,
-              backgroundColor.green,
-              backgroundColor.blue
-            ]
-          });
-      if (result != null) {
-        return HMSException.fromMap(result["error"]);
+    try {
+      if (_isPIPSetupDone) {
+        var result = await PlatformService.invokeMethod(
+            PlatformMethod.changeTrackPIP,
+            arguments: {
+              "track_id": track.trackId,
+              "ratio": (aspectRatio != null && aspectRatio.length == 2)
+                  ? aspectRatio
+                  : [16, 9],
+              "alternative_text": alternativeText,
+              "scale_type": scaleType.value,
+              "color": [
+                backgroundColor.red,
+                backgroundColor.green,
+                backgroundColor.blue
+              ]
+            });
+        if (result != null) {
+          return HMSException.fromMap(result["error"]);
+        }
+      } else if (!_isPIPSetupDone) {
+        return HMSException(
+            message:
+                "[setupPIP] is required to call before calling [changeTrackPIP]",
+            description:
+                "[setupPIP] is required to call before calling [changeTrackPIP]",
+            action: "",
+            isTerminal: false);
       }
-    } else if (!_isPIPSetupDone) {
-      return HMSException(
-          message:
-              "[setupPIP] is required to call before calling [changeTrackPIP]",
-          description:
-              "[setupPIP] is required to call before calling [changeTrackPIP]",
-          action: "",
-          isTerminal: false);
+      return null;
+    } catch (exception) {
+      logException(PlatformMethod.changeTrackPIP, exception);
+      return null;
     }
-    return null;
   }
 
   ///[changeText] is used to change the Text of PIP window.
@@ -144,54 +163,69 @@ class HMSIOSPIPController {
       {required String text,
       List<int>? aspectRatio,
       Color backgroundColor = Colors.black}) async {
-    if (_isPIPSetupDone) {
-      var result = await PlatformService.invokeMethod(
-          PlatformMethod.changeTextPIP,
-          arguments: {
-            "text": text,
-            "ratio": (aspectRatio != null && aspectRatio.length == 2)
-                ? aspectRatio
-                : [16, 9],
-            "color": [
-              backgroundColor.red,
-              backgroundColor.green,
-              backgroundColor.blue
-            ]
-          });
-      if (result != null) {
-        return HMSException.fromMap(result["error"]);
+    try {
+      if (_isPIPSetupDone) {
+        var result = await PlatformService.invokeMethod(
+            PlatformMethod.changeTextPIP,
+            arguments: {
+              "text": text,
+              "ratio": (aspectRatio != null && aspectRatio.length == 2)
+                  ? aspectRatio
+                  : [16, 9],
+              "color": [
+                backgroundColor.red,
+                backgroundColor.green,
+                backgroundColor.blue
+              ]
+            });
+        if (result != null) {
+          return HMSException.fromMap(result["error"]);
+        }
+      } else if (!_isPIPSetupDone) {
+        return HMSException(
+            message:
+                "[setupPIP] is required to call before calling [changeTrackPIP]",
+            description:
+                "[setupPIP] is required to call before calling [changeTrackPIP]",
+            action: "",
+            isTerminal: false);
       }
-    } else if (!_isPIPSetupDone) {
-      return HMSException(
-          message:
-              "[setupPIP] is required to call before calling [changeTrackPIP]",
-          description:
-              "[setupPIP] is required to call before calling [changeTrackPIP]",
-          action: "",
-          isTerminal: false);
+      return null;
+    } catch (exception) {
+      logException(PlatformMethod.changeTextPIP, exception);
+      return null;
     }
-    return null;
   }
 
   ///Method to check whether pip mode is active currently
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   static Future<bool> isActive() async {
-    if (_isPIPSetupDone) {
-      final bool? result =
-          await PlatformService.invokeMethod(PlatformMethod.isPipActive);
-      return result ?? false;
+    try {
+      if (_isPIPSetupDone) {
+        final bool? result =
+            await PlatformService.invokeMethod(PlatformMethod.isPipActive);
+        return result ?? false;
+      }
+      return false;
+    } catch (exception) {
+      logException(PlatformMethod.isPipActive, exception);
+      return false;
     }
-    return false;
   }
 
   ///Method to check whether pip mode is available for the current device
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   static Future<bool> isAvailable() async {
-    final bool? result =
-        await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);
-    return result ?? false;
+    try {
+      final bool? result =
+          await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);
+      return result ?? false;
+    } catch (exception) {
+      logException(PlatformMethod.isPipAvailable, exception);
+      return false;
+    }
   }
 
   ///Method to destroy PIP View.
@@ -200,14 +234,19 @@ class HMSIOSPIPController {
   ///
   ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
   static Future<bool> destroy() async {
-    if (_isPIPSetupDone) {
-      final bool? result =
-          await PlatformService.invokeMethod(PlatformMethod.destroyPIP);
-      if (result ?? false) {
-        _isPIPSetupDone = false;
+    try {
+      if (_isPIPSetupDone) {
+        final bool? result =
+            await PlatformService.invokeMethod(PlatformMethod.destroyPIP);
+        if (result ?? false) {
+          _isPIPSetupDone = false;
+        }
+        return result ?? false;
       }
-      return result ?? false;
+      return true;
+    } catch (exception) {
+      logException(PlatformMethod.destroyPIP, exception);
+      return false;
     }
-    return true;
   }
 }
