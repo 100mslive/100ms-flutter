@@ -73,8 +73,5 @@ P3=$!
 wait $P2 $P3
 
 perform_git_actions
-P4=$!
-
-wait $P4
 
 say done
