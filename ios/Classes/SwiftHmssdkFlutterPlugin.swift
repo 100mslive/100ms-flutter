@@ -826,12 +826,25 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
 
+    /**
+     * This is used to get the logs from the Native SDK
+     * Here to avoid choking of the platform channel we batch the logs in group of 1000
+     * and then send the update to the application.
+     * If a user requires all the logs at any moment then [getAllLogs] method can be used.
+     * Here [logsBuffer] is used to maintain the 1000 logs list
+     * while [logsDump] contains all the logs of the session if a user calls [getAllLogs] we
+     * send the [logsDump] through the platform channel
+     **/
     var logsBuffer = [Any]()
     var logsDump = [Any?]()
     public func log(_ message: String, _ level: HMSLogLevel) {
+        /**
+        * Here we filter the logs based on the level we have set
+        * while calling [startHMSLogger]
+        **/
         guard level.rawValue <= logLevel.rawValue else { return }
 
-        if logsBuffer.count<10 {
+        if logsBuffer.count<1000 {
             logsBuffer.append(message)
             logsDump.append(message)
         } else {
@@ -846,6 +859,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     private func getAllLogs(_ result: @escaping FlutterResult) {
         result(logsDump)
+        logsBuffer = []
     }
 
     private func removeHMSLogger() {
