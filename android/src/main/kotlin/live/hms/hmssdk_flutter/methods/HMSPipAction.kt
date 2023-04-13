@@ -13,6 +13,8 @@ class HMSPipAction {
 
     companion object {
         var pipResult: Result? = null
+        private var pipAutoEnterEnabled = false
+        private var pipAspectRatio = mutableListOf(16, 9)
         fun pipActions(call: MethodCall, result: Result, activity: Activity) {
             when (call.method) {
                 "enter_pip_mode" -> {
@@ -30,10 +32,35 @@ class HMSPipAction {
                         activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
                     )
                 }
+                "setup_pip" -> {
+                    setupPIP(call,result)
+                }
+                "destroy_pip" -> {
+                    destroyPIP(call,result,activity)
+                }
                 else -> {
                     result.notImplemented()
                 }
             }
+        }
+
+        private fun setupPIP(call: MethodCall,result: Result){
+            call.argument<List<Int>?>("ratio")?.let {
+                pipAspectRatio = it.toMutableList()
+            }
+            call.argument<Boolean?>("auto_enter_pip")?.let {
+                pipAutoEnterEnabled = it
+            }
+            result.success(null)
+        }
+
+        private fun destroyPIP(call: MethodCall,result: Result,activity: Activity){
+            pipAspectRatio = mutableListOf(16, 9)
+            pipAutoEnterEnabled = false
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && activity.isInPictureInPictureMode){
+                activity.moveTaskToBack(false)
+            }
+            result.success(true)
         }
 
         fun isPIPActive(activity: Activity): Boolean {
@@ -45,16 +72,32 @@ class HMSPipAction {
 
         @RequiresApi(Build.VERSION_CODES.O)
         private fun enterPipMode(call: MethodCall, result: Result, activity: Activity) {
-            val aspectRatio = call.argument<List<Int>>("aspect_ratio")
-            val autoEnterEnabled = call.argument<Boolean>("auto_enter_pip")
+            call.argument<List<Int>>("aspect_ratio")?.let {
+                pipAspectRatio = it.toMutableList()
+            }
+            call.argument<Boolean>("auto_enter_pip")?.let {
+                pipAutoEnterEnabled = it
+            }
 
-            var params = PictureInPictureParams.Builder().setAspectRatio(Rational(aspectRatio!![0], aspectRatio[1]))
+            var params = PictureInPictureParams.Builder().setAspectRatio(Rational(pipAspectRatio[0], pipAspectRatio[1]))
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                params = params.setAutoEnterEnabled(autoEnterEnabled!!)
+                params = params.setAutoEnterEnabled(pipAutoEnterEnabled)
             }
             pipResult = result
             activity.enterPictureInPictureMode(params.build())
+        }
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun autoEnterPipMode(activity: Activity){
+            if(pipAutoEnterEnabled){
+                var params = PictureInPictureParams.Builder().setAspectRatio(Rational(pipAspectRatio[0], pipAspectRatio[1]))
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    params = params.setAutoEnterEnabled(pipAutoEnterEnabled)
+                }
+                activity.enterPictureInPictureMode(params.build())
+            }
         }
     }
 }
