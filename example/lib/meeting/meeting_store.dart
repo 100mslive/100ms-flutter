@@ -992,6 +992,11 @@ class MeetingStore extends ChangeNotifier
     writeLogs(_logsDump);
     hlsVideoController?.dispose(forceDispose: true);
     hlsVideoController = null;
+    if (Platform.isAndroid) {
+      HMSAndroidPIPController.destroy();
+    } else if (Platform.isIOS) {
+      HMSIOSPIPController.destroy();
+    }
     _hmsSDKInteractor.removeHMSLogger();
     _hmsSDKInteractor.destroy();
     peerTracks.clear();
@@ -1492,12 +1497,6 @@ class MeetingStore extends ChangeNotifier
             text: text, aspectRatio: ratio, backgroundColor: Colors.black);
         currentPIPtrack = null;
       }
-    }
-  }
-
-  void destroyPIPSetupOnIOS() {
-    if (Platform.isIOS) {
-      HMSIOSPIPController.destroy();
     }
   }
 
