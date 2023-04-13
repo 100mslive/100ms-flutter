@@ -945,6 +945,15 @@ class HmssdkFlutterPlugin :
         }
     }
 
+    /***
+     *This is used to get the logs from the Native SDK
+     * Here to avoid choking of the platform channel we batch the logs in group of 1000
+     * and then send the update to the application.
+     * If a user requires all the logs at any moment then [getAllLogs] method can be used.
+     * Here [logsBuffer] is used to maintain the 512 logs list
+     * while [logsDump] contains all the logs of the session if a user calls [getAllLogs] we
+     * send the [logsDump] through the platform channel
+     * ***/
     var logsBuffer = mutableListOf<Any?>()
     var logsDump = mutableListOf<Any?>()
     private val hmsLoggerListener = object : HMSLogger.Loggable {
@@ -954,13 +963,16 @@ class HmssdkFlutterPlugin :
             message: String,
             isWebRtCLog: Boolean
         ) {
+            /***
+            * Here we filter the logs based on the level we have set
+            * while calling [startHMSLogger]
+            ***/
             if (isWebRtCLog && level != HMSLogger.webRtcLogLevel) return
             if (level != HMSLogger.level) return
 
-            if (logsBuffer.size < 1000) {
-                logsBuffer.add(message)
-                logsDump.add(message)
-            } else {
+            logsBuffer.add(message)
+            logsDump.add(message)
+            if (logsBuffer.size >= 512) {
                 val copyLogBuffer = mutableListOf<Any?>()
                 val args = HashMap<String, Any?>()
                 args["event_name"] = "on_logs_update"
@@ -970,12 +982,14 @@ class HmssdkFlutterPlugin :
                     logsSink?.success(args)
                 }
                 logsBuffer.clear()
+                copyLogBuffer.clear()
             }
         }
     }
 
     private fun getAllLogs(result: Result) {
         result.success(logsDump)
+        logsBuffer.clear()
     }
 
     private fun changeName(call: MethodCall, result: Result) {
