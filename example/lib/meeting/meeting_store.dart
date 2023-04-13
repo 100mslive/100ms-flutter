@@ -1132,7 +1132,7 @@ class MeetingStore extends ChangeNotifier
             } else {
               HMSIOSPIPController.setup(
                   autoEnterPip: true,
-                  aspectRatio: [16, 9],
+                  aspectRatio: [9, 16],
                   backgroundColor: Colors.black);
             }
           } else {
@@ -1140,7 +1140,7 @@ class MeetingStore extends ChangeNotifier
               HMSAndroidPIPController.destroy();
             } else {
               HMSAndroidPIPController.setup(
-                  autoEnterPip: true, aspectRatio: [16, 9]);
+                  autoEnterPip: true, aspectRatio: [9, 16]);
             }
           }
         }
