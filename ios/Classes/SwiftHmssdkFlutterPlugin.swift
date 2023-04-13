@@ -126,7 +126,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: Room Actions
 
-        case "build", "preview", "join", "leave", "destroy":
+        case "build", "preview", "join", "leave", "destroy", "get_auth_token_by_room_code":
             buildActions(call, result)
 
             // MARK: Room Actions
@@ -170,7 +170,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - Logging
 
-        case "start_hms_logger", "remove_hms_logger":
+        case "start_hms_logger", "remove_hms_logger", "get_all_logs":
             loggingActions(call, result)
 
             // MARK: - Stats Listener
@@ -232,6 +232,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "destroy":
             destroy(result)
+
+        case "get_auth_token_by_room_code":
+            getAuthTokenByRoomCode(call, result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -295,6 +298,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "remove_hms_logger":
             removeHMSLogger()
+
+        case "get_all_logs":
+            getAllLogs(result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -563,6 +569,39 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result(["roles": roles])
     }
 
+    private func getAuthTokenByRoomCode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+
+        guard let arguments = call.arguments as? [AnyHashable: Any]
+        else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("Invalid parameters for getAuthToken in \(#function)")))
+            return
+        }
+
+        guard let roomCode = arguments["room_code"] as? String
+        else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("Invalid parameters for getAuthToken in \(#function)")))
+            return
+        }
+
+        let userId = arguments["user_id"] as? String? ?? nil
+        let endPoint = arguments["end_point"] as? String? ?? nil
+
+        // This is to make the QA links work
+        if endPoint != nil && endPoint!.contains("nonprod") {
+                UserDefaults.standard.set(endPoint, forKey: "HMSAuthTokenEndpointOverride")
+        } else {
+            UserDefaults.standard.removeObject(forKey: "HMSAuthTokenEndpointOverride")
+        }
+
+        hmsSDK?.getAuthTokenByRoomCode(roomCode, userID: userId, completion: { authToken, error in
+            if let error = error {
+                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.toDictionary(error)))
+            } else {
+                result(HMSResultExtension.toDictionary(true, authToken))
+            }
+        })
+    }
+
     private func changeRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
         let arguments = call.arguments as! [AnyHashable: Any]
@@ -787,28 +826,32 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
 
-    var finalargs = [Any]()
+    var logsBuffer = [Any]()
+    var logsDump = [Any?]()
     public func log(_ message: String, _ level: HMSLogLevel) {
         guard level.rawValue <= logLevel.rawValue else { return }
 
-        var args = [String: Any]()
-        args["event_name"] = "on_logs_update"
-
-        var logArgs = [String: Any]()
-        logArgs["log"] = ["message": message, "level": level.rawValue]
-        args["data"] = logArgs
-
-        if finalargs.count<1000 {
-            finalargs.append(args)
+        if logsBuffer.count<10 {
+            logsBuffer.append(message)
+            logsDump.append(message)
         } else {
-            logsSink?(finalargs)
-            finalargs = []
+            var args = [String: Any]()
+            args["event_name"] = "on_logs_update"
+            args["data"] = logsBuffer
+            logsSink?(args)
+            logsBuffer = []
         }
 
     }
 
+    private func getAllLogs(_ result: @escaping FlutterResult) {
+        result(logsDump)
+    }
+
     private func removeHMSLogger() {
         logLevel = .off
+        logsDump.removeAll()
+        logsBuffer.removeAll()
         hmsSDK?.logger = nil
     }
 

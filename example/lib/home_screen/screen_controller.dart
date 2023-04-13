@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
@@ -16,6 +16,7 @@ class ScreenController extends StatefulWidget {
   final bool mirrorCamera;
   final String? streamUrl;
   final HMSRole? role;
+  final HMSConfig? config;
   const ScreenController(
       {Key? key,
       required this.meetingLink,
@@ -26,7 +27,8 @@ class ScreenController extends StatefulWidget {
       this.showStats = false,
       this.mirrorCamera = true,
       this.streamUrl,
-      this.role})
+      this.role,
+      this.config})
       : super(key: key);
 
   @override
@@ -42,12 +44,18 @@ class _ScreenControllerState extends State<ScreenController> {
   }
 
   void initMeeting() async {
-    bool ans = await context
+    HMSException? ans = await context
         .read<MeetingStore>()
-        .join(widget.user, widget.meetingLink);
-    if (!ans) {
-      Utilities.showToast("Unable to Join");
-      Navigator.of(context).pop();
+        .join(widget.user, widget.meetingLink, roomConfig: widget.config);
+    if (ans != null) {
+      UtilityComponents.showErrorDialog(
+          context: context,
+          errorMessage: "ACTION: ${ans.action} DESCRIPTION: ${ans.description}",
+          errorTitle: ans.message ?? "Join Error",
+          actionMessage: "OK",
+          action: () {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          });
     }
   }
 

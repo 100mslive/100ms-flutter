@@ -11,7 +11,7 @@ class NetworkIconWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Selector<PeerTrackNode, int?>(
         builder: (_, networkQuality, __) {
-          return networkQuality != -1
+          return (networkQuality != null && networkQuality != -1)
               ? Row(
                   children: [
                     SvgPicture.asset(

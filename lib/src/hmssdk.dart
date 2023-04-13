@@ -80,6 +80,34 @@ class HMSSDK {
         appGroup, preferredExtension, hmsLogSettings);
   }
 
+  ///[getAuthTokenByRoomCode] is used to get the authentication token to join the room
+  ///using room codes.
+  ///
+  ///This returns an object of Future<dynamic> which can be either
+  ///of HMSException type or String type based on whether
+  ///method execution is completed successfully or not
+  ///To know more about the implementation checkout [getAuthTokenByRoomCode](https://www.100ms.live/docs/flutter/v2/get-started/quickstart#fetch-token-using-room-code-methodrecommended)
+  Future<dynamic> getAuthTokenByRoomCode(
+      {required String roomCode, String? userId, String? endPoint}) async {
+    var arguments = {
+      "room_code": roomCode,
+      "user_id": userId,
+      "end_point": endPoint
+    };
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.getAuthTokenByRoomCode,
+        arguments: arguments);
+
+    //If the method is executed successfully we get the "success":"true"
+    //Hence we pass the String directly
+    //Else we parse it with HMSException
+    if (result["success"]) {
+      return result["data"];
+    } else {
+      return HMSException.fromMap(result["data"]["error"]);
+    }
+  }
+
   ///add UpdateListener it will add all the listeners.
   ///
   ///HMSSDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing HMSUpdateListener.
@@ -1073,6 +1101,15 @@ class HMSSDK {
   ///Method to remove Log Listener
   void removeLogListener({required HMSLogListener hmsLogListener}) {
     PlatformService.removeLogsListener(hmsLogListener);
+  }
+
+  ///Method to get all the logs from the SDK
+  Future<HMSLogList?> getAllLogs() async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.getAllLogs);
+    if (result != null) {
+      return HMSLogList.fromMap(result);
+    }
+    return null;
   }
 
   ///Method to get available audio devices

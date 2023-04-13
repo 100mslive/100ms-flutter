@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/app_dialogs/stats_for_nerds.dart';
+import 'package:hmssdk_flutter_example/common/bottom_sheets/logger_view_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/notification_settings_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/participants_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/service/constant.dart';
@@ -692,6 +693,36 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       title: Text(
                         "Modify Notifications",
                         semanticsLabel: "fl_notification_setting",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      )),
+                  ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        Navigator.pop(context);
+                        showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: themeBottomSheetColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            context: context,
+                            builder: (ctx) => ChangeNotifierProvider.value(
+                                value: _meetingStore,
+                                child: HMSLoggerViewBottomSheet()));
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "assets/icons/stats.svg",
+                        fit: BoxFit.scaleDown,
+                        color: themeDefaultColor,
+                      ),
+                      title: Text(
+                        "Live logs view",
+                        semanticsLabel: "fl_live_logs",
                         style: GoogleFonts.inter(
                             fontSize: 14,
                             color: themeDefaultColor,

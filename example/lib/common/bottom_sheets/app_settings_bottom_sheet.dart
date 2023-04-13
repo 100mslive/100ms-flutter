@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/notification_settings_bottom_sheet.dart';
+import 'package:hmssdk_flutter_example/common/util/log_writer.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -433,6 +435,28 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                           fontWeight: FontWeight.w600),
                     ),
                   ),
+                  ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        File logFile = await getLogFile;
+                        Share.shareXFiles([XFile(logFile.path)],
+                            text: "HMS Log file");
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "assets/icons/share.svg",
+                        fit: BoxFit.scaleDown,
+                        color: themeDefaultColor,
+                      ),
+                      title: Text(
+                        "Share logs",
+                        semanticsLabel: "fl_share_logs",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      )),
                   SizedBox(
                     height: 30,
                     child: ListTile(
