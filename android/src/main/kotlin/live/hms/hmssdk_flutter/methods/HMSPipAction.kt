@@ -35,6 +35,9 @@ class HMSPipAction {
                 "setup_pip" -> {
                     setupPIP(call,result)
                 }
+                "destroy_pip" -> {
+                    destroyPIP(call,result,activity)
+                }
                 else -> {
                     result.notImplemented()
                 }
@@ -49,6 +52,15 @@ class HMSPipAction {
                 pipAutoEnterEnabled = it
             }
             result.success(null)
+        }
+
+        private fun destroyPIP(call: MethodCall,result: Result,activity: Activity){
+            pipAspectRatio = mutableListOf(16, 9)
+            pipAutoEnterEnabled = false
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && activity.isInPictureInPictureMode){
+                activity.moveTaskToBack(false)
+            }
+            result.success(true)
         }
 
         fun isPIPActive(activity: Activity): Boolean {

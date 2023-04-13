@@ -1,10 +1,11 @@
 package live.hms.hmssdk_flutter
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.PictureInPictureParams
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.util.Log
@@ -43,7 +44,6 @@ import live.hms.video.utils.HMSLogger
 import live.hms.video.utils.HmsUtilities
 
 /** HmssdkFlutterPlugin */
-@SuppressLint("StaticFieldLeak")
 class HmssdkFlutterPlugin :
     FlutterPlugin,
     MethodCallHandler,
@@ -63,9 +63,7 @@ class HmssdkFlutterPlugin :
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
-    companion object {
-        var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
-    }
+    var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         if (hmssdkFlutterPlugin == null) {
@@ -184,7 +182,7 @@ class HmssdkFlutterPlugin :
             "set_playback_allowed_for_track" -> {
                 setPlaybackAllowedForTrack(call, result)
             }
-            "enter_pip_mode", "is_pip_active", "is_pip_available","setup_pip" -> {
+            "enter_pip_mode", "is_pip_active", "is_pip_available","setup_pip", "destroy_pip" -> {
                 HMSPipAction.pipActions(call, result, this.activity)
             }
             "set_simulcast_layer", "get_layer", "get_layer_definition" -> {
@@ -945,6 +943,15 @@ class HmssdkFlutterPlugin :
         }
     }
 
+    /***
+     *This is used to get the logs from the Native SDK
+     * Here to avoid choking of the platform channel we batch the logs in group of 1000
+     * and then send the update to the application.
+     * If a user requires all the logs at any moment then [getAllLogs] method can be used.
+     * Here [logsBuffer] is used to maintain the 512 logs list
+     * while [logsDump] contains all the logs of the session if a user calls [getAllLogs] we
+     * send the [logsDump] through the platform channel
+     * ***/
     var logsBuffer = mutableListOf<Any?>()
     var logsDump = mutableListOf<Any?>()
     private val hmsLoggerListener = object : HMSLogger.Loggable {
@@ -954,13 +961,16 @@ class HmssdkFlutterPlugin :
             message: String,
             isWebRtCLog: Boolean
         ) {
+            /***
+            * Here we filter the logs based on the level we have set
+            * while calling [startHMSLogger]
+            ***/
             if (isWebRtCLog && level != HMSLogger.webRtcLogLevel) return
             if (level != HMSLogger.level) return
 
-            if (logsBuffer.size < 1000) {
-                logsBuffer.add(message)
-                logsDump.add(message)
-            } else {
+            logsBuffer.add(message)
+            logsDump.add(message)
+            if (logsBuffer.size >= 512) {
                 val copyLogBuffer = mutableListOf<Any?>()
                 val args = HashMap<String, Any?>()
                 args["event_name"] = "on_logs_update"
@@ -970,12 +980,14 @@ class HmssdkFlutterPlugin :
                     logsSink?.success(args)
                 }
                 logsBuffer.clear()
+                copyLogBuffer.clear()
             }
         }
     }
 
     private fun getAllLogs(result: Result) {
         result.success(logsDump)
+        logsBuffer.clear()
     }
 
     private fun changeName(call: MethodCall, result: Result) {
@@ -995,22 +1007,35 @@ class HmssdkFlutterPlugin :
     }
 
     private var androidScreenshareResult: Result? = null
-
     private fun startScreenShare(result: Result) {
         androidScreenshareResult = result
-        val mediaProjectionManager: MediaProjectionManager? = activity.getSystemService(
+        activity.applicationContext?.registerReceiver(activityBroadcastReceiver,IntentFilter("ACTIVITY_RECEIVER"))
+        val mediaProjectionManager: MediaProjectionManager = activity.getSystemService(
             Context.MEDIA_PROJECTION_SERVICE
         ) as MediaProjectionManager
         activity.startActivityForResult(
-            mediaProjectionManager?.createScreenCaptureIntent(),
+            mediaProjectionManager.createScreenCaptureIntent(),
             Constants.SCREEN_SHARE_INTENT_REQUEST_CODE
         )
     }
 
-    fun requestScreenShare(data: Intent?) {
+    private val activityBroadcastReceiver = object : BroadcastReceiver(){
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if(intent?.action == "ACTIVITY_RECEIVER")
+                when(intent.extras?.getString("method_name")){
+                    "REQUEST_SCREEN_SHARE"->{
+                        requestScreenShare(intent)
+                    }
+                    "REQUEST_AUDIO_SHARE"-> {
+                        requestAudioShare(intent)
+                    }
+                }
+        }
+    }
+
+    private fun requestScreenShare(data: Intent?) {
         hmssdk!!.startScreenshare(
             object : HMSActionResultListener {
-
                 override fun onError(error: HMSException) {
                     CoroutineScope(Dispatchers.Main).launch {
                         androidScreenshareResult?.success(HMSExceptionExtension.toDictionary(error))
@@ -1027,6 +1052,7 @@ class HmssdkFlutterPlugin :
             },
             data
         )
+        activity.applicationContext?.unregisterReceiver(activityBroadcastReceiver)
     }
 
     private fun stopScreenShare(result: Result) {
@@ -1038,6 +1064,7 @@ class HmssdkFlutterPlugin :
     private fun startAudioShare(call: MethodCall, result: Result) {
         androidAudioShareResult = result
         mode = call.argument<String>("audio_mixing_mode")
+        activity.applicationContext?.registerReceiver(activityBroadcastReceiver,IntentFilter("ACTIVITY_RECEIVER"))
         val mediaProjectionManager: MediaProjectionManager? = activity.getSystemService(
             Context.MEDIA_PROJECTION_SERVICE
         ) as MediaProjectionManager
@@ -1047,7 +1074,7 @@ class HmssdkFlutterPlugin :
         )
     }
 
-    fun requestAudioShare(data: Intent?) {
+    private fun requestAudioShare(data: Intent?) {
         hmssdk!!.startAudioshare(
             object : HMSActionResultListener {
                 override fun onError(error: HMSException) {
@@ -1067,6 +1094,7 @@ class HmssdkFlutterPlugin :
             data,
             audioMixingMode = AudioMixingMode.valueOf(mode!!)
         )
+        activity.applicationContext?.unregisterReceiver(activityBroadcastReceiver)
     }
 
     private fun stopAudioShare(result: Result) {

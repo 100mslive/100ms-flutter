@@ -112,7 +112,9 @@ class _HMSLoggerViewBottomSheetState extends State<HMSLoggerViewBottomSheet> {
                 Selector<MeetingStore, HMSLogList?>(
                     selector: (_, meetingStore) => meetingStore.applicationLogs,
                     builder: (_, data, __) {
-                      _scrollToEnd();
+                      if (data != null && data.hmsLog.length > 0) {
+                        _scrollToEnd();
+                      }
                       return Container(
                         height: MediaQuery.of(context).size.height * 0.60,
                         child: (data == null || data.hmsLog.length == 0)

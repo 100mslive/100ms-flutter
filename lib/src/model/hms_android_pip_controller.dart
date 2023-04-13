@@ -67,4 +67,16 @@ class HMSAndroidPIPController {
         await PlatformService.invokeMethod(PlatformMethod.isPipAvailable);
     return result ?? false;
   }
+
+  ///Method to destroy PIP View.
+  ///
+  ///This method can be call at time of changing role to hls-viewer role or while closing the application
+  ///to disable entering in PIP mode.
+  ///
+  ///Refer [PIP mode guide here](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
+  static Future<bool> destroy() async {
+    final bool? result =
+        await PlatformService.invokeMethod(PlatformMethod.destroyPIP);
+    return result ?? false;
+  }
 }
