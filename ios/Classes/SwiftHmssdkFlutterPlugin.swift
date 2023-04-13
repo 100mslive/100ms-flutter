@@ -831,7 +831,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
      * Here to avoid choking of the platform channel we batch the logs in group of 1000
      * and then send the update to the application.
      * If a user requires all the logs at any moment then [getAllLogs] method can be used.
-     * Here [logsBuffer] is used to maintain the 1000 logs list
+     * Here [logsBuffer] is used to maintain the 512 logs list
      * while [logsDump] contains all the logs of the session if a user calls [getAllLogs] we
      * send the [logsDump] through the platform channel
      **/
@@ -844,10 +844,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         **/
         guard level.rawValue <= logLevel.rawValue else { return }
 
-        if logsBuffer.count<1000 {
-            logsBuffer.append(message)
-            logsDump.append(message)
-        } else {
+        logsBuffer.append(message)
+        logsDump.append(message)
+        if logsBuffer.count >= 512 {
             var args = [String: Any]()
             args["event_name"] = "on_logs_update"
             args["data"] = logsBuffer

@@ -950,7 +950,7 @@ class HmssdkFlutterPlugin :
      * Here to avoid choking of the platform channel we batch the logs in group of 1000
      * and then send the update to the application.
      * If a user requires all the logs at any moment then [getAllLogs] method can be used.
-     * Here [logsBuffer] is used to maintain the 1000 logs list
+     * Here [logsBuffer] is used to maintain the 512 logs list
      * while [logsDump] contains all the logs of the session if a user calls [getAllLogs] we
      * send the [logsDump] through the platform channel
      * ***/
@@ -970,10 +970,9 @@ class HmssdkFlutterPlugin :
             if (isWebRtCLog && level != HMSLogger.webRtcLogLevel) return
             if (level != HMSLogger.level) return
 
-            if (logsBuffer.size < 1000) {
-                logsBuffer.add(message)
-                logsDump.add(message)
-            } else {
+            logsBuffer.add(message)
+            logsDump.add(message)
+            if (logsBuffer.size >= 512) {
                 val copyLogBuffer = mutableListOf<Any?>()
                 val args = HashMap<String, Any?>()
                 args["event_name"] = "on_logs_update"
