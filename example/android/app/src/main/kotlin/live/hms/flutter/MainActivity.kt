@@ -6,7 +6,6 @@ import android.content.res.Configuration
 import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
 import live.hms.hmssdk_flutter.Constants
-import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.hmssdk_flutter.methods.HMSPipAction
 
 class MainActivity : FlutterActivity() {
@@ -15,11 +14,14 @@ class MainActivity : FlutterActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == Constants.SCREEN_SHARE_INTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            HmssdkFlutterPlugin.hmssdkFlutterPlugin?.requestScreenShare(data)
+            data?.action = "ACTIVITY_RECEIVER"
+            activity.sendBroadcast(data?.putExtra("method_name","REQUEST_SCREEN_SHARE"))
         }
 
         if (requestCode == Constants.AUDIO_SHARE_INTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            HmssdkFlutterPlugin.hmssdkFlutterPlugin?.requestAudioShare(data)
+            data?.action = "ACTIVITY_RECEIVER"
+            activity.sendBroadcast(data?.putExtra("method_name","REQUEST_AUDIO_SHARE"))
+
         }
     }
 

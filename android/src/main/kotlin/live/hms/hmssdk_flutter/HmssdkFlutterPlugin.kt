@@ -1,10 +1,11 @@
 package live.hms.hmssdk_flutter
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.PictureInPictureParams
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.util.Log
@@ -43,7 +44,6 @@ import live.hms.video.utils.HMSLogger
 import live.hms.video.utils.HmsUtilities
 
 /** HmssdkFlutterPlugin */
-@SuppressLint("StaticFieldLeak")
 class HmssdkFlutterPlugin :
     FlutterPlugin,
     MethodCallHandler,
@@ -63,9 +63,7 @@ class HmssdkFlutterPlugin :
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
-    companion object {
-        var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
-    }
+    var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         if (hmssdkFlutterPlugin == null) {
@@ -995,22 +993,35 @@ class HmssdkFlutterPlugin :
     }
 
     private var androidScreenshareResult: Result? = null
-
     private fun startScreenShare(result: Result) {
         androidScreenshareResult = result
-        val mediaProjectionManager: MediaProjectionManager? = activity.getSystemService(
+        activity.applicationContext?.registerReceiver(activityBroadcastReceiver,IntentFilter("ACTIVITY_RECEIVER"))
+        val mediaProjectionManager: MediaProjectionManager = activity.getSystemService(
             Context.MEDIA_PROJECTION_SERVICE
         ) as MediaProjectionManager
         activity.startActivityForResult(
-            mediaProjectionManager?.createScreenCaptureIntent(),
+            mediaProjectionManager.createScreenCaptureIntent(),
             Constants.SCREEN_SHARE_INTENT_REQUEST_CODE
         )
     }
 
-    fun requestScreenShare(data: Intent?) {
+    private val activityBroadcastReceiver = object : BroadcastReceiver(){
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if(intent?.action == "ACTIVITY_RECEIVER")
+                when(intent.extras?.getString("method_name")){
+                    "REQUEST_SCREEN_SHARE"->{
+                        requestScreenShare(intent)
+                    }
+                    "REQUEST_AUDIO_SHARE"-> {
+                        requestAudioShare(intent)
+                    }
+                }
+        }
+    }
+
+    private fun requestScreenShare(data: Intent?) {
         hmssdk!!.startScreenshare(
             object : HMSActionResultListener {
-
                 override fun onError(error: HMSException) {
                     CoroutineScope(Dispatchers.Main).launch {
                         androidScreenshareResult?.success(HMSExceptionExtension.toDictionary(error))
@@ -1027,6 +1038,7 @@ class HmssdkFlutterPlugin :
             },
             data
         )
+        activity.applicationContext?.unregisterReceiver(activityBroadcastReceiver)
     }
 
     private fun stopScreenShare(result: Result) {
@@ -1038,6 +1050,7 @@ class HmssdkFlutterPlugin :
     private fun startAudioShare(call: MethodCall, result: Result) {
         androidAudioShareResult = result
         mode = call.argument<String>("audio_mixing_mode")
+        activity.applicationContext?.registerReceiver(activityBroadcastReceiver,IntentFilter("ACTIVITY_RECEIVER"))
         val mediaProjectionManager: MediaProjectionManager? = activity.getSystemService(
             Context.MEDIA_PROJECTION_SERVICE
         ) as MediaProjectionManager
@@ -1047,7 +1060,7 @@ class HmssdkFlutterPlugin :
         )
     }
 
-    fun requestAudioShare(data: Intent?) {
+    private fun requestAudioShare(data: Intent?) {
         hmssdk!!.startAudioshare(
             object : HMSActionResultListener {
                 override fun onError(error: HMSException) {
@@ -1067,6 +1080,7 @@ class HmssdkFlutterPlugin :
             data,
             audioMixingMode = AudioMixingMode.valueOf(mode!!)
         )
+        activity.applicationContext?.unregisterReceiver(activityBroadcastReceiver)
     }
 
     private fun stopAudioShare(result: Result) {
