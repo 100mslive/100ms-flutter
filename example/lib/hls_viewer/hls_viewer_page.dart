@@ -94,8 +94,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
               });
             }
             if (!(context.read<MeetingStore>().hasHlsStarted ||
-                    widget.streamUrl != null) &&
-                context.read<MeetingStore>().isPipActive) {
+                widget.streamUrl != null)) {
               return Scaffold(
                 body: Center(
                   child: Padding(
@@ -111,11 +110,25 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
               body: SafeArea(
                 child: Stack(
                   children: [
-                    Selector<MeetingStore, bool>(
-                        selector: (_, meetingStore) =>
-                            meetingStore.hasHlsStarted,
-                        builder: (_, hasHlsStarted, __) {
-                          return (hasHlsStarted || widget.streamUrl != null)
+                    Selector<MeetingStore, Tuple2<bool, bool>>(
+                        selector: (_, meetingStore) => Tuple2(
+                            meetingStore.isPipActive,
+                            meetingStore.hasHlsStarted),
+                        builder: (_, data, __) {
+                          if (!context
+                                  .read<MeetingStore>()
+                                  .isHLSPlayerRequired &&
+                              !data.item1) {
+                            return Center(
+                              child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: TitleText(
+                                      text:
+                                          "Please Switch to normal mode for viewing the stream",
+                                      textColor: themeDefaultColor)),
+                            );
+                          }
+                          return (data.item2 || widget.streamUrl != null)
                               ? Container(
                                   height: MediaQuery.of(context).size.height,
                                   child: Center(

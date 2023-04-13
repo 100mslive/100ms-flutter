@@ -172,7 +172,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isPipActive = false;
 
-  bool isPipAutoEnabled = false;
+  bool isPipAutoEnabled = true;
 
   bool lastVideoStatus = false;
 
@@ -183,6 +183,8 @@ class MeetingStore extends ChangeNotifier
   HMSVideoTrack? currentPIPtrack;
 
   HMSLogList applicationLogs = HMSLogList(hmsLog: []);
+
+  bool isHLSPlayerRequired = true;
 
   Future<HMSException?> join(String userName, String roomUrl,
       {HMSConfig? roomConfig}) async {
@@ -245,7 +247,7 @@ class MeetingStore extends ChangeNotifier
     WidgetsBinding.instance.removeObserver(this);
     hmsException = null;
     if ((localPeer?.role.name.contains("hls-") ?? false) && hasHlsStarted) {
-      hlsVideoController!.dispose(forceDispose: true);
+      hlsVideoController?.dispose(forceDispose: true);
       hlsVideoController = null;
     }
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
@@ -558,11 +560,15 @@ class MeetingStore extends ChangeNotifier
     getAudioDevicesList();
     notifyListeners();
 
-    if (Platform.isIOS && !(isHLSLink)) {
-      HMSIOSPIPController.setup(
-          autoEnterPip: true,
-          aspectRatio: [9, 16],
-          backgroundColor: Colors.black);
+    if (!(isHLSLink)) {
+      if (Platform.isIOS) {
+        HMSIOSPIPController.setup(
+            autoEnterPip: true,
+            aspectRatio: [9, 16],
+            backgroundColor: Colors.black);
+      } else if (Platform.isAndroid) {
+        HMSAndroidPIPController.setup();
+      }
     }
 
     FlutterForegroundTask.startService(
@@ -984,6 +990,8 @@ class MeetingStore extends ChangeNotifier
     HMSLogList? _logsDump = await _hmsSDKInteractor.getAllogs();
     await deleteFile();
     writeLogs(_logsDump);
+    hlsVideoController?.dispose(forceDispose: true);
+    hlsVideoController = null;
     _hmsSDKInteractor.removeHMSLogger();
     _hmsSDKInteractor.destroy();
     peerTracks.clear();
@@ -1100,7 +1108,7 @@ class MeetingStore extends ChangeNotifier
         if (peer.isLocal) {
           localPeer = peer;
           if (hlsVideoController != null && !peer.role.name.contains("hls-")) {
-            hlsVideoController!.dispose(forceDispose: true);
+            hlsVideoController?.dispose(forceDispose: true);
             hlsVideoController = null;
           }
         }
@@ -1114,9 +1122,11 @@ class MeetingStore extends ChangeNotifier
           }
         }
 
-        // Setup or destroy PIP controller on role Based
-        if (Platform.isIOS) {
-          if (peer.isLocal) {
+        // Setup or destroy PIP controller on role basis
+        //Pip is not supported for player by default
+        //So we need to destroy the pip config
+        if (peer.isLocal) {
+          if (Platform.isIOS) {
             if (peer.role.name.contains("hls-")) {
               HMSIOSPIPController.destroy();
             } else {
@@ -1124,6 +1134,13 @@ class MeetingStore extends ChangeNotifier
                   autoEnterPip: true,
                   aspectRatio: [9, 16],
                   backgroundColor: Colors.black);
+            }
+          } else {
+            if (peer.role.name.contains("hls-")) {
+              HMSAndroidPIPController.destroy();
+            } else {
+              HMSAndroidPIPController.setup(
+                  autoEnterPip: true, aspectRatio: [9, 16]);
             }
           }
         }
@@ -1422,8 +1439,7 @@ class MeetingStore extends ChangeNotifier
       bool _isPipAvailable = await HMSAndroidPIPController.isAvailable();
       if (_isPipAvailable) {
         //[isPipActive] method can also be used to check whether application is in pip Mode or not
-        isPipActive =
-            await HMSAndroidPIPController.start(autoEnterPip: isPipAutoEnabled);
+        isPipActive = await HMSAndroidPIPController.start();
         notifyListeners();
       }
     }
@@ -1488,7 +1504,7 @@ class MeetingStore extends ChangeNotifier
   void setPIPVideoController(bool reinitialise,
       {double? aspectRatio, String? hlsStreamUrl}) {
     if (hlsVideoController != null) {
-      hlsVideoController!.dispose(forceDispose: true);
+      hlsVideoController?.dispose(forceDispose: true);
       hlsVideoController = null;
     }
     if (aspectRatio != null) {
@@ -1537,9 +1553,9 @@ class MeetingStore extends ChangeNotifier
         liveStream: true);
     hlsVideoController =
         PipFlutterPlayerController(pipFlutterPlayerConfiguration);
-    hlsVideoController!.setupDataSource(dataSource);
-    hlsVideoController!.play();
-    hlsVideoController!.setPipFlutterPlayerGlobalKey(pipFlutterPlayerKey);
+    hlsVideoController?.setupDataSource(dataSource);
+    hlsVideoController?.play();
+    hlsVideoController?.setPipFlutterPlayerGlobalKey(pipFlutterPlayerKey);
     if (reinitialise) notifyListeners();
   }
 
@@ -1788,6 +1804,7 @@ class MeetingStore extends ChangeNotifier
       return;
     }
     if (state == AppLifecycleState.resumed) {
+      isHLSPlayerRequired = true;
       if (Platform.isAndroid) {
         isPipActive = await HMSAndroidPIPController.isActive();
       } else if (Platform.isIOS) {
@@ -1821,6 +1838,12 @@ class MeetingStore extends ChangeNotifier
         lastVideoStatus = true;
       }
 
+      if (Platform.isAndroid) {
+        isPipActive = await HMSAndroidPIPController.isActive();
+        isHLSPlayerRequired = false;
+        notifyListeners();
+      }
+
       if (Platform.isIOS) {
         if (screenShareCount == 0 || isScreenShareOn) {
           int peerIndex = peerTracks.indexWhere((element) =>
@@ -1845,9 +1868,15 @@ class MeetingStore extends ChangeNotifier
         }
       }
     } else if (state == AppLifecycleState.inactive) {
-      if (Platform.isAndroid && !isPipActive && !isHLSLink) {
-        HMSAndroidPIPController.start(autoEnterPip: isPipAutoEnabled);
-        isPipActive = true;
+      if (Platform.isAndroid && !isPipActive) {
+        isPipActive = await HMSAndroidPIPController.isActive();
+        isHLSPlayerRequired = false;
+      }
+      notifyListeners();
+    } else if (state == AppLifecycleState.detached) {
+      if (Platform.isAndroid && !isPipActive) {
+        isPipActive = await HMSAndroidPIPController.isActive();
+        isHLSPlayerRequired = false;
       }
       notifyListeners();
     }
