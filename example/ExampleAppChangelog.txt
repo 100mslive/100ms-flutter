@@ -1,3 +1,5 @@
+Board: https://github.com/100mslive/100ms-flutter/projects/17
+
 - Added onUserLeaveHint implementation in Android to enable automatic entering into PIP Mode
 https://github.com/100mslive/100ms-flutter/issues/1209
 
@@ -12,4 +14,4 @@ https://github.com/100mslive/100ms-flutter/issues/1141
 
 Flutter SDK: 1.5.0
 Android SDK: 2.6.0
-iOS SDK: 0.9.1
+iOS SDK: 0.9.2
