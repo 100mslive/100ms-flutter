@@ -6,6 +6,7 @@ import live.hms.hmssdk_flutter.HMSResultExtension
 import live.hms.video.media.capturers.camera.CameraControl
 import live.hms.video.media.tracks.HMSLocalVideoTrack
 import live.hms.video.sdk.HMSSDK
+import java.io.File
 
 class HMSCameraControlsAction {
 
@@ -48,13 +49,18 @@ class HMSCameraControlsAction {
         private fun captureImageAtMaxSupportedResolution(call: MethodCall,result: Result,hmssdk: HMSSDK){
 
             val filePath = call.argument<String>("file_path")?: run {
-
+                TODO("Add excpetion")
             }
 
+            val imageFile = File(filePath)
             hmssdk.getLocalPeer()?.let { localPeer ->
                 localPeer.videoTrack?.let { localVideoTrack ->
                     localVideoTrack.getCameraControl()?.let { cameraControl ->
-                        cameraControl.captureImageAtMaxSupportedResolution()
+                        cameraControl.captureImageAtMaxSupportedResolution(imageFile){ isSuccess ->
+                            if(isSuccess){
+
+                            }
+                        }
                         return
                     }
                 }
