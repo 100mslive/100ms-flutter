@@ -33,10 +33,10 @@ class HMSPipAction {
                     )
                 }
                 "setup_pip" -> {
-                    setupPIP(call,result)
+                    setupPIP(call, result)
                 }
                 "destroy_pip" -> {
-                    destroyPIP(call,result,activity)
+                    destroyPIP(call, result, activity)
                 }
                 else -> {
                     result.notImplemented()
@@ -44,7 +44,7 @@ class HMSPipAction {
             }
         }
 
-        private fun setupPIP(call: MethodCall,result: Result){
+        private fun setupPIP(call: MethodCall, result: Result) {
             call.argument<List<Int>?>("ratio")?.let {
                 pipAspectRatio = it.toMutableList()
             }
@@ -54,10 +54,10 @@ class HMSPipAction {
             result.success(null)
         }
 
-        private fun destroyPIP(call: MethodCall,result: Result,activity: Activity){
+        private fun destroyPIP(call: MethodCall, result: Result, activity: Activity) {
             pipAspectRatio = mutableListOf(16, 9)
             pipAutoEnterEnabled = false
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && activity.isInPictureInPictureMode){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && activity.isInPictureInPictureMode) {
                 activity.moveTaskToBack(false)
             }
             result.success(true)
@@ -89,8 +89,8 @@ class HMSPipAction {
         }
 
         @RequiresApi(Build.VERSION_CODES.O)
-        fun autoEnterPipMode(activity: Activity){
-            if(pipAutoEnterEnabled){
+        fun autoEnterPipMode(activity: Activity) {
+            if (pipAutoEnterEnabled) {
                 var params = PictureInPictureParams.Builder().setAspectRatio(Rational(pipAspectRatio[0], pipAspectRatio[1]))
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
