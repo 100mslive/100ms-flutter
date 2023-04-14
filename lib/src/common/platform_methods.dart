@@ -166,7 +166,8 @@ enum PlatformMethod {
   toggleCameraMuteState,
   captureSnapshot,
   getAllLogs,
-  getAuthTokenByRoomCode
+  getAuthTokenByRoomCode,
+  captureImageAtMaxSupportedResolution
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -400,6 +401,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "get_all_logs";
       case PlatformMethod.getAuthTokenByRoomCode:
         return "get_auth_token_by_room_code";
+      case PlatformMethod.captureImageAtMaxSupportedResolution:
+        return "capture_image_at_max_supported_resolution";
       default:
         return 'unknown';
     }
@@ -635,6 +638,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.getAllLogs;
       case "get_auth_token_by_room_code":
         return PlatformMethod.getAuthTokenByRoomCode;
+      case "capture_image_at_max_supported_resolution":
+        return PlatformMethod.captureImageAtMaxSupportedResolution;
       default:
         return PlatformMethod.unknown;
     }

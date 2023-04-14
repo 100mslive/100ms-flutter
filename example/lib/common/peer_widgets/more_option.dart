@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +15,7 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class MoreOption extends StatelessWidget {
   const MoreOption({Key? key}) : super(key: key);
@@ -258,6 +261,124 @@ class MoreOption extends StatelessWidget {
                             context: context, placeholder: "Enter Name");
                         if (name.isNotEmpty) {
                           _meetingStore.changeName(name: name);
+                        }
+                      },
+                      localImageCapture: () async {
+                        Navigator.pop(context);
+                        HMSLocalVideoTrack? track = (context
+                            .read<PeerTrackNode>()
+                            .track as HMSLocalVideoTrack?);
+                        if (track != null) {
+                          if (track.isMute) {
+                            Utilities.showToast(
+                                "Please unmute the video to capture the image");
+                            return;
+                          }
+                          dynamic res = await HMSCameraControls
+                              .captureImageAtMaxSupportedResolution();
+                          if (res is HMSException) {
+                            Utilities.showToast(
+                                "Error Occured: code: ${res.code?.errorCode}, description: ${res.description}, message: ${res.message}",
+                                time: 5);
+                            return;
+                          }
+                          File imageFile = File(res);
+                          showDialog(
+                              context: context,
+                              builder: (_) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12)),
+                                  actionsPadding: EdgeInsets.only(
+                                      left: 20, right: 20, bottom: 10),
+                                  backgroundColor: themeBottomSheetColor,
+                                  insetPadding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 8),
+                                  contentPadding: EdgeInsets.only(
+                                      top: 20, bottom: 15, left: 24, right: 24),
+                                  title: Text(
+                                      context.read<PeerTrackNode>().peer.name +
+                                          "'s  Snapshot"),
+                                  content: Image.file(imageFile),
+                                  actions: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        ElevatedButton(
+                                            style: ButtonStyle(
+                                                shadowColor:
+                                                    MaterialStateProperty.all(
+                                                        themeSurfaceColor),
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        themeBottomSheetColor),
+                                                shape: MaterialStateProperty.all<
+                                                        RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                  side: BorderSide(
+                                                      width: 1,
+                                                      color: Color.fromRGBO(
+                                                          107, 125, 153, 1)),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                ))),
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 12,
+                                                      horizontal: 10),
+                                              child: Text('Cancel',
+                                                  style: GoogleFonts.inter(
+                                                      color: themeDefaultColor,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      letterSpacing: 0.50)),
+                                            )),
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                              shadowColor:
+                                                  MaterialStateProperty.all(
+                                                      themeSurfaceColor),
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      hmsdefaultColor),
+                                              shape: MaterialStateProperty.all<
+                                                      RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                side: BorderSide(
+                                                    width: 1,
+                                                    color: hmsdefaultColor),
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ))),
+                                          onPressed: () async {
+                                            Share.shareXFiles([XFile(res)],
+                                                text: "HMS Image");
+                                            Navigator.pop(context);
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 12, horizontal: 10),
+                                            child: Text(
+                                              'Share',
+                                              style: GoogleFonts.inter(
+                                                  color: themeDefaultColor,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  letterSpacing: 0.50),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                );
+                              });
                         }
                       },
                       isCaptureSnapshot: !(peerTrackNode.track?.isMute ?? true),

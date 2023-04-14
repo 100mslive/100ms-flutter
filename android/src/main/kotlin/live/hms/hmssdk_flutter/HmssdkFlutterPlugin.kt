@@ -21,6 +21,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import live.hms.hmssdk_flutter.methods.HMSCameraControlsAction
 import live.hms.hmssdk_flutter.methods.HMSPipAction
 import live.hms.hmssdk_flutter.methods.HMSRemoteVideoTrackAction
 import live.hms.hmssdk_flutter.methods.HMSSessionMetadataAction
@@ -191,8 +192,8 @@ class HmssdkFlutterPlugin :
             "capture_snapshot" -> {
                 captureSnapshot(call, result)
             }
-            "is_tap_to_focus_supported" -> {
-
+            "is_tap_to_focus_supported", "capture_image_at_max_supported_resolution", "is_zoom_supported" -> {
+                HMSCameraControlsAction.cameraControlsAction(call,result,hmssdk!!,activity.applicationContext)
             }
             else -> {
                 result.notImplemented()
