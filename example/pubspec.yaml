@@ -38,14 +38,14 @@ dependencies:
   google_fonts:
   bot_toast:
   qr_code_scanner:
-  shared_preferences: 
+  shared_preferences:
   uni_links:
   file_picker:
   draggable_widget:
   badges:
   url_launcher:
   pip_flutter:
-  share_plus: 
+  share_plus:
   flutter_linkify:
   flutter_foreground_task:
   image_gallery_saver:
