@@ -27,7 +27,7 @@ class HMSCameraControlsAction {
 
         let withFlash = arguments?["with_flash"] as? Bool ?? false
 
-        localVideoTrack.captureImageAtMaxSupportedResolution(withFlash: false) { image in
+        localVideoTrack.captureImageAtMaxSupportedResolution(withFlash: withFlash) { image in
 
             guard let capturedImage = image else {
                 result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Could not capture image of the Local Peer's Video Track.")))
@@ -47,8 +47,13 @@ class HMSCameraControlsAction {
                 result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Could not write to disk the image data  of the Local Peer's Video Track. \(error.localizedDescription)")))
                 return
             }
-
-            result(HMSResultExtension.toDictionary(true, filePath.absoluteString))
+            if(filePath.absoluteString.contains("file:///")){
+                result(HMSResultExtension.toDictionary(true, filePath.absoluteString.components(separatedBy: "file:///")[1]))
+            }
+            else{
+                result(HMSResultExtension.toDictionary(true, filePath.absoluteString))
+            }
+            
         }
     }
 
