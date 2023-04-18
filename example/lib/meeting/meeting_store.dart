@@ -1796,39 +1796,72 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
+  /// This Dart function is an override of the didChangeAppLifecycleState method from the WidgetsBindingObserver class in Flutter.
+  ///
+  /// It is called when the state of the application's lifecycle changes, such as when the app is paused, resumed, or detached.
+  /// The function performs a series of conditional checks based on the current state of the application and the platform it is running on (Android or iOS), and performs various actions accordingly.
+  /// These actions include setting flags to indicate whether a certain functionality is required, toggling camera mute state, changing the volume of remote audio tracks, and adjusting the PIP (picture-in-picture) window on iOS.
+  /// The function also notifies any listeners that may be subscribed to this method.
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
+
+    /// If the room has ended, return immediately
     if (isRoomEnded) {
       return;
     }
+
+    /// If the app has resumed
     if (state == AppLifecycleState.resumed) {
+      /// Set a boolean flag to indicate that an HLS player is required
       isHLSPlayerRequired = true;
+
+      /// If the platform is Android, check if picture-in-picture (PIP) is active
       if (Platform.isAndroid) {
         isPipActive = await HMSAndroidPIPController.isActive();
-      } else if (Platform.isIOS) {
+      }
+
+      /// If the platform is iOS, set isPipActive to false
+      else if (Platform.isIOS) {
         isPipActive = false;
       }
+
+      /// Notify any listeners that this state has changed
       notifyListeners();
 
+      /// If the last video status is true (meaning the video was on) and we're not currently reconnecting
       if (lastVideoStatus && !reconnecting) {
+        /// Toggle the camera mute state (i.e., turn off the camera)
         toggleCameraMuteState();
+
+        /// Set lastVideoStatus to false (since the video is now off)
         lastVideoStatus = false;
       }
 
+      /// Get a list of peers (i.e., other participants in the room)
       List<HMSPeer>? peersList = await getPeers();
 
+      /// For each peer that is not the local user and is on an Android device
       peersList?.forEach((element) {
         if (!element.isLocal && (Platform.isAndroid)) {
+          /// Set the volume of their audio track to 10.0
           (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
+
+          /// For each auxiliary track (i.e., additional tracks besides the main audio and video tracks)
           element.auxiliaryTracks?.forEach((element) {
+            /// If the track is an audio track
             if (element.kind == HMSTrackKind.kHMSTrackKindAudio) {
+              /// Set its volume to 10.0
               (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
             }
           });
         }
       });
-    } else if (state == AppLifecycleState.paused) {
+    }
+
+    /// Handle the paused state of the app lifecycle
+    else if (state == AppLifecycleState.paused) {
+      // Get the local peer and toggle the camera mute state if it is not muted
       HMSLocalPeer? localPeer = await getLocalPeer();
       if (localPeer != null &&
           !(localPeer.videoTrack?.isMute ?? true) &&
@@ -1837,16 +1870,20 @@ class MeetingStore extends ChangeNotifier
         lastVideoStatus = true;
       }
 
+      // Check if the platform is Android and set the PIP (Picture-in-Picture) state and HLS player state accordingly
       if (Platform.isAndroid) {
         isPipActive = await HMSAndroidPIPController.isActive();
         isHLSPlayerRequired = false;
         notifyListeners();
       }
 
+      // Check if the platform is iOS and perform appropriate actions based on the screen share count and state
       if (Platform.isIOS) {
         if (screenShareCount == 0 || isScreenShareOn) {
+          // Get the index of the peer track that is not muted and not local
           int peerIndex = peerTracks.indexWhere((element) =>
               (!(element.track?.isMute ?? true) && !element.peer.isLocal));
+          // Change the PIP window track on iOS with the peer track or local track based on the peer index
           if (peerIndex != -1) {
             changePIPWindowTrackOnIOS(
                 track: peerTracks[peerIndex].track,
@@ -1856,9 +1893,11 @@ class MeetingStore extends ChangeNotifier
             changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
           }
         } else {
+          // Get the index of the peer track based on the UID and track ID
           int peerIndex = peerTracks.indexWhere((element) =>
               element.uid ==
               element.peer.peerId + (element.track?.trackId ?? ""));
+          // Change the PIP window track on iOS with the peer track based on the peer index
           if (peerIndex != -1)
             changePIPWindowTrackOnIOS(
                 track: peerTracks[peerIndex].track,
@@ -1866,14 +1905,22 @@ class MeetingStore extends ChangeNotifier
                 ratio: [9, 16]);
         }
       }
-    } else if (state == AppLifecycleState.inactive) {
+    }
+    // Check if the application state is inactive
+    else if (state == AppLifecycleState.inactive) {
+// Check if the platform is Android and picture-in-picture mode is not active
       if (Platform.isAndroid && !isPipActive) {
+// Check if picture-in-picture mode is active using the HMSAndroidPIPController
         isPipActive = await HMSAndroidPIPController.isActive();
         isHLSPlayerRequired = false;
       }
       notifyListeners();
-    } else if (state == AppLifecycleState.detached) {
+    }
+// Check if the application state is detached
+    else if (state == AppLifecycleState.detached) {
+// Check if the platform is Android and picture-in-picture mode is not active
       if (Platform.isAndroid && !isPipActive) {
+// Check if picture-in-picture mode is active using the HMSAndroidPIPController
         isPipActive = await HMSAndroidPIPController.isActive();
         isHLSPlayerRequired = false;
       }
