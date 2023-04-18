@@ -139,7 +139,6 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                   ),
                 ),
               ),
-            if (Platform.isAndroid)
               Padding(
                 padding: const EdgeInsets.only(bottom: 20.0),
                 child: GestureDetector(
