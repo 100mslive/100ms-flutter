@@ -16,7 +16,7 @@ class HMSCameraControlsAction {
             result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) An instance of Local Peer could not be found. Please check if a Room is joined.")))
             return
         }
-        
+
         guard let localVideoTrack = localPeer.localVideoTrack()
         else {
             result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Video Track of Local Peer could not be found. Please check if the Local Peer has permission to publish video & video is unmuted currently.")))
