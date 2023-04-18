@@ -274,8 +274,12 @@ class MoreOption extends StatelessWidget {
                                 "Please unmute the video to capture the image");
                             return;
                           }
+                          //Here we are sending [withFlash] as true
+                          //So flash will turn ON while capturing
+                          //image
                           dynamic res = await HMSCameraControls
-                              .captureImageAtMaxSupportedResolution();
+                              .captureImageAtMaxSupportedResolution(
+                                  withFlash: true);
                           if (res is HMSException) {
                             Utilities.showToast(
                                 "Error Occured: code: ${res.code?.errorCode}, description: ${res.description}, message: ${res.message}",

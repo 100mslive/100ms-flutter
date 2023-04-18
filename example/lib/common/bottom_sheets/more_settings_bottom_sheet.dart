@@ -729,6 +729,23 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       )),
+                  ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        Navigator.pop(context);
+                        context.read<MeetingStore>().toggleFlash();
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(Icons.flashlight_on_outlined),
+                      title: Text(
+                        "Torch",
+                        semanticsLabel: "fl_torch_button",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      )),
                   if (_meetingStore.localPeer?.role.permissions.endRoom ??
                       false)
                     ListTile(

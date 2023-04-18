@@ -1,4 +1,6 @@
 //Package imports
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -137,26 +139,27 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                   ),
                 ),
               ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  widget.localImageCapture!();
-                },
-                child: Row(
-                  children: [
-                    Icon(Icons.image_outlined),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    Text(
-                      "local Image Capture",
-                      style: GoogleFonts.inter(color: iconColor),
-                    )
-                  ],
+            if (Platform.isAndroid)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: GestureDetector(
+                  onTap: () {
+                    widget.localImageCapture!();
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.image_outlined),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      Text(
+                        "Local Image Capture",
+                        style: GoogleFonts.inter(color: iconColor),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),
