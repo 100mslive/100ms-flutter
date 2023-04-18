@@ -12,11 +12,14 @@ class HMSCameraControlsAction {
 
     static func cameraControlsAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
 
-        guard let localPeer = hmsSDK?.localPeer,
-        let localVideoTrack = localPeer.localVideoTrack()
+        guard let localPeer = hmsSDK?.localPeer else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) An instance of Local Peer could not be found. Please check if a Room is joined.")))
+            return
+        }
+        
+        guard let localVideoTrack = localPeer.localVideoTrack()
         else {
-            // TODO: add error log
-            // result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("Error in capturing image")))
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Video Track of Local Peer could not be found. Please check if the Local Peer has permission to publish video & video is unmuted currently.")))
             return
         }
 
@@ -27,14 +30,12 @@ class HMSCameraControlsAction {
         localVideoTrack.captureImageAtMaxSupportedResolution(withFlash: false) { image in
 
             guard let capturedImage = image else {
-                // TODO: add error log
-                // result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("Error in capturing image")))
+                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Could not capture image of the Local Peer's Video Track.")))
                 return
             }
 
             guard let data = capturedImage.jpegData(compressionQuality: 1.0) else {
-                // TODO: add error log
-                // result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("Error in capturing image")))
+                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Could not compress image of the Local Peer's Video Track to jpeg data.")))
                 return
             }
 
@@ -42,9 +43,9 @@ class HMSCameraControlsAction {
 
             do {
                 try data.write(to: filePath)
-            } catch {
-                // TODO: add error log using error.localizedDescription
-                // result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("Error in capturing image")))
+            } catch let error {
+                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Could not write to disk the image data  of the Local Peer's Video Track. \(error.localizedDescription)")))
+                return
             }
 
             result(HMSResultExtension.toDictionary(true, filePath.absoluteString))
