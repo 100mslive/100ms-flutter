@@ -66,7 +66,7 @@ class HMSCameraControlsAction {
 
             // Creating a file at the application directory
             val dir = context.getExternalFilesDir("images")
-            val filePath = "$dir/hms_${Date().time}.JPEG"
+            val filePath = "$dir/hms_${Date().time}.jpg"
             val imageFile = File(filePath)
             hmssdk.getLocalPeer()?.let { localPeer ->
                 localPeer.videoTrack?.let { localVideoTrack ->
