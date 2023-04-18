@@ -38,7 +38,7 @@ class HMSCameraControlsAction {
                 return
             }
 
-            let filePath = getDocumentsDirectory().appendingPathComponent("hms_\(getTimeStamp()).JPEG")
+            let filePath = getDocumentsDirectory().appendingPathComponent("hms_\(getTimeStamp()).jpg")
 
             do {
                 try data.write(to: filePath)
