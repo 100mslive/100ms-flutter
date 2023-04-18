@@ -276,6 +276,7 @@ class MoreOption extends StatelessWidget {
                           }
                           //Here we are sending [withFlash] as true
                           //So flash will turn ON while capturing
+                          //Note: This Flash is only applicable for Back camera & not the Front Camera
                           //image
                           dynamic res = await HMSCameraControls
                               .captureImageAtMaxSupportedResolution(
