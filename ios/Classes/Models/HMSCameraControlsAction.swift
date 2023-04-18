@@ -47,13 +47,8 @@ class HMSCameraControlsAction {
                 result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Could not write to disk the image data  of the Local Peer's Video Track. \(error.localizedDescription)")))
                 return
             }
-            if(filePath.absoluteString.contains("file:///")){
-                result(HMSResultExtension.toDictionary(true, filePath.absoluteString.components(separatedBy: "file:///")[1]))
-            }
-            else{
-                result(HMSResultExtension.toDictionary(true, filePath.absoluteString))
-            }
-            
+
+            result(HMSResultExtension.toDictionary(true, filePath.relativePath))
         }
     }
 
