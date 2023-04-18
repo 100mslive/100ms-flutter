@@ -229,7 +229,9 @@ class MeetingStore extends ChangeNotifier
           endPoint: _roomData?[1] == "true" ? "" : '$qaInitEndPoint',
         );
       } else {
-        FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
+        if (Constant.appFlavor == AppFlavors.hmsInternal) {
+          FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
+        }
         return _tokenData;
       }
     }

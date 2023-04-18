@@ -144,7 +144,9 @@ class PreviewStore extends ChangeNotifier
       return null;
     }
 
-    FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
+    if (Constant.appFlavor == AppFlavors.hmsInternal) {
+      FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
+    }
     return _tokenData;
   }
 

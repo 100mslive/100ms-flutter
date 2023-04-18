@@ -1,5 +1,6 @@
 //Dart imports
 import 'dart:async';
+import 'dart:developer';
 
 //Package imports
 import 'package:bot_toast/bot_toast.dart';
@@ -18,6 +19,7 @@ import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/app_settings_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/home_screen/user_detail_screen.dart';
 import 'package:hmssdk_flutter_example/home_screen/qr_code_screen.dart';
+import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -28,17 +30,28 @@ StreamSubscription? _streamSubscription;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-  Wakelock.enable();
-  Provider.debugCheckInvalidValueType = null;
 
-  // Get any initial links
-  final PendingDynamicLinkData? initialLink =
-      await FirebaseDynamicLinks.instance.getInitialLink();
+  Utilities.getFlavor();
 
-  runZonedGuarded(() => runApp(HMSExampleApp(initialLink: initialLink?.link)),
-      FirebaseCrashlytics.instance.recordError);
+  //Enabling firebase only when application flavor is hmsInternal
+  if (Constant.appFlavor == AppFlavors.hmsInternal) {
+    await Firebase.initializeApp();
+    FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    Wakelock.enable();
+    var flavor = const String.fromEnvironment("APP_FLAVOR");
+    print("FLAVOR IS $flavor");
+    Provider.debugCheckInvalidValueType = null;
+
+    // Get any initial links
+    final PendingDynamicLinkData? initialLink =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+
+    runZonedGuarded(() => runApp(HMSExampleApp(initialLink: initialLink?.link)),
+        FirebaseCrashlytics.instance.recordError);
+  } else {
+    runZonedGuarded(() => runApp(HMSExampleApp(initialLink: null)),
+        (error, stackTrack) => print(error.toString()));
+  }
 }
 
 class HMSExampleApp extends StatefulWidget {
@@ -83,7 +96,9 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     super.initState();
     _initURIHandler();
     _incomingLinkHandler();
-    initDynamicLinks();
+    if (Constant.appFlavor == AppFlavors.hmsInternal) {
+      initDynamicLinks();
+    }
     setThemeMode();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
