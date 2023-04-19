@@ -32,8 +32,6 @@ android {
         applicationId "live.hms.flutter"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 222
-        versionName "1.4.87"
     }
 
     signingConfigs {
@@ -57,6 +55,31 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
+    flavorDimensions "app"
+    productFlavors {
+
+        external {
+            dimension "app"
+            applicationIdSuffix ".external"
+            versionCode 1
+            versionName "1.0.0"
+            resValue "string", "app_name", "[External] 100ms Video Calling Streaming"
+
+        }
+
+        hmsInternal {
+            dimension "app"
+            applicationIdSuffix ""
+            versionCode 222
+            versionName "1.4.87"
+            dependencies {
+                implementation 'com.google.firebase:firebase-crashlytics:18.3.2'
+            }
+            resValue "string", "app_name", "100ms Video Calling Streaming"
+        }
+    }
+
     lint {
         checkDependencies true
     }
@@ -69,9 +92,12 @@ flutter {
 
 dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.firebase:firebase-crashlytics:18.3.2'
 }
 
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'com.google.firebase.firebase-perf'
+if (getGradle().getStartParameter().getTaskRequests()
+        .toString().contains("HmsInternal")){
+            apply plugin: 'com.google.gms.google-services'
+            apply plugin: 'com.google.firebase.crashlytics'
+            apply plugin: 'com.google.firebase.firebase-perf'
+}
+
