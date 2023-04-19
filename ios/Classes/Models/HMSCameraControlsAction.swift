@@ -11,7 +11,21 @@ import HMSSDK
 class HMSCameraControlsAction {
 
     static func cameraControlsAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+        
+    switch call.method{
+            case "capture_image_at_max_supported_resolution":
+                captureImageAtMaxSupportedResolution(call,result,hmsSDK)
+            case "is_flash_supported":
+                isFlashSupported(result,hmsSDK)
+            case "toggle_flash":
+                toggleFlash(result,hmsSDK)
+            default:
+                result(FlutterMethodNotImplemented)
+            }
+    }
 
+    static private func captureImageAtMaxSupportedResolution(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?){
+        
         guard let localPeer = hmsSDK?.localPeer else {
             result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) An instance of Local Peer could not be found. Please check if a Room is joined.")))
             return
@@ -51,7 +65,57 @@ class HMSCameraControlsAction {
             result(HMSResultExtension.toDictionary(true, filePath.relativePath))
         }
     }
+    
+    static private func isFlashSupported(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?){
+        
+        guard let localPeer = hmsSDK?.localPeer else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) An instance of Local Peer could not be found. Please check if a Room is joined.")))
+            return
+        }
 
+        guard let localVideoTrack = localPeer.localVideoTrack()
+        else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Video Track of Local Peer could not be found. Please check if the Local Peer has permission to publish video & video is unmuted currently.")))
+            return
+        }
+        
+        localVideoTrack.modifyCaptureDevice{device in
+            guard let device = device else {
+                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Device could not be found")))
+                    return
+                }
+            result(HMSResultExtension.toDictionary(true,device.isTorchModeSupported(.on)))
+        }
+    }
+    
+    static private func toggleFlash(_ result:@escaping FlutterResult, _ hmsSDK: HMSSDK?){
+        
+        guard let localPeer = hmsSDK?.localPeer else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) An instance of Local Peer could not be found. Please check if a Room is joined.")))
+            return
+        }
+
+        guard let localVideoTrack = localPeer.localVideoTrack()
+        else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Video Track of Local Peer could not be found. Please check if the Local Peer has permission to publish video & video is unmuted currently.")))
+            return
+        }
+        
+        localVideoTrack.modifyCaptureDevice{device in
+            guard let device = device else {
+                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Device could not be found")))
+                    return
+                }
+            if(device.isTorchModeSupported(.on)){
+                device.torchMode = device.torchMode == .off ? .on : .off
+                result(HMSResultExtension.toDictionary(true,nil))
+            }
+            else{
+                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Flash is not supported for current facing camera, Also please ensure camera is turned ON")))
+            }
+        }
+    }
+    
     static private func getDocumentsDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0]
@@ -62,4 +126,5 @@ class HMSCameraControlsAction {
         formatter.timeStyle = .medium
         return formatter.string(from: Date())
     }
+    
 }

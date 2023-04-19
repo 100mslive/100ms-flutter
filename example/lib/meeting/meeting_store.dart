@@ -186,8 +186,6 @@ class MeetingStore extends ChangeNotifier
 
   bool isHLSPlayerRequired = true;
 
-  bool isFlashOn = false;
-
   Future<HMSException?> join(String userName, String roomUrl,
       {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
@@ -1579,19 +1577,16 @@ class MeetingStore extends ChangeNotifier
   ///
   /// This method is used to toggle the flash light of your phone
   /// Here we are not checking whether flash is supported or not
-  /// Since these methods already check them internally,
+  /// Since this method already check that internally,
   ///
   void toggleFlash() async {
-    dynamic result = isFlashOn
-        ? await HMSCameraControls.disableFlash()
-        : await HMSCameraControls.enableFlash();
+    dynamic result = await HMSCameraControls.toggleFlash();
     if (result is HMSException) {
       Utilities.showToast(
           "Error Occured: code: ${result.code?.errorCode}, description: ${result.description}, message: ${result.message}",
           time: 5);
       return;
     }
-    isFlashOn = !isFlashOn;
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod

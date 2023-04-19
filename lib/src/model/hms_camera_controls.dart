@@ -36,13 +36,16 @@ class HMSCameraControls {
     }
   }
 
-  ///[enableFlash] is used to turn ON the flashlight.
+  ///[toggleFlash] is used to toggle the flashlight.
   ///This works only if the current facing camera supports flash capabilities
   ///which can be checked using [isFlashSupported] method
   ///Although this method internally checks whether the current facing camera supports
   ///flash or not. If not it returns an [HMSException] object
-  static Future<dynamic> enableFlash() async {
-    var result = await PlatformService.invokeMethod(PlatformMethod.enableFlash);
+  ///
+  ///Note: [toggleFlash] only works if camera is turned ON
+  ///      i.e. video is unmuted.
+  static Future<dynamic> toggleFlash() async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.toggleFlash);
     if (result["success"]) {
       return result["data"];
     } else {
@@ -50,18 +53,4 @@ class HMSCameraControls {
     }
   }
 
-  ///[disableFlash] is used to turn OFF the flashlight.
-  ///This works only if the current facing camera supports flash capabilities
-  ///which can be checked using [isFlashSupported] method
-  ///Although this method internally checks whether the current facing camera supports
-  ///flash or not. If not it returns an [HMSException] object
-  static Future<dynamic> disableFlash() async {
-    var result =
-        await PlatformService.invokeMethod(PlatformMethod.disableFlash);
-    if (result["success"]) {
-      return result["data"];
-    } else {
-      return HMSException.fromMap(result["data"]["error"]);
-    }
-  }
 }
