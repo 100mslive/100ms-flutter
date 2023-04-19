@@ -210,6 +210,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "capture_snapshot":
             captureSnapshot(call, result)
 
+        case "capture_image_at_max_supported_resolution","is_flash_supported","toggle_flash":
+            HMSCameraControlsAction.cameraControlsAction(call, result, hmsSDK)
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -703,22 +706,22 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     private func changeTrackStateForRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        guard let mute = arguments["mute"] as? Bool else {
+        guard let mute = arguments?["mute"] as? Bool else {
             result(HMSErrorExtension.getError("Could not find track to change track in \(#function)"))
             return
         }
 
         var trackKind: HMSTrackKind?
-        if let kindStr = arguments["type"] as? String {
+        if let kindStr = arguments?["type"] as? String {
             trackKind = kind(from: kindStr)
         }
 
-        let source = arguments["source"] as? String
+        let source = arguments?["source"] as? String
 
         var roles: [HMSRole]?
-        if let rolesString = arguments["roles"] as? [String] {
+        if let rolesString = arguments?["roles"] as? [String] {
             roles = hmsSDK?.roles.filter { rolesString.contains($0.name) }
         }
 
@@ -792,6 +795,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             } else {
                 result(nil)
             }
+
         }
     }
 
@@ -800,9 +804,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private var logLevel = HMSLogLevel.off
 
     private func startHMSLogger(_ call: FlutterMethodCall) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        guard let level = arguments["log_level"] as? String else {
+        guard let level = arguments?["log_level"] as? String else {
             return
         }
 
@@ -886,9 +890,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     private func setSessionMetadata(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        guard let metadata = arguments["session_metadata"] as? String? ?? "" else {
+        guard let metadata = arguments?["session_metadata"] as? String? ?? "" else {
             result(HMSErrorExtension.getError("No session metadata found in \(#function)"))
             return
         }
@@ -937,9 +941,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     private func captureSnapshot(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        guard let trackID = arguments["track_id"] as? String
+        guard let trackID = arguments?["track_id"] as? String
         else {
             result(HMSErrorExtension.getError("Invalid arguments passed in \(#function)"))
             return

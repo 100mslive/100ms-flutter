@@ -19,8 +19,7 @@ class HMSCameraControlsAction {
                 "is_zoom_supported" -> isZoomSupported(result, hmssdk)
                 "capture_image_at_max_supported_resolution" -> captureImageAtMaxSupportedResolution(call,result, hmssdk, context)
                 "is_flash_supported" -> isFlashSupported(result,hmssdk)
-                "enable_flash" -> enableFlash(result,hmssdk)
-                "disable_flash" -> disableFlash(result,hmssdk)
+                "toggle_flash" -> toggleFlash(result,hmssdk)
                 else -> {
                     result.notImplemented()
                 }
@@ -140,51 +139,26 @@ class HMSCameraControlsAction {
         }
 
         /***
-         * This method is used to turn ON the flash
+         * This method is used to toggle the flash
          * Only if the flash is supported by the current facing camera
+         * If video is muted then the flash light does not turn ON
          */
-        private fun enableFlash(result: Result,hmssdk:HMSSDK){
+        private fun toggleFlash(result: Result,hmssdk:HMSSDK){
             hmssdk.getLocalPeer()?.let { localPeer ->
                 localPeer.videoTrack?.let { localVideoTrack ->
                     localVideoTrack.getCameraControl()?.let { cameraControl ->
                         if(cameraControl.isFlashSupported()){
-                            cameraControl.setFlash(true)
+                            if(cameraControl.isFlashEnabled()){
+                                cameraControl.setFlash(false)
+                            }
+                            else{
+                                cameraControl.setFlash(true)
+                            }
                             result.success(HMSResultExtension.toDictionary(true, null))
                             return
                         }
                         else{
-                            result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("Flash is not supported for current facing camera")))
-                            return
-                        }
-                    }?: run {
-                        result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("cameraControl is null")))
-                        return
-                    }
-                }?: run {
-                    result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("local video track is null")))
-                    return
-                }
-            } ?:run{
-                result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("local peer is null")))
-                return
-            }
-        }
-
-        /***
-         * This method is used to turn OFF the flash
-         * Only if the flash is supported by the current facing camera
-         */
-        private fun disableFlash(result: Result,hmssdk:HMSSDK){
-            hmssdk.getLocalPeer()?.let { localPeer ->
-                localPeer.videoTrack?.let { localVideoTrack ->
-                    localVideoTrack.getCameraControl()?.let { cameraControl ->
-                        if(cameraControl.isFlashSupported()){
-                            cameraControl.setFlash(false)
-                            result.success(HMSResultExtension.toDictionary(true, null))
-                            return
-                        }
-                        else{
-                            result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("Flash is not supported for current facing camera")))
+                            result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("Flash is not supported for current facing camera, Also please ensure camera is turned ON")))
                             return
                         }
                     }?: run {

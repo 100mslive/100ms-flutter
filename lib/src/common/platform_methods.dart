@@ -169,8 +169,7 @@ enum PlatformMethod {
   getAuthTokenByRoomCode,
   captureImageAtMaxSupportedResolution,
   isFlashSupported,
-  enableFlash,
-  disableFlash
+  toggleFlash
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -408,10 +407,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "capture_image_at_max_supported_resolution";
       case PlatformMethod.isFlashSupported:
         return "is_flash_supported";
-      case PlatformMethod.enableFlash:
-        return "enable_flash";
-      case PlatformMethod.disableFlash:
-        return "disable_flash";
+      case PlatformMethod.toggleFlash:
+        return "toggle_flash";
       default:
         return 'unknown';
     }
@@ -651,10 +648,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.captureImageAtMaxSupportedResolution;
       case "is_flash_supported":
         return PlatformMethod.isFlashSupported;
-      case "enable_flash":
-        return PlatformMethod.enableFlash;
-      case "disable_flash":
-        return PlatformMethod.disableFlash;
+      case "toggle_flash":
+        return PlatformMethod.toggleFlash;
       default:
         return PlatformMethod.unknown;
     }
