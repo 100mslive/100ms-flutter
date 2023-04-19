@@ -233,12 +233,18 @@ class MoreOption extends StatelessWidget {
             showDialog(
                 context: context,
                 builder: (_) => LocalPeerTileDialog(
+                      isVideoOn:
+                          !(context.read<PeerTrackNode>().track?.isMute ??
+                              true),
                       isAudioMode: false,
                       toggleCamera: () {
                         if (_meetingStore.isVideoOn)
                           _meetingStore.switchCamera();
                       },
                       peerName: peerTrackNode.peer.name,
+                      toggleFlash: () {
+                        context.read<MeetingStore>().toggleFlash();
+                      },
                       changeRole: () {
                         Navigator.pop(context);
                         showDialog(
@@ -257,8 +263,16 @@ class MoreOption extends StatelessWidget {
                       },
                       roles: changeRolePermission,
                       changeName: () async {
-                        String name = await UtilityComponents.showInputDialog(
-                            context: context, placeholder: "Enter Name");
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        String name =
+                            await UtilityComponents.showNameChangeDialog(
+                                context: context,
+                                placeholder: "Enter Name",
+                                prefilledValue: context
+                                        .read<MeetingStore>()
+                                        .localPeer
+                                        ?.name ??
+                                    "");
                         if (name.isNotEmpty) {
                           _meetingStore.changeName(name: name);
                         }

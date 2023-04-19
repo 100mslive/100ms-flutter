@@ -10,14 +10,17 @@ class LocalPeerTileDialog extends StatefulWidget {
   final String peerName;
   final bool isAudioMode;
   final bool roles;
+  final bool isVideoOn;
   final bool? isCaptureSnapshot;
   final Function() toggleCamera;
   final Function() changeName;
   final Function() changeRole;
   final Function()? captureSnapshot;
   final Function()? localImageCapture;
+  final Function()? toggleFlash;
   const LocalPeerTileDialog(
       {required this.isAudioMode,
+      this.isVideoOn = false,
       required this.toggleCamera,
       required this.peerName,
       required this.changeRole,
@@ -25,7 +28,8 @@ class LocalPeerTileDialog extends StatefulWidget {
       required this.changeName,
       this.captureSnapshot,
       this.isCaptureSnapshot,
-      this.localImageCapture});
+      this.localImageCapture,
+      this.toggleFlash});
 
   @override
   _LocalPeerTileDialogState createState() => _LocalPeerTileDialogState();
@@ -45,14 +49,14 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (!widget.isAudioMode)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                    widget.toggleCamera();
-                  },
+            if (!widget.isAudioMode && widget.isVideoOn)
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                  widget.toggleCamera();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
                   child: Row(
                     children: [
                       SvgPicture.asset(
@@ -70,13 +74,13 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                   ),
                 ),
               ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                  widget.changeName();
-                },
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                widget.changeName();
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
                 child: Row(
                   children: [
                     SvgPicture.asset(
@@ -95,12 +99,12 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
               ),
             ),
             if (widget.roles)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                child: GestureDetector(
-                  onTap: () {
-                    widget.changeRole();
-                  },
+              GestureDetector(
+                onTap: () {
+                  widget.changeRole();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
                   child: Row(
                     children: [
                       SvgPicture.asset(
@@ -118,13 +122,37 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                   ),
                 ),
               ),
-            if (widget.isCaptureSnapshot != null && widget.isCaptureSnapshot!)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                child: GestureDetector(
-                  onTap: () {
-                    widget.captureSnapshot!();
-                  },
+            if (widget.isVideoOn)
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                  widget.toggleFlash!();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Row(
+                    children: [
+                      Icon(Icons.flashlight_on_outlined),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      Text(
+                        "Toggle Flash",
+                        style: GoogleFonts.inter(color: iconColor),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            if (widget.isVideoOn &&
+                widget.isCaptureSnapshot != null &&
+                widget.isCaptureSnapshot!)
+              GestureDetector(
+                onTap: () {
+                  widget.captureSnapshot!();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
                   child: Row(
                     children: [
                       Icon(Icons.camera_alt),
@@ -139,12 +167,13 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                child: GestureDetector(
-                  onTap: () {
-                    widget.localImageCapture!();
-                  },
+            if (widget.isVideoOn)
+              GestureDetector(
+                onTap: () {
+                  widget.localImageCapture!();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
                   child: Row(
                     children: [
                       Icon(Icons.image_outlined),
