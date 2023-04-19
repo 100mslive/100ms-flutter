@@ -53,6 +53,7 @@ class HMSMessageAction {
             hmssdk?.sendDirectMessage(message!!, type, peer!!, getMessageResultListener(result))
         }
         private fun getMessageResultListener(result: Result) = object: HMSMessageResultListener {
+            // TODO: not to be sent in onHMSError
             override fun onError(error: HMSException) {
                 val args = HashMap<String, Any?>()
                 args["event_name"] = "on_error"

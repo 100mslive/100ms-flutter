@@ -75,6 +75,7 @@ class HMSFlutterPlatformViewFactory: NSObject, FlutterPlatformViewFactory {
         guard let trackID = arguments["track_id"] as? String
         else {
             let errorMsg = "\(#function) Could not find track_id in arguments: \(arguments)"
+            // TODO: not to be sent in onHMSError
             plugin.sendCustomError(HMSErrorExtension.getError(errorMsg))
             print(errorMsg)
             return nil
@@ -83,6 +84,7 @@ class HMSFlutterPlatformViewFactory: NSObject, FlutterPlatformViewFactory {
         guard let room = plugin.hmsSDK?.room
         else {
             let errorMsg = "\(#function) Could not find room for trackID: \(trackID)"
+            // TODO: not to be sent in onHMSError
             plugin.sendCustomError(HMSErrorExtension.getError(errorMsg))
             print(errorMsg)
             return nil
@@ -91,6 +93,7 @@ class HMSFlutterPlatformViewFactory: NSObject, FlutterPlatformViewFactory {
         guard let videoTrack = HMSUtilities.getVideoTrack(for: trackID, in: room)
         else {
             let errorMsg = "\(#function) Could not find video track in room with trackID: \(trackID)"
+            // TODO: not to be sent in onHMSError
             plugin.sendCustomError(HMSErrorExtension.getError(errorMsg))
             print(errorMsg)
             return nil

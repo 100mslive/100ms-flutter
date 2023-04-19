@@ -1349,6 +1349,7 @@ class HmssdkFlutterPlugin :
             }
         }
 
+        // TODO: not to be sent in onHMSError
         override fun onError(e: HMSException?) {
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_error")
@@ -1387,6 +1388,7 @@ class HmssdkFlutterPlugin :
             }
         }
 
+        // TODO: not to be sent in onHMSError
         override fun onError(e: HMSException?) {
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_error")

@@ -84,6 +84,7 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
         val track = HmsUtilities.getVideoTrack(trackId!!, room!!)
         if (track == null) {
             val args = HashMap<String, Any?>()
+            // TODO: not to be sent in onHMSError
             args["event_name"] = "on_error"
             val hmsException = HMSException(
                 action = "Check the trackId for the track",
