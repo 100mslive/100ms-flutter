@@ -52,5 +52,4 @@ class HMSCameraControls {
       return HMSException.fromMap(result["data"]["error"]);
     }
   }
-
 }

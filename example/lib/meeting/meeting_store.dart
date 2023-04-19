@@ -186,6 +186,8 @@ class MeetingStore extends ChangeNotifier
 
   bool isHLSPlayerRequired = true;
 
+  bool isFlashOn = false;
+
   Future<HMSException?> join(String userName, String roomUrl,
       {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
