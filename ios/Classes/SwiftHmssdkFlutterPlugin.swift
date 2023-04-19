@@ -210,7 +210,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "capture_snapshot":
             captureSnapshot(call, result)
 
-        case "capture_image_at_max_supported_resolution","is_flash_supported","toggle_flash":
+        case "capture_image_at_max_supported_resolution", "is_tap_to_focus_supported", "is_zoom_supported", "is_flash_supported", "toggle_flash":
             HMSCameraControlsAction.cameraControlsAction(call, result, hmsSDK)
 
         default:
