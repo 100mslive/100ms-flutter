@@ -21,6 +21,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import live.hms.hmssdk_flutter.methods.HMSCameraControlsAction
 import live.hms.hmssdk_flutter.methods.HMSPipAction
 import live.hms.hmssdk_flutter.methods.HMSRemoteVideoTrackAction
 import live.hms.hmssdk_flutter.methods.HMSSessionMetadataAction
@@ -182,7 +183,7 @@ class HmssdkFlutterPlugin :
             "set_playback_allowed_for_track" -> {
                 setPlaybackAllowedForTrack(call, result)
             }
-            "enter_pip_mode", "is_pip_active", "is_pip_available","setup_pip", "destroy_pip" -> {
+            "enter_pip_mode", "is_pip_active", "is_pip_available", "setup_pip", "destroy_pip" -> {
                 HMSPipAction.pipActions(call, result, this.activity)
             }
             "set_simulcast_layer", "get_layer", "get_layer_definition" -> {
@@ -190,6 +191,9 @@ class HmssdkFlutterPlugin :
             }
             "capture_snapshot" -> {
                 captureSnapshot(call, result)
+            }
+            "is_tap_to_focus_supported", "capture_image_at_max_supported_resolution", "is_zoom_supported","is_flash_supported","enable_flash","disable_flash" -> {
+                HMSCameraControlsAction.cameraControlsAction(call, result, hmssdk!!, activity.applicationContext)
             }
             else -> {
                 result.notImplemented()
@@ -962,9 +966,9 @@ class HmssdkFlutterPlugin :
             isWebRtCLog: Boolean
         ) {
             /***
-            * Here we filter the logs based on the level we have set
-            * while calling [startHMSLogger]
-            ***/
+             * Here we filter the logs based on the level we have set
+             * while calling [startHMSLogger]
+             ***/
             if (isWebRtCLog && level != HMSLogger.webRtcLogLevel) return
             if (level != HMSLogger.level) return
 
@@ -1009,7 +1013,7 @@ class HmssdkFlutterPlugin :
     private var androidScreenshareResult: Result? = null
     private fun startScreenShare(result: Result) {
         androidScreenshareResult = result
-        activity.applicationContext?.registerReceiver(activityBroadcastReceiver,IntentFilter("ACTIVITY_RECEIVER"))
+        activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"))
         val mediaProjectionManager: MediaProjectionManager = activity.getSystemService(
             Context.MEDIA_PROJECTION_SERVICE
         ) as MediaProjectionManager
@@ -1019,17 +1023,18 @@ class HmssdkFlutterPlugin :
         )
     }
 
-    private val activityBroadcastReceiver = object : BroadcastReceiver(){
+    private val activityBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if(intent?.action == "ACTIVITY_RECEIVER")
-                when(intent.extras?.getString("method_name")){
-                    "REQUEST_SCREEN_SHARE"->{
+            if (intent?.action == "ACTIVITY_RECEIVER") {
+                when (intent.extras?.getString("method_name")) {
+                    "REQUEST_SCREEN_SHARE" -> {
                         requestScreenShare(intent)
                     }
-                    "REQUEST_AUDIO_SHARE"-> {
+                    "REQUEST_AUDIO_SHARE" -> {
                         requestAudioShare(intent)
                     }
                 }
+            }
         }
     }
 
@@ -1064,7 +1069,7 @@ class HmssdkFlutterPlugin :
     private fun startAudioShare(call: MethodCall, result: Result) {
         androidAudioShareResult = result
         mode = call.argument<String>("audio_mixing_mode")
-        activity.applicationContext?.registerReceiver(activityBroadcastReceiver,IntentFilter("ACTIVITY_RECEIVER"))
+        activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"))
         val mediaProjectionManager: MediaProjectionManager? = activity.getSystemService(
             Context.MEDIA_PROJECTION_SERVICE
         ) as MediaProjectionManager

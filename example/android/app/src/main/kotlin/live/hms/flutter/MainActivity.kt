@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import io.flutter.embedding.android.FlutterActivity
 import live.hms.hmssdk_flutter.Constants
 import live.hms.hmssdk_flutter.methods.HMSPipAction
@@ -17,13 +16,12 @@ class MainActivity : FlutterActivity() {
 
         if (requestCode == Constants.SCREEN_SHARE_INTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             data?.action = "ACTIVITY_RECEIVER"
-            activity.sendBroadcast(data?.putExtra("method_name","REQUEST_SCREEN_SHARE"))
+            activity.sendBroadcast(data?.putExtra("method_name", "REQUEST_SCREEN_SHARE"))
         }
 
         if (requestCode == Constants.AUDIO_SHARE_INTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             data?.action = "ACTIVITY_RECEIVER"
-            activity.sendBroadcast(data?.putExtra("method_name","REQUEST_AUDIO_SHARE"))
-
+            activity.sendBroadcast(data?.putExtra("method_name", "REQUEST_AUDIO_SHARE"))
         }
     }
 
@@ -40,11 +38,11 @@ class MainActivity : FlutterActivity() {
             Log.i("PIP Mode", "Exited PIP Mode")
         }
     }
-    
+
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        //This should only work for android version above 8 since PIP is only supported after
-        //android 8 and will not be called after android 12 since it automatically gets handled by android.
+        // This should only work for android version above 8 since PIP is only supported after
+        // android 8 and will not be called after android 12 since it automatically gets handled by android.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
             HMSPipAction.autoEnterPipMode(this)
         }
