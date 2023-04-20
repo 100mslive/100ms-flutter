@@ -143,7 +143,8 @@ class HMSPIPAction {
         let arguments = call.arguments as! [AnyHashable: Any]
 
         guard let trackID = arguments["track_id"] as? String,
-              let track = HMSUtilities.getVideoTrack(for: trackID, in: (hmsSDK?.room)!),
+              let room = hmsSDK?.room,
+              let track = HMSUtilities.getVideoTrack(for: trackID, in: room),
               let alternativeText = arguments["alternative_text"] as? String,
               let ratio = arguments["ratio"] as? [Int],
                 ratio.count == 2,
