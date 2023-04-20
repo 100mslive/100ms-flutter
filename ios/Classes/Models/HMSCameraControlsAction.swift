@@ -112,11 +112,11 @@ class HMSCameraControlsAction {
             return
         }
 
-        localVideoTrack.modifyCaptureDevice {device in
+        localVideoTrack.modifyCaptureDevice { device in
             guard let device = device else {
                 result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Device could not be found")))
-                    return
-                }
+                return
+            }
             result(HMSResultExtension.toDictionary(true, device.isTorchModeSupported(.on)))
         }
     }
@@ -134,11 +134,12 @@ class HMSCameraControlsAction {
             return
         }
 
-        localVideoTrack.modifyCaptureDevice {device in
+        localVideoTrack.modifyCaptureDevice { device in
             guard let device = device else {
                 result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Device could not be found")))
-                    return
-                }
+                return
+            }
+            
             if device.isTorchModeSupported(.on) {
                 device.torchMode = device.torchMode == .off ? .on : .off
                 result(HMSResultExtension.toDictionary(true, nil))
