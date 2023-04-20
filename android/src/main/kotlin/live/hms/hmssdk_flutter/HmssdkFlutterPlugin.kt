@@ -982,9 +982,9 @@ class HmssdkFlutterPlugin :
                 args["data"] = copyLogBuffer
                 CoroutineScope(Dispatchers.Main).launch {
                     logsSink?.success(args)
+                    copyLogBuffer.clear()
+                    logsBuffer.clear()
                 }
-                logsBuffer.clear()
-                copyLogBuffer.clear()
             }
         }
     }
