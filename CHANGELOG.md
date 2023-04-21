@@ -59,6 +59,8 @@ You can checkout the migration guide here:
 - Removed static variables from HMSSDK
 - Improved logging capabilties in SDK
 
+Full Changelog: [1.4.0...1.5.0](https://github.com/100mslive/100ms-flutter/compare/1.4.0...1.5.0)
+
 ## 1.4.0 - 2023-04-06
 
 ### Added
