@@ -1,3 +1,64 @@
+## 1.5.0 - 2023-04-21
+
+### Breaking
+
+- Updated Screen share and Audio share implementation in android
+
+Earlier we used to add `onActivityResult` in our `MainActivity.kt` file:
+
+```dart
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+
+    if (requestCode == Constants.SCREEN_SHARE_INTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        data?.action = "ACTIVITY_RECEIVER"
+        activity.sendBroadcast(data?.putExtra("method_name", "REQUEST_SCREEN_SHARE"))
+    }
+
+    if (requestCode == Constants.AUDIO_SHARE_INTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        data?.action = "ACTIVITY_RECEIVER"
+        activity.sendBroadcast(data?.putExtra("method_name", "REQUEST_AUDIO_SHARE"))
+    }
+}
+```
+
+but now the method code needs to be repleaced with below code as:
+
+```dart
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+
+    if (requestCode == Constants.SCREEN_SHARE_INTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        data?.action = Constants.HMSSDK_RECEIVER
+        activity.sendBroadcast(data?.putExtra(Constants.METHOD_CALL, Constants.SCREEN_SHARE_REQUEST))
+    }
+
+    if (requestCode == Constants.AUDIO_SHARE_INTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        data?.action = Constants.HMSSDK_RECEIVER
+        activity.sendBroadcast(data?.putExtra(Constants.METHOD_CALL, Constants.AUDIO_SHARE_REQUEST))
+    }
+}
+```
+
+You can checkout the migration guide here:
+
+- [Audio Share migration guide](https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/local-audio-share#migrating-from-older-hmssdk-version-to-150-or-above)
+- [Screen Share migration guide](https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/screen-share#migrating-from-older-hmssdk-version-to-150-or-above)
+
+### Added 
+
+- Camera control capabilities
+  - Now you can capture image from a local peer feed at the highest resolution supported by the camera.
+  - You can also control your phone's flash if the camera supports flash
+
+- Enter PIP mode automatically
+  - Now it is possible to enter PIP mode automatically on minimizing the application for all android versions
+
+### Changed
+
+- Removed static variables from HMSSDK
+- Improved logging capabilties in SDK
+
 ## 1.4.0 - 2023-04-06
 
 ### Added
