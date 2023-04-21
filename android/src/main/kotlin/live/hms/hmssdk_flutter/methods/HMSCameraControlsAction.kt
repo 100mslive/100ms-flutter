@@ -17,16 +17,16 @@ class HMSCameraControlsAction {
             when (call.method) {
                 "is_tap_to_focus_supported" -> isTapToFocusSupported(result, hmssdk)
                 "is_zoom_supported" -> isZoomSupported(result, hmssdk)
-                "capture_image_at_max_supported_resolution" -> captureImageAtMaxSupportedResolution(call,result, hmssdk, context)
-                "is_flash_supported" -> isFlashSupported(result,hmssdk)
-                "toggle_flash" -> toggleFlash(result,hmssdk)
+                "capture_image_at_max_supported_resolution" -> captureImageAtMaxSupportedResolution(call, result, hmssdk, context)
+                "is_flash_supported" -> isFlashSupported(result, hmssdk)
+                "toggle_flash" -> toggleFlash(result, hmssdk)
                 else -> {
                     result.notImplemented()
                 }
             }
         }
 
-        //TODO: Complete the method
+        // TODO: Complete the method
         private fun isTapToFocusSupported(result: Result, hmssdk: HMSSDK) {
             hmssdk.getLocalPeer()?.let { localPeer ->
                 localPeer.videoTrack?.let { localVideoTrack ->
@@ -39,7 +39,7 @@ class HMSCameraControlsAction {
             result.success(false)
         }
 
-        //TODO: Complete the method
+        // TODO: Complete the method
         private fun isZoomSupported(result: Result, hmssdk: HMSSDK) {
             hmssdk.getLocalPeer()?.let { localPeer ->
                 localPeer.videoTrack?.let { localVideoTrack ->
@@ -57,8 +57,8 @@ class HMSCameraControlsAction {
          * Here we take the file path from user and save the image at that location
          * If flash is already on while calling this method then we turn OFF the flash
          */
-        private fun captureImageAtMaxSupportedResolution(call: MethodCall,result: Result, hmssdk: HMSSDK, context: Context) {
-            val withFlash: Boolean =  call.argument<Boolean>("with_flash") ?: run {
+        private fun captureImageAtMaxSupportedResolution(call: MethodCall, result: Result, hmssdk: HMSSDK, context: Context) {
+            val withFlash: Boolean = call.argument<Boolean>("with_flash") ?: run {
                 HMSErrorLogger.returnArgumentsError("withFlash parameter is null in captureImageAtMaxSupportedResolution method")
                 false
             }
@@ -71,19 +71,18 @@ class HMSCameraControlsAction {
                 localPeer.videoTrack?.let { localVideoTrack ->
                     localVideoTrack.getCameraControl()?.let { cameraControl ->
 
-                        //If flash is already turned ON we turn it OFF before calling this method
-                        if(cameraControl.isFlashEnabled()){
+                        // If flash is already turned ON we turn it OFF before calling this method
+                        if (cameraControl.isFlashEnabled()) {
                             cameraControl.setFlash(false)
                         }
-                        if(withFlash){
+                        if (withFlash) {
                             /***
                              * Here we check whether flash is supported by the currently facing camera device
                              */
-                            if(cameraControl.isFlashSupported()){
+                            if (cameraControl.isFlashSupported()) {
                                 cameraControl.setFlash(true)
-                            }
-                            else{
-                                HMSErrorLogger.logError("captureImageAtMaxSupportedResolution","Flash is not supported for current facing camera","Compatibility error")
+                            } else {
+                                HMSErrorLogger.logError("captureImageAtMaxSupportedResolution", "Flash is not supported for current facing camera", "Compatibility error")
                             }
                         }
                         cameraControl.captureImageAtMaxSupportedResolution(imageFile) { isSuccess ->
@@ -94,7 +93,7 @@ class HMSCameraControlsAction {
                             } else {
                                 result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("Error in capturing image")))
                             }
-                            if(withFlash){
+                            if (withFlash) {
                                 cameraControl.setFlash(false)
                             }
                         }
@@ -117,22 +116,22 @@ class HMSCameraControlsAction {
         /***
          * This is used to check whether flash is supported by the current facing camera
          */
-        private fun isFlashSupported(result: Result,hmssdk:HMSSDK){
+        private fun isFlashSupported(result: Result, hmssdk: HMSSDK) {
             hmssdk.getLocalPeer()?.let { localPeer ->
                 localPeer.videoTrack?.let { localVideoTrack ->
                     localVideoTrack.getCameraControl()?.let { cameraControl ->
-                        //Here we return whether flash is supported or not
+                        // Here we return whether flash is supported or not
                         result.success(HMSResultExtension.toDictionary(true, cameraControl.isFlashSupported()))
                         return
-                    }?: run {
+                    } ?: run {
                         result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("cameraControl is null")))
                         return
                     }
-                }?: run {
+                } ?: run {
                     result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("local video track is null")))
                     return
                 }
-            } ?:run{
+            } ?: run {
                 result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("local peer is null")))
                 return
             }
@@ -143,33 +142,31 @@ class HMSCameraControlsAction {
          * Only if the flash is supported by the current facing camera
          * If video is muted then the flash light does not turn ON
          */
-        private fun toggleFlash(result: Result,hmssdk:HMSSDK){
+        private fun toggleFlash(result: Result, hmssdk: HMSSDK) {
             hmssdk.getLocalPeer()?.let { localPeer ->
                 localPeer.videoTrack?.let { localVideoTrack ->
                     localVideoTrack.getCameraControl()?.let { cameraControl ->
-                        if(cameraControl.isFlashSupported()){
-                            if(cameraControl.isFlashEnabled()){
+                        if (cameraControl.isFlashSupported()) {
+                            if (cameraControl.isFlashEnabled()) {
                                 cameraControl.setFlash(false)
-                            }
-                            else{
+                            } else {
                                 cameraControl.setFlash(true)
                             }
                             result.success(HMSResultExtension.toDictionary(true, null))
                             return
-                        }
-                        else{
+                        } else {
                             result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("Flash is not supported for current facing camera, Also please ensure camera is turned ON")))
                             return
                         }
-                    }?: run {
+                    } ?: run {
                         result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("cameraControl is null")))
                         return
                     }
-                }?: run {
+                } ?: run {
                     result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("local video track is null")))
                     return
                 }
-            } ?:run{
+            } ?: run {
                 result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("local peer is null")))
                 return
             }
