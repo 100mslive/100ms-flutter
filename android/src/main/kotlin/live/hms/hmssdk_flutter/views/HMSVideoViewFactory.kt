@@ -21,14 +21,15 @@ class HMSVideoViewWidget(
     setMirror: Boolean,
     scaleType: Int?,
     private val matchParent: Boolean? = true,
-    disableAutoSimulcastLayerSelect: Boolean
+    disableAutoSimulcastLayerSelect: Boolean,
+    hmssdkFlutterPlugin: HmssdkFlutterPlugin?
 ) : PlatformView {
 
     private var hmsVideoView: HMSVideoView? = null
 
     init {
         if (hmsVideoView == null) {
-            hmsVideoView = HMSVideoView(context, setMirror, scaleType, track, disableAutoSimulcastLayerSelect)
+            hmsVideoView = HMSVideoView(context, setMirror, scaleType, track, disableAutoSimulcastLayerSelect, hmssdkFlutterPlugin)
         }
     }
 
@@ -96,6 +97,6 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
         }
         val disableAutoSimulcastLayerSelect = args!!["disable_auto_simulcast_layer_select"] as? Boolean ?: false
 
-        return HMSVideoViewWidget(requireNotNull(context), viewId, creationParams, track, setMirror!!, scaleType, matchParent, disableAutoSimulcastLayerSelect)
+        return HMSVideoViewWidget(requireNotNull(context), viewId, creationParams, track, setMirror!!, scaleType, matchParent, disableAutoSimulcastLayerSelect, plugin)
     }
 }

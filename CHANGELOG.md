@@ -1,3 +1,42 @@
+## 1.5.0 - 2023-04-21
+
+### Breaking
+
+- Updated Screen share and Audio share implementation in Android
+
+  The latest update includes changes in the implementation of Screen share and Audio share on Android. If you are using Screenshare or Local Audio Share functionalities, upgrading to this version or above will require changes to be made to the `onActivityResult` method of `MainActivity.kt`.
+
+  More details are available in the Migration Guide listed below:
+  - [Screen Share Migration Guide](https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/screen-share#migrating-from-older-hmssdk-version-to-150-or-above)
+
+  - [Audio Share Migration Guide](https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/local-audio-share#migrating-from-older-hmssdk-version-to-150-or-above)
+
+### Added
+
+- Camera Control Capabilities
+
+  The latest update includes the ability to capture an image from a local peer feed at the maximum resolution supported by the Camera, and the ability to control the phone's flash (if supported).
+
+  Read more about the [Camera Controls here](https://www.100ms.live/docs/flutter/v2/how--to-guides/configure-your-device/camera/camera-controls).
+
+- Enter PIP Mode automatically
+
+  The new update allows for automatic entry into PIP mode for all Android versions upon minimizing the application.
+
+  Read more about adding [PIP Mode here](https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/render-video/pip-mode).
+
+
+### Changed
+
+- Improved logging capabilities in SDK for a more efficient and streamlined logging process.
+
+  Read more about using [Logging here](https://www.100ms.live/docs/flutter/v2/how--to-guides/debugging/error-logging).
+
+
+Updated to Android SDK 2.6.1 & iOS SDK 0.9.2
+
+Full Changelog: [1.4.0...1.5.0](https://github.com/100mslive/100ms-flutter/compare/1.4.0...1.5.0)
+
 ## 1.4.0 - 2023-04-06
 
 ### Added

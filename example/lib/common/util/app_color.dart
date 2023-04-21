@@ -5,11 +5,10 @@ Color iconColor =
     //     ?
     Colors.white;
 // : Colors.black;
-ThemeMode currentMode = ThemeMode.dark;
 
 void updateColor(ThemeMode mode) {
   iconColor = mode == ThemeMode.dark ? Colors.white : Colors.black;
-  currentMode = mode;
+
   themeDefaultColor = mode == ThemeMode.dark
       ? Color.fromRGBO(245, 249, 255, 0.95)
       : Color.fromRGBO(29, 34, 41, 1);
@@ -52,9 +51,7 @@ Color themeDisabledTextColor = Color.fromRGBO(255, 255, 255, 0.48);
 Color enabledTextColor = Color.fromRGBO(255, 255, 255, 0.98);
 Color borderColor = Color.fromRGBO(45, 52, 64, 1);
 Color dividerColor = Color.fromRGBO(27, 31, 38, 1);
-Color buttonColor = Color.fromRGBO(71, 83, 102, 1);
 Color defaultAvatarColor = Color.fromRGBO(101, 85, 193, 1);
-Color buttonBackgroundColor = Color.fromRGBO(1, 13, 15, 1);
 Color themeScreenBackgroundColor = Color.fromRGBO(11, 13, 15, 1);
 Color errorColor = Color.fromRGBO(204, 82, 95, 1);
 Color themeBottomSheetColor = Color.fromRGBO(20, 23, 28, 1);

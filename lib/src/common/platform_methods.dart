@@ -166,7 +166,10 @@ enum PlatformMethod {
   toggleCameraMuteState,
   captureSnapshot,
   getAllLogs,
-  getAuthTokenByRoomCode
+  getAuthTokenByRoomCode,
+  captureImageAtMaxSupportedResolution,
+  isFlashSupported,
+  toggleFlash
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -400,6 +403,12 @@ extension PlatformMethodValues on PlatformMethod {
         return "get_all_logs";
       case PlatformMethod.getAuthTokenByRoomCode:
         return "get_auth_token_by_room_code";
+      case PlatformMethod.captureImageAtMaxSupportedResolution:
+        return "capture_image_at_max_supported_resolution";
+      case PlatformMethod.isFlashSupported:
+        return "is_flash_supported";
+      case PlatformMethod.toggleFlash:
+        return "toggle_flash";
       default:
         return 'unknown';
     }
@@ -635,6 +644,12 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.getAllLogs;
       case "get_auth_token_by_room_code":
         return PlatformMethod.getAuthTokenByRoomCode;
+      case "capture_image_at_max_supported_resolution":
+        return PlatformMethod.captureImageAtMaxSupportedResolution;
+      case "is_flash_supported":
+        return PlatformMethod.isFlashSupported;
+      case "toggle_flash":
+        return PlatformMethod.toggleFlash;
       default:
         return PlatformMethod.unknown;
     }

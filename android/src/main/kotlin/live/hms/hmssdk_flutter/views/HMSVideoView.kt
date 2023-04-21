@@ -22,7 +22,8 @@ class HMSVideoView(
     private val setMirror: Boolean,
     private val scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
     private val track: HMSVideoTrack?,
-    private val disableAutoSimulcastLayerSelect: Boolean
+    private val disableAutoSimulcastLayerSelect: Boolean,
+    private val hmssdkFlutterPlugin: HmssdkFlutterPlugin?
 ) : FrameLayout(context, null) {
 
     private var hmsVideoView: HMSVideoView? = null
@@ -66,9 +67,9 @@ class HMSVideoView(
                     byteArray = stream.toByteArray()
                     bitmap.recycle()
                     val data = Base64.encodeToString(byteArray, Base64.DEFAULT)
-                    if (HmssdkFlutterPlugin.hmssdkFlutterPlugin != null) {
-                        if (HmssdkFlutterPlugin.hmssdkFlutterPlugin?.hmsVideoViewResult != null) {
-                            HmssdkFlutterPlugin.hmssdkFlutterPlugin?.hmsVideoViewResult?.success(data)
+                    if (hmssdkFlutterPlugin != null) {
+                        if (hmssdkFlutterPlugin.hmsVideoViewResult != null) {
+                            hmssdkFlutterPlugin.hmsVideoViewResult?.success(data)
                         } else {
                             Log.e("Receiver error", "hmsVideoViewResult is null")
                         }

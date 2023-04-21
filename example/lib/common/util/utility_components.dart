@@ -1492,6 +1492,7 @@ class UtilityComponents {
                           else
                             Utilities.showToast("Audio Share not enabled"),
                           Navigator.pop(context),
+                          Navigator.pop(context)
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
