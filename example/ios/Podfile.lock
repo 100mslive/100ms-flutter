@@ -50,22 +50,22 @@ PODS:
   - Firebase/Performance (10.7.0):
     - Firebase/CoreOnly
     - FirebasePerformance (~> 10.7.0)
-  - firebase_analytics (10.2.0):
+  - firebase_analytics (10.2.1):
     - Firebase/Analytics (= 10.7.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.9.0):
+  - firebase_core (2.10.0):
     - Firebase/CoreOnly (= 10.7.0)
     - Flutter
-  - firebase_crashlytics (3.1.0):
+  - firebase_crashlytics (3.1.1):
     - Firebase/Crashlytics (= 10.7.0)
     - firebase_core
     - Flutter
-  - firebase_dynamic_links (5.1.0):
+  - firebase_dynamic_links (5.1.1):
     - Firebase/DynamicLinks (= 10.7.0)
     - firebase_core
     - Flutter
-  - firebase_performance (0.9.1):
+  - firebase_performance (0.9.1-1):
     - Firebase/Performance (= 10.7.0)
     - firebase_core
     - Flutter
@@ -194,7 +194,7 @@ PODS:
   - HMSSDK (0.9.2):
     - HMSAnalyticsSDK (= 0.0.2)
     - HMSWebRTC (= 1.0.5115)
-  - hmssdk_flutter (1.5.0):
+  - hmssdk_flutter (1.6.0):
     - Flutter
     - HMSBroadcastExtensionSDK (= 0.0.9)
     - HMSSDK (= 0.9.2)
@@ -354,11 +354,11 @@ SPEC CHECKSUMS:
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: ce3938a0df3cc1ef404671531facef740d03f920
   Firebase: 0219acf760880eeec8ce479895bd7767466d9f81
-  firebase_analytics: 8954db5c9b63075214fa1b3ad2cdced9646f45a0
-  firebase_core: d85432877e814811e040e7659f9c82faeab66e04
-  firebase_crashlytics: 4c90334dc536ffa73b92f3e978426a0d1e339c74
-  firebase_dynamic_links: eb6716a5419a7b1ad5ef4860c84290c48a30be91
-  firebase_performance: 5f227f9d3c97ede796821299aabbe75e42dc3629
+  firebase_analytics: e8e294333de66e5429d4aac365966281b4dbfb7d
+  firebase_core: 18d44f087248303a4a8f05d0099a000c46e3c77a
+  firebase_crashlytics: 6c15c2f507d82746dd62214964acf56146eab53f
+  firebase_dynamic_links: 464b974eeb7a5b4b7c970062c49a3e39ff924f47
+  firebase_performance: 7dd98298ea2f19f480efd59ccbfcad3972ced984
   FirebaseABTesting: 0c7038e4dce273821e417bdc2b0373ee0e0e8df3
   FirebaseAnalytics: f8133442ee6f8512e28ff19e62ce15398bfaeace
   FirebaseCore: e317665b9d744727a97e623edbbed009320afdd7
@@ -380,7 +380,7 @@ SPEC CHECKSUMS:
   HMSAnalyticsSDK: 4d2a88a729b1eb42f3d25f217c28937ec318a5b7
   HMSBroadcastExtensionSDK: d80fe325f6c928bd8e5176290b5a4b7ae15d6fbb
   HMSSDK: 1bd8f954ecccf50611c9b9af431798ffed7fcb30
-  hmssdk_flutter: 87627396158eb17797b2e8ebe6b1b7e3ee633603
+  hmssdk_flutter: 99343f2773e2c66e80ee52e32c2e3491f565ab09
   HMSWebRTC: d74cd5e5ecfe701219dd4042ec67fed02ea5d6db
   image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
