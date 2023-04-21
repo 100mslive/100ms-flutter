@@ -139,7 +139,7 @@ class HMSCameraControlsAction {
                 result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Device could not be found")))
                 return
             }
-            
+
             if device.isTorchModeSupported(.on) {
                 device.torchMode = device.torchMode == .off ? .on : .off
                 result(HMSResultExtension.toDictionary(true, nil))
