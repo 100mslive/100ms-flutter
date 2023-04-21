@@ -15,13 +15,13 @@ class MainActivity : FlutterActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == Constants.SCREEN_SHARE_INTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            data?.action = "ACTIVITY_RECEIVER"
-            activity.sendBroadcast(data?.putExtra("method_name", "REQUEST_SCREEN_SHARE"))
+            data?.action = Constants.HMSSDK_RECEIVER
+            activity.sendBroadcast(data?.putExtra(Constants.METHOD_CALL, Constants.SCREEN_SHARE_REQUEST))
         }
 
         if (requestCode == Constants.AUDIO_SHARE_INTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            data?.action = "ACTIVITY_RECEIVER"
-            activity.sendBroadcast(data?.putExtra("method_name", "REQUEST_AUDIO_SHARE"))
+            data?.action = Constants.HMSSDK_RECEIVER
+            activity.sendBroadcast(data?.putExtra(Constants.METHOD_CALL, Constants.AUDIO_SHARE_REQUEST))
         }
     }
 
