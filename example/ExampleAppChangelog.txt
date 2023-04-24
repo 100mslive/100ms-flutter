@@ -1,19 +1,6 @@
-Board: https://github.com/100mslive/100ms-flutter/projects/17
+Board: https://github.com/100mslive/100ms-flutter/projects/18
 
-- Added onUserLeaveHint implementation in Android to enable automatic entering into PIP Mode
-https://github.com/100mslive/100ms-flutter/issues/1209
 
-- Showing all previous logs on opening Live Logs View
-https://github.com/100mslive/100ms-flutter/issues/1221
-
-- Parallelly archiving Android & iOS apps from the Release Script
-https://github.com/100mslive/100ms-flutter/pull/1224
-
-- Update HMSSDKFlutterPlugin to have only non-static variables
-https://github.com/100mslive/100ms-flutter/issues/1141
-
-- Added support to Capture Snapshot at the highest resolution offered by the camera
-https://github.com/100mslive/100ms-flutter/issues/1230
 
 Flutter SDK: 1.6.0
 Android SDK: 2.6.1
