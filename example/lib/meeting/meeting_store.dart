@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:hmssdk_flutter_example/common/util/log_writer.dart';
 import 'package:hmssdk_flutter_example/app_secrets.dart';
+import 'package:hmssdk_flutter_example/enum/session_store_key.dart';
 import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -39,7 +40,8 @@ class MeetingStore extends ChangeNotifier
         HMSUpdateListener,
         HMSActionResultListener,
         HMSStatsListener,
-        HMSLogListener {
+        HMSLogListener,
+        HMSKeyChangeListener {
   late HMSSDKInteractor _hmsSDKInteractor;
 
   MeetingStore({required HMSSDKInteractor hmsSDKInteractor}) {
@@ -188,6 +190,9 @@ class MeetingStore extends ChangeNotifier
 
   bool isFlashOn = false;
 
+  HMSSessionStore? _hmsSessionStore;
+
+  PeerTrackNode? spotLightPeer;
   Future<HMSException?> join(String userName, String roomUrl,
       {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
@@ -709,7 +714,6 @@ class MeetingStore extends ChangeNotifier
     log("onMessage-> sender: ${message.sender} message: ${message.message} time: ${message.time}, type: ${message.type}");
     switch (message.type) {
       case "metadata":
-        getSessionMetadata();
         break;
       default:
         addMessage(message);
@@ -1001,6 +1005,8 @@ class MeetingStore extends ChangeNotifier
     }
     _hmsSDKInteractor.removeHMSLogger();
     _hmsSDKInteractor.destroy();
+    _hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeListener: this);
+    _hmsSessionStore = null;
     peerTracks.clear();
     isRoomEnded = true;
     screenShareCount = 0;
@@ -1303,6 +1309,53 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
+  @override
+  void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
+    _hmsSessionStore = hmsSessionStore;
+    _hmsSessionStore?.addKeyChangeListener(
+        keys: SessionStoreKeyValues.getSessionStoreKeys(),
+        hmsKeyChangeListener: this,
+        hmsActionResultListener: this);
+  }
+
+  @override
+  void onKeyChanged({required String key, required String? value}) {
+    log("onKeyChanged --> key: $key value: $value");
+    SessionStoreKey keyType = SessionStoreKeyValues.getMethodFromName(key);
+    switch (keyType) {
+      case SessionStoreKey.PINNED_MESSAGE_SESSION_KEY:
+        sessionMetadata = value;
+        break;
+      case SessionStoreKey.SPOTLIGHT:
+        setPeerToSpotlight(value);
+        break;
+      case SessionStoreKey.unknown:
+        break;
+    }
+    notifyListeners();
+  }
+
+  void setPeerToSpotlight(String? value) {
+    int currentSpotlightPeerIndex =
+        peerTracks.indexWhere((node) => node.uid == spotLightPeer?.uid);
+    if (currentSpotlightPeerIndex != -1) {
+      peerTracks[currentSpotlightPeerIndex].pinTile = false;
+      spotLightPeer = null;
+    }
+    if (value != null) {
+      int index =
+          peerTracks.indexWhere((node) => node.track?.trackId == (value));
+      if (index != -1) {
+        Utilities.showToast("${peerTracks[index].peer.name} is in spotlight");
+        spotLightPeer = peerTracks[index];
+        changePinTileStatus(peerTracks[index]);
+      } else {
+        Utilities.showToast("Failed to set spotlight for the peer");
+      }
+    }
+    notifyListeners();
+  }
+
   void setMode(MeetingMode meetingMode) {
     //Turning the videos on if the previously mode was audio
     if (this.meetingMode == MeetingMode.Audio &&
@@ -1430,13 +1483,22 @@ class MeetingStore extends ChangeNotifier
     audioPlayerVolume = volume;
   }
 
-  void setSessionMetadata(String? metadata) {
-    _hmsSDKInteractor.setSessionMetadata(
-        metadata: metadata, hmsActionResultListener: this);
+  void setSessionMetadata({required String key, String? metadata}) {
+    _hmsSessionStore?.setSessionMetadataForKey(
+        key: key, data: metadata, hmsActionResultListener: this);
   }
 
-  void getSessionMetadata() async {
-    sessionMetadata = await _hmsSDKInteractor.getSessionMetadata();
+  void getSessionMetadata(String key) async {
+    dynamic result = await _hmsSessionStore?.getSessionMetadataForKey(key: key);
+    if (result is HMSException) {
+      Utilities.showToast(
+          "Error Occured: code: ${result.code?.errorCode}, description: ${result.description}, message: ${result.message}",
+          time: 5);
+      return;
+    }
+    if (result != null) {
+      sessionMetadata = result as String;
+    }
     notifyListeners();
   }
 
@@ -1733,6 +1795,10 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
         Utilities.showToast("Change Role successful");
         break;
+      case HMSActionResultListenerMethod.setSessionMetadataForKey:
+        break;
+      case HMSActionResultListenerMethod.addKeyChangeListener:
+        break;
     }
   }
 
@@ -1808,6 +1874,12 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
         Utilities.showToast("Change role failed");
+        break;
+      case HMSActionResultListenerMethod.setSessionMetadataForKey:
+        Utilities.showToast("Set session metadata failed");
+        break;
+      case HMSActionResultListenerMethod.addKeyChangeListener:
+        Utilities.showToast("Add key change listener failed");
         break;
     }
     notifyListeners();

@@ -21,10 +21,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import live.hms.hmssdk_flutter.methods.HMSCameraControlsAction
-import live.hms.hmssdk_flutter.methods.HMSPipAction
-import live.hms.hmssdk_flutter.methods.HMSRemoteVideoTrackAction
-import live.hms.hmssdk_flutter.methods.HMSSessionMetadataAction
+import live.hms.hmssdk_flutter.methods.*
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
 import live.hms.video.audio.HMSAudioManager.*
 import live.hms.video.connection.stats.*
@@ -39,6 +36,8 @@ import live.hms.video.sdk.models.enums.HMSRoomUpdate
 import live.hms.video.sdk.models.enums.HMSTrackUpdate
 import live.hms.video.sdk.models.role.HMSRole
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
+import live.hms.video.sessionstore.HMSKeyChangeListener
+import live.hms.video.sessionstore.HmsSessionStore
 import live.hms.video.signal.init.TokenRequest
 import live.hms.video.signal.init.TokenRequestOptions
 import live.hms.video.utils.HMSLogger
@@ -56,15 +55,18 @@ class HmssdkFlutterPlugin :
     private var previewChannel: EventChannel? = null
     private var logsEventChannel: EventChannel? = null
     private var rtcStatsChannel: EventChannel? = null
+    private var sessionStoreChannel : EventChannel? = null
     private var eventSink: EventChannel.EventSink? = null
     private var previewSink: EventChannel.EventSink? = null
     private var logsSink: EventChannel.EventSink? = null
     private var rtcSink: EventChannel.EventSink? = null
+    private var sessionStoreSink: EventChannel.EventSink? = null
     private lateinit var activity: Activity
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
     var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
+    private var hmsSessionStore: HmsSessionStore? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         if (hmssdkFlutterPlugin == null) {
@@ -80,11 +82,15 @@ class HmssdkFlutterPlugin :
             this.rtcStatsChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "rtc_event_channel")
 
+            this.sessionStoreChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger,"session_event_channel")
+
             this.meetingEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Meeting event channel not found")
             this.channel?.setMethodCallHandler(this) ?: Log.e("Channel Error", "Event channel not found")
             this.previewChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Preview channel not found")
             this.logsEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Logs event channel not found")
             this.rtcStatsChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "RTC Stats channel not found")
+            this.sessionStoreChannel?.setStreamHandler(this) ?: Log.e("Channel Error","Session Store channel not found")
             this.hmsVideoFactory = HMSVideoViewFactory(this)
 
             flutterPluginBinding.platformViewRegistry.registerViewFactory(
@@ -194,6 +200,15 @@ class HmssdkFlutterPlugin :
             }
             "is_tap_to_focus_supported", "capture_image_at_max_supported_resolution", "is_zoom_supported", "is_flash_supported", "toggle_flash" -> {
                 HMSCameraControlsAction.cameraControlsAction(call, result, hmssdk!!, activity.applicationContext)
+            }
+            "get_session_metadata_for_key", "set_session_metadata_for_key" -> {
+                HMSSessionStoreAction.sessionStoreActions(call,result,hmsSessionStore)
+            }
+            "add_key_change_listener"-> {
+                addKeyChangeListener(call,result)
+            }
+            "remove_key_change_listener" -> {
+                removeKeyChangeListener()
             }
             else -> {
                 result.notImplemented()
@@ -368,10 +383,12 @@ class HmssdkFlutterPlugin :
             previewChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Preview channel not found")
             logsEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Logs event channel not found")
             rtcStatsChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "RTC Stats channel not found")
+            sessionStoreChannel?.setStreamHandler(null)?:Log.e("Channel Error","Session Store channel not found")
             eventSink = null
             previewSink = null
             rtcSink = null
             logsSink = null
+            sessionStoreSink = null
             hmssdkFlutterPlugin = null
         } else {
             Log.e("Plugin Error", "hmssdkFlutterPlugin is null in onDetachedFromEngine")
@@ -454,6 +471,7 @@ class HmssdkFlutterPlugin :
     private fun leave(result: Result) {
         hmssdk!!.leave(hmsActionResultListener = HMSCommonAction.getActionListener(result))
         disposePIP()
+        removeKeyChangeListener()
     }
 
     private fun destroy(result: Result) {
@@ -471,6 +489,8 @@ class HmssdkFlutterPlugin :
             this.logsSink = events
         } else if (nameOfEventSink == "rtc_stats") {
             this.rtcSink = events
+        } else if(nameOfEventSink == "session_store") {
+            this.sessionStoreSink = events
         }
     }
 
@@ -668,6 +688,7 @@ class HmssdkFlutterPlugin :
             hmsActionResultListener = HMSCommonAction.getActionListener(result)
         )
         disposePIP()
+        removeKeyChangeListener()
     }
 
     private fun isAllowedToEndMeeting(): Boolean? {
@@ -851,6 +872,7 @@ class HmssdkFlutterPlugin :
             if (HMSPipAction.isPIPActive(activity)) {
                 activity.moveTaskToBack(true)
                 disposePIP()
+                removeKeyChangeListener()
             }
             if (args["data"] != null) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -886,6 +908,17 @@ class HmssdkFlutterPlugin :
                 }
             }
         }
+
+        override fun onSessionStoreAvailable(sessionStore: HmsSessionStore) {
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_session_store_available"
+            args["data"] = null
+            hmsSessionStore = sessionStore
+            CoroutineScope(Dispatchers.Main).launch {
+                eventSink?.success(args)
+            }
+        }
+
     }
 
     private val hmsPreviewListener = object : HMSPreviewListener {
@@ -1180,6 +1213,34 @@ class HmssdkFlutterPlugin :
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             activity.setPictureInPictureParams(PictureInPictureParams.Builder().setAutoEnterEnabled(false).build())
         }
+    }
+
+    private val keyChangeListener = object : HMSKeyChangeListener {
+        override fun onKeyChanged(key: String, value: String?) {
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_key_changed"
+            val keyValuePair = HashMap<String,String?>()
+            keyValuePair["key"] = key
+            keyValuePair["value"] = value
+            args["data"] = keyValuePair
+            CoroutineScope(Dispatchers.Main).launch {
+                sessionStoreSink?.success(args)
+            }
+        }
+    }
+    private fun addKeyChangeListener(call: MethodCall,result: Result){
+
+        val keys = call.argument<List<String>>("keys") ?: run {
+            HMSErrorLogger.returnArgumentsError("keys parameter is null")
+        }
+
+        keys.let { keys as List<String>
+            hmsSessionStore?.addKeyChangeListener(keys,keyChangeListener,HMSCommonAction.getActionListener(result))
+        }
+    }
+
+    private fun removeKeyChangeListener(){
+        hmsSessionStore?.removeKeyChangeListener(keyChangeListener)
     }
 
     private val hmsStatsListener = object : HMSStatsObserver {
