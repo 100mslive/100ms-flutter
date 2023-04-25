@@ -231,6 +231,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "capture_image_at_max_supported_resolution", "is_tap_to_focus_supported", "is_zoom_supported", "is_flash_supported", "toggle_flash":
             HMSCameraControlsAction.cameraControlsAction(call, result, hmsSDK)
 
+            // MARK: - Session Store
+            
+        case "get_session_metadata_for_key", "set_session_metadata_for_key":
+            HMSSessionStoreAction.sessionStoreActions(call, result, hmsSDK)
+           
+            
         default:
             result(FlutterMethodNotImplemented)
         }
