@@ -89,3 +89,5 @@ export 'src/model/hms_ios_pip_controller.dart';
 export 'src/model/hms_ios_screenshare_config.dart';
 export 'src/model/hms_log_list.dart';
 export 'src/model/hms_camera_controls.dart';
+export 'src/model/hms_session_store.dart';
+export 'src/model/hms_key_change_listener.dart';

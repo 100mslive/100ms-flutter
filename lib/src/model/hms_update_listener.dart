@@ -99,4 +99,7 @@ abstract class HMSUpdateListener {
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice});
+
+  ///
+  void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore});
 }

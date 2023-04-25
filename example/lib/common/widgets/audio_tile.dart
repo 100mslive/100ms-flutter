@@ -12,6 +12,7 @@ import 'package:hmssdk_flutter_example/common/peer_widgets/rtc_stats_view.dart';
 import 'package:hmssdk_flutter_example/common/peer_widgets/tile_border.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
+import 'package:hmssdk_flutter_example/enum/session_store_key.dart';
 import 'package:provider/provider.dart';
 
 // Project imports
@@ -62,6 +63,26 @@ class AudioTile extends StatelessWidget {
                       Navigator.pop(context);
                       _meetingStore.changeTrackState(
                           peerTrackNode.track!, mute);
+                    },
+                    isSpotlightedPeer:
+                        context.read<MeetingStore>().spotLightPeer?.uid ==
+                            peerTrackNode.uid,
+                    setOnSpotlight: () {
+                      if (context.read<MeetingStore>().spotLightPeer?.uid ==
+                          peerTrackNode.uid) {
+                        _meetingStore.setSessionMetadata(
+                            key: SessionStoreKeyValues.getNameFromMethod(
+                                SessionStoreKey.SPOTLIGHT),
+                            metadata: null);
+                        return;
+                      }
+                      String? metadata = (peerTrackNode.track == null)
+                          ? peerTrackNode.audioTrack?.trackId
+                          : peerTrackNode.track?.trackId;
+                      _meetingStore.setSessionMetadata(
+                          key: SessionStoreKeyValues.getNameFromMethod(
+                              SessionStoreKey.SPOTLIGHT),
+                          metadata: metadata);
                     },
                     changeAudioTrack: (mute, isAudioTrack) {
                       Navigator.pop(context);
@@ -142,6 +163,26 @@ class AudioTile extends StatelessWidget {
                                     forceChange: forceChange);
                               },
                             ));
+                  },
+                  isSpotlightedPeer:
+                      context.read<MeetingStore>().spotLightPeer?.uid ==
+                          peerTrackNode.uid,
+                  setOnSpotlight: () {
+                    if (context.read<MeetingStore>().spotLightPeer?.uid ==
+                        peerTrackNode.uid) {
+                      _meetingStore.setSessionMetadata(
+                          key: SessionStoreKeyValues.getNameFromMethod(
+                              SessionStoreKey.SPOTLIGHT),
+                          metadata: null);
+                    }
+                    String? metadata = (peerTrackNode.track == null)
+                        ? peerTrackNode.audioTrack?.trackId
+                        : peerTrackNode.track?.trackId;
+                    _meetingStore.setSessionMetadata(
+                        key: SessionStoreKeyValues.getNameFromMethod(
+                            SessionStoreKey.SPOTLIGHT),
+                        metadata: metadata);
+                    return;
                   },
                   roles: changeRolePermission,
                   changeName: () async {
