@@ -138,6 +138,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume", "toggle_mic_mute_state":
             HMSAudioAction.audioActions(call, result, hmsSDK)
+            
+        case "set_playback_allowed_for_track":
+            setPlaybackAllowedForTrack(call, result)
 
             // MARK: - Video Helpers
 
@@ -182,24 +185,35 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "start_screen_share", "stop_screen_share", "is_screen_share_active":
             screenShareActions(call, result)
-
+            
+            // MARK: - Track Settings
+            
         case "get_track_settings":
             trackSettingsAction(call, result)
             break
+            
+            // MARK: - Local Audio Share
+            
         case "play_audio_share", "stop_audio_share", "pause_audio_share", "resume_audio_share", "set_audio_share_volume", "audio_share_playing", "audio_share_current_time", "audio_share_duration":
             audioShareAction(call, result)
+            
+            // MARK: - Switch Audio Output
+            
         case "switch_audio_output", "get_audio_devices_list":
             HMSAudioDeviceAction.audioActions(call, result, hmsSDK)
+            
+            // MARK: - Session Metadata
 
         case "get_session_metadata", "set_session_metadata":
             sessionMetadataAction(call, result)
 
-        case "set_playback_allowed_for_track":
-            setPlaybackAllowedForTrack(call, result)
+            // MARK: - Simulcast
 
         case "set_simulcast_layer", "get_layer", "get_layer_definition":
             HMSRemoteVideoTrackExtension.remoteVideoTrackActions(call, result, hmsSDK!)
 
+            // MARK: - PIP Mode
+            
         case "setup_pip", "start_pip", "stop_pip", "is_pip_available", "is_pip_active", "change_track_pip", "change_text_pip", "destroy_pip":
             guard #available(iOS 15.0, *) else {
                 print(#function, HMSErrorExtension.getError("iOS 15 or above is required"))
@@ -207,9 +221,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                         return }
             HMSPIPAction.pipAction(call, result, hmsSDK, self)
 
+            // MARK: - Capture HMSVideoView Snapshot
+            
         case "capture_snapshot":
             captureSnapshot(call, result)
 
+            // MARK: - Advanced Camera Controls
+            
         case "capture_image_at_max_supported_resolution", "is_tap_to_focus_supported", "is_zoom_supported", "is_flash_supported", "toggle_flash":
             HMSCameraControlsAction.cameraControlsAction(call, result, hmsSDK)
 
