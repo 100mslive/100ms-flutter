@@ -576,7 +576,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
 
         sessionStoreChangeObservers.removeAll { $0.identifier == identifier }
-        
+
         result(nil)
     }
 
