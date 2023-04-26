@@ -257,12 +257,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             HMSSessionStoreAction.sessionStoreActions(call, result, self)
 
         case "add_key_change_listener":
-            print(#function)
-//                addKeyChangeListener(call,result)
+            addKeyChangeListener(call, result)
 
         case "remove_key_change_listener":
-            print(#function)
-//                removeKeyChangeListener()
+            removeKeyChangeListener(call, result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -549,6 +547,35 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             result(true)
         }
+    }
+
+    private func removeKeyChangeListener(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+
+        guard let store = sessionStore
+        else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Session Store is null.")))
+            return
+        }
+
+        guard let arguments = call.arguments as? [AnyHashable: Any]
+        else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) No arguments to identify which Key Change Listener should be removed from the Session Store.")))
+            return
+        }
+
+        guard let identifier = arguments["identifier"] as? String
+        else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) No identifier passed which can be used. Available arguments: \(arguments)")))
+            return
+        }
+
+        let keyChangeListenersToBeRemoved = sessionStoreChangeObservers.filter { $0.identifier == identifier }
+
+        for listener in keyChangeListenersToBeRemoved {
+            store.removeObserver(listener.observer)
+        }
+
+        sessionStoreChangeObservers.removeAll { $0.identifier == identifier }
     }
 
     // MARK: - Room Actions
