@@ -8,7 +8,10 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 class HMSCameraControls {
   ///[captureImageAtMaxSupportedResolution] is used to capture images at the original camera
   ///resolution.
-  ///[withFlash] parameter turns flash ON if set to TRUE. Default value is FALSE
+  ///
+  /// **Parameters**:
+  /// 
+  /// **withFlash** - parameter turns flash ON if set to TRUE. Default value is FALSE
   ///
   ///Note: [withFlash] only works if current facing camera supports flash. If it doesn't support flash
   ///      then image will be captured without flash even if [withFlash] is set as TRUE
