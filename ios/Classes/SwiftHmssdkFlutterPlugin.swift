@@ -21,7 +21,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var logsSink: FlutterEventSink?
     var rtcSink: FlutterEventSink?
     var sessionSink: FlutterEventSink?
-    
+
     var roleChangeRequest: HMSRoleChangeRequest?
 
     internal var hmsSDK: HMSSDK?
@@ -29,6 +29,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private var isStatsActive = false
 
     internal var sessionStore: HMSSessionStore?
+
+    private var sessionStoreChangeObservers = [HMSSessionStoreKeyChangeListener]()
 
     // MARK: - Flutter Setup
 
@@ -41,7 +43,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let logsChannel = FlutterEventChannel(name: "logs_event_channel", binaryMessenger: registrar.messenger())
         let rtcChannel = FlutterEventChannel(name: "rtc_event_channel", binaryMessenger: registrar.messenger())
         let sessionChannel = FlutterEventChannel(name: "session_event_channel", binaryMessenger: registrar.messenger())
-        
 
         let instance = SwiftHmssdkFlutterPlugin(channel: channel,
                                                 meetingEventChannel: eventChannel,
@@ -58,7 +59,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         logsChannel.setStreamHandler(instance)
         rtcChannel.setStreamHandler(instance)
         sessionChannel.setStreamHandler(instance)
-        
+
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
 
@@ -482,6 +483,71 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         default:
             result(FlutterMethodNotImplemented)
+        }
+    }
+
+    // MARK: - Session Store
+
+    private func addKeyChangeListener(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+
+        guard let store = sessionStore
+        else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Session Store is null.")))
+            return
+        }
+
+        guard let arguments = call.arguments as? [AnyHashable: Any]
+        else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) No arguments passed which can be attached to Key Change Listener on the Session Store.")))
+            return
+        }
+
+        guard let keys = arguments["keys"] as? [String]
+        else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) No keys passed which can be attached to Key Change Listener on the Session Store. Available arguments: \(arguments)")))
+            return
+        }
+
+        store.observeChanges(forKeys: keys, changeObserver: { [weak self] key, value in
+
+            var data = [String: Any]()
+
+            data["event_name"] = "on_key_changed"
+
+            var dict: [String: Any] = ["key": key]
+
+            if let value = value {
+                dict["value"] = value
+            }
+
+            data["data"] = dict
+
+            self?.sessionSink?(data)
+
+        }) { [weak self] observer, error in
+
+            if let error = error {
+                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Error in observing changes for key: \(keys) in the Session Store. Error: \(error.localizedDescription)")))
+                return
+            }
+
+            guard let observer = observer
+            else {
+                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Unknown Error in observing changes for key: \(keys) in the Session Store.")))
+                return
+            }
+
+            guard let self = self
+            else {
+                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Could not find self instance while observing changes for key: \(keys) in the Session Store.")))
+                return
+            }
+
+            let identifier = keys.map({$0}).joined(separator: ",")
+
+            self.sessionStoreChangeObservers.append(HMSSessionStoreKeyChangeListener(identifier, observer))
+
+            result(true)
         }
     }
 
@@ -1251,9 +1317,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     public func on(sessionStoreAvailable store: HMSSessionStore) {
         sessionStore = store
-        
+
         let data = ["event_name": "on_session_store_available"]
-        
+
         eventSink?(data)
     }
 
