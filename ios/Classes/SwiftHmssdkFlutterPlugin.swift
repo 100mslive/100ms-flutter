@@ -25,7 +25,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     private var isStatsActive = false
 
-    private var sessionStore: HMSSessionStore?
+    internal var sessionStore: HMSSessionStore?
 
     // MARK: - Flutter Setup
 
@@ -236,7 +236,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             // MARK: - Session Store
 
         case "get_session_metadata_for_key", "set_session_metadata_for_key":
-            HMSSessionStoreAction.sessionStoreActions(call, result, hmsSDK)
+            HMSSessionStoreAction.sessionStoreActions(call, result, self)
 
         case "add_key_change_listener":
             print(#function)
