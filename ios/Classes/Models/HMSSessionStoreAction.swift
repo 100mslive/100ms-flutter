@@ -43,11 +43,12 @@ class HMSSessionStoreAction {
 
             if let error = error {
                 result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Error in fetching key: \(key) from Session Store. Error: \(error.localizedDescription)")))
+                return
             }
 
             guard let value = value
             else {
-                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Error in fetching key: \(key) from Session Store due to an unknown error")))
+                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Unknown error in fetching key: \(key) from Session Store.")))
                 return
             }
 
@@ -58,5 +59,39 @@ class HMSSessionStoreAction {
 
     static private func setSessionMetadata(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ plugin: SwiftHmssdkFlutterPlugin) {
 
+        guard let store = plugin.sessionStore
+        else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Session Store is null.")))
+            return
+        }
+
+        guard let arguments = call.arguments as? [AnyHashable: Any],
+            let key = arguments["key"] as? String
+        else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Key for the object to be set in Session Store is null.")))
+            return
+        }
+
+        guard let data = arguments["data"]
+        else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Data for the key - \(key) to be set in Session Store is null.")))
+            return
+        }
+
+        store.set(data, forKey: key) { value, error in
+
+            if let error = error {
+                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Error in setting data: \(data) for key: \(key) to the Session Store. Error: \(error.localizedDescription)")))
+                return
+            }
+
+            guard let value = value
+            else {
+                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Unknown Error in setting data: \(data) for key: \(key) to the Session Store.")))
+                return
+            }
+
+            result(HMSResultExtension.toDictionary(true, value))
+        }
     }
 }
