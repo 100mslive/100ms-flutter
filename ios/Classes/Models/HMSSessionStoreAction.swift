@@ -9,8 +9,8 @@ import Foundation
 import HMSSDK
 
 class HMSSessionStoreAction {
-  
+
     static func sessionStoreActions(_ call: FlutterMethodCall, _ result: FlutterResult, _ hmsSDK: HMSSDK?) {
-        
+
     }
 }
