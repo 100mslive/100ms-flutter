@@ -24,6 +24,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     internal var hmsSDK: HMSSDK?
 
     private var isStatsActive = false
+    
+    private var sessionStore: HMSSessionStore?
 
     // MARK: - Flutter Setup
 
@@ -236,6 +238,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "get_session_metadata_for_key", "set_session_metadata_for_key":
             HMSSessionStoreAction.sessionStoreActions(call, result, hmsSDK)
            
+        case "add_key_change_listener":
+            print(#function)
+//                addKeyChangeListener(call,result)
+            
+        case "remove_key_change_listener":
+            print(#function)
+//                removeKeyChangeListener()
             
         default:
             result(FlutterMethodNotImplemented)
@@ -1221,6 +1230,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             rtcSink?(data)
         }
+    }
+    
+    public func on(sessionStoreAvailable store: HMSSessionStore) {
+        sessionStore = store
     }
 
     // MARK: - Helper Functions
