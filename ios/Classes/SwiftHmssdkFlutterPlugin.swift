@@ -487,14 +487,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     // MARK: - Room Actions
     private func build(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
         // TODO: add checks for 100ms Extension Target
-        if let prefExtension = arguments["preferred_extension"] as? String {
+        if let prefExtension = arguments?["preferred_extension"] as? String {
             preferredExtension = prefExtension
         }
 
-        if let iOSScreenshareConfig = arguments["ios_screenshare_config"] as? [String: String] {
+        if let iOSScreenshareConfig = arguments?["ios_screenshare_config"] as? [String: String] {
             if let prefExtension = iOSScreenshareConfig["preferred_extension"] {
                 preferredExtension = prefExtension
             } else {
@@ -504,13 +504,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
 
         var setLogger = false
-        if let hmsLogSettings = arguments["hms_log_settings"] as? [AnyHashable: Any] {
+        if let hmsLogSettings = arguments?["hms_log_settings"] as? [AnyHashable: Any] {
             let level = hmsLogSettings["log_level"] as! String
             logLevel = getLogLevel(from: level)
             setLogger = true
         }
-        let dartSDKVersion = arguments["dart_sdk_version"] as! String
-        let hmsSDKVersion = arguments["hmssdk_version"] as! String
+        let dartSDKVersion = arguments?["dart_sdk_version"] as! String
+        let hmsSDKVersion = arguments?["hmssdk_version"] as! String
         let framework = HMSFrameworkInfo(type: .flutter, version: dartSDKVersion, sdkVersion: hmsSDKVersion)
         audioMixerSourceMap = [:]
 
@@ -520,11 +520,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 result(false)
                 return
             }
-            if let appGroup = arguments["app_group"] as? String {
+            if let appGroup = arguments?["app_group"] as? String {
                 sdk.appGroup = appGroup
             }
 
-            if let iOSScreenshareConfig = arguments["ios_screenshare_config"] as? [String: String] {
+            if let iOSScreenshareConfig = arguments?["ios_screenshare_config"] as? [String: String] {
                 if let appGroup = iOSScreenshareConfig["app_group"] {
                     sdk.appGroup = appGroup
                 } else {
@@ -540,7 +540,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
 
             var trackSettings: HMSTrackSettings?
-            if let settingsDict = arguments["hms_track_setting"] as? [AnyHashable: Any] {
+            if let settingsDict = arguments?["hms_track_setting"] as? [AnyHashable: Any] {
                 self.audioMixerSourceInit(settingsDict, sdk, result)
                 trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict, self.audioMixerSourceMap, result)
             }
