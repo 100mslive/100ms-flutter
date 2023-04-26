@@ -578,7 +578,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         sessionStoreChangeObservers.removeAll { $0.identifier == identifier }
     }
 
+    private func sessionStoreCleanup() {
+        sessionStore = nil
+        sessionStoreChangeObservers = []
+    }
+
     // MARK: - Room Actions
+
     private func build(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         let arguments = call.arguments as? [AnyHashable: Any]
 
@@ -690,11 +696,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     private func leave(_ result: @escaping FlutterResult) {
-        hmsSDK?.leave { _, error in
+        hmsSDK?.leave { [weak self] _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
-                self.destroyPIPController()
+                self?.performCleanupOnLeavingRoom()
                 result(nil)
             }
         }
@@ -794,11 +800,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let lock = arguments["lock"] as? Bool ?? false
         let reason = arguments["reason"] as? String ?? "End room invoked"
 
-        hmsSDK?.endRoom(lock: lock, reason: reason) { _, error in
+        hmsSDK?.endRoom(lock: lock, reason: reason) { [weak self] _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
-                self.destroyPIPController()
+                self?.performCleanupOnLeavingRoom()
                 result(nil)
             }
         }
@@ -1252,7 +1258,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
-        destroyPIPController()
+        performCleanupOnLeavingRoom()
         eventSink?(data)
     }
 
@@ -1427,11 +1433,16 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         eventSink?(data)
     }
 
-    func destroyPIPController() {
+    private func destroyPIPController() {
         if #available(iOS 15.0, *) {
             if HMSPIPAction.pipController != nil {
                 HMSPIPAction.disposePIP(nil)
             }
         }
+    }
+
+    private func performCleanupOnLeavingRoom() {
+        destroyPIPController()
+        sessionStoreCleanup()
     }
 }
