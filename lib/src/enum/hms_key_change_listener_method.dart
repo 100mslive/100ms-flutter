@@ -1,3 +1,4 @@
+/// Enum for key change listener methods
 enum HMSKeyChangeListenerMethod { onKeyChanged, unknown }
 
 extension HMSKeyChangeListenerMethodValues on HMSKeyChangeListenerMethod {

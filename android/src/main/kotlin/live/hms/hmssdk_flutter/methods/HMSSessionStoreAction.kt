@@ -25,6 +25,14 @@ class HMSSessionStoreAction {
             }
         }
 
+        /***
+         * This is used to get session metadata corresponding to the provided key
+         *
+         * If the key is null we log the error and return from method since we have the let
+         * block in place already
+         *
+         * This method returns [sessionMetadata] is the session metadata is available for corresponding key
+         */
         private fun getSessionMetadataForKey(call: MethodCall,result: Result,hmsSessionStore: HmsSessionStore?){
             val key = call.argument<String?>("key") ?: run {
                 HMSErrorLogger.returnArgumentsError("key is null")
@@ -43,6 +51,15 @@ class HMSSessionStoreAction {
             }
         }
 
+        /***
+         * This is used to set session metadata corresponding to the provided key
+         *
+         * If the key is null we log the error and return from method since we have the let
+         * block in place already
+         *
+         * This method sets the [data] provided during the method call
+         * The completion of this method is marked by actionResultListener's [onSuccess] or [onError] callback
+         */
         private fun setSessionMetadataForKey(call: MethodCall,result: Result,hmsSessionStore: HmsSessionStore?){
             val key = call.argument<String?>("key") ?: run {
                 HMSErrorLogger.returnArgumentsError("key is null")

@@ -1215,6 +1215,12 @@ class HmssdkFlutterPlugin :
         }
     }
 
+    /**
+     * [HMSKeyChangeListener] gets update regarding the changes to the
+     * metadata of the keys for which it was attached
+     * It has [onKeyChanged] method which is called
+     * everytime there is change in metadata for a key
+     */
     private val keyChangeListener = object : HMSKeyChangeListener {
         override fun onKeyChanged(key: String, value: String?) {
             val args = HashMap<String, Any?>()
@@ -1228,6 +1234,16 @@ class HmssdkFlutterPlugin :
             }
         }
     }
+
+    /**
+     *  This method is used to add key change listener for
+     *  keys passed while calling this method
+     *
+     *  Parameters:
+     *  - keys: List<String> List of keys for which metadata updates need to be listened.
+     *  - keyChangeListener: Instance of HMSKeyChangeListener to listen to the metadata changes for corresponding keys
+     *  - hmsActionResultListener: Instance of HMSActionResultListener to notify success or failure of the method call
+     */
     private fun addKeyChangeListener(call: MethodCall,result: Result){
 
         val keys = call.argument<List<String>>("keys") ?: run {
@@ -1239,6 +1255,10 @@ class HmssdkFlutterPlugin :
         }
     }
 
+    /***
+     * This method is used to remove the attached key change listeners
+     * attached using [addKeyChangeListener] method
+     */
     private fun removeKeyChangeListener(){
         hmsSessionStore?.removeKeyChangeListener(keyChangeListener)
     }

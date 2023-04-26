@@ -61,6 +61,9 @@ class HMSStatsListenerMethodResponse {
       {required this.method, required this.data, required this.response});
 }
 
+///HMSKeyChangeListenerMethodResponse contains all the responses sent from the session store channel
+///
+/// Checkout different responses in [HMSKeyChangeListenerMethod] enum
 class HMSKeyChangeListenerMethodResponse {
   final HMSKeyChangeListenerMethod method;
   final Map<dynamic, dynamic> data;

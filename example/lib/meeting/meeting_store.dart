@@ -193,6 +193,7 @@ class MeetingStore extends ChangeNotifier
   HMSSessionStore? _hmsSessionStore;
 
   PeerTrackNode? spotLightPeer;
+
   Future<HMSException?> join(String userName, String roomUrl,
       {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
@@ -1309,6 +1310,8 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
+  ///Here we get the instance of HMSSessionStore using which
+  ///we will be performing the session metadata actions
   @override
   void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
     _hmsSessionStore = hmsSessionStore;
@@ -1318,6 +1321,10 @@ class MeetingStore extends ChangeNotifier
         hmsActionResultListener: this);
   }
 
+  ///We get this call everytime metadata corresponding to a key is changed
+  ///
+  ///Note: This only gets called when we have attached [HMSKeyChangeListener] using
+  ///     addKeyChangeListener method with keys to be listened
   @override
   void onKeyChanged({required String key, required String? value}) {
     log("onKeyChanged --> key: $key value: $value");
@@ -1335,6 +1342,8 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
+  ///This method sets the peer to spotlight
+  ///this also handles removing a peer from spotlight case
   void setPeerToSpotlight(String? value) {
     int currentSpotlightPeerIndex =
         peerTracks.indexWhere((node) => node.uid == spotLightPeer?.uid);
