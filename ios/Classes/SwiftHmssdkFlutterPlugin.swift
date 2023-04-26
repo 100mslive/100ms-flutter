@@ -14,11 +14,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var previewEventChannel: FlutterEventChannel?
     var logsEventChannel: FlutterEventChannel?
     var rtcStatsEventChannel: FlutterEventChannel?
+    var sessionEventChannel: FlutterEventChannel?
 
     var eventSink: FlutterEventSink?
     var previewSink: FlutterEventSink?
     var logsSink: FlutterEventSink?
     var rtcSink: FlutterEventSink?
+    var sessionSink: FlutterEventSink?
+    
     var roleChangeRequest: HMSRoleChangeRequest?
 
     internal var hmsSDK: HMSSDK?
@@ -37,12 +40,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let previewChannel = FlutterEventChannel(name: "preview_event_channel", binaryMessenger: registrar.messenger())
         let logsChannel = FlutterEventChannel(name: "logs_event_channel", binaryMessenger: registrar.messenger())
         let rtcChannel = FlutterEventChannel(name: "rtc_event_channel", binaryMessenger: registrar.messenger())
+        let sessionChannel = FlutterEventChannel(name: "session_event_channel", binaryMessenger: registrar.messenger())
+        
 
         let instance = SwiftHmssdkFlutterPlugin(channel: channel,
                                                 meetingEventChannel: eventChannel,
                                                 previewEventChannel: previewChannel,
                                                 logsEventChannel: logsChannel,
-                                                rtcStatsEventChannel: rtcChannel)
+                                                rtcStatsEventChannel: rtcChannel,
+                                                sessionEventChannel: sessionChannel)
 
         let videoViewFactory = HMSFlutterPlatformViewFactory(plugin: instance)
         registrar.register(videoViewFactory, withId: "HMSFlutterPlatformView")
@@ -51,7 +57,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         previewChannel.setStreamHandler(instance)
         logsChannel.setStreamHandler(instance)
         rtcChannel.setStreamHandler(instance)
-
+        sessionChannel.setStreamHandler(instance)
+        
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
 
@@ -59,13 +66,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 meetingEventChannel: FlutterEventChannel,
                 previewEventChannel: FlutterEventChannel,
                 logsEventChannel: FlutterEventChannel,
-                rtcStatsEventChannel: FlutterEventChannel) {
+                rtcStatsEventChannel: FlutterEventChannel,
+                sessionEventChannel: FlutterEventChannel) {
 
         self.channel = channel
         self.meetingEventChannel = meetingEventChannel
         self.previewEventChannel = previewEventChannel
         self.logsEventChannel = logsEventChannel
         self.rtcStatsEventChannel = rtcStatsEventChannel
+        self.sessionEventChannel = sessionEventChannel
     }
 
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
@@ -84,6 +93,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             logsSink = events
         case "rtc_stats":
             rtcSink = events
+        case "session_store":
+            sessionSink = events
         default:
             return FlutterError(code: #function, message: "invalid event sink name", details: arguments)
         }
@@ -100,25 +111,31 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             meetingEventChannel!.setStreamHandler(nil)
             eventSink = nil
         } else {
-            print("meetingEventChannel not found", #function)
+            print(#function, "meetingEventChannel not found")
         }
         if previewEventChannel != nil {
             previewEventChannel!.setStreamHandler(nil)
             previewSink = nil
         } else {
-            print("previewEventChannel not found", #function)
+            print(#function, "previewEventChannel not found")
         }
         if logsEventChannel != nil {
             logsEventChannel!.setStreamHandler(nil)
             logsSink = nil
         } else {
-            print("logsEventChannel not found", #function)
+            print(#function, "logsEventChannel not found")
         }
         if rtcStatsEventChannel != nil {
             rtcStatsEventChannel!.setStreamHandler(nil)
             rtcSink = nil
         } else {
-            print("rtcStatsEventChannel not found", #function)
+            print(#function, "rtcStatsEventChannel not found")
+        }
+        if sessionEventChannel != nil {
+            sessionEventChannel!.setStreamHandler(nil)
+            sessionEventChannel = nil
+        } else {
+            print(#function, "sessionEventChannel not found")
         }
     }
 
@@ -1234,6 +1251,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     public func on(sessionStoreAvailable store: HMSSessionStore) {
         sessionStore = store
+        
+        let data = ["event_name": "on_session_store_available"]
+        
+        eventSink?(data)
     }
 
     // MARK: - Helper Functions
