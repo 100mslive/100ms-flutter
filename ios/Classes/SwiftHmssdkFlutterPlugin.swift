@@ -545,7 +545,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             self.sessionStoreChangeObservers.append(HMSSessionStoreKeyChangeListener(identifier, observer))
 
-            result(true)
+            result(nil)
         }
     }
 
@@ -576,6 +576,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
 
         sessionStoreChangeObservers.removeAll { $0.identifier == identifier }
+        
+        result(nil)
     }
 
     private func sessionStoreCleanup() {

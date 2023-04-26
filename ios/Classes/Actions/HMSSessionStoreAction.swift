@@ -85,13 +85,7 @@ class HMSSessionStoreAction {
                 return
             }
 
-            guard let value = value
-            else {
-                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Unknown Error in setting data: \(data) for key: \(key) to the Session Store.")))
-                return
-            }
-
-            result(HMSResultExtension.toDictionary(true, value))
+            result(nil)
         }
     }
 }
