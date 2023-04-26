@@ -1234,7 +1234,7 @@ class HmssdkFlutterPlugin :
             HMSErrorLogger.returnArgumentsError("keys parameter is null")
         }
 
-        keys.let { keys as List<String>
+        keys?.let { keys as List<String>
             hmsSessionStore?.addKeyChangeListener(keys,keyChangeListener,HMSCommonAction.getActionListener(result))
         }
     }
