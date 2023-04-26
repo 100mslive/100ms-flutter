@@ -987,7 +987,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             "data": [
                 "room": HMSRoomExtension.toDictionary(room),
                 "local_tracks": tracks
-            ]
+            ] as [String : Any]
         ] as [String: Any]
         previewEnded = false
         previewSink?(data)
@@ -1011,7 +1011,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             "data": [
                 "room": HMSRoomExtension.toDictionary(room),
                 "update": HMSRoomExtension.getValueOf(update)
-            ]
+            ] as [String : Any]
         ] as [String: Any]
         if previewEnded {
             eventSink?(data)
@@ -1029,7 +1029,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             "data": [
                 "peer": HMSPeerExtension.toDictionary(peer),
                 "update": HMSPeerExtension.getValueOf(update)
-            ]
+            ] as [String : Any]
         ] as [String: Any]
 
         if previewEnded {
@@ -1047,7 +1047,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "peer": HMSPeerExtension.toDictionary(peer),
                 "track": HMSTrackExtension.toDictionary(track),
                 "update": HMSTrackExtension.getValueOf(update)
-            ]
+            ] as [String : Any]
         ] as [String: Any]
         if peer.isLocal && track.source.uppercased() == "SCREEN" {
             if update == .trackAdded {
@@ -1173,7 +1173,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                     "local_video_stats": HMSStatsExtension.toDictionary(localVideoStats),
                     "track": HMSTrackExtension.toDictionary(track),
                     "peer": HMSPeerExtension.toDictionary(peer)
-                ]
+                ] as [String : Any]
             ] as [String: Any]
 
             rtcSink?(data)
