@@ -82,7 +82,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       CupertinoPageRoute(
                           builder: (_) => MeetingPage(
                               authToken:
-                                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoyLCJ0eXBlIjoiYXBwIiwiYXBwX2RhdGEiOm51bGwsImFjY2Vzc19rZXkiOiI2MThiNTU5MGJlNmMzYzBiMzUxNTBhYmEiLCJyb2xlIjoiaG9zdCIsInJvb21faWQiOiI2MThiNTVkOGJlNmMzYzBiMzUxNTBhYmQiLCJ1c2VyX2lkIjoiMThmYzFlODgtM2YzNS00MDhkLTg3OTYtNDE5YjI3MTEyMTk0IiwiZXhwIjoxNjgxMTkzNTU0LCJqdGkiOiI5ZTkwZDczMS0wYThhLTQ5NWEtOTQxNC1mY2Q1YWFhMTY5NTkiLCJpYXQiOjE2ODExMDcxNTQsImlzcyI6IjYxOGI1NTkwYmU2YzNjMGIzNTE1MGFiOCIsIm5iZiI6MTY4MTEwNzE1NCwic3ViIjoiYXBpIn0.-QobyOO90TVMXfgnWkbJ9a8X3U9Sc3vWKwGoLkv9s4w",
+                                  /*
+                                  * Paste Auth Token for your Room from 100ms Dashboard here
+                                  * https://dashboard.100ms.live/
+                                  */
                               userName: userName)))
               },
               child: const Padding(
@@ -111,7 +114,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       CupertinoPageRoute(
                           builder: (_) => HLSViewerPage(
                               authToken:
-                                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoyLCJ0eXBlIjoiYXBwIiwiYXBwX2RhdGEiOm51bGwsImFjY2Vzc19rZXkiOiI2MThiNTU5MGJlNmMzYzBiMzUxNTBhYmEiLCJyb2xlIjoiaGxzLXZpZXdlciIsInJvb21faWQiOiI2MThiNTVkOGJlNmMzYzBiMzUxNTBhYmQiLCJ1c2VyX2lkIjoiZmUwOGQyYjQtM2Y4ZS00OTliLThlNzctNTkyYWQ4ZDQwOWRmIiwiZXhwIjoxNjgxMTk1NzM1LCJqdGkiOiI0OTk2NDQxMi0zYjlkLTRjZDQtOTg1YS0xODQxZTliNWJiOWEiLCJpYXQiOjE2ODExMDkzMzUsImlzcyI6IjYxOGI1NTkwYmU2YzNjMGIzNTE1MGFiOCIsIm5iZiI6MTY4MTEwOTMzNSwic3ViIjoiYXBpIn0.6GeiCmweoCAUv1xLD6icsSkSi1dixMS3YZMGYFrtNos",
+                                  /*
+                                  * Paste Auth Token for your Room from 100ms Dashboard here
+                                  * https://dashboard.100ms.live/
+                                  */
                               userName: userName)))
               },
               child: const Padding(
