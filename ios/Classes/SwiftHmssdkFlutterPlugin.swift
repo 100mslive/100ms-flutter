@@ -486,6 +486,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     // MARK: - Session Store
 
+    /**
+     *  This method is used to add key change listener for
+     *  keys passed while calling this method
+     *
+     *  Parameters:
+     *  - keys: List<String> List of keys for which metadata updates need to be listened.
+     *  - keyChangeListener: Instance of HMSKeyChangeListener to listen to the metadata changes for corresponding keys
+     */
     private func addKeyChangeListener(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
         guard let store = sessionStore
@@ -505,6 +513,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) No keys passed which can be attached to Key Change Listener on the Session Store. Available arguments: \(arguments)")))
             return
         }
+        
+        guard let uid = arguments["uid"] as? String
+        else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) No uid passed for key change listener Available arguments: \(arguments)")))
+            return
+        }
 
         store.observeChanges(forKeys: keys, changeObserver: { [weak self] key, value in
 
@@ -516,6 +530,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             if let value = value {
                 dict["value"] = value
+                dict["uid"] = uid
             }
 
             data["data"] = dict
@@ -541,14 +556,16 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 return
             }
 
-            let identifier = keys.map({$0}).joined(separator: ",")
-
-            self.sessionStoreChangeObservers.append(HMSSessionStoreKeyChangeListener(identifier, observer))
+            self.sessionStoreChangeObservers.append(HMSSessionStoreKeyChangeListener(uid, observer))
 
             result(nil)
         }
     }
 
+    /***
+     * This method is used to remove the attached key change listeners
+     * attached using [addKeyChangeListener] method
+     */
     private func removeKeyChangeListener(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
         guard let store = sessionStore
@@ -563,21 +580,38 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return
         }
 
-        guard let identifier = arguments["identifier"] as? String
+        guard let uid = arguments["uid"] as? String
         else {
             result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) No identifier passed which can be used. Available arguments: \(arguments)")))
             return
         }
 
-        let keyChangeListenersToBeRemoved = sessionStoreChangeObservers.filter { $0.identifier == identifier }
-
-        for listener in keyChangeListenersToBeRemoved {
-            store.removeObserver(listener.observer)
+        guard let keyChangeListenersToBeRemovedIndex = sessionStoreChangeObservers.firstIndex(where: {
+            $0.uid == uid
+        })
+        else{
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) No listener found to remove")))
+            return
         }
 
-        sessionStoreChangeObservers.removeAll { $0.identifier == identifier }
+        
+        store.removeObserver(sessionStoreChangeObservers[keyChangeListenersToBeRemovedIndex].observer)
+
+        sessionStoreChangeObservers.remove(at: keyChangeListenersToBeRemovedIndex)
 
         result(nil)
+    }
+    
+    /**
+            This takes care of removing all the key change listeners attached during the session
+            This is used while cleaning the room state i.e after calling leave room,
+            onRemovedFromRoom or endRoom
+     */
+    private func removeAllKeyChangeListener(){
+        sessionStoreChangeObservers.forEach{
+            hmsSessionStoreObserver in
+            sessionStore?.removeObserver(hmsSessionStoreObserver.observer)
+        }
     }
 
     private func sessionStoreCleanup() {
@@ -1445,6 +1479,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     private func performCleanupOnLeavingRoom() {
         destroyPIPController()
+        removeAllKeyChangeListener()
         sessionStoreCleanup()
     }
 }

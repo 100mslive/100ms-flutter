@@ -9,12 +9,12 @@ import Foundation
 
 class HMSSessionStoreKeyChangeListener: NSObject {
 
-    let identifier: String
+    let uid: String
 
     let observer: NSObjectProtocol
 
-    init(_ identifier: String, _ observer: NSObjectProtocol) {
-        self.identifier = identifier
+    init(_ uid: String, _ observer: NSObjectProtocol) {
+        self.uid = uid
         self.observer = observer
     }
 }
