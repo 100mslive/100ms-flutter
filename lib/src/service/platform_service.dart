@@ -15,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_key_change_listener_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
+import 'package:hmssdk_flutter/src/model/hms_key_change_observer.dart';
 
 class PlatformService {
   ///used to pass data to platform using methods
@@ -47,7 +48,7 @@ class PlatformService {
   ///add preview listeners.
   static List<HMSPreviewListener> previewListeners = [];
 
-  static List<HMSKeyChangeListener> keyChangeListeners = [];
+  static List<HMSKeyChangeObserver> keyChangeObservers = [];
 
   ///List for event Listener
   static List<HMSStatsListener> statsListeners = [];
@@ -99,13 +100,20 @@ class PlatformService {
     logsListeners.remove(hmsLogListener);
   }
 
-  static void addKeyChangeListener(HMSKeyChangeListener hmsKeyChangeListener) {
-    keyChangeListeners.add(hmsKeyChangeListener);
+  static void addKeyChangeObserver(HMSKeyChangeObserver hmsKeyChangeObserver) {
+    keyChangeObservers.add(hmsKeyChangeObserver);
   }
 
-  static void removeKeyChangeListener(
-      HMSKeyChangeListener hmsKeyChangeListener) {
-    keyChangeListeners.remove(hmsKeyChangeListener);
+  static void removeKeyChangeObserver(
+      HMSKeyChangeListener hmsKeyChangeListener) async {
+    int index = keyChangeObservers.indexWhere((observer) =>
+        observer.hmsKeyChangeListener.hashCode ==
+        hmsKeyChangeListener.hashCode);
+    if (index != -1) {
+      invokeMethod(PlatformMethod.removeKeyChangeListener,
+          arguments: {"uid": keyChangeObservers[index].uid});
+      keyChangeObservers.removeAt(index);
+    }
   }
 
   ///used to invoke different methods at platform side and returns something but not neccessarily
@@ -623,8 +631,13 @@ class PlatformService {
       HMSKeyChangeListenerMethod method, Map arguments) {
     switch (method) {
       case HMSKeyChangeListenerMethod.onKeyChanged:
-        keyChangeListeners.forEach((e) =>
-            e.onKeyChanged(key: arguments["key"], value: arguments["value"]));
+        int index = keyChangeObservers
+            .indexWhere((observer) => observer.uid == arguments["uid"]);
+        if (index != -1) {
+          keyChangeObservers[index]
+              .hmsKeyChangeListener
+              .onKeyChanged(key: arguments["key"], value: arguments["value"]);
+        }
         break;
       case HMSKeyChangeListenerMethod.unknown:
         break;

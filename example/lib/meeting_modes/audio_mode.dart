@@ -47,8 +47,7 @@ List<StairedGridTile> portraitPattern(
     tiles.add(StairedGridTile(1, ratio));
     pinTileCount++;
   }
-  int gridView = (peerTrack.length - pinTileCount) ~/ 6;
-  int tileLeft = (peerTrack.length - pinTileCount) - (gridView * 6);
+  int tileLeft = (peerTrack.length - pinTileCount) % 6;
   for (int i = 0; i < (peerTrack.length - pinTileCount - tileLeft); i++) {
     tiles.add(StairedGridTile(1 / 3, ratio / 1.5));
   }

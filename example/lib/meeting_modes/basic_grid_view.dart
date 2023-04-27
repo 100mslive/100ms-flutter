@@ -123,8 +123,7 @@ List<StairedGridTile> portraitPattern(List<PeerTrackNode> peerTrack,
     pinTileCount++;
   }
   int normalTile = peerTrack.length - screenShareCount - pinTileCount;
-  int gridView = normalTile ~/ 4;
-  int tileLeft = normalTile - (gridView * 4);
+  int tileLeft = normalTile % 4;
   for (int i = 0; i < (normalTile - tileLeft); i++) {
     tiles.add(StairedGridTile(0.5, ratio));
   }
