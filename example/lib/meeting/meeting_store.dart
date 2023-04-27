@@ -1317,8 +1317,7 @@ class MeetingStore extends ChangeNotifier
     _hmsSessionStore = hmsSessionStore;
     _hmsSessionStore?.addKeyChangeListener(
         keys: SessionStoreKeyValues.getSessionStoreKeys(),
-        hmsKeyChangeListener: this,
-        hmsActionResultListener: this);
+        hmsKeyChangeListener: this);
   }
 
   ///We get this call everytime metadata corresponding to a key is changed
@@ -1806,8 +1805,6 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.setSessionMetadataForKey:
         break;
-      case HMSActionResultListenerMethod.addKeyChangeListener:
-        break;
     }
   }
 
@@ -1886,9 +1883,6 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.setSessionMetadataForKey:
         Utilities.showToast("Set session metadata failed");
-        break;
-      case HMSActionResultListenerMethod.addKeyChangeListener:
-        Utilities.showToast("Add key change listener failed");
         break;
     }
     notifyListeners();

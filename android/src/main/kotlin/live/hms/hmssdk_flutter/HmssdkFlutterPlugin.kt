@@ -67,6 +67,7 @@ class HmssdkFlutterPlugin :
     private var requestChange: HMSRoleChangeRequest? = null
     var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
     private var hmsSessionStore: HmsSessionStore? = null
+    private var hmsKeyChangeObserverList  =  ArrayList<HMSKeyChangeObserver>()
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         if (hmssdkFlutterPlugin == null) {
@@ -208,7 +209,7 @@ class HmssdkFlutterPlugin :
                 addKeyChangeListener(call,result)
             }
             "remove_key_change_listener" -> {
-                removeKeyChangeListener()
+                removeKeyChangeListener(call)
             }
             else -> {
                 result.notImplemented()
@@ -471,7 +472,7 @@ class HmssdkFlutterPlugin :
     private fun leave(result: Result) {
         hmssdk!!.leave(hmsActionResultListener = HMSCommonAction.getActionListener(result))
         disposePIP()
-        removeKeyChangeListener()
+        removeAllKeyChangeListener()
     }
 
     private fun destroy(result: Result) {
@@ -688,7 +689,7 @@ class HmssdkFlutterPlugin :
             hmsActionResultListener = HMSCommonAction.getActionListener(result)
         )
         disposePIP()
-        removeKeyChangeListener()
+        removeAllKeyChangeListener()
     }
 
     private fun isAllowedToEndMeeting(): Boolean? {
@@ -872,7 +873,7 @@ class HmssdkFlutterPlugin :
             if (HMSPipAction.isPIPActive(activity)) {
                 activity.moveTaskToBack(true)
                 disposePIP()
-                removeKeyChangeListener()
+                removeAllKeyChangeListener()
             }
             if (args["data"] != null) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -1216,26 +1217,6 @@ class HmssdkFlutterPlugin :
     }
 
     /**
-     * [HMSKeyChangeListener] gets update regarding the changes to the
-     * metadata of the keys for which it was attached
-     * It has [onKeyChanged] method which is called
-     * everytime there is change in metadata for a key
-     */
-    private val keyChangeListener = object : HMSKeyChangeListener {
-        override fun onKeyChanged(key: String, value: String?) {
-            val args = HashMap<String, Any?>()
-            args["event_name"] = "on_key_changed"
-            val keyValuePair = HashMap<String,String?>()
-            keyValuePair["key"] = key
-            keyValuePair["value"] = value
-            args["data"] = keyValuePair
-            CoroutineScope(Dispatchers.Main).launch {
-                sessionStoreSink?.success(args)
-            }
-        }
-    }
-
-    /**
      *  This method is used to add key change listener for
      *  keys passed while calling this method
      *
@@ -1250,8 +1231,29 @@ class HmssdkFlutterPlugin :
             HMSErrorLogger.returnArgumentsError("keys parameter is null")
         }
 
-        keys?.let { keys as List<String>
-            hmsSessionStore?.addKeyChangeListener(keys,keyChangeListener,HMSCommonAction.getActionListener(result))
+        val uid = call.argument<String>("uid")?: run {
+            HMSErrorLogger.returnArgumentsError("uid is null")
+        }
+
+        uid.let {
+             val keyChangeListener = object : HMSKeyChangeListener {
+                override fun onKeyChanged(key: String, value: String?) {
+                    val args = HashMap<String, Any?>()
+                    args["event_name"] = "on_key_changed"
+                    val newData = HashMap<String,String?>()
+                    newData["key"] = key
+                    newData["value"] = value
+                    newData["uid"] = uid as String
+                    args["data"] = newData
+                    CoroutineScope(Dispatchers.Main).launch {
+                        sessionStoreSink?.success(args)
+                    }
+                }
+            }
+            hmsKeyChangeObserverList.add(HMSKeyChangeObserver(uid as String,keyChangeListener))
+            keys.let { keys as List<String>
+                hmsSessionStore?.addKeyChangeListener(keys,keyChangeListener,HMSCommonAction.getActionListener(result))
+            }
         }
     }
 
@@ -1259,8 +1261,34 @@ class HmssdkFlutterPlugin :
      * This method is used to remove the attached key change listeners
      * attached using [addKeyChangeListener] method
      */
-    private fun removeKeyChangeListener(){
-        hmsSessionStore?.removeKeyChangeListener(keyChangeListener)
+    private fun removeKeyChangeListener(call: MethodCall){
+
+        val uid = call.argument<String>("uid")?: run {
+            HMSErrorLogger.returnArgumentsError("uid is null")
+        }
+
+        uid?.let {
+            hmsKeyChangeObserverList.forEach{
+                    hmsKeyChangeObserver ->
+                if(hmsKeyChangeObserver.uid == uid){
+                    hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeObserver.keyChangeListener)
+                    hmsKeyChangeObserverList.remove(hmsKeyChangeObserver)
+                    return
+                }
+            }
+        }
+    }
+
+    /**
+     * This method removes all the key change listeners attached during the session
+     * This is used while cleaning the room state i.e after calling leave room,
+     * onRemovedFromRoom or endRoom
+     */
+    private fun removeAllKeyChangeListener(){
+        hmsKeyChangeObserverList.forEach{
+            hmsKeyChangeObserver -> hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeObserver.keyChangeListener)
+        }
+        hmsKeyChangeObserverList.clear()
     }
 
     private val hmsStatsListener = object : HMSStatsObserver {

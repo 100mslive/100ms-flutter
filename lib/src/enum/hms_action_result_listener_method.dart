@@ -26,6 +26,5 @@ enum HMSActionResultListenerMethod {
   switchCamera,
   changeRoleOfPeersWithRoles,
   setSessionMetadataForKey,
-  addKeyChangeListener,
   unknown
 }

@@ -1,4 +1,5 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/model/hms_key_change_observer.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 /// [HMSSessionStore] class takes care of the session metadata for a session
@@ -15,26 +16,19 @@ class HMSSessionStore {
   ///
   /// **hmsKeyChangeListener** An instance of [HMSKeyChangeListener] implemented in the class where changes needs to be listened
   ///
-  /// **hmsActionResultListener** [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess] and [HMSActionResultListener.onException] will be called.
-  Future<void> addKeyChangeListener(
+  Future<HMSException?> addKeyChangeListener(
       {required List<String> keys,
-      required HMSKeyChangeListener hmsKeyChangeListener,
-      HMSActionResultListener? hmsActionResultListener}) async {
+      required HMSKeyChangeListener hmsKeyChangeListener}) async {
+    String uid = DateTime.now().millisecondsSinceEpoch.toString();
     dynamic result = await PlatformService.invokeMethod(
         PlatformMethod.addKeyChangeListener,
-        arguments: {
-          "keys": keys,
-        });
-    if (hmsActionResultListener != null) {
-      if (result == null) {
-        PlatformService.addKeyChangeListener(hmsKeyChangeListener);
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.addKeyChangeListener);
-      } else {
-        hmsActionResultListener.onException(
-            methodType: HMSActionResultListenerMethod.addKeyChangeListener,
-            hmsException: HMSException.fromMap(result["data"]));
-      }
+        arguments: {"keys": keys, "uid": uid});
+    if (result == null) {
+      PlatformService.addKeyChangeObserver(HMSKeyChangeObserver(
+          uid: uid, hmsKeyChangeListener: hmsKeyChangeListener));
+      return null;
+    } else {
+      return HMSException.fromMap(result["data"]);
     }
   }
 
@@ -44,10 +38,9 @@ class HMSSessionStore {
   ///
   /// **hmsKeyChangeListener** An instance of [HMSKeyChangeListener] which was attaced earlier in [addKeyChangeListener]
   ///
-  Future<void> removeKeyChangeListener(
-      {required HMSKeyChangeListener hmsKeyChangeListener}) async {
-    await PlatformService.invokeMethod(PlatformMethod.removeKeyChangeListener);
-    PlatformService.removeKeyChangeListener(hmsKeyChangeListener);
+  void removeKeyChangeListener(
+      {required HMSKeyChangeListener hmsKeyChangeListener}) {
+    PlatformService.removeKeyChangeObserver(hmsKeyChangeListener);
   }
 
   ///[getSessionMetadataForKey] method is used to get metadata corresponding to the given key.
