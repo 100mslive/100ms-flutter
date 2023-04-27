@@ -158,7 +158,10 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                   padding: const EdgeInsets.only(bottom: 20.0),
                   child: Row(
                     children: [
-                      Icon(Icons.camera_alt),
+                      SvgPicture.asset(
+                        "assets/icons/snapshot.svg",
+                        color: iconColor,
+                      ),
                       SizedBox(
                         width: 16,
                       ),
@@ -179,7 +182,10 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                   padding: const EdgeInsets.only(bottom: 20.0),
                   child: Row(
                     children: [
-                      Icon(Icons.image_outlined),
+                      SvgPicture.asset(
+                        "assets/icons/local_capture.svg",
+                        color: iconColor,
+                      ),
                       SizedBox(
                         width: 16,
                       ),

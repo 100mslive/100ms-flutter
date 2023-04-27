@@ -235,7 +235,6 @@ class MeetingStore extends ChangeNotifier
           endPoint: _roomData?[1] == "true" ? "" : '$qaInitEndPoint',
         );
       } else {
-        FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
         return _tokenData;
       }
     }
@@ -1816,7 +1815,11 @@ class MeetingStore extends ChangeNotifier
       required HMSException hmsException}) {
     this.hmsException = hmsException;
     log("ActionResultListener onException-> method: ${methodType.toString()} , Error code : ${hmsException.code} , Description : ${hmsException.description} , Message : ${hmsException.message}");
-    FirebaseCrashlytics.instance.log(hmsException.toString());
+    FirebaseAnalytics.instance
+        .logEvent(name: "HMSActionResultListenerLogs", parameters: {
+      "data":
+          "ActionResultListener onException-> method: ${methodType.toString()} , Error code : ${hmsException.code} , Description : ${hmsException.description} , Message : ${hmsException.message}"
+    });
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
         break;
@@ -1975,7 +1978,6 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onLogMessage({required HMSLogList hmsLogList}) {
-    FirebaseCrashlytics.instance.log(hmsLogList.toString());
     FirebaseAnalytics.instance.logEvent(
         name: "SDK_Logs", parameters: {"data": hmsLogList.toString()});
     applicationLogs.hmsLog.addAll(hmsLogList.hmsLog);

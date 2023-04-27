@@ -29,7 +29,18 @@ StreamSubscription? _streamSubscription;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+
+  //This sends all the fatal crashes in the application to crashlytics
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+
+  //This sends all the errors in the application(be it in flutter or native layer) to crashlytics
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+
   Wakelock.enable();
   Provider.debugCheckInvalidValueType = null;
 

@@ -143,8 +143,6 @@ class PreviewStore extends ChangeNotifier
       meetingUrl = meetingLink;
       return null;
     }
-
-    FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
     return _tokenData;
   }
 
