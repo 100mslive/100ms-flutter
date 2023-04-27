@@ -54,9 +54,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: Container(
         color: Colors.black,
         child: Center(
@@ -98,8 +95,8 @@ class _MeetingPageState extends State<MeetingPage>
   late HMSSDK _hmsSDK;
 
   //Enter the username and authToken from dashboard for the corresponding role here.
-  String userName = "Enter Username Here";
-  String authToken = "Enter AuthToken Here";
+  String userName = "Pushpam";
+  String authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoyLCJ0eXBlIjoiYXBwIiwiYXBwX2RhdGEiOm51bGwsImFjY2Vzc19rZXkiOiI2MThiNTU5MGJlNmMzYzBiMzUxNTBhYmEiLCJyb2xlIjoibGlzdGVuZXIiLCJyb29tX2lkIjoiNjQwNGQ4NTlkYTdlN2NhODEyODQwZTdmIiwidXNlcl9pZCI6Ijc3MjAxNjJmLWRiZTktNDQzMS1iZWQ0LWYzOWY0NWZjZTFlNSIsImV4cCI6MTY4MjcxMTY3NSwianRpIjoiZDRkZGQyNTMtMjgwMy00ZGRlLWFmMzctMmFhODE4ZjFlZTJhIiwiaWF0IjoxNjgyNjI1Mjc1LCJpc3MiOiI2MThiNTU5MGJlNmMzYzBiMzUxNTBhYjgiLCJuYmYiOjE2ODI2MjUyNzUsInN1YiI6ImFwaSJ9.8ZhNDellSPVJsVYEQ_ohHOT5AVzfl-mqDFtyIFw_2VY";
   Offset position = const Offset(5, 5);
   bool isJoinSuccessful = false;
   final List<PeerTrackNode> _listeners = [];
