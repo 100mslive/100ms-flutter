@@ -69,7 +69,7 @@ PODS:
     - Firebase/Performance (= 10.7.0)
     - firebase_core
     - Flutter
-  - FirebaseABTesting (10.8.0):
+  - FirebaseABTesting (10.9.0):
     - FirebaseCore (~> 10.0)
   - FirebaseAnalytics (10.7.0):
     - FirebaseAnalytics/AdIdSupport (= 10.7.0)
@@ -93,9 +93,9 @@ PODS:
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/Logger (~> 7.8)
-  - FirebaseCoreExtension (10.8.0):
+  - FirebaseCoreExtension (10.9.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseCoreInternal (10.8.0):
+  - FirebaseCoreInternal (10.9.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
   - FirebaseCrashlytics (10.7.0):
     - FirebaseCore (~> 10.5)
@@ -107,7 +107,7 @@ PODS:
     - PromisesObjC (~> 2.1)
   - FirebaseDynamicLinks (10.7.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseInstallations (10.8.0):
+  - FirebaseInstallations (10.9.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
@@ -122,13 +122,13 @@ PODS:
     - GoogleUtilities/ISASwizzler (~> 7.8)
     - GoogleUtilities/MethodSwizzler (~> 7.8)
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - FirebaseRemoteConfig (10.8.0):
+  - FirebaseRemoteConfig (10.9.0):
     - FirebaseABTesting (~> 10.0)
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
-  - FirebaseSessions (10.8.0):
+  - FirebaseSessions (10.9.0):
     - FirebaseCore (~> 10.5)
     - FirebaseCoreExtension (~> 10.0)
     - FirebaseInstallations (~> 10.0)
@@ -359,17 +359,17 @@ SPEC CHECKSUMS:
   firebase_crashlytics: 6c15c2f507d82746dd62214964acf56146eab53f
   firebase_dynamic_links: 464b974eeb7a5b4b7c970062c49a3e39ff924f47
   firebase_performance: 7dd98298ea2f19f480efd59ccbfcad3972ced984
-  FirebaseABTesting: 0c7038e4dce273821e417bdc2b0373ee0e0e8df3
+  FirebaseABTesting: 005b70969e2817e2a1e631e8dba29134a04c0622
   FirebaseAnalytics: f8133442ee6f8512e28ff19e62ce15398bfaeace
   FirebaseCore: e317665b9d744727a97e623edbbed009320afdd7
-  FirebaseCoreExtension: d815fd6fec8bb3a0940bc02dd5e3e641ea7229d8
-  FirebaseCoreInternal: fa2899eb1f340054858d289e5a0fb935a0a74e52
+  FirebaseCoreExtension: d3e9bba2930a8033042112397cd9f006a1bb203d
+  FirebaseCoreInternal: d2b4acb827908e72eca47a9fd896767c3053921e
   FirebaseCrashlytics: 35fdd1a433b31e28adcf5c8933f4c526691a1e0b
   FirebaseDynamicLinks: 16a8fae3697fba66fed7a1d646fe59f30d42aa31
-  FirebaseInstallations: b2a05a3fe707df764345d68685534d07d0664af3
+  FirebaseInstallations: c58489c9caacdbf27d1da60891a87318e20218e0
   FirebasePerformance: 8281bbaf08aad194001018b932115b7d58a6f00b
-  FirebaseRemoteConfig: ffd8c40611809c92526783da146be93a15cc3f00
-  FirebaseSessions: d4e22e13e5523e58fcd625671c59bed7ccee8736
+  FirebaseRemoteConfig: 5ea5834e8c518f377bf1af2d97ebd611914ebf2d
+  FirebaseSessions: 44a6782502eb279a214d4adca20891353278760c
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_foreground_task: 21ef182ab0a29a3005cc72cd70e5f45cb7f7f817
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
@@ -402,6 +402,6 @@ SPEC CHECKSUMS:
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
 
-PODFILE CHECKSUM: 576bcfbc69c41c8e1c7e04a8ea0da7225b4b2db0
+PODFILE CHECKSUM: be0979b1605a070d72f7b3642279b7f60a395416
 
 COCOAPODS: 1.12.1
