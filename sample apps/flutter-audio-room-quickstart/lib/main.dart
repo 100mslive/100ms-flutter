@@ -95,8 +95,8 @@ class _MeetingPageState extends State<MeetingPage>
   late HMSSDK _hmsSDK;
 
   //Enter the username and authToken from dashboard for the corresponding role here.
-  String userName = "Enter username here";
-  String authToken = "Enter Auth token here";
+  String userName = "Enter Username Here";
+  String authToken = "Enter AuthToken Here";
   Offset position = const Offset(5, 5);
   bool isJoinSuccessful = false;
   final List<PeerTrackNode> _listeners = [];
