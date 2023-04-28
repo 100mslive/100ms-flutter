@@ -46,13 +46,13 @@ class HMSSessionStoreAction {
                 return
             }
 
-            guard let value = value
-            else {
-                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Unknown error in fetching key: \(key) from Session Store.")))
-                return
+            if(value is String?){
+                result(HMSResultExtension.toDictionary(true, value))
             }
-
-            result(HMSResultExtension.toDictionary(true, value))
+            else{
+                HMSErrorLogger.returnHMSException(#function,"Session metadata type is not compatible, Please use String? type while setting metadata","Type Incompatibility Error",result)
+            }
+            
         }
 
     }

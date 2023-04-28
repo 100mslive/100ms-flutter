@@ -528,11 +528,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             var dict: [String: Any] = ["key": key]
 
-            if let value = value {
+            if(value is String?){
                 dict["value"] = value
-                dict["uid"] = uid
             }
-
+            else{
+                HMSErrorLogger.logError(#function,"Session metadata type is not compatible, Please use String? type while setting metadata","Type Incompatibility Error")
+                dict["value"] = nil
+            }
+            
+            dict["uid"] = uid
             data["data"] = dict
 
             self?.sessionSink?(data)
