@@ -12,3 +12,5 @@ Just plugin following values and run the application :
 - authToken : Auth token of the role with which you wish to join the room
 
 That's it. Press the `Join Audio Room` button and start conversing 🥳🥳🥳
+
+![audio-room-video](https://user-images.githubusercontent.com/93931528/234982245-583d54c9-15c2-4039-858e-979de5ecb79a.gif)
