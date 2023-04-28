@@ -39,7 +39,9 @@ android {
         minSdkVersion 21
     }
 }
-def hmsVersion = "an719-SNAPSHOT"
+
+def hmsVersion = "an722-SNAPSHOT"
+
 dependencies {
     implementation "com.github.100mslive.android-sdk:lib:$hmsVersion"
     implementation "live.100ms:video-view:${sdkVersions['android']}"

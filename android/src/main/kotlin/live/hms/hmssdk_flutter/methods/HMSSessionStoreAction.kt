@@ -44,8 +44,13 @@ class HMSSessionStoreAction {
                         result.success(HMSResultExtension.toDictionary(false,HMSExceptionExtension.toDictionary(error)))
                     }
 
-                    override fun onSuccess(sessionMetadata: String?) {
-                        result.success(HMSResultExtension.toDictionary(true,sessionMetadata))
+                    override fun onSuccess(sessionMetadata: Any?) {
+                        if(sessionMetadata is String?){
+                            result.success(HMSResultExtension.toDictionary(true,sessionMetadata))
+                        }
+                        else{
+                            HMSErrorLogger.returnHMSException("getSessionMetadataForKey","Session metadata type is not compatible, Please use String? type while setting metadata","Type Incompatibility Error",result)
+                        }
                     }
                 })
             }

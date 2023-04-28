@@ -1237,12 +1237,18 @@ class HmssdkFlutterPlugin :
 
         uid.let {
              val keyChangeListener = object : HMSKeyChangeListener {
-                override fun onKeyChanged(key: String, value: String?) {
+                override fun onKeyChanged(key: String, value: Any?) {
                     val args = HashMap<String, Any?>()
                     args["event_name"] = "on_key_changed"
                     val newData = HashMap<String,String?>()
                     newData["key"] = key
-                    newData["value"] = value
+                    if(value is String?){
+                        newData["value"] = value
+                    }
+                    else{
+                        HMSErrorLogger.logError("onKeyChanged","Session metadata type is not compatible, Please use String? type while setting metadata","Type Incompatibility Error")
+                        newData["value"] = null
+                    }
                     newData["uid"] = uid as String
                     args["data"] = newData
                     CoroutineScope(Dispatchers.Main).launch {
