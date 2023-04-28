@@ -111,4 +111,16 @@ class HMSTrackSettingsExtension {
         return HMSTrackMuteState.mute
     }
 
+    static private  func getAudioMode(from mode: String?) -> HMSAudioMode? {
+        switch mode {
+        case "voice":
+            return .voice
+
+        case "music":
+            return .music
+
+        default:
+            return nil
+        }
+    }
 }
