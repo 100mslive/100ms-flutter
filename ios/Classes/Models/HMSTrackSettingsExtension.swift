@@ -59,21 +59,46 @@ class HMSTrackSettingsExtension {
     static func setTrackSetting(_ settingsDict: [AnyHashable: Any], _ audioMixerSourceMap: [String: HMSAudioNode], _ result: @escaping FlutterResult) -> HMSTrackSettings? {
 
         var audioSettings: HMSAudioTrackSettings?
-        if let audioSettingsDict = settingsDict["audio_track_setting"] as? [AnyHashable: Any],
-           let initialMuteState = audioSettingsDict["track_initial_state"] as? String {
+
+        if let audioSettingsDict = settingsDict["audio_track_setting"] as? [AnyHashable: Any] {
+
+            var initialMuteState: HMSTrackMuteState?
+            if let muteState = audioSettingsDict["track_initial_state"] as? String {
+                initialMuteState = getinitialMuteState(from: muteState)
+            }
 
             if #available(iOS 13.0, *), !audioMixerSourceMap.isEmpty {
                 do {
                     let audioMixerSource = try HMSAudioMixerSource(nodes: audioMixerSourceMap.values.map {$0})
 
-                    audioSettings = HMSAudioTrackSettings(maxBitrate: 32, trackDescription: "track_description", initialMuteState: getinitialMuteState(from: initialMuteState), audioSource: audioMixerSource)
+                    audioSettings = HMSAudioTrackSettings.build({ builder in
+
+                        builder.audioSource = audioMixerSource
+
+                        if let muteState = initialMuteState {
+                            builder.initialMuteState = muteState
+                        }
+
+                        if let mode = getAudioMode(from: audioSettingsDict["audioMode"] as? String) {
+                            builder.audioMode = mode
+                        }
+                    })
 
                 } catch {
                     print(#function, HMSErrorExtension.toDictionary(error))
                     result(false)
                 }
             } else {
-                audioSettings = HMSAudioTrackSettings(maxBitrate: 32, trackDescription: "track_description", initialMuteState: getinitialMuteState(from: initialMuteState), audioSource: nil)
+                audioSettings = HMSAudioTrackSettings.build({ builder in
+
+                    if let muteState = initialMuteState {
+                        builder.initialMuteState = muteState
+                    }
+
+                    if let mode = getAudioMode(from: audioSettingsDict["audioMode"] as? String) {
+                        builder.audioMode = mode
+                    }
+                })
             }
         }
 
