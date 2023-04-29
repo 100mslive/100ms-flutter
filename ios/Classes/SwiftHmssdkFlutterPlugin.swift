@@ -498,25 +498,26 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         guard let store = sessionStore
         else {
-            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Session Store is null.")))
+            HMSErrorLogger.returnHMSException(#function,"Session Store is null","NULL ERROR",result)
             return
         }
 
         guard let arguments = call.arguments as? [AnyHashable: Any]
         else {
-            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) No arguments passed which can be attached to Key Change Listener on the Session Store.")))
+            HMSErrorLogger.returnArgumentsError("keys is null")
+            HMSErrorLogger.returnHMSException(#function,"No arguments passed which can be attached to Key Change Listener on the Session Store.","NULL ERROR",result)
             return
         }
 
         guard let keys = arguments["keys"] as? [String]
         else {
-            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) No keys passed which can be attached to Key Change Listener on the Session Store. Available arguments: \(arguments)")))
+            HMSErrorLogger.returnHMSException(#function,"No keys passed which can be attached to Key Change Listener on the Session Store. Available arguments: \(arguments)","NULL ERROR",result)
             return
         }
         
         guard let uid = arguments["uid"] as? String
         else {
-            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) No uid passed for key change listener Available arguments: \(arguments)")))
+            HMSErrorLogger.returnHMSException(#function,"No uid passed for key change listener Available arguments: \(arguments)","NULL ERROR",result)
             return
         }
 
@@ -544,19 +545,19 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }) { [weak self] observer, error in
 
             if let error = error {
-                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Error in observing changes for key: \(keys) in the Session Store. Error: \(error.localizedDescription)")))
+                HMSErrorLogger.returnHMSException(#function,"Error in observing changes for key: \(keys) in the Session Store. Error: \(error.localizedDescription)","KEY CHANGE ERROR",result)
                 return
             }
 
             guard let observer = observer
             else {
-                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Unknown Error in observing changes for key: \(keys) in the Session Store.")))
+                HMSErrorLogger.returnHMSException(#function,"Unknown Error in observing changes for key: \(keys) in the Session Store.","KEY CHANGE ERROR",result)
                 return
             }
 
             guard let self = self
             else {
-                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Could not find self instance while observing changes for key: \(keys) in the Session Store.")))
+                HMSErrorLogger.returnHMSException(#function,"Could not find self instance while observing changes for key: \(keys) in the Session Store.","KEY CHANGE ERROR",result)
                 return
             }
 
@@ -580,13 +581,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         guard let arguments = call.arguments as? [AnyHashable: Any]
         else {
-            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) No arguments to identify which Key Change Listener should be removed from the Session Store.")))
+            HMSErrorLogger.returnHMSException(#function,"No arguments to identify which Key Change Listener should be removed from the Session Store.","Remove Key Error",result)
             return
         }
 
         guard let uid = arguments["uid"] as? String
         else {
-            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) No identifier passed which can be used. Available arguments: \(arguments)")))
+            HMSErrorLogger.returnHMSException(#function,"No identifier passed which can be used. Available arguments: \(arguments)","Unique Id Error",result)
             return
         }
 
@@ -594,7 +595,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             $0.uid == uid
         })
         else{
-            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) No listener found to remove")))
+            HMSErrorLogger.returnHMSException(#function,"No listener found to remove","Listener Error",result)
             return
         }
 
