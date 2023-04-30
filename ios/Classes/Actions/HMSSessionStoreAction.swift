@@ -28,21 +28,22 @@ class HMSSessionStoreAction {
 
         guard let store = plugin.sessionStore
         else {
-            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Session Store is null.")))
+            HMSErrorLogger.returnHMSException(#function,"Session Store is null","NULL ERROR",result)
             return
         }
 
         guard let arguments = call.arguments as? [AnyHashable: Any],
             let key = arguments["key"] as? String
         else {
-            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Key to be fetched from Session Store is null.")))
+            HMSErrorLogger.returnArgumentsError("key is null")
+            HMSErrorLogger.returnHMSException(#function,"Key to be fetched from Session Store is null.","NULL ERROR",result)
             return
         }
 
         store.object(forKey: key) { value, error in
 
             if let error = error {
-                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Error in fetching key: \(key) from Session Store. Error: \(error.localizedDescription)")))
+                HMSErrorLogger.returnHMSException(#function,"Error in fetching key: \(key) from Session Store. Error: \(error.localizedDescription)","Key Fetching error",result)
                 return
             }
 
@@ -61,30 +62,29 @@ class HMSSessionStoreAction {
 
         guard let store = plugin.sessionStore
         else {
-            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Session Store is null.")))
+            HMSErrorLogger.returnHMSException(#function,"Session Store is null.", "NULL ERROR",result)
             return
         }
 
         guard let arguments = call.arguments as? [AnyHashable: Any],
             let key = arguments["key"] as? String
         else {
-            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Key for the object to be set in Session Store is null.")))
+            HMSErrorLogger.returnHMSException(#function,"Key for the object to be set in Session Store is null.","NULL ERROR",result)
             return
         }
 
         guard let data = arguments["data"]
         else {
-            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Data for the key - \(key) to be set in Session Store is null.")))
+            HMSErrorLogger.returnHMSException(#function,"Data for the key - \(key) to be set in Session Store is null.","NULL ERROR",result)
             return
         }
 
         store.set(data, forKey: key) { value, error in
 
             if let error = error {
-                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Error in setting data: \(data) for key: \(key) to the Session Store. Error: \(error.localizedDescription)")))
+                HMSErrorLogger.returnHMSException(#function,"Error in setting data: \(data) for key: \(key) to the Session Store. Error: \(error.localizedDescription)","Key Error",result)
                 return
             }
-
             result(nil)
         }
     }
