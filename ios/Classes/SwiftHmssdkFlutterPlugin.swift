@@ -498,26 +498,26 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         guard let store = sessionStore
         else {
-            HMSErrorLogger.returnHMSException(#function,"Session Store is null","NULL ERROR",result)
+            HMSErrorLogger.returnHMSException(#function, "Session Store is null", "NULL ERROR", result)
             return
         }
 
         guard let arguments = call.arguments as? [AnyHashable: Any]
         else {
             HMSErrorLogger.returnArgumentsError("keys is null")
-            HMSErrorLogger.returnHMSException(#function,"No arguments passed which can be attached to Key Change Listener on the Session Store.","NULL ERROR",result)
+            HMSErrorLogger.returnHMSException(#function, "No arguments passed which can be attached to Key Change Listener on the Session Store.", "NULL ERROR", result)
             return
         }
 
         guard let keys = arguments["keys"] as? [String]
         else {
-            HMSErrorLogger.returnHMSException(#function,"No keys passed which can be attached to Key Change Listener on the Session Store. Available arguments: \(arguments)","NULL ERROR",result)
+            HMSErrorLogger.returnHMSException(#function, "No keys passed which can be attached to Key Change Listener on the Session Store. Available arguments: \(arguments)", "NULL ERROR", result)
             return
         }
-        
+
         guard let uid = arguments["uid"] as? String
         else {
-            HMSErrorLogger.returnHMSException(#function,"No uid passed for key change listener Available arguments: \(arguments)","NULL ERROR",result)
+            HMSErrorLogger.returnHMSException(#function, "No uid passed for key change listener Available arguments: \(arguments)", "NULL ERROR", result)
             return
         }
 
@@ -529,14 +529,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             var dict: [String: Any] = ["key": key]
 
-            if(value is String?){
+            if value is String? {
                 dict["value"] = value
-            }
-            else{
-                HMSErrorLogger.logError(#function,"Session metadata type is not compatible, Please use String? type while setting metadata","Type Incompatibility Error")
+            } else {
+                HMSErrorLogger.logError(#function, "Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error")
                 dict["value"] = nil
             }
-            
+
             dict["uid"] = uid
             data["data"] = dict
 
@@ -545,19 +544,19 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }) { [weak self] observer, error in
 
             if let error = error {
-                HMSErrorLogger.returnHMSException(#function,"Error in observing changes for key: \(keys) in the Session Store. Error: \(error.localizedDescription)","KEY CHANGE ERROR",result)
+                HMSErrorLogger.returnHMSException(#function, "Error in observing changes for key: \(keys) in the Session Store. Error: \(error.localizedDescription)", "KEY CHANGE ERROR", result)
                 return
             }
 
             guard let observer = observer
             else {
-                HMSErrorLogger.returnHMSException(#function,"Unknown Error in observing changes for key: \(keys) in the Session Store.","KEY CHANGE ERROR",result)
+                HMSErrorLogger.returnHMSException(#function, "Unknown Error in observing changes for key: \(keys) in the Session Store.", "KEY CHANGE ERROR", result)
                 return
             }
 
             guard let self = self
             else {
-                HMSErrorLogger.returnHMSException(#function,"Could not find self instance while observing changes for key: \(keys) in the Session Store.","KEY CHANGE ERROR",result)
+                HMSErrorLogger.returnHMSException(#function, "Could not find self instance while observing changes for key: \(keys) in the Session Store.", "KEY CHANGE ERROR", result)
                 return
             }
 
@@ -581,39 +580,38 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         guard let arguments = call.arguments as? [AnyHashable: Any]
         else {
-            HMSErrorLogger.returnHMSException(#function,"No arguments to identify which Key Change Listener should be removed from the Session Store.","Remove Key Error",result)
+            HMSErrorLogger.returnHMSException(#function, "No arguments to identify which Key Change Listener should be removed from the Session Store.", "Remove Key Error", result)
             return
         }
 
         guard let uid = arguments["uid"] as? String
         else {
-            HMSErrorLogger.returnHMSException(#function,"No identifier passed which can be used. Available arguments: \(arguments)","Unique Id Error",result)
+            HMSErrorLogger.returnHMSException(#function, "No identifier passed which can be used. Available arguments: \(arguments)", "Unique Id Error", result)
             return
         }
 
         guard let keyChangeListenersToBeRemovedIndex = sessionStoreChangeObservers.firstIndex(where: {
             $0.uid == uid
         })
-        else{
-            HMSErrorLogger.returnHMSException(#function,"No listener found to remove","Listener Error",result)
+        else {
+            HMSErrorLogger.returnHMSException(#function, "No listener found to remove", "Listener Error", result)
             return
         }
 
-        
         store.removeObserver(sessionStoreChangeObservers[keyChangeListenersToBeRemovedIndex].observer)
 
         sessionStoreChangeObservers.remove(at: keyChangeListenersToBeRemovedIndex)
 
         result(nil)
     }
-    
+
     /**
             This takes care of removing all the key change listeners attached during the session
             This is used while cleaning the room state i.e after calling leave room,
             onRemovedFromRoom or endRoom
      */
-    private func removeAllKeyChangeListener(){
-        sessionStoreChangeObservers.forEach{
+    private func removeAllKeyChangeListener() {
+        sessionStoreChangeObservers.forEach {
             hmsSessionStoreObserver in
             sessionStore?.removeObserver(hmsSessionStoreObserver.observer)
         }

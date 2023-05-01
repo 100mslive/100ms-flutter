@@ -15,11 +15,11 @@ class AudioModeSelectDialog extends StatefulWidget {
   final HMSAudioMode currentAudioMode;
   final Function(HMSAudioMode) changeAudioMode;
 
-  AudioModeSelectDialog({required this.currentAudioMode,required this.changeAudioMode});
+  AudioModeSelectDialog(
+      {required this.currentAudioMode, required this.changeAudioMode});
 
   @override
-  _AudioModeSelectDialogState createState() =>
-      _AudioModeSelectDialogState();
+  _AudioModeSelectDialogState createState() => _AudioModeSelectDialogState();
 }
 
 class _AudioModeSelectDialogState extends State<AudioModeSelectDialog> {
@@ -136,10 +136,7 @@ class _AudioModeSelectDialogState extends State<AudioModeSelectDialog> {
                     Utilities.showToast("Please select audioMode"),
                   }
                 else
-                  {
-                    Navigator.pop(context),
-                    widget.changeAudioMode(valueChoose!)
-                  }
+                  {Navigator.pop(context), widget.changeAudioMode(valueChoose!)}
               },
               child: Padding(
                 padding:

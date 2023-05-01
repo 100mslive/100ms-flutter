@@ -234,7 +234,7 @@ class Utilities {
                 trackInitialState: joinWithMutedAudio
                     ? HMSTrackInitState.MUTED
                     : HMSTrackInitState.UNMUTED,
-                    audioMode: audioMode),
+                audioMode: audioMode),
             videoTrackSetting: HMSVideoTrackSetting(
                 trackInitialState: joinWithMutedVideo
                     ? HMSTrackInitState.MUTED
@@ -250,7 +250,7 @@ class Utilities {
                 trackInitialState: joinWithMutedAudio
                     ? HMSTrackInitState.MUTED
                     : HMSTrackInitState.UNMUTED,
-                    audioMode: audioMode),
+                audioMode: audioMode),
             videoTrackSetting: HMSVideoTrackSetting(
                 trackInitialState: joinWithMutedVideo
                     ? HMSTrackInitState.MUTED

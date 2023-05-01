@@ -90,12 +90,11 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       int audioModeIndex = await Utilities.getIntData(key: 'audio-mode');
       if (res) {
         await setHMSSDKInteractor(
-          joinWithMutedAudio: joinWithMutedAudio,
-          joinWithMutedVideo: joinWithMutedVideo,
-          isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
-          isAudioMixerDisabled: isAudioMixerDisabled,
-          audioMode: HMSAudioMode.values[audioModeIndex]
-        );
+            joinWithMutedAudio: joinWithMutedAudio,
+            joinWithMutedVideo: joinWithMutedVideo,
+            isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
+            isAudioMixerDisabled: isAudioMixerDisabled,
+            audioMode: HMSAudioMode.values[audioModeIndex]);
 
         if (!skipPreview) {
           _previewStore = PreviewStore(hmsSDKInteractor: _hmsSDKInteractor);

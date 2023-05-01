@@ -54,7 +54,7 @@ class HMSAudioTrackSetting {
             ? HMSTrackInitStateValue.getHMSTrackInitStateFromName(
                 map['track_initial_state'])
             : HMSTrackInitState.UNMUTED,
-            audioMode: audioMode);
+        audioMode: audioMode);
   }
 
   Map<String, dynamic> toMap() {
