@@ -11,8 +11,14 @@ import HMSSDK
 class HMSAudioFilePlayerNodeExtension {
 
     static func play(_ call: [AnyHashable: Any], _ playerNode: HMSAudioFilePlayerNode, _ result: @escaping FlutterResult) {
-        do {
-            try playerNode.play(fileUrl: URL(string: call["file_url"] as! String)!, loops: call["loops"] as? Bool ?? false, interrupts: call["interrupts"] as? Bool ?? false)
+                guard let url = URL(string: call["file_url"] as! String) else{
+                    HMSErrorLogger.returnArgumentsError(errorMessage: "File URL is invalid")
+                    HMSErrorLogger.returnHMSException(#function,"Error in playing the file", "File Error",result)
+                    return
+                }
+        do{
+            try
+                playerNode.play(fileUrl: url, loops: call["loops"] as? Bool ?? false, interrupts: call["interrupts"] as? Bool ?? false)
         } catch {
             result(HMSErrorExtension.toDictionary(error))
         }

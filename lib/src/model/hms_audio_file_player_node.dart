@@ -45,10 +45,10 @@ class HMSAudioFilePlayerNode extends HMSAudioNode {
           "loops": loop,
           "interrupts": interrupts
         });
-    if (result == null) {
+    if (result["success"]) {
       return null;
     } else {
-      return HMSException.fromMap(result["error"]);
+      return HMSException.fromMap(result["data"]["error"]);
     }
   }
 
