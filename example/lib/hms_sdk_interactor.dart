@@ -18,7 +18,8 @@ class HMSSDKInteractor {
       bool joinWithMutedAudio = true,
       bool joinWithMutedVideo = true,
       bool isSoftwareDecoderDisabled = true,
-      bool isAudioMixerDisabled = true}) {
+      bool isAudioMixerDisabled = true,
+      HMSAudioMode audioMode = HMSAudioMode.VOICE}) {
     HMSLogSettings hmsLogSettings = HMSLogSettings(
         maxDirSizeInBytes: 1000000,
         isLogStorageEnabled: true,
@@ -28,14 +29,15 @@ class HMSSDKInteractor {
         isAudioMixerDisabled: (Platform.isIOS && isAudioMixerDisabled),
         joinWithMutedVideo: joinWithMutedVideo,
         joinWithMutedAudio: joinWithMutedAudio,
-        isSoftwareDecoderDisabled: isSoftwareDecoderDisabled);
+        isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
+        audioMode: audioMode);
 
     hmsSDK = HMSSDK(
         iOSScreenshareConfig: iOSScreenshareConfig,
         hmsLogSettings: hmsLogSettings,
         hmsTrackSetting: trackSetting);
   }
-
+  
   Future<void> build() async {
     await hmsSDK.build();
   }

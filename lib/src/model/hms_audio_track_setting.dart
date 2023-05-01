@@ -20,10 +20,14 @@ class HMSAudioTrackSetting {
   ///[trackInitialState] property to set the initial state of the audio track i.e Mute/Unmute.By default it's unmuted.
   final HMSTrackInitState? trackInitialState;
 
+  ///[audioMode] property to set the audio mode of audio track i.e voice or music mode
+  final HMSAudioMode audioMode;
+
   HMSAudioTrackSetting(
       {this.useHardwareAcousticEchoCanceler,
       this.audioSource,
-      this.trackInitialState = HMSTrackInitState.UNMUTED});
+      this.trackInitialState = HMSTrackInitState.UNMUTED,
+      this.audioMode = HMSAudioMode.VOICE});
 
   factory HMSAudioTrackSetting.fromMap(Map map) {
     List<HMSAudioNode> nodeList = [];
@@ -40,6 +44,8 @@ class HMSAudioTrackSetting {
       audioMixerSource = HMSAudioMixerSource(node: nodeList);
     }
     HMSAudioMixerSource(node: nodeList);
+
+    HMSAudioMode audioMode = map["audio_mode"] ?? HMSAudioMode.VOICE;
     return HMSAudioTrackSetting(
         useHardwareAcousticEchoCanceler:
             map['user_hardware_acoustic_echo_canceler'] ?? null,
@@ -47,7 +53,8 @@ class HMSAudioTrackSetting {
         trackInitialState: map.containsKey("track_initial_state")
             ? HMSTrackInitStateValue.getHMSTrackInitStateFromName(
                 map['track_initial_state'])
-            : HMSTrackInitState.UNMUTED);
+            : HMSTrackInitState.UNMUTED,
+            audioMode: audioMode);
   }
 
   Map<String, dynamic> toMap() {
@@ -56,7 +63,8 @@ class HMSAudioTrackSetting {
       'audio_source': audioSource?.toList(),
       'track_initial_state':
           HMSTrackInitStateValue.getValuefromHMSTrackInitState(
-              trackInitialState)
+              trackInitialState),
+      'audio_mode': HMSAudioModeValues.getNameFromHMSAudioMode(audioMode)
     };
   }
 }

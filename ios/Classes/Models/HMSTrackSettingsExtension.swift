@@ -79,7 +79,7 @@ class HMSTrackSettingsExtension {
                             builder.initialMuteState = muteState
                         }
 
-                        if let mode = getAudioMode(from: audioSettingsDict["audioMode"] as? String) {
+                        if let mode = getAudioMode(from: audioSettingsDict["audio_mode"] as? String) {
                             builder.audioMode = mode
                         }
                     })
@@ -95,7 +95,7 @@ class HMSTrackSettingsExtension {
                         builder.initialMuteState = muteState
                     }
 
-                    if let mode = getAudioMode(from: audioSettingsDict["audioMode"] as? String) {
+                    if let mode = getAudioMode(from: audioSettingsDict["audio_mode"] as? String) {
                         builder.audioMode = mode
                     }
                 })
