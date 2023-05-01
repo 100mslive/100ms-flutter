@@ -1,5 +1,6 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/enum/hms_key_change_listener_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
 
 ///PlatformMethodResponse contains all the responses sent back from the platform
@@ -58,4 +59,15 @@ class HMSStatsListenerMethodResponse {
   final dynamic response;
   HMSStatsListenerMethodResponse(
       {required this.method, required this.data, required this.response});
+}
+
+///HMSKeyChangeListenerMethodResponse contains all the responses sent from the session store channel
+///
+/// Checkout different responses in [HMSKeyChangeListenerMethod] enum
+class HMSKeyChangeListenerMethodResponse {
+  final HMSKeyChangeListenerMethod method;
+  final Map<dynamic, dynamic> data;
+
+  HMSKeyChangeListenerMethodResponse(
+      {required this.method, required this.data});
 }

@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/common/widgets/subtitle_text.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/enum/session_store_key.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../meeting/meeting_store.dart';
@@ -187,7 +188,10 @@ class MessageContainer extends StatelessWidget {
                         child: Text('Pin Message'),
                         onTap: () => context
                             .read<MeetingStore>()
-                            .setSessionMetadata(senderName! + ": " + message),
+                            .setSessionMetadata(
+                                key: SessionStoreKeyValues.getNameFromMethod(
+                                    SessionStoreKey.PINNED_MESSAGE_SESSION_KEY),
+                                metadata: senderName! + ": " + message),
                       );
                     });
                   },

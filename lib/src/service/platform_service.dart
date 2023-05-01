@@ -13,7 +13,9 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/enum/hms_key_change_listener_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
+import 'package:hmssdk_flutter/src/model/hms_key_change_observer.dart';
 
 class PlatformService {
   ///used to pass data to platform using methods
@@ -34,6 +36,10 @@ class PlatformService {
   static const EventChannel _rtcStatsChannel =
       const EventChannel("rtc_event_channel");
 
+  ///used to get stream of session store changes
+  static const EventChannel _sessionStoreChannel =
+      const EventChannel("session_event_channel");
+
   ///add meeting listeners.
   static List<HMSUpdateListener> updateListeners = [];
 
@@ -41,6 +47,8 @@ class PlatformService {
 
   ///add preview listeners.
   static List<HMSPreviewListener> previewListeners = [];
+
+  static List<HMSKeyChangeObserver> keyChangeObservers = [];
 
   ///List for event Listener
   static List<HMSStatsListener> statsListeners = [];
@@ -90,6 +98,22 @@ class PlatformService {
 
   static void removeLogsListener(HMSLogListener hmsLogListener) {
     logsListeners.remove(hmsLogListener);
+  }
+
+  static void addKeyChangeObserver(HMSKeyChangeObserver hmsKeyChangeObserver) {
+    keyChangeObservers.add(hmsKeyChangeObserver);
+  }
+
+  static void removeKeyChangeObserver(
+      HMSKeyChangeListener hmsKeyChangeListener) async {
+    int index = keyChangeObservers.indexWhere((observer) =>
+        observer.hmsKeyChangeListener.hashCode ==
+        hmsKeyChangeListener.hashCode);
+    if (index != -1) {
+      invokeMethod(PlatformMethod.removeKeyChangeListener,
+          arguments: {"uid": keyChangeObservers[index].uid});
+      keyChangeObservers.removeAt(index);
+    }
   }
 
   ///used to invoke different methods at platform side and returns something but not neccessarily
@@ -228,6 +252,10 @@ class PlatformService {
                 ? availableAudioDevice
                 : null
           });
+          break;
+
+        case HMSUpdateListenerMethod.onSessionStoreAvailable:
+          notifyUpdateListeners(method, {});
           break;
 
         case HMSUpdateListenerMethod.unknown:
@@ -421,6 +449,24 @@ class PlatformService {
           break;
       }
     });
+
+    _sessionStoreChannel
+        .receiveBroadcastStream({'name': 'session_store'}).map((event) {
+      HMSKeyChangeListenerMethod method =
+          HMSKeyChangeListenerMethodValues.getMethodFromName(
+              event['event_name']);
+      Map data = event['data'];
+      return HMSKeyChangeListenerMethodResponse(method: method, data: data);
+    }).listen((event) {
+      HMSKeyChangeListenerMethod method = event.method;
+      switch (method) {
+        case HMSKeyChangeListenerMethod.onKeyChanged:
+          notifySessionStoreListeners(method, event.data);
+          break;
+        case HMSKeyChangeListenerMethod.unknown:
+          break;
+      }
+    });
   }
 
   static void notifyLogsUpdateListeners(
@@ -571,7 +617,29 @@ class PlatformService {
             availableAudioDevice: arguments["available_audio_device"]));
         break;
 
+      case HMSUpdateListenerMethod.onSessionStoreAvailable:
+        updateListeners.forEach((e) =>
+            e.onSessionStoreAvailable(hmsSessionStore: HMSSessionStore()));
+        break;
+
       case HMSUpdateListenerMethod.unknown:
+        break;
+    }
+  }
+
+  static void notifySessionStoreListeners(
+      HMSKeyChangeListenerMethod method, Map arguments) {
+    switch (method) {
+      case HMSKeyChangeListenerMethod.onKeyChanged:
+        int index = keyChangeObservers
+            .indexWhere((observer) => observer.uid == arguments["uid"]);
+        if (index != -1) {
+          keyChangeObservers[index]
+              .hmsKeyChangeListener
+              .onKeyChanged(key: arguments["key"], value: arguments["value"]);
+        }
+        break;
+      case HMSKeyChangeListenerMethod.unknown:
         break;
     }
   }
