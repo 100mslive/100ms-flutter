@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import io.flutter.embedding.android.FlutterActivity
 import live.hms.hmssdk_flutter.Constants
 import live.hms.hmssdk_flutter.methods.HMSPipAction
@@ -37,6 +38,15 @@ class MainActivity : FlutterActivity() {
         } else {
             Log.i("PIP Mode", "Exited PIP Mode")
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    override fun onPictureInPictureRequested(): Boolean {
+        super.onPictureInPictureRequested()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R ) {
+            HMSPipAction.autoEnterPipMode(this)
+        }
+        return false
     }
 
     override fun onUserLeaveHint() {

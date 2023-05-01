@@ -9,6 +9,7 @@ import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/common/widgets/hms_dropdown.dart';
 import 'package:hmssdk_flutter_example/common/widgets/message_container.dart';
+import 'package:hmssdk_flutter_example/enum/session_store_key.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -366,9 +367,11 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                 ),
                                 GestureDetector(
                                     onTap: () {
-                                      context
-                                          .read<MeetingStore>()
-                                          .setSessionMetadata(null);
+                                      context.read<MeetingStore>().setSessionMetadata(
+                                          key: SessionStoreKeyValues
+                                              .getNameFromMethod(SessionStoreKey
+                                                  .PINNED_MESSAGE_SESSION_KEY),
+                                          metadata: null);
                                     },
                                     child: SvgPicture.asset(
                                         "assets/icons/close.svg"))

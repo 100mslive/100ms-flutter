@@ -21,10 +21,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import live.hms.hmssdk_flutter.methods.HMSCameraControlsAction
-import live.hms.hmssdk_flutter.methods.HMSPipAction
-import live.hms.hmssdk_flutter.methods.HMSRemoteVideoTrackAction
-import live.hms.hmssdk_flutter.methods.HMSSessionMetadataAction
+import live.hms.hmssdk_flutter.methods.*
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
 import live.hms.video.audio.HMSAudioManager.*
 import live.hms.video.connection.stats.*
@@ -39,6 +36,8 @@ import live.hms.video.sdk.models.enums.HMSRoomUpdate
 import live.hms.video.sdk.models.enums.HMSTrackUpdate
 import live.hms.video.sdk.models.role.HMSRole
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
+import live.hms.video.sessionstore.HMSKeyChangeListener
+import live.hms.video.sessionstore.HmsSessionStore
 import live.hms.video.signal.init.TokenRequest
 import live.hms.video.signal.init.TokenRequestOptions
 import live.hms.video.utils.HMSLogger
@@ -56,15 +55,19 @@ class HmssdkFlutterPlugin :
     private var previewChannel: EventChannel? = null
     private var logsEventChannel: EventChannel? = null
     private var rtcStatsChannel: EventChannel? = null
+    private var sessionStoreChannel : EventChannel? = null
     private var eventSink: EventChannel.EventSink? = null
     private var previewSink: EventChannel.EventSink? = null
     private var logsSink: EventChannel.EventSink? = null
     private var rtcSink: EventChannel.EventSink? = null
+    private var sessionStoreSink: EventChannel.EventSink? = null
     private lateinit var activity: Activity
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private var requestChange: HMSRoleChangeRequest? = null
     var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
+    private var hmsSessionStore: HmsSessionStore? = null
+    private var hmsKeyChangeObserverList  =  ArrayList<HMSKeyChangeObserver>()
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         if (hmssdkFlutterPlugin == null) {
@@ -80,11 +83,15 @@ class HmssdkFlutterPlugin :
             this.rtcStatsChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "rtc_event_channel")
 
+            this.sessionStoreChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger,"session_event_channel")
+
             this.meetingEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Meeting event channel not found")
             this.channel?.setMethodCallHandler(this) ?: Log.e("Channel Error", "Event channel not found")
             this.previewChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Preview channel not found")
             this.logsEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Logs event channel not found")
             this.rtcStatsChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "RTC Stats channel not found")
+            this.sessionStoreChannel?.setStreamHandler(this) ?: Log.e("Channel Error","Session Store channel not found")
             this.hmsVideoFactory = HMSVideoViewFactory(this)
 
             flutterPluginBinding.platformViewRegistry.registerViewFactory(
@@ -194,6 +201,15 @@ class HmssdkFlutterPlugin :
             }
             "is_tap_to_focus_supported", "capture_image_at_max_supported_resolution", "is_zoom_supported", "is_flash_supported", "toggle_flash" -> {
                 HMSCameraControlsAction.cameraControlsAction(call, result, hmssdk!!, activity.applicationContext)
+            }
+            "get_session_metadata_for_key", "set_session_metadata_for_key" -> {
+                HMSSessionStoreAction.sessionStoreActions(call,result,hmsSessionStore)
+            }
+            "add_key_change_listener"-> {
+                addKeyChangeListener(call,result)
+            }
+            "remove_key_change_listener" -> {
+                removeKeyChangeListener(call)
             }
             else -> {
                 result.notImplemented()
@@ -368,10 +384,12 @@ class HmssdkFlutterPlugin :
             previewChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Preview channel not found")
             logsEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Logs event channel not found")
             rtcStatsChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "RTC Stats channel not found")
+            sessionStoreChannel?.setStreamHandler(null)?:Log.e("Channel Error","Session Store channel not found")
             eventSink = null
             previewSink = null
             rtcSink = null
             logsSink = null
+            sessionStoreSink = null
             hmssdkFlutterPlugin = null
         } else {
             Log.e("Plugin Error", "hmssdkFlutterPlugin is null in onDetachedFromEngine")
@@ -454,6 +472,7 @@ class HmssdkFlutterPlugin :
     private fun leave(result: Result) {
         hmssdk!!.leave(hmsActionResultListener = HMSCommonAction.getActionListener(result))
         disposePIP()
+        removeAllKeyChangeListener()
     }
 
     private fun destroy(result: Result) {
@@ -471,6 +490,8 @@ class HmssdkFlutterPlugin :
             this.logsSink = events
         } else if (nameOfEventSink == "rtc_stats") {
             this.rtcSink = events
+        } else if(nameOfEventSink == "session_store") {
+            this.sessionStoreSink = events
         }
     }
 
@@ -668,6 +689,7 @@ class HmssdkFlutterPlugin :
             hmsActionResultListener = HMSCommonAction.getActionListener(result)
         )
         disposePIP()
+        removeAllKeyChangeListener()
     }
 
     private fun isAllowedToEndMeeting(): Boolean? {
@@ -851,6 +873,7 @@ class HmssdkFlutterPlugin :
             if (HMSPipAction.isPIPActive(activity)) {
                 activity.moveTaskToBack(true)
                 disposePIP()
+                removeAllKeyChangeListener()
             }
             if (args["data"] != null) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -886,6 +909,17 @@ class HmssdkFlutterPlugin :
                 }
             }
         }
+
+        override fun onSessionStoreAvailable(sessionStore: HmsSessionStore) {
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_session_store_available"
+            args["data"] = null
+            hmsSessionStore = sessionStore
+            CoroutineScope(Dispatchers.Main).launch {
+                eventSink?.success(args)
+            }
+        }
+
     }
 
     private val hmsPreviewListener = object : HMSPreviewListener {
@@ -1180,6 +1214,87 @@ class HmssdkFlutterPlugin :
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             activity.setPictureInPictureParams(PictureInPictureParams.Builder().setAutoEnterEnabled(false).build())
         }
+    }
+
+    /**
+     *  This method is used to add key change listener for
+     *  keys passed while calling this method
+     *
+     *  Parameters:
+     *  - keys: List<String> List of keys for which metadata updates need to be listened.
+     *  - keyChangeListener: Instance of HMSKeyChangeListener to listen to the metadata changes for corresponding keys
+     *  - hmsActionResultListener: Instance of HMSActionResultListener to notify success or failure of the method call
+     */
+    private fun addKeyChangeListener(call: MethodCall,result: Result){
+
+        val keys = call.argument<List<String>>("keys") ?: run {
+            HMSErrorLogger.returnArgumentsError("keys parameter is null")
+        }
+
+        val uid = call.argument<String>("uid")?: run {
+            HMSErrorLogger.returnArgumentsError("uid is null")
+        }
+
+        uid.let {
+             val keyChangeListener = object : HMSKeyChangeListener {
+                override fun onKeyChanged(key: String, value: Any?) {
+                    val args = HashMap<String, Any?>()
+                    args["event_name"] = "on_key_changed"
+                    val newData = HashMap<String,String?>()
+                    newData["key"] = key
+                    if(value is String?){
+                        newData["value"] = value
+                    }
+                    else{
+                        HMSErrorLogger.logError("onKeyChanged","Session metadata type is not compatible, Please use String? type while setting metadata","Type Incompatibility Error")
+                        newData["value"] = null
+                    }
+                    newData["uid"] = uid as String
+                    args["data"] = newData
+                    CoroutineScope(Dispatchers.Main).launch {
+                        sessionStoreSink?.success(args)
+                    }
+                }
+            }
+            hmsKeyChangeObserverList.add(HMSKeyChangeObserver(uid as String,keyChangeListener))
+            keys.let { keys as List<String>
+                hmsSessionStore?.addKeyChangeListener(keys,keyChangeListener,HMSCommonAction.getActionListener(result))
+            }
+        }
+    }
+
+    /***
+     * This method is used to remove the attached key change listeners
+     * attached using [addKeyChangeListener] method
+     */
+    private fun removeKeyChangeListener(call: MethodCall){
+
+        val uid = call.argument<String>("uid")?: run {
+            HMSErrorLogger.returnArgumentsError("uid is null")
+        }
+
+        uid?.let {
+            hmsKeyChangeObserverList.forEach{
+                    hmsKeyChangeObserver ->
+                if(hmsKeyChangeObserver.uid == uid){
+                    hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeObserver.keyChangeListener)
+                    hmsKeyChangeObserverList.remove(hmsKeyChangeObserver)
+                    return
+                }
+            }
+        }
+    }
+
+    /**
+     * This method removes all the key change listeners attached during the session
+     * This is used while cleaning the room state i.e after calling leave room,
+     * onRemovedFromRoom or endRoom
+     */
+    private fun removeAllKeyChangeListener(){
+        hmsKeyChangeObserverList.forEach{
+            hmsKeyChangeObserver -> hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeObserver.keyChangeListener)
+        }
+        hmsKeyChangeObserverList.clear()
     }
 
     private val hmsStatsListener = object : HMSStatsObserver {

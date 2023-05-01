@@ -1,5 +1,19 @@
 Board: https://github.com/100mslive/100ms-flutter/projects/18
 
+- Add Session Store APIs
+https://github.com/100mslive/100ms-flutter/issues/1259
+
+- Add support for setting a Tile in Spotlight Mode using Session Store
+https://github.com/100mslive/100ms-flutter/issues/1252
+
+- Fixed Role change request popup taking time to dismiss
+https://github.com/100mslive/100ms-flutter/issues/1271
+
+- Fixed grid logic and audio view tile
+https://github.com/100mslive/100ms-flutter/pull/1283
+
+- Updated crashlytics implementation
+https://github.com/100mslive/100ms-flutter/pull/1280
 
 
 Flutter SDK: 1.6.0
