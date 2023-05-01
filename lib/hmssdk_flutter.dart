@@ -20,6 +20,7 @@ export 'src/enum/hms_stats_listener_method.dart';
 export 'src/enum/hms_track_init_state.dart';
 export 'src/enum/hms_Quality_limitation_reason.dart';
 export 'src/enum/hms_simulcast_layer.dart';
+export 'src/enum/hms_audio_mode.dart';
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';
 export 'src/exceptions/hms_in_sufficient_data.dart';

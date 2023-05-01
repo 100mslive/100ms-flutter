@@ -41,7 +41,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       {required bool joinWithMutedAudio,
       required bool joinWithMutedVideo,
       required bool isSoftwareDecoderDisabled,
-      required bool isAudioMixerDisabled}) async {
+      required bool isAudioMixerDisabled,
+      required HMSAudioMode audioMode}) async {
     /// [iOSScreenshareConfig] of [HMSSDKInteractor] are optional values only required for implementing Screen & Audio Share on iOS. They are not required for Android.
     /// Remove [appGroup] & [preferredExtension] if your app does not implements Screen or Audio Share on iOS.
     /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
@@ -57,7 +58,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         joinWithMutedAudio: joinWithMutedAudio,
         joinWithMutedVideo: joinWithMutedVideo,
         isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
-        isAudioMixerDisabled: isAudioMixerDisabled);
+        isAudioMixerDisabled: isAudioMixerDisabled,
+        audioMode: audioMode);
     //build call should be a blocking call
     await _hmsSDKInteractor.build();
   }
@@ -85,12 +87,15 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
           await Utilities.getBoolData(key: 'software-decoder-disabled') ?? true;
       bool isAudioMixerDisabled =
           await Utilities.getBoolData(key: 'audio-mixer-disabled') ?? true;
+      int audioModeIndex = await Utilities.getIntData(key: 'audio-mode');
       if (res) {
         await setHMSSDKInteractor(
-            joinWithMutedAudio: joinWithMutedAudio,
-            joinWithMutedVideo: joinWithMutedVideo,
-            isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
-            isAudioMixerDisabled: isAudioMixerDisabled);
+          joinWithMutedAudio: joinWithMutedAudio,
+          joinWithMutedVideo: joinWithMutedVideo,
+          isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
+          isAudioMixerDisabled: isAudioMixerDisabled,
+          audioMode: HMSAudioMode.values[audioModeIndex]
+        );
 
         if (!skipPreview) {
           _previewStore = PreviewStore(hmsSDKInteractor: _hmsSDKInteractor);
