@@ -47,7 +47,7 @@ class HMSSessionStoreAction {
                 return
             }
 
-            if(value is String || value is NSNull){
+            if(value is String? || value is NSNull){
                 result(HMSResultExtension.toDictionary(true, value))
             }
             else{
