@@ -1235,6 +1235,7 @@ class HMSSDK {
   /// **hmsActionResultListener** - [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess] and [HMSActionResultListener.onException] will be called.
   ///
   ///Refer [session metadata guide here](https://www.100ms.live/docs/flutter/v2/features/session-metadata)
+  @Deprecated('Use [setSessionMetadataForKey]')
   Future<void> setSessionMetadata(
       {required String? metadata,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -1260,6 +1261,7 @@ class HMSSDK {
   ///Method to fetch the latest metadata from the server and returns it
   ///
   ///Refer [session metadata guide here](https://www.100ms.live/docs/flutter/v2/features/session-metadata)
+  @Deprecated('Use [getSessionMetadataForKey]')
   Future<String?> getSessionMetadata() async {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.getSessionMetadata);

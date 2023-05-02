@@ -11,6 +11,7 @@ import 'package:hmssdk_flutter_example/common/widgets/hms_embedded_button.dart';
 import 'package:hmssdk_flutter_example/common/widgets/stream_timer.dart';
 import 'package:hmssdk_flutter_example/common/widgets/subtitle_text.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
+import 'package:hmssdk_flutter_example/enum/session_store_key.dart';
 import 'package:hmssdk_flutter_example/meeting_modes/full_screen_mode.dart';
 import 'package:hmssdk_flutter_example/meeting_modes/audio_mode.dart';
 import 'package:hmssdk_flutter_example/meeting_modes/hero_mode.dart';
@@ -709,7 +710,10 @@ class _MeetingPageState extends State<MeetingPage> {
                                                             context
                                                                 .read<
                                                                     MeetingStore>()
-                                                                .getSessionMetadata(),
+                                                                .getSessionMetadata(
+                                                                    SessionStoreKeyValues.getNameFromMethod(
+                                                                        SessionStoreKey
+                                                                            .PINNED_MESSAGE_SESSION_KEY)),
                                                             context
                                                                 .read<
                                                                     MeetingStore>()
