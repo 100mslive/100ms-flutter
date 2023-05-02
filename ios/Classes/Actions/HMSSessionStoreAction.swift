@@ -53,7 +53,7 @@ class HMSSessionStoreAction {
             else{
                 HMSErrorLogger.returnHMSException(#function,"Session metadata type is not compatible, Please use String? type while setting metadata","Type Incompatibility Error",result)
             }
-            
+                
         }
 
     }

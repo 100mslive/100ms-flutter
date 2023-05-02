@@ -190,9 +190,13 @@ class MeetingStore extends ChangeNotifier
 
   bool isFlashOn = false;
 
+  ///These variables are used in session metadata implementation *************************************************
+
   HMSSessionStore? _hmsSessionStore;
 
   PeerTrackNode? spotLightPeer;
+
+  String? spotlightMetadata;
 
   Future<HMSException?> join(String userName, String roomUrl,
       {HMSConfig? roomConfig}) async {
@@ -694,6 +698,10 @@ class MeetingStore extends ChangeNotifier
             uid: peer.peerId + "mainVideo",
             stats: RTCStats(),
             track: track as HMSVideoTrack));
+        if (spotlightMetadata == track.trackId) {
+          setPeerToSpotlight(spotlightMetadata);
+          spotlightMetadata = null;
+        }
         notifyListeners();
         return;
       }
@@ -1003,9 +1011,9 @@ class MeetingStore extends ChangeNotifier
     } else if (Platform.isIOS) {
       HMSIOSPIPController.destroy();
     }
+    _hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeListener: this);
     _hmsSDKInteractor.removeHMSLogger();
     _hmsSDKInteractor.destroy();
-    _hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeListener: this);
     _hmsSessionStore = null;
     peerTracks.clear();
     isRoomEnded = true;
@@ -1357,7 +1365,7 @@ class MeetingStore extends ChangeNotifier
         spotLightPeer = peerTracks[index];
         changePinTileStatus(peerTracks[index]);
       } else {
-        Utilities.showToast("Failed to set spotlight for the peer");
+        spotlightMetadata = value;
       }
     }
     notifyListeners();
