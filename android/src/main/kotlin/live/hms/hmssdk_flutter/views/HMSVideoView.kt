@@ -23,7 +23,7 @@ class HMSVideoView(
     private val scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
     private val track: HMSVideoTrack?,
     private val disableAutoSimulcastLayerSelect: Boolean,
-    private val hmssdkFlutterPlugin: HmssdkFlutterPlugin?,
+    private val hmssdkFlutterPlugin: HmssdkFlutterPlugin?
 ) : FrameLayout(context, null) {
 
     private var hmsVideoView: HMSVideoView? = null

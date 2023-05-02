@@ -22,7 +22,7 @@ class HMSVideoViewWidget(
     scaleType: Int?,
     private val matchParent: Boolean? = true,
     disableAutoSimulcastLayerSelect: Boolean,
-    hmssdkFlutterPlugin: HmssdkFlutterPlugin?,
+    hmssdkFlutterPlugin: HmssdkFlutterPlugin?
 ) : PlatformView {
 
     private var hmsVideoView: HMSVideoView? = null
@@ -41,12 +41,12 @@ class HMSVideoViewWidget(
         super.onFlutterViewAttached(flutterView)
         var frameLayoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT
         )
         if (matchParent == false) {
             frameLayoutParams = FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
             )
         }
         if (view != null) {
@@ -90,7 +90,7 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
                 code = 6004,
                 description = "There is no track corresponding to the given trackId",
                 message = "Video track is null for corresponding trackId",
-                name = "HMSVideoView Error",
+                name = "HMSVideoView Error"
             )
             args["data"] = HMSExceptionExtension.toDictionary(hmsException)
             plugin.onVideoViewError(args)
