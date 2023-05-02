@@ -81,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       context,
                       CupertinoPageRoute(
                           builder: (_) => MeetingPage(
-                              authToken:
+                              authToken:"",
                                   /*
                                   * Paste Auth Token for your Room from 100ms Dashboard here
                                   * https://dashboard.100ms.live/
@@ -113,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       context,
                       CupertinoPageRoute(
                           builder: (_) => HLSViewerPage(
-                              authToken:
+                              authToken:"",
                                   /*
                                   * Paste Auth Token for your Room from 100ms Dashboard here
                                   * https://dashboard.100ms.live/
