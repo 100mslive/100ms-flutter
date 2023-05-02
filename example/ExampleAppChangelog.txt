@@ -18,4 +18,4 @@ https://github.com/100mslive/100ms-flutter/pull/1280
 
 Flutter SDK: 1.6.0
 Android SDK: 2.6.1
-iOS SDK: 0.9.2
+iOS SDK: 0.9.3
