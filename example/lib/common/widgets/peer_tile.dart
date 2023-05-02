@@ -149,9 +149,12 @@ class _PeerTileState extends State<PeerTile> {
                   width: widget.itemWidth - 5.0,
                   child: Stack(
                     children: [
-                      VideoView(
-                        uid: context.read<PeerTrackNode>().uid,
-                        scaleType: widget.scaleType,
+                      Align(
+                        alignment: Alignment.center,
+                        child: VideoView(
+                          uid: context.read<PeerTrackNode>().uid,
+                          scaleType: widget.scaleType,
+                        ),
                       ),
                       Positioned(
                         //Bottom left
