@@ -529,7 +529,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             var dict: [String: Any] = ["key": key]
 
-            if(value is String?){
+            if(value is String || value is NSNull){
                 dict["value"] = value
             }
             else{
@@ -575,7 +575,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         guard let store = sessionStore
         else {
-            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Session Store is null.")))
+            HMSErrorLogger.returnHMSException(#function,"Session Store is null","NULL ERROR",result)
             return
         }
 

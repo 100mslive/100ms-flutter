@@ -47,7 +47,7 @@ class HMSSessionStoreAction {
                 return
             }
 
-            if(value is String?){
+            if(value is String || value is NSNull){
                 result(HMSResultExtension.toDictionary(true, value))
             }
             else{
@@ -73,16 +73,12 @@ class HMSSessionStoreAction {
             return
         }
 
-        guard let data = arguments["data"]
-        else {
-            HMSErrorLogger.returnHMSException(#function,"Data for the key - \(key) to be set in Session Store is null.","NULL ERROR",result)
-            return
-        }
+        let data = arguments["data"]
 
-        store.set(data, forKey: key) { value, error in
+        store.set(data as Any, forKey: key) { value, error in
 
             if let error = error {
-                HMSErrorLogger.returnHMSException(#function,"Error in setting data: \(data) for key: \(key) to the Session Store. Error: \(error.localizedDescription)","Key Error",result)
+                HMSErrorLogger.returnHMSException(#function,"Error in setting data: \(data ?? "null") for key: \(key) to the Session Store. Error: \(error.localizedDescription)","Key Error",result)
                 return
             }
             result(nil)
