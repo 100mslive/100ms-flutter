@@ -29,7 +29,7 @@ class HMSPipAction {
                 }
                 "is_pip_available" -> {
                     result.success(
-                        activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+                        activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE),
                     )
                 }
                 "setup_pip" -> {
