@@ -529,7 +529,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             var dict: [String: Any] = ["key": key]
 
-            if(value is String || value is NSNull){
+            if(value is String? || value is NSNull){
                 dict["value"] = value
             }
             else{
