@@ -617,6 +617,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             hmsSessionStoreObserver in
             sessionStore?.removeObserver(hmsSessionStoreObserver.observer)
         }
+        sessionStoreCleanup()
     }
 
     private func sessionStoreCleanup() {
@@ -1485,6 +1486,5 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private func performCleanupOnLeavingRoom() {
         destroyPIPController()
         removeAllKeyChangeListener()
-        sessionStoreCleanup()
     }
 }
