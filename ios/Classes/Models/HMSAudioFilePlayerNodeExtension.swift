@@ -12,12 +12,12 @@ class HMSAudioFilePlayerNodeExtension {
 
     static func play(_ call: [AnyHashable: Any], _ playerNode: HMSAudioFilePlayerNode, _ result: @escaping FlutterResult) {
                 guard let fileURL = call["file_url"] as? String else{
-                    HMSErrorLogger.returnArgumentsError(errorMessage: "Invalid file")
+                    HMSErrorLogger.returnArgumentsError("Invalid file")
                     HMSErrorLogger.returnHMSException(#function,"Error in playing the file", "File Error",result)
                     return
                 }
                 guard let url = URL(string: fileURL) else{
-                    HMSErrorLogger.returnArgumentsError(errorMessage: "File URL is invalid")
+                    HMSErrorLogger.returnArgumentsError("File URL is invalid")
                     HMSErrorLogger.returnHMSException(#function,"Error in playing the file", "File Error",result)
                     return
                 }
