@@ -1,8 +1,5 @@
 // Package imports
 import 'package:flutter/material.dart';
-import 'package:hmssdk_flutter_example/common/app_dialogs/change_role_option_dialog.dart';
-import 'package:hmssdk_flutter_example/common/app_dialogs/change_simulcast_layer_option_dialog.dart';
-import 'package:hmssdk_flutter_example/common/app_dialogs/local_peer_tile_dialog.dart';
 import 'package:hmssdk_flutter_example/common/peer_widgets/audio_level_avatar.dart';
 import 'package:hmssdk_flutter_example/common/peer_widgets/audio_mute_status.dart';
 import 'package:hmssdk_flutter_example/common/peer_widgets/brb_tag.dart';
@@ -12,14 +9,10 @@ import 'package:hmssdk_flutter_example/common/peer_widgets/network_icon_widget.d
 import 'package:hmssdk_flutter_example/common/peer_widgets/rtc_stats_view.dart';
 import 'package:hmssdk_flutter_example/common/peer_widgets/tile_border.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:provider/provider.dart';
 
 // Project imports
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
-import 'package:hmssdk_flutter_example/common/app_dialogs/remote_peer_tile_dialog.dart';
 
 import '../peer_widgets/peer_name.dart';
 
