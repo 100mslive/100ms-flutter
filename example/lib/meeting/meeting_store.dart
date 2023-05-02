@@ -1408,15 +1408,17 @@ class MeetingStore extends ChangeNotifier
       HMSAudioFilePlayerNode("audioFilePlayerNode");
   HMSMicNode micNode = HMSMicNode();
 
-  void playAudioIos(String url) {
-    audioFilePlayerNode.play(fileUrl: url);
+  void playAudioIos(String url) async {
+    HMSException? exception = await audioFilePlayerNode.play(fileUrl: url);
+    if (exception != null) {
+      Utilities.showToast(exception.description, time: 5);
+    }
     isPlayerRunningIos();
   }
 
   Future<bool> isPlayerRunningIos() async {
-    bool isPlaying = await audioFilePlayerNode.isPlaying();
-    isAudioShareStarted = isPlaying;
-    return isPlaying;
+    isAudioShareStarted = await audioFilePlayerNode.isPlaying();
+    return isAudioShareStarted;
   }
 
   void stopAudioIos() {
