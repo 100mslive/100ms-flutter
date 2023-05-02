@@ -49,9 +49,10 @@ class _VideoViewState extends State<VideoView> {
                     child: InteractiveViewer(
                       // [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
                       // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
-                      child: 
-                      Container(
-                        height: Platform.isIOS? double.infinity : MediaQuery.of(context).size.height/3,
+                      child: Container(
+                        height: Platform.isIOS
+                            ? double.infinity
+                            : MediaQuery.of(context).size.height / 3,
                         child: HMSVideoView(
                           key: Key(data.item1!.trackId),
                           scaleType: widget.scaleType,
