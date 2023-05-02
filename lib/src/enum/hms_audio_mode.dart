@@ -1,4 +1,4 @@
-enum HMSAudioMode { VOICE, MUSIC}
+enum HMSAudioMode { VOICE, MUSIC }
 
 extension HMSAudioModeValues on HMSAudioMode {
   static HMSAudioMode getAudioModeFromName(String name) {

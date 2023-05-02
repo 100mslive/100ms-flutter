@@ -37,7 +37,7 @@ class HMSSDKInteractor {
         hmsLogSettings: hmsLogSettings,
         hmsTrackSetting: trackSetting);
   }
-  
+
   Future<void> build() async {
     await hmsSDK.build();
   }

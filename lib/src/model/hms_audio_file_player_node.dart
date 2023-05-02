@@ -55,8 +55,8 @@ class HMSAudioFilePlayerNode extends HMSAudioNode {
   ///The [pause] function on [HMSAudioFilePlayerNode] to pause a file on a local device in a meeting room.
   ///
   ///Refer [Audio sharing in iOS guide here](https://www.100ms.live/docs/flutter/v2/features/audio_sharing#i-os-setup)
-  void pause() {
-    PlatformService.invokeMethod(PlatformMethod.pauseAudioShare,
+  Future<void> pause() async {
+    await PlatformService.invokeMethod(PlatformMethod.pauseAudioShare,
         arguments: {"name": methodName});
   }
 
@@ -64,18 +64,18 @@ class HMSAudioFilePlayerNode extends HMSAudioNode {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.resumeAudioShare,
         arguments: {"name": methodName});
-    if (result == null) {
+    if (result["success"]) {
       return null;
     } else {
-      return HMSException.fromMap(result["error"]);
+      return HMSException.fromMap(result["data"]["error"]);
     }
   }
 
   ///The [stop] function on [HMSAudioFilePlayerNode] to stop a file on a local device in a meeting room.
   ///
   ///Refer [Audio sharing in iOS guide here](https://www.100ms.live/docs/flutter/v2/features/audio_sharing#i-os-setup)
-  void stop() {
-    PlatformService.invokeMethod(PlatformMethod.stopAudioShare,
+  Future<void> stop() async {
+    await PlatformService.invokeMethod(PlatformMethod.stopAudioShare,
         arguments: {"name": methodName});
   }
 
@@ -86,8 +86,8 @@ class HMSAudioFilePlayerNode extends HMSAudioNode {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.audioSharePlaying,
         arguments: {"name": methodName});
-    if (result != null) {
-      return result["is_playing"];
+    if (result["success"]) {
+      return result["data"]["is_playing"];
     }
     return false;
   }
@@ -95,12 +95,12 @@ class HMSAudioFilePlayerNode extends HMSAudioNode {
   ///The [currentDuration] function on [HMSAudioFilePlayerNode] will return the current duration of audio shared.
   ///
   ///Refer [Audio sharing in iOS guide here](https://www.100ms.live/docs/flutter/v2/features/audio_sharing#i-os-setup)
-  Future<int?> currentDuration() async {
+  Future<double?> currentDuration() async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.audioShareCurrentTime,
         arguments: {"name": methodName});
-    if (result != null) {
-      return result["current_duration"];
+    if (result["success"]) {
+      return result["data"]["current_duration"];
     }
     return null;
   }
@@ -108,12 +108,12 @@ class HMSAudioFilePlayerNode extends HMSAudioNode {
   ///The [duration] function on [HMSAudioFilePlayerNode] will return the total duration of audio shared.
   ///
   ///Refer [Audio sharing in iOS guide here](https://www.100ms.live/docs/flutter/v2/features/audio_sharing#i-os-setup)
-  Future<int?> duration() async {
+  Future<double?> duration() async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.audioShareDuration,
         arguments: {"name": methodName});
-    if (result != null) {
-      return result["duration"];
+    if (result["success"]) {
+      return result["data"]["duration"];
     }
     return null;
   }

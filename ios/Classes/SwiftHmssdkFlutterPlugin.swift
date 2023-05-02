@@ -348,17 +348,17 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 HMSAudioFilePlayerNodeExtension.play(arguments, audioNode as! HMSAudioFilePlayerNode, result)
                 break
             case "stop_audio_share":
-                HMSAudioFilePlayerNodeExtension.stop(audioNode as! HMSAudioFilePlayerNode)
+                HMSAudioFilePlayerNodeExtension.stop(audioNode as! HMSAudioFilePlayerNode,result)
                 break
             case "pause_audio_share":
-                HMSAudioFilePlayerNodeExtension.pause(audioNode as! HMSAudioFilePlayerNode)
+                HMSAudioFilePlayerNodeExtension.pause(audioNode as! HMSAudioFilePlayerNode,result)
                 break
             case "resume_audio_share":
                 HMSAudioFilePlayerNodeExtension.resume(audioNode as! HMSAudioFilePlayerNode, result)
                 break
             case "set_audio_share_volume":
                 if arguments["name"] as! String != "mic_node" {
-                    HMSAudioFilePlayerNodeExtension.setVolume(arguments, audioNode as! HMSAudioFilePlayerNode)
+                    HMSAudioFilePlayerNodeExtension.setVolume(arguments, audioNode as! HMSAudioFilePlayerNode,result)
                 } else {
                     HMSMicNodeExtension.setVolume(arguments, audioNode as! HMSMicNode)
                 }

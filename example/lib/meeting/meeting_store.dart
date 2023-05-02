@@ -1411,15 +1411,14 @@ class MeetingStore extends ChangeNotifier
   void playAudioIos(String url) async {
     HMSException? exception = await audioFilePlayerNode.play(fileUrl: url);
     if (exception != null) {
-      Utilities.showToast(exception.description,time: 5);
+      Utilities.showToast(exception.description, time: 5);
     }
-    await isPlayerRunningIos();
+    isPlayerRunningIos();
   }
 
   Future<bool> isPlayerRunningIos() async {
-    bool isPlaying = await audioFilePlayerNode.isPlaying();
-    isAudioShareStarted = isPlaying;
-    return isPlaying;
+    isAudioShareStarted = await audioFilePlayerNode.isPlaying();
+    return isAudioShareStarted;
   }
 
   void stopAudioIos() {

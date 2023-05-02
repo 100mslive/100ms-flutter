@@ -10,7 +10,7 @@ class HMSCameraControls {
   ///resolution.
   ///
   /// **Parameters**:
-  /// 
+  ///
   /// **withFlash** - parameter turns flash ON if set to TRUE. Default value is FALSE
   ///
   ///Note: [withFlash] only works if current facing camera supports flash. If it doesn't support flash
@@ -32,7 +32,7 @@ class HMSCameraControls {
 
   ///[isFlashSupported] is used to check whether the current facing camera supports
   /// flash or not.
-  /// 
+  ///
   ///Refer: Read more about isFlashSupported [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/configure-your-device/camera/camera-controls#check-if-flash-feature-is-available)
   static Future<dynamic> isFlashSupported() async {
     var result =
