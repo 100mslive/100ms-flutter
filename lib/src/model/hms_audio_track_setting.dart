@@ -45,7 +45,7 @@ class HMSAudioTrackSetting {
     }
     HMSAudioMixerSource(node: nodeList);
 
-    HMSAudioMode audioMode = map["audio_mode"] ?? HMSAudioMode.VOICE;
+    HMSAudioMode audioMode = HMSAudioModeValues.getAudioModeFromName(map["audio_mode"]);
     return HMSAudioTrackSetting(
         useHardwareAcousticEchoCanceler:
             map['user_hardware_acoustic_echo_canceler'] ?? null,

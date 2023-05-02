@@ -53,6 +53,7 @@ class HMSTrackSettingsExtension {
         dict["track_description"] = hmsAudioTrackSettings.trackDescription
         dict["max_bitrate"] = hmsAudioTrackSettings.maxBitrate
         dict["audio_source"] = audioMixerSourceMap.keys.map {$0}
+        dict["audio_mode"] = getStringFromAudioMode(from: hmsAudioTrackSettings.audioMode)
         return dict
     }
 
@@ -143,6 +144,19 @@ class HMSTrackSettingsExtension {
 
         case "music":
             return .music
+
+        default:
+            return nil
+        }
+    }
+    
+    static private func getStringFromAudioMode(from mode: HMSAudioMode) -> String? {
+        switch mode{
+        case .music:
+            return "music"
+
+        case .voice:
+            return "voice"
 
         default:
             return nil
