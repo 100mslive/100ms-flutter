@@ -140,7 +140,7 @@ class _PeerTileState extends State<PeerTile> {
                 child: Container(
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey, width: 1.0),
-                      color: Colors.transparent,
+                      color: Colors.red,
                       borderRadius: BorderRadius.all(Radius.circular(10))),
                   key: key,
                   padding: EdgeInsets.all(2),

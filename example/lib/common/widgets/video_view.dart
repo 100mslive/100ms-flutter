@@ -1,4 +1,5 @@
 //Package imports
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -38,11 +39,13 @@ class VideoView extends StatefulWidget {
 class _VideoViewState extends State<VideoView> {
   @override
   Widget build(BuildContext context) {
-    return Selector<PeerTrackNode, Tuple3<HMSVideoTrack?, bool, bool>>(
+    return Selector<PeerTrackNode,
+            Tuple4<HMSVideoTrack?, bool, bool, HMSResolution?>>(
         builder: (_, data, __) {
           if ((data.item1 == null) || data.item2 || data.item3) {
             return Semantics(label: "fl_video_off", child: AudioLevelAvatar());
           } else {
+            log("Screen share height ${data.item4?.height} width: ${data.item4?.width}");
             return (data.item1?.source != "REGULAR")
                 ? ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -50,9 +53,10 @@ class _VideoViewState extends State<VideoView> {
                       // [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
                       // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
                       child: Container(
+                        width: MediaQuery.of(context).size.width * 0.8204,
                         height: Platform.isIOS
                             ? double.infinity
-                            : MediaQuery.of(context).size.height / 3,
+                            : MediaQuery.of(context).size.height,
                         child: HMSVideoView(
                           key: Key(data.item1!.trackId),
                           scaleType: widget.scaleType,
@@ -89,9 +93,10 @@ class _VideoViewState extends State<VideoView> {
                   );
           }
         },
-        selector: (_, peerTrackNode) => Tuple3(
+        selector: (_, peerTrackNode) => Tuple4(
             peerTrackNode.track,
             (peerTrackNode.isOffscreen),
-            (peerTrackNode.track?.isMute ?? true)));
+            (peerTrackNode.track?.isMute ?? true),
+            (peerTrackNode.stats?.hmsRemoteVideoStats?.resolution)));
   }
 }
