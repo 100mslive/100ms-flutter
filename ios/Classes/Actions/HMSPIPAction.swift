@@ -78,7 +78,7 @@ class HMSPIPAction {
             model?.color = .black
         }
 
-        let controller = UIHostingController(rootView: PiPView(model: model!))
+        let controller = UIHostingController(rootView: HMSPiPView(model: model!))
 
         pipVideoCallViewController.view.addConstrained(subview: controller.view)
 

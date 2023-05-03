@@ -1,5 +1,5 @@
 //
-//  PiPView.swift
+//  HMSPiPView.swift
 //  HMSSDK
 //
 //  Copyright © 2022 100ms. All rights reserved.
@@ -9,7 +9,7 @@ import SwiftUI
 import HMSSDK
 
 @available(iOS 15.0, *)
-struct PiPView: View {
+struct HMSPiPView: View {
 
     @ObservedObject var model: PiPModel
 

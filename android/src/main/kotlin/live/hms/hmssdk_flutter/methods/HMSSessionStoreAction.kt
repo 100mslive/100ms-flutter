@@ -41,15 +41,15 @@ class HMSSessionStoreAction {
             key?.let { key as String
                 hmsSessionStore?.get(key,object:HMSSessionMetadataListener{
                     override fun onError(error: HMSException) {
-                        result.success(HMSResultExtension.toDictionary(false,HMSExceptionExtension.toDictionary(error)))
+                        result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)))
                     }
 
                     override fun onSuccess(sessionMetadata: Any?) {
-                        if(sessionMetadata is String?){
-                            result.success(HMSResultExtension.toDictionary(true,sessionMetadata))
+                        if (sessionMetadata is String?) {
+                            result.success(HMSResultExtension.toDictionary(true, sessionMetadata))
                         }
                         else{
-                            HMSErrorLogger.returnHMSException("getSessionMetadataForKey","Session metadata type is not compatible, Please use String? type while setting metadata","Type Incompatibility Error",result)
+                            HMSErrorLogger.returnHMSException("getSessionMetadataForKey","Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error", result)
                         }
                     }
                 })

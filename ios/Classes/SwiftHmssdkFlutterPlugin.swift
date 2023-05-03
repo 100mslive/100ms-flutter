@@ -14,16 +14,23 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var previewEventChannel: FlutterEventChannel?
     var logsEventChannel: FlutterEventChannel?
     var rtcStatsEventChannel: FlutterEventChannel?
+    var sessionEventChannel: FlutterEventChannel?
 
     var eventSink: FlutterEventSink?
     var previewSink: FlutterEventSink?
     var logsSink: FlutterEventSink?
     var rtcSink: FlutterEventSink?
+    var sessionSink: FlutterEventSink?
+
     var roleChangeRequest: HMSRoleChangeRequest?
 
     internal var hmsSDK: HMSSDK?
 
     private var isStatsActive = false
+
+    internal var sessionStore: HMSSessionStore?
+
+    private var sessionStoreChangeObservers = [HMSSessionStoreKeyChangeListener]()
 
     // MARK: - Flutter Setup
 
@@ -35,12 +42,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let previewChannel = FlutterEventChannel(name: "preview_event_channel", binaryMessenger: registrar.messenger())
         let logsChannel = FlutterEventChannel(name: "logs_event_channel", binaryMessenger: registrar.messenger())
         let rtcChannel = FlutterEventChannel(name: "rtc_event_channel", binaryMessenger: registrar.messenger())
+        let sessionChannel = FlutterEventChannel(name: "session_event_channel", binaryMessenger: registrar.messenger())
 
         let instance = SwiftHmssdkFlutterPlugin(channel: channel,
                                                 meetingEventChannel: eventChannel,
                                                 previewEventChannel: previewChannel,
                                                 logsEventChannel: logsChannel,
-                                                rtcStatsEventChannel: rtcChannel)
+                                                rtcStatsEventChannel: rtcChannel,
+                                                sessionEventChannel: sessionChannel)
 
         let videoViewFactory = HMSFlutterPlatformViewFactory(plugin: instance)
         registrar.register(videoViewFactory, withId: "HMSFlutterPlatformView")
@@ -49,6 +58,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         previewChannel.setStreamHandler(instance)
         logsChannel.setStreamHandler(instance)
         rtcChannel.setStreamHandler(instance)
+        sessionChannel.setStreamHandler(instance)
 
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
@@ -57,13 +67,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 meetingEventChannel: FlutterEventChannel,
                 previewEventChannel: FlutterEventChannel,
                 logsEventChannel: FlutterEventChannel,
-                rtcStatsEventChannel: FlutterEventChannel) {
+                rtcStatsEventChannel: FlutterEventChannel,
+                sessionEventChannel: FlutterEventChannel) {
 
         self.channel = channel
         self.meetingEventChannel = meetingEventChannel
         self.previewEventChannel = previewEventChannel
         self.logsEventChannel = logsEventChannel
         self.rtcStatsEventChannel = rtcStatsEventChannel
+        self.sessionEventChannel = sessionEventChannel
     }
 
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
@@ -82,6 +94,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             logsSink = events
         case "rtc_stats":
             rtcSink = events
+        case "session_store":
+            sessionSink = events
         default:
             return FlutterError(code: #function, message: "invalid event sink name", details: arguments)
         }
@@ -98,25 +112,31 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             meetingEventChannel!.setStreamHandler(nil)
             eventSink = nil
         } else {
-            print("meetingEventChannel not found", #function)
+            print(#function, "meetingEventChannel not found")
         }
         if previewEventChannel != nil {
             previewEventChannel!.setStreamHandler(nil)
             previewSink = nil
         } else {
-            print("previewEventChannel not found", #function)
+            print(#function, "previewEventChannel not found")
         }
         if logsEventChannel != nil {
             logsEventChannel!.setStreamHandler(nil)
             logsSink = nil
         } else {
-            print("logsEventChannel not found", #function)
+            print(#function, "logsEventChannel not found")
         }
         if rtcStatsEventChannel != nil {
             rtcStatsEventChannel!.setStreamHandler(nil)
             rtcSink = nil
         } else {
-            print("rtcStatsEventChannel not found", #function)
+            print(#function, "rtcStatsEventChannel not found")
+        }
+        if sessionEventChannel != nil {
+            sessionEventChannel!.setStreamHandler(nil)
+            sessionEventChannel = nil
+        } else {
+            print(#function, "sessionEventChannel not found")
         }
     }
 
@@ -138,6 +158,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume", "toggle_mic_mute_state":
             HMSAudioAction.audioActions(call, result, hmsSDK)
+
+        case "set_playback_allowed_for_track":
+            setPlaybackAllowedForTrack(call, result)
 
             // MARK: - Video Helpers
 
@@ -183,22 +206,33 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "start_screen_share", "stop_screen_share", "is_screen_share_active":
             screenShareActions(call, result)
 
+            // MARK: - Track Settings
+
         case "get_track_settings":
             trackSettingsAction(call, result)
             break
+
+            // MARK: - Local Audio Share
+
         case "play_audio_share", "stop_audio_share", "pause_audio_share", "resume_audio_share", "set_audio_share_volume", "audio_share_playing", "audio_share_current_time", "audio_share_duration":
             audioShareAction(call, result)
+
+            // MARK: - Switch Audio Output
+
         case "switch_audio_output", "get_audio_devices_list":
             HMSAudioDeviceAction.audioActions(call, result, hmsSDK)
+
+            // MARK: - Session Metadata
 
         case "get_session_metadata", "set_session_metadata":
             sessionMetadataAction(call, result)
 
-        case "set_playback_allowed_for_track":
-            setPlaybackAllowedForTrack(call, result)
+            // MARK: - Simulcast
 
         case "set_simulcast_layer", "get_layer", "get_layer_definition":
             HMSRemoteVideoTrackExtension.remoteVideoTrackActions(call, result, hmsSDK!)
+
+            // MARK: - PIP Mode
 
         case "setup_pip", "start_pip", "stop_pip", "is_pip_available", "is_pip_active", "change_track_pip", "change_text_pip", "destroy_pip":
             guard #available(iOS 15.0, *) else {
@@ -207,11 +241,26 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                         return }
             HMSPIPAction.pipAction(call, result, hmsSDK, self)
 
+            // MARK: - Capture HMSVideoView Snapshot
+
         case "capture_snapshot":
             captureSnapshot(call, result)
 
+            // MARK: - Advanced Camera Controls
+
         case "capture_image_at_max_supported_resolution", "is_tap_to_focus_supported", "is_zoom_supported", "is_flash_supported", "toggle_flash":
             HMSCameraControlsAction.cameraControlsAction(call, result, hmsSDK)
+
+            // MARK: - Session Store
+
+        case "get_session_metadata_for_key", "set_session_metadata_for_key":
+            HMSSessionStoreAction.sessionStoreActions(call, result, self)
+
+        case "add_key_change_listener":
+            addKeyChangeListener(call, result)
+
+        case "remove_key_change_listener":
+            removeKeyChangeListener(call, result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -435,16 +484,158 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
 
+    // MARK: - Session Store
+
+    /**
+     *  This method is used to add key change listener for
+     *  keys passed while calling this method
+     *
+     *  Parameters:
+     *  - keys: List<String> List of keys for which metadata updates need to be listened.
+     *  - keyChangeListener: Instance of HMSKeyChangeListener to listen to the metadata changes for corresponding keys
+     */
+    private func addKeyChangeListener(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+
+        guard let store = sessionStore
+        else {
+            HMSErrorLogger.returnHMSException(#function,"Session Store is null","NULL ERROR",result)
+            return
+        }
+
+        guard let arguments = call.arguments as? [AnyHashable: Any]
+        else {
+            HMSErrorLogger.returnArgumentsError("keys is null")
+            HMSErrorLogger.returnHMSException(#function,"No arguments passed which can be attached to Key Change Listener on the Session Store.","NULL ERROR",result)
+            return
+        }
+
+        guard let keys = arguments["keys"] as? [String]
+        else {
+            HMSErrorLogger.returnHMSException(#function,"No keys passed which can be attached to Key Change Listener on the Session Store. Available arguments: \(arguments)","NULL ERROR",result)
+            return
+        }
+        
+        guard let uid = arguments["uid"] as? String
+        else {
+            HMSErrorLogger.returnHMSException(#function,"No uid passed for key change listener Available arguments: \(arguments)","NULL ERROR",result)
+            return
+        }
+
+        store.observeChanges(forKeys: keys, changeObserver: { [weak self] key, value in
+
+            var data = [String: Any]()
+
+            data["event_name"] = "on_key_changed"
+
+            var dict: [String: Any] = ["key": key]
+
+            if(value is String? || value is NSNull){
+                dict["value"] = value
+            }
+            else{
+                HMSErrorLogger.logError(#function,"Session metadata type is not compatible, Please use String? type while setting metadata","Type Incompatibility Error")
+                dict["value"] = nil
+            }
+            
+            dict["uid"] = uid
+            data["data"] = dict
+
+            self?.sessionSink?(data)
+
+        }) { [weak self] observer, error in
+
+            if let error = error {
+                HMSErrorLogger.returnHMSException(#function,"Error in observing changes for key: \(keys) in the Session Store. Error: \(error.localizedDescription)","KEY CHANGE ERROR",result)
+                return
+            }
+
+            guard let observer = observer
+            else {
+                HMSErrorLogger.returnHMSException(#function,"Unknown Error in observing changes for key: \(keys) in the Session Store.","KEY CHANGE ERROR",result)
+                return
+            }
+
+            guard let self = self
+            else {
+                HMSErrorLogger.returnHMSException(#function,"Could not find self instance while observing changes for key: \(keys) in the Session Store.","KEY CHANGE ERROR",result)
+                return
+            }
+
+            self.sessionStoreChangeObservers.append(HMSSessionStoreKeyChangeListener(uid, observer))
+
+            result(nil)
+        }
+    }
+
+    /***
+     * This method is used to remove the attached key change listeners
+     * attached using [addKeyChangeListener] method
+     */
+    private func removeKeyChangeListener(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+
+        guard let store = sessionStore
+        else {
+            HMSErrorLogger.returnHMSException(#function,"Session Store is null","NULL ERROR",result)
+            return
+        }
+
+        guard let arguments = call.arguments as? [AnyHashable: Any]
+        else {
+            HMSErrorLogger.returnHMSException(#function,"No arguments to identify which Key Change Listener should be removed from the Session Store.","Remove Key Error",result)
+            return
+        }
+
+        guard let uid = arguments["uid"] as? String
+        else {
+            HMSErrorLogger.returnHMSException(#function,"No identifier passed which can be used. Available arguments: \(arguments)","Unique Id Error",result)
+            return
+        }
+
+        guard let keyChangeListenersToBeRemovedIndex = sessionStoreChangeObservers.firstIndex(where: {
+            $0.uid == uid
+        })
+        else{
+            HMSErrorLogger.returnHMSException(#function,"No listener found to remove","Listener Error",result)
+            return
+        }
+
+        
+        store.removeObserver(sessionStoreChangeObservers[keyChangeListenersToBeRemovedIndex].observer)
+
+        sessionStoreChangeObservers.remove(at: keyChangeListenersToBeRemovedIndex)
+
+        result(nil)
+    }
+    
+    /**
+            This takes care of removing all the key change listeners attached during the session
+            This is used while cleaning the room state i.e after calling leave room,
+            onRemovedFromRoom or endRoom
+     */
+    private func removeAllKeyChangeListener(){
+        sessionStoreChangeObservers.forEach{
+            hmsSessionStoreObserver in
+            sessionStore?.removeObserver(hmsSessionStoreObserver.observer)
+        }
+        sessionStoreCleanup()
+    }
+
+    private func sessionStoreCleanup() {
+        sessionStore = nil
+        sessionStoreChangeObservers = []
+    }
+
     // MARK: - Room Actions
+
     private func build(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
         // TODO: add checks for 100ms Extension Target
-        if let prefExtension = arguments["preferred_extension"] as? String {
+        if let prefExtension = arguments?["preferred_extension"] as? String {
             preferredExtension = prefExtension
         }
 
-        if let iOSScreenshareConfig = arguments["ios_screenshare_config"] as? [String: String] {
+        if let iOSScreenshareConfig = arguments?["ios_screenshare_config"] as? [String: String] {
             if let prefExtension = iOSScreenshareConfig["preferred_extension"] {
                 preferredExtension = prefExtension
             } else {
@@ -454,13 +645,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
 
         var setLogger = false
-        if let hmsLogSettings = arguments["hms_log_settings"] as? [AnyHashable: Any] {
+        if let hmsLogSettings = arguments?["hms_log_settings"] as? [AnyHashable: Any] {
             let level = hmsLogSettings["log_level"] as! String
             logLevel = getLogLevel(from: level)
             setLogger = true
         }
-        let dartSDKVersion = arguments["dart_sdk_version"] as! String
-        let hmsSDKVersion = arguments["hmssdk_version"] as! String
+        let dartSDKVersion = arguments?["dart_sdk_version"] as! String
+        let hmsSDKVersion = arguments?["hmssdk_version"] as! String
         let framework = HMSFrameworkInfo(type: .flutter, version: dartSDKVersion, sdkVersion: hmsSDKVersion)
         audioMixerSourceMap = [:]
 
@@ -470,11 +661,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 result(false)
                 return
             }
-            if let appGroup = arguments["app_group"] as? String {
+            if let appGroup = arguments?["app_group"] as? String {
                 sdk.appGroup = appGroup
             }
 
-            if let iOSScreenshareConfig = arguments["ios_screenshare_config"] as? [String: String] {
+            if let iOSScreenshareConfig = arguments?["ios_screenshare_config"] as? [String: String] {
                 if let appGroup = iOSScreenshareConfig["app_group"] {
                     sdk.appGroup = appGroup
                 } else {
@@ -490,7 +681,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
 
             var trackSettings: HMSTrackSettings?
-            if let settingsDict = arguments["hms_track_setting"] as? [AnyHashable: Any] {
+            if let settingsDict = arguments?["hms_track_setting"] as? [AnyHashable: Any] {
                 self.audioMixerSourceInit(settingsDict, sdk, result)
                 trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict, self.audioMixerSourceMap, result)
             }
@@ -547,11 +738,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     private func leave(_ result: @escaping FlutterResult) {
-        hmsSDK?.leave { _, error in
+        hmsSDK?.leave { [weak self] _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
-                self.destroyPIPController()
+                self?.performCleanupOnLeavingRoom()
                 result(nil)
             }
         }
@@ -651,11 +842,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let lock = arguments["lock"] as? Bool ?? false
         let reason = arguments["reason"] as? String ?? "End room invoked"
 
-        hmsSDK?.endRoom(lock: lock, reason: reason) { _, error in
+        hmsSDK?.endRoom(lock: lock, reason: reason) { [weak self] _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
-                self.destroyPIPController()
+                self?.performCleanupOnLeavingRoom()
                 result(nil)
             }
         }
@@ -963,7 +1154,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             "data": [
                 "room": HMSRoomExtension.toDictionary(room),
                 "local_tracks": tracks
-            ]
+            ] as [String: Any]
         ] as [String: Any]
         previewEnded = false
         previewSink?(data)
@@ -987,7 +1178,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             "data": [
                 "room": HMSRoomExtension.toDictionary(room),
                 "update": HMSRoomExtension.getValueOf(update)
-            ]
+            ] as [String: Any]
         ] as [String: Any]
         if previewEnded {
             eventSink?(data)
@@ -1005,7 +1196,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             "data": [
                 "peer": HMSPeerExtension.toDictionary(peer),
                 "update": HMSPeerExtension.getValueOf(update)
-            ]
+            ] as [String: Any]
         ] as [String: Any]
 
         if previewEnded {
@@ -1023,7 +1214,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 "peer": HMSPeerExtension.toDictionary(peer),
                 "track": HMSTrackExtension.toDictionary(track),
                 "update": HMSTrackExtension.getValueOf(update)
-            ]
+            ] as [String: Any]
         ] as [String: Any]
         if peer.isLocal && track.source.uppercased() == "SCREEN" {
             if update == .trackAdded {
@@ -1109,7 +1300,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             ]
         ] as [String: Any]
 
-        destroyPIPController()
+        performCleanupOnLeavingRoom()
         eventSink?(data)
     }
 
@@ -1149,7 +1340,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                     "local_video_stats": HMSStatsExtension.toDictionary(localVideoStats),
                     "track": HMSTrackExtension.toDictionary(track),
                     "peer": HMSPeerExtension.toDictionary(peer)
-                ]
+                ] as [String: Any]
             ] as [String: Any]
 
             rtcSink?(data)
@@ -1197,6 +1388,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             rtcSink?(data)
         }
+    }
+
+    public func on(sessionStoreAvailable store: HMSSessionStore) {
+        sessionStore = store
+
+        let data = ["event_name": "on_session_store_available"]
+
+        eventSink?(data)
     }
 
     // MARK: - Helper Functions
@@ -1276,11 +1475,16 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         eventSink?(data)
     }
 
-    func destroyPIPController() {
+    private func destroyPIPController() {
         if #available(iOS 15.0, *) {
             if HMSPIPAction.pipController != nil {
                 HMSPIPAction.disposePIP(nil)
             }
         }
+    }
+
+    private func performCleanupOnLeavingRoom() {
+        destroyPIPController()
+        removeAllKeyChangeListener()
     }
 }

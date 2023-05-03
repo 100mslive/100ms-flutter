@@ -47,10 +47,10 @@ class HMSSessionMetadataAction {
             override fun onSuccess(sessionMetadata: Any?) {
                 val args = HashMap<String, Any?>()
                 args["event_name"] = "session_metadata"
-                if(sessionMetadata is String?){
+                if (sessionMetadata is String?) {
                     args["data"] = HMSSessionMetadataExtension.toDictionary(sessionMetadata)
                 }
-                else{
+                else {
                     HMSErrorLogger.logError("getSessionMetadata","Session metadata type is not compatible, Please use String? type while setting metadata","Type Incompatibility Error")
                     args["data"] = null
                 }

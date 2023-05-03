@@ -69,8 +69,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
         await Utilities.getBoolData(key: 'audio-mixer-disabled') ?? true;
     isAutoSimulcast =
         await Utilities.getBoolData(key: 'is-auto-simulcast') ?? true;
-    int audio_mode_index = await Utilities.getIntData(key: 'audio-mode');
-    currentAudioMode = await HMSAudioMode.values[audio_mode_index];
+    int audioModeIndex = await Utilities.getIntData(key: 'audio-mode');
+    currentAudioMode = HMSAudioMode.values[audioModeIndex];
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
     });
