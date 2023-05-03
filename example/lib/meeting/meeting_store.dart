@@ -586,6 +586,15 @@ class MeetingStore extends ChangeNotifier
         notificationText: "Tap to return to the app");
   }
 
+  void getSpotlightPeer() async {
+    String? metadata =
+        await _hmsSessionStore?.getSessionMetadataForKey(key: "spotlight");
+    if (metadata != null) {
+      setPeerToSpotlight(metadata);
+      spotlightMetadata = metadata;
+    }
+  }
+
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
     log("onRoomUpdate-> room: ${room.toString()} update: ${update.name}");
@@ -699,7 +708,6 @@ class MeetingStore extends ChangeNotifier
             track: track as HMSVideoTrack));
         if (spotlightMetadata == track.trackId) {
           setPeerToSpotlight(spotlightMetadata);
-          spotlightMetadata = null;
         }
         notifyListeners();
         return;
@@ -744,8 +752,9 @@ class MeetingStore extends ChangeNotifier
     //To handle the active speaker mode scenario
     if (meetingMode == MeetingMode.ActiveSpeaker) {
       //Picking up the first four peers from the peerTracks list
-      List<PeerTrackNode> activeSpeakerList =
-          peerTracks.sublist(screenShareCount, Math.min(peerTracks.length, 4));
+      List<PeerTrackNode> activeSpeakerList = peerTracks.sublist(
+          screenShareCount + (spotLightPeer != null ? 1 : 0),
+          Math.min(peerTracks.length, 4));
 
       /* Here we iterate through the updateSpeakers list
        * and do the following:
@@ -763,8 +772,11 @@ class MeetingStore extends ChangeNotifier
           if (peerIndex != -1) {
             PeerTrackNode activeSpeaker = peerTracks[peerIndex];
             peerTracks.removeAt(peerIndex);
-            peerTracks.insert(screenShareCount, activeSpeaker);
-            peerTracks[screenShareCount].setOffScreenStatus(false);
+            peerTracks.insert(
+                screenShareCount + (spotLightPeer != null ? 1 : 0),
+                activeSpeaker);
+            peerTracks[screenShareCount + (spotLightPeer != null ? 1 : 0)]
+                .setOffScreenStatus(false);
           }
         }
       });
@@ -1126,6 +1138,7 @@ class MeetingStore extends ChangeNotifier
 
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
+          getSpotlightPeer();
           localPeer = peer;
           if (hlsVideoController != null && !peer.role.name.contains("hls-")) {
             hlsVideoController?.dispose(forceDispose: true);
@@ -1324,6 +1337,7 @@ class MeetingStore extends ChangeNotifier
     _hmsSessionStore?.addKeyChangeListener(
         keys: SessionStoreKeyValues.getSessionStoreKeys(),
         hmsKeyChangeListener: this);
+    getSpotlightPeer();
   }
 
   ///We get this call everytime metadata corresponding to a key is changed
@@ -1355,6 +1369,7 @@ class MeetingStore extends ChangeNotifier
     if (currentSpotlightPeerIndex != -1) {
       peerTracks[currentSpotlightPeerIndex].pinTile = false;
       spotLightPeer = null;
+      spotlightMetadata = null;
     }
     if (value != null) {
       int index =
@@ -1363,9 +1378,10 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("${peerTracks[index].peer.name} is in spotlight");
         spotLightPeer = peerTracks[index];
         changePinTileStatus(peerTracks[index]);
-      } else {
-        spotlightMetadata = value;
       }
+    } else {
+      spotlightMetadata = null;
+      spotLightPeer = null;
     }
     notifyListeners();
   }
