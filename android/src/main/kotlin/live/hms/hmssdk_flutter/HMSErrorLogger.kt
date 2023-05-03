@@ -24,8 +24,6 @@ class HMSErrorLogger {
          */
         fun returnArgumentsError(errorMessage: String): Unit? {
             HMSLogger.e("FL_HMSSDK Args Error", errorMessage)
-
-            // TODO: why is this return null required?
             return null
         }
 
