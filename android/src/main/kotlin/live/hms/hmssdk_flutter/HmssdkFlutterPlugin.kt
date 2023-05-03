@@ -1235,7 +1235,7 @@ class HmssdkFlutterPlugin :
 
         uid.let {
             val keyChangeListener = object : HMSKeyChangeListener {
-                override fun onKeyChanged(key: String, value: String?) {
+                override fun onKeyChanged(key: String, value: Any?) {
                     val args = HashMap<String, Any?>()
                     args["event_name"] = "on_key_changed"
                     val newData = HashMap<String, String?>()
