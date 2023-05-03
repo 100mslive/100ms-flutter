@@ -6,6 +6,9 @@ https://github.com/100mslive/100ms-flutter/issues/1259
 - Add support for setting a Tile in Spotlight Mode using Session Store
 https://github.com/100mslive/100ms-flutter/issues/1252
 
+- Add support for Music Mode on iOS
+https://github.com/100mslive/100ms-flutter/issues/1275
+
 - Fixed Role change request popup taking time to dismiss
 https://github.com/100mslive/100ms-flutter/issues/1271
 
@@ -17,5 +20,5 @@ https://github.com/100mslive/100ms-flutter/pull/1280
 
 
 Flutter SDK: 1.6.0
-Android SDK: 2.6.1
+Android SDK: 2.6.2
 iOS SDK: 0.9.3
