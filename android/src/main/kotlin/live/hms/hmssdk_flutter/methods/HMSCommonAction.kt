@@ -25,15 +25,11 @@ class HMSCommonAction {
 
         fun getActionListener(result: Result) = object : HMSActionResultListener {
             override fun onError(error: HMSException) {
-                CoroutineScope(Dispatchers.Main).launch {
                     result.success(HMSExceptionExtension.toDictionary(error))
-                }
             }
 
             override fun onSuccess() {
-                CoroutineScope(Dispatchers.Main).launch {
-                    result.success(null)
-                }
+                result.success(null)
             }
         }
 
