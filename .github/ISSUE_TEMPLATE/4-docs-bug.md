@@ -1,21 +1,21 @@
 ---
 name: "📚 Documentation issue report"
 about: "Report an issue in the documentation."
-title: ""
+title: "📚 "
 labels: ["Needs Triage 🔍"]
-assignees: ''
-
+assignees: ""
 ---
+
 # 📚 Documentation Issue Report
+
 <!-- Do read the 100ms Docs: https://www.100ms.live/docs -->
 <!-- You can ask your questions on 100ms Discord as well: https://100ms.live/discord -->
 
 ## **Describe the bug**
+
 <!-- A clear and concise description of what the bug is. -->
 
-*
-
----
+- ***
 
 ### Steps to Reproduce
 
@@ -36,21 +36,22 @@ assignees: ''
 ---
 
 ### Any Media to attach?
+
 <!-- If applicable, add screenshots or videos to help explain your problem. -->
 
 ---
 
 ## **Describe the solution you'd like**
+
 <!-- A clear and concise description of what you want to happen. -->
 
-*
-
----
+- ***
 
 ### **Additional context**
+
 <!-- Add any other context or additional information about the problem here.-->
 
-*
+-
 
 <!--
 
