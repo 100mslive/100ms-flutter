@@ -390,40 +390,61 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     // MARK: - Audio Share
 
     private func audioShareAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        let arguments = call.arguments as! [AnyHashable: Any]
-        if let audioNode = audioMixerSourceMap[arguments["name"] as! String] {
-            switch call.method {
-            case "play_audio_share":
-                HMSAudioFilePlayerNodeExtension.play(arguments, audioNode as! HMSAudioFilePlayerNode, result)
-                break
-            case "stop_audio_share":
-                HMSAudioFilePlayerNodeExtension.stop(audioNode as! HMSAudioFilePlayerNode,result)
-                break
-            case "pause_audio_share":
-                HMSAudioFilePlayerNodeExtension.pause(audioNode as! HMSAudioFilePlayerNode,result)
-                break
-            case "resume_audio_share":
-                HMSAudioFilePlayerNodeExtension.resume(audioNode as! HMSAudioFilePlayerNode, result)
-                break
-            case "set_audio_share_volume":
-                if arguments["name"] as! String != "mic_node" {
-                    HMSAudioFilePlayerNodeExtension.setVolume(arguments, audioNode as! HMSAudioFilePlayerNode,result)
-                } else {
-                    HMSMicNodeExtension.setVolume(arguments, audioNode as! HMSMicNode)
-                }
-                break
-            case "audio_share_playing":
-                HMSAudioFilePlayerNodeExtension.isPlaying(audioNode as! HMSAudioFilePlayerNode, result)
-                break
-            case "audio_share_current_time":
-                HMSAudioFilePlayerNodeExtension.currentDuration(audioNode as! HMSAudioFilePlayerNode, result)
-                break
-            case "audio_share_duration":
-                HMSAudioFilePlayerNodeExtension.duration(audioNode as! HMSAudioFilePlayerNode, result)
-                break
-            default:
-                result(FlutterMethodNotImplemented)
-            }
+        
+        guard let arguments = call.arguments as? [AnyHashable: Any]
+        else {
+            HMSErrorLogger.returnHMSException(#function, "No arguments passed to the function", "NULL Error", result)
+            return
+        }
+        
+        guard let name = arguments["name"] as? String
+        else {
+            HMSErrorLogger.returnHMSException(#function, "No name passed to the function. Available arguments: \(arguments)", "NULL Error", result)
+            return
+        }
+        
+        if name == "mic_node",
+           call.method == "set_audio_share_volume",
+           let audioNode = audioMixerSourceMap[name] as? HMSMicNode {
+            
+            HMSMicNodeExtension.setVolume(arguments, audioNode)
+            return
+        }
+        
+        guard let audioNode = audioMixerSourceMap[name] as? HMSAudioFilePlayerNode
+        else {
+            HMSErrorLogger.returnHMSException(#function, "Failed to cast to HMSAudioFilePlayerNode required for performing. Available arguments: \(arguments)", "NULL Error", result)
+            return
+        }
+        
+        
+        switch call.method {
+        case "play_audio_share":
+            HMSAudioFilePlayerNodeExtension.play(arguments, audioNode, result)
+            break
+        case "stop_audio_share":
+            HMSAudioFilePlayerNodeExtension.stop(audioNode, result)
+            break
+        case "pause_audio_share":
+            HMSAudioFilePlayerNodeExtension.pause(audioNode, result)
+            break
+        case "resume_audio_share":
+            HMSAudioFilePlayerNodeExtension.resume(audioNode, result)
+            break
+        case "set_audio_share_volume":
+            HMSAudioFilePlayerNodeExtension.setVolume(arguments, audioNode, result)
+            break
+        case "audio_share_playing":
+            HMSAudioFilePlayerNodeExtension.isPlaying(audioNode, result)
+            break
+        case "audio_share_current_time":
+            HMSAudioFilePlayerNodeExtension.currentDuration(audioNode, result)
+            break
+        case "audio_share_duration":
+            HMSAudioFilePlayerNodeExtension.duration(audioNode, result)
+            break
+        default:
+            result(FlutterMethodNotImplemented)
         }
     }
 
@@ -498,26 +519,26 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         guard let store = sessionStore
         else {
-            HMSErrorLogger.returnHMSException(#function,"Session Store is null","NULL ERROR",result)
+            HMSErrorLogger.returnHMSException(#function, "Session Store is null", "NULL ERROR", result)
             return
         }
 
         guard let arguments = call.arguments as? [AnyHashable: Any]
         else {
             HMSErrorLogger.returnArgumentsError("keys is null")
-            HMSErrorLogger.returnHMSException(#function,"No arguments passed which can be attached to Key Change Listener on the Session Store.","NULL ERROR",result)
+            HMSErrorLogger.returnHMSException(#function, "No arguments passed which can be attached to Key Change Listener on the Session Store.", "NULL ERROR", result)
             return
         }
 
         guard let keys = arguments["keys"] as? [String]
         else {
-            HMSErrorLogger.returnHMSException(#function,"No keys passed which can be attached to Key Change Listener on the Session Store. Available arguments: \(arguments)","NULL ERROR",result)
+            HMSErrorLogger.returnHMSException(#function, "No keys passed which can be attached to Key Change Listener on the Session Store. Available arguments: \(arguments)", "NULL ERROR", result)
             return
         }
-        
+
         guard let uid = arguments["uid"] as? String
         else {
-            HMSErrorLogger.returnHMSException(#function,"No uid passed for key change listener Available arguments: \(arguments)","NULL ERROR",result)
+            HMSErrorLogger.returnHMSException(#function, "No uid passed for key change listener Available arguments: \(arguments)", "NULL ERROR", result)
             return
         }
 
@@ -529,14 +550,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             var dict: [String: Any] = ["key": key]
 
-            if(value is String? || value is NSNull){
+            if value is String? || value is NSNull {
                 dict["value"] = value
-            }
-            else{
-                HMSErrorLogger.logError(#function,"Session metadata type is not compatible, Please use String? type while setting metadata","Type Incompatibility Error")
+            } else {
+                HMSErrorLogger.logError(#function, "Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error")
                 dict["value"] = nil
             }
-            
+
             dict["uid"] = uid
             data["data"] = dict
 
@@ -545,19 +565,19 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }) { [weak self] observer, error in
 
             if let error = error {
-                HMSErrorLogger.returnHMSException(#function,"Error in observing changes for key: \(keys) in the Session Store. Error: \(error.localizedDescription)","KEY CHANGE ERROR",result)
+                HMSErrorLogger.returnHMSException(#function, "Error in observing changes for key: \(keys) in the Session Store. Error: \(error.localizedDescription)", "KEY CHANGE ERROR", result)
                 return
             }
 
             guard let observer = observer
             else {
-                HMSErrorLogger.returnHMSException(#function,"Unknown Error in observing changes for key: \(keys) in the Session Store.","KEY CHANGE ERROR",result)
+                HMSErrorLogger.returnHMSException(#function, "Unknown Error in observing changes for key: \(keys) in the Session Store.", "KEY CHANGE ERROR", result)
                 return
             }
 
             guard let self = self
             else {
-                HMSErrorLogger.returnHMSException(#function,"Could not find self instance while observing changes for key: \(keys) in the Session Store.","KEY CHANGE ERROR",result)
+                HMSErrorLogger.returnHMSException(#function, "Could not find self instance while observing changes for key: \(keys) in the Session Store.", "KEY CHANGE ERROR", result)
                 return
             }
 
@@ -575,45 +595,44 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         guard let store = sessionStore
         else {
-            HMSErrorLogger.returnHMSException(#function,"Session Store is null","NULL ERROR",result)
+            HMSErrorLogger.returnHMSException(#function, "Session Store is null", "NULL ERROR", result)
             return
         }
 
         guard let arguments = call.arguments as? [AnyHashable: Any]
         else {
-            HMSErrorLogger.returnHMSException(#function,"No arguments to identify which Key Change Listener should be removed from the Session Store.","Remove Key Error",result)
+            HMSErrorLogger.returnHMSException(#function, "No arguments to identify which Key Change Listener should be removed from the Session Store.", "Remove Key Error", result)
             return
         }
 
         guard let uid = arguments["uid"] as? String
         else {
-            HMSErrorLogger.returnHMSException(#function,"No identifier passed which can be used. Available arguments: \(arguments)","Unique Id Error",result)
+            HMSErrorLogger.returnHMSException(#function, "No identifier passed which can be used. Available arguments: \(arguments)", "Unique Id Error", result)
             return
         }
 
         guard let keyChangeListenersToBeRemovedIndex = sessionStoreChangeObservers.firstIndex(where: {
             $0.uid == uid
         })
-        else{
-            HMSErrorLogger.returnHMSException(#function,"No listener found to remove","Listener Error",result)
+        else {
+            HMSErrorLogger.returnHMSException(#function, "No listener found to remove", "Listener Error", result)
             return
         }
 
-        
         store.removeObserver(sessionStoreChangeObservers[keyChangeListenersToBeRemovedIndex].observer)
 
         sessionStoreChangeObservers.remove(at: keyChangeListenersToBeRemovedIndex)
 
         result(nil)
     }
-    
+
     /**
             This takes care of removing all the key change listeners attached during the session
             This is used while cleaning the room state i.e after calling leave room,
             onRemovedFromRoom or endRoom
      */
-    private func removeAllKeyChangeListener(){
-        sessionStoreChangeObservers.forEach{
+    private func removeAllKeyChangeListener() {
+        sessionStoreChangeObservers.forEach {
             hmsSessionStoreObserver in
             sessionStore?.removeObserver(hmsSessionStoreObserver.observer)
         }
