@@ -28,7 +28,7 @@ class HMSSessionStoreAction {
 
         guard let store = plugin.sessionStore
         else {
-            HMSErrorLogger.returnHMSException(#function,"Session Store is null","NULL ERROR",result)
+            HMSErrorLogger.returnHMSException(#function, "Session Store is null", "NULL ERROR", result)
             return
         }
 
@@ -36,24 +36,23 @@ class HMSSessionStoreAction {
             let key = arguments["key"] as? String
         else {
             HMSErrorLogger.returnArgumentsError("key is null")
-            HMSErrorLogger.returnHMSException(#function,"Key to be fetched from Session Store is null.","NULL ERROR",result)
+            HMSErrorLogger.returnHMSException(#function, "Key to be fetched from Session Store is null.", "NULL ERROR", result)
             return
         }
 
         store.object(forKey: key) { value, error in
 
             if let error = error {
-                HMSErrorLogger.returnHMSException(#function,"Error in fetching key: \(key) from Session Store. Error: \(error.localizedDescription)","Key Fetching error",result)
+                HMSErrorLogger.returnHMSException(#function, "Error in fetching key: \(key) from Session Store. Error: \(error.localizedDescription)", "Key Fetching error", result)
                 return
             }
 
-            if(value is String? || value is NSNull){
+            if value is String? || value is NSNull {
                 result(HMSResultExtension.toDictionary(true, value))
+            } else {
+                HMSErrorLogger.returnHMSException(#function, "Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error", result)
             }
-            else{
-                HMSErrorLogger.returnHMSException(#function,"Session metadata type is not compatible, Please use String? type while setting metadata","Type Incompatibility Error",result)
-            }
-                
+
         }
 
     }
@@ -62,23 +61,23 @@ class HMSSessionStoreAction {
 
         guard let store = plugin.sessionStore
         else {
-            HMSErrorLogger.returnHMSException(#function,"Session Store is null.", "NULL ERROR",result)
+            HMSErrorLogger.returnHMSException(#function, "Session Store is null.", "NULL ERROR", result)
             return
         }
 
         guard let arguments = call.arguments as? [AnyHashable: Any],
             let key = arguments["key"] as? String
         else {
-            HMSErrorLogger.returnHMSException(#function,"Key for the object to be set in Session Store is null.","NULL ERROR",result)
+            HMSErrorLogger.returnHMSException(#function, "Key for the object to be set in Session Store is null.", "NULL ERROR", result)
             return
         }
 
         let data = arguments["data"]
 
-        store.set(data as Any, forKey: key) { value, error in
+        store.set(data as Any, forKey: key) { _, error in
 
             if let error = error {
-                HMSErrorLogger.returnHMSException(#function,"Error in setting data: \(data ?? "null") for key: \(key) to the Session Store. Error: \(error.localizedDescription)","Key Error",result)
+                HMSErrorLogger.returnHMSException(#function, "Error in setting data: \(data ?? "null") for key: \(key) to the Session Store. Error: \(error.localizedDescription)", "Key Error", result)
                 return
             }
             result(nil)
