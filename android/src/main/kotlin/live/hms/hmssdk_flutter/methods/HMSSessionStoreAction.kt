@@ -12,15 +12,15 @@ import live.hms.video.sessionstore.HmsSessionStore
 
 class HMSSessionStoreAction {
 
-    companion object{
+    companion object {
 
-        fun sessionStoreActions(call: MethodCall, result: Result, hmsSessionStore: HmsSessionStore?){
-            when(call.method){
+        fun sessionStoreActions(call: MethodCall, result: Result, hmsSessionStore: HmsSessionStore?) {
+            when (call.method) {
                 "get_session_metadata_for_key" -> {
-                    getSessionMetadataForKey(call,result,hmsSessionStore)
+                    getSessionMetadataForKey(call, result, hmsSessionStore)
                 }
                 "set_session_metadata_for_key" -> {
-                    setSessionMetadataForKey(call,result,hmsSessionStore)
+                    setSessionMetadataForKey(call, result, hmsSessionStore)
                 }
             }
         }
@@ -33,26 +33,29 @@ class HMSSessionStoreAction {
          *
          * This method returns [sessionMetadata] is the session metadata is available for corresponding key
          */
-        private fun getSessionMetadataForKey(call: MethodCall,result: Result,hmsSessionStore: HmsSessionStore?){
+        private fun getSessionMetadataForKey(call: MethodCall, result: Result, hmsSessionStore: HmsSessionStore?) {
             val key = call.argument<String?>("key") ?: run {
                 HMSErrorLogger.returnArgumentsError("key is null")
             }
 
-            key?.let { key as String
-                hmsSessionStore?.get(key,object:HMSSessionMetadataListener{
-                    override fun onError(error: HMSException) {
-                        result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)))
-                    }
+            key?.let {
+                key as String
+                hmsSessionStore?.get(
+                    key,
+                    object : HMSSessionMetadataListener {
+                        override fun onError(error: HMSException) {
+                            result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)))
+                        }
 
-                    override fun onSuccess(sessionMetadata: Any?) {
-                        if (sessionMetadata is String?) {
-                            result.success(HMSResultExtension.toDictionary(true, sessionMetadata))
+                        override fun onSuccess(sessionMetadata: Any?) {
+                            if (sessionMetadata is String?) {
+                                result.success(HMSResultExtension.toDictionary(true, sessionMetadata))
+                            } else {
+                                HMSErrorLogger.returnHMSException("getSessionMetadataForKey", "Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error", result)
+                            }
                         }
-                        else{
-                            HMSErrorLogger.returnHMSException("getSessionMetadataForKey","Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error", result)
-                        }
-                    }
-                })
+                    },
+                )
             }
         }
 
@@ -65,17 +68,17 @@ class HMSSessionStoreAction {
          * This method sets the [data] provided during the method call
          * The completion of this method is marked by actionResultListener's [onSuccess] or [onError] callback
          */
-        private fun setSessionMetadataForKey(call: MethodCall,result: Result,hmsSessionStore: HmsSessionStore?){
+        private fun setSessionMetadataForKey(call: MethodCall, result: Result, hmsSessionStore: HmsSessionStore?) {
             val key = call.argument<String?>("key") ?: run {
                 HMSErrorLogger.returnArgumentsError("key is null")
             }
 
             val data = call.argument<String?>("data")
 
-            key?.let { key as String
-                hmsSessionStore?.set(data,key,HMSCommonAction.getActionListener(result))
+            key?.let {
+                key as String
+                hmsSessionStore?.set(data, key, HMSCommonAction.getActionListener(result))
             }
         }
-
     }
 }
