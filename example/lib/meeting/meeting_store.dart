@@ -686,6 +686,7 @@ class MeetingStore extends ChangeNotifier
             audioTrack: track as HMSAudioTrack));
         notifyListeners();
       }
+      setSpotlightOnTrackUpdate(track);
       return;
     }
 
@@ -706,12 +707,12 @@ class MeetingStore extends ChangeNotifier
             uid: peer.peerId + "mainVideo",
             stats: RTCStats(),
             track: track as HMSVideoTrack));
-        if (spotlightMetadata == track.trackId) {
-          setPeerToSpotlight(spotlightMetadata);
-        }
         notifyListeners();
+        setSpotlightOnTrackUpdate(track);
         return;
       }
+
+      setSpotlightOnTrackUpdate(track);
     }
     peerOperationWithTrack(peer, trackUpdate, track);
   }
@@ -770,13 +771,15 @@ class MeetingStore extends ChangeNotifier
           int peerIndex = peerTracks.indexWhere(
               (node) => node.uid == speaker.peer.peerId + "mainVideo");
           if (peerIndex != -1) {
-            PeerTrackNode activeSpeaker = peerTracks[peerIndex];
-            peerTracks.removeAt(peerIndex);
-            peerTracks.insert(
-                screenShareCount + (spotLightPeer != null ? 1 : 0),
-                activeSpeaker);
-            peerTracks[screenShareCount + (spotLightPeer != null ? 1 : 0)]
-                .setOffScreenStatus(false);
+            if (peerTracks[peerIndex].uid != spotLightPeer?.uid) {
+              PeerTrackNode activeSpeaker = peerTracks[peerIndex];
+              peerTracks.removeAt(peerIndex);
+              peerTracks.insert(
+                  screenShareCount + (spotLightPeer != null ? 1 : 0),
+                  activeSpeaker);
+              peerTracks[screenShareCount + (spotLightPeer != null ? 1 : 0)]
+                  .setOffScreenStatus(false);
+            }
           }
         }
       });
@@ -1372,8 +1375,9 @@ class MeetingStore extends ChangeNotifier
       spotlightMetadata = null;
     }
     if (value != null) {
-      int index =
-          peerTracks.indexWhere((node) => node.track?.trackId == (value));
+      int index = peerTracks.indexWhere(((node) =>
+          node.audioTrack?.trackId == (value) ||
+          node.track?.trackId == (value)));
       if (index != -1) {
         Utilities.showToast("${peerTracks[index].peer.name} is in spotlight");
         spotLightPeer = peerTracks[index];
@@ -1486,6 +1490,15 @@ class MeetingStore extends ChangeNotifier
       return true;
     }
     return false;
+  }
+
+  void setSpotlightOnTrackUpdate(HMSTrack track) {
+    ///In order to avoid errors because of
+    ///track updates ordering for audio and video
+    ///adding the method call here.
+    if (spotlightMetadata == track.trackId) {
+      setPeerToSpotlight(spotlightMetadata);
+    }
   }
 
   HMSAudioFilePlayerNode audioFilePlayerNode =

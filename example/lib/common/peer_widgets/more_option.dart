@@ -71,9 +71,11 @@ class MoreOption extends StatelessWidget {
                               metadata: null);
                           return;
                         }
-                        String? metadata = (peerTrackNode.track == null)
-                            ? peerTrackNode.audioTrack?.trackId
-                            : peerTrackNode.track?.trackId;
+                        ///Setting the metadata as audio trackId if it's not present 
+                        ///then setting it as video trackId
+                        String? metadata = (peerTrackNode.audioTrack == null)
+                            ? peerTrackNode.track?.trackId
+                            : peerTrackNode.audioTrack?.trackId;
                         _meetingStore.setSessionMetadata(
                             key: SessionStoreKeyValues.getNameFromMethod(
                                 SessionStoreKey.SPOTLIGHT),
@@ -278,9 +280,11 @@ class MoreOption extends StatelessWidget {
                               metadata: null);
                           return;
                         }
-                        String? metadata = (peerTrackNode.track == null)
-                            ? peerTrackNode.audioTrack?.trackId
-                            : peerTrackNode.track?.trackId;
+                        ///Setting the metadata as audio trackId if it's not present 
+                        ///then setting it as video trackId
+                        String? metadata = (peerTrackNode.audioTrack == null)
+                            ? peerTrackNode.track?.trackId
+                            : peerTrackNode.audioTrack?.trackId;
                         _meetingStore.setSessionMetadata(
                             key: SessionStoreKeyValues.getNameFromMethod(
                                 SessionStoreKey.SPOTLIGHT),
