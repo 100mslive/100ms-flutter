@@ -12,15 +12,19 @@ class HMSAudioTrackSetting {
   /// The default is on if it is supported.
   /// Please note that on some devices the hardware wrongly reports the HW echo canceler to be present whereas it does not work
   /// In such as application need to set this to false, so that SW echo canceler is picked up.
+  /// Refer: Read more about useHardwareAcousticEchoCanceler [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/track/set-track-settings#usehardwareacousticechocanceler)
   final bool? useHardwareAcousticEchoCanceler;
 
   ///[audioSource] only for iOS. Used for audioSharing use cases.
+  ///Refer: Read more about audio source [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/local-audio-share#i-os-setup)
   HMSAudioMixerSource? audioSource;
 
   ///[trackInitialState] property to set the initial state of the audio track i.e Mute/Unmute.By default it's unmuted.
+  ///Refer: Read more about trackInitialState [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/join#join-with-muted-audio-video)
   final HMSTrackInitState? trackInitialState;
 
   ///[audioMode] property to set the audio mode of audio track i.e voice or music mode
+  ///Refer: Read more about audio mode [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/configure-your-device/microphone/music-mode)
   final HMSAudioMode? audioMode;
 
   HMSAudioTrackSetting(
