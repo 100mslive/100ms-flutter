@@ -471,7 +471,7 @@ class HmssdkFlutterPlugin :
 
     private fun leave(result: Result) {
         hmssdk!!.leave(hmsActionResultListener = HMSCommonAction.getActionListener(result))
-        disposePIP()
+        HMSPipAction.disposePIP(activity)
         removeAllKeyChangeListener()
     }
 
@@ -688,7 +688,7 @@ class HmssdkFlutterPlugin :
             reason = reason,
             hmsActionResultListener = HMSCommonAction.getActionListener(result),
         )
-        disposePIP()
+        HMSPipAction.disposePIP(activity)
         removeAllKeyChangeListener()
     }
 
@@ -872,7 +872,7 @@ class HmssdkFlutterPlugin :
             args.put("data", HMSRemovedFromRoomExtension.toDictionary(notification))
             if (HMSPipAction.isPIPActive(activity)) {
                 activity.moveTaskToBack(true)
-                disposePIP()
+                HMSPipAction.disposePIP(activity)
                 removeAllKeyChangeListener()
             }
             if (args["data"] != null) {
@@ -1207,12 +1207,6 @@ class HmssdkFlutterPlugin :
         error["description"] = "Track not found to set isPlaybackAllowed"
         map["error"] = error
         result.success(map)
-    }
-
-    private fun disposePIP() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            activity.setPictureInPictureParams(PictureInPictureParams.Builder().setAutoEnterEnabled(false).build())
-        }
     }
 
     /**
