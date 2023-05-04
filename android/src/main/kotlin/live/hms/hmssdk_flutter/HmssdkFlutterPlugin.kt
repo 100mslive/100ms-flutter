@@ -1,7 +1,6 @@
 package live.hms.hmssdk_flutter
 
 import android.app.Activity
-import android.app.PictureInPictureParams
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
