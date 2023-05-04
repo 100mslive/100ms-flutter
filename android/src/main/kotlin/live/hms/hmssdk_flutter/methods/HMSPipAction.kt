@@ -110,6 +110,7 @@ class HMSPipAction {
         fun disposePIP(activity: Activity) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && isPIPEnabled) {
                 activity.setPictureInPictureParams(PictureInPictureParams.Builder().setAutoEnterEnabled(false).build())
+isPIPEnabled = false
             }
         }
     }
