@@ -686,12 +686,7 @@ class MeetingStore extends ChangeNotifier
             audioTrack: track as HMSAudioTrack));
         notifyListeners();
       }
-      ///In order to avoid errors because of 
-      ///track updates ordering for audio and video
-      ///adding the method call here.
-      if (spotlightMetadata == track.trackId) {
-        setPeerToSpotlight(spotlightMetadata);
-      }
+      setSpotlightOnTrackUpdate(track);
       return;
     }
 
@@ -713,20 +708,11 @@ class MeetingStore extends ChangeNotifier
             stats: RTCStats(),
             track: track as HMSVideoTrack));
         notifyListeners();
-      ///In order to avoid errors because of 
-      ///track updates ordering for audio and video
-      ///adding the method call here.
-        if (spotlightMetadata == track.trackId) {
-          setPeerToSpotlight(spotlightMetadata);
-        }
+        setSpotlightOnTrackUpdate(track);
         return;
       }
-      ///In order to avoid errors because of 
-      ///track updates ordering for audio and video
-      ///adding the method call here.
-      if (spotlightMetadata == track.trackId) {
-          setPeerToSpotlight(spotlightMetadata);
-      }
+
+      setSpotlightOnTrackUpdate(track);
     }
     peerOperationWithTrack(peer, trackUpdate, track);
   }
@@ -1389,8 +1375,9 @@ class MeetingStore extends ChangeNotifier
       spotlightMetadata = null;
     }
     if (value != null) {
-      int index =
-          peerTracks.indexWhere(((node) => node.audioTrack?.trackId == (value) || node.track?.trackId == (value)));
+      int index = peerTracks.indexWhere(((node) =>
+          node.audioTrack?.trackId == (value) ||
+          node.track?.trackId == (value)));
       if (index != -1) {
         Utilities.showToast("${peerTracks[index].peer.name} is in spotlight");
         spotLightPeer = peerTracks[index];
@@ -1503,6 +1490,15 @@ class MeetingStore extends ChangeNotifier
       return true;
     }
     return false;
+  }
+
+  void setSpotlightOnTrackUpdate(HMSTrack track) {
+    ///In order to avoid errors because of
+    ///track updates ordering for audio and video
+    ///adding the method call here.
+    if (spotlightMetadata == track.trackId) {
+      setPeerToSpotlight(spotlightMetadata);
+    }
   }
 
   HMSAudioFilePlayerNode audioFilePlayerNode =
