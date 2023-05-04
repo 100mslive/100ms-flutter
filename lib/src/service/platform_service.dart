@@ -104,15 +104,26 @@ class PlatformService {
     keyChangeObservers.add(hmsKeyChangeObserver);
   }
 
-  static void removeKeyChangeObserver(
+  static Future<HMSException?> removeKeyChangeObserver(
       HMSKeyChangeListener hmsKeyChangeListener) async {
     int index = keyChangeObservers.indexWhere((observer) =>
         observer.hmsKeyChangeListener.hashCode ==
         hmsKeyChangeListener.hashCode);
     if (index != -1) {
-      invokeMethod(PlatformMethod.removeKeyChangeListener,
+      var result = await invokeMethod(PlatformMethod.removeKeyChangeListener,
           arguments: {"uid": keyChangeObservers[index].uid});
-      keyChangeObservers.removeAt(index);
+      if (result["success"]) {
+        keyChangeObservers.removeAt(index);
+        return null;
+      } else {
+        return HMSException.fromMap(result["data"]["error"]);
+      }
+    } else {
+      return HMSException(
+          message: "hmsKeyChangeListener not found",
+          description: "No listener found to remove",
+          action: "Listener Error",
+          isTerminal: true);
     }
   }
 

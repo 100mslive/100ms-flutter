@@ -38,9 +38,9 @@ class HMSSessionStore {
   ///
   /// **hmsKeyChangeListener** An instance of [HMSKeyChangeListener] which was attaced earlier in [addKeyChangeListener]
   ///
-  void removeKeyChangeListener(
-      {required HMSKeyChangeListener hmsKeyChangeListener}) {
-    PlatformService.removeKeyChangeObserver(hmsKeyChangeListener);
+  Future<HMSException?> removeKeyChangeListener(
+      {required HMSKeyChangeListener hmsKeyChangeListener}) async{
+    return PlatformService.removeKeyChangeObserver(hmsKeyChangeListener);
   }
 
   ///[getSessionMetadataForKey] method is used to get metadata corresponding to the given key.

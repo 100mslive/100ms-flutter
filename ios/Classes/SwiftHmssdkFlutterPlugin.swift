@@ -572,6 +572,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
      */
     private func removeKeyChangeListener(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
+//        There is no need to call removeKeyChangeListener is
+//        there is no keyChangeListener attached
+        if(sessionStoreChangeObservers.isEmpty){
+            result(HMSResultExtension.toDictionary(true,nil))
+            return
+        }
+        
         guard let store = sessionStore
         else {
             HMSErrorLogger.returnHMSException(#function, "Session Store is null", "NULL ERROR", result)
@@ -602,7 +609,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         sessionStoreChangeObservers.remove(at: keyChangeListenersToBeRemovedIndex)
 
-        result(nil)
+        result(HMSResultExtension.toDictionary(true,nil))
     }
 
     /**
@@ -611,9 +618,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             onRemovedFromRoom or endRoom
      */
     private func removeAllKeyChangeListener() {
-        sessionStoreChangeObservers.forEach {
-            hmsSessionStoreObserver in
-            sessionStore?.removeObserver(hmsSessionStoreObserver.observer)
+        sessionStoreChangeObservers.forEach {[weak self] observer in
+            self?.sessionStore?.removeObserver(observer.observer)
         }
         sessionStoreCleanup()
     }
