@@ -6,7 +6,7 @@ labels: ["Needs Triage 🔍"]
 assignees: ""
 ---
 
-# 📚 Documentation Issue Report
+# 📚 Documentation Task
 
 <!-- Do read the 100ms Docs: https://www.100ms.live/docs -->
 <!-- You can ask your questions on 100ms Discord as well: https://100ms.live/discord -->
