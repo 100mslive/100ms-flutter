@@ -24,7 +24,7 @@ class HMSErrorLogger {
      * This method is used to log of arguments passed from flutter channel is null
      * This does not stop the function execution. Function still executes normally
      */
-    static func returnArgumentsError(errorMessage: String) {
+    static func returnArgumentsError(_ errorMessage: String) {
         print("FL_HMSSDK Args Error \(errorMessage)")
     }
 

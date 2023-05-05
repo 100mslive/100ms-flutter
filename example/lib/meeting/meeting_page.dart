@@ -11,6 +11,7 @@ import 'package:hmssdk_flutter_example/common/widgets/hms_embedded_button.dart';
 import 'package:hmssdk_flutter_example/common/widgets/stream_timer.dart';
 import 'package:hmssdk_flutter_example/common/widgets/subtitle_text.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
+import 'package:hmssdk_flutter_example/enum/session_store_key.dart';
 import 'package:hmssdk_flutter_example/meeting_modes/full_screen_mode.dart';
 import 'package:hmssdk_flutter_example/meeting_modes/audio_mode.dart';
 import 'package:hmssdk_flutter_example/meeting_modes/hero_mode.dart';
@@ -378,9 +379,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                     top: 55,
                                                     left: 0,
                                                     right: 0,
-                                                    bottom: (widget.isStreamingLink &&
-                                                            (modeData.item2?.role.permissions.hlsStreaming ==
-                                                                true))
+                                                    bottom: (widget.isStreamingLink && (modeData.item2?.role.permissions.hlsStreaming == true))
                                                         ? 108
                                                         : 68,
                                                     /***
@@ -391,7 +390,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                      * - Remaining as the mode from bottom sheet is selected corresponding grid layout is rendered
                                                     */
                                                     child: Container(
-                                                        child: (((modeData.item1 == MeetingMode.OneToOne) || data.item3 == 2) &&
+                                                        child: (((modeData.item1 == MeetingMode.OneToOne) || ((data.item3 == 2) && context.read<MeetingStore>().peers.length == 2)) &&
                                                                 (modeData.item2 !=
                                                                     null))
                                                             ? OneToOneMode(
@@ -410,7 +409,8 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                     MeetingMode
                                                                         .ActiveSpeaker)
                                                                 ? basicGridView(
-                                                                    peerTracks: data.item1.sublist(0, min(data.item1.length, data.item4 + 4)),
+                                                                    peerTracks:
+                                                                        data.item1.sublist(0, min(data.item1.length, data.item4 + 4)),
                                                                     itemCount: min(data.item3, data.item4 + 4),
                                                                     screenShareCount: data.item4,
                                                                     context: context,
@@ -709,7 +709,10 @@ class _MeetingPageState extends State<MeetingPage> {
                                                             context
                                                                 .read<
                                                                     MeetingStore>()
-                                                                .getSessionMetadata(),
+                                                                .getSessionMetadata(
+                                                                    SessionStoreKeyValues.getNameFromMethod(
+                                                                        SessionStoreKey
+                                                                            .PINNED_MESSAGE_SESSION_KEY)),
                                                             context
                                                                 .read<
                                                                     MeetingStore>()

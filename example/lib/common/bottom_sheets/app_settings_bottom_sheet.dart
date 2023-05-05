@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/app_dialogs/audio_mode_select_dialog.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/notification_settings_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/util/log_writer.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
@@ -31,6 +33,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
   bool isSoftwareDecoderDisabled = true;
   bool isAudioMixerDisabled = true;
   bool isAutoSimulcast = true;
+  HMSAudioMode currentAudioMode = HMSAudioMode.VOICE;
   var versions = {};
 
   @override
@@ -66,6 +69,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
         await Utilities.getBoolData(key: 'audio-mixer-disabled') ?? true;
     isAutoSimulcast =
         await Utilities.getBoolData(key: 'is-auto-simulcast') ?? true;
+    int audioModeIndex = await Utilities.getIntData(key: 'audio-mode');
+    currentAudioMode = HMSAudioMode.values[audioModeIndex];
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
     });
@@ -76,6 +81,11 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     if (!await launchUrl(_url, mode: LaunchMode.externalApplication)) {
       throw 'Could not launch $_url';
     }
+  }
+
+  void setAudioMode(HMSAudioMode newMode) {
+    currentAudioMode = newMode;
+    setState(() {});
   }
 
   @override
@@ -386,6 +396,39 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                                   key: 'is-auto-simulcast', value: value),
                               setState(() {})
                             }),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (_) => AudioModeSelectDialog(
+                              currentAudioMode: currentAudioMode,
+                              changeAudioMode: (newMode) {
+                                setAudioMode(newMode);
+                                Utilities.saveIntData(
+                                    key: "audio-mode", value: newMode.index);
+                              }));
+                    },
+                    child: ListTile(
+                      horizontalTitleGap: 2,
+                      enabled: false,
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "assets/icons/audio_mode.svg",
+                        fit: BoxFit.scaleDown,
+                        color: themeDefaultColor,
+                      ),
+                      title: Text(
+                        "Audio Mode",
+                        semanticsLabel: "fl_audio_mode",
+                        style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      trailing: Text(currentAudioMode.name),
+                    ),
                   ),
                   ListTile(
                       horizontalTitleGap: 2,

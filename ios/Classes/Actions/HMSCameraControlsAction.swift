@@ -166,6 +166,7 @@ class HMSCameraControlsAction {
     /// - Returns: the string represents the current time in the time zone of the device running the application.
     static private func getTimeStamp() -> String {
         let formatter = DateFormatter()
+
         formatter.timeStyle = .medium
         return formatter.string(from: Date())
     }

@@ -11,6 +11,7 @@ import 'package:hmssdk_flutter_example/common/app_dialogs/remote_peer_tile_dialo
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
+import 'package:hmssdk_flutter_example/enum/session_store_key.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
@@ -57,6 +58,29 @@ class MoreOption extends StatelessWidget {
                         Navigator.pop(context);
                         _meetingStore.changeTrackState(
                             peerTrackNode.audioTrack!, mute);
+                      },
+                      isSpotlightedPeer:
+                          context.read<MeetingStore>().spotLightPeer?.uid ==
+                              peerTrackNode.uid,
+                      setOnSpotlight: () {
+                        if (context.read<MeetingStore>().spotLightPeer?.uid ==
+                            peerTrackNode.uid) {
+                          _meetingStore.setSessionMetadata(
+                              key: SessionStoreKeyValues.getNameFromMethod(
+                                  SessionStoreKey.SPOTLIGHT),
+                              metadata: null);
+                          return;
+                        }
+
+                        ///Setting the metadata as audio trackId if it's not present
+                        ///then setting it as video trackId
+                        String? metadata = (peerTrackNode.audioTrack == null)
+                            ? peerTrackNode.track?.trackId
+                            : peerTrackNode.audioTrack?.trackId;
+                        _meetingStore.setSessionMetadata(
+                            key: SessionStoreKeyValues.getNameFromMethod(
+                                SessionStoreKey.SPOTLIGHT),
+                            metadata: metadata);
                       },
                       removePeer: () async {
                         Navigator.pop(context);
@@ -244,6 +268,29 @@ class MoreOption extends StatelessWidget {
                       peerName: peerTrackNode.peer.name,
                       toggleFlash: () {
                         context.read<MeetingStore>().toggleFlash();
+                      },
+                      isSpotlightedPeer:
+                          context.read<MeetingStore>().spotLightPeer?.uid ==
+                              peerTrackNode.uid,
+                      setOnSpotlight: () {
+                        if (context.read<MeetingStore>().spotLightPeer?.uid ==
+                            peerTrackNode.uid) {
+                          _meetingStore.setSessionMetadata(
+                              key: SessionStoreKeyValues.getNameFromMethod(
+                                  SessionStoreKey.SPOTLIGHT),
+                              metadata: null);
+                          return;
+                        }
+
+                        ///Setting the metadata as audio trackId if it's not present
+                        ///then setting it as video trackId
+                        String? metadata = (peerTrackNode.audioTrack == null)
+                            ? peerTrackNode.track?.trackId
+                            : peerTrackNode.audioTrack?.trackId;
+                        _meetingStore.setSessionMetadata(
+                            key: SessionStoreKeyValues.getNameFromMethod(
+                                SessionStoreKey.SPOTLIGHT),
+                            metadata: metadata);
                       },
                       changeRole: () {
                         Navigator.pop(context);

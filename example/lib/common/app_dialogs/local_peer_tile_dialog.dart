@@ -17,6 +17,8 @@ class LocalPeerTileDialog extends StatefulWidget {
   final Function()? captureSnapshot;
   final Function()? localImageCapture;
   final Function()? toggleFlash;
+  final Function() setOnSpotlight;
+  final bool isSpotlightedPeer;
   const LocalPeerTileDialog(
       {required this.isAudioMode,
       this.isVideoOn = false,
@@ -28,7 +30,9 @@ class LocalPeerTileDialog extends StatefulWidget {
       this.captureSnapshot,
       this.isCaptureSnapshot,
       this.localImageCapture,
-      this.toggleFlash});
+      this.toggleFlash,
+      required this.setOnSpotlight,
+      this.isSpotlightedPeer = false});
 
   @override
   _LocalPeerTileDialogState createState() => _LocalPeerTileDialogState();
@@ -154,7 +158,10 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                   padding: const EdgeInsets.only(bottom: 20.0),
                   child: Row(
                     children: [
-                      Icon(Icons.camera_alt),
+                      SvgPicture.asset(
+                        "assets/icons/snapshot.svg",
+                        color: iconColor,
+                      ),
                       SizedBox(
                         width: 16,
                       ),
@@ -175,7 +182,10 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                   padding: const EdgeInsets.only(bottom: 20.0),
                   child: Row(
                     children: [
-                      Icon(Icons.image_outlined),
+                      SvgPicture.asset(
+                        "assets/icons/local_capture.svg",
+                        color: iconColor,
+                      ),
                       SizedBox(
                         width: 16,
                       ),
@@ -187,6 +197,32 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                   ),
                 ),
               ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                widget.setOnSpotlight();
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      "assets/icons/spotlight.svg",
+                      color: iconColor,
+                    ),
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Text(
+                      widget.isSpotlightedPeer
+                          ? "Remove From Spotlight"
+                          : "Spotlight Tile",
+                      style: GoogleFonts.inter(color: iconColor),
+                    )
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

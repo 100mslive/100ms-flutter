@@ -93,18 +93,6 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                 Navigator.of(context).popUntil((route) => route.isFirst);
               });
             }
-            if (!(context.read<MeetingStore>().hasHlsStarted ||
-                widget.streamUrl != null)) {
-              return Scaffold(
-                body: Center(
-                  child: Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: TitleText(
-                          text: "Waiting for HLS to start...",
-                          textColor: themeDefaultColor)),
-                ),
-              );
-            }
             return Scaffold(
               resizeToAvoidBottomInset: false,
               body: SafeArea(

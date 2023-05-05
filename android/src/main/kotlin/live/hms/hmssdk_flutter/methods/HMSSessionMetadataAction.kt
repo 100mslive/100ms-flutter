@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.HMSCommonAction
-import live.hms.hmssdk_flutter.HMSExceptionExtension
+import live.hms.hmssdk_flutter.HMSErrorLogger
 import live.hms.hmssdk_flutter.HMSSessionMetadataExtension
 import live.hms.video.error.HMSException
 import live.hms.video.sdk.HMSSDK
@@ -37,22 +37,27 @@ class HMSSessionMetadataAction {
             hmssdk.setSessionMetaData(metadata, HMSCommonAction.getActionListener(result))
         }
 
-        private fun getSessionMetadataResultListener(result: MethodChannel.Result) = object:
+        private fun getSessionMetadataResultListener(result: MethodChannel.Result) = object :
             HMSSessionMetadataListener {
             override fun onError(error: HMSException) {
                 result.success(null)
             }
 
-            override fun onSuccess(sessionMetadata: String?) {
+            override fun onSuccess(sessionMetadata: Any?) {
                 val args = HashMap<String, Any?>()
                 args["event_name"] = "session_metadata"
-                args["data"] = HMSSessionMetadataExtension.toDictionary(sessionMetadata)
-                if (args["data"] != null)
+                if (sessionMetadata is String?) {
+                    args["data"] = HMSSessionMetadataExtension.toDictionary(sessionMetadata)
+                } else {
+                    HMSErrorLogger.logError("getSessionMetadata", "Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error")
+                    args["data"] = null
+                }
+                if (args["data"] != null) {
                     CoroutineScope(Dispatchers.Main).launch {
                         result.success(args)
                     }
+                }
             }
         }
-
     }
 }

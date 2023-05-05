@@ -1,20 +1,24 @@
-Board: https://github.com/100mslive/100ms-flutter/projects/17
+Board: https://github.com/100mslive/100ms-flutter/projects/18
 
-- Added onUserLeaveHint implementation in Android to enable automatic entering into PIP Mode
-https://github.com/100mslive/100ms-flutter/issues/1209
+- Add Session Store APIs
+https://github.com/100mslive/100ms-flutter/issues/1259
 
-- Showing all previous logs on opening Live Logs View
-https://github.com/100mslive/100ms-flutter/issues/1221
+- Add support for setting a Tile in Spotlight Mode using Session Store
+https://github.com/100mslive/100ms-flutter/issues/1252
 
-- Parallelly archiving Android & iOS apps from the Release Script
-https://github.com/100mslive/100ms-flutter/pull/1224
+- Add support for Music Mode on iOS
+https://github.com/100mslive/100ms-flutter/issues/1275
 
-- Update HMSSDKFlutterPlugin to have only non-static variables
-https://github.com/100mslive/100ms-flutter/issues/1141
+- Fixed Role change request popup taking time to dismiss
+https://github.com/100mslive/100ms-flutter/issues/1271
 
-- Added support to Capture Snapshot at the highest resolution offered by the camera
-https://github.com/100mslive/100ms-flutter/issues/1230
+- Fixed grid logic and audio view tile
+https://github.com/100mslive/100ms-flutter/pull/1283
 
-Flutter SDK: 1.5.0
-Android SDK: 2.6.1
-iOS SDK: 0.9.2
+- Updated crashlytics implementation
+https://github.com/100mslive/100ms-flutter/pull/1280
+
+
+Flutter SDK: 1.6.0
+Android SDK: 2.6.2
+iOS SDK: 0.9.3

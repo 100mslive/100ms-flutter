@@ -127,7 +127,7 @@ List<StairedGridTile> portraitPattern(
     tiles.add(StairedGridTile(0.33, ratio / 0.6));
   }
   int gridView = normalTile ~/ 4;
-  int tileLeft = normalTile - (gridView * 4);
+  int tileLeft = normalTile % 4;
   for (int i = 0; i < (normalTile - tileLeft - 4); i++) {
     tiles.add(StairedGridTile(0.5, ratio));
   }

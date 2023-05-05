@@ -20,6 +20,7 @@ export 'src/enum/hms_stats_listener_method.dart';
 export 'src/enum/hms_track_init_state.dart';
 export 'src/enum/hms_Quality_limitation_reason.dart';
 export 'src/enum/hms_simulcast_layer.dart';
+export 'src/enum/hms_audio_mode.dart';
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';
 export 'src/exceptions/hms_in_sufficient_data.dart';
@@ -89,3 +90,5 @@ export 'src/model/hms_ios_pip_controller.dart';
 export 'src/model/hms_ios_screenshare_config.dart';
 export 'src/model/hms_log_list.dart';
 export 'src/model/hms_camera_controls.dart';
+export 'src/model/hms_session_store.dart';
+export 'src/model/hms_key_change_listener.dart';
