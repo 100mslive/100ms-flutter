@@ -80,7 +80,7 @@ class HMSSessionStoreAction {
                 HMSErrorLogger.returnHMSException(#function, "Error in setting data: \(data ?? "null") for key: \(key) to the Session Store. Error: \(error.localizedDescription)", "Key Error", result)
                 return
             }
-            result(nil)
+            result(HMSResultExtension.toDictionary(true,nil))
         }
     }
 }
