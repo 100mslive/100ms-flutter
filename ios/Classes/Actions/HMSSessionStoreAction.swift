@@ -61,14 +61,16 @@ class HMSSessionStoreAction {
 
         guard let store = plugin.sessionStore
         else {
-            HMSErrorLogger.returnHMSException(#function, "Session Store is null.", "NULL ERROR", result)
+            HMSErrorLogger.logError(#function,"Session Store is null.","NULL Error")
+            result(HMSErrorExtension.getError("Session Store is null."))
             return
         }
 
         guard let arguments = call.arguments as? [AnyHashable: Any],
             let key = arguments["key"] as? String
         else {
-            HMSErrorLogger.returnHMSException(#function, "Key for the object to be set in Session Store is null.", "NULL ERROR", result)
+            HMSErrorLogger.logError(#function,"Key for the object to be set in Session Store is null.","NULL Error")
+            result(HMSErrorExtension.getError("Key for the object to be set in Session Store is null."))
             return
         }
 
@@ -77,7 +79,8 @@ class HMSSessionStoreAction {
         store.set(data as Any, forKey: key) { _, error in
 
             if let error = error {
-                HMSErrorLogger.returnHMSException(#function, "Error in setting data: \(data ?? "null") for key: \(key) to the Session Store. Error: \(error.localizedDescription)", "Key Error", result)
+                HMSErrorLogger.logError(#function,"Error in setting data: \(data ?? "null") for key: \(key) to the Session Store. Error: \(error.localizedDescription)","Key Error")
+                result(HMSErrorExtension.getError("Error in setting data: \(data ?? "null") for key: \(key) to the Session Store. Error: \(error.localizedDescription)"))
                 return
             }
             result(nil)

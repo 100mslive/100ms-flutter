@@ -29,7 +29,7 @@ class HMSSessionStore {
           uid: uid, hmsKeyChangeListener: hmsKeyChangeListener));
       return null;
     } else {
-      return HMSException.fromMap(result["data"]);
+      return HMSException.fromMap(result["error"]);
     }
   }
 

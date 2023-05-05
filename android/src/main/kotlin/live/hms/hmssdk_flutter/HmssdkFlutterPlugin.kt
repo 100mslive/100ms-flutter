@@ -1226,7 +1226,7 @@ class HmssdkFlutterPlugin :
             HMSErrorLogger.returnArgumentsError("uid is null")
         }
 
-        uid.let {
+        uid?.let {
             val keyChangeListener = object : HMSKeyChangeListener {
                 override fun onKeyChanged(key: String, value: Any?) {
                     val args = HashMap<String, Any?>()
@@ -1262,7 +1262,7 @@ class HmssdkFlutterPlugin :
         val uid = call.argument<String>("uid") ?: run {
             HMSErrorLogger.returnArgumentsError("uid is null")
         }
-        //There is no need to call removeKeyChangeListener is
+        //There is no need to call removeKeyChangeListener since
         //there is no keyChangeListener attached
         if(hmsKeyChangeObserverList.isEmpty()){
             result.success(HMSResultExtension.toDictionary(true,null))
