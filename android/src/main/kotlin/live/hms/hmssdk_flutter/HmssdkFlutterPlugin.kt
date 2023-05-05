@@ -1226,7 +1226,7 @@ class HmssdkFlutterPlugin :
             HMSErrorLogger.returnArgumentsError("uid is null")
         }
 
-        uid.let {
+        uid?.let {
             val keyChangeListener = object : HMSKeyChangeListener {
                 override fun onKeyChanged(key: String, value: Any?) {
                     val args = HashMap<String, Any?>()
