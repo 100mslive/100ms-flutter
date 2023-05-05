@@ -71,7 +71,8 @@ class MoreOption extends StatelessWidget {
                               metadata: null);
                           return;
                         }
-                        ///Setting the metadata as audio trackId if it's not present 
+
+                        ///Setting the metadata as audio trackId if it's not present
                         ///then setting it as video trackId
                         String? metadata = (peerTrackNode.audioTrack == null)
                             ? peerTrackNode.track?.trackId
@@ -280,7 +281,8 @@ class MoreOption extends StatelessWidget {
                               metadata: null);
                           return;
                         }
-                        ///Setting the metadata as audio trackId if it's not present 
+
+                        ///Setting the metadata as audio trackId if it's not present
                         ///then setting it as video trackId
                         String? metadata = (peerTrackNode.audioTrack == null)
                             ? peerTrackNode.track?.trackId
