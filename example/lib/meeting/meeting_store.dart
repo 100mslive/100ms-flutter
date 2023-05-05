@@ -1382,6 +1382,8 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("${peerTracks[index].peer.name} is in spotlight");
         spotLightPeer = peerTracks[index];
         changePinTileStatus(peerTracks[index]);
+      } else {
+        spotlightMetadata = value;
       }
     } else {
       spotlightMetadata = null;
