@@ -41,7 +41,7 @@ class HMSSessionStore {
   ///
   ///Refer: Read more about removeKeyChangeListener [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store#stop-listening-to-updates-for-keys)
   Future<HMSException?> removeKeyChangeListener(
-      {required HMSKeyChangeListener hmsKeyChangeListener}) async{
+      {required HMSKeyChangeListener hmsKeyChangeListener}) async {
     return PlatformService.removeKeyChangeObserver(hmsKeyChangeListener);
   }
 
