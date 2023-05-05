@@ -134,7 +134,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         if sessionEventChannel != nil {
             sessionEventChannel!.setStreamHandler(nil)
-            sessionEventChannel = nil
+            sessionSink = nil
         } else {
             print(#function, "sessionEventChannel not found")
         }
