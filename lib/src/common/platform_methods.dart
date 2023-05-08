@@ -166,7 +166,14 @@ enum PlatformMethod {
   toggleCameraMuteState,
   captureSnapshot,
   getAllLogs,
-  getAuthTokenByRoomCode
+  getAuthTokenByRoomCode,
+  captureImageAtMaxSupportedResolution,
+  isFlashSupported,
+  toggleFlash,
+  getSessionMetadataForKey,
+  setSessionMetadataForKey,
+  addKeyChangeListener,
+  removeKeyChangeListener
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -400,6 +407,20 @@ extension PlatformMethodValues on PlatformMethod {
         return "get_all_logs";
       case PlatformMethod.getAuthTokenByRoomCode:
         return "get_auth_token_by_room_code";
+      case PlatformMethod.captureImageAtMaxSupportedResolution:
+        return "capture_image_at_max_supported_resolution";
+      case PlatformMethod.isFlashSupported:
+        return "is_flash_supported";
+      case PlatformMethod.toggleFlash:
+        return "toggle_flash";
+      case PlatformMethod.getSessionMetadataForKey:
+        return "get_session_metadata_for_key";
+      case PlatformMethod.setSessionMetadataForKey:
+        return "set_session_metadata_for_key";
+      case PlatformMethod.addKeyChangeListener:
+        return "add_key_change_listener";
+      case PlatformMethod.removeKeyChangeListener:
+        return "remove_key_change_listener";
       default:
         return 'unknown';
     }
@@ -635,6 +656,20 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.getAllLogs;
       case "get_auth_token_by_room_code":
         return PlatformMethod.getAuthTokenByRoomCode;
+      case "capture_image_at_max_supported_resolution":
+        return PlatformMethod.captureImageAtMaxSupportedResolution;
+      case "is_flash_supported":
+        return PlatformMethod.isFlashSupported;
+      case "toggle_flash":
+        return PlatformMethod.toggleFlash;
+      case "get_session_metadata_for_key":
+        return PlatformMethod.getSessionMetadataForKey;
+      case "set_session_metadata_for_key":
+        return PlatformMethod.setSessionMetadataForKey;
+      case "add_key_change_listener":
+        return PlatformMethod.addKeyChangeListener;
+      case "remove_key_change_listener":
+        return PlatformMethod.removeKeyChangeListener;
       default:
         return PlatformMethod.unknown;
     }

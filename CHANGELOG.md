@@ -1,23 +1,88 @@
+## 1.6.0 - 2023-05-04
+
+### New Features
+
+- Session Store
+  You can now use Session Store, a shared real-time key-value store accessible by everyone in the Room. This can be used to implement new features such as Pinned Messages and Spotlight Video Tiles, which brings a particular peer to the center stage for everyone in the Room.
+
+  Learn more about Session Store in the [documentation](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store).
+
+- Music Mode on iOS
+  The latest update adds the ability to achieve high-quality audio recordings with full, rich sound, whether you are recording music, podcasts, or any other type of audio.
+
+  Learn more about the [Music Mode here](https://www.100ms.live/docs/flutter/v2/how-to-guides/configure-your-device/microphone/music-mode).
+
+### Changes
+
+- Android version 12+: We've made changes to Android 12+ so that adding PIP declaration in the Manifest file is now optional, except for those using the PIP Feature.
+
+  Check out more in the [Picture-in-Picture (PIP) documentation](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/render-video/pip-mode).
+
+- This version includes a significant improvement in the usability of Local Audio Share APIs. By optimizing the ergonomics, we have made it more intuitive and user-friendly for you to interact with these APIs.
+
+  Read more about [Local Audio Share here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/local-audio-share).
+
+Updated to Android SDK 2.6.2 & iOS SDK 0.9.3
+
+**Full Changelog**: [1.5.0...1.6.0](https://github.com/100mslive/100ms-flutter/compare/1.5.0...1.6.0)
+
+## 1.5.0 - 2023-04-21
+
+### Breaking
+
+- Updated Screen share and Audio share implementation in Android
+
+  The latest update includes changes in the implementation of Screen share and Audio share on Android. If you are using Screenshare or Local Audio Share functionalities, upgrading to this version or above will require changes to be made to the `onActivityResult` method of `MainActivity.kt`.
+
+  More details are available in the Migration Guide listed below:
+
+  - [Screen Share Migration Guide](https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/screen-share#migrating-from-older-hmssdk-version-to-150-or-above)
+
+  - [Audio Share Migration Guide](https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/local-audio-share#migrating-from-older-hmssdk-version-to-150-or-above)
+
+### Added
+
+- Camera Control Capabilities
+
+  The latest update includes the ability to capture an image from a local peer feed at the maximum resolution supported by the Camera, and the ability to control the phone's flash (if supported).
+
+  Read more about the [Camera Controls here](https://www.100ms.live/docs/flutter/v2/how--to-guides/configure-your-device/camera/camera-controls).
+
+- Enter PIP Mode automatically
+
+  The new update allows for automatic entry into PIP mode for all Android versions upon minimizing the application.
+
+  Read more about adding [PIP Mode here](https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/render-video/pip-mode).
+
+### Changed
+
+- Improved logging capabilities in SDK for a more efficient and streamlined logging process.
+
+  Read more about using [Logging here](https://www.100ms.live/docs/flutter/v2/how--to-guides/debugging/error-logging).
+
+Updated to Android SDK 2.6.1 & iOS SDK 0.9.2
+
+Full Changelog: [1.4.0...1.5.0](https://github.com/100mslive/100ms-flutter/compare/1.4.0...1.5.0)
+
 ## 1.4.0 - 2023-04-06
 
 ### Added
 
 - Join using Room Codes
+
   - Room Codes is a streamlined and secure way to manage user authentication in Rooms.
   - By generating short codes via `getAuthTokenByRoomCode` API, you can easily manage user access with one code per role for each room, without the need for server infrastructure
   - This feature ensures a smoother login experience for users while enhancing security.
-  
+
   You can read more about Room Codes [here](https://www.100ms.live/docs/concepts/v2/concepts/rooms/room-codes/room-codes).
 
 ### Changed
 
 - Improved Logging capabilities to help you diagnose and debug performance and user-reported issues more effectively
 
-
 Updated to Android SDK 2.6.0 & iOS SDK 0.9.1
 
 Full Changelog: [1.3.3...1.4.0](https://github.com/100mslive/100ms-flutter/compare/1.3.3...1.4.0)
-
 
 ## 1.3.3 - 2023-03-22
 
@@ -29,11 +94,9 @@ Full Changelog: [1.3.3...1.4.0](https://github.com/100mslive/100ms-flutter/compa
 
 - Updated the 100ms Quickstart, GetX, MobX & Riverpod based [Sample apps](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps)
 
-
 Updated to Android SDK 2.5.9 & iOS SDK 0.7.1
 
 Full Changelog: [1.3.2...1.3.3](https://github.com/100mslive/100ms-flutter/compare/1.3.2...1.3.3)
-
 
 ## 1.3.2 - 2023-03-09
 
@@ -41,15 +104,14 @@ Full Changelog: [1.3.2...1.3.3](https://github.com/100mslive/100ms-flutter/compa
 
 - Corrected an issue with `DateTime` parsing where joining failed on iOS devices behind UTC Timezone
 
-
 Updated to Android SDK 2.5.7 & iOS SDK 0.6.4
 
 Full Changelog: [1.3.1...1.3.2](https://github.com/100mslive/100ms-flutter/compare/1.3.1...1.3.2)
 
-
 ## 1.3.1 - 2023-02-27
 
 ### Changed
+
 - Performance improvements for PIP Mode on iOS
 - Improved Disconnected State detection on certain Networks
 - Gracefully handling of null objects
@@ -72,16 +134,13 @@ Full Changelog: [1.3.0...1.3.1](https://github.com/100mslive/100ms-flutter/compa
 
   To learn more about PIP & how to implement it in your apps, refer the PIP Guide [here](https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/render-video/pip-mode#ios).
 
-
 - Added `HMSPIPAndroidController` to easily configure & use PIP Mode on Android
 
   PIP Mode support was available on Android since version 1.0.0. With this release we have made it more easy & simple to setup PIP on Android devices. Use the new `HMSPIPAndroidController` class to configure & start playing your Live Videos when your app is in Background. Refer the PIP Guide [here](https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/render-video/pip-mode#android).
 
-
 - Added Capture Snapshot API to capture a frame of the video track being rendered
 
   With the new `captureSnapshot()` method on `HMSVideoTrack` you can instantly capture a frame of any Video being rendered on screen. You can use this to capture moments of a Peer's Video, or a Screenshare happening in Room, etc. To learn more about how to use Capture Snapshot refer the Guide [here](https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/render-video/capture-snapshot).
-
 
 ### Deprecated
 
@@ -94,11 +153,9 @@ Full Changelog: [1.3.0...1.3.1](https://github.com/100mslive/100ms-flutter/compa
 - Corrected an issue where doing multiple Role Changes stopped working
 - Corrected an issue where video views were getting recreated
 
-
 Updated to Android SDK 2.5.7 & iOS SDK 0.6.2
 
 Full Changelog: [1.2.0...1.3.0](https://github.com/100mslive/100ms-flutter/compare/1.2.0...1.3.0)
-
 
 ## 1.2.0 - 2023-01-13
 
@@ -127,21 +184,17 @@ Full Changelog: [1.2.0...1.3.0](https://github.com/100mslive/100ms-flutter/compa
 
   To learn more about how ABR works & how it enhances your app, refer the guide [here](https://www.100ms.live/docs/flutter/v2/foundation/adaptive-bitrate).
 
-
 - Using HMSVideoView on Android
 
   HMSVideoView on Android provides a better abstraction to render live video and handles edge cases like managing Release/Init states. It has in-built support to subscribe to video of the correct resolution.
 
   To learn more about Rendering Video, refer the guide [here](https://www.100ms.live/docs/flutter/v2/features/render-video).
 
-
 - Added Simulcast support for RTC Stats
 
   RTC Call Stats are updated to show Simulcast layer data if available for Local Peer's Video Track. This can be used to diagnose user experience with metrics such as Audio/Video Bitrate, Round Trip Time, Packet loss, etc.
 
   To learn more about using RTC Call Stats, refer the guide [here](https://www.100ms.live/docs/flutter/v2/features/call-stats).
-
-
 
 ### Changed
 
@@ -151,14 +204,9 @@ Full Changelog: [1.2.0...1.3.0](https://github.com/100mslive/100ms-flutter/compa
 
 - On Android, the `onJoin` updates will now be triggered before `onPeerUpdate` when a user joins the room
 
-
-
 Updated to Android SDK 2.5.6 & iOS SDK 0.5.5
 
-
 Full Changelog: [1.1.0...1.2.0](https://github.com/100mslive/100ms-flutter/compare/1.1.0...1.2.0)
-
-
 
 ## 1.1.0 - 2022-12-17
 
@@ -196,8 +244,8 @@ Full Changelog: [1.1.0...1.2.0](https://github.com/100mslive/100ms-flutter/compa
   ```dart
   hmsSDK.switchAudioOutput(audioDevice: HMSAudioDevice.SPEAKER_PHONE);
   ```
-  For More Information, refer: https://www.100ms.live/docs/flutter/v2/features/audio-output-routing
 
+  For More Information, refer: https://www.100ms.live/docs/flutter/v2/features/audio-output-routing
 
 ### Deprecated
 
@@ -205,17 +253,14 @@ Full Changelog: [1.1.0...1.2.0](https://github.com/100mslive/100ms-flutter/compa
 
   No change in functionality or method signature.
 
-
 ### Fixed
 
 - Microphone not getting captured on Role Change from a non-publishing to publishing Role on iOS
 - Corrected an issue where on iOS a default Audio Mixer was getting created if Track Settings was passed while building the HMSSDK instance
 
-
 Updated to Native Android SDK 2.5.4 & Native iOS SDK 0.5.3
 
 Full Changelog: [1.0.0...1.1.0](https://github.com/100mslive/100ms-flutter/compare/1.0.0...1.1.0)
-
 
 ## 1.0.0 - 2022-12-09
 
@@ -223,19 +268,20 @@ Full Changelog: [1.0.0...1.1.0](https://github.com/100mslive/100ms-flutter/compa
 
 - Added support for Picture in Picture mode on Android.
 
-    PIP Mode lets the user watch the room video in a small window pinned to a corner of the screen while navigating between apps or browsing content on the main screen.
+  PIP Mode lets the user watch the room video in a small window pinned to a corner of the screen while navigating between apps or browsing content on the main screen.
 
-    Example implementation for checking device support & enabling PIP mode:
-    ```dart
-    // to start PIP mode invoke the `enterPipMode` function, the parameters passed to it are optional
-    hmsSDK.enterPipMode(aspectRatio: [16, 9], autoEnterPip: true);
+  Example implementation for checking device support & enabling PIP mode:
 
-    // method to check whether PIP mode is available for current device
-    bool isPipAvailable = await hmsSDK.isPipAvailable();
+  ```dart
+  // to start PIP mode invoke the `enterPipMode` function, the parameters passed to it are optional
+  hmsSDK.enterPipMode(aspectRatio: [16, 9], autoEnterPip: true);
 
-    // method to check whether PIP mode is active currently
-    bool isPipActive = await hmsSDK.isPipActive();
-    ```
+  // method to check whether PIP mode is available for current device
+  bool isPipAvailable = await hmsSDK.isPipAvailable();
+
+  // method to check whether PIP mode is active currently
+  bool isPipActive = await hmsSDK.isPipActive();
+  ```
 
 - Added `roomPeerCountUpdated` type in `HMSRoomUpdate`
 
@@ -243,22 +289,19 @@ Full Changelog: [1.0.0...1.1.0](https://github.com/100mslive/100ms-flutter/compa
 
 - Added convenience APIs to Mute / Unmute Audio or Video of the entire room locally
 
-
 ### Fixed
 
 - Corrected parsing of `HMSMessage` objects sent Server-side APIs
 - Session Metadata can now be reset to a null value
 - Importing Native Android SDK dependency from Maven Central instead of Jitpack
 - HMSTrackSettings is now nullable while building the HMSSDK object
-- Corrected usage of Native Util functions to fetch Audio & Video tracks 
+- Corrected usage of Native Util functions to fetch Audio & Video tracks
 - Corrected default local audio track settings for iOS devices
 - Corrected sending of peer count in `HMSRoom` instance on iOS
 
 Updated to Native Android SDK 2.5.1 & Native iOS SDK 0.4.7
 
 Full Changelog: [0.7.8...1.0.0](https://github.com/100mslive/100ms-flutter/compare/0.7.8...1.0.0)
-
-
 
 ## 0.7.8 - 2022-10-31
 
@@ -295,7 +338,6 @@ Full Changelog: [0.7.6...0.7.7](https://github.com/100mslive/100ms-flutter/compa
 
 Full Changelog: [0.7.6...0.7.5](https://github.com/100mslive/100ms-flutter/compare/0.7.6...0.7.5)
 
-
 ## 0.7.5 - 2022-08-18
 
 - Added support on iOS for sharing audio from local files on your device & from other audio playing apps
@@ -303,7 +345,7 @@ Full Changelog: [0.7.6...0.7.5](https://github.com/100mslive/100ms-flutter/compa
 - Added APIs to fetch local peer track settings
 - Fixed an issue where exiting from Preview without joining room was not releasing camera access
 - Added `destroy` API to cleanup Native HMSSDK instance correctly
-- Disabled Hardware Scaler on Android to correct intermittent Video tile flickering 
+- Disabled Hardware Scaler on Android to correct intermittent Video tile flickering
 - Updated to Native Android SDK 2.4.8 & Native iOS SDK 0.3.3
 
 ## 0.7.4 - 2022-07-29
@@ -311,7 +353,7 @@ Full Changelog: [0.7.6...0.7.5](https://github.com/100mslive/100ms-flutter/compa
 ### Added
 
 - Added APIs to stream device audio in different modes
-- Added  APIs to view and change the output speaker selected by the SDK to playout
+- Added APIs to view and change the output speaker selected by the SDK to playout
 - setAudioMode API to change the Audio out mode manually between in-call volume and media volume
 
 ### Fixed
@@ -328,8 +370,8 @@ Full Changelog: [0.7.6...0.7.5](https://github.com/100mslive/100ms-flutter/compa
 - recording permission in HMSRole is now broken into - `browserRecording` and `rtmpStreaming`
 - streaming permission in HMSRole is now `hlsStreaming`
 
-
 ## 0.7.3 - 2022-06-23
+
 - Added support for iOS Screenshare
 - Added `HMSHLSRecordingConfig` to perform recording while HLS Streaming
 - Updated error callback in `HMSUpdateListener` to `onHMSError`
@@ -392,7 +434,7 @@ Full Changelog: [0.7.6...0.7.5](https://github.com/100mslive/100ms-flutter/compa
 
 - Added HLS Support. Now you can Start/Stop HLS Streaming from Flutter SDK
 - Added support to do ScreenShare from Android device
-  
+
 ### Changed
 
 - Updated callbacks for Permission based action APIs

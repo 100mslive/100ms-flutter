@@ -15,6 +15,7 @@ class HMSPipAction {
         var pipResult: Result? = null
         private var pipAutoEnterEnabled = false
         private var pipAspectRatio = mutableListOf(16, 9)
+        private var isPIPEnabled = false
         fun pipActions(call: MethodCall, result: Result, activity: Activity) {
             when (call.method) {
                 "enter_pip_mode" -> {
@@ -29,14 +30,14 @@ class HMSPipAction {
                 }
                 "is_pip_available" -> {
                     result.success(
-                        activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+                        activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE),
                     )
                 }
                 "setup_pip" -> {
-                    setupPIP(call,result)
+                    setupPIP(call, result)
                 }
                 "destroy_pip" -> {
-                    destroyPIP(call,result,activity)
+                    destroyPIP(call, result, activity)
                 }
                 else -> {
                     result.notImplemented()
@@ -44,7 +45,8 @@ class HMSPipAction {
             }
         }
 
-        private fun setupPIP(call: MethodCall,result: Result){
+        private fun setupPIP(call: MethodCall, result: Result) {
+            isPIPEnabled = true
             call.argument<List<Int>?>("ratio")?.let {
                 pipAspectRatio = it.toMutableList()
             }
@@ -54,10 +56,10 @@ class HMSPipAction {
             result.success(null)
         }
 
-        private fun destroyPIP(call: MethodCall,result: Result,activity: Activity){
+        private fun destroyPIP(call: MethodCall, result: Result, activity: Activity) {
             pipAspectRatio = mutableListOf(16, 9)
             pipAutoEnterEnabled = false
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && activity.isInPictureInPictureMode){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && activity.isInPictureInPictureMode) {
                 activity.moveTaskToBack(false)
             }
             result.success(true)
@@ -72,6 +74,7 @@ class HMSPipAction {
 
         @RequiresApi(Build.VERSION_CODES.O)
         private fun enterPipMode(call: MethodCall, result: Result, activity: Activity) {
+            isPIPEnabled = true
             call.argument<List<Int>>("aspect_ratio")?.let {
                 pipAspectRatio = it.toMutableList()
             }
@@ -89,14 +92,25 @@ class HMSPipAction {
         }
 
         @RequiresApi(Build.VERSION_CODES.O)
-        fun autoEnterPipMode(activity: Activity){
-            if(pipAutoEnterEnabled){
+        fun autoEnterPipMode(activity: Activity) {
+            if (pipAutoEnterEnabled && isPIPEnabled) {
                 var params = PictureInPictureParams.Builder().setAspectRatio(Rational(pipAspectRatio[0], pipAspectRatio[1]))
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     params = params.setAutoEnterEnabled(pipAutoEnterEnabled)
                 }
                 activity.enterPictureInPictureMode(params.build())
+            }
+        }
+
+        /**
+         * This method only needs to be called when application is using PIP mode
+         * [isPIPEnabled] variable keeps a track whether PIP was enabled in application or not
+         */
+        fun disposePIP(activity: Activity) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && isPIPEnabled) {
+                activity.setPictureInPictureParams(PictureInPictureParams.Builder().setAutoEnterEnabled(false).build())
+                isPIPEnabled = false
             }
         }
     }

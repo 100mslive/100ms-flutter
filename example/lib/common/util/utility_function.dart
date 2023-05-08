@@ -226,13 +226,15 @@ class Utilities {
       {required bool isAudioMixerDisabled,
       required bool joinWithMutedVideo,
       required bool joinWithMutedAudio,
-      required bool isSoftwareDecoderDisabled}) {
+      required bool isSoftwareDecoderDisabled,
+      HMSAudioMode? audioMode}) {
     return isAudioMixerDisabled
         ? HMSTrackSetting(
             audioTrackSetting: HMSAudioTrackSetting(
                 trackInitialState: joinWithMutedAudio
                     ? HMSTrackInitState.MUTED
-                    : HMSTrackInitState.UNMUTED),
+                    : HMSTrackInitState.UNMUTED,
+                audioMode: audioMode),
             videoTrackSetting: HMSVideoTrackSetting(
                 trackInitialState: joinWithMutedVideo
                     ? HMSTrackInitState.MUTED
@@ -243,11 +245,12 @@ class Utilities {
                 audioSource: HMSAudioMixerSource(node: [
                   HMSAudioFilePlayerNode("audioFilePlayerNode"),
                   HMSMicNode(),
-                  HMSScreenBroadcastAudioReceiverNode()
+                  HMSScreenBroadcastAudioReceiverNode(),
                 ]),
                 trackInitialState: joinWithMutedAudio
                     ? HMSTrackInitState.MUTED
-                    : HMSTrackInitState.UNMUTED),
+                    : HMSTrackInitState.UNMUTED,
+                audioMode: audioMode),
             videoTrackSetting: HMSVideoTrackSetting(
                 trackInitialState: joinWithMutedVideo
                     ? HMSTrackInitState.MUTED

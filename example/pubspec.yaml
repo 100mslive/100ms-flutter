@@ -4,7 +4,7 @@ description: Demonstrates how to use the hmssdk_flutter plugin.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 1.0.7+7
+version: 1.6.0
 environment:
   sdk: ">=2.12.0 <3.0.0"
 
@@ -38,14 +38,14 @@ dependencies:
   google_fonts:
   bot_toast:
   qr_code_scanner:
-  shared_preferences: 
+  shared_preferences:
   uni_links:
   file_picker:
   draggable_widget:
   badges:
   url_launcher:
   pip_flutter:
-  share_plus: 
+  share_plus:
   flutter_linkify:
   flutter_foreground_task:
   image_gallery_saver:

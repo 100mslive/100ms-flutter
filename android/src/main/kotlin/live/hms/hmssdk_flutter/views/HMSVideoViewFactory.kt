@@ -12,7 +12,6 @@ import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.video.error.HMSException
 import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.video.utils.HmsUtilities
-import io.flutter.plugin.common.MethodChannel.Result
 
 class HMSVideoViewWidget(
     private val context: Context,
@@ -23,14 +22,14 @@ class HMSVideoViewWidget(
     scaleType: Int?,
     private val matchParent: Boolean? = true,
     disableAutoSimulcastLayerSelect: Boolean,
-    hmsVideoViewResult: Result?
+    hmssdkFlutterPlugin: HmssdkFlutterPlugin?
 ) : PlatformView {
 
     private var hmsVideoView: HMSVideoView? = null
 
     init {
         if (hmsVideoView == null) {
-            hmsVideoView = HMSVideoView(context, setMirror, scaleType, track, disableAutoSimulcastLayerSelect,hmsVideoViewResult)
+            hmsVideoView = HMSVideoView(context, setMirror, scaleType, track, disableAutoSimulcastLayerSelect, hmssdkFlutterPlugin)
         }
     }
 
@@ -98,6 +97,6 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
         }
         val disableAutoSimulcastLayerSelect = args!!["disable_auto_simulcast_layer_select"] as? Boolean ?: false
 
-        return HMSVideoViewWidget(requireNotNull(context), viewId, creationParams, track, setMirror!!, scaleType, matchParent, disableAutoSimulcastLayerSelect,plugin.hmsVideoViewResult)
+        return HMSVideoViewWidget(requireNotNull(context), viewId, creationParams, track, setMirror!!, scaleType, matchParent, disableAutoSimulcastLayerSelect, plugin)
     }
 }

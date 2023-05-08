@@ -10,12 +10,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.hmssdk_flutter.R
 import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.videoview.HMSVideoView
 import org.webrtc.RendererCommon
 import java.io.ByteArrayOutputStream
-import io.flutter.plugin.common.MethodChannel.Result
 
 class HMSVideoView(
     context: Context,
@@ -23,7 +23,7 @@ class HMSVideoView(
     private val scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
     private val track: HMSVideoTrack?,
     private val disableAutoSimulcastLayerSelect: Boolean,
-    private val hmsVideoViewResult: Result?
+    private val hmssdkFlutterPlugin: HmssdkFlutterPlugin?
 ) : FrameLayout(context, null) {
 
     private var hmsVideoView: HMSVideoView? = null
@@ -67,10 +67,14 @@ class HMSVideoView(
                     byteArray = stream.toByteArray()
                     bitmap.recycle()
                     val data = Base64.encodeToString(byteArray, Base64.DEFAULT)
-                    if (hmsVideoViewResult != null) {
-                        hmsVideoViewResult.success(data)
+                    if (hmssdkFlutterPlugin != null) {
+                        if (hmssdkFlutterPlugin.hmsVideoViewResult != null) {
+                            hmssdkFlutterPlugin.hmsVideoViewResult?.success(data)
+                        } else {
+                            Log.e("Receiver error", "hmsVideoViewResult is null")
+                        }
                     } else {
-                        Log.e("Receiver error", "hmsVideoViewResult is null")
+                        Log.e("Receiver error", "hmssdkFlutterPlugin is null")
                     }
                 }
             })

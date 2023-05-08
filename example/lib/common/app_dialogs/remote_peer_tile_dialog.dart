@@ -15,6 +15,7 @@ class RemotePeerTileDialog extends StatefulWidget {
   final bool simulcast;
   final bool pinTile;
   final bool? isCaptureSnapshot;
+  final bool isSpotlightedPeer;
   final Function(bool, bool) changeVideoTrack;
   final Function(bool, bool) changeAudioTrack;
   final Function() removePeer;
@@ -22,6 +23,7 @@ class RemotePeerTileDialog extends StatefulWidget {
   final Function() changeLayer;
   final Function() changePinTileStatus;
   final Function()? captureSnapshot;
+  final Function() setOnSpotlight;
   const RemotePeerTileDialog(
       {required this.isVideoMuted,
       required this.isAudioMuted,
@@ -39,7 +41,9 @@ class RemotePeerTileDialog extends StatefulWidget {
       required this.pinTile,
       required this.changePinTileStatus,
       this.isCaptureSnapshot,
-      this.captureSnapshot});
+      this.captureSnapshot,
+      required this.setOnSpotlight,
+      this.isSpotlightedPeer = false});
 
   @override
   _RemotePeerTileDialogState createState() => _RemotePeerTileDialogState();
@@ -237,6 +241,32 @@ class _RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                     ),
                     Text(
                       widget.pinTile ? "Unpin Tile" : "Pin Tile",
+                      style: GoogleFonts.inter(color: iconColor),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                widget.setOnSpotlight();
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      "assets/icons/spotlight.svg",
+                      color: iconColor,
+                    ),
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Text(
+                      widget.isSpotlightedPeer
+                          ? "Remove From Spotlight"
+                          : "Spotlight Tile",
                       style: GoogleFonts.inter(color: iconColor),
                     )
                   ],

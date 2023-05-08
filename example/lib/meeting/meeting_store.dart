@@ -4,12 +4,12 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as Math;
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:hmssdk_flutter_example/common/util/log_writer.dart';
 import 'package:hmssdk_flutter_example/app_secrets.dart';
+import 'package:hmssdk_flutter_example/enum/session_store_key.dart';
 import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -39,7 +39,8 @@ class MeetingStore extends ChangeNotifier
         HMSUpdateListener,
         HMSActionResultListener,
         HMSStatsListener,
-        HMSLogListener {
+        HMSLogListener,
+        HMSKeyChangeListener {
   late HMSSDKInteractor _hmsSDKInteractor;
 
   MeetingStore({required HMSSDKInteractor hmsSDKInteractor}) {
@@ -186,6 +187,16 @@ class MeetingStore extends ChangeNotifier
 
   bool isHLSPlayerRequired = true;
 
+  bool isFlashOn = false;
+
+  ///These variables are used in session metadata implementation *************************************************
+
+  HMSSessionStore? _hmsSessionStore;
+
+  PeerTrackNode? spotLightPeer;
+
+  String? spotlightMetadata;
+
   Future<HMSException?> join(String userName, String roomUrl,
       {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
@@ -227,7 +238,6 @@ class MeetingStore extends ChangeNotifier
           endPoint: _roomData?[1] == "true" ? "" : '$qaInitEndPoint',
         );
       } else {
-        FirebaseCrashlytics.instance.setUserIdentifier(_tokenData.toString());
         return _tokenData;
       }
     }
@@ -576,6 +586,15 @@ class MeetingStore extends ChangeNotifier
         notificationText: "Tap to return to the app");
   }
 
+  void getSpotlightPeer() async {
+    String? metadata =
+        await _hmsSessionStore?.getSessionMetadataForKey(key: "spotlight");
+    if (metadata != null) {
+      setPeerToSpotlight(metadata);
+      spotlightMetadata = metadata;
+    }
+  }
+
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
     log("onRoomUpdate-> room: ${room.toString()} update: ${update.name}");
@@ -667,6 +686,7 @@ class MeetingStore extends ChangeNotifier
             audioTrack: track as HMSAudioTrack));
         notifyListeners();
       }
+      setSpotlightOnTrackUpdate(track);
       return;
     }
 
@@ -688,15 +708,18 @@ class MeetingStore extends ChangeNotifier
             stats: RTCStats(),
             track: track as HMSVideoTrack));
         notifyListeners();
+        setSpotlightOnTrackUpdate(track);
         return;
       }
+
+      setSpotlightOnTrackUpdate(track);
     }
     peerOperationWithTrack(peer, trackUpdate, track);
   }
 
   @override
   void onHMSError({required HMSException error}) {
-    log("onHMSError-> error: ${error.message}");
+    log("onHMSError-> error: ${error.code} ${error.message}");
     this.hmsException = error;
     Utilities.showNotification(error.message ?? "", "error");
     notifyListeners();
@@ -707,7 +730,6 @@ class MeetingStore extends ChangeNotifier
     log("onMessage-> sender: ${message.sender} message: ${message.message} time: ${message.time}, type: ${message.type}");
     switch (message.type) {
       case "metadata":
-        getSessionMetadata();
         break;
       default:
         addMessage(message);
@@ -731,8 +753,9 @@ class MeetingStore extends ChangeNotifier
     //To handle the active speaker mode scenario
     if (meetingMode == MeetingMode.ActiveSpeaker) {
       //Picking up the first four peers from the peerTracks list
-      List<PeerTrackNode> activeSpeakerList =
-          peerTracks.sublist(screenShareCount, Math.min(peerTracks.length, 4));
+      List<PeerTrackNode> activeSpeakerList = peerTracks.sublist(
+          screenShareCount + (spotLightPeer != null ? 1 : 0),
+          Math.min(peerTracks.length, 4));
 
       /* Here we iterate through the updateSpeakers list
        * and do the following:
@@ -748,10 +771,15 @@ class MeetingStore extends ChangeNotifier
           int peerIndex = peerTracks.indexWhere(
               (node) => node.uid == speaker.peer.peerId + "mainVideo");
           if (peerIndex != -1) {
-            PeerTrackNode activeSpeaker = peerTracks[peerIndex];
-            peerTracks.removeAt(peerIndex);
-            peerTracks.insert(screenShareCount, activeSpeaker);
-            peerTracks[screenShareCount].setOffScreenStatus(false);
+            if (peerTracks[peerIndex].uid != spotLightPeer?.uid) {
+              PeerTrackNode activeSpeaker = peerTracks[peerIndex];
+              peerTracks.removeAt(peerIndex);
+              peerTracks.insert(
+                  screenShareCount + (spotLightPeer != null ? 1 : 0),
+                  activeSpeaker);
+              peerTracks[screenShareCount + (spotLightPeer != null ? 1 : 0)]
+                  .setOffScreenStatus(false);
+            }
           }
         }
       });
@@ -997,8 +1025,10 @@ class MeetingStore extends ChangeNotifier
     } else if (Platform.isIOS) {
       HMSIOSPIPController.destroy();
     }
+    _hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeListener: this);
     _hmsSDKInteractor.removeHMSLogger();
     _hmsSDKInteractor.destroy();
+    _hmsSessionStore = null;
     peerTracks.clear();
     isRoomEnded = true;
     screenShareCount = 0;
@@ -1111,6 +1141,7 @@ class MeetingStore extends ChangeNotifier
 
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
+          getSpotlightPeer();
           localPeer = peer;
           if (hlsVideoController != null && !peer.role.name.contains("hls-")) {
             hlsVideoController?.dispose(forceDispose: true);
@@ -1301,6 +1332,66 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
+  ///Here we get the instance of HMSSessionStore using which
+  ///we will be performing the session metadata actions
+  @override
+  void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
+    _hmsSessionStore = hmsSessionStore;
+    _hmsSessionStore?.addKeyChangeListener(
+        keys: SessionStoreKeyValues.getSessionStoreKeys(),
+        hmsKeyChangeListener: this);
+    getSpotlightPeer();
+  }
+
+  ///We get this call everytime metadata corresponding to a key is changed
+  ///
+  ///Note: This only gets called when we have attached [HMSKeyChangeListener] using
+  ///     addKeyChangeListener method with keys to be listened
+  @override
+  void onKeyChanged({required String key, required String? value}) {
+    log("onKeyChanged --> key: $key value: $value");
+    SessionStoreKey keyType = SessionStoreKeyValues.getMethodFromName(key);
+    switch (keyType) {
+      case SessionStoreKey.PINNED_MESSAGE_SESSION_KEY:
+        sessionMetadata = value;
+        break;
+      case SessionStoreKey.SPOTLIGHT:
+        setPeerToSpotlight(value);
+        break;
+      case SessionStoreKey.unknown:
+        break;
+    }
+    notifyListeners();
+  }
+
+  ///This method sets the peer to spotlight
+  ///this also handles removing a peer from spotlight case
+  void setPeerToSpotlight(String? value) {
+    int currentSpotlightPeerIndex =
+        peerTracks.indexWhere((node) => node.uid == spotLightPeer?.uid);
+    if (currentSpotlightPeerIndex != -1) {
+      peerTracks[currentSpotlightPeerIndex].pinTile = false;
+      spotLightPeer = null;
+      spotlightMetadata = null;
+    }
+    if (value != null) {
+      int index = peerTracks.indexWhere(((node) =>
+          node.audioTrack?.trackId == (value) ||
+          node.track?.trackId == (value)));
+      if (index != -1) {
+        Utilities.showToast("${peerTracks[index].peer.name} is in spotlight");
+        spotLightPeer = peerTracks[index];
+        changePinTileStatus(peerTracks[index]);
+      } else {
+        spotlightMetadata = value;
+      }
+    } else {
+      spotlightMetadata = null;
+      spotLightPeer = null;
+    }
+    notifyListeners();
+  }
+
   void setMode(MeetingMode meetingMode) {
     //Turning the videos on if the previously mode was audio
     if (this.meetingMode == MeetingMode.Audio &&
@@ -1403,19 +1494,30 @@ class MeetingStore extends ChangeNotifier
     return false;
   }
 
+  void setSpotlightOnTrackUpdate(HMSTrack track) {
+    ///In order to avoid errors because of
+    ///track updates ordering for audio and video
+    ///adding the method call here.
+    if (spotlightMetadata == track.trackId) {
+      setPeerToSpotlight(spotlightMetadata);
+    }
+  }
+
   HMSAudioFilePlayerNode audioFilePlayerNode =
       HMSAudioFilePlayerNode("audioFilePlayerNode");
   HMSMicNode micNode = HMSMicNode();
 
-  void playAudioIos(String url) {
-    audioFilePlayerNode.play(fileUrl: url);
+  void playAudioIos(String url) async {
+    HMSException? exception = await audioFilePlayerNode.play(fileUrl: url);
+    if (exception != null) {
+      Utilities.showToast(exception.description, time: 5);
+    }
     isPlayerRunningIos();
   }
 
   Future<bool> isPlayerRunningIos() async {
-    bool isPlaying = await audioFilePlayerNode.isPlaying();
-    isAudioShareStarted = isPlaying;
-    return isPlaying;
+    isAudioShareStarted = await audioFilePlayerNode.isPlaying();
+    return isAudioShareStarted;
   }
 
   void stopAudioIos() {
@@ -1428,13 +1530,22 @@ class MeetingStore extends ChangeNotifier
     audioPlayerVolume = volume;
   }
 
-  void setSessionMetadata(String? metadata) {
-    _hmsSDKInteractor.setSessionMetadata(
-        metadata: metadata, hmsActionResultListener: this);
+  void setSessionMetadata({required String key, String? metadata}) {
+    _hmsSessionStore?.setSessionMetadataForKey(
+        key: key, data: metadata, hmsActionResultListener: this);
   }
 
-  void getSessionMetadata() async {
-    sessionMetadata = await _hmsSDKInteractor.getSessionMetadata();
+  void getSessionMetadata(String key) async {
+    dynamic result = await _hmsSessionStore?.getSessionMetadataForKey(key: key);
+    if (result is HMSException) {
+      Utilities.showToast(
+          "Error Occured: code: ${result.code?.errorCode}, description: ${result.description}, message: ${result.message}",
+          time: 5);
+      return;
+    }
+    if (result != null) {
+      sessionMetadata = result as String;
+    }
     notifyListeners();
   }
 
@@ -1572,6 +1683,21 @@ class MeetingStore extends ChangeNotifier
       peerTracks.add(peerTrackNode);
     }
     notifyListeners();
+  }
+
+  ///
+  /// This method is used to toggle the flash light of your phone
+  /// Here we are not checking whether flash is supported or not
+  /// Since this method already check that internally,
+  ///
+  void toggleFlash() async {
+    dynamic result = await HMSCameraControls.toggleFlash();
+    if (result is HMSException) {
+      Utilities.showToast(
+          "Error Occured: code: ${result.code?.errorCode}, description: ${result.description}, message: ${result.message}",
+          time: 5);
+      return;
+    }
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
@@ -1716,6 +1842,8 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
         Utilities.showToast("Change Role successful");
         break;
+      case HMSActionResultListenerMethod.setSessionMetadataForKey:
+        break;
     }
   }
 
@@ -1727,7 +1855,11 @@ class MeetingStore extends ChangeNotifier
       required HMSException hmsException}) {
     this.hmsException = hmsException;
     log("ActionResultListener onException-> method: ${methodType.toString()} , Error code : ${hmsException.code} , Description : ${hmsException.description} , Message : ${hmsException.message}");
-    FirebaseCrashlytics.instance.log(hmsException.toString());
+    FirebaseAnalytics.instance
+        .logEvent(name: "HMSActionResultListenerLogs", parameters: {
+      "data":
+          "ActionResultListener onException-> method: ${methodType.toString()} , Error code : ${hmsException.code} , Description : ${hmsException.description} , Message : ${hmsException.message}"
+    });
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
         break;
@@ -1791,6 +1923,9 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
         Utilities.showToast("Change role failed");
+        break;
+      case HMSActionResultListenerMethod.setSessionMetadataForKey:
+        Utilities.showToast("Set session metadata failed");
         break;
     }
     notifyListeners();
@@ -1883,7 +2018,6 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onLogMessage({required HMSLogList hmsLogList}) {
-    FirebaseCrashlytics.instance.log(hmsLogList.toString());
     FirebaseAnalytics.instance.logEvent(
         name: "SDK_Logs", parameters: {"data": hmsLogList.toString()});
     applicationLogs.hmsLog.addAll(hmsLogList.hmsLog);
