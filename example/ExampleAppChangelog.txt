@@ -2,5 +2,5 @@ Board: https://github.com/100mslive/100ms-flutter/projects/19
 
 
 Flutter SDK: 1.7.0
-Android SDK: 2.6.2
+Android SDK: 2.6.3
 iOS SDK: 0.9.3
