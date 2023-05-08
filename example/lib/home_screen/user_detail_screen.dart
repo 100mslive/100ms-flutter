@@ -84,7 +84,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       bool joinWithMutedVideo =
           await Utilities.getBoolData(key: 'join-with-muted-video') ?? true;
       bool isSoftwareDecoderDisabled =
-          await Utilities.getBoolData(key: 'software-decoder-disabled') ?? true;
+          await Utilities.getBoolData(key: 'software-decoder-disabled') ?? false;
       bool isAudioMixerDisabled =
           await Utilities.getBoolData(key: 'audio-mixer-disabled') ?? true;
       int audioModeIndex = await Utilities.getIntData(key: 'audio-mode');

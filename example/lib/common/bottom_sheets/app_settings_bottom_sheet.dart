@@ -30,7 +30,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
   bool skipPreview = false;
   bool mirrorCamera = true;
   bool showStats = false;
-  bool isSoftwareDecoderDisabled = true;
+  bool isSoftwareDecoderDisabled = false;
   bool isAudioMixerDisabled = true;
   bool isAutoSimulcast = true;
   HMSAudioMode currentAudioMode = HMSAudioMode.VOICE;
@@ -64,7 +64,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     showStats = await Utilities.getBoolData(key: 'show-stats') ?? false;
     isDarkMode = await Utilities.getBoolData(key: 'dark-mode') ?? true;
     isSoftwareDecoderDisabled =
-        await Utilities.getBoolData(key: 'software-decoder-disabled') ?? true;
+        await Utilities.getBoolData(key: 'software-decoder-disabled') ?? false;
     isAudioMixerDisabled =
         await Utilities.getBoolData(key: 'audio-mixer-disabled') ?? true;
     isAutoSimulcast =
