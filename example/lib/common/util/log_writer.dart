@@ -4,19 +4,22 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
 File? _logFile;
-Future<String> get _localPath async {
+Future<String?> get _localPath async {
   final directory = Platform.isAndroid
       ? await getExternalStorageDirectory()
       : await getApplicationSupportDirectory();
-  return directory!.path;
+  return directory?.path;
 }
 
-Future<File> get getLogFile async {
+Future<File?> get getLogFile async {
   if (_logFile == null) {
     final path = await _localPath;
+    if (path == null) {
+      return null;
+    }
     _logFile = File('$path/hms_log.txt');
   }
-  return _logFile!;
+  return _logFile;
 }
 
 Future<void> deleteFile() async {
@@ -28,7 +31,9 @@ Future<void> deleteFile() async {
 Future<void> writeLogs(HMSLogList? logsList) async {
   final file = await getLogFile;
   // Write the file
-  logsList?.hmsLog.forEach((element) {
-    file.writeAsString(element + "\n", mode: FileMode.append);
+  if(file != null){
+      logsList?.hmsLog.forEach((element) {
+      file.writeAsString(element + "\n", mode: FileMode.append);
   });
+  }
 }
