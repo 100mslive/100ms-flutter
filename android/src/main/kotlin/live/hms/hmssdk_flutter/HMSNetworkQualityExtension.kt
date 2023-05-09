@@ -1,8 +1,6 @@
 package live.hms.hmssdk_flutter
 
 import live.hms.video.connection.stats.quality.HMSNetworkQuality
-import live.hms.video.sdk.models.HMSPeer
-import live.hms.video.sdk.models.enums.HMSPeerUpdate
 
 class HMSNetworkQualityExtension {
 

@@ -27,7 +27,7 @@ class MainActivity : FlutterActivity() {
 
     override fun onPictureInPictureModeChanged(
         isInPictureInPictureMode: Boolean,
-        newConfig: Configuration?
+        newConfig: Configuration?,
     ) {
         if (isInPictureInPictureMode) {
             if (HMSPipAction.pipResult != null) {
