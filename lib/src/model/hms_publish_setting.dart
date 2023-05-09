@@ -23,15 +23,15 @@ class HMSPublishSetting {
       allowed = [];
 
     HMSAudioSetting? audioSetting;
-    if (map.containsKey('audio_setting'))
-      audioSetting = HMSAudioSetting.fromMap(map['audio_setting']);
+    if (map.containsKey('audio'))
+      audioSetting = HMSAudioSetting.fromMap(map['audio']);
     HMSVideoSetting? videoSetting;
-    if (map.containsKey('video_setting')) {
-      videoSetting = HMSVideoSetting.fromMap(map['video_setting']);
+    if (map.containsKey('video')) {
+      videoSetting = HMSVideoSetting.fromMap(map['video']);
     }
     HMSVideoSetting? screenSetting;
-    if (map.containsKey('screen_setting')) {
-      screenSetting = HMSVideoSetting.fromMap(map['screen_setting']);
+    if (map.containsKey('screen')) {
+      screenSetting = HMSVideoSetting.fromMap(map['screen']);
     }
     HMSSimulcastSettings? simulcastSettings;
     if (map.containsKey('simulcast')) {
