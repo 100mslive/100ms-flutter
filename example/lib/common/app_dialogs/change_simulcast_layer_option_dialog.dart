@@ -13,9 +13,9 @@ import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:collection/collection.dart';
 
 class ChangeSimulcastLayerOptionDialog extends StatefulWidget {
-  List<HMSSimulcastLayerDefinition> layerDefinitions;
-  HMSSimulcastLayer selectedLayer;
-  HMSRemoteVideoTrack track;
+  final List<HMSSimulcastLayerDefinition> layerDefinitions;
+  final HMSSimulcastLayer selectedLayer;
+  final HMSRemoteVideoTrack track;
   ChangeSimulcastLayerOptionDialog(
       {required this.layerDefinitions,
       required this.selectedLayer,
@@ -43,7 +43,6 @@ class _ChangeSimulcastLayerOptionDialogState
   @override
   Widget build(BuildContext context) {
     String message = "Current Layer: ${widget.selectedLayer.name}";
-    double width = MediaQuery.of(context).size.width;
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       actionsPadding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
