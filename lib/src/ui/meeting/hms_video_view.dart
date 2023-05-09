@@ -150,9 +150,6 @@ class _PlatformView extends StatelessWidget {
                     disableAutoSimulcastLayerSelect
               },
               creationParamsCodec: const StandardMessageCodec(),
-              onFocus: () {
-                params.onFocusChanged(true);
-              },
             )
               ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
               ..create();
