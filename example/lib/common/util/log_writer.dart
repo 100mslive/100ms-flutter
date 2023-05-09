@@ -31,9 +31,9 @@ Future<void> deleteFile() async {
 Future<void> writeLogs(HMSLogList? logsList) async {
   final file = await getLogFile;
   // Write the file
-  if(file != null){
-      logsList?.hmsLog.forEach((element) {
+  if (file != null) {
+    logsList?.hmsLog.forEach((element) {
       file.writeAsString(element + "\n", mode: FileMode.append);
-  });
+    });
   }
 }
