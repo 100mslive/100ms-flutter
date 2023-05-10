@@ -45,8 +45,8 @@ class HMSVideoViewWidget(
         )
         if (matchParent == false) {
             frameLayoutParams = FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
             )
         }
         if (view != null) {
