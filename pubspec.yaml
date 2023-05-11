@@ -8,7 +8,7 @@ documentation: https://www.100ms.live/docs
 
 environment:
   sdk: ">=2.16.0 <4.0.0"
-  flutter: ">=1.20.0"
+  flutter: ">=2.10.0"
 
 dependencies:
   flutter:
