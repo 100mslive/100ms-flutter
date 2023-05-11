@@ -1034,11 +1034,19 @@ class HmssdkFlutterPlugin :
         )
     }
 
-    public fun onVideoViewError(args: HashMap<String, Any?>) {
-        if (args["data"] != null) {
-            CoroutineScope(Dispatchers.Main).launch {
-                eventSink?.success(args)
-            }
+    fun onVideoViewError(methodName: String, error: String, errorMessage: String) {
+        val args = HashMap<String, Any?>()
+        args["event_name"] = "on_error"
+        val hmsException = HMSException(
+            action = "Check the logs for more info",
+            code = 6004,
+            description = error,
+            message = errorMessage,
+            name = "$methodName Error",
+        )
+        args["data"] = HMSExceptionExtension.toDictionary(hmsException)
+        CoroutineScope(Dispatchers.Main).launch {
+            eventSink?.success(args)
         }
     }
 

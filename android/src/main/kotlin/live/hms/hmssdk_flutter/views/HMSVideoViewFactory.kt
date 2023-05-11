@@ -83,17 +83,9 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
 
         val track = HmsUtilities.getVideoTrack(trackId!!, room!!)
         if (track == null) {
-            val args = HashMap<String, Any?>()
-            args["event_name"] = "on_error"
-            val hmsException = HMSException(
-                action = "Check the trackId for the track",
-                code = 6004,
-                description = "There is no track corresponding to the given trackId",
-                message = "Video track is null for corresponding trackId",
-                name = "HMSVideoView Error",
-            )
-            args["data"] = HMSExceptionExtension.toDictionary(hmsException)
-            plugin.onVideoViewError(args)
+            plugin.onVideoViewError(methodName = "HMSVideoView",
+                error = "There is no track corresponding to the given trackId",
+            errorMessage = "Video track is null for corresponding trackId")
         }
         val disableAutoSimulcastLayerSelect = args!!["disable_auto_simulcast_layer_select"] as? Boolean ?: false
 
