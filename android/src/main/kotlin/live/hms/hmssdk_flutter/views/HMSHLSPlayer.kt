@@ -12,7 +12,7 @@ class HMSHLSPlayer(
     var hlsPlayer: HmsHlsPlayer? = null
 
     init {
-
+        
     }
     override fun getView(): View? {
         TODO("Not yet implemented")
@@ -24,6 +24,8 @@ class HMSHLSPlayer(
 
     override fun onFlutterViewAttached(flutterView: View) {
         super.onFlutterViewAttached(flutterView)
-
+        hlsUrl?.let {
+            hlsPlayer?.play(hlsUrl)
+        }
     }
 }
