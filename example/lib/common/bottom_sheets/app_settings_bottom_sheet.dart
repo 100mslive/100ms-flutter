@@ -481,9 +481,13 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                   ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                        File logFile = await getLogFile;
-                        Share.shareXFiles([XFile(logFile.path)],
-                            text: "HMS Log file");
+                        File? logFile = await getLogFile;
+                        if (logFile != null) {
+                          Share.shareXFiles([XFile(logFile.path)],
+                              text: "HMS Log file");
+                        } else {
+                          Utilities.showToast("No file found");
+                        }
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(

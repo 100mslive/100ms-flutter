@@ -208,7 +208,7 @@ class HmssdkFlutterPlugin :
                 addKeyChangeListener(call, result)
             }
             "remove_key_change_listener" -> {
-                removeKeyChangeListener(call,result)
+                removeKeyChangeListener(call, result)
             }
             else -> {
                 result.notImplemented()
@@ -1258,14 +1258,14 @@ class HmssdkFlutterPlugin :
      * This method is used to remove the attached key change listeners
      * attached using [addKeyChangeListener] method
      */
-    private fun removeKeyChangeListener(call: MethodCall,result: Result) {
+    private fun removeKeyChangeListener(call: MethodCall, result: Result) {
         val uid = call.argument<String>("uid") ?: run {
             HMSErrorLogger.returnArgumentsError("uid is null")
         }
-        //There is no need to call removeKeyChangeListener since
-        //there is no keyChangeListener attached
-        if(hmsKeyChangeObserverList.isEmpty()){
-            result.success(HMSResultExtension.toDictionary(true,null))
+        // There is no need to call removeKeyChangeListener since
+        // there is no keyChangeListener attached
+        if (hmsKeyChangeObserverList.isEmpty()) {
+            result.success(HMSResultExtension.toDictionary(true, null))
             return
         }
 
@@ -1275,12 +1275,12 @@ class HmssdkFlutterPlugin :
                 if (hmsKeyChangeObserver.uid == uid) {
                     hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeObserver.keyChangeListener)
                     hmsKeyChangeObserverList.remove(hmsKeyChangeObserver)
-                    result.success(HMSResultExtension.toDictionary(true,null))
+                    result.success(HMSResultExtension.toDictionary(true, null))
                     return
                 }
             }
-        }?: run {
-            result.success(HMSResultExtension.toDictionary(false,"keyChangeListener uid is null"))
+        } ?: run {
+            result.success(HMSResultExtension.toDictionary(false, "keyChangeListener uid is null"))
         }
     }
 

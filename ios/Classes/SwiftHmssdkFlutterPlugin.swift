@@ -498,7 +498,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         guard let store = sessionStore
         else {
-            HMSErrorLogger.logError(#function,"Session Store is null","NULL ERROR")
+            HMSErrorLogger.logError(#function, "Session Store is null", "NULL ERROR")
             result(HMSErrorExtension.getError("Session Store is null"))
             return
         }
@@ -512,14 +512,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         guard let keys = arguments["keys"] as? [String]
         else {
-            HMSErrorLogger.logError(#function,"No keys passed which can be attached to Key Change Listener on the Session Store. Available arguments: \(arguments)","NULL ERROR")
+            HMSErrorLogger.logError(#function, "No keys passed which can be attached to Key Change Listener on the Session Store. Available arguments: \(arguments)", "NULL ERROR")
             result(HMSErrorExtension.getError("No keys passed which can be attached to Key Change Listener on the Session Store. Available arguments: \(arguments)"))
             return
         }
 
         guard let uid = arguments["uid"] as? String
         else {
-                HMSErrorLogger.logError(#function,"No uid passed for key change listener Available arguments: \(arguments)", "NULL ERROR")
+                HMSErrorLogger.logError(#function, "No uid passed for key change listener Available arguments: \(arguments)", "NULL ERROR")
                 result(HMSErrorExtension.getError("No uid passed for key change listener Available arguments: \(arguments)"))
             return
         }
@@ -547,21 +547,21 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }) { [weak self] observer, error in
 
             if let error = error {
-                HMSErrorLogger.logError(#function,"Error in observing changes for key: \(keys) in the Session Store. Error: \(error.localizedDescription)","KEY CHANGE ERROR")
+                HMSErrorLogger.logError(#function, "Error in observing changes for key: \(keys) in the Session Store. Error: \(error.localizedDescription)", "KEY CHANGE ERROR")
                 result(HMSErrorExtension.getError("Error in observing changes for key: \(keys) in the Session Store. Error: \(error.localizedDescription)"))
                 return
             }
 
             guard let observer = observer
             else {
-                HMSErrorLogger.logError(#function,"Unknown Error in observing changes for key: \(keys) in the Session Store.","KEY CHANGE ERROR")
+                HMSErrorLogger.logError(#function, "Unknown Error in observing changes for key: \(keys) in the Session Store.", "KEY CHANGE ERROR")
                 result(HMSErrorExtension.getError("Unknown Error in observing changes for key: \(keys) in the Session Store."))
                 return
             }
 
             guard let self = self
             else {
-                HMSErrorLogger.logError(#function,"Could not find self instance while observing changes for key: \(keys) in the Session Store.","KEY CHANGE ERROR")
+                HMSErrorLogger.logError(#function, "Could not find self instance while observing changes for key: \(keys) in the Session Store.", "KEY CHANGE ERROR")
                 result(HMSErrorExtension.getError("Could not find self instance while observing changes for key: \(keys) in the Session Store."))
                 return
             }
