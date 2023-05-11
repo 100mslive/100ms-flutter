@@ -100,7 +100,7 @@ class HMSVideoView(
         if (track != null) {
             if (hmsVideoView != null) {
                 // delay addTrack
-//                hmsVideoView?.addTrack(track)
+                hmsVideoView?.addTrack(track)
                 context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId))
             } else {
                 Log.e("HMSVideoView Error", "onAttachedToWindow error hmsVideoView is null")
@@ -114,7 +114,6 @@ class HMSVideoView(
         super.onDetachedFromWindow()
         if (hmsVideoView != null) {
             hmsVideoView?.removeTrack()
-            this.hmsVideoView = null
             context.unregisterReceiver(broadcastReceiver)
         } else {
             Log.e("HMSVideoView error", "onDetachedFromWindow error hmsVideoView is null")
