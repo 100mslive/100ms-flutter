@@ -131,7 +131,7 @@ class MeetingStore extends ChangeNotifier
 
   ScrollController controller = ScrollController();
 
-  MeetingMode meetingMode = MeetingMode.Grid;
+  MeetingMode meetingMode = MeetingMode.ActiveSpeaker;
 
   bool isLandscapeLocked = false;
 
@@ -1032,7 +1032,7 @@ class MeetingStore extends ChangeNotifier
     peerTracks.clear();
     isRoomEnded = true;
     screenShareCount = 0;
-    this.meetingMode = MeetingMode.Grid;
+    this.meetingMode = MeetingMode.ActiveSpeaker;
     isScreenShareOn = false;
     isAudioShareStarted = false;
     _hmsSDKInteractor.removeUpdateListener(this);
