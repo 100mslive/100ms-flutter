@@ -1,5 +1,13 @@
 Board: https://github.com/100mslive/100ms-flutter/projects/19
 
+- Hybrid composition videoview on Android to improve performance
+https://github.com/100mslive/100ms-flutter/pull/1330
+
+- Screen share should be in centre on Flutter Android
+https://github.com/100mslive/100ms-flutter/issues/1068
+
+- Updated Dart & Flutter SDK versions
+https://github.com/100mslive/100ms-flutter/pull/1332
 
 Flutter SDK: 1.7.0
 Android SDK: 2.6.3
