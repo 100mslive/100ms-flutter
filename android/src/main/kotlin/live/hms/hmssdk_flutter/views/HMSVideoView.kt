@@ -23,7 +23,7 @@ class HMSVideoView(
     private val scaleType: Int? = RendererCommon.ScalingType.SCALE_ASPECT_FIT.ordinal,
     private val track: HMSVideoTrack?,
     private val disableAutoSimulcastLayerSelect: Boolean,
-    private val hmssdkFlutterPlugin: HmssdkFlutterPlugin?
+    private val hmssdkFlutterPlugin: HmssdkFlutterPlugin?,
 ) : FrameLayout(context, null) {
 
     private var hmsVideoView: HMSVideoView? = null
@@ -84,14 +84,14 @@ class HMSVideoView(
     }
 
     fun onDisposeCalled() {
-        if (hmsVideoView != null) {
-            hmsVideoView?.removeTrack()
+        if (this.hmsVideoView != null) {
+            this.hmsVideoView?.removeTrack()
         } else {
             Log.e("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
         }
         this.removeView(view)
-        view = null
-        hmsVideoView = null
+        this.view = null
+        this.hmsVideoView = null
         context.unregisterReceiver(broadcastReceiver)
     }
 
@@ -99,6 +99,7 @@ class HMSVideoView(
         super.onAttachedToWindow()
         if (track != null) {
             if (hmsVideoView != null) {
+                // delay addTrack
                 hmsVideoView?.addTrack(track)
                 context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId))
             } else {

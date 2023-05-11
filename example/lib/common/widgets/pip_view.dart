@@ -44,8 +44,7 @@ class _PipViewState extends State<PipView> {
                                                 "REGULAR")
                                             ? ScaleType.SCALE_ASPECT_FIT
                                             : ScaleType.SCALE_ASPECT_FILL,
-                                    setMirror: false,
-                                    matchParent: false),
+                                    setMirror: false),
                               );
                       },
                     ))
