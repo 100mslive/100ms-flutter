@@ -140,7 +140,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                               ScaleType.SCALE_ASPECT_FILL,
                                           track: _previewStore.localTracks[0],
                                           setMirror: true,
-                                          matchParent: false,
                                         )
                                       : Container(
                                           child: Center(
