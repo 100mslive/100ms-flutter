@@ -50,22 +50,22 @@ PODS:
   - Firebase/Performance (10.7.0):
     - Firebase/CoreOnly
     - FirebasePerformance (~> 10.7.0)
-  - firebase_analytics (10.2.1):
+  - firebase_analytics (10.4.0):
     - Firebase/Analytics (= 10.7.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.10.0):
+  - firebase_core (2.12.0):
     - Firebase/CoreOnly (= 10.7.0)
     - Flutter
-  - firebase_crashlytics (3.1.2):
+  - firebase_crashlytics (3.3.0):
     - Firebase/Crashlytics (= 10.7.0)
     - firebase_core
     - Flutter
-  - firebase_dynamic_links (5.1.1):
+  - firebase_dynamic_links (5.3.0):
     - Firebase/DynamicLinks (= 10.7.0)
     - firebase_core
     - Flutter
-  - firebase_performance (0.9.1-1):
+  - firebase_performance (0.9.2):
     - Firebase/Performance (= 10.7.0)
     - firebase_core
     - Flutter
@@ -162,7 +162,7 @@ PODS:
     - GoogleUtilities/Network (~> 7.8)
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - GoogleDataTransport (9.2.2):
+  - GoogleDataTransport (9.2.3):
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
@@ -232,9 +232,9 @@ PODS:
   - qr_code_scanner (0.2.0):
     - Flutter
     - MTBBarcodeScanner
-  - SDWebImage (5.15.6):
-    - SDWebImage/Core (= 5.15.6)
-  - SDWebImage/Core (5.15.6)
+  - SDWebImage (5.15.7):
+    - SDWebImage/Core (= 5.15.7)
+  - SDWebImage/Core (5.15.7)
   - share_plus (0.0.1):
     - Flutter
   - shared_preferences_foundation (0.0.1):
@@ -261,12 +261,12 @@ DEPENDENCIES:
   - hmssdk_flutter (from `.symlinks/plugins/hmssdk_flutter/ios`)
   - image_gallery_saver (from `.symlinks/plugins/image_gallery_saver/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
-  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - pip_flutter (from `.symlinks/plugins/pip_flutter/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
-  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - uni_links (from `.symlinks/plugins/uni_links/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
@@ -330,7 +330,7 @@ EXTERNAL SOURCES:
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
-    :path: ".symlinks/plugins/path_provider_foundation/ios"
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   pip_flutter:
@@ -340,7 +340,7 @@ EXTERNAL SOURCES:
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
   shared_preferences_foundation:
-    :path: ".symlinks/plugins/shared_preferences_foundation/ios"
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   uni_links:
     :path: ".symlinks/plugins/uni_links/ios"
   url_launcher_ios:
@@ -354,11 +354,11 @@ SPEC CHECKSUMS:
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: ce3938a0df3cc1ef404671531facef740d03f920
   Firebase: 0219acf760880eeec8ce479895bd7767466d9f81
-  firebase_analytics: e8e294333de66e5429d4aac365966281b4dbfb7d
-  firebase_core: 18d44f087248303a4a8f05d0099a000c46e3c77a
-  firebase_crashlytics: 621d91c0c5752e8219f8fe05a4d1e76394f4896a
-  firebase_dynamic_links: 464b974eeb7a5b4b7c970062c49a3e39ff924f47
-  firebase_performance: 7dd98298ea2f19f480efd59ccbfcad3972ced984
+  firebase_analytics: 843839cfcab326b37cca084009045a8fc287ef74
+  firebase_core: 312d0d81b346ec20540822c8498e626d6918ef48
+  firebase_crashlytics: 869c43dd16f650004bb312ff9eff8d068406b939
+  firebase_dynamic_links: 6910c165ebf7d30d8f3d5667668049b69a05ccbd
+  firebase_performance: 2a0f7dcea97db730990e16a1e94eecc3280160a8
   FirebaseABTesting: 005b70969e2817e2a1e631e8dba29134a04c0622
   FirebaseAnalytics: f8133442ee6f8512e28ff19e62ce15398bfaeace
   FirebaseCore: e317665b9d744727a97e623edbbed009320afdd7
@@ -374,7 +374,7 @@ SPEC CHECKSUMS:
   flutter_foreground_task: 21ef182ab0a29a3005cc72cd70e5f45cb7f7f817
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   GoogleAppMeasurement: fe17c92a32207dd5cdd4e8d742767f2da74857f6
-  GoogleDataTransport: 8378d1fa8ac49753ea6ce70d65a7cb70ce5f66e6
+  GoogleDataTransport: f0308f5905a745f94fb91fea9c6cbaf3831cb1bd
   GoogleUtilities: 9aa0ad5a7bc171f8bae016300bfcfa3fb8425749
   HLSCachingReverseProxyServer: 59935e1e0244ad7f3375d75b5ef46e8eb26ab181
   HMSAnalyticsSDK: 4d2a88a729b1eb42f3d25f217c28937ec318a5b7
@@ -386,7 +386,7 @@ SPEC CHECKSUMS:
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
-  path_provider_foundation: c68054786f1b4f3343858c1e1d0caaded73f0be9
+  path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
   PINCache: 7a8fc1a691173d21dbddbf86cd515de6efa55086
   PINOperation: daa34d4aa1d8449089be7d405b9d974abc4724c6
@@ -394,9 +394,9 @@ SPEC CHECKSUMS:
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   PromisesSwift: cf9eb58666a43bbe007302226e510b16c1e10959
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
-  SDWebImage: d47d81bea8a77187896b620dc79c3c528e8906b9
+  SDWebImage: 25bac438318faf37e35650619ebc288a9061d292
   share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
-  shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
+  shared_preferences_foundation: e2dae3258e06f44cc55f49d42024fd8dd03c590c
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
