@@ -16,7 +16,7 @@ class HMSVideoTrackSetting {
   /// [trackInitialState] property to set the initial state of the video track i.e Mute/Unmute.
   final HMSTrackInitState? trackInitialState;
 
-  /// [forceSoftwareDecoder] property to use software decoder. By default it's set to false.(Android Only)
+  /// [forceSoftwareDecoder] property to use software decoder. By default it's set to false. This property is available only on Android.
   final bool? forceSoftwareDecoder;
 
   HMSVideoTrackSetting(

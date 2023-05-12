@@ -42,7 +42,6 @@ class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
   @override
   Widget build(BuildContext context) {
     String message = "Route the audio output to";
-    double width = MediaQuery.of(context).size.width;
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       actionsPadding: EdgeInsets.only(left: 20, right: 20, bottom: 10),

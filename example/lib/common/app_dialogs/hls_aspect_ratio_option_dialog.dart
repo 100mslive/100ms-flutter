@@ -13,7 +13,7 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class AspectRatioOptionDialog extends StatefulWidget {
   final List<String> availableAspectRatios;
-  MeetingStore meetingStore;
+  final MeetingStore meetingStore;
   AspectRatioOptionDialog({
     required this.availableAspectRatios,
     required this.meetingStore,

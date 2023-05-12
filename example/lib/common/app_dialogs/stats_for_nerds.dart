@@ -60,7 +60,6 @@ class _StatsForNerdsState extends State<StatsForNerds> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       actionsPadding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
