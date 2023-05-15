@@ -45,15 +45,13 @@ class HMSHLSPlayer extends StatelessWidget {
   ///
   /// To use,import package:`hmssdk_flutter/ui/meeting/hms_hls_player.dart`.
   ///
-  HMSHLSPlayer(
-      {Key? key,
-      this.hlsUrl})
-      : super(key: key);
+  HMSHLSPlayer({Key? key, this.hlsUrl}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return _PlatformView(
-      hlsUrl: hlsUrl
+      hlsUrl: hlsUrl,
+      key: key,
     );
   }
 }
@@ -61,10 +59,7 @@ class HMSHLSPlayer extends StatelessWidget {
 class _PlatformView extends StatelessWidget {
   final String? hlsUrl;
 
-  _PlatformView(
-      {Key? key,
-      this.hlsUrl})
-      : super(key: key);
+  _PlatformView({Key? key, this.hlsUrl}) : super(key: key);
 
   void onPlatformViewCreated(int id) {}
 
@@ -73,12 +68,11 @@ class _PlatformView extends StatelessWidget {
     ///AndroidView for android it uses surfaceRenderer provided internally by webrtc.
     if (Platform.isAndroid) {
       return AndroidView(
+        key: key,
         viewType: 'HMSHLSPlayer',
         onPlatformViewCreated: onPlatformViewCreated,
         creationParamsCodec: StandardMessageCodec(),
-        creationParams: {
-           'hls_url': hlsUrl 
-        },
+        creationParams: {'hls_url': hlsUrl},
         gestureRecognizers: {},
       );
     } else if (Platform.isIOS) {
@@ -87,9 +81,7 @@ class _PlatformView extends StatelessWidget {
         viewType: 'HMSHLSPlayer',
         onPlatformViewCreated: onPlatformViewCreated,
         creationParamsCodec: StandardMessageCodec(),
-        creationParams: {
-          'hls_url': hlsUrl 
-        },
+        creationParams: {'hls_url': hlsUrl},
         gestureRecognizers: {},
       );
     } else {

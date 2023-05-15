@@ -13,8 +13,12 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/enum/hms_hls_playback_event_method.dart';
+import 'package:hmssdk_flutter/src/enum/hms_hls_playback_state.dart';
 import 'package:hmssdk_flutter/src/enum/hms_key_change_listener_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
+import 'package:hmssdk_flutter/src/model/hms_hls_cue.dart';
+import 'package:hmssdk_flutter/src/model/hms_hls_playback_event_listener.dart';
 import 'package:hmssdk_flutter/src/model/hms_key_change_observer.dart';
 
 class PlatformService {
@@ -40,6 +44,10 @@ class PlatformService {
   static const EventChannel _sessionStoreChannel =
       const EventChannel("session_event_channel");
 
+  ///used to get stream of session store changes
+  static const EventChannel _hlsPlayerChannel =
+      const EventChannel("hls_player_channel");
+
   ///add meeting listeners.
   static List<HMSUpdateListener> updateListeners = [];
 
@@ -49,6 +57,8 @@ class PlatformService {
   static List<HMSPreviewListener> previewListeners = [];
 
   static List<HMSKeyChangeObserver> keyChangeObservers = [];
+
+  static List<HMSHLSPlaybackEventsListener> hlsPlaybackEventListener = [];
 
   ///List for event Listener
   static List<HMSStatsListener> statsListeners = [];
@@ -125,6 +135,16 @@ class PlatformService {
           action: "Listener Error",
           isTerminal: true);
     }
+  }
+
+  static void addHLSPlaybackEventListener(
+      HMSHLSPlaybackEventsListener hmshlsPlaybackEventsListener) {
+    hlsPlaybackEventListener.add(hmshlsPlaybackEventsListener);
+  }
+
+  static void removeHLSPlaybackEventListener(
+      HMSHLSPlaybackEventsListener hmshlsPlaybackEventsListener) {
+    hlsPlaybackEventListener.remove(hmshlsPlaybackEventsListener);
   }
 
   ///used to invoke different methods at platform side and returns something but not neccessarily
@@ -478,6 +498,17 @@ class PlatformService {
           break;
       }
     });
+
+    _hlsPlayerChannel
+        .receiveBroadcastStream({'name': 'hls_player'}).map((event) {
+      HMSHLSPlaybackEventMethod method =
+          HMSHLSPlaybackEventMethodValues.getMethodFromName(
+              event['event_name']);
+      Map data = event['data'];
+      return HMSHLSPlayerPlaybackEventResponse(method: method, data: data);
+    }).listen((event) {
+      notifyHLSPlaybackEventListeners(event.method, event.data);
+    });
   }
 
   static void notifyLogsUpdateListeners(
@@ -651,6 +682,26 @@ class PlatformService {
         }
         break;
       case HMSKeyChangeListenerMethod.unknown:
+        break;
+    }
+  }
+
+  static void notifyHLSPlaybackEventListeners(
+      HMSHLSPlaybackEventMethod method, Map arguments) {
+    switch (method) {
+      case HMSHLSPlaybackEventMethod.onPlaybackFailure:
+        hlsPlaybackEventListener
+            .forEach((e) => e.onPlaybackFailure(error: arguments["error"]));
+        break;
+      case HMSHLSPlaybackEventMethod.onPlaybackStateChanged:
+        hlsPlaybackEventListener.forEach((e) => e.onPlaybackStateChanged(
+            playbackState: HMSHLSPlaybackStateValues.getMethodFromName(
+                arguments["playback_state"])));
+        break;
+      case HMSHLSPlaybackEventMethod.onCue:
+        hlsPlaybackEventListener.forEach((e) => e.onCue(hlsCue: HMSHLSCue.fromMap(arguments)));
+        break;
+      case HMSHLSPlaybackEventMethod.unknown:
         break;
     }
   }

@@ -21,6 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.methods.*
+import live.hms.hmssdk_flutter.views.HMSHLSPlayerFactory
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
 import live.hms.video.audio.HMSAudioManager.*
 import live.hms.video.connection.stats.*
@@ -55,18 +56,22 @@ class HmssdkFlutterPlugin :
     private var logsEventChannel: EventChannel? = null
     private var rtcStatsChannel: EventChannel? = null
     private var sessionStoreChannel: EventChannel? = null
+    var hlsPlayerChannel: EventChannel? = null
     private var eventSink: EventChannel.EventSink? = null
     private var previewSink: EventChannel.EventSink? = null
     private var logsSink: EventChannel.EventSink? = null
     private var rtcSink: EventChannel.EventSink? = null
     private var sessionStoreSink: EventChannel.EventSink? = null
+    var hlsPlayerSink : EventChannel.EventSink? = null
     private lateinit var activity: Activity
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
+    private lateinit var hmsHLSPlayerFactory: HMSHLSPlayerFactory
     private var requestChange: HMSRoleChangeRequest? = null
     var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
     private var hmsSessionStore: HmsSessionStore? = null
     private var hmsKeyChangeObserverList = ArrayList<HMSKeyChangeObserver>()
+    var hlsStreamUrl: String? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         if (hmssdkFlutterPlugin == null) {
@@ -85,17 +90,27 @@ class HmssdkFlutterPlugin :
             this.sessionStoreChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "session_event_channel")
 
+            this.hlsPlayerChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger,"hls_player_channel")
+
             this.meetingEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Meeting event channel not found")
             this.channel?.setMethodCallHandler(this) ?: Log.e("Channel Error", "Event channel not found")
             this.previewChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Preview channel not found")
             this.logsEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Logs event channel not found")
             this.rtcStatsChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "RTC Stats channel not found")
             this.sessionStoreChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Session Store channel not found")
+            this.hlsPlayerChannel?.setStreamHandler(this)?:Log.e("Channel Error", "HLS Player channel not found")
             this.hmsVideoFactory = HMSVideoViewFactory(this)
+            this.hmsHLSPlayerFactory = HMSHLSPlayerFactory(this)
 
             flutterPluginBinding.platformViewRegistry.registerViewFactory(
                 "HMSVideoView",
                 hmsVideoFactory,
+            )
+
+            flutterPluginBinding.platformViewRegistry.registerViewFactory(
+                "HMSHLSPlayer",
+                hmsHLSPlayerFactory
             )
             hmssdkFlutterPlugin = this
         } else {
@@ -209,6 +224,9 @@ class HmssdkFlutterPlugin :
             }
             "remove_key_change_listener" -> {
                 removeKeyChangeListener(call, result)
+            }
+            "start_hls_player","stop_hls_player","pause_hls_player","resume_hls_player","seek_to_live_position","seek_forward","seek_backward" -> {
+                HMSHLSPlayerAction.hlsPlayerAction(call, result, activity)
             }
             else -> {
                 result.notImplemented()
@@ -384,11 +402,13 @@ class HmssdkFlutterPlugin :
             logsEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Logs event channel not found")
             rtcStatsChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "RTC Stats channel not found")
             sessionStoreChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Session Store channel not found")
+            hlsPlayerChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "HLS Player channel not found")
             eventSink = null
             previewSink = null
             rtcSink = null
             logsSink = null
             sessionStoreSink = null
+            hlsPlayerSink = null
             hmssdkFlutterPlugin = null
         } else {
             Log.e("Plugin Error", "hmssdkFlutterPlugin is null in onDetachedFromEngine")
@@ -491,6 +511,8 @@ class HmssdkFlutterPlugin :
             this.rtcSink = events
         } else if (nameOfEventSink == "session_store") {
             this.sessionStoreSink = events
+        } else if (nameOfEventSink == "hls_player") {
+            this.hlsPlayerSink = events
         }
     }
 
@@ -796,6 +818,23 @@ class HmssdkFlutterPlugin :
 
         override fun onJoin(room: HMSRoom) {
             hmssdk!!.addAudioObserver(hmsAudioListener)
+
+            /**
+             * This sets the [hlsStreamUrl] variable to
+             * fetch the stream URL directly from onRoomUpdate
+             * This helps to play the HLS Stream even if user doesn't send
+             * the stream URL.
+             */
+            room.hlsStreamingState?.let { streamingState ->
+                if(streamingState.running){
+                    streamingState.variants?.let { variants ->
+                        if(variants.isNotEmpty()){
+                            hlsStreamUrl = variants[0].hlsStreamUrl
+                        }
+                    }
+                }
+            }
+
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_join_room")
 
@@ -843,6 +882,24 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {
+
+            /**
+             * This sets the [hlsStreamUrl] variable to
+             * fetch the stream URL directly from onRoomUpdate
+             * This helps to play the HLS Stream even if user doesn't send
+             * the stream URL.
+             */
+            if(type == HMSRoomUpdate.HLS_STREAMING_STATE_UPDATED){
+                hmsRoom.hlsStreamingState?.let { streamingState ->
+                    if(streamingState.running){
+                        streamingState.variants?.let { variants ->
+                            if(variants.isNotEmpty()){
+                                hlsStreamUrl = variants[0].hlsStreamUrl
+                            }
+                        }
+                    }
+                }
+            }
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_room_update")
             args.put("data", HMSRoomUpdateExtension.toDictionary(hmsRoom, type))

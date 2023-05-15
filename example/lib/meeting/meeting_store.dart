@@ -7,6 +7,8 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:hmssdk_flutter/src/model/hms_hls_cue.dart';
+import 'package:hmssdk_flutter/src/enum/hms_hls_playback_state.dart';
 import 'package:hmssdk_flutter_example/common/util/log_writer.dart';
 import 'package:hmssdk_flutter_example/app_secrets.dart';
 import 'package:hmssdk_flutter_example/enum/session_store_key.dart';
@@ -40,7 +42,8 @@ class MeetingStore extends ChangeNotifier
         HMSActionResultListener,
         HMSStatsListener,
         HMSLogListener,
-        HMSKeyChangeListener {
+        HMSKeyChangeListener,
+        HMSHLSPlaybackEventsListener {
   late HMSSDKInteractor _hmsSDKInteractor;
 
   MeetingStore({required HMSSDKInteractor hmsSDKInteractor}) {
@@ -244,6 +247,7 @@ class MeetingStore extends ChangeNotifier
 
     _hmsSDKInteractor.addUpdateListener(this);
     _hmsSDKInteractor.addLogsListener(this);
+    HMSHLSPlayerController.addHMSHLSPlaybackEventsListener(this);
     WidgetsBinding.instance.addObserver(this);
     _hmsSDKInteractor.join(config: roomConfig);
     this.meetingUrl = roomUrl;
@@ -1027,6 +1031,7 @@ class MeetingStore extends ChangeNotifier
     }
     _hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeListener: this);
     _hmsSDKInteractor.removeHMSLogger();
+    HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(this);
     _hmsSDKInteractor.destroy();
     _hmsSessionStore = null;
     peerTracks.clear();
@@ -2022,5 +2027,62 @@ class MeetingStore extends ChangeNotifier
         name: "SDK_Logs", parameters: {"data": hmsLogList.toString()});
     applicationLogs.hmsLog.addAll(hmsLogList.hmsLog);
     notifyListeners();
+  }
+
+  String getEmojiFromId(Map metadata) {
+    String emoji = "";
+    switch (metadata["emojiId"]) {
+      case "+1":
+        emoji = "👍";
+        break;
+      case "-1":
+        emoji = "👎";
+        break;
+      case "wave":
+        emoji = "👋";
+        break;
+      case "clap":
+        emoji = "👏";
+        break;
+      case "fire":
+        emoji = "🔥";
+        break;
+      case "tada":
+        emoji = "🎉";
+        break;
+      case "heart_eyes":
+        emoji = "😍";
+        break;
+      case "joy":
+        emoji = "😂";
+        break;
+      case "open_mouth":
+        emoji = "😮";
+        break;
+      case "sob":
+        emoji = "😭";
+        break;
+      default:
+        break;
+    }
+    return emoji;
+  }
+
+  @override
+  void onCue({required HMSHLSCue hlsCue}) {
+    log("onCue called");
+    Utilities.showToast(hlsCue.payload??"");
+  }
+
+  @override
+  void onPlaybackFailure({required String? error}) {
+    log("onPlaybackFailure called");
+    Utilities.showToast("Playback state changed to $error");
+  }
+
+  @override
+  void onPlaybackStateChanged({required HMSHLSPlaybackState playbackState}) {
+    log("onPlaybackStateChanged called");
+    Utilities.showToast("Playback state changed to ${playbackState.name}");
   }
 }

@@ -18,10 +18,8 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class HLSViewerPage extends StatefulWidget {
-  final String? streamUrl;
 
   HLSViewerPage({
-    this.streamUrl,
     Key? key,
   }) : super(key: key);
   @override
@@ -102,26 +100,12 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                         selector: (_, meetingStore) => Tuple2(
                             meetingStore.isPipActive,
                             meetingStore.hasHlsStarted),
-                        builder: (_, data, __) {
-                          if (!context
-                                  .read<MeetingStore>()
-                                  .isHLSPlayerRequired &&
-                              !data.item1) {
-                            return Center(
-                              child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 8.0),
-                                  child: TitleText(
-                                      text:
-                                          "Please Switch to normal mode for viewing the stream",
-                                      textColor: themeDefaultColor)),
-                            );
-                          }
-                          return (data.item2 || widget.streamUrl != null)
+                        builder: (_, hlsData, __) {
+                          return (hlsData.item2)
                               ? Container(
                                   height: MediaQuery.of(context).size.height,
                                   child: Center(
                                     child: HLSPlayer(
-                                      streamUrl: widget.streamUrl,
                                       ratio: Utilities.getHLSPlayerDefaultRatio(
                                           MediaQuery.of(context).size),
                                     ),

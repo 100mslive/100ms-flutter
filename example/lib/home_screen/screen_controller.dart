@@ -65,23 +65,21 @@ class _ScreenControllerState extends State<ScreenController> {
 
   @override
   Widget build(BuildContext context) {
-    if ((Provider.of<MeetingStore>(context).localPeer != null &&
-            Provider.of<MeetingStore>(context)
-                .localPeer!
-                .role
-                .name
-                .contains("hls-")) ||
-        ((widget.role?.name.contains("hls-") ?? false) &&
-            widget.streamUrl != null)) {
-      return HLSViewerPage(
-        streamUrl: widget.streamUrl,
-      );
+    if (widget.role?.name.contains("hls-") ?? false) {
+      return HLSViewerPage();
     } else {
-      return MeetingPage(
-        isStreamingLink: widget.isStreamingLink,
-        meetingLink: widget.meetingLink,
-        isRoomMute: widget.isRoomMute,
-      );
+      return Selector<MeetingStore, String?>(
+          selector: (_, meetingStore) => meetingStore.localPeer?.role.name,
+          builder: (_, role, __) {
+            if (role?.contains("hls-") ?? false) {
+              return HLSViewerPage();
+            }
+            return MeetingPage(
+              isStreamingLink: widget.isStreamingLink,
+              meetingLink: widget.meetingLink,
+              isRoomMute: widget.isRoomMute,
+            );
+          });
     }
   }
 }

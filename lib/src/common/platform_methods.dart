@@ -173,7 +173,14 @@ enum PlatformMethod {
   getSessionMetadataForKey,
   setSessionMetadataForKey,
   addKeyChangeListener,
-  removeKeyChangeListener
+  removeKeyChangeListener,
+  start,
+  stop,
+  pause,
+  resume,
+  seekToLivePosition,
+  seekForward,
+  seekBackward
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -421,6 +428,20 @@ extension PlatformMethodValues on PlatformMethod {
         return "add_key_change_listener";
       case PlatformMethod.removeKeyChangeListener:
         return "remove_key_change_listener";
+      case PlatformMethod.start:
+        return "start_hls_player";
+      case PlatformMethod.stop:
+        return "stop_hls_player";
+      case PlatformMethod.pause:
+        return "pause_hls_player";
+      case PlatformMethod.resume:
+        return "resume_hls_player";
+      case PlatformMethod.seekToLivePosition:
+        return "seek_to_live_position";
+      case PlatformMethod.seekForward:
+        return "seek_forward";
+      case PlatformMethod.seekBackward:
+        return "seek_backward";
       default:
         return 'unknown';
     }
@@ -670,6 +691,20 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.addKeyChangeListener;
       case "remove_key_change_listener":
         return PlatformMethod.removeKeyChangeListener;
+      case "start_hls_player":
+        return PlatformMethod.start;
+      case "stop_hls_player":
+        return PlatformMethod.stop;
+      case "pause_hls_player":
+        return PlatformMethod.pause;
+      case "resume_hls_player":
+        return PlatformMethod.resume;
+      case "seek_to_live_position":
+        return PlatformMethod.seekToLivePosition;
+      case "seek_forward":
+        return PlatformMethod.seekForward;
+      case "seek_backward":
+        return PlatformMethod.seekBackward;
       default:
         return PlatformMethod.unknown;
     }
