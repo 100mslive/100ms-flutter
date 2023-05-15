@@ -3,7 +3,6 @@ package live.hms.hmssdk_flutter.views
 import android.content.Context
 import android.util.Log
 import android.view.View
-import android.widget.FrameLayout
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.platform.PlatformViewFactory
@@ -35,19 +34,6 @@ class HMSVideoViewWidget(
 
     override fun getView(): View? {
         return hmsVideoView
-    }
-
-    override fun onFlutterViewAttached(flutterView: View) {
-        super.onFlutterViewAttached(flutterView)
-        var frameLayoutParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT,
-        )
-        if (view != null) {
-            view?.layoutParams = frameLayoutParams
-        } else {
-            Log.e("HMSVideoView error", "onFlutterViewAttached error view is null")
-        }
     }
 
     override fun dispose() {
