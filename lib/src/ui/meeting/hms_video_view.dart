@@ -2,8 +2,12 @@
 import 'dart:io' show Platform;
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show StandardMessageCodec;
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart'
+    show AndroidViewController, PlatformViewsService, StandardMessageCodec;
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -83,6 +87,7 @@ class HMSVideoView extends StatelessWidget {
       {Key? key,
       required this.track,
       this.setMirror = false,
+      @Deprecated("matchParent is not longer necessary and will be removed in future version")
       this.matchParent = true,
       this.scaleType = ScaleType.SCALE_ASPECT_FIT,
       this.disableAutoSimulcastLayerSelect = false})
@@ -123,19 +128,34 @@ class _PlatformView extends StatelessWidget {
   Widget build(BuildContext context) {
     ///AndroidView for android it uses surfaceRenderer provided internally by webrtc.
     if (Platform.isAndroid) {
-      return AndroidView(
-        viewType: 'HMSVideoView',
-        onPlatformViewCreated: onPlatformViewCreated,
-        creationParamsCodec: StandardMessageCodec(),
-        creationParams: {
-          'track_id': track.trackId,
-          'set_mirror': track.source != "REGULAR" ? false : setMirror,
-          'scale_type': scaleType.value,
-          'match_parent': matchParent,
-          'disable_auto_simulcast_layer_select': disableAutoSimulcastLayerSelect
-        },
-        gestureRecognizers: {},
-      );
+      return PlatformViewLink(
+          surfaceFactory: (context, controller) {
+            return AndroidViewSurface(
+              controller: controller as AndroidViewController,
+              gestureRecognizers: const <
+                  Factory<OneSequenceGestureRecognizer>>{},
+              hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+            );
+          },
+          onCreatePlatformView: (params) {
+            return PlatformViewsService.initAndroidView(
+              id: params.id,
+              viewType: 'HMSVideoView',
+              layoutDirection: TextDirection.ltr,
+              creationParams: {
+                'track_id': track.trackId,
+                'set_mirror': track.source != "REGULAR" ? false : setMirror,
+                'scale_type': scaleType.value,
+                'match_parent': matchParent,
+                'disable_auto_simulcast_layer_select':
+                    disableAutoSimulcastLayerSelect
+              },
+              creationParamsCodec: const StandardMessageCodec(),
+            )
+              ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+              ..create();
+          },
+          viewType: 'HMSVideoView');
     } else if (Platform.isIOS) {
       ///UIKitView for ios it uses VideoView provided by 100ms ios_sdk internally.
       return UiKitView(

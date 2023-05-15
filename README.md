@@ -246,6 +246,14 @@ abstract class HMSUpdateListener {
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice});
+      
+      
+  /// Whenever a user joins a room [onSessionStoreAvailable] is fired to get an instance of [HMSSessionStore]
+  /// which can be used to perform session metadata operations
+  /// - Parameters:
+  ///   - hmsSessionStore: An instance of HMSSessionStore which will be used to call session metadata methods
+  void onSessionStoreAvailable(
+      {HMSSessionStore? hmsSessionStore});
 }
 ```
 
