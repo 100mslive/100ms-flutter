@@ -17,11 +17,6 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
   late Animation<double> fadeInFadeOut;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: GlobalKey(),

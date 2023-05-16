@@ -432,14 +432,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                     ListenableProvider.value(
                                                       value: _meetingStore,
                                                       child: ScreenController(
-                                                        streamUrl: _previewStore
-                                                                .isHLSStreamingStarted
-                                                            ? _previewStore
-                                                                .room
-                                                                ?.hmshlsStreamingState
-                                                                ?.variants[0]
-                                                                ?.hlsStreamUrl
-                                                            : null,
                                                         isRoomMute:
                                                             _previewStore
                                                                 .isRoomMute,

@@ -1,4 +1,4 @@
-package live.hms.hmssdk_flutter.methods
+package live.hms.hmssdk_flutter.hls_player
 
 import android.app.Activity
 import android.content.Intent

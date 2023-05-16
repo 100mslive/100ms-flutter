@@ -1,5 +1,6 @@
 //Package imports
 
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as Math;
@@ -2029,60 +2030,21 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  String getEmojiFromId(Map metadata) {
-    String emoji = "";
-    switch (metadata["emojiId"]) {
-      case "+1":
-        emoji = "👍";
-        break;
-      case "-1":
-        emoji = "👎";
-        break;
-      case "wave":
-        emoji = "👋";
-        break;
-      case "clap":
-        emoji = "👏";
-        break;
-      case "fire":
-        emoji = "🔥";
-        break;
-      case "tada":
-        emoji = "🎉";
-        break;
-      case "heart_eyes":
-        emoji = "😍";
-        break;
-      case "joy":
-        emoji = "😂";
-        break;
-      case "open_mouth":
-        emoji = "😮";
-        break;
-      case "sob":
-        emoji = "😭";
-        break;
-      default:
-        break;
-    }
-    return emoji;
-  }
-
   @override
   void onCue({required HMSHLSCue hlsCue}) {
-    log("onCue called");
-    Utilities.showToast(hlsCue.payload??"");
+    if (hlsCue.payload != null) {
+      final Map<String, dynamic> data = jsonDecode(hlsCue.payload!);
+      Utilities.showToast(Utilities.getTimedMetadataEmojiFromId(data["emojiId"]));
+    }
   }
 
   @override
   void onPlaybackFailure({required String? error}) {
-    log("onPlaybackFailure called");
-    Utilities.showToast("Playback state changed to $error");
+    Utilities.showToast("Playback failure $error");
   }
 
   @override
   void onPlaybackStateChanged({required HMSHLSPlaybackState playbackState}) {
-    log("onPlaybackStateChanged called");
     Utilities.showToast("Playback state changed to ${playbackState.name}");
   }
 }

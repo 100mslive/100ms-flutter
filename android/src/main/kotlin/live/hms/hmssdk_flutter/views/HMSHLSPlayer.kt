@@ -127,7 +127,6 @@ class HMSHLSPlayer(
                             object : HmsHlsPlaybackEvents{
                                 val hashMap: HashMap<String, Any?> = HashMap()
                                 override fun onPlaybackFailure(error : HmsHlsException) {
-                                    Log.d("HMSHLSPLAYER","From App, error: ${error.error.localizedMessage}")
                                     val args: HashMap<String, String?> = HashMap()
                                     hashMap["event_name"] = "on_playback_failure"
                                     args["error"] = error.error.localizedMessage
@@ -138,7 +137,6 @@ class HMSHLSPlayer(
                                 }
 
                                 override fun onPlaybackStateChanged(p1 : HmsHlsPlaybackState){
-                                    Log.d("HMSHLSPLAYER","From App, playback state: $p1")
                                     hashMap["event_name"] = "on_playback_state_changed"
                                     hashMap["data"] = HMSHLSPlaybackStateExtension.toDictionary(p1)
                                     if(hashMap["data"]!= null){
@@ -149,7 +147,6 @@ class HMSHLSPlayer(
                                 }
 
                                 override fun onCue(hlsCue : HmsHlsCue) {
-                                    Log.d("HMSHLSPLAYER","From App, onCue: ${hlsCue.payloadval}")
                                     hashMap["event_name"] = "on_cue"
                                     hashMap["data"] = HMSHLSCueExtension.toDictionary(hlsCue)
                                     if(hashMap["data"]!= null){

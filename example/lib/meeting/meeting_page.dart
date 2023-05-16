@@ -52,26 +52,6 @@ class _MeetingPageState extends State<MeetingPage> {
   void initState() {
     super.initState();
     checkAudioState();
-    _initForegroundTask();
-  }
-
-  void _initForegroundTask() {
-    FlutterForegroundTask.init(
-        androidNotificationOptions: AndroidNotificationOptions(
-            channelId: '100ms_flutter_notification',
-            channelName: '100ms Flutter Notification',
-            channelDescription:
-                'This notification appears when the foreground service is running.',
-            channelImportance: NotificationChannelImportance.LOW,
-            priority: NotificationPriority.LOW,
-            iconData: const NotificationIconData(
-              resType: ResourceType.mipmap,
-              resPrefix: ResourcePrefix.ic,
-              name: 'launcher',
-            )),
-        iosNotificationOptions:
-            const IOSNotificationOptions(showNotification: false),
-        foregroundTaskOptions: const ForegroundTaskOptions());
   }
 
   void checkAudioState() async {

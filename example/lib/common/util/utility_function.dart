@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
@@ -256,5 +257,51 @@ class Utilities {
                     ? HMSTrackInitState.MUTED
                     : HMSTrackInitState.UNMUTED,
                 forceSoftwareDecoder: isSoftwareDecoderDisabled));
+  }
+
+  static String getTimedMetadataEmojiFromId(String emojiId) {
+    switch (emojiId) {
+      case "+1":
+        return "👍";
+      case "-1":
+        return "👎";
+      case "wave":
+        return "👋";
+      case "clap":
+        return "👏";
+      case "fire":
+        return "🔥";
+      case "tada":
+        return "🎉";
+      case "heart_eyes":
+        return "😍";
+      case "joy":
+        return "😂";
+      case "open_mouth":
+        return "😮";
+      case "sob":
+        return "😭";
+      default:
+        return "";
+    }
+  }
+
+  static void initForegroundTask() {
+    FlutterForegroundTask.init(
+        androidNotificationOptions: AndroidNotificationOptions(
+            channelId: '100ms_flutter_notification',
+            channelName: '100ms Flutter Notification',
+            channelDescription:
+                'This notification appears when the foreground service is running.',
+            channelImportance: NotificationChannelImportance.LOW,
+            priority: NotificationPriority.LOW,
+            iconData: const NotificationIconData(
+              resType: ResourceType.mipmap,
+              resPrefix: ResourcePrefix.ic,
+              name: 'launcher',
+            )),
+        iosNotificationOptions:
+            const IOSNotificationOptions(showNotification: false),
+        foregroundTaskOptions: const ForegroundTaskOptions());
   }
 }
