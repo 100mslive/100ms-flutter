@@ -148,8 +148,7 @@ class _AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
                   }
                   Utilities.showToast(
                       "Player aspect ratio changed to $valueChoose");
-                  widget.meetingStore
-                      .setPIPVideoController(true, aspectRatio: ratio);
+                  widget.meetingStore.setAspectRatio(ratio);
                   Navigator.pop(context);
                 }
               },

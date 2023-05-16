@@ -44,7 +44,6 @@ dependencies:
   draggable_widget:
   badges:
   url_launcher:
-  pip_flutter:
   share_plus:
   flutter_linkify:
   flutter_foreground_task:

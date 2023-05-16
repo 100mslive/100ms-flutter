@@ -129,14 +129,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
-  csslib:
-    dependency: transitive
-    description:
-      name: csslib
-      sha256: b36c7f7e24c0bdf1bf9a3da461c837d1de64b9f8beb190c9011d8c72a3dfd745
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.17.2"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -360,14 +352,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_widget_from_html_core:
-    dependency: transitive
-    description:
-      name: flutter_widget_from_html_core
-      sha256: e8f4f8b461a140ffb7c71f938bc76efc758893e7468843d9dbf70cb0b9e900cb
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.8.5+3"
   focus_detector:
     dependency: "direct main"
     description:
@@ -376,14 +360,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-  fwfh_text_style:
-    dependency: transitive
-    description:
-      name: fwfh_text_style
-      sha256: "37806ee0222f79b6e8d4c698c322c897eae6a817258156f40aeece4e588fac60"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.22.08+1"
   google_fonts:
     dependency: "direct main"
     description:
@@ -399,14 +375,6 @@ packages:
       relative: true
     source: path
     version: "1.7.0"
-  html:
-    dependency: transitive
-    description:
-      name: html
-      sha256: "58e3491f7bf0b6a4ea5110c0c688877460d1a6366731155c4a4580e7ded773e8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.15.3"
   http:
     dependency: "direct main"
     description:
@@ -599,14 +567,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.6"
-  pedantic:
-    dependency: transitive
-    description:
-      name: pedantic
-      sha256: "67fc27ed9639506c856c840ccce7594d0bdcd91bc8d53d6e52359449a1d50602"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.11.1"
   permission_handler:
     dependency: "direct main"
     description:
@@ -655,14 +615,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
-  pip_flutter:
-    dependency: "direct main"
-    description:
-      name: pip_flutter
-      sha256: "1e5ac5c8c33199039399fb630586a75ea5f1612f2c1818f337c54d4e92033fa0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.3"
   platform:
     dependency: transitive
     description:
