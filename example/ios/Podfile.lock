@@ -191,13 +191,13 @@ PODS:
     - PINCache (>= 3.0.1-beta.3)
   - HMSAnalyticsSDK (0.0.2)
   - HMSBroadcastExtensionSDK (0.0.9)
-  - HMSSDK (0.9.3):
+  - HMSSDK (0.9.4):
     - HMSAnalyticsSDK (= 0.0.2)
     - HMSWebRTC (= 1.0.5116)
   - hmssdk_flutter (1.7.0):
     - Flutter
     - HMSBroadcastExtensionSDK (= 0.0.9)
-    - HMSSDK (= 0.9.3)
+    - HMSSDK (= 0.9.4)
   - HMSWebRTC (1.0.5116)
   - image_gallery_saver (1.5.0):
     - Flutter
@@ -232,9 +232,9 @@ PODS:
   - qr_code_scanner (0.2.0):
     - Flutter
     - MTBBarcodeScanner
-  - SDWebImage (5.15.7):
-    - SDWebImage/Core (= 5.15.7)
-  - SDWebImage/Core (5.15.7)
+  - SDWebImage (5.15.8):
+    - SDWebImage/Core (= 5.15.8)
+  - SDWebImage/Core (5.15.8)
   - share_plus (0.0.1):
     - Flutter
   - shared_preferences_foundation (0.0.1):
@@ -379,8 +379,8 @@ SPEC CHECKSUMS:
   HLSCachingReverseProxyServer: 59935e1e0244ad7f3375d75b5ef46e8eb26ab181
   HMSAnalyticsSDK: 4d2a88a729b1eb42f3d25f217c28937ec318a5b7
   HMSBroadcastExtensionSDK: d80fe325f6c928bd8e5176290b5a4b7ae15d6fbb
-  HMSSDK: 0b25c97c4575e19e0e20acc49ca5fa8bdf1df626
-  hmssdk_flutter: ba9d4214c3acaf3d262c620df8d12bdecebb677d
+  HMSSDK: fc0bc12a4d44fd3104a3447639e7967ba6451167
+  hmssdk_flutter: 98648fda16ad29d1500cbcbef2b8d58d3ccbec47
   HMSWebRTC: ae54e9dd91b869051b283b43b14f57d43b7bf8e1
   image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
@@ -394,7 +394,7 @@ SPEC CHECKSUMS:
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   PromisesSwift: cf9eb58666a43bbe007302226e510b16c1e10959
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
-  SDWebImage: 25bac438318faf37e35650619ebc288a9061d292
+  SDWebImage: cb032eba469c54e0000e78bcb0a13cdde0a52798
   share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
   shared_preferences_foundation: e2dae3258e06f44cc55f49d42024fd8dd03c590c
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
