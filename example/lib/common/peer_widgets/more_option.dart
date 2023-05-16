@@ -14,9 +14,9 @@ import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/session_store_key.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+// import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
+// import 'package:share_plus/share_plus.dart';
 
 class MoreOption extends StatelessWidget {
   const MoreOption({Key? key}) : super(key: key);
@@ -205,19 +205,19 @@ class MoreOption extends StatelessWidget {
                                                     BorderRadius.circular(8.0),
                                               ))),
                                           onPressed: () async {
-                                            Map result = await ImageGallerySaver
-                                                .saveImage(bytes,
-                                                    quality: 100,
-                                                    name: peerTrackNode
-                                                            .peer.name +
-                                                        DateTime.now()
-                                                            .toIso8601String());
-                                            if (result
-                                                    .containsKey("isSuccess") &&
-                                                result["isSuccess"]) {
-                                              Utilities.showToast(
-                                                  "Snapshot save to Gallery");
-                                            }
+                                            // Map result = await ImageGallerySaver
+                                            //     .saveImage(bytes,
+                                            //         quality: 100,
+                                            //         name: peerTrackNode
+                                            //                 .peer.name +
+                                            //             DateTime.now()
+                                            //                 .toIso8601String());
+                                            // if (result
+                                            //         .containsKey("isSuccess") &&
+                                            //     result["isSuccess"]) {
+                                            //   Utilities.showToast(
+                                            //       "Snapshot save to Gallery");
+                                            // }
                                             Navigator.pop(context);
                                           },
                                           child: Padding(
@@ -422,8 +422,8 @@ class MoreOption extends StatelessWidget {
                                                     BorderRadius.circular(8.0),
                                               ))),
                                           onPressed: () async {
-                                            Share.shareXFiles([XFile(res)],
-                                                text: "HMS Image");
+                                            // Share.shareXFiles([XFile(res)],
+                                            //     text: "HMS Image");
                                             Navigator.pop(context);
                                           },
                                           child: Padding(
@@ -528,19 +528,19 @@ class MoreOption extends StatelessWidget {
                                                     BorderRadius.circular(8.0),
                                               ))),
                                           onPressed: () async {
-                                            Map result = await ImageGallerySaver
-                                                .saveImage(bytes,
-                                                    quality: 100,
-                                                    name: peerTrackNode
-                                                            .peer.name +
-                                                        DateTime.now()
-                                                            .toIso8601String());
-                                            if (result
-                                                    .containsKey("isSuccess") &&
-                                                result["isSuccess"]) {
-                                              Utilities.showToast(
-                                                  "Snapshot save to Gallery");
-                                            }
+                                            // Map result = await ImageGallerySaver
+                                            //     .saveImage(bytes,
+                                            //         quality: 100,
+                                            //         name: peerTrackNode
+                                            //                 .peer.name +
+                                            //             DateTime.now()
+                                            //                 .toIso8601String());
+                                            // if (result
+                                            //         .containsKey("isSuccess") &&
+                                            //     result["isSuccess"]) {
+                                            //   Utilities.showToast(
+                                            //       "Snapshot save to Gallery");
+                                            // }
                                             Navigator.pop(context);
                                           },
                                           child: Padding(

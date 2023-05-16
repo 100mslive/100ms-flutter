@@ -11,7 +11,7 @@ import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:collection/collection.dart';
-import 'package:share_plus/share_plus.dart';
+// import 'package:share_plus/share_plus.dart';
 
 class ShareLinkOptionDialog extends StatefulWidget {
   final List<HMSRole> roles;
@@ -153,10 +153,10 @@ class _ShareLinkOptionDialogState extends State<ShareLinkOptionDialog> {
                       widget.roomID +
                       "/" +
                       valueChoose!.name;
-                  await Share.share(
-                    meetingLink,
-                    subject: "Join Meet",
-                  );
+                  // await Share.share(
+                  //   meetingLink,
+                  //   subject: "Join Meet",
+                  // );
                 }
               },
               child: Padding(

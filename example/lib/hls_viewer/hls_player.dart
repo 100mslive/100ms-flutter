@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pip_flutter/pipflutter_player.dart';
-import 'package:pip_flutter/pipflutter_player_controller.dart';
+// import 'package:pip_flutter/pipflutter_player.dart';
+// import 'package:pip_flutter/pipflutter_player_controller.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -34,13 +34,7 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<MeetingStore, PipFlutterPlayerController?>(
-        selector: (_, meetingStore) => meetingStore.hlsVideoController,
-        builder: (_, controller, __) {
-          if (controller == null) {
-            return Scaffold();
-          }
-          return Scaffold(
+    return  Scaffold(
               key: GlobalKey(),
               body: Stack(
                 children: [
@@ -49,10 +43,11 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
                     opacity: fadeInFadeOut,
                     child: AspectRatio(
                       aspectRatio: context.read<MeetingStore>().hlsAspectRatio,
-                      child: PipFlutterPlayer(
-                        controller: controller,
-                        key: context.read<MeetingStore>().pipFlutterPlayerKey,
-                      ),
+                      child: Container(color: Colors.red,)
+                      //  PipFlutterPlayer(
+                      //   controller: controller,
+                      //   key: context.read<MeetingStore>().pipFlutterPlayerKey,
+                      // ),
                     ),
                   )),
                   if (!context.read<MeetingStore>().isPipActive)
@@ -92,6 +87,5 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
                     )
                 ],
               ));
-        });
   }
 }

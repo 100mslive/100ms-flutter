@@ -21,11 +21,6 @@ dependencies:
   http:
   permission_handler:
   intl:
-  firebase_crashlytics:
-  firebase_core:
-  firebase_analytics:
-  firebase_performance:
-  firebase_dynamic_links:
   flutter_launcher_icons:
   package_info_plus:
   path_provider:
@@ -40,15 +35,12 @@ dependencies:
   qr_code_scanner:
   shared_preferences:
   uni_links:
-  file_picker:
   draggable_widget:
   badges:
   url_launcher:
-  pip_flutter:
-  share_plus:
+  # pip_flutter:
   flutter_linkify:
   flutter_foreground_task:
-  image_gallery_saver:
 
 dev_dependencies:
   flutter_test:

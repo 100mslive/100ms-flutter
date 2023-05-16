@@ -1,7 +1,7 @@
 //Package imports
 
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:file_picker/file_picker.dart';
+// import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -1592,19 +1592,19 @@ class UtilityComponents {
                               borderRadius: BorderRadius.circular(8.0),
                             ))),
                         onPressed: () async {
-                          if (isPlaying) {
-                            meetingStore.stopAudioIos();
-                            Navigator.pop(context, "");
-                          } else {
-                            FilePickerResult? result =
-                                await FilePicker.platform.pickFiles();
-                            if (result != null) {
-                              String? path =
-                                  "file://" + result.files.single.path!;
+                          // if (isPlaying) {
+                          //   meetingStore.stopAudioIos();
+                          //   Navigator.pop(context, "");
+                          // } else {
+                          //   FilePickerResult? result =
+                          //       await FilePicker.platform.pickFiles();
+                          //   if (result != null) {
+                          //     String? path =
+                          //         "file://" + result.files.single.path!;
 
-                              Navigator.pop(context, path);
-                            }
-                          }
+                          //     Navigator.pop(context, path);
+                          //   }
+                          // }
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(

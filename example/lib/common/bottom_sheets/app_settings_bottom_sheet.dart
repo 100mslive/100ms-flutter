@@ -12,7 +12,7 @@ import 'package:hmssdk_flutter_example/common/util/log_writer.dart';
 import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
-import 'package:share_plus/share_plus.dart';
+// import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -483,8 +483,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       onTap: () async {
                         File? logFile = await getLogFile;
                         if (logFile != null) {
-                          Share.shareXFiles([XFile(logFile.path)],
-                              text: "HMS Log file");
+                          // Share.shareXFiles([XFile(logFile.path)],
+                          //     text: "HMS Log file");
                         } else {
                           Utilities.showToast("No file found");
                         }
