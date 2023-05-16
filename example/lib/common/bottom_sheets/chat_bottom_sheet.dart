@@ -17,7 +17,6 @@ import 'package:tuple/tuple.dart';
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ChatBottomSheet extends StatefulWidget {
   @override
@@ -340,12 +339,6 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                       child: SelectableLinkify(
                                         text: sessionMetadata,
                                         onOpen: (link) async {
-                                          Uri url = Uri.parse(link.url);
-                                          if (await canLaunchUrl(url)) {
-                                            await launchUrl(url,
-                                                mode: LaunchMode
-                                                    .externalApplication);
-                                          }
                                         },
                                         options:
                                             LinkifyOptions(humanize: false),

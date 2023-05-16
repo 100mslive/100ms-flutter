@@ -19,9 +19,6 @@ import 'package:hmssdk_flutter_example/common/bottom_sheets/app_settings_bottom_
 import 'package:hmssdk_flutter_example/home_screen/user_detail_screen.dart';
 import 'package:hmssdk_flutter_example/home_screen/qr_code_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:wakelock/wakelock.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:uni_links/uni_links.dart';
 
 bool _initialURILinkHandled = false;
 StreamSubscription? _streamSubscription;
@@ -41,7 +38,6 @@ void main() async {
   //   return true;
   // };
 
-  Wakelock.enable();
   Provider.debugCheckInvalidValueType = null;
 
   // Get any initial links
@@ -100,54 +96,54 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
   }
 
   Future<void> _initURIHandler() async {
-    if (!_initialURILinkHandled) {
-      _initialURILinkHandled = true;
-      try {
-        if (widget.initialLink != null) {
-          return;
-        }
-        _currentURI = await getInitialUri();
-        if (_currentURI != null) {
-          if (!mounted) {
-            return;
-          }
-          setState(() {});
-        }
-      } on PlatformException {
-        debugPrint("Failed to receive initial uri");
-      } on FormatException {
-        if (!mounted) {
-          return;
-        }
-      }
-    }
+    // if (!_initialURILinkHandled) {
+    //   _initialURILinkHandled = true;
+    //   try {
+    //     if (widget.initialLink != null) {
+    //       return;
+    //     }
+    //     // _currentURI = await getInitialUri();
+    //     if (_currentURI != null) {
+    //       if (!mounted) {
+    //         return;
+    //       }
+    //       setState(() {});
+    //     }
+    //   } on PlatformException {
+    //     debugPrint("Failed to receive initial uri");
+    //   } on FormatException {
+    //     if (!mounted) {
+    //       return;
+    //     }
+    //   }
+    // }
   }
 
   void _incomingLinkHandler() {
-    if (!kIsWeb) {
-      _streamSubscription = uriLinkStream.listen((Uri? uri) {
-        if (!mounted) {
-          return;
-        }
-        if (uri == null || !uri.toString().contains("100ms.live")) {
-          return;
-        }
-        setState(() {
-          _currentURI = uri;
-        });
-        String tempUri = uri.toString();
-        if (tempUri.contains("deep_link_id")) {
-          setState(() {
-            _currentURI =
-                Uri.parse(Utilities.fetchMeetingLinkFromFirebase(tempUri));
-          });
-        }
-      }, onError: (Object err) {
-        if (!mounted) {
-          return;
-        }
-      });
-    }
+    // if (!kIsWeb) {
+    //   _streamSubscription = uriLinkStream.listen((Uri? uri) {
+    //     if (!mounted) {
+    //       return;
+    //     }
+    //     if (uri == null || !uri.toString().contains("100ms.live")) {
+    //       return;
+    //     }
+    //     setState(() {
+    //       _currentURI = uri;
+    //     });
+    //     String tempUri = uri.toString();
+    //     if (tempUri.contains("deep_link_id")) {
+    //       setState(() {
+    //         _currentURI =
+    //             Uri.parse(Utilities.fetchMeetingLinkFromFirebase(tempUri));
+    //       });
+    //     }
+    //   }, onError: (Object err) {
+    //     if (!mounted) {
+    //       return;
+    //     }
+    //   });
+    // }
   }
 
   Future<void> initDynamicLinks() async {
@@ -225,14 +221,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   TextEditingController meetingLinkController = TextEditingController();
 
-  PackageInfo _packageInfo = PackageInfo(
-    appName: 'Unknown',
-    packageName: 'Unknown',
-    version: 'Unknown',
-    buildNumber: 'Unknown',
-    buildSignature: 'Unknown',
-  );
-
   @override
   void initState() {
     super.initState();
@@ -254,10 +242,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _initPackageInfo() async {
-    final info = await PackageInfo.fromPlatform();
-    setState(() {
-      _packageInfo = info;
-    });
+
   }
 
   @override
@@ -461,8 +446,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     context: context,
                                     builder: (ctx) => AppSettingsBottomSheet(
-                                          appVersion: _packageInfo.version +
-                                              " (${_packageInfo.buildNumber})",
+                                          appVersion: "Test IOS",
                                         ))),
                                 child: Padding(
                                   padding: const EdgeInsets.only(

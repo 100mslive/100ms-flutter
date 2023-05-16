@@ -8,12 +8,10 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Utilities {
-  static RegExp regexEmoji = RegExp(
-      r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])');
+  static RegExp regexEmoji =
+      RegExp(r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])');
 
   static String getAvatarTitle(String name) {
     if (name.contains(regexEmoji)) {
@@ -43,26 +41,14 @@ class Utilities {
         return Color(0xFF6554C0);
       }
     }
-    return Utilities
-        .colors[name.toUpperCase().codeUnitAt(0) % Utilities.colors.length];
+    return Utilities.colors[name.toUpperCase().codeUnitAt(0) % Utilities.colors.length];
   }
 
-  static List<Color> colors = [
-    Colors.amber,
-    hmsdefaultColor,
-    Colors.purple,
-    Colors.lightGreen,
-    Colors.redAccent
-  ];
+  static List<Color> colors = [Colors.amber, hmsdefaultColor, Colors.purple, Colors.lightGreen, Colors.redAccent];
 
   static double getRatio(Size size, BuildContext context) {
     EdgeInsets viewPadding = MediaQuery.of(context).viewPadding;
-    return (size.height -
-            viewPadding.top -
-            viewPadding.bottom -
-            kToolbarHeight -
-            kBottomNavigationBarHeight -
-            4) /
+    return (size.height - viewPadding.top - viewPadding.bottom - kToolbarHeight - kBottomNavigationBarHeight - 4) /
         (size.width);
   }
 
@@ -79,8 +65,7 @@ class Utilities {
   }
 
   static void setRTMPUrl(String roomUrl) {
-    if (roomUrl.contains("flutterhms.page.link") &&
-        roomUrl.contains("meetingUrl")) {
+    if (roomUrl.contains("flutterhms.page.link") && roomUrl.contains("meetingUrl")) {
       roomUrl = roomUrl.split("meetingUrl=")[1];
     }
     List<String> urlSplit = roomUrl.split('/');
@@ -92,34 +77,10 @@ class Utilities {
   }
 
   static Future<bool> getPermissions() async {
-    if (Platform.isIOS) return true;
-    await Permission.camera.request();
-    await Permission.microphone.request();
-    await Permission.bluetoothConnect.request();
-    // storage permission is required to save Snapshot to device gallery.
-    await Permission.storage.request();
-
-    while ((await Permission.camera.isDenied)) {
-      await Permission.camera.request();
-    }
-    while ((await Permission.microphone.isDenied)) {
-      await Permission.microphone.request();
-    }
-    while ((await Permission.bluetoothConnect.isDenied)) {
-      await Permission.bluetoothConnect.request();
-    }
-
     return true;
   }
 
   static Future<bool> getCameraPermissions() async {
-    if (Platform.isIOS) return true;
-    await Permission.camera.request();
-
-    while ((await Permission.camera.isDenied)) {
-      await Permission.camera.request();
-    }
-
     return true;
   }
 
@@ -145,40 +106,42 @@ class Utilities {
   }
 
   static Future<String> getStringData({required String key}) async {
-    final prefs = await SharedPreferences.getInstance();
+    // final prefs = await SharedPreferences.getInstance();
 
-    return prefs.getString(key) ?? "";
+    // return prefs.getString(key) ?? "";
+    return "";
   }
 
-  static void saveStringData(
-      {required String key, required String value}) async {
-    final prefs = await SharedPreferences.getInstance();
+  static void saveStringData({required String key, required String value}) async {
+    // final prefs = await SharedPreferences.getInstance();
 
-    prefs.setString(key, value);
+    // prefs.setString(key, value);
   }
 
   static Future<int> getIntData({required String key}) async {
-    final prefs = await SharedPreferences.getInstance();
+    // final prefs = await SharedPreferences.getInstance();
 
-    return prefs.getInt(key) ?? 0;
+    // return prefs.getInt(key) ?? 0;
+    return 0;
   }
 
   static void saveIntData({required String key, required int value}) async {
-    final prefs = await SharedPreferences.getInstance();
+    // final prefs = await SharedPreferences.getInstance();
 
-    prefs.setInt(key, value);
+    // prefs.setInt(key, value);
   }
 
   static Future<bool?> getBoolData({required String key}) async {
-    final prefs = await SharedPreferences.getInstance();
+    // final prefs = await SharedPreferences.getInstance();
 
-    return prefs.getBool(key) ?? null;
+    // return prefs.getBool(key) ?? null;
+    return null;
   }
 
-  static Future<bool> saveBoolData(
-      {required String key, required bool value}) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.setBool(key, value);
+  static Future<bool> saveBoolData({required String key, required bool value}) async {
+    // final prefs = await SharedPreferences.getInstance();
+    // return prefs.setBool(key, value);
+    return false;
   }
 
   static String fetchMeetingLinkFromFirebase(String url) {
@@ -192,26 +155,22 @@ class Utilities {
     bool toShowNotif = false;
     switch (type) {
       case "peer-joined":
-        toShowNotif =
-            await Utilities.getBoolData(key: "peer-join-notif") ?? true;
+        toShowNotif = await Utilities.getBoolData(key: "peer-join-notif") ?? true;
         if (toShowNotif) showToast(message);
         break;
 
       case "peer-left":
-        toShowNotif =
-            await Utilities.getBoolData(key: "peer-leave-notif") ?? true;
+        toShowNotif = await Utilities.getBoolData(key: "peer-leave-notif") ?? true;
         if (toShowNotif) showToast(message);
         break;
 
       case "message":
-        toShowNotif =
-            await Utilities.getBoolData(key: "new-message-notif") ?? true;
+        toShowNotif = await Utilities.getBoolData(key: "new-message-notif") ?? true;
         if (toShowNotif) showToast(message);
         break;
 
       case "hand-raise":
-        toShowNotif =
-            await Utilities.getBoolData(key: "hand-raise-notif") ?? true;
+        toShowNotif = await Utilities.getBoolData(key: "hand-raise-notif") ?? true;
         if (toShowNotif) showToast(message);
         break;
 
@@ -231,14 +190,10 @@ class Utilities {
     return isAudioMixerDisabled
         ? HMSTrackSetting(
             audioTrackSetting: HMSAudioTrackSetting(
-                trackInitialState: joinWithMutedAudio
-                    ? HMSTrackInitState.MUTED
-                    : HMSTrackInitState.UNMUTED,
+                trackInitialState: joinWithMutedAudio ? HMSTrackInitState.MUTED : HMSTrackInitState.UNMUTED,
                 audioMode: audioMode),
             videoTrackSetting: HMSVideoTrackSetting(
-                trackInitialState: joinWithMutedVideo
-                    ? HMSTrackInitState.MUTED
-                    : HMSTrackInitState.UNMUTED,
+                trackInitialState: joinWithMutedVideo ? HMSTrackInitState.MUTED : HMSTrackInitState.UNMUTED,
                 forceSoftwareDecoder: isSoftwareDecoderDisabled))
         : HMSTrackSetting(
             audioTrackSetting: HMSAudioTrackSetting(
@@ -247,14 +202,10 @@ class Utilities {
                   HMSMicNode(),
                   HMSScreenBroadcastAudioReceiverNode(),
                 ]),
-                trackInitialState: joinWithMutedAudio
-                    ? HMSTrackInitState.MUTED
-                    : HMSTrackInitState.UNMUTED,
+                trackInitialState: joinWithMutedAudio ? HMSTrackInitState.MUTED : HMSTrackInitState.UNMUTED,
                 audioMode: audioMode),
             videoTrackSetting: HMSVideoTrackSetting(
-                trackInitialState: joinWithMutedVideo
-                    ? HMSTrackInitState.MUTED
-                    : HMSTrackInitState.UNMUTED,
+                trackInitialState: joinWithMutedVideo ? HMSTrackInitState.MUTED : HMSTrackInitState.UNMUTED,
                 forceSoftwareDecoder: isSoftwareDecoderDisabled));
   }
 }

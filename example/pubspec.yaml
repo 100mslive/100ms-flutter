@@ -15,15 +15,15 @@ dependencies:
   hmssdk_flutter:
     path: ../
 
-  wakelock:
+  # wakelock:
   cupertino_icons:
   provider:
   http:
-  permission_handler:
+  # permission_handler:
   intl:
   flutter_launcher_icons:
-  package_info_plus:
-  path_provider:
+  # package_info_plus:
+  # path_provider:
   dropdown_button2:
   focus_detector:
   flutter_staggered_grid_view:
@@ -32,15 +32,15 @@ dependencies:
   flutter_svg:
   google_fonts:
   bot_toast:
-  qr_code_scanner:
-  shared_preferences:
-  uni_links:
+  # qr_code_scanner:
+  # shared_preferences:
+  # uni_links:
   draggable_widget:
   badges:
-  url_launcher:
+  # url_launcher:
   # pip_flutter:
   flutter_linkify:
-  flutter_foreground_task:
+  # flutter_foreground_task:
 
 dev_dependencies:
   flutter_test:

@@ -6,7 +6,6 @@ import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:hmssdk_flutter_example/home_screen/user_detail_screen.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRCodeScreen extends StatefulWidget {
   QRCodeScreen();
@@ -17,47 +16,47 @@ class QRCodeScreen extends StatefulWidget {
 
 class _QRCodeScreenState extends State<QRCodeScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  QRViewController? controller;
+  // QRViewController? controller;
 
   @override
   void reassemble() {
     super.reassemble();
-    if (Platform.isAndroid) {
-      controller!.pauseCamera();
-    } else if (Platform.isIOS) {
-      controller!.resumeCamera();
-    }
+    // if (Platform.isAndroid) {
+    //   controller!.pauseCamera();
+    // } else if (Platform.isIOS) {
+    //   controller!.resumeCamera();
+    // }
   }
 
   @override
   void dispose() {
-    controller?.dispose();
+    // controller?.dispose();
     super.dispose();
   }
 
-  void _onQRViewCreated(QRViewController qrController) {
-    this.controller = qrController;
-    controller!.resumeCamera();
-    controller!.scannedDataStream.listen((scanData) async {
-      if (scanData.code != null) {
-        MeetingFlow flow = Utilities.deriveFlow(scanData.code!);
-        if (flow == MeetingFlow.meeting || flow == MeetingFlow.hlsStreaming) {
-          controller!.pauseCamera();
-          Utilities.setRTMPUrl(scanData.code!);
-          FocusManager.instance.primaryFocus?.unfocus();
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => UserDetailScreen(
-              meetingLink: scanData.code!.trim(),
-              meetingFlow: flow,
-            ),
-          ));
-        } else {
-          Utilities.showToast("Invalid meeting url");
-          controller!.resumeCamera();
-        }
-      }
-    });
-  }
+  // void _onQRViewCreated(QRViewController qrController) {
+  //   this.controller = qrController;
+  //   controller!.resumeCamera();
+  //   controller!.scannedDataStream.listen((scanData) async {
+  //     if (scanData.code != null) {
+  //       MeetingFlow flow = Utilities.deriveFlow(scanData.code!);
+  //       if (flow == MeetingFlow.meeting || flow == MeetingFlow.hlsStreaming) {
+  //         controller!.pauseCamera();
+  //         Utilities.setRTMPUrl(scanData.code!);
+  //         FocusManager.instance.primaryFocus?.unfocus();
+  //         Navigator.of(context).pushReplacement(MaterialPageRoute(
+  //           builder: (_) => UserDetailScreen(
+  //             meetingLink: scanData.code!.trim(),
+  //             meetingFlow: flow,
+  //           ),
+  //         ));
+  //       } else {
+  //         Utilities.showToast("Invalid meeting url");
+  //         controller!.resumeCamera();
+  //       }
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -105,20 +104,6 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
               ),
               SizedBox(
                 height: 30,
-              ),
-              Container(
-                height:
-                    orientation == Orientation.portrait ? height * 0.75 : 500,
-                width: MediaQuery.of(context).size.width - 40,
-                child: QRView(
-                  key: qrKey,
-                  onQRViewCreated: _onQRViewCreated,
-                  overlay: QrScannerOverlayShape(
-                    borderRadius: 10,
-                    borderWidth: 5,
-                    borderColor: Colors.white,
-                  ),
-                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),

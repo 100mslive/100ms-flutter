@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -56,22 +55,6 @@ class _MeetingPageState extends State<MeetingPage> {
   }
 
   void _initForegroundTask() {
-    FlutterForegroundTask.init(
-        androidNotificationOptions: AndroidNotificationOptions(
-            channelId: '100ms_flutter_notification',
-            channelName: '100ms Flutter Notification',
-            channelDescription:
-                'This notification appears when the foreground service is running.',
-            channelImportance: NotificationChannelImportance.LOW,
-            priority: NotificationPriority.LOW,
-            iconData: const NotificationIconData(
-              resType: ResourceType.mipmap,
-              resPrefix: ResourcePrefix.ic,
-              name: 'launcher',
-            )),
-        iosNotificationOptions:
-            const IOSNotificationOptions(showNotification: false),
-        foregroundTaskOptions: const ForegroundTaskOptions());
   }
 
   void checkAudioState() async {
@@ -198,8 +181,7 @@ class _MeetingPageState extends State<MeetingPage> {
           bool ans = await UtilityComponents.onBackPressed(context) ?? false;
           return ans;
         },
-        child: WithForegroundTask(
-          child: Selector<MeetingStore, Tuple2<bool, HMSException?>>(
+        child: Selector<MeetingStore, Tuple2<bool, HMSException?>>(
               selector: (_, meetingStore) =>
                   Tuple2(meetingStore.isRoomEnded, meetingStore.hmsException),
               builder: (_, data, __) {
@@ -1378,6 +1360,6 @@ class _MeetingPageState extends State<MeetingPage> {
                             );
                     });
               }),
-        ));
+      );
   }
 }

@@ -13,7 +13,6 @@ import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 // import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 class AppSettingsBottomSheet extends StatefulWidget {
@@ -78,9 +77,6 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
 
   Future<void> _launchUrl() async {
     final Uri _url = Uri.parse('https://discord.gg/YtUqvA6j');
-    if (!await launchUrl(_url, mode: LaunchMode.externalApplication)) {
-      throw 'Could not launch $_url';
-    }
   }
 
   void setAudioMode(HMSAudioMode newMode) {

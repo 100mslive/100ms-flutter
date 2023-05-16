@@ -7,7 +7,6 @@ import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/enum/session_store_key.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../meeting/meeting_store.dart';
 
 class MessageContainer extends StatelessWidget {
@@ -152,11 +151,6 @@ class MessageContainer extends StatelessWidget {
                   SelectableLinkify(
                     text: message,
                     onOpen: (link) async {
-                      Uri url = Uri.parse(link.url);
-                      if (await canLaunchUrl(url)) {
-                        await launchUrl(url,
-                            mode: LaunchMode.externalApplication);
-                      }
                     },
                     options: LinkifyOptions(humanize: false),
                     style: GoogleFonts.inter(

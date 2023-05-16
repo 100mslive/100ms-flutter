@@ -6,7 +6,6 @@ import 'dart:math' as Math;
 // import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:hmssdk_flutter_example/common/util/log_writer.dart';
 import 'package:hmssdk_flutter_example/app_secrets.dart';
 import 'package:hmssdk_flutter_example/enum/session_store_key.dart';
@@ -581,9 +580,6 @@ class MeetingStore extends ChangeNotifier
       }
     }
 
-    FlutterForegroundTask.startService(
-        notificationTitle: "100ms foreground service running",
-        notificationText: "Tap to return to the app");
   }
 
   void getSpotlightPeer() async {
@@ -1039,7 +1035,6 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.removeLogsListener(this);
     setLandscapeLock(false);
     notifyListeners();
-    FlutterForegroundTask.stopService();
   }
 
   void toggleScreenShare() {
