@@ -1760,6 +1760,7 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
         var message = HMSMessage(
+            messageId: "",
             sender: localPeer,
             message: arguments!['message'],
             type: arguments['type'],
@@ -1775,6 +1776,7 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.sendGroupMessage:
         var message = HMSMessage(
+            messageId: "",
             sender: localPeer,
             message: arguments!['message'],
             type: arguments['type'],
@@ -1789,6 +1791,7 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.sendDirectMessage:
         var message = HMSMessage(
+            messageId: "",
             sender: localPeer,
             message: arguments!['message'],
             type: arguments['type'],
