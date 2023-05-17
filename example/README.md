@@ -29,6 +29,7 @@ The Example application contains the implementation of all the features provided
 - ❌ Remove Peer
 - 📡 HLS Streaming
 - 📱 PIP Mode
+- 🎭 Spotlight 
 - And many more...
 
 ## Sample app architecture
@@ -768,11 +769,76 @@ After calling `startHLSStreaming` we will get an `onSuccess` callback if the met
 100ms Flutter SDK provides support for creating a Picture in Picture mode experience for video calls.
 
 PIP Mode lets the user watch the room video in a small window pinned to a corner of the screen while navigating between apps or browsing content on the main screen.
-Currently, this functionality is only available on Android.
 
 To know more about how to implement PIP mode. Please check: [PIP Mode](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
 
+- PIP in Android
+
 https://user-images.githubusercontent.com/93931528/205587304-772a5dd6-ed64-4d9e-8bb5-4fc3eed83bea.mp4
+
+- PIP in iOS
+
+https://github.com/100mslive/100ms-flutter/assets/93931528/af331f42-fe33-4345-bf6b-e623cc2d29e8
+
+### 17. Spotlight
+
+Sometimes in large video conferences or webinars where numerous participants are present, spotlighting helps draw attention to a speaker, presenter, or panelist. 
+
+HMSSDK provides a way to achieve the same, here comes `HMSSessionStore`. To read more about Session store checkout our docs [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store)
+
+Let's see how we can spotlight a peer using session store:
+
+- Setup the Session store using the steps mentioned in the doc above.
+
+- Set the session metadata using `setSessionMetadataForKey` method with key as `spotlight` and value as anything unique for a particular peer so here we are using audio trackId as the unique value.
+
+```dart
+/// Here [_hmsSessionStore] is an instance of HMSSessionStore
+/// Details about how to get this are mentioned in above docs: https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store
+
+///Setting key as spotlight and data as peer's audio track Id
+///[hmsActionResultListener] is an instance of class implementing HMSActionResultListener
+_hmsSessionStore?.setSessionMetadataForKey(
+        key: 'spotlight', data: audioTrackId, hmsActionResultListener: this);
+```
+
+- Listen to `onKeyChanged` method for updates regarding the session store values. 
+
+The `onKeyChanged` method is a listener that allows us to receive updates about the values stored in the session. In this case, we are interested in updates related to the `spotlight` key. When we receive an update with the key as `spotlight`, it means that there is new data available to indicate which participant's video feed should be highlighted.
+
+```dart
+  @override
+  void onKeyChanged({required String key, required String? value}) {
+    switch (key) {
+      case 'spotlight':
+        //Set the peer to spotlight here
+        break;
+      default:
+        break;
+    }
+  }
+```
+
+- Remove a peer from spotlight
+
+To remove a peer from spotlight just set the `spotlight` key as null.
+
+```dart
+/// Here [_hmsSessionStore] is an instance of HMSSessionStore
+/// Details about how to get this are mentioned in above docs: https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store
+
+///Setting key as spotlight and data as null
+///[hmsActionResultListener] is an instance of class implementing HMSActionResultListener
+_hmsSessionStore?.setSessionMetadataForKey(
+        key: 'spotlight', data: null, hmsActionResultListener: this);
+```
+
+
+Checkout spotlight in action:
+
+https://github.com/100mslive/100ms-flutter/assets/93931528/0a9df0b9-8518-4ca4-8cd3-7447a450acb8
+
+You can check the spotlight implementation code in the example folder above.
 
 ## Handling Errors
 
