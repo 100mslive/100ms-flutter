@@ -768,11 +768,16 @@ After calling `startHLSStreaming` we will get an `onSuccess` callback if the met
 100ms Flutter SDK provides support for creating a Picture in Picture mode experience for video calls.
 
 PIP Mode lets the user watch the room video in a small window pinned to a corner of the screen while navigating between apps or browsing content on the main screen.
-Currently, this functionality is only available on Android.
 
 To know more about how to implement PIP mode. Please check: [PIP Mode](https://www.100ms.live/docs/flutter/v2/advanced-features/pip-mode)
 
+- PIP in Android
+
 https://user-images.githubusercontent.com/93931528/205587304-772a5dd6-ed64-4d9e-8bb5-4fc3eed83bea.mp4
+
+- PIP in iOS
+
+https://github.com/adityathakurxd/flutter-meet/assets/93931528/79d7d4f2-630f-4f85-ae7a-076615b43334
 
 ## Handling Errors
 
