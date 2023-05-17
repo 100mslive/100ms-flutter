@@ -821,7 +821,11 @@ The `onKeyChanged` method is a listener that allows us to receive updates about 
 
 Checkout spotlight in action:
 
-https://github.com/100mslive/100ms-flutter/assets/93931528/0a9df0b9-8518-4ca4-8cd3-7447a450acb8
+<div style="text-align: center;">
+  <video controls>
+    <source src="https://github.com/100mslive/100ms-flutter/assets/93931528/0a9df0b9-8518-4ca4-8cd3-7447a450acb8" type="video/mp4">
+  </video>
+</div>
 
 ## Handling Errors
 
@@ -884,23 +888,23 @@ Example app shows toast for the errors which will not affect the meeting and the
 3. Perform hot reload/restart
 4. Verify the changes.
 
---
+---
 
 To verify the token which is being passed in `HMSConfig` please visit [jwt.io](https://jwt.io/). The token should contain the correct room-Id, role etc.
 
---
+---
 
 For Video rendering optimizations please follow [7](#7-display-video-tracks)
 
---
+---
 
 Please make sure that the application is using the same `HMSSDK` instance across the app otherwise it will not get SDK updates as expected.
 
---
+---
 
 Please ensure that the `build` method is called on the `HMSSDK` object before performing any other operation.
 
---
+---
 
 For more FAQs please visit [FAQs](https://www.100ms.live/docs/flutter/v2/debugging/faq)
 
