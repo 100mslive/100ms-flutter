@@ -778,7 +778,7 @@ https://user-images.githubusercontent.com/93931528/205587304-772a5dd6-ed64-4d9e-
 
 - PIP in iOS
 
-https://github.com/adityathakurxd/flutter-meet/assets/93931528/79d7d4f2-630f-4f85-ae7a-076615b43334
+https://github.com/100mslive/100ms-flutter/assets/93931528/af331f42-fe33-4345-bf6b-e623cc2d29e8
 
 ### 17. Spotlight
 
@@ -884,23 +884,23 @@ Example app shows toast for the errors which will not affect the meeting and the
 3. Perform hot reload/restart
 4. Verify the changes.
 
----
+--
 
 To verify the token which is being passed in `HMSConfig` please visit [jwt.io](https://jwt.io/). The token should contain the correct room-Id, role etc.
 
----
+--
 
 For Video rendering optimizations please follow [7](#7-display-video-tracks)
 
----
+--
 
 Please make sure that the application is using the same `HMSSDK` instance across the app otherwise it will not get SDK updates as expected.
 
----
+--
 
 Please ensure that the `build` method is called on the `HMSSDK` object before performing any other operation.
 
----
+--
 
 For more FAQs please visit [FAQs](https://www.100ms.live/docs/flutter/v2/debugging/faq)
 
