@@ -9,6 +9,6 @@ class Constant {
   static String meetingCode = "";
   static String streamingUrl = "";
 
-  static HMSLogLevel webRTCLogLevel = HMSLogLevel.ERROR;
+  static HMSLogLevel webRTCLogLevel = HMSLogLevel.VERBOSE;
   static HMSLogLevel sdkLogLevel = HMSLogLevel.VERBOSE;
 }

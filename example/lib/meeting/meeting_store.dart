@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as Math;
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
@@ -2018,6 +2019,10 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onLogMessage({required HMSLogList hmsLogList}) {
+    compute((message) => updateLogs, hmsLogList, debugLabel: "HMSLogsIsolate");
+  }
+
+  void updateLogs({required HMSLogList hmsLogList}) {
     FirebaseAnalytics.instance.logEvent(
         name: "SDK_Logs", parameters: {"data": hmsLogList.toString()});
     applicationLogs.hmsLog.addAll(hmsLogList.hmsLog);
