@@ -821,11 +821,7 @@ The `onKeyChanged` method is a listener that allows us to receive updates about 
 
 Checkout spotlight in action:
 
-<div style="text-align: center;">
-  <video controls>
-    <source src="https://github.com/100mslive/100ms-flutter/assets/93931528/0a9df0b9-8518-4ca4-8cd3-7447a450acb8" type="video/mp4">
-  </video>
-</div>
+https://github.com/100mslive/100ms-flutter/assets/93931528/0a9df0b9-8518-4ca4-8cd3-7447a450acb8
 
 ## Handling Errors
 
