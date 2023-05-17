@@ -29,6 +29,7 @@ The Example application contains the implementation of all the features provided
 - ❌ Remove Peer
 - 📡 HLS Streaming
 - 📱 PIP Mode
+- 🎭 Spotlight 
 - And many more...
 
 ## Sample app architecture
@@ -778,6 +779,49 @@ https://user-images.githubusercontent.com/93931528/205587304-772a5dd6-ed64-4d9e-
 - PIP in iOS
 
 https://github.com/adityathakurxd/flutter-meet/assets/93931528/79d7d4f2-630f-4f85-ae7a-076615b43334
+
+### 17. Spotlight
+
+Sometimes in large video conferences or webinars where numerous participants are present, spotlighting helps draw attention to a speaker, presenter, or panelist. 
+
+HMSSDK provides a way to achieve the same, here comes `HMSSessionStore`. To read more about Session store checkout our docs [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store)
+
+Let's see how we can spotlight a peer using session store:
+
+- Setup the Session store using the steps mentioned in the doc above.
+
+- Set the session metadata using `setSessionMetadataForKey` method with key as `spotlight` and value as anything unique for a particular peer so here we are using audio trackId as the unique value.
+
+```dart
+/// Here [_hmsSessionStore] is an instance of HMSSessionStore
+/// Details about how to get this are mentioned in above docs: https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store
+
+///Setting key as spotlight and data and the peer's audio track Id
+///[hmsActionResultListener] is an instance of class implementing HMSActionResultListener
+_hmsSessionStore?.setSessionMetadataForKey(
+        key: 'spotlight', data: audioTrackId, hmsActionResultListener: this);
+```
+
+- Listen to `onKeyChanged` method for updates regarding the session store values. 
+
+The `onKeyChanged` method is a listener that allows us to receive updates about the values stored in the session. In this case, we are interested in updates related to the `spotlight` key. When we receive an update with the key as `spotlight`, it means that there is new data available to indicate which participant's video feed should be highlighted.
+
+```dart
+  @override
+  void onKeyChanged({required String key, required String? value}) {
+    switch (key) {
+      case 'spotlight':
+        //Set the peer to spotlight here
+        break;
+      default:
+        break;
+    }
+  }
+```
+
+Checkout spotlight in action:
+
+https://github.com/100mslive/100ms-flutter/assets/93931528/753c23af-79f1-4be0-97fd-f6f83d466644
 
 ## Handling Errors
 
