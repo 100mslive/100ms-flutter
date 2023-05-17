@@ -1,5 +1,7 @@
-Board: https://github.com/100mslive/100ms-flutter/projects/19
+Board: https://github.com/100mslive/100ms-flutter/projects/23
 
+- Fixed android screen share, where the screen share was coming at the top rather than center.
+https://github.com/100mslive/100ms-flutter/issues/1068
 
 Flutter SDK: 1.6.1
 Android SDK: 2.6.3
