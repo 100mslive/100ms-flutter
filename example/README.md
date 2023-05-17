@@ -796,7 +796,7 @@ Let's see how we can spotlight a peer using session store:
 /// Here [_hmsSessionStore] is an instance of HMSSessionStore
 /// Details about how to get this are mentioned in above docs: https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store
 
-///Setting key as spotlight and data and the peer's audio track Id
+///Setting key as spotlight and data as peer's audio track Id
 ///[hmsActionResultListener] is an instance of class implementing HMSActionResultListener
 _hmsSessionStore?.setSessionMetadataForKey(
         key: 'spotlight', data: audioTrackId, hmsActionResultListener: this);
@@ -819,9 +819,26 @@ The `onKeyChanged` method is a listener that allows us to receive updates about 
   }
 ```
 
+- Remove a peer from spotlight
+
+To remove a peer from spotlight just set the `spotlight` key as null.
+
+```dart
+/// Here [_hmsSessionStore] is an instance of HMSSessionStore
+/// Details about how to get this are mentioned in above docs: https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store
+
+///Setting key as spotlight and data as null
+///[hmsActionResultListener] is an instance of class implementing HMSActionResultListener
+_hmsSessionStore?.setSessionMetadataForKey(
+        key: 'spotlight', data: null, hmsActionResultListener: this);
+```
+
+
 Checkout spotlight in action:
 
 https://github.com/100mslive/100ms-flutter/assets/93931528/0a9df0b9-8518-4ca4-8cd3-7447a450acb8
+
+You can check the spotlight implementation code in the example folder above.
 
 ## Handling Errors
 
