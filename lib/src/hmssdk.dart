@@ -380,20 +380,22 @@ class HMSSDK {
     return listOfPeers;
   }
 
-  /// Utility Function to parse messages from 
-  /// [sendBroadcastMessage], [sendGroupMessage], [sendDirectMessage] 
+  /// Utility Function to parse messages from
+  /// [sendBroadcastMessage], [sendGroupMessage], [sendDirectMessage]
   /// to send the HMSMessage object from the server back to the application
   Map<String, dynamic>? _hmsMessageToMap(Map<dynamic, dynamic>? result) {
-  return result == null ?null:{
-    'message_id': result["message"]["message_id"],
-    'sender': result["message"]["sender"],
-    'message': result["message"]["message"],
-    'hms_message_recipient': result["message"]
-        ["hms_message_recipient"],
-    'type': result["message"]["type"],
-    'time': result["message"]["time"],
-  };
-}
+    return result == null
+        ? null
+        : {
+            'message_id': result["message"]["message_id"],
+            'sender': result["message"]["sender"],
+            'message': result["message"]["message"],
+            'hms_message_recipient': result["message"]["hms_message_recipient"],
+            'type': result["message"]["type"],
+            'time': result["message"]["time"],
+          };
+  }
+
   /// Sends a message to everyone on the call.
   ///
   /// **Parameters**:

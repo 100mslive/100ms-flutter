@@ -62,7 +62,7 @@ class HMSMessage {
 
   Map<String, dynamic> toMap(Map<String, dynamic> map) {
     return {
-      'message_id':messageId,
+      'message_id': messageId,
       'sender': sender,
       'message': message,
       'type': type,
