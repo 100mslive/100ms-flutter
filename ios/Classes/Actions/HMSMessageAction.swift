@@ -35,11 +35,18 @@ class HMSMessageAction {
 
         let type = arguments["type"] as? String ?? "chat"
 
-        hmsSDK?.sendBroadcastMessage(type: type, message: message) { _, error in
+        hmsSDK?.sendBroadcastMessage(type: type, message: message) {data, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
-                result(nil)
+                guard let data
+                else{
+                    result(nil)
+                    return
+                }
+                var dict = [String: Any]()
+                dict["message"] = HMSMessageExtension.toDictionary(data)
+                result(dict)
             }
         }
     }
@@ -58,11 +65,18 @@ class HMSMessageAction {
 
         let type = arguments["type"] as? String ?? "chat"
 
-        hmsSDK?.sendDirectMessage(type: type, message: message, peer: peer) { _, error in
+        hmsSDK?.sendDirectMessage(type: type, message: message, peer: peer) { data, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
-                result(nil)
+                guard let data
+                else{
+                    result(nil)
+                    return
+                }
+                var dict = [String: Any]()
+                dict["message"] = HMSMessageExtension.toDictionary(data)
+                result(dict)
             }
         }
     }
@@ -81,11 +95,18 @@ class HMSMessageAction {
 
         let type = arguments["type"] as? String ?? "chat"
 
-        hmsSDK?.sendGroupMessage(type: type, message: message, roles: roles) { _, error in
+        hmsSDK?.sendGroupMessage(type: type, message: message, roles: roles) { data, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
-                result(nil)
+                guard let data
+                else{
+                    result(nil)
+                    return
+                }
+                var dict = [String: Any]()
+                dict["message"] = HMSMessageExtension.toDictionary(data)
+                result(dict)
             }
         }
     }
