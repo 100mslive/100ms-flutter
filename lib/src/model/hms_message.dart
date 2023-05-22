@@ -18,6 +18,9 @@ import 'package:hmssdk_flutter/src/model/hms_date_extension.dart';
 ///
 ///Refer [chat guide here](https://www.100ms.live/docs/flutter/v2/features/chat)
 class HMSMessage {
+  ///[messageId] id to uniquely identify the message
+  final String messageId;
+
   ///[sender] id basically it is the peerId who is sending message.
   final HMSPeer? sender;
 
@@ -32,7 +35,8 @@ class HMSMessage {
 
   HMSMessageRecipient? hmsMessageRecipient;
   HMSMessage(
-      {required this.sender,
+      {required this.messageId,
+      required this.sender,
       required this.message,
       required this.type,
       required this.time,
@@ -40,12 +44,15 @@ class HMSMessage {
 
   factory HMSMessage.fromMap(Map map) {
     Map messageMap = map;
+    String messageId =
+        messageMap.containsKey("message_id") ? messageMap["message_id"] : "";
     HMSPeer? sender = messageMap.containsKey("sender")
         ? HMSPeer.fromMap(messageMap['sender'])
         : null;
     HMSMessageRecipient recipient =
         HMSMessageRecipient.fromMap(messageMap['hms_message_recipient']);
     return HMSMessage(
+        messageId: messageId,
         sender: sender,
         message: messageMap['message'] as String,
         type: messageMap['type'] as String,
@@ -55,6 +62,7 @@ class HMSMessage {
 
   Map<String, dynamic> toMap(Map<String, dynamic> map) {
     return {
+      'message_id': messageId,
       'sender': sender,
       'message': message,
       'type': type,

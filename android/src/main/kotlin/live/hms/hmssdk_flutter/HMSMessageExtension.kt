@@ -6,8 +6,9 @@ import java.text.SimpleDateFormat
 class HMSMessageExtension {
     companion object {
         fun toDictionary(message: HMSMessage?): HashMap<String, Any>? {
-            val args = HashMap<String, Any>()
+            val args = HashMap<String, Any?>()
             if (message == null)return null
+            args["message_id"] = message.messageId
             args["message"] = message.message
             args["time"] =
                 SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(message.serverReceiveTime).toString()
