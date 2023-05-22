@@ -80,7 +80,5 @@ class HMSHLSPlayerPlaybackEventResponse {
   final HMSHLSPlaybackEventMethod method;
   final Map<dynamic, dynamic> data;
 
-  HMSHLSPlayerPlaybackEventResponse(
-      {required this.method, required this.data});
+  HMSHLSPlayerPlaybackEventResponse({required this.method, required this.data});
 }
-

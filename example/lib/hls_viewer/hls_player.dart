@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/hls_viewer/hls_stats_view.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -23,10 +24,30 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
         body: Stack(
           children: [
             Center(
-                child: AspectRatio(
-                  aspectRatio: context.read<MeetingStore>().hlsAspectRatio,
-                  child: HMSHLSPlayer(),
-                )),
+                child: Selector<MeetingStore, double>(
+                    selector: (_, meetingStore) => meetingStore.hlsAspectRatio,
+                    builder: (_, ratio, __) {
+                      return AspectRatio(
+                        aspectRatio: ratio,
+                        child: HMSHLSPlayer(
+                          isHLSStatsRequired:
+                              context.read<MeetingStore>().isHLSStatsEnabled,
+                        ),
+                      );
+                    })),
+            Selector<MeetingStore, bool>(
+                selector: (_, meetingStore) => meetingStore.isHLSStatsEnabled,
+                builder: (_, isHLSStatsEnabled, __) {
+                  return isHLSStatsEnabled
+                      ? Align(
+                          alignment: Alignment.topLeft,
+                          child: ChangeNotifierProvider.value(
+                            value: context.read<MeetingStore>(),
+                            child: HLSStatsView(),
+                          ),
+                        )
+                      : Container();
+                }),
             if (!context.read<MeetingStore>().isPipActive)
               Positioned(
                 bottom: 10,

@@ -2,6 +2,8 @@ enum HMSHLSPlaybackEventMethod {
   onPlaybackFailure,
   onPlaybackStateChanged,
   onCue,
+  onHLSError,
+  onHLSEventUpdate,
   unknown
 }
 
@@ -14,6 +16,10 @@ extension HMSHLSPlaybackEventMethodValues on HMSHLSPlaybackEventMethod {
         return HMSHLSPlaybackEventMethod.onPlaybackStateChanged;
       case "on_cue":
         return HMSHLSPlaybackEventMethod.onCue;
+      case "on_hls_error":
+        return HMSHLSPlaybackEventMethod.onHLSError;
+      case "on_hls_event_update":
+        return HMSHLSPlaybackEventMethod.onHLSEventUpdate;
       default:
         return HMSHLSPlaybackEventMethod.unknown;
     }

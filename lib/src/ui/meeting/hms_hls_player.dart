@@ -5,52 +5,47 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show StandardMessageCodec;
 
-// Project imports:
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-
+/// TODO: Update docs regarding HMSHLSPlayer
 ///100ms HMSVideoView
 ///
 ///HMSVideoView used to render video in ios and android devices
 ///
 /// To use,import package:`hmssdk_flutter/ui/meeting/hms_video_view.dart`.
 ///
-/// just pass the videotracks of local or remote peer and internally it passes [peer_id], [is_local] and [track_id] to specific views.
 ///
-/// [HMSHLSPlayer] will render video using trackId from HMSTrack
+///
+/// [HMSHLSPlayer] will render video using streamURL
 ///
 /// **parameters**
 ///
-/// **track** - This will render video with trackId present in the track. Use video track only.
 ///
-/// **matchParent** - To match the size of the parent widget.
-///
-/// **scaleType** - To set the video scaling. [SCALE_ASPECT_FIT, SCALE_ASPECT_FILL, SCALE_ASPECT_BALANCED]
-///
-/// **setMirror** - To set mirroring of video
-///
-/// **disableAutoSimulcastLayerSelect** -  To disable auto simulcast (Adaptive Bitrate)
-///
-/// **key** - [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
-/// Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
 ///
 /// Refer [HMSVideoView guide here](https://www.100ms.live/docs/flutter/v2/features/render-video)
 class HMSHLSPlayer extends StatelessWidget {
-  /// This will render video with trackId present in the track
-  /// [track] - the video track to be displayed
+  /// This will render stream with the given stream URL
+  /// [hlsUrl] - the video track to be displayed
   final String? hlsUrl;
+
+  final bool? isHLSStatsRequired;
+
+  final bool? showPlayerControls;
 
   ///100ms HMSHLSPlayer
   ///
-  ///HMSHLSPlayer used to render video in ios and android devices
+  ///HMSHLSPlayer used to render HLS Stream in ios and android devices
   ///
   /// To use,import package:`hmssdk_flutter/ui/meeting/hms_hls_player.dart`.
   ///
-  HMSHLSPlayer({Key? key, this.hlsUrl}) : super(key: key);
+  HMSHLSPlayer(
+      {Key? key, this.hlsUrl, this.isHLSStatsRequired, this.showPlayerControls})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return _PlatformView(
       hlsUrl: hlsUrl,
+      isHLSStatsRequired: isHLSStatsRequired,
+      showPlayerControls: showPlayerControls,
       key: key,
     );
   }
@@ -58,8 +53,16 @@ class HMSHLSPlayer extends StatelessWidget {
 
 class _PlatformView extends StatelessWidget {
   final String? hlsUrl;
+  final bool? isHLSStatsRequired;
 
-  _PlatformView({Key? key, this.hlsUrl}) : super(key: key);
+  final bool? showPlayerControls;
+
+  _PlatformView(
+      {Key? key,
+      this.hlsUrl,
+      this.isHLSStatsRequired = false,
+      this.showPlayerControls = false})
+      : super(key: key);
 
   void onPlatformViewCreated(int id) {}
 
@@ -72,7 +75,11 @@ class _PlatformView extends StatelessWidget {
         viewType: 'HMSHLSPlayer',
         onPlatformViewCreated: onPlatformViewCreated,
         creationParamsCodec: StandardMessageCodec(),
-        creationParams: {'hls_url': hlsUrl},
+        creationParams: {
+          'hls_url': hlsUrl,
+          'is_hls_stats_required': isHLSStatsRequired,
+          'show_player_controls': showPlayerControls
+        },
         gestureRecognizers: {},
       );
     } else if (Platform.isIOS) {
@@ -81,7 +88,11 @@ class _PlatformView extends StatelessWidget {
         viewType: 'HMSHLSPlayer',
         onPlatformViewCreated: onPlatformViewCreated,
         creationParamsCodec: StandardMessageCodec(),
-        creationParams: {'hls_url': hlsUrl},
+        creationParams: {
+          'hls_url': hlsUrl,
+          'is_hls_stats_required': isHLSStatsRequired,
+          'show_player_controls': showPlayerControls
+        },
         gestureRecognizers: {},
       );
     } else {

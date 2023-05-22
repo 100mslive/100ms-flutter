@@ -9,14 +9,15 @@ import android.view.LayoutInflater
 import live.hms.hmssdk_flutter.R
 import android.widget.FrameLayout
 import androidx.media3.ui.PlayerView
-import io.flutter.plugin.common.EventChannel
-import io.flutter.plugin.common.EventChannel.EventSink
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import live.hms.hls_player.*
+import live.hms.hmssdk_flutter.Constants
+import live.hms.hmssdk_flutter.Constants.Companion.HLS_PLAYER_INTENT
 import live.hms.hmssdk_flutter.HMSErrorLogger
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
+import live.hms.hmssdk_flutter.hls_player.HLSStatsHandler
 import live.hms.hmssdk_flutter.hls_player.HMSHLSCueExtension
 import live.hms.hmssdk_flutter.hls_player.HMSHLSPlaybackStateExtension
 import java.util.concurrent.TimeUnit
@@ -25,14 +26,16 @@ class HMSHLSPlayer(
     context: Context,
     private val hlsUrl: String?,
     private val hmssdkFlutterPlugin: HmssdkFlutterPlugin?,
+    private val isHLSStatsRequired: Boolean,
+    showHLSControls: Boolean
     ): FrameLayout(context,null) {
 
     var hlsPlayer: HmsHlsPlayer? = null
     private var hlsPlayerView: PlayerView? = null
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(contxt: Context?, intent: Intent?) {
-            if (intent?.action == "hms_player") {
-                when (intent?.extras?.getString("method_name")) {
+            if (intent?.action == HLS_PLAYER_INTENT) {
+                when (intent.extras?.getString(Constants.METHOD_CALL)) {
                     "start_hls_player" -> {
                         return start()
                     }
@@ -49,10 +52,19 @@ class HMSHLSPlayer(
                         return seekToLivePosition()
                     }
                     "seek_forward" -> {
-                        return seekForward(intent?.extras?.getLong("seconds"))
+                        return seekForward(intent.extras?.getLong("seconds"))
                     }
                     "seek_backward" -> {
-                        return seekBackward(intent?.extras?.getLong("seconds"))
+                        return seekBackward(intent.extras?.getLong("seconds"))
+                    }
+                    "set_volume" -> {
+                        return setVolume(intent.extras?.getInt("volume"))
+                    }
+                    "add_hls_stats_listener" -> {
+                        return HLSStatsHandler.addHLSStatsListener(hmssdkFlutterPlugin,hlsPlayer)
+                    }
+                    "remove_hls_stats_listener" -> {
+                        return HLSStatsHandler.removeStatsListener(hlsPlayer)
                     }
                 }
             } else {
@@ -90,7 +102,6 @@ class HMSHLSPlayer(
     }
 
     private fun start() {
-
         hmssdkFlutterPlugin?.hlsStreamUrl?.let {
             hlsPlayer?.play(it)
         }?:run {
@@ -98,12 +109,20 @@ class HMSHLSPlayer(
         }
     }
 
+    private fun setVolume(volume:Int?){
+        volume?.let {
+            hlsPlayer?.volume = it
+        }
+    }
+
     init {
         hlsPlayerView = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.hms_hls_player, this)?.findViewById(R.id.hlsView)
-        if(hlsPlayerView != null){
+        hlsPlayerView?.let {
+            it.useController = showHLSControls
             hlsPlayer = HmsHlsPlayer(context, hmssdkFlutterPlugin?.hmssdk)
-            hlsPlayerView?.player = hlsPlayer?.getNativePlayer()
-
+            it.player = hlsPlayer?.getNativePlayer()
+        }?:run {
+            HMSErrorLogger.logError("init HMSHLSPlayer","hlsPlayerView is null","NULL_ERROR")
         }
     }
 
@@ -122,53 +141,17 @@ class HMSHLSPlayer(
                 hmssdkFlutterPlugin?.let { plugin ->
                     plugin.hlsStreamUrl?.let { streamUrl ->
                         player.play(streamUrl)
-                        context.registerReceiver(broadcastReceiver, IntentFilter("hms_player"))
+                        context.registerReceiver(broadcastReceiver, IntentFilter(HLS_PLAYER_INTENT))
                         player.addPlayerEventListener(
-                            object : HmsHlsPlaybackEvents{
-                                val hashMap: HashMap<String, Any?> = HashMap()
-                                override fun onPlaybackFailure(error : HmsHlsException) {
-                                    val args: HashMap<String, String?> = HashMap()
-                                    hashMap["event_name"] = "on_playback_failure"
-                                    args["error"] = error.error.localizedMessage
-                                    hashMap["data"] = args
-                                    CoroutineScope(Dispatchers.Main).launch {
-                                        hmssdkFlutterPlugin.hlsPlayerSink?.success(hashMap)
-                                    }
-                                }
-
-                                override fun onPlaybackStateChanged(p1 : HmsHlsPlaybackState){
-                                    hashMap["event_name"] = "on_playback_state_changed"
-                                    hashMap["data"] = HMSHLSPlaybackStateExtension.toDictionary(p1)
-                                    if(hashMap["data"]!= null){
-                                        CoroutineScope(Dispatchers.Main).launch {
-                                            hmssdkFlutterPlugin.hlsPlayerSink?.success(hashMap)
-                                        }
-                                    }
-                                }
-
-                                override fun onCue(hlsCue : HmsHlsCue) {
-                                    hashMap["event_name"] = "on_cue"
-                                    hashMap["data"] = HMSHLSCueExtension.toDictionary(hlsCue)
-                                    if(hashMap["data"]!= null){
-                                        CoroutineScope(Dispatchers.Main).launch {
-                                            hmssdkFlutterPlugin.hlsPlayerSink?.success(hashMap)
-                                        }
-                                    }
-                                }
-                            }
+                            hmsHLSPlaybackEvents
                         )
+                        if(isHLSStatsRequired){
+                            HLSStatsHandler.addHLSStatsListener(hmssdkFlutterPlugin,hlsPlayer)
+                        }
                     }
                 }
             }
         }
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        hlsPlayer?.stop()
-        hlsPlayer = null
-        hlsPlayerView = null
-        context.unregisterReceiver(broadcastReceiver)
     }
 
     fun dispose() {
@@ -176,5 +159,44 @@ class HMSHLSPlayer(
         hlsPlayer = null
         hlsPlayerView = null
         context.unregisterReceiver(broadcastReceiver)
+        HLSStatsHandler.removeStatsListener(hlsPlayer)
     }
+
+    private val hmsHLSPlaybackEvents = object: HmsHlsPlaybackEvents{
+        override fun onPlaybackFailure(error : HmsHlsException) {
+            val hashMap: HashMap<String, Any?> = HashMap()
+            val args: HashMap<String, String?> = HashMap()
+            hashMap["event_name"] = "on_playback_failure"
+            args["error"] = error.error.localizedMessage
+            hashMap["data"] = args
+            CoroutineScope(Dispatchers.Main).launch {
+                hmssdkFlutterPlugin?.hlsPlayerSink?.success(hashMap)
+            }
+        }
+
+        override fun onPlaybackStateChanged(p1 : HmsHlsPlaybackState){
+            val hashMap: HashMap<String, Any?> = HashMap()
+            hashMap["event_name"] = "on_playback_state_changed"
+            hashMap["data"] = HMSHLSPlaybackStateExtension.toDictionary(p1)
+            if(hashMap["data"]!= null){
+                CoroutineScope(Dispatchers.Main).launch {
+                    hmssdkFlutterPlugin?.hlsPlayerSink?.success(hashMap)
+                }
+            }
+        }
+
+        override fun onCue(hlsCue : HmsHlsCue) {
+            val hashMap: HashMap<String, Any?> = HashMap()
+            hashMap["event_name"] = "on_cue"
+            hashMap["data"] = HMSHLSCueExtension.toDictionary(hlsCue)
+            if(hashMap["data"]!= null){
+                CoroutineScope(Dispatchers.Main).launch {
+                    hmssdkFlutterPlugin?.hlsPlayerSink?.success(hashMap)
+                }
+            }
+        }
+    }
+
+
+
 }

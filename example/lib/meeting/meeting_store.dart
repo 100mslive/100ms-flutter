@@ -8,14 +8,13 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:hmssdk_flutter/src/model/hls_player_model/hms_hls_player_stats.dart';
 import 'package:hmssdk_flutter/src/model/hms_hls_cue.dart';
 import 'package:hmssdk_flutter/src/enum/hms_hls_playback_state.dart';
 import 'package:hmssdk_flutter_example/common/util/log_writer.dart';
 import 'package:hmssdk_flutter_example/app_secrets.dart';
 import 'package:hmssdk_flutter_example/enum/session_store_key.dart';
 import 'package:hmssdk_flutter_example/service/constant.dart';
-import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
-import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/model/rtc_stats.dart';
@@ -178,8 +177,6 @@ class MeetingStore extends ChangeNotifier
 
   HMSLogList applicationLogs = HMSLogList(hmsLog: []);
 
-  bool isHLSPlayerRequired = true;
-
   bool isFlashOn = false;
 
   ///These variables are used in session metadata implementation *************************************************
@@ -189,6 +186,12 @@ class MeetingStore extends ChangeNotifier
   PeerTrackNode? spotLightPeer;
 
   String? spotlightMetadata;
+
+  ///HLS Player Stats
+
+  HMSHLSPlayerStats? hlsPlayerStats;
+
+  bool isHLSStatsEnabled = true;
 
   Future<HMSException?> join(String userName, String roomUrl,
       {HMSConfig? roomConfig}) async {
@@ -560,15 +563,13 @@ class MeetingStore extends ChangeNotifier
     getAudioDevicesList();
     notifyListeners();
 
-    if (!(isHLSLink)) {
-      if (Platform.isIOS) {
-        HMSIOSPIPController.setup(
-            autoEnterPip: true,
-            aspectRatio: [9, 16],
-            backgroundColor: Colors.black);
-      } else if (Platform.isAndroid) {
-        HMSAndroidPIPController.setup();
-      }
+    if (Platform.isIOS) {
+      HMSIOSPIPController.setup(
+          autoEnterPip: true,
+          aspectRatio: [9, 16],
+          backgroundColor: Colors.black);
+    } else if (Platform.isAndroid) {
+      HMSAndroidPIPController.setup();
     }
 
     FlutterForegroundTask.startService(
@@ -1140,29 +1141,6 @@ class MeetingStore extends ChangeNotifier
         } else {
           if (peer.isLocal) {
             isHLSLink = false;
-          }
-        }
-
-        // Setup or destroy PIP controller on role basis
-        //Pip is not supported for player by default
-        //So we need to destroy the pip config
-        if (peer.isLocal) {
-          if (Platform.isIOS) {
-            if (peer.role.name.contains("hls-")) {
-              HMSIOSPIPController.destroy();
-            } else {
-              HMSIOSPIPController.setup(
-                  autoEnterPip: true,
-                  aspectRatio: [9, 16],
-                  backgroundColor: Colors.black);
-            }
-          } else {
-            if (peer.role.name.contains("hls-")) {
-              HMSAndroidPIPController.destroy();
-            } else {
-              HMSAndroidPIPController.setup(
-                  autoEnterPip: true, aspectRatio: [9, 16]);
-            }
           }
         }
 
@@ -1870,7 +1848,6 @@ class MeetingStore extends ChangeNotifier
       return;
     }
     if (state == AppLifecycleState.resumed) {
-      isHLSPlayerRequired = true;
       if (Platform.isAndroid) {
         isPipActive = await HMSAndroidPIPController.isActive();
       } else if (Platform.isIOS) {
@@ -1906,7 +1883,6 @@ class MeetingStore extends ChangeNotifier
 
       if (Platform.isAndroid) {
         isPipActive = await HMSAndroidPIPController.isActive();
-        isHLSPlayerRequired = false;
         notifyListeners();
       }
 
@@ -1936,13 +1912,11 @@ class MeetingStore extends ChangeNotifier
     } else if (state == AppLifecycleState.inactive) {
       if (Platform.isAndroid && !isPipActive) {
         isPipActive = await HMSAndroidPIPController.isActive();
-        isHLSPlayerRequired = false;
       }
       notifyListeners();
     } else if (state == AppLifecycleState.detached) {
       if (Platform.isAndroid && !isPipActive) {
         isPipActive = await HMSAndroidPIPController.isActive();
-        isHLSPlayerRequired = false;
       }
       notifyListeners();
     }
@@ -1973,5 +1947,27 @@ class MeetingStore extends ChangeNotifier
   @override
   void onPlaybackStateChanged({required HMSHLSPlaybackState playbackState}) {
     Utilities.showToast("Playback state changed to ${playbackState.name}");
+  }
+
+  @override
+  void onHLSError({required HMSException hlsException}) {
+    // TODO: implement onHLSError
+  }
+
+  @override
+  void onHLSEventUpdate({required HMSHLSPlayerStats playerStats}) {
+    log("onHLSEventUpdate-> bitrate:${playerStats.videoInfo.averageBitrate} buffered duration: ${playerStats.bufferedDuration}");
+    hlsPlayerStats = playerStats;
+    notifyListeners();
+  }
+
+  void setHLSPlayerStats(bool value) {
+    isHLSStatsEnabled = value;
+    if (!value) {
+      HMSHLSPlayerController.removeHLSStatsListener();
+    } else {
+      HMSHLSPlayerController.addHLSStatsListener();
+    }
+    notifyListeners();
   }
 }

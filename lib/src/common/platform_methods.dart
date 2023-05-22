@@ -180,7 +180,10 @@ enum PlatformMethod {
   resume,
   seekToLivePosition,
   seekForward,
-  seekBackward
+  seekBackward,
+  setHLSPlayerVolume,
+  addHLSStatsListener,
+  removeHLSStatsListener
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -442,6 +445,12 @@ extension PlatformMethodValues on PlatformMethod {
         return "seek_forward";
       case PlatformMethod.seekBackward:
         return "seek_backward";
+      case PlatformMethod.setHLSPlayerVolume:
+        return "set_hls_player_volume";
+      case PlatformMethod.addHLSStatsListener:
+        return "add_hls_stats_listener";
+      case PlatformMethod.removeHLSStatsListener:
+        return "remove_hls_stats_listener";
       default:
         return 'unknown';
     }
@@ -705,6 +714,12 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.seekForward;
       case "seek_backward":
         return PlatformMethod.seekBackward;
+      case "set_hls_player_volume":
+        return PlatformMethod.setHLSPlayerVolume;
+      case "add_hls_stats_listener":
+        return PlatformMethod.addHLSStatsListener;
+      case "remove_hls_stats_listener":
+        return PlatformMethod.removeHLSStatsListener;
       default:
         return PlatformMethod.unknown;
     }

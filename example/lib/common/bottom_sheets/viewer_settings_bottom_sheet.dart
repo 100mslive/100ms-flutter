@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,6 +19,13 @@ class ViewerSettingsBottomSheet extends StatefulWidget {
 }
 
 class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
+  bool isStatsEnabled = true;
+  @override
+  void initState() {
+    super.initState();
+    isStatsEnabled = context.read<MeetingStore>().isHLSStatsEnabled;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
@@ -266,6 +274,30 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                         letterSpacing: 0.25,
                         fontWeight: FontWeight.w600),
                   )),
+              ListTile(
+                horizontalTitleGap: 2,
+                contentPadding: EdgeInsets.zero,
+                leading: SvgPicture.asset(
+                  "assets/icons/stats.svg",
+                  fit: BoxFit.scaleDown,
+                ),
+                title: Text(
+                  "Show Player Stats",
+                  style: GoogleFonts.inter(
+                      fontSize: 14,
+                      color: themeDefaultColor,
+                      letterSpacing: 0.25,
+                      fontWeight: FontWeight.w600),
+                ),
+                trailing: CupertinoSwitch(
+                    activeColor: hmsdefaultColor,
+                    value: isStatsEnabled,
+                    onChanged: (value) => {
+                          isStatsEnabled = value,
+                          context.read<MeetingStore>().setHLSPlayerStats(value),
+                          setState(() {}),
+                        }),
+              ),
             ],
           ),
         ),
