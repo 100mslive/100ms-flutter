@@ -1,8 +1,11 @@
-Board: https://github.com/100mslive/100ms-flutter/projects/23
+Board: https://github.com/100mslive/100ms-flutter/projects/19
 
 - Fixed android screen share, where the screen share was coming at the top rather than center.
 https://github.com/100mslive/100ms-flutter/issues/1068
 
-Flutter SDK: 1.6.1
-Android SDK: 2.6.3
+- Added support for messageId on Messages
+https://github.com/100mslive/100ms-flutter/issues/1335
+
+Flutter SDK: 1.7.0
+Android SDK: 2.6.4
 iOS SDK: 0.9.4
