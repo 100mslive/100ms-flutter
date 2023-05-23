@@ -6,9 +6,7 @@ import android.view.View
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.platform.PlatformViewFactory
-import live.hms.hmssdk_flutter.HMSExceptionExtension
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
-import live.hms.video.error.HMSException
 import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.video.utils.HmsUtilities
 
@@ -63,9 +61,11 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
 
         val track = HmsUtilities.getVideoTrack(trackId!!, room!!)
         if (track == null) {
-            plugin.onVideoViewError(methodName = "HMSVideoView",
+            plugin.onVideoViewError(
+                methodName = "HMSVideoView",
                 error = "There is no track corresponding to the given trackId",
-            errorMessage = "Video track is null for corresponding trackId")
+                errorMessage = "Video track is null for corresponding trackId",
+            )
         }
         val disableAutoSimulcastLayerSelect = args!!["disable_auto_simulcast_layer_select"] as? Boolean ?: false
 
