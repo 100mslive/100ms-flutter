@@ -30,7 +30,7 @@ class TileBorder extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border.all(
                   color: (audioLevel != -1)
-                      ? Utilities.getBackgroundColour(name)
+                      ? hmsdefaultColor
                       : themeBottomSheetColor,
                   width: (audioLevel != -1) ? 4.0 : 0.0),
               borderRadius: BorderRadius.all(Radius.circular(10)),
