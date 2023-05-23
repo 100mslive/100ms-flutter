@@ -360,14 +360,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-  fwfh_text_style:
-    dependency: transitive
-    description:
-      name: fwfh_text_style
-      sha256: "66ea19f4b5837789a82e5dd4a1d169e4f1693f6846d7e50439772a6a324343f7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.22.8+2"
   google_fonts:
     dependency: "direct main"
     description:
@@ -383,14 +375,6 @@ packages:
       relative: true
     source: path
     version: "1.6.1"
-  html:
-    dependency: transitive
-    description:
-      name: html
-      sha256: "58e3491f7bf0b6a4ea5110c0c688877460d1a6366731155c4a4580e7ded773e8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.15.3"
   http:
     dependency: "direct main"
     description:
@@ -627,7 +611,7 @@ packages:
     dependency: transitive
     description:
       name: petitparser
-      sha256: cb3798bef7fc021ac45b308f4b51208a152792445cce0448c9a4ba5879dd8750
+      sha256: "49392a45ced973e8d94a85fdb21293fbb40ba805fc49f2965101ae748a3683b4"
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
