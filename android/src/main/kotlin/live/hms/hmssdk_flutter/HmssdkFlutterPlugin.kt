@@ -822,14 +822,6 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
-            if (type == HMSPeerUpdate.AUDIO_TOGGLED || type == HMSPeerUpdate.VIDEO_TOGGLED ||
-                type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER ||
-                type == HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER || type == HMSPeerUpdate.STARTED_SPEAKING ||
-                type == HMSPeerUpdate.STOPPED_SPEAKING
-            ) {
-                return
-            }
-
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_peer_update"
 
@@ -934,14 +926,6 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
-            if (type == HMSPeerUpdate.AUDIO_TOGGLED || type == HMSPeerUpdate.VIDEO_TOGGLED ||
-                type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER ||
-                type == HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER || type == HMSPeerUpdate.STARTED_SPEAKING ||
-                type == HMSPeerUpdate.STOPPED_SPEAKING
-            ) {
-                return
-            }
-
             val args = HashMap<String, Any?>()
 
             args["event_name"] = "on_peer_update"

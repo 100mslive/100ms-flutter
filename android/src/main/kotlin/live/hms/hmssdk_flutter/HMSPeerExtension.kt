@@ -39,11 +39,6 @@ class HMSPeerExtension {
                 HMSPeerUpdate.ROLE_CHANGED -> "roleUpdated"
                 HMSPeerUpdate.METADATA_CHANGED -> "metadataChanged"
                 HMSPeerUpdate.NAME_CHANGED -> "nameChanged"
-                HMSPeerUpdate.BECAME_DOMINANT_SPEAKER -> "becameDominantSpeaker"
-                HMSPeerUpdate.NO_DOMINANT_SPEAKER -> "noDominantSpeaker"
-                HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER -> "resignedDominantSpeaker"
-                HMSPeerUpdate.STARTED_SPEAKING -> "startedSpeaking"
-                HMSPeerUpdate.STOPPED_SPEAKING -> "stoppedSpeaking"
                 HMSPeerUpdate.NETWORK_QUALITY_UPDATED -> "networkQualityUpdated"
                 else -> "defaultUpdate"
             }
