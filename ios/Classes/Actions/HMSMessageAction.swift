@@ -40,7 +40,7 @@ class HMSMessageAction {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
                 guard let data
-                else{
+                else {
                     result(nil)
                     return
                 }
@@ -70,7 +70,7 @@ class HMSMessageAction {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
                 guard let data
-                else{
+                else {
                     result(nil)
                     return
                 }
@@ -100,7 +100,7 @@ class HMSMessageAction {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
                 guard let data
-                else{
+                else {
                     result(nil)
                     return
                 }

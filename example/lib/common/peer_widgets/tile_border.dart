@@ -5,7 +5,6 @@ import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
-import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 
 class TileBorder extends StatelessWidget {
   final double itemHeight;

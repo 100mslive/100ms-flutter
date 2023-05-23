@@ -15,7 +15,7 @@ class HMSMessageExtension {
         var dict = [String: Any]()
 
         dict["message_id"] = message.messageID
-        
+
         dict["message"] = message.message
 
         dict["type"] = message.type
