@@ -189,9 +189,14 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     return MaterialApp(
       builder: BotToastInit(), //1. call BotToastInit
       navigatorObservers: [BotToastNavigatorObserver()],
-      home: HomePage(
-        deepLinkURL: _currentURI == null ? null : _currentURI.toString(),
-      ),
+      // home: HomePage(
+      //   deepLinkURL: _currentURI == null ? null : _currentURI.toString(),
+      // ),
+      home: TestRoute(),
+      routes: {
+        '/test-route':(context) => TestRoute(),
+        '/hms-path':(context) => HomePage(),
+      },
       theme: _lightTheme,
       darkTheme: _darkTheme,
       themeMode: _themeMode,
@@ -528,4 +533,18 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+class TestRoute extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        color: Colors.red,
+        child: Center(child: 
+        Text("Test Route",style: TextStyle(color: Colors.white),)),
+      ),
+    );
+  }
+
 }
