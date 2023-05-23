@@ -1,10 +1,16 @@
 Board: https://github.com/100mslive/100ms-flutter/projects/19
 
+- Android HLS Player Support
+https://github.com/100mslive/100ms-flutter/issues/1089
+
 - Fixed android screen share, where the screen share was coming at the top rather than center.
 https://github.com/100mslive/100ms-flutter/issues/1068
 
 - Added support for messageId on Messages
 https://github.com/100mslive/100ms-flutter/issues/1335
+
+- Updated `captureSnapshot` implementation
+https://github.com/100mslive/100ms-flutter/pull/1350
 
 Flutter SDK: 1.7.0
 Android SDK: 2.6.4
