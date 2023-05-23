@@ -4,7 +4,7 @@ cli:
 plugins:
   sources:
     - id: trunk
-      ref: v0.0.16
+      ref: v0.0.17
       uri: https://github.com/trunk-io/plugins
 lint:
   enabled:
@@ -17,7 +17,7 @@ lint:
     - shellcheck@0.9.0
     - gitleaks@8.16.3
     - svgo@3.0.2
-    - ktlint@0.49.0
+    - ktlint@0.49.1
 runtimes:
   enabled:
     - python@3.10.8

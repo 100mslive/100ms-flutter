@@ -1669,46 +1669,27 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("Change name successful");
         break;
       case HMSActionResultListenerMethod.sendBroadcastMessage:
-        var message = HMSMessage(
-            sender: localPeer,
-            message: arguments!['message'],
-            type: arguments['type'],
-            time: DateTime.now(),
-            hmsMessageRecipient: HMSMessageRecipient(
-                recipientPeer: null,
-                recipientRoles: null,
-                hmsMessageRecipientType: HMSMessageRecipientType.BROADCAST));
-        if (arguments['type'] != "metadata") {
+        if (arguments != null) {
+          var message = HMSMessage.fromMap(arguments);
+          if (arguments['type'] != "metadata") {
+            addMessage(message);
+            notifyListeners();
+          }
+        }
+        break;
+      case HMSActionResultListenerMethod.sendGroupMessage:
+        if (arguments != null) {
+          var message = HMSMessage.fromMap(arguments);
           addMessage(message);
           notifyListeners();
         }
         break;
-      case HMSActionResultListenerMethod.sendGroupMessage:
-        var message = HMSMessage(
-            sender: localPeer,
-            message: arguments!['message'],
-            type: arguments['type'],
-            time: DateTime.now(),
-            hmsMessageRecipient: HMSMessageRecipient(
-                recipientPeer: null,
-                recipientRoles: arguments['roles'],
-                hmsMessageRecipientType: HMSMessageRecipientType.GROUP));
-        addMessage(message);
-        notifyListeners();
-
-        break;
       case HMSActionResultListenerMethod.sendDirectMessage:
-        var message = HMSMessage(
-            sender: localPeer,
-            message: arguments!['message'],
-            type: arguments['type'],
-            time: DateTime.now(),
-            hmsMessageRecipient: HMSMessageRecipient(
-                recipientPeer: arguments['peer'],
-                recipientRoles: null,
-                hmsMessageRecipientType: HMSMessageRecipientType.DIRECT));
-        addMessage(message);
-        notifyListeners();
+        if (arguments != null) {
+          var message = HMSMessage.fromMap(arguments);
+          addMessage(message);
+          notifyListeners();
+        }
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
         isHLSLoading = true;

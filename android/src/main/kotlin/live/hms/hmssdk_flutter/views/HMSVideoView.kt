@@ -99,6 +99,7 @@ class HMSVideoView(
         super.onAttachedToWindow()
         if (track != null) {
             if (hmsVideoView != null) {
+                // delay addTrack
                 hmsVideoView?.addTrack(track)
                 context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId))
             } else {
