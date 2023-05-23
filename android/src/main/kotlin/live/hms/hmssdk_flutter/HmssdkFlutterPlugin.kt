@@ -21,6 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.hls_player.HMSHLSPlayerAction
+import live.hms.hmssdk_flutter.Constants.Companion.METHOD_CALL
 import live.hms.hmssdk_flutter.methods.*
 import live.hms.hmssdk_flutter.views.HMSHLSPlayerFactory
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
@@ -1236,7 +1237,7 @@ class HmssdkFlutterPlugin :
         val trackId: String? = call.argument<String>("track_id")
         if (trackId != null) {
             hmsVideoViewResult = result
-            activity.sendBroadcast(Intent(trackId).putExtra("method_name", "CAPTURE_SNAPSHOT"))
+            activity.sendBroadcast(Intent(trackId).putExtra(METHOD_CALL, "CAPTURE_SNAPSHOT"))
         }
     }
 
