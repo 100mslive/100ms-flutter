@@ -29,6 +29,7 @@ import 'package:hmssdk_flutter_example/common/widgets/pip_view.dart';
 import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
+import 'package:wakelock/wakelock.dart';
 
 class MeetingPage extends StatefulWidget {
   final String meetingLink;
@@ -51,6 +52,7 @@ class _MeetingPageState extends State<MeetingPage> {
   void initState() {
     super.initState();
     checkAudioState();
+    Wakelock.enable();
   }
 
   void checkAudioState() async {

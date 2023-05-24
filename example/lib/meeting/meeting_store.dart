@@ -26,6 +26,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
+import 'package:wakelock/wakelock.dart';
 
 class MeetingStore extends ChangeNotifier
     with WidgetsBindingObserver
@@ -191,7 +192,7 @@ class MeetingStore extends ChangeNotifier
 
   HMSHLSPlayerStats? hlsPlayerStats;
 
-  bool isHLSStatsEnabled = true;
+  bool isHLSStatsEnabled = false;
 
   Future<HMSException?> join(String userName, String roomUrl,
       {HMSConfig? roomConfig}) async {
@@ -563,7 +564,7 @@ class MeetingStore extends ChangeNotifier
     getAudioDevicesList();
     notifyListeners();
 
-    if (Platform.isIOS) {
+    if (Platform.isIOS && !(localPeer?.role.name.contains("hls-") ?? false)) {
       HMSIOSPIPController.setup(
           autoEnterPip: true,
           aspectRatio: [9, 16],
@@ -1018,6 +1019,7 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.removeHMSLogger();
     HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(this);
     _hmsSDKInteractor.destroy();
+    Wakelock.disable();
     _hmsSessionStore = null;
     peerTracks.clear();
     isRoomEnded = true;
@@ -1141,6 +1143,19 @@ class MeetingStore extends ChangeNotifier
         } else {
           if (peer.isLocal) {
             isHLSLink = false;
+          }
+        }
+
+        if (peer.isLocal) {
+          if (Platform.isIOS) {
+            if (peer.role.name.contains("hls-")) {
+              HMSIOSPIPController.destroy();
+            } else {
+              HMSIOSPIPController.setup(
+                  autoEnterPip: true,
+                  aspectRatio: [9, 16],
+                  backgroundColor: Colors.black);
+            }
           }
         }
 
@@ -1937,7 +1952,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onHLSEventUpdate({required HMSHLSPlayerStats playerStats}) {
-    log("onHLSEventUpdate-> bitrate:${playerStats.videoInfo.averageBitrate} buffered duration: ${playerStats.bufferedDuration}");
+    log("onHLSEventUpdate-> bitrate:${playerStats.averageBitrate} buffered duration: ${playerStats.bufferedDuration}");
     hlsPlayerStats = playerStats;
     notifyListeners();
   }

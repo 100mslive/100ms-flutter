@@ -19,7 +19,6 @@ import 'package:hmssdk_flutter_example/common/bottom_sheets/app_settings_bottom_
 import 'package:hmssdk_flutter_example/home_screen/user_detail_screen.dart';
 import 'package:hmssdk_flutter_example/home_screen/qr_code_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:wakelock/wakelock.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uni_links/uni_links.dart';
 
@@ -41,7 +40,6 @@ void main() async {
     return true;
   };
 
-  Wakelock.enable();
   Provider.debugCheckInvalidValueType = null;
 
   // Get any initial links

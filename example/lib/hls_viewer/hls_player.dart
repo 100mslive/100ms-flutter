@@ -30,6 +30,7 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
                       return AspectRatio(
                         aspectRatio: ratio,
                         child: HMSHLSPlayer(
+                          showPlayerControls: true,
                           isHLSStatsRequired:
                               context.read<MeetingStore>().isHLSStatsEnabled,
                         ),

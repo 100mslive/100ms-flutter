@@ -15,13 +15,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var logsEventChannel: FlutterEventChannel?
     var rtcStatsEventChannel: FlutterEventChannel?
     var sessionEventChannel: FlutterEventChannel?
+    var hlsPlayerChannel: FlutterEventChannel?
 
     var eventSink: FlutterEventSink?
     var previewSink: FlutterEventSink?
     var logsSink: FlutterEventSink?
     var rtcSink: FlutterEventSink?
     var sessionSink: FlutterEventSink?
-
+    var hlsPlayerSink: FlutterEventSink?
+    
     var roleChangeRequest: HMSRoleChangeRequest?
 
     internal var hmsSDK: HMSSDK?
@@ -31,6 +33,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     internal var sessionStore: HMSSessionStore?
 
     private var sessionStoreChangeObservers = [HMSSessionStoreKeyChangeListener]()
+    
+    var hlsStreamUrl: String?
 
     // MARK: - Flutter Setup
 
@@ -43,23 +47,29 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let logsChannel = FlutterEventChannel(name: "logs_event_channel", binaryMessenger: registrar.messenger())
         let rtcChannel = FlutterEventChannel(name: "rtc_event_channel", binaryMessenger: registrar.messenger())
         let sessionChannel = FlutterEventChannel(name: "session_event_channel", binaryMessenger: registrar.messenger())
-
+        let hlsChannel = FlutterEventChannel(name: "hls_player_channel",binaryMessenger: registrar.messenger())
+        
         let instance = SwiftHmssdkFlutterPlugin(channel: channel,
                                                 meetingEventChannel: eventChannel,
                                                 previewEventChannel: previewChannel,
                                                 logsEventChannel: logsChannel,
                                                 rtcStatsEventChannel: rtcChannel,
-                                                sessionEventChannel: sessionChannel)
+                                                sessionEventChannel: sessionChannel,
+                                                hlsPlayerChannel: hlsChannel)
 
         let videoViewFactory = HMSFlutterPlatformViewFactory(plugin: instance)
         registrar.register(videoViewFactory, withId: "HMSFlutterPlatformView")
 
+        let hlsPlayerFactory = HMSHLSPlayerViewFactory(plugin: instance)
+        registrar.register(hlsPlayerFactory, withId: "HMSHLSPlayer")
+        
         eventChannel.setStreamHandler(instance)
         previewChannel.setStreamHandler(instance)
         logsChannel.setStreamHandler(instance)
         rtcChannel.setStreamHandler(instance)
         sessionChannel.setStreamHandler(instance)
-
+        hlsChannel.setStreamHandler(instance)
+        
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
 
@@ -68,7 +78,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 previewEventChannel: FlutterEventChannel,
                 logsEventChannel: FlutterEventChannel,
                 rtcStatsEventChannel: FlutterEventChannel,
-                sessionEventChannel: FlutterEventChannel) {
+                sessionEventChannel: FlutterEventChannel,
+                hlsPlayerChannel: FlutterEventChannel) {
 
         self.channel = channel
         self.meetingEventChannel = meetingEventChannel
@@ -76,6 +87,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         self.logsEventChannel = logsEventChannel
         self.rtcStatsEventChannel = rtcStatsEventChannel
         self.sessionEventChannel = sessionEventChannel
+        self.hlsPlayerChannel = hlsPlayerChannel
     }
 
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
@@ -96,6 +108,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             rtcSink = events
         case "session_store":
             sessionSink = events
+        case "hls_player":
+            hlsPlayerSink = events
         default:
             return FlutterError(code: #function, message: "invalid event sink name", details: arguments)
         }
@@ -137,6 +151,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             sessionSink = nil
         } else {
             print(#function, "sessionEventChannel not found")
+        }
+        if hlsPlayerChannel != nil {
+            hlsPlayerChannel!.setStreamHandler(nil)
+            hlsPlayerSink = nil
+        }
+        else {
+            print(#function, "hlsPlayerChannel not found")
         }
     }
 
@@ -261,7 +282,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "remove_key_change_listener":
             removeKeyChangeListener(call, result)
-
+            
+            // MARK: - HLS Player
+            
+        case "start_hls_player","stop_hls_player","pause_hls_player","resume_hls_player","seek_to_live_position","seek_forward","seek_backward","set_hls_player_volume","add_hls_stats_listener","remove_hls_stats_listener":
+            HMSHLSPlayerAction.hlsPlayerAction(call,result)
+ 
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -1172,6 +1198,20 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var previewEnded = false
     public func on(join room: HMSRoom) {
         previewEnded = true
+        
+        /**
+         * This sets the [hlsStreamUrl] variable to
+         * fetch the stream URL directly from onRoomUpdate
+         * This helps to play the HLS Stream even if user doesn't send
+         * the stream URL.
+         */
+        
+        if(room.hlsStreamingState.running){
+            if(!room.hlsStreamingState.variants.isEmpty){
+                hlsStreamUrl = room.hlsStreamingState.variants[0].url.absoluteString
+            }
+        }
+        
         let data = [
             "event_name": "on_join_room",
             "data": [
@@ -1183,6 +1223,20 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     public func on(room: HMSRoom, update: HMSRoomUpdate) {
+        
+        /**
+         * This sets the [hlsStreamUrl] variable to
+         * fetch the stream URL directly from onRoomUpdate
+         * This helps to play the HLS Stream even if user doesn't send
+         * the stream URL.
+         */
+        
+        if(room.hlsStreamingState.running){
+            if(!room.hlsStreamingState.variants.isEmpty){
+                hlsStreamUrl = room.hlsStreamingState.variants[0].url.absoluteString
+            }
+        }
+        
         let data = [
             "event_name": "on_room_update",
             "data": [
