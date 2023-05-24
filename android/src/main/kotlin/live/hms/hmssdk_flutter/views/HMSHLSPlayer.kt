@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import android.view.LayoutInflater
-import live.hms.hmssdk_flutter.R
 import android.widget.FrameLayout
 import androidx.media3.ui.PlayerView
 import kotlinx.coroutines.CoroutineScope
@@ -17,6 +16,7 @@ import live.hms.hmssdk_flutter.Constants
 import live.hms.hmssdk_flutter.Constants.Companion.HLS_PLAYER_INTENT
 import live.hms.hmssdk_flutter.HMSErrorLogger
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
+import live.hms.hmssdk_flutter.R
 import live.hms.hmssdk_flutter.hls_player.HLSStatsHandler
 import live.hms.hmssdk_flutter.hls_player.HMSHLSCueExtension
 import live.hms.hmssdk_flutter.hls_player.HMSHLSPlaybackStateExtension
@@ -27,8 +27,8 @@ class HMSHLSPlayer(
     private val hlsUrl: String?,
     private val hmssdkFlutterPlugin: HmssdkFlutterPlugin?,
     private val isHLSStatsRequired: Boolean,
-    showHLSControls: Boolean
-    ): FrameLayout(context,null) {
+    showHLSControls: Boolean,
+) : FrameLayout(context, null) {
 
     var hlsPlayer: HmsHlsPlayer? = null
     private var hlsPlayerView: PlayerView? = null
@@ -61,7 +61,7 @@ class HMSHLSPlayer(
                         return setVolume(intent.extras?.getInt("volume"))
                     }
                     "add_hls_stats_listener" -> {
-                        return HLSStatsHandler.addHLSStatsListener(hmssdkFlutterPlugin,hlsPlayer)
+                        return HLSStatsHandler.addHLSStatsListener(hmssdkFlutterPlugin, hlsPlayer)
                     }
                     "remove_hls_stats_listener" -> {
                         return HLSStatsHandler.removeStatsListener(hlsPlayer)
@@ -75,13 +75,13 @@ class HMSHLSPlayer(
 
     private fun seekBackward(seconds: Long?) {
         seconds?.let { time ->
-            hlsPlayer?.seekBackward(time,TimeUnit.SECONDS)
+            hlsPlayer?.seekBackward(time, TimeUnit.SECONDS)
         }
     }
 
     private fun seekForward(seconds: Long?) {
         seconds?.let { time ->
-            hlsPlayer?.seekForward(time,TimeUnit.SECONDS)
+            hlsPlayer?.seekForward(time, TimeUnit.SECONDS)
         }
     }
 
@@ -104,12 +104,12 @@ class HMSHLSPlayer(
     private fun start() {
         hmssdkFlutterPlugin?.hlsStreamUrl?.let {
             hlsPlayer?.play(it)
-        }?:run {
-            HMSErrorLogger.logError("start","HLS Stream URL is null","NULL Error")
+        } ?: run {
+            HMSErrorLogger.logError("start", "HLS Stream URL is null", "NULL Error")
         }
     }
 
-    private fun setVolume(volume:Int?){
+    private fun setVolume(volume: Int?) {
         volume?.let {
             hlsPlayer?.volume = it
         }
@@ -121,8 +121,8 @@ class HMSHLSPlayer(
             it.useController = showHLSControls
             hlsPlayer = HmsHlsPlayer(context, hmssdkFlutterPlugin?.hmssdk)
             it.player = hlsPlayer?.getNativePlayer()
-        }?:run {
-            HMSErrorLogger.logError("init HMSHLSPlayer","hlsPlayerView is null","NULL_ERROR")
+        } ?: run {
+            HMSErrorLogger.logError("init HMSHLSPlayer", "hlsPlayerView is null", "NULL_ERROR")
         }
     }
 
@@ -137,16 +137,16 @@ class HMSHLSPlayer(
         hlsPlayer?.let { player ->
             hlsUrl?.let {
                 player.play(hlsUrl)
-            }?:run{
+            } ?: run {
                 hmssdkFlutterPlugin?.let { plugin ->
                     plugin.hlsStreamUrl?.let { streamUrl ->
                         player.play(streamUrl)
                         context.registerReceiver(broadcastReceiver, IntentFilter(HLS_PLAYER_INTENT))
                         player.addPlayerEventListener(
-                            hmsHLSPlaybackEvents
+                            hmsHLSPlaybackEvents,
                         )
-                        if(isHLSStatsRequired){
-                            HLSStatsHandler.addHLSStatsListener(hmssdkFlutterPlugin,hlsPlayer)
+                        if (isHLSStatsRequired) {
+                            HLSStatsHandler.addHLSStatsListener(hmssdkFlutterPlugin, hlsPlayer)
                         }
                     }
                 }
@@ -162,8 +162,8 @@ class HMSHLSPlayer(
         HLSStatsHandler.removeStatsListener(hlsPlayer)
     }
 
-    private val hmsHLSPlaybackEvents = object: HmsHlsPlaybackEvents{
-        override fun onPlaybackFailure(error : HmsHlsException) {
+    private val hmsHLSPlaybackEvents = object : HmsHlsPlaybackEvents {
+        override fun onPlaybackFailure(error: HmsHlsException) {
             val hashMap: HashMap<String, Any?> = HashMap()
             val args: HashMap<String, String?> = HashMap()
             hashMap["event_name"] = "on_playback_failure"
@@ -174,29 +174,26 @@ class HMSHLSPlayer(
             }
         }
 
-        override fun onPlaybackStateChanged(p1 : HmsHlsPlaybackState){
+        override fun onPlaybackStateChanged(p1: HmsHlsPlaybackState) {
             val hashMap: HashMap<String, Any?> = HashMap()
             hashMap["event_name"] = "on_playback_state_changed"
             hashMap["data"] = HMSHLSPlaybackStateExtension.toDictionary(p1)
-            if(hashMap["data"]!= null){
+            if (hashMap["data"] != null) {
                 CoroutineScope(Dispatchers.Main).launch {
                     hmssdkFlutterPlugin?.hlsPlayerSink?.success(hashMap)
                 }
             }
         }
 
-        override fun onCue(hlsCue : HmsHlsCue) {
+        override fun onCue(hlsCue: HmsHlsCue) {
             val hashMap: HashMap<String, Any?> = HashMap()
             hashMap["event_name"] = "on_cue"
             hashMap["data"] = HMSHLSCueExtension.toDictionary(hlsCue)
-            if(hashMap["data"]!= null){
+            if (hashMap["data"] != null) {
                 CoroutineScope(Dispatchers.Main).launch {
                     hmssdkFlutterPlugin?.hlsPlayerSink?.success(hashMap)
                 }
             }
         }
     }
-
-
-
 }

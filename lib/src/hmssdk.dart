@@ -380,6 +380,22 @@ class HMSSDK {
     return listOfPeers;
   }
 
+  /// Utility Function to parse messages from
+  /// [sendBroadcastMessage], [sendGroupMessage], [sendDirectMessage]
+  /// to send the HMSMessage object from the server back to the application
+  Map<String, dynamic>? _hmsMessageToMap(Map<dynamic, dynamic>? result) {
+    return result == null
+        ? null
+        : {
+            'message_id': result["message"]["message_id"],
+            'sender': result["message"]["sender"],
+            'message': result["message"]["message"],
+            'hms_message_recipient': result["message"]["hms_message_recipient"],
+            'type': result["message"]["type"],
+            'time': result["message"]["time"],
+          };
+  }
+
   /// Sends a message to everyone on the call.
   ///
   /// **Parameters**:
@@ -409,7 +425,7 @@ class HMSSDK {
       } else {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.sendBroadcastMessage,
-            arguments: arguments);
+            arguments: _hmsMessageToMap(result));
       }
     }
   }
@@ -449,7 +465,7 @@ class HMSSDK {
       } else {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.sendGroupMessage,
-            arguments: {"message": message, "type": type, "roles": hmsRolesTo});
+            arguments: _hmsMessageToMap(result));
       }
     }
   }
@@ -490,7 +506,7 @@ class HMSSDK {
       } else {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.sendDirectMessage,
-            arguments: {"message": message, "peer": peerTo, "type": type});
+            arguments: _hmsMessageToMap(result));
       }
     }
   }

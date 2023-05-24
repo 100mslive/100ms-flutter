@@ -3,13 +3,10 @@ package live.hms.hmssdk_flutter.views
 import android.content.Context
 import android.util.Log
 import android.view.View
-import android.widget.FrameLayout
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.platform.PlatformViewFactory
-import live.hms.hmssdk_flutter.HMSExceptionExtension
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
-import live.hms.video.error.HMSException
 import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.video.utils.HmsUtilities
 
@@ -35,25 +32,6 @@ class HMSVideoViewWidget(
 
     override fun getView(): View? {
         return hmsVideoView
-    }
-
-    override fun onFlutterViewAttached(flutterView: View) {
-        super.onFlutterViewAttached(flutterView)
-        var frameLayoutParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT,
-        )
-        if (matchParent == false) {
-            frameLayoutParams = FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-            )
-        }
-        if (view != null) {
-            view?.layoutParams = frameLayoutParams
-        } else {
-            Log.e("HMSVideoView error", "onFlutterViewAttached error view is null")
-        }
     }
 
     override fun dispose() {
@@ -83,9 +61,11 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
 
         val track = HmsUtilities.getVideoTrack(trackId!!, room!!)
         if (track == null) {
-            plugin.onVideoViewError(methodName = "HMSVideoView",
+            plugin.onVideoViewError(
+                methodName = "HMSVideoView",
                 error = "There is no track corresponding to the given trackId",
-            errorMessage = "Video track is null for corresponding trackId")
+                errorMessage = "Video track is null for corresponding trackId",
+            )
         }
         val disableAutoSimulcastLayerSelect = args!!["disable_auto_simulcast_layer_select"] as? Boolean ?: false
 
