@@ -19,48 +19,63 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController fcmTokenController = TextEditingController();
-  TextEditingController roomIdController =
-      TextEditingController();
+  TextEditingController roomIdController = TextEditingController();
 
   Future<void> listenerEvent(Function? callback) async {
     try {
       FlutterCallkitIncoming.onEvent.listen((event) async {
         print(' HMSSDK HOME: $event');
         switch (event!.event) {
-          case Event.ACTION_CALL_INCOMING:
+          case Event.actionDidUpdateDevicePushTokenVoip:
+            // TODO: Handle this case.
             break;
-          case Event.ACTION_CALL_START:
+          case Event.actionCallIncoming:
+            // TODO: Handle this case.
             break;
-          case Event.ACTION_CALL_ACCEPT:
+          case Event.actionCallStart:
+            // TODO: Handle this case.
+            break;
+          case Event.actionCallAccept:
+            // TODO: Handle this case.
             var data = event.body;
             String authToken = data["extra"]["authToken"];
             String userName = data["nameCaller"];
             bool res = await getPermissions();
             if (res) {
-            startOutGoingCall();
+              startOutGoingCall();
               NavigationService.instance
                   .pushNamed(AppRoute.callingPage, args: authToken);
             }
             break;
-          case Event.ACTION_CALL_DECLINE:
+          case Event.actionCallDecline:
+            // TODO: Handle this case.
             break;
-          case Event.ACTION_CALL_ENDED:
+          case Event.actionCallEnded:
+            // TODO: Handle this case.
             break;
-          case Event.ACTION_CALL_TIMEOUT:
+          case Event.actionCallTimeout:
+            // TODO: Handle this case.
             break;
-          case Event.ACTION_CALL_CALLBACK:
+          case Event.actionCallCallback:
+            // TODO: Handle this case.
             break;
-          case Event.ACTION_CALL_TOGGLE_HOLD:
+          case Event.actionCallToggleHold:
+            // TODO: Handle this case.
             break;
-          case Event.ACTION_CALL_TOGGLE_MUTE:
+          case Event.actionCallToggleMute:
+            // TODO: Handle this case.
             break;
-          case Event.ACTION_CALL_TOGGLE_DMTF:
+          case Event.actionCallToggleDmtf:
+            // TODO: Handle this case.
             break;
-          case Event.ACTION_CALL_TOGGLE_GROUP:
+          case Event.actionCallToggleGroup:
+            // TODO: Handle this case.
             break;
-          case Event.ACTION_CALL_TOGGLE_AUDIO_SESSION:
+          case Event.actionCallToggleAudioSession:
+            // TODO: Handle this case.
             break;
-          case Event.ACTION_DID_UPDATE_DEVICE_PUSH_TOKEN_VOIP:
+          case Event.actionCallCustom:
+            // TODO: Handle this case.
             break;
         }
         if (callback != null) {

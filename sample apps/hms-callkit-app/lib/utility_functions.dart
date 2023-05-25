@@ -115,8 +115,6 @@ Future<void> makeFakeCallInComing() async {
       duration: 30000,
       textAccept: 'Accept',
       textDecline: 'Decline',
-      textMissedCall: 'Missed call',
-      textCallback: 'Call back',
       extra: <String, dynamic>{
         'userId': '1a2b3c4d',
         'authToken': "Enter your authToken here",
@@ -125,8 +123,6 @@ Future<void> makeFakeCallInComing() async {
       android: const AndroidParams(
         isCustomNotification: true,
         isShowLogo: false,
-        isShowCallback: true,
-        isShowMissedCallNotification: true,
         ringtonePath: 'system_ringtone_default',
         backgroundColor: '#0955fa',
         backgroundUrl: 'assets/test.png',
@@ -257,20 +253,16 @@ CallKitParams getCallInfo(String authToken) {
     duration: 60000,
     textAccept: 'Accept',
     textDecline: 'Decline',
-    textMissedCall: 'Missed call',
-    textCallback: 'Call back',
     extra: <String, dynamic>{'authToken': authToken},
     android: const AndroidParams(
       isCustomNotification: true,
       isShowLogo: false,
-      isShowCallback: true,
-      isShowMissedCallNotification: true,
       ringtonePath: 'system_ringtone_default',
       backgroundColor: '#0955fa',
       backgroundUrl: 'assets/test.png',
       actionColor: '#4CAF50',
     ),
-    ios: IOSParams(
+    ios: const IOSParams(
       iconName: 'CallKitLogo',
       handleType: '',
       supportsVideo: true,
