@@ -40,6 +40,8 @@ class HMSPeerExtension {
                 HMSPeerUpdate.METADATA_CHANGED -> "metadataChanged"
                 HMSPeerUpdate.NAME_CHANGED -> "nameChanged"
                 HMSPeerUpdate.NETWORK_QUALITY_UPDATED -> "networkQualityUpdated"
+                HMSPeerUpdate.BECAME_DOMINANT_SPEAKER -> "becameDominantSpeaker"
+                HMSPeerUpdate.NO_DOMINANT_SPEAKER -> "noDominantSpeaker"
                 else -> "defaultUpdate"
             }
         }
