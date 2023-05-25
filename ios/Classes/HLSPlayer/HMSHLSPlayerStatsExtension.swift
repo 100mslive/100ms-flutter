@@ -11,7 +11,7 @@ import HMSHLSPlayerSDK
 class HMSHLSPlayerStatsExtension {
     static func toDictionary(_ hlsStats: HMSHLSStatsMonitor) -> [String: Any?] {
         var args = [String: Any?]()
-        
+
         args["bandwidth_estimate"] = hlsStats.estimatedBandwidth
         args["total_bytes_loaded"] = hlsStats.bytesDownloaded
         args["buffered_duration"] = hlsStats.bufferedDuration
@@ -20,7 +20,7 @@ class HMSHLSPlayerStatsExtension {
         args["video_height"] = hlsStats.videoSize.height
         args["video_width"] = hlsStats.videoSize.width
         args["average_bitrate"] = hlsStats.bitrate
-        
+
         return args
     }
 }
