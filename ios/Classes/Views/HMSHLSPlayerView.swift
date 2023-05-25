@@ -49,6 +49,12 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView{
             return playerViewController.view
         }
         
+        /**
+         * Here we start the player
+         * We first check whether the user has passed the streamUrl or not
+         * If not, we fetch the URL from SDK
+         * else we use the URL sent by the user
+         */
         if(hlsURL != nil){
             guard let hlsStreamURL =  URL(string: hlsURL!) else{
                 HMSErrorLogger.logError(#function,"Cannot convert hlsURL to URL","PARSE_ERROR")
