@@ -194,6 +194,8 @@ class MeetingStore extends ChangeNotifier
 
   bool isHLSStatsEnabled = false;
 
+  bool isDefaultAspectRatioSelected = true;
+
   Future<HMSException?> join(String userName, String roomUrl,
       {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
@@ -639,7 +641,6 @@ class MeetingStore extends ChangeNotifier
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
     log("onTrackUpdate-> track: ${track.toString()} peer: ${peer.name} update: ${trackUpdate.name}");
-    if (peer.role.name.contains("hls-")) return;
 
     if (!isSpeakerOn &&
         track.kind == HMSTrackKind.kHMSTrackKindAudio &&
@@ -693,6 +694,8 @@ class MeetingStore extends ChangeNotifier
         if (meetingMode == MeetingMode.Single) {
           rearrangeTile(peerTrackNode, index);
         }
+        setSpotlightOnTrackUpdate(track);
+        return;
       } else {
         peerTracks.add(new PeerTrackNode(
             peer: peer,
@@ -703,8 +706,6 @@ class MeetingStore extends ChangeNotifier
         setSpotlightOnTrackUpdate(track);
         return;
       }
-
-      setSpotlightOnTrackUpdate(track);
     }
     peerOperationWithTrack(peer, trackUpdate, track);
   }
@@ -1095,11 +1096,7 @@ class MeetingStore extends ChangeNotifier
       SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
     } else {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight
-      ]);
+      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     }
     isLandscapeLocked = value;
     notifyListeners();
@@ -1259,6 +1256,10 @@ class MeetingStore extends ChangeNotifier
             notifyListeners();
             changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
           }
+          peerTracks.removeWhere(
+              (element) => element.track?.trackId == track.trackId);
+          notifyListeners();
+          return;
         } else {
           int peerIndex = peerTracks.indexWhere(
               (element) => element.uid == peer.peerId + "mainVideo");
