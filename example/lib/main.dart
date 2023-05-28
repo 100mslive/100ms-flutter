@@ -46,6 +46,9 @@ void main() async {
   final PendingDynamicLinkData? initialLink =
       await FirebaseDynamicLinks.instance.getInitialLink();
 
+  await SystemChrome.setPreferredOrientations(
+    [DeviceOrientation.portraitUp],
+  );
   runZonedGuarded(() => runApp(HMSExampleApp(initialLink: initialLink?.link)),
       FirebaseCrashlytics.instance.recordError);
 }
@@ -94,7 +97,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     _incomingLinkHandler();
     initDynamicLinks();
     setThemeMode();
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
   Future<void> _initURIHandler() async {
