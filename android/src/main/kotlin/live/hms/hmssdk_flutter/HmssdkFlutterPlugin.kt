@@ -823,14 +823,14 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
-            if (type == HMSPeerUpdate.AUDIO_TOGGLED || type == HMSPeerUpdate.VIDEO_TOGGLED ||
-                type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER ||
-                type == HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER || type == HMSPeerUpdate.STARTED_SPEAKING ||
-                type == HMSPeerUpdate.STOPPED_SPEAKING
-            ) {
+
+            /**
+             * Since these methods are not part of HMSPeerUpdate enum in flutter
+             * We return the method call and don't send update to flutter layer
+             */
+            if (type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER){
                 return
             }
-
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_peer_update"
 
@@ -935,11 +935,12 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
-            if (type == HMSPeerUpdate.AUDIO_TOGGLED || type == HMSPeerUpdate.VIDEO_TOGGLED ||
-                type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER ||
-                type == HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER || type == HMSPeerUpdate.STARTED_SPEAKING ||
-                type == HMSPeerUpdate.STOPPED_SPEAKING
-            ) {
+
+            /**
+             * Since these methods are not part of HMSPeerUpdate enum in flutter
+             * We return the method call and don't send update to flutter layer
+             */
+            if (type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER){
                 return
             }
 
