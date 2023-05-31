@@ -432,12 +432,10 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                   }
                                   if (urls != null) {
                                     _meetingStore.startRtmpOrRecording(
-                                        meetingUrl: Constant.streamingUrl,
                                         toRecord: data["toRecord"] ?? false,
                                         rtmpUrls: urls);
                                   } else if (data["toRecord"] ?? false) {
                                     _meetingStore.startRtmpOrRecording(
-                                        meetingUrl: Constant.streamingUrl,
                                         toRecord: data["toRecord"] ?? false,
                                         rtmpUrls: null);
                                   }
@@ -479,7 +477,6 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                   _meetingStore.stopRtmpAndRecording();
                                 } else {
                                   _meetingStore.startRtmpOrRecording(
-                                      meetingUrl: Constant.streamingUrl,
                                       toRecord: true,
                                       rtmpUrls: []);
                                 }

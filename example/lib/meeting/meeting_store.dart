@@ -396,11 +396,10 @@ class MeetingStore extends ChangeNotifier
   }
 
   void startRtmpOrRecording(
-      {required String meetingUrl,
+      {String? meetingUrl,
       required bool toRecord,
       List<String>? rtmpUrls}) async {
-    HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(
-        meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
+    HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(meetingUrl: meetingUrl,toRecord: toRecord, rtmpUrls: rtmpUrls);
 
     _hmsSDKInteractor.startRtmpOrRecording(hmsRecordingConfig, this);
   }

@@ -32,8 +32,10 @@ class HMSRecordingAction {
         }
 
         var meetingURL: URL?
-        if let meetingURLStr = arguments["meeting_url"] as? String {
-            meetingURL = URL(string: meetingURLStr)
+        let meetingURLStr = arguments["meeting_url"] as? String
+        
+        if(meetingURLStr != nil){
+            meetingURL = URL(string: meetingURLStr!)
         }
 
         var rtmpURLs: [URL]?

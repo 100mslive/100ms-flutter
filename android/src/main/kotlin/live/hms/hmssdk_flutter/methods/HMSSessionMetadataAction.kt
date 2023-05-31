@@ -1,5 +1,6 @@
 package live.hms.hmssdk_flutter.methods
 
+import com.google.gson.JsonElement
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import kotlinx.coroutines.CoroutineScope
@@ -17,10 +18,10 @@ class HMSSessionMetadataAction {
         fun sessionMetadataActions(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK) {
             when (call.method) {
                 "get_session_metadata" -> {
-                    getSessionMetadata(result, hmssdk)
+//                    getSessionMetadata(result, hmssdk)
                 }
                 "set_session_metadata" -> {
-                    setSessionMetadata(call, result, hmssdk)
+//                    setSessionMetadata(call, result, hmssdk)
                 }
                 else -> {
                     result.notImplemented()
@@ -28,36 +29,36 @@ class HMSSessionMetadataAction {
             }
         }
 
-        private fun getSessionMetadata(result: MethodChannel.Result, hmssdk: HMSSDK) {
-            hmssdk.getSessionMetaData(getSessionMetadataResultListener(result))
-        }
-
-        private fun setSessionMetadata(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK) {
-            val metadata = call.argument<String>("session_metadata")
-            hmssdk.setSessionMetaData(metadata, HMSCommonAction.getActionListener(result))
-        }
-
-        private fun getSessionMetadataResultListener(result: MethodChannel.Result) = object :
-            HMSSessionMetadataListener {
-            override fun onError(error: HMSException) {
-                result.success(null)
-            }
-
-            override fun onSuccess(sessionMetadata: Any?) {
-                val args = HashMap<String, Any?>()
-                args["event_name"] = "session_metadata"
-                if (sessionMetadata is String?) {
-                    args["data"] = HMSSessionMetadataExtension.toDictionary(sessionMetadata)
-                } else {
-                    HMSErrorLogger.logError("getSessionMetadata", "Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error")
-                    args["data"] = null
-                }
-                if (args["data"] != null) {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        result.success(args)
-                    }
-                }
-            }
-        }
+//        private fun getSessionMetadata(result: MethodChannel.Result, hmssdk: HMSSDK) {
+//            hmssdk.getSessionMetaData(getSessionMetadataResultListener(result))
+//        }
+//
+//        private fun setSessionMetadata(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK) {
+//            val metadata = call.argument<String>("session_metadata")
+//            hmssdk.setSessionMetaData(metadata, HMSCommonAction.getActionListener(result))
+//        }
+//
+//        private fun getSessionMetadataResultListener(result: MethodChannel.Result) = object :
+//            HMSSessionMetadataListener {
+//            override fun onError(error: HMSException) {
+//                result.success(null)
+//            }
+//
+//            override fun onSuccess(sessionMetadata: JsonElement?) {
+//                val args = HashMap<String, Any?>()
+//                args["event_name"] = "session_metadata"
+//                if (sessionMetadata is String?) {
+//                    args["data"] = HMSSessionMetadataExtension.toDictionary(sessionMetadata)
+//                } else {
+//                    HMSErrorLogger.logError("getSessionMetadata", "Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error")
+//                    args["data"] = null
+//                }
+//                if (args["data"] != null) {
+//                    CoroutineScope(Dispatchers.Main).launch {
+//                        result.success(args)
+//                    }
+//                }
+//            }
+//        }
     }
 }
