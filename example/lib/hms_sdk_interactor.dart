@@ -348,4 +348,8 @@ class HMSSDKInteractor {
     return await hmsSDK.getAuthTokenByRoomCode(
         roomCode: roomCode, userId: userId, endPoint: endPoint);
   }
+
+  void switchAudioOutputUsingiOSUI() {
+    return hmsSDK.switchAudioOutputUsingiOSUI();
+  }
 }

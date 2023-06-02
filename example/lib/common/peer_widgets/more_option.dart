@@ -65,7 +65,7 @@ class MoreOption extends StatelessWidget {
                       setOnSpotlight: () {
                         if (context.read<MeetingStore>().spotLightPeer?.uid ==
                             peerTrackNode.uid) {
-                          _meetingStore.setSessionMetadata(
+                          _meetingStore.setSessionMetadataForKey(
                               key: SessionStoreKeyValues.getNameFromMethod(
                                   SessionStoreKey.SPOTLIGHT),
                               metadata: null);
@@ -77,7 +77,7 @@ class MoreOption extends StatelessWidget {
                         String? metadata = (peerTrackNode.audioTrack == null)
                             ? peerTrackNode.track?.trackId
                             : peerTrackNode.audioTrack?.trackId;
-                        _meetingStore.setSessionMetadata(
+                        _meetingStore.setSessionMetadataForKey(
                             key: SessionStoreKeyValues.getNameFromMethod(
                                 SessionStoreKey.SPOTLIGHT),
                             metadata: metadata);
@@ -275,7 +275,7 @@ class MoreOption extends StatelessWidget {
                       setOnSpotlight: () {
                         if (context.read<MeetingStore>().spotLightPeer?.uid ==
                             peerTrackNode.uid) {
-                          _meetingStore.setSessionMetadata(
+                          _meetingStore.setSessionMetadataForKey(
                               key: SessionStoreKeyValues.getNameFromMethod(
                                   SessionStoreKey.SPOTLIGHT),
                               metadata: null);
@@ -287,7 +287,7 @@ class MoreOption extends StatelessWidget {
                         String? metadata = (peerTrackNode.audioTrack == null)
                             ? peerTrackNode.track?.trackId
                             : peerTrackNode.audioTrack?.trackId;
-                        _meetingStore.setSessionMetadata(
+                        _meetingStore.setSessionMetadataForKey(
                             key: SessionStoreKeyValues.getNameFromMethod(
                                 SessionStoreKey.SPOTLIGHT),
                             metadata: metadata);

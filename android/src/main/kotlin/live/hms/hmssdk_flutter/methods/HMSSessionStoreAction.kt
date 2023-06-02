@@ -1,5 +1,6 @@
 package live.hms.hmssdk_flutter.methods
 
+import com.google.gson.JsonElement
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
 import live.hms.hmssdk_flutter.HMSCommonAction
@@ -47,12 +48,8 @@ class HMSSessionStoreAction {
                             result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)))
                         }
 
-                        override fun onSuccess(sessionMetadata: Any?) {
-                            if (sessionMetadata is String?) {
-                                result.success(HMSResultExtension.toDictionary(true, sessionMetadata))
-                            } else {
-                                HMSErrorLogger.returnHMSException("getSessionMetadataForKey", "Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error", result)
-                            }
+                        override fun onSuccess(sessionMetadata: com.google.gson.JsonElement?) {
+                            result.success(HMSResultExtension.toDictionary(true, sessionMetadata?.asString))
                         }
                     },
                 )

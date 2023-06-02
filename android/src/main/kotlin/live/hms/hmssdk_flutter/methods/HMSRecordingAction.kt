@@ -22,23 +22,31 @@ class HMSRecordingAction {
         }
 
         private fun startRtmpOrRecording(call: MethodCall, result: Result, hmssdk: HMSSDK) {
-            val meetingUrl = call.argument<String>("meeting_url")
-            val toRecord = call.argument<Boolean>("to_record")
-            val listOfRtmpUrls: List<String> = call.argument<List<String>>("rtmp_urls") ?: listOf()
-            val resolutionMap = call.argument<Map<String, Int>>("resolution")
-            val hmsRecordingConfig = if (resolutionMap != null) {
-                val resolution = HMSRtmpVideoResolution(
-                    width = resolutionMap["width"]!!,
-                    height = resolutionMap["height"]!!,
-                )
-                HMSRecordingConfig(meetingUrl!!, listOfRtmpUrls, toRecord!!, resolution)
-            } else {
-                HMSRecordingConfig(meetingUrl!!, listOfRtmpUrls, toRecord!!)
+            val meetingUrl = call.argument<String?>("meeting_url")
+            val toRecord = call.argument<Boolean>("to_record") ?: run {
+                HMSErrorLogger.returnArgumentsError("toRecord parameter is null")
             }
-            hmssdk.startRtmpOrRecording(
-                hmsRecordingConfig,
-                hmsActionResultListener = HMSCommonAction.getActionListener(result),
-            )
+            toRecord?.let { enableRecording ->
+
+                val listOfRtmpUrls: List<String> = call.argument<List<String>>("rtmp_urls") ?: listOf()
+                val resolutionMap = call.argument<Map<String, Int>>("resolution")
+                val hmsRecordingConfig = if (resolutionMap != null) {
+                    val resolution = HMSRtmpVideoResolution(
+                        width = resolutionMap["width"]!!,
+                        height = resolutionMap["height"]!!,
+                    )
+                    HMSRecordingConfig(meetingUrl, listOfRtmpUrls, enableRecording as Boolean, resolution)
+                } else {
+                    HMSRecordingConfig(meetingUrl, listOfRtmpUrls, enableRecording as Boolean)
+                }
+                hmssdk.startRtmpOrRecording(
+                    hmsRecordingConfig,
+                    hmsActionResultListener = HMSCommonAction.getActionListener(result),
+                )
+            }
+                ?: run {
+                    HMSErrorLogger.returnArgumentsError("toRecord parameter is null")
+                }
         }
 
         private fun stopRtmpAndRecording(result: Result, hmssdk: HMSSDK) {
