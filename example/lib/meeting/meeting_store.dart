@@ -392,7 +392,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   void startRtmpOrRecording(
-      {required String meetingUrl,
+      {String? meetingUrl,
       required bool toRecord,
       List<String>? rtmpUrls}) async {
     HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(
@@ -1509,7 +1509,7 @@ class MeetingStore extends ChangeNotifier
     audioPlayerVolume = volume;
   }
 
-  void setSessionMetadata({required String key, String? metadata}) {
+  void setSessionMetadataForKey({required String key, String? metadata}) {
     _hmsSessionStore?.setSessionMetadataForKey(
         key: key, data: metadata, hmsActionResultListener: this);
   }
@@ -1558,6 +1558,10 @@ class MeetingStore extends ChangeNotifier
       }
       notifyListeners();
     }
+  }
+
+  void switchAudioOutputUsingiOSUI() {
+    _hmsSDKInteractor.switchAudioOutputUsingiOSUI();
   }
 
   void changePIPWindowTrackOnIOS(
@@ -1667,9 +1671,12 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         if (arguments != null) {
-          if (arguments["rtmp_urls"].length == 0 && arguments["to_record"]) {
+          if (arguments["rtmp_urls"] != null &&
+              arguments["rtmp_urls"].length == 0 &&
+              arguments["to_record"]) {
             Utilities.showToast("Recording Started");
-          } else if (arguments["rtmp_urls"].length != 0 &&
+          } else if (arguments["rtmp_urls"] != null &&
+              arguments["rtmp_urls"].length != 0 &&
               arguments["to_record"] == false) {
             Utilities.showToast("RTMP Started");
           }
@@ -1734,13 +1741,6 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.stopAudioShare:
         Utilities.showToast("Audio Share Stopped");
         isAudioShareStarted = false;
-        notifyListeners();
-        break;
-      case HMSActionResultListenerMethod.setSessionMetadata:
-        _hmsSDKInteractor.sendBroadcastMessage("refresh", this,
-            type: "metadata");
-        Utilities.showToast("Session Metadata changed");
-        sessionMetadata = arguments!["session_metadata"];
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.switchCamera:
@@ -1822,8 +1822,6 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.stopAudioShare:
-        break;
-      case HMSActionResultListenerMethod.setSessionMetadata:
         break;
       case HMSActionResultListenerMethod.switchCamera:
         Utilities.showToast("Camera switching failed");

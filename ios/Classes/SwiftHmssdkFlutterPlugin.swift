@@ -239,13 +239,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - Switch Audio Output
 
-        case "switch_audio_output", "get_audio_devices_list":
+        case "switch_audio_output", "get_audio_devices_list", "switch_audio_output_using_ios_ui":
             HMSAudioDeviceAction.audioActions(call, result, hmsSDK)
-
-            // MARK: - Session Metadata
-
-        case "get_session_metadata", "set_session_metadata":
-            sessionMetadataAction(call, result)
 
             // MARK: - Simulcast
 
@@ -489,21 +484,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "is_screen_share_active":
             result(isScreenShareOn)
-        default:
-            result(FlutterMethodNotImplemented)
-        }
-    }
-
-    // MARK: - Session Metadata
-    private func sessionMetadataAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        switch call.method {
-
-        case "get_session_metadata":
-            getSessionMetadata(result)
-
-        case "set_session_metadata":
-            setSessionMetadata(call, result)
-
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -1096,42 +1076,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         logsDump.removeAll()
         logsBuffer.removeAll()
         hmsSDK?.logger = nil
-    }
-
-    private func getSessionMetadata(_ result: @escaping FlutterResult) {
-        hmsSDK?.getSessionMetadata(completion: { metadata, _ in
-            if let metadata = metadata {
-                let data = [
-                    "event_name": "session_metadata",
-                    "data": [
-                        "metadata": metadata
-                    ]
-                ] as [String: Any]
-                result(data)
-            } else {
-                result(nil)
-            }
-        })
-    }
-
-    private func setSessionMetadata(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-
-        let arguments = call.arguments as? [AnyHashable: Any]
-
-        guard let metadata = arguments?["session_metadata"] as? String? ?? "" else {
-            result(HMSErrorExtension.getError("No session metadata found in \(#function)"))
-            return
-        }
-
-        hmsSDK?.setSessionMetadata(metadata, completion: { _, error in
-            if let error = error {
-                result(HMSErrorExtension.toDictionary(error))
-                return
-            } else {
-                result(nil)
-            }
-        }
-        )
     }
 
     private func setPlaybackAllowedForTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {

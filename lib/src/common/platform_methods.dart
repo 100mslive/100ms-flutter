@@ -146,8 +146,6 @@ enum PlatformMethod {
   audioShareDuration,
   getTrackSettings,
   destroy,
-  setSessionMetadata,
-  getSessionMetadata,
   setPlaybackAllowedForTrack,
   enterPipMode,
   isPipActive,
@@ -183,7 +181,8 @@ enum PlatformMethod {
   seekBackward,
   setHLSPlayerVolume,
   addHLSStatsListener,
-  removeHLSStatsListener
+  removeHLSStatsListener,
+  switchAudioOutputUsingiOSUI
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -375,10 +374,6 @@ extension PlatformMethodValues on PlatformMethod {
         return "get_track_settings";
       case PlatformMethod.destroy:
         return "destroy";
-      case PlatformMethod.setSessionMetadata:
-        return "set_session_metadata";
-      case PlatformMethod.getSessionMetadata:
-        return "get_session_metadata";
       case PlatformMethod.setPlaybackAllowedForTrack:
         return "set_playback_allowed_for_track";
       case PlatformMethod.enterPipMode:
@@ -451,6 +446,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "add_hls_stats_listener";
       case PlatformMethod.removeHLSStatsListener:
         return "remove_hls_stats_listener";
+      case PlatformMethod.switchAudioOutputUsingiOSUI:
+        return "switch_audio_output_using_ios_ui";
       default:
         return 'unknown';
     }
@@ -648,10 +645,6 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.getTrackSettings;
       case "destroy":
         return PlatformMethod.destroy;
-      case "set_session_metadata":
-        return PlatformMethod.setSessionMetadata;
-      case "get_session_metadata":
-        return PlatformMethod.getSessionMetadata;
       case "set_playback_allowed_for_track":
         return PlatformMethod.setPlaybackAllowedForTrack;
       case "enter_pip_mode":
@@ -720,6 +713,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.addHLSStatsListener;
       case "remove_hls_stats_listener":
         return PlatformMethod.removeHLSStatsListener;
+      case "switch_audio_output_using_ios_ui":
+        return PlatformMethod.switchAudioOutputUsingiOSUI;
       default:
         return PlatformMethod.unknown;
     }
