@@ -219,7 +219,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - Switch Audio Output
 
-        case "switch_audio_output", "get_audio_devices_list":
+        case "switch_audio_output", "get_audio_devices_list", "switch_audio_output_using_ios_ui":
             HMSAudioDeviceAction.audioActions(call, result, hmsSDK)
 
             // MARK: - Session Metadata

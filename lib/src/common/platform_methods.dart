@@ -173,7 +173,8 @@ enum PlatformMethod {
   getSessionMetadataForKey,
   setSessionMetadataForKey,
   addKeyChangeListener,
-  removeKeyChangeListener
+  removeKeyChangeListener,
+  switchAudioOutputUsingiOSUI
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -421,6 +422,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "add_key_change_listener";
       case PlatformMethod.removeKeyChangeListener:
         return "remove_key_change_listener";
+      case PlatformMethod.switchAudioOutputUsingiOSUI:
+        return "switch_audio_output_using_ios_ui";
       default:
         return 'unknown';
     }
@@ -670,6 +673,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.addKeyChangeListener;
       case "remove_key_change_listener":
         return PlatformMethod.removeKeyChangeListener;
+      case "switch_audio_output_using_ios_ui":
+        return PlatformMethod.switchAudioOutputUsingiOSUI;
       default:
         return PlatformMethod.unknown;
     }
