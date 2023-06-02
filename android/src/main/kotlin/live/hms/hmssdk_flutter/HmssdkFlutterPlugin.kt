@@ -185,9 +185,7 @@ class HmssdkFlutterPlugin :
             "get_track_settings" -> {
                 trackSettings(call, result)
             }
-            "get_session_metadata", "set_session_metadata" -> {
-                HMSSessionMetadataAction.sessionMetadataActions(call, result, hmssdk!!)
-            }
+
             "set_playback_allowed_for_track" -> {
                 setPlaybackAllowedForTrack(call, result)
             }
@@ -1236,13 +1234,7 @@ class HmssdkFlutterPlugin :
                     args["event_name"] = "on_key_changed"
                     val newData = HashMap<String, String?>()
                     newData["key"] = key
-                    newData["value"] = value.toString()
-//                    if (value is String?) {
-//                        newData["value"] = value
-//                    } else {
-//                        HMSErrorLogger.logError("onKeyChanged", "Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error")
-//                        newData["value"] = null
-//                    }
+                    newData["value"] = value?.asString
                     newData["uid"] = uid as String
                     args["data"] = newData
                     CoroutineScope(Dispatchers.Main).launch {

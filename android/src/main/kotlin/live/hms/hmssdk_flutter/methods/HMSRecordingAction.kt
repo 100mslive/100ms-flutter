@@ -22,7 +22,7 @@ class HMSRecordingAction {
         }
 
         private fun startRtmpOrRecording(call: MethodCall, result: Result, hmssdk: HMSSDK) {
-            val meetingUrl = call.argument<String>("meeting_url")
+            val meetingUrl = call.argument<String?>("meeting_url")
             val toRecord = call.argument<Boolean>("to_record") ?: run {
                 HMSErrorLogger.returnArgumentsError("toRecord parameter is null")
             }
