@@ -349,7 +349,7 @@ class HMSSDKInteractor {
         roomCode: roomCode, userId: userId, endPoint: endPoint);
   }
 
-  void switchAudioOutputiOSUI() {
-    return hmsSDK.switchAudioOutputiOSUI();
+  void switchAudioOutputUsingiOSUI() {
+    return hmsSDK.switchAudioOutputUsingiOSUI();
   }
 }

@@ -1581,8 +1581,8 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  void switchAudioOutputiOSUI() {
-    _hmsSDKInteractor.switchAudioOutputiOSUI();
+  void switchAudioOutputUsingiOSUI() {
+    _hmsSDKInteractor.switchAudioOutputUsingiOSUI();
   }
 
   void changePIPWindowTrackOnIOS(

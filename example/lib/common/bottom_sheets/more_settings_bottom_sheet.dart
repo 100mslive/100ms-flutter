@@ -157,7 +157,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                           } else {
                             context
                                 .read<MeetingStore>()
-                                .switchAudioOutputiOSUI();
+                                .switchAudioOutputUsingiOSUI();
                           }
                         },
                         child: Container(

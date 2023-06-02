@@ -18,8 +18,8 @@ class HMSAudioDeviceAction {
         case "switch_audio_output":
             switchAudioOutput(call, result, hmsSDK)
 
-        case "switch_audio_output_ios_ui":
-            switchAudioOutputiOSUI(result)
+        case "switch_audio_output_using_ios_ui":
+            switchAudioOutputUsingiOSUI(result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -83,7 +83,7 @@ class HMSAudioDeviceAction {
             This method is used to show native iOS UI to change
              audio output device
      */
-    static private func switchAudioOutputiOSUI(_ result: @escaping FlutterResult){
+    static private func switchAudioOutputUsingiOSUI(_ result: @escaping FlutterResult){
         let routerPicker = AVRoutePickerView()
         for view in routerPicker.subviews {
             if let button = view as? UIButton {
