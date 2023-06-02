@@ -9,6 +9,7 @@ import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.NonNull
+import com.google.gson.JsonElement
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -184,9 +185,7 @@ class HmssdkFlutterPlugin :
             "get_track_settings" -> {
                 trackSettings(call, result)
             }
-            "get_session_metadata", "set_session_metadata" -> {
-                HMSSessionMetadataAction.sessionMetadataActions(call, result, hmssdk!!)
-            }
+
             "set_playback_allowed_for_track" -> {
                 setPlaybackAllowedForTrack(call, result)
             }
@@ -1230,17 +1229,12 @@ class HmssdkFlutterPlugin :
 
         uid?.let {
             val keyChangeListener = object : HMSKeyChangeListener {
-                override fun onKeyChanged(key: String, value: Any?) {
+                override fun onKeyChanged(key: String, value: JsonElement?) {
                     val args = HashMap<String, Any?>()
                     args["event_name"] = "on_key_changed"
                     val newData = HashMap<String, String?>()
                     newData["key"] = key
-                    if (value is String?) {
-                        newData["value"] = value
-                    } else {
-                        HMSErrorLogger.logError("onKeyChanged", "Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error")
-                        newData["value"] = null
-                    }
+                    newData["value"] = value?.asString
                     newData["uid"] = uid as String
                     args["data"] = newData
                     CoroutineScope(Dispatchers.Main).launch {

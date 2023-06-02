@@ -5,7 +5,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 ///[HMSRecordingConfig] contains meeting Url, record status, rtmp Urls list and video resolution.
 class HMSRecordingConfig {
   ///Single click meeting url to start/stop recording/streaming.
-  final String meetingUrl;
+  final String? meetingUrl;
 
   ///true if recording/streaming should be started. false if recording/streaming should be stoppped.
   final bool toRecord;
@@ -22,7 +22,7 @@ class HMSRecordingConfig {
   HMSResolution? resolution;
 
   HMSRecordingConfig(
-      {required this.meetingUrl,
+      {this.meetingUrl,
       required this.toRecord,
       this.rtmpUrls,
       this.resolution});

@@ -146,8 +146,6 @@ enum PlatformMethod {
   audioShareDuration,
   getTrackSettings,
   destroy,
-  setSessionMetadata,
-  getSessionMetadata,
   setPlaybackAllowedForTrack,
   enterPipMode,
   isPipActive,
@@ -366,10 +364,6 @@ extension PlatformMethodValues on PlatformMethod {
         return "get_track_settings";
       case PlatformMethod.destroy:
         return "destroy";
-      case PlatformMethod.setSessionMetadata:
-        return "set_session_metadata";
-      case PlatformMethod.getSessionMetadata:
-        return "get_session_metadata";
       case PlatformMethod.setPlaybackAllowedForTrack:
         return "set_playback_allowed_for_track";
       case PlatformMethod.enterPipMode:
@@ -621,10 +615,6 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.getTrackSettings;
       case "destroy":
         return PlatformMethod.destroy;
-      case "set_session_metadata":
-        return PlatformMethod.setSessionMetadata;
-      case "get_session_metadata":
-        return PlatformMethod.getSessionMetadata;
       case "set_playback_allowed_for_track":
         return PlatformMethod.setPlaybackAllowedForTrack;
       case "enter_pip_mode":

@@ -367,11 +367,13 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                 ),
                                 GestureDetector(
                                     onTap: () {
-                                      context.read<MeetingStore>().setSessionMetadata(
-                                          key: SessionStoreKeyValues
-                                              .getNameFromMethod(SessionStoreKey
-                                                  .PINNED_MESSAGE_SESSION_KEY),
-                                          metadata: null);
+                                      context
+                                          .read<MeetingStore>()
+                                          .setSessionMetadataForKey(
+                                              key: SessionStoreKeyValues
+                                                  .getNameFromMethod(SessionStoreKey
+                                                      .PINNED_MESSAGE_SESSION_KEY),
+                                              metadata: null);
                                     },
                                     child: SvgPicture.asset(
                                         "assets/icons/close.svg"))
