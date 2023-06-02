@@ -1163,6 +1163,15 @@ class HMSSDK {
         arguments: {"audio_device_name": audioDevice.name});
   }
 
+  ///**** Only for iOS ****
+  /// Method to show the native iOS UI for switching the audio output device.
+  /// This method natively switches the audio output to the selected device.
+  void switchAudioOutputiOSUI() {
+    if (Platform.isIOS) {
+      PlatformService.invokeMethod(PlatformMethod.switchAudioOutputiOSUI);
+    }
+  }
+
   ///Method to start audio share of other apps. (Android Only)
   ///
   ///**Parameter**:
