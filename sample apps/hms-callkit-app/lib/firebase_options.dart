@@ -63,7 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '639484339298',
     projectId: 'hms-callkit-dd0c9',
     storageBucket: 'hms-callkit-dd0c9.appspot.com',
-    iosClientId: '639484339298-q450qsqg6t7uopupiklago0me8mq0al7.apps.googleusercontent.com',
+    iosClientId:
+        '639484339298-q450qsqg6t7uopupiklago0me8mq0al7.apps.googleusercontent.com',
     iosBundleId: 'com.example.hmsCallkit',
   );
 }

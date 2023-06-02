@@ -13,8 +13,7 @@ class AppRoute {
   static const previewPage = '/preview_page';
   static const receiveCallPage = '/receive-call-page';
 
-  static Route<dynamic>? generateRoute(
-      RouteSettings settings){
+  static Route<dynamic>? generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case homePage:
         return MaterialPageRoute(
@@ -41,6 +40,4 @@ class AppRoute {
         return null;
     }
   }
-
-  
 }

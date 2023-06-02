@@ -822,12 +822,11 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
-
             /**
              * Since these methods are not part of HMSPeerUpdate enum in flutter
              * We return the method call and don't send update to flutter layer
              */
-            if (type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER){
+            if (type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER) {
                 return
             }
             val args = HashMap<String, Any?>()
@@ -934,12 +933,11 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
-
             /**
              * Since these methods are not part of HMSPeerUpdate enum in flutter
              * We return the method call and don't send update to flutter layer
              */
-            if (type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER){
+            if (type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER) {
                 return
             }
 

@@ -379,7 +379,7 @@ class _MeetingPageState extends State<MeetingPage>
       NavigationService.instance.pushNamedAndRemoveUntil(AppRoute.homePage);
     }
   }
-  
+
   @override
   void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
     // TODO: implement onSessionStoreAvailable

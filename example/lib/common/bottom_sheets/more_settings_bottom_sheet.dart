@@ -9,7 +9,6 @@ import 'package:hmssdk_flutter_example/common/app_dialogs/stats_for_nerds.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/logger_view_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/notification_settings_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/participants_bottom_sheet.dart';
-import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/common/widgets/share_link_option.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
@@ -484,8 +483,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                   _meetingStore.stopRtmpAndRecording();
                                 } else {
                                   _meetingStore.startRtmpOrRecording(
-                                      toRecord: true,
-                                      rtmpUrls: []);
+                                      toRecord: true, rtmpUrls: []);
                                 }
                                 Navigator.pop(context);
                               },

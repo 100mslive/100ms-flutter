@@ -300,21 +300,19 @@ class _HomePageState extends State<HomePage> {
                         }
                         await getPermissions();
                         //Enter the tokenEndPoint, role and userId here
-                        String? authToken =
-                            await getAuthToken(
+                        String? authToken = await getAuthToken(
                             roomId: roomIdController.text,
                             role: "host",
-                            tokenEndpoint: 
-                            "Enter your token endpoint here",
+                            tokenEndpoint: "Enter your token endpoint here",
                             userId: "Enter the user Id here");
                         //Checking whether authentication token is null or not
-                        if(authToken != null){
+                        if (authToken != null) {
                           call(
                               receiverFCMToken: fcmTokenController.text,
                               authToken: authToken);
                           NavigationService.instance.pushNamedIfNotCurrent(
                               AppRoute.previewPage,
-                              args: authToken);  
+                              args: authToken);
                         }
                       },
                       child: Padding(

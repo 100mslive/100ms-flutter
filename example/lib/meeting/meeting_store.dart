@@ -1745,9 +1745,12 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         if (arguments != null) {
-          if (arguments["rtmp_urls"] != null && arguments["rtmp_urls"].length == 0 && arguments["to_record"]) {
+          if (arguments["rtmp_urls"] != null &&
+              arguments["rtmp_urls"].length == 0 &&
+              arguments["to_record"]) {
             Utilities.showToast("Recording Started");
-          } else if (arguments["rtmp_urls"] != null && arguments["rtmp_urls"].length != 0 &&
+          } else if (arguments["rtmp_urls"] != null &&
+              arguments["rtmp_urls"].length != 0 &&
               arguments["to_record"] == false) {
             Utilities.showToast("RTMP Started");
           }

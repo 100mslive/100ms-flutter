@@ -33,8 +33,8 @@ class HMSRecordingAction {
 
         var meetingURL: URL?
         let meetingURLStr = arguments["meeting_url"] as? String
-        
-        if(meetingURLStr != nil){
+
+        if meetingURLStr != nil {
             meetingURL = URL(string: meetingURLStr!)
         }
 

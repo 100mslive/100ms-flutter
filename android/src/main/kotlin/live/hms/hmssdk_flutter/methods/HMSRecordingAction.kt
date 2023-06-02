@@ -26,7 +26,7 @@ class HMSRecordingAction {
             val toRecord = call.argument<Boolean>("to_record") ?: run {
                 HMSErrorLogger.returnArgumentsError("toRecord parameter is null")
             }
-            toRecord?.let {enableRecording ->
+            toRecord?.let { enableRecording ->
 
                 val listOfRtmpUrls: List<String> = call.argument<List<String>>("rtmp_urls") ?: listOf()
                 val resolutionMap = call.argument<Map<String, Int>>("resolution")
@@ -43,11 +43,10 @@ class HMSRecordingAction {
                     hmsRecordingConfig,
                     hmsActionResultListener = HMSCommonAction.getActionListener(result),
                 )
-
-            } ?:
-            run {
-                HMSErrorLogger.returnArgumentsError("toRecord parameter is null")
             }
+                ?: run {
+                    HMSErrorLogger.returnArgumentsError("toRecord parameter is null")
+                }
         }
 
         private fun stopRtmpAndRecording(result: Result, hmssdk: HMSSDK) {

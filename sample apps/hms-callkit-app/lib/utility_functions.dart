@@ -88,17 +88,17 @@ Future<void> placeCall(String authToken) async {
 void checkAndNavigationCallingPage(String message) async {
   var currentCall = await _getCurrentCall();
   bool res = await getPermissions();
-  if(currentCall != null){
-          Map<String, dynamic> callData = {};
-      currentCall.forEach((key, value) {
-        callData[key] = value;
-      });
-      if (res == true && currentCall != null && currentCall["extra"] != null) {
-        NavigationService.instance
-            .pushNamedIfNotCurrent(AppRoute.callingPage, args: currentCall["extra"]["authToken"]);
-      }
+  if (currentCall != null) {
+    Map<String, dynamic> callData = {};
+    currentCall.forEach((key, value) {
+      callData[key] = value;
+    });
+    if (res == true && currentCall != null && currentCall["extra"] != null) {
+      NavigationService.instance.pushNamedIfNotCurrent(AppRoute.callingPage,
+          args: currentCall["extra"]["authToken"]);
+    }
   }
-  }
+}
 
 //To make a fake call on same device
 Future<void> makeFakeCallInComing() async {

@@ -4,7 +4,6 @@ A sample project for calling made with 100ms and flutter_callkit_incoming.
 
 https://github.com/Decoder07/hms-callkit-demo/assets/93931528/69bd9d0f-65e9-46cd-a50c-4ac7ea9a6446
 
-
 ## Getting Started
 
 - Clone the repo
@@ -21,7 +20,7 @@ To test the application install the app in two devices.
 - Copy the code(FCM token) from one device. Let's call it Device-1
 - Paste this token on different device. Let's call this Device-2
 - Press the Call Now button on Device-1
-- You will receive a notification on Device-2 
+- You will receive a notification on Device-2
 - Accept the call on Device-2
 
 ### Setup 100ms token service
@@ -29,9 +28,9 @@ To test the application install the app in two devices.
 100ms token service takes care of joining room once you receive a call or you wish to call someone.
 We will need an authentication token to join the room which we will also send to other peer through payload by which the receiver can also join the room. You can find the code for this in `join_service.dart`.
 
-Here's the code for this: 
+Here's the code for this:
 
-```dart 
+```dart
 Future<String> getAuthToken({required String roomId,required String tokenEndpoint,required String userId,required String role}) async {
   Uri endPoint = Uri.parse(
       tokenEndpoint);

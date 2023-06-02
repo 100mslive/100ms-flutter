@@ -1,6 +1,5 @@
 package live.hms.hmssdk_flutter.methods
 
-import com.google.gson.Gson
 import com.google.gson.JsonElement
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
@@ -50,7 +49,7 @@ class HMSSessionStoreAction {
                         }
 
                         override fun onSuccess(sessionMetadata: com.google.gson.JsonElement?) {
-                            result.success(HMSResultExtension.toDictionary(true,sessionMetadata?.asString))
+                            result.success(HMSResultExtension.toDictionary(true, sessionMetadata?.asString))
                         }
                     },
                 )

@@ -78,12 +78,12 @@ class HMSAudioDeviceAction {
              return "SPEAKER_PHONE"
          }
      }
-    
+
     /**
             This method is used to show native iOS UI to change
              audio output device
      */
-    static private func switchAudioOutputUsingiOSUI(_ result: @escaping FlutterResult){
+    static private func switchAudioOutputUsingiOSUI(_ result: @escaping FlutterResult) {
         let routerPicker = AVRoutePickerView()
         for view in routerPicker.subviews {
             if let button = view as? UIButton {
