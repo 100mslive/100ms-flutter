@@ -15,7 +15,6 @@ dependencies:
   hmssdk_flutter:
     path: ../
 
-  wakelock:
   cupertino_icons:
   provider:
   http:
@@ -44,11 +43,11 @@ dependencies:
   draggable_widget:
   badges:
   url_launcher:
-  pip_flutter:
   share_plus:
   flutter_linkify:
   flutter_foreground_task:
   image_gallery_saver:
+  wakelock: 0.6.1+2
 
 dev_dependencies:
   flutter_test:

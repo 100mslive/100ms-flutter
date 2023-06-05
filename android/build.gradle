@@ -43,6 +43,7 @@ android {
 dependencies {
     implementation "live.100ms:android-sdk:${sdkVersions['android']}"
     implementation "live.100ms:video-view:${sdkVersions['android']}"
+    implementation "live.100ms:hls-player:${sdkVersions['android']}"
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'

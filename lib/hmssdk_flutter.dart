@@ -55,7 +55,6 @@ export 'src/model/hms_video_setting.dart';
 export 'src/model/hms_video_track.dart';
 export 'src/model/hms_video_track_setting.dart';
 export 'src/model/platform_method_response.dart';
-export 'src/ui/meeting/hms_video_view.dart';
 export 'src/model/hms_track_change_request.dart';
 export 'src/model/hms_peer_removed_from_room.dart';
 export 'src/model/hms_message_recipient.dart';
@@ -92,3 +91,9 @@ export 'src/model/hms_log_list.dart';
 export 'src/model/hms_camera_controls.dart';
 export 'src/model/hms_session_store.dart';
 export 'src/model/hms_key_change_listener.dart';
+export 'src/model/hms_hls_playback_event_listener.dart';
+export 'src/model/hms_hls_player_controller.dart';
+
+//Views
+export 'src/ui/meeting/hms_video_view.dart';
+export 'src/ui/meeting/hms_hls_player.dart';

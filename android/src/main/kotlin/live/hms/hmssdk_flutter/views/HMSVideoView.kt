@@ -85,14 +85,14 @@ class HMSVideoView(
     }
 
     fun onDisposeCalled() {
-        if (this.hmsVideoView != null) {
-            this.hmsVideoView?.removeTrack()
+        if (hmsVideoView != null) {
+            hmsVideoView?.removeTrack()
         } else {
             Log.e("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
         }
         this.removeView(view)
-        this.view = null
-        this.hmsVideoView = null
+        view = null
+        hmsVideoView = null
         context.unregisterReceiver(broadcastReceiver)
     }
 
