@@ -1,3 +1,4 @@
+///[HMSHLSPlaybackEventMethod] is an enum containing the HLS Player callbacks
 enum HMSHLSPlaybackEventMethod {
   onPlaybackFailure,
   onPlaybackStateChanged,

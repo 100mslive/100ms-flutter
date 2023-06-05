@@ -91,8 +91,8 @@ export 'src/model/hms_log_list.dart';
 export 'src/model/hms_camera_controls.dart';
 export 'src/model/hms_session_store.dart';
 export 'src/model/hms_key_change_listener.dart';
-export 'src/model/hms_hls_playback_event_listener.dart';
-export 'src/model/hms_hls_player_controller.dart';
+export 'src/model/hls_player/hms_hls_playback_event_listener.dart';
+export 'src/model/hls_player/hms_hls_player_controller.dart';
 
 //Views
 export 'src/ui/meeting/hms_video_view.dart';

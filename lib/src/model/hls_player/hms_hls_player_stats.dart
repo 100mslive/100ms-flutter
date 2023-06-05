@@ -1,11 +1,32 @@
+/// 100ms HMSHLSPlayerStats
+/// 
+///[HMSHLSPlayerStats] is a data class, confirming to the HLSPlayerStats
+///
+///Whenever the player stats are attached, we get an object of [HMSHLSPlayerStats] in [onHLSEventUpdate] callback.
 class HMSHLSPlayerStats {
+
+  /// The current bandwidth, as estimated by the player
   final double bandWidthEstimate;
+
+  /// The total bytes downloaded within the given poll duration
   final int totalBytesLoaded;
+
+  /// An estimate of the total buffered duration from the current position
   final double bufferedDuration;
+
+  /// Distance of current playing position from live edge
   final double distanceFromLive;
+
+  /// bitrate of the current layer being played
   final double averageBitrate;
+
+  /// The height of the video
   final double videoHeight;
+
+  /// The width of the video
   final double videoWidth;
+
+  /// The number of dropped frames since the last call to this method
   final int droppedFrameCount;
 
   HMSHLSPlayerStats(

@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show StandardMessageCodec;
 
 /// TODO: Update docs regarding HMSHLSPlayer
-///100ms HMSVideoView
+///100ms HMSHLSPlayer
 ///
-///HMSVideoView used to render video in ios and android devices
+///HMSHLSPlayer used to render hls stream in ios and android devices
 ///
 /// To use,import package:`hmssdk_flutter/ui/meeting/hms_video_view.dart`.
 ///

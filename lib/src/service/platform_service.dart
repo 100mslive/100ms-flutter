@@ -17,8 +17,8 @@ import 'package:hmssdk_flutter/src/enum/hms_hls_playback_event_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_hls_playback_state.dart';
 import 'package:hmssdk_flutter/src/enum/hms_key_change_listener_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
-import 'package:hmssdk_flutter/src/model/hls_player_model/hms_hls_player_stats.dart';
-import 'package:hmssdk_flutter/src/model/hms_hls_cue.dart';
+import 'package:hmssdk_flutter/src/model/hls_player/hms_hls_cue.dart';
+import 'package:hmssdk_flutter/src/model/hls_player/hms_hls_player_stats.dart';
 import 'package:hmssdk_flutter/src/model/hms_key_change_observer.dart';
 
 class PlatformService {
