@@ -182,7 +182,8 @@ enum PlatformMethod {
   setHLSPlayerVolume,
   addHLSStatsListener,
   removeHLSStatsListener,
-  switchAudioOutputUsingiOSUI
+  switchAudioOutputUsingiOSUI,
+  sendHLSTimedMetadata
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -448,6 +449,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "remove_hls_stats_listener";
       case PlatformMethod.switchAudioOutputUsingiOSUI:
         return "switch_audio_output_using_ios_ui";
+      case PlatformMethod.sendHLSTimedMetadata:
+        return "send_hls_timed_metadata";
       default:
         return 'unknown';
     }
@@ -715,6 +718,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.removeHLSStatsListener;
       case "switch_audio_output_using_ios_ui":
         return PlatformMethod.switchAudioOutputUsingiOSUI;
+      case "send_hls_timed_metadata":
+        return PlatformMethod.sendHLSTimedMetadata;
       default:
         return PlatformMethod.unknown;
     }
