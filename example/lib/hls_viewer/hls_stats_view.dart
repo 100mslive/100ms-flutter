@@ -16,18 +16,18 @@ class HLSStatsView extends StatelessWidget {
       child: ListView(
         shrinkWrap: true,
         children: [
-          Selector<MeetingStore, int?>(
+          Selector<MeetingStore, double?>(
               builder: (_, bitrate, __) {
                 return Text(
                     "Bitrate : ${bitrate == null ? "-" : (bitrate / 8000)} KBps",
                     style: GoogleFonts.inter(color: iconColor, fontSize: 12));
               },
               selector: (_, meetingStore) =>
-                  meetingStore.hlsPlayerStats?.videoInfo.averageBitrate),
+                  meetingStore.hlsPlayerStats?.averageBitrate),
           SizedBox(
             height: 10,
           ),
-          Selector<MeetingStore, int?>(
+          Selector<MeetingStore, double?>(
               builder: (_, bufferedDuration, __) {
                 return Text(
                     "Buffered Duration  : ${bufferedDuration == null ? "-" : bufferedDuration / 1000}",
@@ -38,36 +38,25 @@ class HLSStatsView extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          Selector<MeetingStore, int?>(
+          Selector<MeetingStore, double?>(
               builder: (_, videoWidth, __) {
                 return Text(
                     "Video Width : ${videoWidth == null ? "-" : videoWidth} px",
                     style: GoogleFonts.inter(color: iconColor, fontSize: 12));
               },
               selector: (_, meetingStore) =>
-                  meetingStore.hlsPlayerStats?.videoInfo.videoWidth),
+                  meetingStore.hlsPlayerStats?.videoWidth),
           SizedBox(
             height: 10,
           ),
-          Selector<MeetingStore, int?>(
+          Selector<MeetingStore, double?>(
               builder: (_, videoHeight, __) {
                 return Text(
                     "Video Height : ${videoHeight == null ? "-" : videoHeight} px",
                     style: GoogleFonts.inter(color: iconColor, fontSize: 12));
               },
               selector: (_, meetingStore) =>
-                  meetingStore.hlsPlayerStats?.videoInfo.videoHeight),
-          SizedBox(
-            height: 10,
-          ),
-          Selector<MeetingStore, double?>(
-              builder: (_, frameRate, __) {
-                return Text(
-                    "Frame Rate : ${frameRate == null ? "-" : frameRate} fps",
-                    style: GoogleFonts.inter(color: iconColor, fontSize: 12));
-              },
-              selector: (_, meetingStore) =>
-                  meetingStore.hlsPlayerStats?.videoInfo.frameRate),
+                  meetingStore.hlsPlayerStats?.videoHeight),
           SizedBox(
             height: 10,
           ),
@@ -78,11 +67,11 @@ class HLSStatsView extends StatelessWidget {
                     style: GoogleFonts.inter(color: iconColor, fontSize: 12));
               },
               selector: (_, meetingStore) =>
-                  meetingStore.hlsPlayerStats?.frameInfo.droppedFrameCount),
+                  meetingStore.hlsPlayerStats?.droppedFrameCount),
           SizedBox(
             height: 10,
           ),
-          Selector<MeetingStore, int?>(
+          Selector<MeetingStore, double?>(
               builder: (_, distanceFromLive, __) {
                 return Text(
                     "Distance from live edge : ${distanceFromLive == null ? "-" : distanceFromLive / 1000}s",

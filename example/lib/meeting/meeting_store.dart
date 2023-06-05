@@ -26,6 +26,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
 import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:hmssdk_flutter_example/service/room_service.dart';
+import 'package:wakelock/wakelock.dart';
 
 class MeetingStore extends ChangeNotifier
     with WidgetsBindingObserver
@@ -191,7 +192,9 @@ class MeetingStore extends ChangeNotifier
 
   HMSHLSPlayerStats? hlsPlayerStats;
 
-  bool isHLSStatsEnabled = true;
+  bool isHLSStatsEnabled = false;
+
+  bool isDefaultAspectRatioSelected = true;
 
   Future<HMSException?> join(String userName, String roomUrl,
       {HMSConfig? roomConfig}) async {
@@ -563,7 +566,7 @@ class MeetingStore extends ChangeNotifier
     getAudioDevicesList();
     notifyListeners();
 
-    if (Platform.isIOS) {
+    if (Platform.isIOS && !(localPeer?.role.name.contains("hls-") ?? false)) {
       HMSIOSPIPController.setup(
           autoEnterPip: true,
           aspectRatio: [9, 16],
@@ -638,7 +641,6 @@ class MeetingStore extends ChangeNotifier
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
     log("onTrackUpdate-> track: ${track.toString()} peer: ${peer.name} update: ${trackUpdate.name}");
-    if (peer.role.name.contains("hls-")) return;
 
     if (!isSpeakerOn &&
         track.kind == HMSTrackKind.kHMSTrackKindAudio &&
@@ -692,6 +694,8 @@ class MeetingStore extends ChangeNotifier
         if (meetingMode == MeetingMode.Single) {
           rearrangeTile(peerTrackNode, index);
         }
+        setSpotlightOnTrackUpdate(track);
+        return;
       } else {
         peerTracks.add(new PeerTrackNode(
             peer: peer,
@@ -702,8 +706,6 @@ class MeetingStore extends ChangeNotifier
         setSpotlightOnTrackUpdate(track);
         return;
       }
-
-      setSpotlightOnTrackUpdate(track);
     }
     peerOperationWithTrack(peer, trackUpdate, track);
   }
@@ -1018,6 +1020,7 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.removeHMSLogger();
     HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(this);
     _hmsSDKInteractor.destroy();
+    Wakelock.disable();
     _hmsSessionStore = null;
     peerTracks.clear();
     isRoomEnded = true;
@@ -1093,11 +1096,7 @@ class MeetingStore extends ChangeNotifier
       SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
     } else {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight
-      ]);
+      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     }
     isLandscapeLocked = value;
     notifyListeners();
@@ -1141,6 +1140,19 @@ class MeetingStore extends ChangeNotifier
         } else {
           if (peer.isLocal) {
             isHLSLink = false;
+          }
+        }
+
+        if (peer.isLocal) {
+          if (Platform.isIOS) {
+            if (peer.role.name.contains("hls-")) {
+              HMSIOSPIPController.destroy();
+            } else {
+              HMSIOSPIPController.setup(
+                  autoEnterPip: true,
+                  aspectRatio: [9, 16],
+                  backgroundColor: Colors.black);
+            }
           }
         }
 
@@ -1244,6 +1256,10 @@ class MeetingStore extends ChangeNotifier
             notifyListeners();
             changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
           }
+          peerTracks.removeWhere(
+              (element) => element.track?.trackId == track.trackId);
+          notifyListeners();
+          return;
         } else {
           int peerIndex = peerTracks.indexWhere(
               (element) => element.uid == peer.peerId + "mainVideo");
@@ -1935,7 +1951,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onHLSEventUpdate({required HMSHLSPlayerStats playerStats}) {
-    log("onHLSEventUpdate-> bitrate:${playerStats.videoInfo.averageBitrate} buffered duration: ${playerStats.bufferedDuration}");
+    log("onHLSEventUpdate-> bitrate:${playerStats.averageBitrate} buffered duration: ${playerStats.bufferedDuration}");
     hlsPlayerStats = playerStats;
     notifyListeners();
   }

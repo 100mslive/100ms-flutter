@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_stats_view.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +32,7 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
                       return AspectRatio(
                         aspectRatio: ratio,
                         child: HMSHLSPlayer(
+                          showPlayerControls: true,
                           isHLSStatsRequired:
                               context.read<MeetingStore>().isHLSStatsEnabled,
                         ),
@@ -78,7 +81,33 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
                         ]),
                   ),
                 ),
-              )
+              ),
+            Align(
+              alignment: Alignment.topRight,
+              child: GestureDetector(
+                onTap: () {
+                  var _meetingStore = context.read<MeetingStore>();
+                  if (_meetingStore.isLandscapeLocked) {
+                    _meetingStore.setLandscapeLock(false);
+                    if (_meetingStore.isDefaultAspectRatioSelected) {
+                      _meetingStore.setAspectRatio(9 / 16);
+                    }
+                  } else {
+                    _meetingStore.setLandscapeLock(true);
+                    if (_meetingStore.isDefaultAspectRatioSelected) {
+                      _meetingStore.setAspectRatio(16 / 9);
+                    }
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SvgPicture.asset(
+                    "assets/icons/rotate.svg",
+                    color: iconColor,
+                  ),
+                ),
+              ),
+            )
           ],
         ));
   }

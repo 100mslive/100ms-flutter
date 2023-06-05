@@ -15,7 +15,6 @@ dependencies:
   hmssdk_flutter:
     path: ../
 
-  wakelock:
   cupertino_icons:
   provider:
   http:
@@ -48,6 +47,7 @@ dependencies:
   flutter_linkify:
   flutter_foreground_task:
   image_gallery_saver:
+  wakelock: 0.6.1+2
 
 dev_dependencies:
   flutter_test:
