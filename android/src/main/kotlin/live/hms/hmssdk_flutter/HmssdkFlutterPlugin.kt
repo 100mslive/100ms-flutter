@@ -168,7 +168,7 @@ class HmssdkFlutterPlugin :
             }
 
             // MARK: HLS
-            "hls_start_streaming", "hls_stop_streaming" -> {
+            "hls_start_streaming", "hls_stop_streaming", "send_hls_timed_metadata" -> {
                 HMSHLSAction.hlsActions(call, result, hmssdk!!)
             }
 

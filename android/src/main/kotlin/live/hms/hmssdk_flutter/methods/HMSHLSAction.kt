@@ -5,6 +5,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 import live.hms.video.sdk.HMSSDK
 import live.hms.video.sdk.models.HMSHLSConfig
 import live.hms.video.sdk.models.HMSHLSMeetingURLVariant
+import live.hms.video.sdk.models.HMSHLSTimedMetadata
 import live.hms.video.sdk.models.HMSHlsRecordingConfig
 
 class HMSHLSAction {
@@ -18,6 +19,9 @@ class HMSHLSAction {
                 }
                 "hls_stop_streaming" -> {
                     stopHLSStreaming(call, result, hmssdk)
+                }
+                "send_hls_timed_metadata" -> {
+                    sendHLSTimedMetadata(call, result, hmssdk)
                 }
                 else -> {
                     result.notImplemented()
@@ -74,6 +78,33 @@ class HMSHLSAction {
             }
 
             hmssdk.stopHLSStreaming(config = hlsConfig, hmsActionResultListener = HMSCommonAction.getActionListener(result))
+        }
+
+        private fun sendHLSTimedMetadata(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+            val metadata = call.argument<List<Map<String, Any>>>("metadata") ?: kotlin.run {
+                HMSErrorLogger.returnArgumentsError("metadata Parameter is null")
+            }
+
+            metadata?.let {
+                    hlsMetadataList ->
+                hlsMetadataList as List<Map<String, Any>>
+
+                val hlsMetadata = ArrayList<HMSHLSTimedMetadata>()
+
+                /***
+                 * Here we parse the Map<String,Any> from flutter to
+                 * [HMSHLSTimedMetadata] objects
+                 */
+                hlsMetadataList.forEach {
+                    hlsMetadata.add(
+                        HMSHLSTimedMetadata(
+                            it["metadata"] as String,
+                            (it["duration"] as Int).toLong(),
+                        ),
+                    )
+                }
+                hmssdk.setHlsSessionMetadata(hlsMetadata, HMSCommonAction.getActionListener(result))
+            }
         }
     }
 }

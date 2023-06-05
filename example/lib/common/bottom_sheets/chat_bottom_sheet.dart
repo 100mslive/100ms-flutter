@@ -472,8 +472,31 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                     left: 15, bottom: 11, top: 11, right: 15),
                                 hintText: "Send a message to everyone"),
                           ),
-                          width: widthOfScreen - 70,
+                          width: widthOfScreen - 110,
                         ),
+                        InkWell(
+                            onTap: () {
+                              if (messageTextController.text.isEmpty) {
+                                Utilities.showToast("Message can't be empty");
+                                return;
+                              }
+                              context
+                                  .read<MeetingStore>()
+                                  .sendHLSTimedMetadata([
+                                HMSHLSTimedMetadata(
+                                    metadata: messageTextController.text)
+                              ]);
+                              messageTextController.clear();
+                            },
+                            child: Container(
+                              width: 30,
+                              height: 30,
+                              child: SvgPicture.asset(
+                                "assets/icons/timed_metadata.svg",
+                                color: themeDefaultColor,
+                                fit: BoxFit.scaleDown,
+                              ),
+                            )),
                         InkWell(
                             onTap: () {
                               if (messageTextController.text.isEmpty) {
