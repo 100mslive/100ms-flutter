@@ -946,6 +946,37 @@ class HMSSDK {
     }
   }
 
+  ///Method to send Timed metadata for HLS Stream
+  ///
+  ///**Parameters**:
+  ///
+  /// **metadata** - [metadata] the data which you wish to send as metadata
+  ///
+  /// **hmsActionResultListener** - [hmsActionResultListener] is a callback whose [HMSActionResultListener.onSuccess] will be called when the action completes successfully.
+  ///
+  ///Refer TODO: ADD Docs Link
+  Future<void> sendHLSTimedMetadata(
+      {required List<HMSHLSTimedMetadata> metadata,
+      HMSActionResultListener? hmsActionResultListener}) async {
+    var args = {"metadata": metadata.map((e) => e.toMap()).toList()};
+
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.sendHLSTimedMetadata,
+        arguments: args);
+
+    if (hmsActionResultListener != null) {
+      if (result == null) {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.sendHLSTimedMetadata,
+            arguments: args);
+      } else {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.sendHLSTimedMetadata,
+            hmsException: HMSException.fromMap(result["error"]));
+      }
+    }
+  }
+
   /// Change the metadata that appears inside [HMSPeer.metadata]. This change is persistent and all peers joining after the change will still see these values.
   ///
   /// **Parameters**:

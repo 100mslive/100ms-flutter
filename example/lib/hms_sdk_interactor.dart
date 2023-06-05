@@ -352,4 +352,10 @@ class HMSSDKInteractor {
   void switchAudioOutputUsingiOSUI() {
     return hmsSDK.switchAudioOutputUsingiOSUI();
   }
+
+  void sendHLSTimedMetadata(List<HMSHLSTimedMetadata> metadata,
+      HMSActionResultListener? hmsActionResultListener) {
+    hmsSDK.sendHLSTimedMetadata(
+        metadata: metadata, hmsActionResultListener: hmsActionResultListener);
+  }
 }

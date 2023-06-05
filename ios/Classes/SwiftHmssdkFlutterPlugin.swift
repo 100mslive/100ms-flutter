@@ -208,7 +208,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - HLS
 
-        case "hls_start_streaming", "hls_stop_streaming":
+        case "hls_start_streaming", "hls_stop_streaming","send_hls_timed_metadata":
             HMSHLSAction.hlsActions(call, result, hmsSDK)
 
             // MARK: - Logging

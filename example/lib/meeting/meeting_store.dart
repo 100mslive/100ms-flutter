@@ -462,6 +462,10 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.stopHLSStreaming(hmsActionResultListener: this);
   }
 
+  void sendHLSTimedMetadata(List<HMSHLSTimedMetadata> metadata) {
+    _hmsSDKInteractor.sendHLSTimedMetadata(metadata, this);
+  }
+
   void changeTrackStateForRole(bool mute, List<HMSRole>? roles) {
     _hmsSDKInteractor.changeTrackStateForRole(
         true, HMSTrackKind.kHMSTrackKindAudio, "regular", roles, this);
@@ -1751,6 +1755,9 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.setSessionMetadataForKey:
         break;
+      case HMSActionResultListenerMethod.sendHLSTimedMetadata:
+        Utilities.showToast("Metadata sent successfully");
+        break;
     }
   }
 
@@ -1831,6 +1838,9 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.setSessionMetadataForKey:
         Utilities.showToast("Set session metadata failed");
+        break;
+      case HMSActionResultListenerMethod.sendHLSTimedMetadata:
+        // TODO: Handle this case.
         break;
     }
     notifyListeners();

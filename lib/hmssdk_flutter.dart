@@ -93,6 +93,7 @@ export 'src/model/hms_session_store.dart';
 export 'src/model/hms_key_change_listener.dart';
 export 'src/model/hms_hls_playback_event_listener.dart';
 export 'src/model/hms_hls_player_controller.dart';
+export 'src/model/hms_hls_timed_metadata.dart';
 
 //Views
 export 'src/ui/meeting/hms_video_view.dart';
