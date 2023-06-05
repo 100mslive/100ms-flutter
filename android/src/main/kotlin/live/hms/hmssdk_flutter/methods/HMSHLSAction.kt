@@ -80,14 +80,14 @@ class HMSHLSAction {
             hmssdk.stopHLSStreaming(config = hlsConfig, hmsActionResultListener = HMSCommonAction.getActionListener(result))
         }
 
-        private fun sendHLSTimedMetadata(call: MethodCall, result: Result, hmssdk: HMSSDK){
-            val metadata = call.argument<List<Map<String,Any>>>("metadata") ?: kotlin.run {
+        private fun sendHLSTimedMetadata(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+            val metadata = call.argument<List<Map<String, Any>>>("metadata") ?: kotlin.run {
                 HMSErrorLogger.returnArgumentsError("metadata Parameter is null")
             }
 
             metadata?.let {
-                hlsMetadataList ->
-                hlsMetadataList as List<Map<String,Any>>
+                    hlsMetadataList ->
+                hlsMetadataList as List<Map<String, Any>>
 
                 val hlsMetadata = ArrayList<HMSHLSTimedMetadata>()
 
@@ -95,13 +95,15 @@ class HMSHLSAction {
                  * Here we parse the Map<String,Any> from flutter to
                  * [HMSHLSTimedMetadata] objects
                  */
-                hlsMetadataList.forEach{
-
-                   hlsMetadata.add(HMSHLSTimedMetadata(it["metadata"] as String,
-                       (it["duration"] as Int).toLong()
-                   ))
+                hlsMetadataList.forEach {
+                    hlsMetadata.add(
+                        HMSHLSTimedMetadata(
+                            it["metadata"] as String,
+                            (it["duration"] as Int).toLong(),
+                        ),
+                    )
                 }
-                hmssdk.setHlsSessionMetadata(hlsMetadata,HMSCommonAction.getActionListener(result))
+                hmssdk.setHlsSessionMetadata(hlsMetadata, HMSCommonAction.getActionListener(result))
             }
         }
     }

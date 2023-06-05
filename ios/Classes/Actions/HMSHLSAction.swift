@@ -16,9 +16,9 @@ class HMSHLSAction {
 
         case "hls_stop_streaming":
             stopHlsStreaming(call, result, hmsSDK)
-        
+
         case "send_hls_timed_metadata":
-            sendHLSTimedMetadata(call, result,hmsSDK)
+            sendHLSTimedMetadata(call, result, hmsSDK)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -75,33 +75,33 @@ class HMSHLSAction {
 
         return HMSHLSConfig(variants: meetingUrlVariant)
     }
-    
-    static private func sendHLSTimedMetadata(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?){
-        
+
+    static private func sendHLSTimedMetadata(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+
         let arguments = call.arguments as? [AnyHashable: Any]
-        
-        guard let metadata = arguments?["metadata"] as? [[String:Any]] else{
+
+        guard let metadata = arguments?["metadata"] as? [[String: Any]] else {
             HMSErrorLogger.returnArgumentsError("metadata parameter is null")
             return
         }
-        
+
         var hlsMetadata: [HMSHLSTimedMetadata] = []
-        
+
         /***
          * Here we parse the Map<String,Any> from flutter to
          * [HMSHLSTimedMetadata] objects
          */
-        metadata.forEach{ timedMetadata in
-            hlsMetadata.append(HMSHLSTimedMetadata(payload: timedMetadata["metadata"] as! String,duration: timedMetadata["duration"] as! Int))
+        metadata.forEach { timedMetadata in
+            hlsMetadata.append(HMSHLSTimedMetadata(payload: timedMetadata["metadata"] as! String, duration: timedMetadata["duration"] as! Int))
         }
-        
-        hmsSDK?.sendHLSTimedMetadata(hlsMetadata){ _, error in
+
+        hmsSDK?.sendHLSTimedMetadata(hlsMetadata) { _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
             } else {
                 result(nil)
             }
         }
-        
+
     }
 }
