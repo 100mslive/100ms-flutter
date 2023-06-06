@@ -39,9 +39,9 @@ class HMSTrackSettingsExtension {
                     hmsAudioTrackSettings.setUseHardwareAcousticEchoCanceler(
                         useHardwareAcousticEchoCanceler,
                     )
-                }else{
+                } else {
                     hmsAudioTrackSettings.setUseHardwareAcousticEchoCanceler(
-                        false
+                        false,
                     )
                 }
 

@@ -54,7 +54,7 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
          * else we use the URL sent by the user
          */
         if hlsURL != nil {
-            
+
             /**
              * Here we play the stream using streamUrl using the stream from
              * url passed by the user
@@ -63,7 +63,7 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
                 HMSErrorLogger.logError(#function, "Cannot convert hlsURL to URL", "PARSE_ERROR")
                 return playerViewController.view
             }
-            
+
             /**
              * Here we play the stream using streamUrl using the stream from
              * onRoomUpdate or onJoin
@@ -75,7 +75,7 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
                     HMSErrorLogger.logError(#function, "hlsStreamURL not found", "NULL_ERROR")
                     return playerViewController.view
                 }
-                
+
                 /**
                  * Here we add the event listener to listen to the events
                  * of HLS Player

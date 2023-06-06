@@ -21,10 +21,10 @@ packages:
     dependency: transitive
     description:
       name: args
-      sha256: c372bb384f273f0c2a8aaaa226dad84dc27c8519a691b888725dec59518ad53a
+      sha256: eef6c46b622e0494a36c5a12d10d77fb4e855501a91c1b9ef9339326e58f0596
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.1"
+    version: "2.4.2"
   async:
     dependency: transitive
     description:
@@ -571,10 +571,10 @@ packages:
     dependency: transitive
     description:
       name: permission_handler_android
-      sha256: d8cc6a62ded6d0f49c6eac337e080b066ee3bce4d405bd9439a61e1f1927bfe8
+      sha256: f1044cf68ae3a56b31854b7b3e022d5a50dd78b5a28bba5287bcf1d9e3e62537
       url: "https://pub.dev"
     source: hosted
-    version: "10.2.1"
+    version: "10.2.2"
   permission_handler_apple:
     dependency: transitive
     description:
