@@ -1,10 +1,9 @@
 /// 100ms HMSHLSPlayerStats
-/// 
+///
 ///[HMSHLSPlayerStats] is a data class, confirming to the HLSPlayerStats
 ///
 ///Whenever the player stats are attached, we get an object of [HMSHLSPlayerStats] in [onHLSEventUpdate] callback.
 class HMSHLSPlayerStats {
-
   /// The current bandwidth, as estimated by the player
   final double bandWidthEstimate;
 

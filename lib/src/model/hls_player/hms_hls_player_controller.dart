@@ -7,7 +7,7 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 class HMSHLSPlayerController {
   /// Adds an [HMSHLSPlaybackEventsListener] to listen for HLS playback events.
   /// **parameters**:
-  /// 
+  ///
   /// **hmshlsPlaybackEventsListener** - hls playback event listener to be attached
   static void addHMSHLSPlaybackEventsListener(
       HMSHLSPlaybackEventsListener hmshlsPlaybackEventsListener) {
@@ -16,7 +16,7 @@ class HMSHLSPlayerController {
 
   /// Removes an [HMSHLSPlaybackEventsListener] that was previously added.
   /// **parameters**:
-  /// 
+  ///
   /// **hmshlsPlaybackEventsListener** - hls playback event listener to be removed
   static void removeHMSHLSPlaybackEventsListener(
       HMSHLSPlaybackEventsListener hmshlsPlaybackEventsListener) {
@@ -26,7 +26,7 @@ class HMSHLSPlayerController {
 
   /// Starts the HLS playback with the specified [hlsUrl].
   /// **parameters**:
-  /// 
+  ///
   /// **hlsUrl** - hls stream m3u8 url to be played
   static Future<void> start({required String? hlsUrl}) async {
     await PlatformService.invokeMethod(PlatformMethod.start);
@@ -54,8 +54,7 @@ class HMSHLSPlayerController {
 
   /// Seeks forward in the HLS playback by the specified [seconds].
   /// **parameters**:
-  /// 
-  /// 
+  ///
   /// **seconds** - seek forward in the stream by specified seconds
   static Future<void> seekForward({required int seconds}) async {
     final Map<String, dynamic> arguments = {'seconds': seconds};
@@ -65,8 +64,7 @@ class HMSHLSPlayerController {
 
   /// Seeks backward in the HLS playback by the specified [seconds].
   /// **parameters**:
-  /// 
-  /// 
+  ///
   /// **seconds** - seek backward in the stream by specified seconds
   static Future<void> seekBackward({required int seconds}) async {
     final Map<String, dynamic> arguments = {
@@ -77,9 +75,8 @@ class HMSHLSPlayerController {
   }
 
   /// Sets the volume of the HLS player to the specified [volume].
-  ///
   /// **parameters**:
-  /// 
+  ///
   /// **volume** - volume for HLS player
   /// The [volume] value should be between 0 and 100.
   static Future<void> setVolume({required int volume}) async {

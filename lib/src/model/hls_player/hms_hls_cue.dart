@@ -1,10 +1,10 @@
+//Project imports
 import 'package:hmssdk_flutter/src/model/hms_date_extension.dart';
 
 ///100ms HMSHLSCue
 ///
 ///[HMSHLSCue] is used to parse the timed metadata sent across the platforms.
 class HMSHLSCue {
-
   // Unique id of the timed event
   final String? id;
 

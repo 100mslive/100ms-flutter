@@ -22,6 +22,11 @@ import live.hms.hmssdk_flutter.hls_player.HMSHLSCueExtension
 import live.hms.hmssdk_flutter.hls_player.HMSHLSPlaybackStateExtension
 import java.util.concurrent.TimeUnit
 
+/**
+ * This class renders the HMSHLSPlayer over Android View
+ *
+ * We create the object of this class when the init of HMSHLSPlayerWidget is called from create method.
+ */
 class HMSHLSPlayer(
     context: Context,
     private val hlsUrl: String?,
@@ -136,15 +141,33 @@ class HMSHLSPlayer(
          */
         hlsPlayer?.let { player ->
             hlsUrl?.let {
+                /**
+                 * Here we play the stream using streamUrl using the stream from
+                 * url passed by the user
+                 */
                 player.play(hlsUrl)
             } ?: run {
                 hmssdkFlutterPlugin?.let { plugin ->
                     plugin.hlsStreamUrl?.let { streamUrl ->
+                        /**
+                         * Here we play the stream using streamUrl using the stream from
+                         * onRoomUpdate or onJoin
+                         */
                         player.play(streamUrl)
                         context.registerReceiver(broadcastReceiver, IntentFilter(HLS_PLAYER_INTENT))
+
+                        /**
+                         * Here we add the event listener to listen to the events
+                         * of HLS Player
+                         */
                         player.addPlayerEventListener(
                             hmsHLSPlaybackEvents,
                         )
+
+                        /**
+                         * Here we add the stats listener to the
+                         * HLS Player
+                         */
                         if (isHLSStatsRequired) {
                             HLSStatsHandler.addHLSStatsListener(hmssdkFlutterPlugin, hlsPlayer)
                         }
