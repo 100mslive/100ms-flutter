@@ -1,3 +1,4 @@
+/// [HMSHLSPlaybackState] is an enum containing different HLS Player states
 enum HMSHLSPlaybackState {
   PLAYING,
   STOPPED,

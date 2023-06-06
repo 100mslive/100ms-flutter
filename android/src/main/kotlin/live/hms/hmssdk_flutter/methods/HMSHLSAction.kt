@@ -80,6 +80,13 @@ class HMSHLSAction {
             hmssdk.stopHLSStreaming(config = hlsConfig, hmsActionResultListener = HMSCommonAction.getActionListener(result))
         }
 
+        /**
+         * This method is used to send timed metadata to the HLS Player
+         *
+         * This takes a list of [HMSHLSTimedMetadata] objects
+         * From flutter we receive a list of Map<String,Any> and then we
+         * convert it to list of HMSHLSTimedMetadata objects
+         */
         private fun sendHLSTimedMetadata(call: MethodCall, result: Result, hmssdk: HMSSDK) {
             val metadata = call.argument<List<Map<String, Any>>>("metadata") ?: kotlin.run {
                 HMSErrorLogger.returnArgumentsError("metadata Parameter is null")

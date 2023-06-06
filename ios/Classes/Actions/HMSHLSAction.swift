@@ -76,6 +76,13 @@ class HMSHLSAction {
         return HMSHLSConfig(variants: meetingUrlVariant)
     }
 
+    /**
+     * This method is used to send timed metadata to the HLS Player
+     *
+     * This takes a list of [HMSHLSTimedMetadata] objects
+     * From flutter we receive a list of Map<String,Any> and then we
+     * convert it to list of HMSHLSTimedMetadata objects
+     */
     static private func sendHLSTimedMetadata(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
 
         let arguments = call.arguments as? [AnyHashable: Any]

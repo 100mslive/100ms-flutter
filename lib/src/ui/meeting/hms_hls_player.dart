@@ -5,20 +5,21 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show StandardMessageCodec;
 
-/// TODO: Update docs regarding HMSHLSPlayer
-///100ms HMSVideoView
+///100ms HMSHLSPlayer
 ///
-///HMSVideoView used to render video in ios and android devices
+///HMSHLSPlayer used to render hls stream in ios and android devices
 ///
-/// To use,import package:`hmssdk_flutter/ui/meeting/hms_video_view.dart`.
-///
-///
+/// To use,import package:`hmssdk_flutter/ui/meeting/hms_hls_player.dart`.
 ///
 /// [HMSHLSPlayer] will render video using streamURL
 ///
 /// **parameters**
 ///
+/// **hlsUrl** - m3u8 Stream URL, if not passed HMSSDK tries to get it internally
 ///
+/// **isHLSStatsRequired** - If HLS stats are required set this to true. Default is false
+///
+/// **showPlayerControls** - To show the default player UI set this to true. Default is false
 ///
 /// Refer [HMSVideoView guide here](https://www.100ms.live/docs/flutter/v2/features/render-video)
 class HMSHLSPlayer extends StatelessWidget {
@@ -30,12 +31,6 @@ class HMSHLSPlayer extends StatelessWidget {
 
   final bool? showPlayerControls;
 
-  ///100ms HMSHLSPlayer
-  ///
-  ///HMSHLSPlayer used to render HLS Stream in ios and android devices
-  ///
-  /// To use,import package:`hmssdk_flutter/ui/meeting/hms_hls_player.dart`.
-  ///
   HMSHLSPlayer(
       {Key? key, this.hlsUrl, this.isHLSStatsRequired, this.showPlayerControls})
       : super(key: key);

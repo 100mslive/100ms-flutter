@@ -54,10 +54,20 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
          * else we use the URL sent by the user
          */
         if hlsURL != nil {
+            
+            /**
+             * Here we play the stream using streamUrl using the stream from
+             * url passed by the user
+             */
             guard let hlsStreamURL =  URL(string: hlsURL!) else {
                 HMSErrorLogger.logError(#function, "Cannot convert hlsURL to URL", "PARSE_ERROR")
                 return playerViewController.view
             }
+            
+            /**
+             * Here we play the stream using streamUrl using the stream from
+             * onRoomUpdate or onJoin
+             */
             hlsPlayer?.play(hlsStreamURL)
         } else {
             if hmssdkFlutterPlugin.hlsStreamUrl != nil {
@@ -65,11 +75,20 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
                     HMSErrorLogger.logError(#function, "hlsStreamURL not found", "NULL_ERROR")
                     return playerViewController.view
                 }
+                
+                /**
+                 * Here we add the event listener to listen to the events
+                 * of HLS Player
+                 */
                 hmsHLSStreamViewController = HMSHLSStreamViewController(hlsPlayer: hlsPlayer, hmssdkFlutterPlugin: hmssdkFlutterPlugin)
                 hlsPlayer?.delegate = hmsHLSStreamViewController
                 hlsPlayer?.play(hlsStreamURL)
                 NotificationCenter.default.addObserver(self, selector: #selector(handleHLSPlayerOperations), name: NSNotification.Name(HMSHLSPlayerAction.HLS_PLAYER_METHOD), object: nil)
 
+                /**
+                 * Here we add the stats listener to the
+                 * HLS Player
+                 */
                 if isHLSStatsRequired {
                     HMSHLSStatsHandler.addHLSStatsListener(hlsPlayer, hmssdkFlutterPlugin)
                 }
