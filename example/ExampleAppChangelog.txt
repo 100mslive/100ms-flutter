@@ -18,7 +18,7 @@ https://github.com/100mslive/100ms-flutter/issues/1293
 - Add support for starting RTMP Streaming / Recording without Meeting URLs
 https://github.com/100mslive/100ms-flutter/issues/1314
 
-- Enableb S/W echo cancellation on Android by default
+- Enabled S/W echo cancellation on Android by default
 https://github.com/100mslive/react-native-hms/issues/1068
 
 Flutter SDK: 1.7.0
