@@ -9,7 +9,11 @@ import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.NonNull
+import com.google.gson.JsonArray
 import com.google.gson.JsonElement
+import com.google.gson.JsonNull
+import com.google.gson.JsonObject
+import com.google.gson.JsonPrimitive
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -1297,7 +1301,28 @@ class HmssdkFlutterPlugin :
                     args["event_name"] = "on_key_changed"
                     val newData = HashMap<String, String?>()
                     newData["key"] = key
-                    newData["value"] = value?.asString
+
+                    /**
+                     * Here depending on the value we parse the JsonElement
+                     * if it's a JsonPrimitive we parse it as String and then send to flutter
+                     * if it's a JsonObject,JsonArray we convert it to String and then send to flutter
+                     * if it's a JsonNull we send it as null
+                     */
+
+                    value?.let {
+                        if(it.isJsonPrimitive){
+                            newData["value"] = value.asString
+                        }
+                        else if (it.isJsonNull){
+                            newData["value"] = null
+                        }
+                        else{
+                            newData["value"] = value.toString()
+                        }
+                    }?:run {
+                        newData["value"] = null
+                    }
+
                     newData["uid"] = uid as String
                     args["data"] = newData
                     CoroutineScope(Dispatchers.Main).launch {
