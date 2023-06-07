@@ -32,8 +32,8 @@ android {
         applicationId "live.hms.flutter"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 249
-        versionName "1.4.114"
+        versionCode 250
+        versionName "1.4.115"
     }
 
     signingConfigs {
