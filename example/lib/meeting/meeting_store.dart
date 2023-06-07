@@ -1935,9 +1935,26 @@ class MeetingStore extends ChangeNotifier
   @override
   void onCue({required HMSHLSCue hlsCue}) {
     if (hlsCue.payload != null) {
-      final Map<String, dynamic> data = jsonDecode(hlsCue.payload!);
-      Utilities.showToast(
-          Utilities.getTimedMetadataEmojiFromId(data["emojiId"]));
+      /**
+       * Generally we are assuming that the timed metadata payload will be a JSON String
+       * but if it's a normal string then this throws the format exception 
+       * Hence we catch it and display the payload as string on toast.
+       * The toast is displayed for the time duration hlsCue.endDate - hlsCue.startDate
+       * If endDate is null then toast is displayed for 2 seconds by default
+       */
+      try {
+        final Map<String, dynamic> data = jsonDecode(hlsCue.payload!);
+        Utilities.showToast(
+            Utilities.getTimedMetadataEmojiFromId(data["emojiId"]),
+            time: hlsCue.endDate == null
+                ? 2
+                : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds);
+      } catch (e) {
+        Utilities.showToast(hlsCue.payload!,
+            time: hlsCue.endDate == null
+                ? 2
+                : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds);
+      }
     }
   }
 
