@@ -48,8 +48,26 @@ class HMSSessionStoreAction {
                             result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)))
                         }
 
-                        override fun onSuccess(sessionMetadata: com.google.gson.JsonElement?) {
-                            result.success(HMSResultExtension.toDictionary(true, sessionMetadata?.asString))
+                        override fun onSuccess(sessionMetadata: JsonElement?) {
+                            var value : Any? = null
+
+                            /**
+                             * Here depending on the value we parse the JsonElement
+                             * if it's a JsonPrimitive we parse it as String and then send to flutter
+                             * if it's a JsonObject,JsonArray we convert it to String and then send to flutter
+                             * if it's a JsonNull we send it as null
+                             */
+                            sessionMetadata?.let {
+                                value = if(it.isJsonPrimitive){
+                                    it.asString
+                                } else if (it.isJsonNull){
+                                    null
+                                } else{
+                                    it.toString()
+                                }
+                            }
+
+                            result.success(HMSResultExtension.toDictionary(true, value))
                         }
                     },
                 )
