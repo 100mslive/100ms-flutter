@@ -18,6 +18,12 @@ class HMSHLSStreamViewController: HMSHLSPlayerDelegate {
         self.hmssdkFlutterPlugin = hmssdkFlutterPlugin
     }
 
+    /*
+     This method is called when the playback state of the HMSHLSPlayer changes
+     
+     Parameters:
+     - state: The HMSHLSPlaybackState representing the new playback state
+     */
     func onPlaybackStateChanged(state: HMSHLSPlaybackState) {
         let data = [
             "event_name": "on_playback_state_changed",
@@ -31,6 +37,12 @@ class HMSHLSStreamViewController: HMSHLSPlayerDelegate {
         hmssdkFlutterPlugin.hlsPlayerSink?(data)
     }
 
+    /*
+     This method is called when a cue is received from the HMSHLSPlayer
+     
+     Parameters:
+     - cue: The HMSHLSCue representing the received cue
+     */
     func onCue(cue: HMSHLSCue) {
         let data = [
             "event_name": "on_cue",
@@ -45,6 +57,12 @@ class HMSHLSStreamViewController: HMSHLSPlayerDelegate {
 
     }
 
+    /*
+     This method is called when a playback failure occurs in the HMSHLSPlayer
+     
+     Parameters:
+     - error: The Error representing the encountered playback failure
+     */
     func onPlaybackFailure(error: Error) {
         guard let error = error as? HMSHLSError else { return }
 

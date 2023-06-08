@@ -28,8 +28,10 @@ class HMSHLSPlayerController {
   /// **parameters**:
   ///
   /// **hlsUrl** - hls stream m3u8 url to be played
-  static Future<void> start({required String? hlsUrl}) async {
-    await PlatformService.invokeMethod(PlatformMethod.start);
+  static Future<void> start({String? hlsUrl}) async {
+    await PlatformService.invokeMethod(PlatformMethod.start,arguments: {
+      "hls_url": hlsUrl
+    });
   }
 
   /// Stops the HLS playback.
