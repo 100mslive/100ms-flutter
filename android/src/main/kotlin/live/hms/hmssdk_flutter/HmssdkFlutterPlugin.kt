@@ -9,11 +9,7 @@ import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.NonNull
-import com.google.gson.JsonArray
 import com.google.gson.JsonElement
-import com.google.gson.JsonNull
-import com.google.gson.JsonObject
-import com.google.gson.JsonPrimitive
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -1310,16 +1306,14 @@ class HmssdkFlutterPlugin :
                      */
 
                     value?.let {
-                        if(it.isJsonPrimitive){
+                        if (it.isJsonPrimitive) {
                             newData["value"] = value.asString
-                        }
-                        else if (it.isJsonNull){
+                        } else if (it.isJsonNull) {
                             newData["value"] = null
-                        }
-                        else{
+                        } else {
                             newData["value"] = value.toString()
                         }
-                    }?:run {
+                    } ?: run {
                         newData["value"] = null
                     }
 
