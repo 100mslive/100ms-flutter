@@ -16,7 +16,7 @@ class HMSHLSPlayerAction {
     companion object {
         fun hlsPlayerAction(call: MethodCall, result: Result, activity: Activity) {
             when (call.method) {
-                "start_hls_player" -> start(call,result, activity)
+                "start_hls_player" -> start(call, result, activity)
                 "stop_hls_player" -> stop(result, activity)
                 "pause_hls_player" -> pause(result, activity)
                 "resume_hls_player" -> resume(result, activity)
@@ -39,9 +39,9 @@ class HMSHLSPlayerAction {
          * @param result The result object to be returned after starting the player.
          * @param activity The current activity from which the method is called.
          */
-        private fun start(call:MethodCall,result: Result, activity: Activity) {
+        private fun start(call: MethodCall, result: Result, activity: Activity) {
             val hlsUrl = call.argument<String?>("hls_url")
-            activity.sendBroadcast(Intent(HLS_PLAYER_INTENT).putExtra(METHOD_CALL, "start_hls_player").putExtra("hls_url",hlsUrl))
+            activity.sendBroadcast(Intent(HLS_PLAYER_INTENT).putExtra(METHOD_CALL, "start_hls_player").putExtra("hls_url", hlsUrl))
             result.success(null)
         }
 

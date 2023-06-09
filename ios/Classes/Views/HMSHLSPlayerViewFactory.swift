@@ -28,9 +28,8 @@ class HMSHLSPlayerViewFactory: NSObject, FlutterPlatformViewFactory {
         let isHLSStatsRequired = arguments?["is_hls_stats_required"] as? Bool ?? false
 
         let showPlayerControls = arguments?["show_player_controls"] as? Bool ?? false
-        
 
-        //This instantiates an HMSHLSPlayerView object with the provided parameters.
+        // This instantiates an HMSHLSPlayerView object with the provided parameters.
         return HMSHLSPlayerView(frame: frame,
                                       viewIdentifier: viewId,
                                 hlsURL: hlsUrl,

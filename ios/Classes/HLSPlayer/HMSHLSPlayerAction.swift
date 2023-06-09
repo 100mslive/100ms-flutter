@@ -20,7 +20,7 @@ class HMSHLSPlayerAction {
     static func hlsPlayerAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "start_hls_player":
-            start(call,result)
+            start(call, result)
 
         case "stop_hls_player":
             stop(result)
@@ -55,7 +55,6 @@ class HMSHLSPlayerAction {
 
     }
 
-    
     /**
      * Starts the HLS player by posting a notification with the specified method call and HLS URL.
      *
@@ -63,17 +62,17 @@ class HMSHLSPlayerAction {
      *   - call: The method call object containing the HLS URL as an argument.
      *   - result: The result object to be returned after starting the player.
      */
-    static private func start(_ call: FlutterMethodCall,_ result: @escaping FlutterResult) {
-        
-        guard let arguments = call.arguments as? [AnyHashable: Any] else{
+    static private func start(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+
+        guard let arguments = call.arguments as? [AnyHashable: Any] else {
             HMSErrorLogger.logError(#function, "No arguments found", "NULL_ERROR")
             result(nil)
             return
         }
-        
+
         let hlsUrl = arguments["hls_url"] as? String
-        
-        NotificationCenter.default.post(name: NSNotification.Name(HLS_PLAYER_METHOD), object: nil, userInfo: [METHOD_CALL: "start_hls_player","hls_url":hlsUrl])
+
+        NotificationCenter.default.post(name: NSNotification.Name(HLS_PLAYER_METHOD), object: nil, userInfo: [METHOD_CALL: "start_hls_player", "hls_url": hlsUrl])
         result(nil)
     }
 
@@ -87,7 +86,6 @@ class HMSHLSPlayerAction {
         result(nil)
     }
 
-    
     /**
      * Pauses the HLS player by posting a notification with the specified method call.
      *
@@ -177,7 +175,7 @@ class HMSHLSPlayerAction {
         NotificationCenter.default.post(name: NSNotification.Name(HLS_PLAYER_METHOD), object: nil, userInfo: [METHOD_CALL: "set_hls_player_volume", "volume": volume])
         result(nil)
     }
-    
+
     /**
      * Adds a listener to receive HLS player statistics by posting a notification with the corresponding method call.
      *
