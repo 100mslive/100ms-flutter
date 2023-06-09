@@ -12,12 +12,29 @@ import live.hms.stats.PlayerStatsListener
 import live.hms.stats.model.PlayerStatsModel
 import live.hms.video.error.HMSException
 
+/**
+ * This class handles the HLS Player stats
+ */
 class HLSStatsHandler {
 
     companion object {
 
+        /**
+         * Adds an HLS stats listener to the HLS player.
+         * This listener captures HLS player errors and updates in player stats.
+         *
+         * @param hmssdkFlutterPlugin The HMSSDK Flutter plugin instance.
+         * @param hlsPlayer The HLS player instance.
+         */
         fun addHLSStatsListener(hmssdkFlutterPlugin: HmssdkFlutterPlugin?, hlsPlayer: HmsHlsPlayer?) {
             hlsPlayer?.setStatsMonitor(object : PlayerStatsListener {
+
+
+                /**
+                 * Callback method triggered when an HLS error occurs during playback.
+                 *
+                 * @param error The HMSException representing the error.
+                 */
                 override fun onError(error: HMSException) {
                     val hashMap: HashMap<String, Any?> = HashMap()
                     hmssdkFlutterPlugin?.let { plugin ->
@@ -31,13 +48,17 @@ class HLSStatsHandler {
                     }
                 }
 
+                /**
+                 * Callback method triggered when an HLS player event update occurs.
+                 *
+                 * @param playerStatsModel The PlayerStatsModel containing the updated player statistics.
+                 */
                 override fun onEventUpdate(playerStatsModel: PlayerStatsModel) {
                     val hashMap: HashMap<String, Any?> = HashMap()
                     hmssdkFlutterPlugin?.let { plugin ->
                         hashMap["event_name"] = "on_hls_event_update"
                         hashMap["data"] = HMSPlayerStatsExtension.toDictionary(playerStatsModel)
                         if (hashMap["data"] != null) {
-                            Log.v("Vkohli", "Sending onEventUpdate $hashMap")
                             CoroutineScope(Dispatchers.Main).launch {
                                 plugin.hlsPlayerSink?.success(hashMap)
                             }
@@ -49,6 +70,11 @@ class HLSStatsHandler {
             }
         }
 
+        /**
+         * Removes the HLS stats listener from the HLS player.
+         *
+         * @param hlsPlayer The HLS player instance.
+         */
         fun removeStatsListener(hlsPlayer: HmsHlsPlayer?) {
             hlsPlayer?.setStatsMonitor(null) ?: run {
                 HMSErrorLogger.logError("removeStatsListener", "hlsPlayer is null", "NULL_ERROR")

@@ -17,6 +17,15 @@ class HMSHLSPlayerWidget(
 
     private var hmsHLSPlayer: HMSHLSPlayer? = null
 
+    /**
+     * Initializes the HLS player if it is null.
+     * - Parameters:
+     * - context: The Android context.
+     * - hlsUrl: The HLS URL.
+     * - hmssdkFlutterPlugin: The Flutter plugin instance.
+     * - isHLSStatsRequired: Indicates whether HLS stats are required.
+     * - showPlayerControls: Indicates whether to show player controls.
+     */
     init {
         if (hmsHLSPlayer == null) {
             hmsHLSPlayer = HMSHLSPlayer(context, hlsUrl, hmssdkFlutterPlugin, isHLSStatsRequired, showPlayerControls)

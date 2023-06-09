@@ -20,6 +20,16 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
     var statMonitor: HMSHLSStatsMonitor?
     private var hmsHLSStreamViewController: HMSHLSStreamViewController?
 
+    /**
+     * Initializes the HLS player view with the specified parameters.
+     * - Parameters:
+     *   - frame: The CGRect defining the frame of the HLS player view.
+     *   - viewIdentifier: The unique identifier for the HLS player view.
+     *   - hlsURL: The HLS URL for the media content to be played.
+     *   - hmssdkFlutterPlugin: The instance of the SwiftHmssdkFlutterPlugin.
+     *   - isHLSStatsRequired: A boolean indicating whether HLS stats are required.
+     *   - showPlayerControls: A boolean indicating whether to show player controls.
+     */
     init(frame: CGRect, viewIdentifier: Int64, hlsURL: String?, hmssdkFlutterPlugin: SwiftHmssdkFlutterPlugin?, isHLSStatsRequired: Bool, showPlayerControls: Bool) {
         self.frame = frame
         self.viewIdentifier = viewIdentifier
@@ -33,6 +43,11 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
         initialisePlayer()
     }
 
+    /**
+     Initializes the HLS player and returns the player's view.
+     
+     - Returns: The UIView representing the HLS player.
+     */
     private func initialisePlayer() -> UIView {
 
         hlsPlayer = HMSHLSPlayer()
@@ -99,15 +114,25 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
 
     }
 
+    /**
+     Deinitializes the HLS player and performs necessary cleanup.
+     */
     deinit {
+        
+        // Remove the HLS stats listener
         HMSHLSStatsHandler.removeHLSStatsListener()
+        
+        // Set the hlsPlayer to nil to release its resources
         hlsPlayer = nil
     }
 
+    /**
+     * Below methods handles the HLS Player controller calls
+     */
     @objc func handleHLSPlayerOperations(_ notification: Notification) {
         switch notification.userInfo?[HMSHLSPlayerAction.METHOD_CALL] as? String? {
         case "start_hls_player":
-            start()
+            start(notification.userInfo!["hls_url"] as? String)
         case "stop_hls_player":
             hlsPlayer?.stop()
 
@@ -124,7 +149,7 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
             hlsPlayer?.seekForward(seconds: TimeInterval(notification.userInfo!["seconds"] as! Int))
 
         case "seek_backward":
-            hlsPlayer?.seekForward(seconds: TimeInterval(notification.userInfo!["seconds"] as! Int))
+            hlsPlayer?.seekBackward(seconds: TimeInterval(notification.userInfo!["seconds"] as! Int))
 
         case "set_hls_player_volume":
             hlsPlayer?.volume = notification.userInfo!["volume"] as! Int
@@ -140,19 +165,35 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
         }
     }
 
-    private func start() {
+    /**
+     Starts the HLS player with the specified HLS URL.
 
-        guard let hmssdkFlutterPlugin else {
-            HMSErrorLogger.logError(#function, "hmssdkFlutterPlugin is null", "NULL_ERROR")
-            return
-        }
+     - Parameters:
+        - hlsUrl: The HLS URL to play. If nil, the HLS URL from hmssdkFlutterPlugin will be used.
+     */
+    private func start(_ hlsUrl: String?) {
 
-        if hmssdkFlutterPlugin.hlsStreamUrl != nil {
-            guard let hlsStreamURL =  URL(string: hmssdkFlutterPlugin.hlsStreamUrl!) else {
-                HMSErrorLogger.logError(#function, "hlsStreamURL not found", "NULL_ERROR")
+        if(hlsUrl != nil){
+            guard let hlsStreamURL =  URL(string: hlsUrl!) else {
+                HMSErrorLogger.logError(#function, "hlsUrl not found", "NULL_ERROR")
                 return
             }
             hlsPlayer?.play(hlsStreamURL)
+            return
+        }
+        else{
+            guard let hmssdkFlutterPlugin else {
+                HMSErrorLogger.logError(#function, "hmssdkFlutterPlugin is null", "NULL_ERROR")
+                return
+            }
+
+            if hmssdkFlutterPlugin.hlsStreamUrl != nil {
+                guard let hlsStreamURL =  URL(string: hmssdkFlutterPlugin.hlsStreamUrl!) else {
+                    HMSErrorLogger.logError(#function, "hlsStreamURL not found", "NULL_ERROR")
+                    return
+                }
+                hlsPlayer?.play(hlsStreamURL)
+            }
         }
     }
 
@@ -167,5 +208,7 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
     private func removeHLSStatsListener() {
         HMSHLSStatsHandler.removeHLSStatsListener()
     }
+    
+    /***********************************************************************************************************************************/
 
 }
