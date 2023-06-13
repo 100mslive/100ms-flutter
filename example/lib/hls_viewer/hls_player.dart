@@ -29,35 +29,36 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
                 child: Selector<MeetingStore, double>(
                     selector: (_, meetingStore) => meetingStore.hlsAspectRatio,
                     builder: (_, ratio, __) {
-                      return AspectRatio(
-                        aspectRatio: ratio,
-                        child: HMSHLSPlayer(
-                          showPlayerControls: true,
-                          isHLSStatsRequired:
-                              context.read<MeetingStore>().isHLSStatsEnabled,
-                        ),
-                      );
+                      return Container();
+                      // AspectRatio(
+                      //   aspectRatio: ratio,
+                      //   child: HMSHLSPlayer(
+                      //     showPlayerControls: true,
+                      //     isHLSStatsRequired:
+                      //         context.read<MeetingStore>().isHLSStatsEnabled,
+                      //   ),
+                      // );
                     })),
-            Selector<MeetingStore, bool>(
-                selector: (_, meetingStore) => meetingStore.isHLSStatsEnabled,
-                builder: (_, isHLSStatsEnabled, __) {
-                  return isHLSStatsEnabled
-                      ? Align(
-                          alignment: Alignment.topLeft,
-                          child: ChangeNotifierProvider.value(
-                            value: context.read<MeetingStore>(),
-                            child: HLSStatsView(),
-                          ),
-                        )
-                      : Container();
-                }),
+            // Selector<MeetingStore, bool>(
+            //     selector: (_, meetingStore) => meetingStore.isHLSStatsEnabled,
+            //     builder: (_, isHLSStatsEnabled, __) {
+            //       return isHLSStatsEnabled
+            //           ? Align(
+            //               alignment: Alignment.topLeft,
+            //               child: ChangeNotifierProvider.value(
+            //                 value: context.read<MeetingStore>(),
+            //                 child: HLSStatsView(),
+            //               ),
+            //             )
+            //           : Container();
+            //     }),
             if (!context.read<MeetingStore>().isPipActive)
               Positioned(
                 bottom: 10,
                 right: 20,
                 child: GestureDetector(
                   onTap: () {
-                    HMSHLSPlayerController.seekToLivePosition();
+                    // HMSHLSPlayerController.seekToLivePosition();
                   },
                   child: Container(
                     padding: EdgeInsets.all(5),

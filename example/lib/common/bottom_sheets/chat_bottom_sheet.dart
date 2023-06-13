@@ -493,12 +493,12 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                   Utilities.showToast("Message can't be empty");
                                   return;
                                 }
-                                context
-                                    .read<MeetingStore>()
-                                    .sendHLSTimedMetadata([
-                                  HMSHLSTimedMetadata(
-                                      metadata: messageTextController.text)
-                                ]);
+                                // context
+                                //     .read<MeetingStore>()
+                                //     .sendHLSTimedMetadata([
+                                //   HMSHLSTimedMetadata(
+                                //       metadata: messageTextController.text)
+                                // ]);
                                 messageTextController.clear();
                               } else {
                                 Utilities.showToast(

@@ -93,9 +93,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
             return Selector<MeetingStore, bool>(
                 selector: (_, meetingStore) => meetingStore.isPipActive,
                 builder: (_, isPipActive, __) {
-                  return isPipActive
-                      ? HMSHLSPlayer()
-                      : Scaffold(
+                  return Scaffold(
                           resizeToAvoidBottomInset: false,
                           body: SafeArea(
                             child: Stack(

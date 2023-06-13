@@ -1,5 +1,6 @@
 //Dart imports
 import 'dart:async';
+import 'dart:developer';
 
 //Package imports
 import 'package:bot_toast/bot_toast.dart';
@@ -191,8 +192,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      builder: BotToastInit(), //1. call BotToastInit
-      navigatorObservers: [BotToastNavigatorObserver()],
       home: HomePage(
         deepLinkURL: _currentURI == null ? null : _currentURI.toString(),
       ),
@@ -276,6 +275,7 @@ class _HomePageState extends State<HomePage> {
     Utilities.setRTMPUrl(meetingLinkController.text);
     MeetingFlow flow = Utilities.deriveFlow(meetingLinkController.text.trim());
     if (flow == MeetingFlow.meeting || flow == MeetingFlow.hlsStreaming) {
+      log(context.hashCode.toString());
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -343,8 +343,8 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text("Joining Link",
-                          key: Key('joining_link_text'),
+                      Text("Room Code",
+                          key: Key('room_code_text'),
                           style: GoogleFonts.inter(
                               color: themeDefaultColor,
                               height: 1.5,
@@ -356,7 +356,7 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   width: width * 0.95,
                   child: TextField(
-                    key: Key('meeting_link_field'),
+                    key: Key('room_code_field'),
                     textInputAction: TextInputAction.done,
                     onSubmitted: (value) {
                       joinMeeting();
@@ -371,7 +371,7 @@ class _HomePageState extends State<HomePage> {
                         contentPadding: EdgeInsets.only(left: 16),
                         fillColor: themeSurfaceColor,
                         filled: true,
-                        hintText: 'Paste the link here',
+                        hintText: 'Paste the room code here',
                         hintStyle: GoogleFonts.inter(
                             color: hmsHintColor,
                             height: 1.5,
@@ -433,7 +433,7 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 child: Container(
                                   padding:
-                                      const EdgeInsets.fromLTRB(60, 12, 8, 12),
+                                      const EdgeInsets.fromLTRB(12, 12, 8, 12),
                                   decoration: BoxDecoration(
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(8))),
@@ -453,29 +453,29 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               )),
-                              GestureDetector(
-                                onTap: (() => showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    context: context,
-                                    builder: (ctx) => AppSettingsBottomSheet(
-                                          appVersion: _packageInfo.version +
-                                              " (${_packageInfo.buildNumber})",
-                                        ))),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 8.0, right: 8),
-                                  child: SvgPicture.asset(
-                                    "assets/icons/more.svg",
-                                    color: meetingLinkController.text.isEmpty
-                                        ? themeDisabledTextColor
-                                        : hmsWhiteColor,
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                ),
-                              )
+                              // GestureDetector(
+                              //   onTap: (() => showModalBottomSheet(
+                              //       isScrollControlled: true,
+                              //       shape: RoundedRectangleBorder(
+                              //         borderRadius: BorderRadius.circular(20),
+                              //       ),
+                              //       context: context,
+                              //       builder: (ctx) => AppSettingsBottomSheet(
+                              //             appVersion: _packageInfo.version +
+                              //                 " (${_packageInfo.buildNumber})",
+                              //           ))),
+                              //   child: Padding(
+                              //     padding: const EdgeInsets.only(
+                              //         left: 8.0, right: 8),
+                              //     child: SvgPicture.asset(
+                              //       "assets/icons/more.svg",
+                              //       color: meetingLinkController.text.isEmpty
+                              //           ? themeDisabledTextColor
+                              //           : hmsWhiteColor,
+                              //       fit: BoxFit.scaleDown,
+                              //     ),
+                              //   ),
+                              // )
                             ],
                           ),
                         );
@@ -490,53 +490,53 @@ class _HomePageState extends State<HomePage> {
                       height: 5,
                       color: dividerColor,
                     )),
-                SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  width: width * 0.95,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(hmsdefaultColor),
-                        backgroundColor:
-                            MaterialStateProperty.all(hmsdefaultColor),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ))),
-                    onPressed: () async {
-                      bool res = await Utilities.getCameraPermissions();
-                      if (res) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => QRCodeScreen()));
-                      }
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.qr_code,
-                            size: 18,
-                            color: enabledTextColor,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          TitleText(
-                              key: Key("scan_qr_code"),
-                              text: 'Scan QR Code',
-                              textColor: enabledTextColor)
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                // SizedBox(
+                //   height: 20,
+                // ),
+                // SizedBox(
+                //   width: width * 0.95,
+                //   child: ElevatedButton(
+                //     style: ButtonStyle(
+                //         shadowColor: MaterialStateProperty.all(hmsdefaultColor),
+                //         backgroundColor:
+                //             MaterialStateProperty.all(hmsdefaultColor),
+                //         shape:
+                //             MaterialStateProperty.all<RoundedRectangleBorder>(
+                //                 RoundedRectangleBorder(
+                //           borderRadius: BorderRadius.circular(8.0),
+                //         ))),
+                //     onPressed: () async {
+                //       bool res = await Utilities.getCameraPermissions();
+                //       if (res) {
+                //         Navigator.push(context,
+                //             MaterialPageRoute(builder: (_) => QRCodeScreen()));
+                //       }
+                //     },
+                //     child: Container(
+                //       padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                //       decoration: BoxDecoration(
+                //           borderRadius: BorderRadius.all(Radius.circular(8))),
+                //       child: Row(
+                //         mainAxisSize: MainAxisSize.min,
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         children: [
+                //           Icon(
+                //             Icons.qr_code,
+                //             size: 18,
+                //             color: enabledTextColor,
+                //           ),
+                //           SizedBox(
+                //             width: 5,
+                //           ),
+                //           TitleText(
+                //               key: Key("scan_qr_code"),
+                //               text: 'Scan QR Code',
+                //               textColor: enabledTextColor)
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

@@ -318,7 +318,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                     value: isStatsEnabled,
                     onChanged: (value) => {
                           isStatsEnabled = value,
-                          context.read<MeetingStore>().setHLSPlayerStats(value),
+                          // context.read<MeetingStore>().setHLSPlayerStats(value),
                           setState(() {}),
                         }),
               ),

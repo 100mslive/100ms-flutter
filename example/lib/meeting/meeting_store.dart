@@ -32,8 +32,7 @@ class MeetingStore extends ChangeNotifier
         HMSActionResultListener,
         HMSStatsListener,
         HMSLogListener,
-        HMSKeyChangeListener,
-        HMSHLSPlaybackEventsListener {
+        HMSKeyChangeListener{
   late HMSSDKInteractor _hmsSDKInteractor;
 
   MeetingStore({required HMSSDKInteractor hmsSDKInteractor}) {
@@ -187,7 +186,7 @@ class MeetingStore extends ChangeNotifier
 
   ///HLS Player Stats
 
-  HMSHLSPlayerStats? hlsPlayerStats;
+  // HMSHLSPlayerStats? hlsPlayerStats;
 
   bool isHLSStatsEnabled = false;
 
@@ -240,7 +239,7 @@ class MeetingStore extends ChangeNotifier
 
     _hmsSDKInteractor.addUpdateListener(this);
     _hmsSDKInteractor.addLogsListener(this);
-    HMSHLSPlayerController.addHMSHLSPlaybackEventsListener(this);
+    // HMSHLSPlayerController.addHMSHLSPlaybackEventsListener(this);
     WidgetsBinding.instance.addObserver(this);
     _hmsSDKInteractor.join(config: roomConfig);
     this.meetingUrl = roomUrl;
@@ -392,10 +391,10 @@ class MeetingStore extends ChangeNotifier
       {String? meetingUrl,
       required bool toRecord,
       List<String>? rtmpUrls}) async {
-    HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(
-        meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
+    // HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(
+    //     meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
 
-    _hmsSDKInteractor.startRtmpOrRecording(hmsRecordingConfig, this);
+    // _hmsSDKInteractor.startRtmpOrRecording(hmsRecordingConfig, this);
   }
 
   void stopRtmpAndRecording() async {
@@ -459,9 +458,9 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.stopHLSStreaming(hmsActionResultListener: this);
   }
 
-  void sendHLSTimedMetadata(List<HMSHLSTimedMetadata> metadata) {
-    _hmsSDKInteractor.sendHLSTimedMetadata(metadata, this);
-  }
+  // void sendHLSTimedMetadata(List<HMSHLSTimedMetadata> metadata) {
+  //   _hmsSDKInteractor.sendHLSTimedMetadata(metadata, this);
+  // }
 
   void changeTrackStateForRole(bool mute, List<HMSRole>? roles) {
     _hmsSDKInteractor.changeTrackStateForRole(
@@ -1019,7 +1018,7 @@ class MeetingStore extends ChangeNotifier
     }
     _hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeListener: this);
     _hmsSDKInteractor.removeHMSLogger();
-    HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(this);
+    // HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(this);
     _hmsSDKInteractor.destroy();
     Wakelock.disable();
     _hmsSessionStore = null;
@@ -1562,7 +1561,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   void switchAudioOutputUsingiOSUI() {
-    _hmsSDKInteractor.switchAudioOutputUsingiOSUI();
+    // _hmsSDKInteractor.switchAudioOutputUsingiOSUI();
   }
 
   void changePIPWindowTrackOnIOS(
@@ -1752,9 +1751,9 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.setSessionMetadataForKey:
         break;
-      case HMSActionResultListenerMethod.sendHLSTimedMetadata:
-        Utilities.showToast("Metadata sent successfully");
-        break;
+      // case HMSActionResultListenerMethod.sendHLSTimedMetadata:
+      //   Utilities.showToast("Metadata sent successfully");
+      //   break;
     }
   }
 
@@ -1836,9 +1835,9 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.setSessionMetadataForKey:
         Utilities.showToast("Set session metadata failed");
         break;
-      case HMSActionResultListenerMethod.sendHLSTimedMetadata:
-        // TODO: Handle this case.
-        break;
+      // case HMSActionResultListenerMethod.sendHLSTimedMetadata:
+      //   // TODO: Handle this case.
+      //   break;
     }
     notifyListeners();
   }
@@ -1932,61 +1931,61 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  @override
-  void onCue({required HMSHLSCue hlsCue}) {
-    if (hlsCue.payload != null) {
-      /**
-       * Generally we are assuming that the timed metadata payload will be a JSON String
-       * but if it's a normal string then this throws the format exception 
-       * Hence we catch it and display the payload as string on toast.
-       * The toast is displayed for the time duration hlsCue.endDate - hlsCue.startDate
-       * If endDate is null then toast is displayed for 2 seconds by default
-       */
-      try {
-        final Map<String, dynamic> data = jsonDecode(hlsCue.payload!);
-        Utilities.showToast(
-            Utilities.getTimedMetadataEmojiFromId(data["emojiId"]),
-            time: hlsCue.endDate == null
-                ? 2
-                : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds);
-      } catch (e) {
-        Utilities.showToast(hlsCue.payload!,
-            time: hlsCue.endDate == null
-                ? 2
-                : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds);
-      }
-    }
-  }
+  // @override
+  // void onCue({required HMSHLSCue hlsCue}) {
+  //   if (hlsCue.payload != null) {
+  //     /**
+  //      * Generally we are assuming that the timed metadata payload will be a JSON String
+  //      * but if it's a normal string then this throws the format exception 
+  //      * Hence we catch it and display the payload as string on toast.
+  //      * The toast is displayed for the time duration hlsCue.endDate - hlsCue.startDate
+  //      * If endDate is null then toast is displayed for 2 seconds by default
+  //      */
+  //     try {
+  //       final Map<String, dynamic> data = jsonDecode(hlsCue.payload!);
+  //       Utilities.showToast(
+  //           Utilities.getTimedMetadataEmojiFromId(data["emojiId"]),
+  //           time: hlsCue.endDate == null
+  //               ? 2
+  //               : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds);
+  //     } catch (e) {
+  //       Utilities.showToast(hlsCue.payload!,
+  //           time: hlsCue.endDate == null
+  //               ? 2
+  //               : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds);
+  //     }
+  //   }
+  // }
 
-  @override
-  void onPlaybackFailure({required String? error}) {
-    Utilities.showToast("Playback failure $error");
-  }
+  // @override
+  // void onPlaybackFailure({required String? error}) {
+  //   Utilities.showToast("Playback failure $error");
+  // }
 
-  @override
-  void onPlaybackStateChanged({required HMSHLSPlaybackState playbackState}) {
-    Utilities.showToast("Playback state changed to ${playbackState.name}");
-  }
+  // @override
+  // void onPlaybackStateChanged({required HMSHLSPlaybackState playbackState}) {
+  //   Utilities.showToast("Playback state changed to ${playbackState.name}");
+  // }
 
   @override
   void onHLSError({required HMSException hlsException}) {
     // TODO: implement onHLSError
   }
 
-  @override
-  void onHLSEventUpdate({required HMSHLSPlayerStats playerStats}) {
-    log("onHLSEventUpdate-> bitrate:${playerStats.averageBitrate} buffered duration: ${playerStats.bufferedDuration}");
-    hlsPlayerStats = playerStats;
-    notifyListeners();
-  }
+  // @override
+  // void onHLSEventUpdate({required HMSHLSPlayerStats playerStats}) {
+  //   log("onHLSEventUpdate-> bitrate:${playerStats.averageBitrate} buffered duration: ${playerStats.bufferedDuration}");
+  //   hlsPlayerStats = playerStats;
+  //   notifyListeners();
+  // }
 
-  void setHLSPlayerStats(bool value) {
-    isHLSStatsEnabled = value;
-    if (!value) {
-      HMSHLSPlayerController.removeHLSStatsListener();
-    } else {
-      HMSHLSPlayerController.addHLSStatsListener();
-    }
-    notifyListeners();
-  }
+  // void setHLSPlayerStats(bool value) {
+  //   isHLSStatsEnabled = value;
+  //   if (!value) {
+  //     HMSHLSPlayerController.removeHLSStatsListener();
+  //   } else {
+  //     HMSHLSPlayerController.addHLSStatsListener();
+  //   }
+  //   notifyListeners();
+  // }
 }

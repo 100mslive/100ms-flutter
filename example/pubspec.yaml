@@ -12,8 +12,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-  hmssdk_flutter:
-    path: ../
+  # hmssdk_flutter:
+  #   path: ../
+  
+  hmssdk_uikit:
+    path: ../ui_kit
 
   cupertino_icons:
   provider:
