@@ -10,11 +10,10 @@ import Foundation
 class HMSResultExtension {
 
     static func toDictionary(_ success: Bool, _ data: Any?) -> [String: Any?] {
-        let dict = [
-            "success": success,
-            "data": data
-        ]
+        var dict: [String: Any] = ["success": success]
+        if let data = data {
+            dict["data"] = data
+        }
         return dict
     }
-
 }
