@@ -7,6 +7,7 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
+import 'package:hmssdk_flutter_example/common/util/animated_text.dart';
 import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -54,6 +55,15 @@ class Utilities {
     Colors.purple,
     Colors.lightGreen,
     Colors.redAccent
+  ];
+
+  /// List of alignments for timed metadata toasts
+  static List<Alignment> timedMetadataAlignment = [
+    Alignment(-0.9, 0.4),
+    Alignment(-0.4, 0.2),
+    Alignment(0, 0.8),
+    Alignment(0.4, 0.9),
+    Alignment(0.8, 0.5)
   ];
 
   static double getRatio(Size size, BuildContext context) {
@@ -139,6 +149,20 @@ class Utilities {
 
   static void showToast(String message, {int time = 1}) {
     BotToast.showText(
+        textStyle: GoogleFonts.inter(fontSize: 14),
+        text: message,
+        contentColor: Colors.black87,
+        duration: Duration(seconds: time));
+  }
+
+  static void showTimedMetadata(String message,
+      {int time = 1, Alignment align = const Alignment(0, 0.8)}) {
+    BotToast.showText(
+        align: align,
+        wrapToastAnimation: (controller, cancelFunc, widget) =>
+            AnimatedTextWidget(
+                text: message, duration: Duration(seconds: time)),
+        onlyOne: false,
         textStyle: GoogleFonts.inter(fontSize: 14),
         text: message,
         contentColor: Colors.black87,
