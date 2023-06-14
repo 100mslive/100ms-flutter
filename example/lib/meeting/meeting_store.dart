@@ -1934,6 +1934,11 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onCue({required HMSHLSCue hlsCue}) {
+    /**
+     * Here we use a list of alignments and select an alignment at random and use it 
+     * to position the toast for timed metadata
+     */
+
     if (hlsCue.payload != null) {
       /**
        * Generally we are assuming that the timed metadata payload will be a JSON String
@@ -1944,16 +1949,20 @@ class MeetingStore extends ChangeNotifier
        */
       try {
         final Map<String, dynamic> data = jsonDecode(hlsCue.payload!);
-        Utilities.showToast(
+        Utilities.showTimedMetadata(
             Utilities.getTimedMetadataEmojiFromId(data["emojiId"]),
             time: hlsCue.endDate == null
                 ? 2
-                : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds);
+                : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds,
+            align: Utilities.timedMetadataAlignment[Math.Random()
+                .nextInt(Utilities.timedMetadataAlignment.length)]);
       } catch (e) {
-        Utilities.showToast(hlsCue.payload!,
+        Utilities.showTimedMetadata(hlsCue.payload!,
             time: hlsCue.endDate == null
                 ? 2
-                : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds);
+                : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds,
+            align: Utilities.timedMetadataAlignment[Math.Random()
+                .nextInt(Utilities.timedMetadataAlignment.length)]);
       }
     }
   }
