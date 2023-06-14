@@ -6,11 +6,11 @@ import 'package:hmssdk_uikit/widgets/screen_controller.dart';
 
 export 'package:hmssdk_uikit/hmssdk_uikit.dart';
 
-class HMSRoomKit extends StatelessWidget {
+class HMSPrebuilt extends StatelessWidget {
   final String roomCode;
   final HMSPrebuiltOptions? hmsConfig;
 
-  const HMSRoomKit({super.key, required this.roomCode, this.hmsConfig});
+  const HMSPrebuilt({super.key, required this.roomCode, this.hmsConfig});
 
   @override
   Widget build(BuildContext context) {

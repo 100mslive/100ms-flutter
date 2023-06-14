@@ -221,7 +221,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 if (nameController.text.isNotEmpty &&
                                     meetingLinkController.text.isNotEmpty) {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (_) => const HMSRoomKit(
+                                      builder: (_) => const HMSPrebuilt(
                                             roomCode: "bfv-knhs-jgi",
                                           )));
                                 } else {

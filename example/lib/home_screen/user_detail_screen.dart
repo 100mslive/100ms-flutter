@@ -12,9 +12,7 @@ import 'package:hmssdk_uikit/widgets/common_widgets/hms_listenable_button.dart';
 class UserDetailScreen extends StatefulWidget {
   final String meetingLink;
   final bool autofocusField;
-  UserDetailScreen(
-      {required this.meetingLink,
-      this.autofocusField = false});
+  UserDetailScreen({required this.meetingLink, this.autofocusField = false});
   @override
   State<UserDetailScreen> createState() => _UserDetailScreenState();
 }
@@ -74,9 +72,14 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
               child: TextField(
                 textInputAction: TextInputAction.done,
                 onSubmitted: (value) {
-                  Navigator.push(context,                     MaterialPageRoute(
-                      builder: (_) =>
-                          HMSRoomKit(roomCode: widget.meetingLink,hmsConfig:HMSPrebuiltOptions(userName: nameController.text),)));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => HMSPrebuilt(
+                                roomCode: widget.meetingLink,
+                                hmsConfig: HMSPrebuiltOptions(
+                                    userName: nameController.text),
+                              )));
                 },
                 autofocus: widget.autofocusField,
                 textCapitalization: TextCapitalization.words,
@@ -121,10 +124,15 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                 onPressed: () async => {
                       log(context.hashCode.toString()),
                       FocusManager.instance.primaryFocus?.unfocus(),
-                      Navigator.push(context,MaterialPageRoute(
-                      builder: (_) =>
-                          HMSRoomKit(roomCode: widget.meetingLink,hmsConfig:HMSPrebuiltOptions(userName: nameController.text),)))
-                     },
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => HMSPrebuilt(
+                                    roomCode: widget.meetingLink,
+                                    hmsConfig: HMSPrebuiltOptions(
+                                        userName: nameController.text),
+                                  )))
+                    },
                 childWidget: Container(
                   padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
                   decoration: BoxDecoration(
