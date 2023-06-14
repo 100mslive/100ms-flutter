@@ -140,7 +140,8 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                     ],
                   ),
                 ),
-              ),  GestureDetector(
+              ),
+            GestureDetector(
               onTap: () {
                 Navigator.pop(context);
                 widget.setOnSpotlight();

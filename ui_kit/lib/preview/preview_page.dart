@@ -437,7 +437,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                           meetingLink: widget
                                                               .meetingLink),
                                                     )))
-                                        // }
                                       },
                                       childWidget: Container(
                                         padding: const EdgeInsets.fromLTRB(

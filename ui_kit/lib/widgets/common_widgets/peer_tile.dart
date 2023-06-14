@@ -19,7 +19,6 @@ import 'package:provider/provider.dart';
 
 // Project imports
 
-
 class PeerTile extends StatefulWidget {
   final double itemHeight;
   final double itemWidth;
@@ -142,7 +141,8 @@ class _PeerTileState extends State<PeerTile> {
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey, width: 1.0),
                       color: Colors.transparent,
-                      borderRadius: const BorderRadius.all(Radius.circular(10))),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10))),
                   key: key,
                   padding: const EdgeInsets.all(2),
                   margin: const EdgeInsets.all(2),

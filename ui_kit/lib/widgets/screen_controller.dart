@@ -48,9 +48,6 @@ class _ScreenControllerState extends State<ScreenController> {
           isAudioMixerDisabled: true);
       await _hmsSDKInteractor.build();
       _previewStore = PreviewStore(hmsSDKInteractor: _hmsSDKInteractor);
-      // _previewStore.startPreview(
-      //     userName: widget.hmsConfig?.userName ?? "Test User",
-      //     meetingLink: widget.roomCode);
       setState(() {
         isLoading = false;
       });
@@ -77,7 +74,10 @@ class _ScreenControllerState extends State<ScreenController> {
             )
           : ListenableProvider.value(
               value: _previewStore,
-              child: PreviewPage(meetingLink: widget.roomCode,name: widget.hmsConfig?.userName??"Test User",)),
+              child: PreviewPage(
+                meetingLink: widget.roomCode,
+                name: widget.hmsConfig?.userName ?? "Test User",
+              )),
     );
   }
 }

@@ -229,7 +229,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       "Please enter the details");
                                 }
                               },
-                              child: Container( 
+                              child: Container(
                                 padding:
                                     const EdgeInsets.fromLTRB(12, 12, 8, 12),
                                 decoration: const BoxDecoration(

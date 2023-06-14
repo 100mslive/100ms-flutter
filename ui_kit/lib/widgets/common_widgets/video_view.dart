@@ -39,7 +39,8 @@ class _VideoViewState extends State<VideoView> {
     return Selector<PeerTrackNode, Tuple3<HMSVideoTrack?, bool, bool>>(
         builder: (_, data, __) {
           if ((data.item1 == null) || data.item2 || data.item3) {
-            return Semantics(label: "fl_video_off", child: const AudioLevelAvatar());
+            return Semantics(
+                label: "fl_video_off", child: const AudioLevelAvatar());
           } else {
             return (data.item1?.source != "REGULAR")
                 ? ClipRRect(

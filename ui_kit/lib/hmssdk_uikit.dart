@@ -14,6 +14,9 @@ class HMSRoomKit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenController(roomCode: roomCode,hmsConfig: hmsConfig,);
+    return ScreenController(
+      roomCode: roomCode,
+      hmsConfig: hmsConfig,
+    );
   }
 }

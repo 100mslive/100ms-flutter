@@ -133,75 +133,73 @@ class MoreOption extends StatelessWidget {
             showDialog(
                 context: context,
                 builder: (_) => LocalPeerTileDialog(
-                      isVideoOn:
-                          !(context.read<PeerTrackNode>().track?.isMute ??
-                              true),
-                      isAudioMode: false,
-                      toggleCamera: () {
-                        if (_meetingStore.isVideoOn) {
-                          _meetingStore.switchCamera();
-                        }
-                      },
-                      peerName: peerTrackNode.peer.name,
-                      toggleFlash: () {
-                        context.read<MeetingStore>().toggleFlash();
-                      },
-                      isSpotlightedPeer:
-                          context.read<MeetingStore>().spotLightPeer?.uid ==
-                              peerTrackNode.uid,
-                      setOnSpotlight: () {
-                        if (context.read<MeetingStore>().spotLightPeer?.uid ==
-                            peerTrackNode.uid) {
-                          _meetingStore.setSessionMetadata(
-                              key: SessionStoreKeyValues.getNameFromMethod(
-                                  SessionStoreKey.SPOTLIGHT),
-                              metadata: null);
-                          return;
-                        }
-
-                        ///Setting the metadata as audio trackId if it's not present
-                        ///then setting it as video trackId
-                        String? metadata = (peerTrackNode.audioTrack == null)
-                            ? peerTrackNode.track?.trackId
-                            : peerTrackNode.audioTrack?.trackId;
+                    isVideoOn:
+                        !(context.read<PeerTrackNode>().track?.isMute ?? true),
+                    isAudioMode: false,
+                    toggleCamera: () {
+                      if (_meetingStore.isVideoOn) {
+                        _meetingStore.switchCamera();
+                      }
+                    },
+                    peerName: peerTrackNode.peer.name,
+                    toggleFlash: () {
+                      context.read<MeetingStore>().toggleFlash();
+                    },
+                    isSpotlightedPeer:
+                        context.read<MeetingStore>().spotLightPeer?.uid ==
+                            peerTrackNode.uid,
+                    setOnSpotlight: () {
+                      if (context.read<MeetingStore>().spotLightPeer?.uid ==
+                          peerTrackNode.uid) {
                         _meetingStore.setSessionMetadata(
                             key: SessionStoreKeyValues.getNameFromMethod(
                                 SessionStoreKey.SPOTLIGHT),
-                            metadata: metadata);
-                      },
-                      changeRole: () {
-                        Navigator.pop(context);
-                        showDialog(
-                            context: context,
-                            builder: (_) => ChangeRoleOptionDialog(
-                                  peerName: peerTrackNode.peer.name,
-                                  roles: _meetingStore.roles,
-                                  peer: peerTrackNode.peer,
-                                  changeRole: (role, forceChange) {
-                                    _meetingStore.changeRoleOfPeer(
-                                        peer: peerTrackNode.peer,
-                                        roleName: role,
-                                        forceChange: forceChange);
-                                  },
-                                ));
-                      },
-                      roles: changeRolePermission,
-                      changeName: () async {
-                        FocusManager.instance.primaryFocus?.unfocus();
-                        String name =
-                            await UtilityComponents.showNameChangeDialog(
-                                context: context,
-                                placeholder: "Enter Name",
-                                prefilledValue: context
-                                        .read<MeetingStore>()
-                                        .localPeer
-                                        ?.name ??
-                                    "");
-                        if (name.isNotEmpty) {
-                          _meetingStore.changeName(name: name);
-                        }
+                            metadata: null);
+                        return;
                       }
-                    ));
+
+                      ///Setting the metadata as audio trackId if it's not present
+                      ///then setting it as video trackId
+                      String? metadata = (peerTrackNode.audioTrack == null)
+                          ? peerTrackNode.track?.trackId
+                          : peerTrackNode.audioTrack?.trackId;
+                      _meetingStore.setSessionMetadata(
+                          key: SessionStoreKeyValues.getNameFromMethod(
+                              SessionStoreKey.SPOTLIGHT),
+                          metadata: metadata);
+                    },
+                    changeRole: () {
+                      Navigator.pop(context);
+                      showDialog(
+                          context: context,
+                          builder: (_) => ChangeRoleOptionDialog(
+                                peerName: peerTrackNode.peer.name,
+                                roles: _meetingStore.roles,
+                                peer: peerTrackNode.peer,
+                                changeRole: (role, forceChange) {
+                                  _meetingStore.changeRoleOfPeer(
+                                      peer: peerTrackNode.peer,
+                                      roleName: role,
+                                      forceChange: forceChange);
+                                },
+                              ));
+                    },
+                    roles: changeRolePermission,
+                    changeName: () async {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      String name =
+                          await UtilityComponents.showNameChangeDialog(
+                              context: context,
+                              placeholder: "Enter Name",
+                              prefilledValue: context
+                                      .read<MeetingStore>()
+                                      .localPeer
+                                      ?.name ??
+                                  "");
+                      if (name.isNotEmpty) {
+                        _meetingStore.changeName(name: name);
+                      }
+                    }));
           }
         },
         child: Semantics(

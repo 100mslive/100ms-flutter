@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:developer';
 
 //Package imports
-import 'package:bot_toast/bot_toast.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -12,13 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
-import 'package:hmssdk_flutter_example/common/util/app_color.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
-import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/common/bottom_sheets/app_settings_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/home_screen/user_detail_screen.dart';
-import 'package:hmssdk_flutter_example/home_screen/qr_code_screen.dart';
+import 'package:hmssdk_uikit/common/app_color.dart';
+import 'package:hmssdk_uikit/common/utility_functions.dart';
+import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uni_links/uni_links.dart';
@@ -273,20 +269,13 @@ class _HomePageState extends State<HomePage> {
     }
     FocusManager.instance.primaryFocus?.unfocus();
     Utilities.setRTMPUrl(meetingLinkController.text);
-    MeetingFlow flow = Utilities.deriveFlow(meetingLinkController.text.trim());
-    if (flow == MeetingFlow.meeting || flow == MeetingFlow.hlsStreaming) {
-      log(context.hashCode.toString());
-      Navigator.push(
+     Navigator.push(
           context,
           MaterialPageRoute(
               builder: (_) => UserDetailScreen(
                     autofocusField: true,
-                    meetingLink: meetingLinkController.text.trim(),
-                    meetingFlow: flow,
+                    meetingLink: meetingLinkController.text.trim()
                   )));
-    } else {
-      Utilities.showToast("Please enter valid url");
-    }
   }
 
   @override
@@ -453,29 +442,6 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               )),
-                              // GestureDetector(
-                              //   onTap: (() => showModalBottomSheet(
-                              //       isScrollControlled: true,
-                              //       shape: RoundedRectangleBorder(
-                              //         borderRadius: BorderRadius.circular(20),
-                              //       ),
-                              //       context: context,
-                              //       builder: (ctx) => AppSettingsBottomSheet(
-                              //             appVersion: _packageInfo.version +
-                              //                 " (${_packageInfo.buildNumber})",
-                              //           ))),
-                              //   child: Padding(
-                              //     padding: const EdgeInsets.only(
-                              //         left: 8.0, right: 8),
-                              //     child: SvgPicture.asset(
-                              //       "assets/icons/more.svg",
-                              //       color: meetingLinkController.text.isEmpty
-                              //           ? themeDisabledTextColor
-                              //           : hmsWhiteColor,
-                              //       fit: BoxFit.scaleDown,
-                              //     ),
-                              //   ),
-                              // )
                             ],
                           ),
                         );
@@ -490,53 +456,6 @@ class _HomePageState extends State<HomePage> {
                       height: 5,
                       color: dividerColor,
                     )),
-                // SizedBox(
-                //   height: 20,
-                // ),
-                // SizedBox(
-                //   width: width * 0.95,
-                //   child: ElevatedButton(
-                //     style: ButtonStyle(
-                //         shadowColor: MaterialStateProperty.all(hmsdefaultColor),
-                //         backgroundColor:
-                //             MaterialStateProperty.all(hmsdefaultColor),
-                //         shape:
-                //             MaterialStateProperty.all<RoundedRectangleBorder>(
-                //                 RoundedRectangleBorder(
-                //           borderRadius: BorderRadius.circular(8.0),
-                //         ))),
-                //     onPressed: () async {
-                //       bool res = await Utilities.getCameraPermissions();
-                //       if (res) {
-                //         Navigator.push(context,
-                //             MaterialPageRoute(builder: (_) => QRCodeScreen()));
-                //       }
-                //     },
-                //     child: Container(
-                //       padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-                //       decoration: BoxDecoration(
-                //           borderRadius: BorderRadius.all(Radius.circular(8))),
-                //       child: Row(
-                //         mainAxisSize: MainAxisSize.min,
-                //         mainAxisAlignment: MainAxisAlignment.center,
-                //         children: [
-                //           Icon(
-                //             Icons.qr_code,
-                //             size: 18,
-                //             color: enabledTextColor,
-                //           ),
-                //           SizedBox(
-                //             width: 5,
-                //           ),
-                //           TitleText(
-                //               key: Key("scan_qr_code"),
-                //               text: 'Scan QR Code',
-                //               textColor: enabledTextColor)
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
               ],
             ),
           ),

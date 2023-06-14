@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   
-  hmssdk_flutter:
+  hmssdk_flutter: 1.6.0
   wakelock:
   intl:
   flutter_foreground_task:

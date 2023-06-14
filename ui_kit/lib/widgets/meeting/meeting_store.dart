@@ -195,15 +195,14 @@ class MeetingStore extends ChangeNotifier
       //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
 
       //We use this to get the auth token from room code
-      tokenData = await _hmsSDKInteractor.getAuthTokenByRoomCode(
-          roomCode: roomCode);
+      tokenData =
+          await _hmsSDKInteractor.getAuthTokenByRoomCode(roomCode: roomCode);
 
       if ((tokenData is String?) && tokenData != null) {
         roomConfig = HMSConfig(
-          authToken: tokenData,
-          userName: userName,
-          captureNetworkQualityInPreview: true
-        );
+            authToken: tokenData,
+            userName: userName,
+            captureNetworkQualityInPreview: true);
       } else {
         return tokenData;
       }

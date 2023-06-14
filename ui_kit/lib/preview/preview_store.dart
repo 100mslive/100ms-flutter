@@ -1,7 +1,6 @@
 //Package imports
 import 'dart:developer';
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_uikit/common/constants.dart';
@@ -100,7 +99,6 @@ class PreviewStore extends ChangeNotifier
 
   Future<HMSException?> startPreview(
       {required String userName, required String meetingLink}) async {
-
     Constant.meetingCode = meetingLink;
 
     //We use this to get the auth token from room code
@@ -109,10 +107,9 @@ class PreviewStore extends ChangeNotifier
 
     if ((_tokenData is String?) && _tokenData != null) {
       roomConfig = HMSConfig(
-        authToken: _tokenData,
-        userName: userName,
-        captureNetworkQualityInPreview: true
-      );
+          authToken: _tokenData,
+          userName: userName,
+          captureNetworkQualityInPreview: true);
       hmsSDKInteractor.startHMSLogger(
           Constant.webRTCLogLevel, Constant.sdkLogLevel);
       hmsSDKInteractor.addPreviewListener(this);
@@ -206,8 +203,7 @@ class PreviewStore extends ChangeNotifier
   }
 
   @override
-  void onLogMessage({required HMSLogList hmsLogList}) {
-  }
+  void onLogMessage({required HMSLogList hmsLogList}) {}
 
   void destroy() {
     hmsSDKInteractor.removePreviewListener(this);

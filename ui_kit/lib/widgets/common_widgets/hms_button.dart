@@ -19,8 +19,8 @@ class HMSButton extends StatelessWidget {
         width: width,
         child: ElevatedButton(
           style: ButtonStyle(
-              shadowColor: MaterialStateProperty.all(
-                  shadowColor ?? themeSurfaceColor),
+              shadowColor:
+                  MaterialStateProperty.all(shadowColor ?? themeSurfaceColor),
               backgroundColor: MaterialStateProperty.all(
                   buttonBackgroundColor ?? hmsdefaultColor),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(

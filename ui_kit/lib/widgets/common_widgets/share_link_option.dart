@@ -43,7 +43,8 @@ class _ShareLinkOptionDialogState extends State<ShareLinkOptionDialog> {
       actionsPadding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
       backgroundColor: themeBottomSheetColor,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      contentPadding: const EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
+      contentPadding:
+          const EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -148,7 +149,8 @@ class _ShareLinkOptionDialogState extends State<ShareLinkOptionDialog> {
                   } else {
                     codeDomain = meetingLink.split("/preview/");
                   }
-                  meetingLink = "${codeDomain[0]}/${widget.roomID}/${valueChoose!.name}";
+                  meetingLink =
+                      "${codeDomain[0]}/${widget.roomID}/${valueChoose!.name}";
                   await Share.share(
                     meetingLink,
                     subject: "Join Meet",

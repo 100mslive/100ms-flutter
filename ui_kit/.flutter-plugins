@@ -1,17 +1,17 @@
 # This is a generated file; do not edit or check into version control.
-flutter_foreground_task=/Users/decode/.pub-cache/hosted/pub.dev/flutter_foreground_task-5.2.1/
+flutter_foreground_task=/Users/decode/.pub-cache/hosted/pub.dev/flutter_foreground_task-6.0.0+1/
 hmssdk_flutter=/Users/decode/.pub-cache/hosted/pub.dev/hmssdk_flutter-1.6.0/
 path_provider=/Users/decode/.pub-cache/hosted/pub.dev/path_provider-2.0.15/
 path_provider_android=/Users/decode/.pub-cache/hosted/pub.dev/path_provider_android-2.0.27/
 path_provider_foundation=/Users/decode/.pub-cache/hosted/pub.dev/path_provider_foundation-2.2.3/
 path_provider_linux=/Users/decode/.pub-cache/hosted/pub.dev/path_provider_linux-2.1.11/
-path_provider_windows=/Users/decode/.pub-cache/hosted/pub.dev/path_provider_windows-2.1.6/
-permission_handler=/Users/decode/.pub-cache/hosted/pub.dev/permission_handler-10.2.0/
-permission_handler_android=/Users/decode/.pub-cache/hosted/pub.dev/permission_handler_android-10.2.1/
-permission_handler_apple=/Users/decode/.pub-cache/hosted/pub.dev/permission_handler_apple-9.0.8/
+path_provider_windows=/Users/decode/.pub-cache/hosted/pub.dev/path_provider_windows-2.1.7/
+permission_handler=/Users/decode/.pub-cache/hosted/pub.dev/permission_handler-10.3.0/
+permission_handler_android=/Users/decode/.pub-cache/hosted/pub.dev/permission_handler_android-10.2.3/
+permission_handler_apple=/Users/decode/.pub-cache/hosted/pub.dev/permission_handler_apple-9.1.0/
 permission_handler_windows=/Users/decode/.pub-cache/hosted/pub.dev/permission_handler_windows-0.1.2/
 share_plus=/Users/decode/.pub-cache/hosted/pub.dev/share_plus-6.3.4/
-shared_preferences=/Users/decode/.pub-cache/hosted/pub.dev/shared_preferences-2.1.1/
+shared_preferences=/Users/decode/.pub-cache/hosted/pub.dev/shared_preferences-2.1.2/
 shared_preferences_android=/Users/decode/.pub-cache/hosted/pub.dev/shared_preferences_android-2.1.4/
 shared_preferences_foundation=/Users/decode/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.2.2/
 shared_preferences_linux=/Users/decode/.pub-cache/hosted/pub.dev/shared_preferences_linux-2.2.0/

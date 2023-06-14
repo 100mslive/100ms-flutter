@@ -9,9 +9,7 @@ import 'package:hmssdk_uikit/widgets/common_widgets/subtitle_text.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
 import 'package:hmssdk_uikit/widgets/meeting/meeting_store.dart';
 
-
 //Project imports
-
 
 class AspectRatioOptionDialog extends StatefulWidget {
   final List<String> availableAspectRatios;
@@ -136,9 +134,7 @@ class _AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
                     side: BorderSide(width: 1, color: hmsdefaultColor),
                     borderRadius: BorderRadius.circular(8.0),
                   ))),
-              onPressed: () {
-                
-              },
+              onPressed: () {},
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 10),

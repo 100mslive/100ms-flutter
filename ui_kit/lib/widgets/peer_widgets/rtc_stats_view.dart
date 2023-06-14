@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 
 //Project imports
 
-
 class RTCStatsView extends StatelessWidget {
   final bool isLocal;
 
