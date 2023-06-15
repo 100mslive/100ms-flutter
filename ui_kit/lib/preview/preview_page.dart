@@ -47,7 +47,6 @@ class _PreviewPageState extends State<PreviewPage> {
     HMSException? ans = await context
         .read<PreviewStore>()
         .startPreview(userName: widget.name, meetingLink: widget.meetingLink);
-    log(context.hashCode.toString());
     if (ans != null) {
       UtilityComponents.showErrorDialog(
           context: context,
@@ -55,12 +54,7 @@ class _PreviewPageState extends State<PreviewPage> {
           errorTitle: ans.message ?? "Join Error",
           actionMessage: "OK",
           action: () {
-            log(context.hashCode.toString());
-            log(Navigator.canPop(context).toString());
-            Navigator.of(context).popUntil((route) {
-              log(route.settings.name ?? "null");
-              return true;
-            });
+            Navigator.popUntil(context, (route) => route.isFirst);
           });
     }
   }
@@ -428,6 +422,10 @@ class _PreviewPageState extends State<PreviewPage> {
                                             .read<PreviewStore>()
                                             .removePreviewListener(),
                                         setMeetingStore(_previewStore),
+                                        _meetingStore.join(
+                                            widget.name, widget.meetingLink,
+                                            roomConfig:
+                                                _previewStore.roomConfig),
                                         Navigator.of(context).pushReplacement(
                                             MaterialPageRoute(
                                                 builder: (_) =>

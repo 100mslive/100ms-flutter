@@ -124,11 +124,11 @@ class Utilities {
   }
 
   static void showToast(String message, {int time = 1}) {
-    BotToast.showText(
-        textStyle: GoogleFonts.inter(fontSize: 14),
-        text: message,
-        contentColor: Colors.black87,
-        duration: Duration(seconds: time));
+    // BotToast.showText(
+    //     textStyle: GoogleFonts.inter(fontSize: 14),
+    //     text: message,
+    //     contentColor: Colors.black87,
+    //     duration: Duration(seconds: time));
   }
 
   static Future<String> getStringData({required String key}) async {

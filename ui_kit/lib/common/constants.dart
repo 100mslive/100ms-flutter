@@ -11,4 +11,6 @@ class Constant {
 
   static HMSLogLevel webRTCLogLevel = HMSLogLevel.ERROR;
   static HMSLogLevel sdkLogLevel = HMSLogLevel.VERBOSE;
+
+  static bool debugMode = false;
 }

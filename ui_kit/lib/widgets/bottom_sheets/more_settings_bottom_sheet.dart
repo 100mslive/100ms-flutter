@@ -323,6 +323,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                           fontWeight: FontWeight.w600),
                     ),
                   ),
+                  if(Constant.debugMode)
                   ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
