@@ -423,7 +423,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                             ? true
                                             : false,
                                     message:
-                                        "${data.item1[index].messageId.substring(0, 6)}: ${data.item1[index].message.trim().toString()}",
+                                        "${data.item1[index].message.trim().toString()}",
                                     senderName:
                                         data.item1[index].sender?.name ??
                                             "Anonymous",
