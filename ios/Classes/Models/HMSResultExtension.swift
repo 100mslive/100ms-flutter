@@ -10,11 +10,15 @@ import Foundation
 class HMSResultExtension {
 
     static func toDictionary(_ success: Bool, _ data: Any?) -> [String: Any?] {
-        let dict = [
-            "success": success,
-            "data": data
-        ]
+        
+        /**
+            We  add `data`  field in the map only when it is non null
+             otherwise the application might crash.
+         */
+        var dict: [String: Any] = ["success": success]
+        if let data = data {
+            dict["data"] = data
+        }
         return dict
     }
-
 }
