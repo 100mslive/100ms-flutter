@@ -20,7 +20,7 @@ dependencies:
   http:
   permission_handler:
   intl:
-  firebase_crashlytics:
+  firebase_crashlytics: 3.1.2
   firebase_core:
   firebase_analytics:
   firebase_performance:
@@ -45,7 +45,7 @@ dependencies:
   url_launcher:
   share_plus:
   flutter_linkify:
-  flutter_foreground_task:
+  flutter_foreground_task: 4.1.0
   image_gallery_saver:
   wakelock: 0.6.1+2
 
