@@ -254,7 +254,6 @@ class MeetingStore extends ChangeNotifier
     WidgetsBinding.instance.removeObserver(this);
     hmsException = null;
     _hmsSDKInteractor.leave(hmsActionResultListener: this);
-    _hmsSDKInteractor.destroy();
   }
 
   Future<void> toggleMicMuteState() async {
@@ -1017,6 +1016,8 @@ class MeetingStore extends ChangeNotifier
     } else if (Platform.isIOS) {
       HMSIOSPIPController.destroy();
     }
+    _hmsSDKInteractor.removeUpdateListener(this);
+    _hmsSDKInteractor.removeLogsListener(this);
     _hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeListener: this);
     _hmsSDKInteractor.removeHMSLogger();
     HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(this);
@@ -1025,15 +1026,9 @@ class MeetingStore extends ChangeNotifier
     _hmsSessionStore = null;
     peerTracks.clear();
     isRoomEnded = true;
-    screenShareCount = 0;
-    this.meetingMode = MeetingMode.ActiveSpeaker;
-    isScreenShareOn = false;
-    isAudioShareStarted = false;
-    _hmsSDKInteractor.removeUpdateListener(this);
-    _hmsSDKInteractor.removeLogsListener(this);
     setLandscapeLock(false);
-    notifyListeners();
     FlutterForegroundTask.stopService();
+    notifyListeners();
   }
 
   void toggleScreenShare() {
