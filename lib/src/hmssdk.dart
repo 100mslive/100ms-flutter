@@ -1281,6 +1281,11 @@ class HMSSDK {
     PlatformService.invokeMethod(PlatformMethod.destroy);
   }
 
+  ///Method to toggle the always screen on capabilities(similar to wakelock)
+  void toggleAlwaysScreenOn() {
+    PlatformService.invokeMethod(PlatformMethod.toggleAlwaysScreenOn);
+  }
+
   ///Method to activate pipMode in the application
   ///
   ///**Parameters**:

@@ -282,6 +282,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "start_hls_player", "stop_hls_player", "pause_hls_player", "resume_hls_player", "seek_to_live_position", "seek_forward", "seek_backward", "set_hls_player_volume", "add_hls_stats_listener", "remove_hls_stats_listener":
             HMSHLSPlayerAction.hlsPlayerAction(call, result)
 
+        case "toggle_always_screen_on":
+            toggleAlwaysScreenOn(result)
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -765,6 +768,22 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     private func destroy(_ result: @escaping FlutterResult) {
         hmsSDK = nil
+        result(nil)
+    }
+    
+    /**
+                [toggleAlwaysScreenOn] provides a way to keep the screen always ON
+                when enabled.
+     */
+    private func toggleAlwaysScreenOn(_ result: @escaping FlutterResult){
+        
+        if(UIApplication.shared.isIdleTimerDisabled){
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
+        else{
+            UIApplication.shared.isIdleTimerDisabled = true
+        }
+        result(nil)
     }
 
     // MARK: - Role based Actions
