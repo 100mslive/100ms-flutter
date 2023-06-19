@@ -1343,9 +1343,6 @@ class MeetingStore extends ChangeNotifier
   ///this also handles removing a peer from spotlight case
   void setPeerToSpotlight(String? value) {
     try {
-      if (spotLightPeer == null) {
-        return;
-      }
       int currentSpotlightPeerIndex =
       peerTracks.indexWhere((node) => node.uid == spotLightPeer?.uid);
       if (currentSpotlightPeerIndex != -1) {
