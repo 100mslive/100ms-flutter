@@ -1342,29 +1342,33 @@ class MeetingStore extends ChangeNotifier
   ///This method sets the peer to spotlight
   ///this also handles removing a peer from spotlight case
   void setPeerToSpotlight(String? value) {
-    int currentSpotlightPeerIndex =
-        peerTracks.indexWhere((node) => node.uid == spotLightPeer?.uid);
-    if (currentSpotlightPeerIndex != -1) {
-      peerTracks[currentSpotlightPeerIndex].pinTile = false;
-      spotLightPeer = null;
-      spotlightMetadata = null;
-    }
-    if (value != null) {
-      int index = peerTracks.indexWhere(((node) =>
-          node.audioTrack?.trackId == (value) ||
-          node.track?.trackId == (value)));
-      if (index != -1) {
-        Utilities.showToast("${peerTracks[index].peer.name} is in spotlight");
-        spotLightPeer = peerTracks[index];
-        changePinTileStatus(peerTracks[index]);
-      } else {
-        spotlightMetadata = value;
+    try {
+      int currentSpotlightPeerIndex =
+      peerTracks.indexWhere((node) => node.uid == spotLightPeer?.uid);
+      if (currentSpotlightPeerIndex != -1) {
+        peerTracks[currentSpotlightPeerIndex].pinTile = false;
+        spotLightPeer = null;
+        spotlightMetadata = null;
       }
-    } else {
-      spotlightMetadata = null;
-      spotLightPeer = null;
+      if (value != null) {
+        int index = peerTracks.indexWhere(((node) =>
+        node.audioTrack?.trackId == (value) ||
+            node.track?.trackId == (value)));
+        if (index != -1) {
+          Utilities.showToast("${peerTracks[index].peer.name} is in spotlight");
+          spotLightPeer = peerTracks[index];
+          changePinTileStatus(peerTracks[index]);
+        } else {
+          spotlightMetadata = value;
+        }
+      } else {
+        spotlightMetadata = null;
+        spotLightPeer = null;
+      }
+      notifyListeners();
+    } catch (e) {
+      log("setPeerToSpotlight: $e");
     }
-    notifyListeners();
   }
 
   void setMode(MeetingMode meetingMode) {

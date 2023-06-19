@@ -33,3 +33,5 @@ example/ios/fastlane/README.md
 example/ios/Runner/GoogleService-Info.plist
 example/ios/config/GoogleService-Info.plist
 *.p8
+sample apps/hms-callkit-app/.flutter-plugins
+sample apps/hms-callkit-app/.flutter-plugins-dependencies
