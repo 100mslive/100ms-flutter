@@ -230,6 +230,7 @@ class PreviewStore extends ChangeNotifier
 
   @override
   void onLogMessage({required HMSLogList hmsLogList}) {
+    log("preview_store: onLogMessage");
     FirebaseCrashlytics.instance.log(hmsLogList.toString());
     FirebaseAnalytics.instance.logEvent(
         name: "SDK_Logs", parameters: {"data": hmsLogList.toString()});

@@ -1046,7 +1046,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
      * send the [logsDump] through the platform channel
      **/
     var logsBuffer = [Any]()
-    var logsDump = [Any?]()
+    var logsDump = [Any]()
     public func log(_ message: String, _ level: HMSLogLevel) {
         /**
         * Here we filter the logs based on the level we have set
@@ -1056,6 +1056,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         logsBuffer.append(message)
         logsDump.append(message)
+        
         if logsBuffer.count >= 512 {
             var args = [String: Any]()
             args["event_name"] = "on_logs_update"
@@ -1063,7 +1064,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             logsSink?(args)
             logsBuffer = []
         }
-
     }
 
     private func getAllLogs(_ result: @escaping FlutterResult) {
@@ -1493,5 +1493,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private func performCleanupOnLeavingRoom() {
         destroyPIPController()
         removeAllKeyChangeListener()
+        removeHMSLogger()
     }
 }
