@@ -1,3 +1,54 @@
+## 1.7.0 - 2023-06-20
+
+### New Features
+
+- HLS Player
+
+  Introducing the HMSSDK inbuilt HLS Player, `HMSHLSPlayer` a comprehensive end-to-end solution featuring custom player controls. 
+
+  You can also assess the playback quality using HLS Player Stats.
+
+  Learn more about `HMSHLSPlayer` [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player)
+
+### Breaking
+
+- Removed Session metadata methods
+
+  The `setSessionMetadata` and `getSessionMetadata` methods have been removed and are no longer available. To implement session metadata functionalities, please update your code to use the Session Store API's. Checkout the docs [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store)
+
+### Added
+
+- messageId
+
+  You can now uniquely identify a message using the `messageId` property of `HMSMessage` class.
+
+  Checkout the updated `HMSMessage` docs [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/chat#receiving-chat-messages)
+
+- switchAudioOutputUsingiOSUI
+
+  You can now display the native iOS UI to change audio output device using the `switchAudioOutputUsingiOSUI` method. 
+
+  Checkout the docs [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/configure-your-device/speaker/audio-output-routing#switch-audio-output-device-ui-ios-only)
+
+### Changed
+
+- RTMP Streaming
+
+  `meetingUrl` is now an optional parameter to start RTMP Streaming.
+
+  Checkout the docs [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/recording#startstop-streaming-recording)
+
+- Software Echo Cancellation
+
+  Software Echo Cancellation is now enabled by default.
+
+### Fixed
+
+- Screen Share
+
+  Fixed a bug in android, where the screen share from a remote peer would always appear at the top while rendering in full screen
+
+
 ## 1.6.0 - 2023-05-04
 
 ### New Features
