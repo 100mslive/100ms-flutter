@@ -21,10 +21,9 @@ enum HMSActionResultListenerMethod {
   stopScreenShare,
   startAudioShare,
   stopAudioShare,
-  @Deprecated('use [setSessionMetadataForKey]')
-  setSessionMetadata,
   switchCamera,
   changeRoleOfPeersWithRoles,
   setSessionMetadataForKey,
+  sendHLSTimedMetadata,
   unknown
 }

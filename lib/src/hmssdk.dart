@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
-import 'package:hmssdk_flutter/src/model/hms_session_metadata.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../hmssdk_flutter.dart';
 
@@ -380,6 +379,22 @@ class HMSSDK {
     return listOfPeers;
   }
 
+  /// Utility Function to parse messages from
+  /// [sendBroadcastMessage], [sendGroupMessage], [sendDirectMessage]
+  /// to send the HMSMessage object from the server back to the application
+  Map<String, dynamic>? _hmsMessageToMap(Map<dynamic, dynamic>? result) {
+    return result == null
+        ? null
+        : {
+            'message_id': result["message"]["message_id"],
+            'sender': result["message"]["sender"],
+            'message': result["message"]["message"],
+            'hms_message_recipient': result["message"]["hms_message_recipient"],
+            'type': result["message"]["type"],
+            'time': result["message"]["time"],
+          };
+  }
+
   /// Sends a message to everyone on the call.
   ///
   /// **Parameters**:
@@ -409,7 +424,7 @@ class HMSSDK {
       } else {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.sendBroadcastMessage,
-            arguments: arguments);
+            arguments: _hmsMessageToMap(result));
       }
     }
   }
@@ -449,7 +464,7 @@ class HMSSDK {
       } else {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.sendGroupMessage,
-            arguments: {"message": message, "type": type, "roles": hmsRolesTo});
+            arguments: _hmsMessageToMap(result));
       }
     }
   }
@@ -490,7 +505,7 @@ class HMSSDK {
       } else {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.sendDirectMessage,
-            arguments: {"message": message, "peer": peerTo, "type": type});
+            arguments: _hmsMessageToMap(result));
       }
     }
   }
@@ -931,6 +946,37 @@ class HMSSDK {
     }
   }
 
+  ///Method to send Timed metadata for HLS Stream
+  ///
+  ///**Parameters**:
+  ///
+  /// **metadata** - [metadata] the data which you wish to send as metadata
+  ///
+  /// **hmsActionResultListener** - [hmsActionResultListener] is a callback whose [HMSActionResultListener.onSuccess] will be called when the action completes successfully.
+  ///
+  ///Refer TODO: ADD Docs Link
+  Future<void> sendHLSTimedMetadata(
+      {required List<HMSHLSTimedMetadata> metadata,
+      HMSActionResultListener? hmsActionResultListener}) async {
+    var args = {"metadata": metadata.map((e) => e.toMap()).toList()};
+
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.sendHLSTimedMetadata,
+        arguments: args);
+
+    if (hmsActionResultListener != null) {
+      if (result == null) {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.sendHLSTimedMetadata,
+            arguments: args);
+      } else {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.sendHLSTimedMetadata,
+            hmsException: HMSException.fromMap(result["error"]));
+      }
+    }
+  }
+
   /// Change the metadata that appears inside [HMSPeer.metadata]. This change is persistent and all peers joining after the change will still see these values.
   ///
   /// **Parameters**:
@@ -1147,6 +1193,15 @@ class HMSSDK {
         arguments: {"audio_device_name": audioDevice.name});
   }
 
+  ///**** Only for iOS ****
+  /// Method to show the native iOS UI for switching the audio output device.
+  /// This method natively switches the audio output to the selected device.
+  void switchAudioOutputUsingiOSUI() {
+    if (Platform.isIOS) {
+      PlatformService.invokeMethod(PlatformMethod.switchAudioOutputUsingiOSUI);
+    }
+  }
+
   ///Method to start audio share of other apps. (Android Only)
   ///
   ///**Parameter**:
@@ -1224,51 +1279,6 @@ class HMSSDK {
   ///Method to destroy HMSSDK instance.
   void destroy() {
     PlatformService.invokeMethod(PlatformMethod.destroy);
-  }
-
-  /// Method to update the value of the session metadata.
-  ///
-  ///**Parameters**:
-  ///
-  ///**metadata** - passing string value you want to set as Session Metadata.
-  ///
-  /// **hmsActionResultListener** - [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess] and [HMSActionResultListener.onException] will be called.
-  ///
-  ///Refer [session metadata guide here](https://www.100ms.live/docs/flutter/v2/features/session-metadata)
-  @Deprecated('Use [setSessionMetadataForKey]')
-  Future<void> setSessionMetadata(
-      {required String? metadata,
-      HMSActionResultListener? hmsActionResultListener}) async {
-    var arguments = {"session_metadata": metadata};
-    var result = await PlatformService.invokeMethod(
-        PlatformMethod.setSessionMetadata,
-        arguments: arguments);
-
-    if (hmsActionResultListener != null) {
-      if (result != null && result["error"] != null) {
-        hmsActionResultListener.onException(
-            methodType: HMSActionResultListenerMethod.setSessionMetadata,
-            arguments: arguments,
-            hmsException: HMSException.fromMap(result["error"]));
-      } else {
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.setSessionMetadata,
-            arguments: arguments);
-      }
-    }
-  }
-
-  ///Method to fetch the latest metadata from the server and returns it
-  ///
-  ///Refer [session metadata guide here](https://www.100ms.live/docs/flutter/v2/features/session-metadata)
-  @Deprecated('Use [getSessionMetadataForKey]')
-  Future<String?> getSessionMetadata() async {
-    var result =
-        await PlatformService.invokeMethod(PlatformMethod.getSessionMetadata);
-    if (result != null) {
-      return HMSSessionMetadata.fromMap(result).metadata;
-    }
-    return null;
   }
 
   ///Method to activate pipMode in the application

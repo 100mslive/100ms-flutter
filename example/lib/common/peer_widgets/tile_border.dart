@@ -5,7 +5,6 @@ import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
-import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 
 class TileBorder extends StatelessWidget {
   final double itemHeight;
@@ -30,7 +29,7 @@ class TileBorder extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border.all(
                   color: (audioLevel != -1)
-                      ? Utilities.getBackgroundColour(name)
+                      ? hmsdefaultColor
                       : themeBottomSheetColor,
                   width: (audioLevel != -1) ? 4.0 : 0.0),
               borderRadius: BorderRadius.all(Radius.circular(10)),

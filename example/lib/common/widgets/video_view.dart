@@ -52,7 +52,6 @@ class _VideoViewState extends State<VideoView> {
                         scaleType: widget.scaleType,
                         track: data.item1!,
                         setMirror: false,
-                        matchParent: false,
                         disableAutoSimulcastLayerSelect:
                             !(context.read<MeetingStore>().isAutoSimulcast),
                       ),
@@ -67,6 +66,7 @@ class _VideoViewState extends State<VideoView> {
                       width: widget.itemWidth,
                       // [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
                       // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
+
                       child: HMSVideoView(
                         key: Key(data.item1!.trackId),
                         scaleType: ScaleType.SCALE_ASPECT_FILL,
@@ -74,7 +74,6 @@ class _VideoViewState extends State<VideoView> {
                         setMirror: data.item1.runtimeType == HMSLocalVideoTrack
                             ? context.read<MeetingStore>().isMirror
                             : false,
-                        matchParent: false,
                         disableAutoSimulcastLayerSelect:
                             !(context.read<MeetingStore>().isAutoSimulcast),
                       ),

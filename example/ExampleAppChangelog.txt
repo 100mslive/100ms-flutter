@@ -1,24 +1,26 @@
-Board: https://github.com/100mslive/100ms-flutter/projects/18
+Board: https://github.com/100mslive/100ms-flutter/projects/19
 
-- Add Session Store APIs
-https://github.com/100mslive/100ms-flutter/issues/1259
+- Added HLS Player Support
+https://github.com/100mslive/100ms-flutter/issues/1089
 
-- Add support for setting a Tile in Spotlight Mode using Session Store
-https://github.com/100mslive/100ms-flutter/issues/1252
+- Fixed android screen share, where the screen share was coming at the top rather than center.
+https://github.com/100mslive/100ms-flutter/issues/1068
 
-- Add support for Music Mode on iOS
-https://github.com/100mslive/100ms-flutter/issues/1275
+- Added support for messageId on Messages
+https://github.com/100mslive/100ms-flutter/issues/1335
 
-- Fixed Role change request popup taking time to dismiss
-https://github.com/100mslive/100ms-flutter/issues/1271
+- Updated `captureSnapshot` implementation
+https://github.com/100mslive/100ms-flutter/pull/1350
 
-- Fixed grid logic and audio view tile
-https://github.com/100mslive/100ms-flutter/pull/1283
+- Added API to open iOS Control Centre' Switch Audio Output UI
+https://github.com/100mslive/100ms-flutter/issues/1293
 
-- Updated crashlytics implementation
-https://github.com/100mslive/100ms-flutter/pull/1280
+- Add support for starting RTMP Streaming / Recording without Meeting URLs
+https://github.com/100mslive/100ms-flutter/issues/1314
 
+- Enabled S/W echo cancellation on Android by default
+https://github.com/100mslive/react-native-hms/issues/1068
 
-Flutter SDK: 1.6.0
-Android SDK: 2.6.2
-iOS SDK: 0.9.3
+Flutter SDK: 1.7.0
+Android SDK: 2.6.7
+iOS SDK: 0.9.5

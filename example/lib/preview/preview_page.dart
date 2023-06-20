@@ -140,7 +140,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                               ScaleType.SCALE_ASPECT_FILL,
                                           track: _previewStore.localTracks[0],
                                           setMirror: true,
-                                          matchParent: false,
                                         )
                                       : Container(
                                           child: Center(
@@ -432,14 +431,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                     ListenableProvider.value(
                                                       value: _meetingStore,
                                                       child: ScreenController(
-                                                        streamUrl: _previewStore
-                                                                .isHLSStreamingStarted
-                                                            ? _previewStore
-                                                                .room
-                                                                ?.hmshlsStreamingState
-                                                                ?.variants[0]
-                                                                ?.hlsStreamUrl
-                                                            : null,
                                                         isRoomMute:
                                                             _previewStore
                                                                 .isRoomMute,
