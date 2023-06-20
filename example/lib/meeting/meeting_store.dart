@@ -1344,7 +1344,7 @@ class MeetingStore extends ChangeNotifier
   void setPeerToSpotlight(String? value) {
     try {
       int currentSpotlightPeerIndex =
-      peerTracks.indexWhere((node) => node.uid == spotLightPeer?.uid);
+          peerTracks.indexWhere((node) => node.uid == spotLightPeer?.uid);
       if (currentSpotlightPeerIndex != -1) {
         peerTracks[currentSpotlightPeerIndex].pinTile = false;
         spotLightPeer = null;
@@ -1352,7 +1352,7 @@ class MeetingStore extends ChangeNotifier
       }
       if (value != null) {
         int index = peerTracks.indexWhere(((node) =>
-        node.audioTrack?.trackId == (value) ||
+            node.audioTrack?.trackId == (value) ||
             node.track?.trackId == (value)));
         if (index != -1) {
           Utilities.showToast("${peerTracks[index].peer.name} is in spotlight");
