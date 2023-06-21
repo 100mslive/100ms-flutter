@@ -1,26 +1,6 @@
-Board: https://github.com/100mslive/100ms-flutter/projects/19
+Board: https://github.com/100mslive/100ms-flutter/projects/20
 
-- Added HLS Player Support
-https://github.com/100mslive/100ms-flutter/issues/1089
 
-- Fixed android screen share, where the screen share was coming at the top rather than center.
-https://github.com/100mslive/100ms-flutter/issues/1068
-
-- Added support for messageId on Messages
-https://github.com/100mslive/100ms-flutter/issues/1335
-
-- Updated `captureSnapshot` implementation
-https://github.com/100mslive/100ms-flutter/pull/1350
-
-- Added API to open iOS Control Centre' Switch Audio Output UI
-https://github.com/100mslive/100ms-flutter/issues/1293
-
-- Add support for starting RTMP Streaming / Recording without Meeting URLs
-https://github.com/100mslive/100ms-flutter/issues/1314
-
-- Enabled S/W echo cancellation on Android by default
-https://github.com/100mslive/react-native-hms/issues/1068
-
-Flutter SDK: 1.7.0
+Flutter SDK: 1.8.0
 Android SDK: 2.6.7
 iOS SDK: 0.9.5
