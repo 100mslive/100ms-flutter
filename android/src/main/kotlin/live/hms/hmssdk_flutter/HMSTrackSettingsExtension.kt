@@ -31,9 +31,17 @@ class HMSTrackSettingsExtension {
 
                 val initialState = HMSTrackInitStateExtension.getHMSTrackInitStatefromValue(hmsAudioTrackHashMap["track_initial_state"] as String)
 
-                if (useHardwareAcousticEchoCanceler != null) {
-                    hmsAudioTrackSettings = hmsAudioTrackSettings.setUseHardwareAcousticEchoCanceler(
+                /**
+                 * Setting hardware acoustic echo canceler to false by default
+                 * If no value is passed from flutter
+                 */
+                hmsAudioTrackSettings = if (useHardwareAcousticEchoCanceler != null) {
+                    hmsAudioTrackSettings.setUseHardwareAcousticEchoCanceler(
                         useHardwareAcousticEchoCanceler,
+                    )
+                } else {
+                    hmsAudioTrackSettings.setUseHardwareAcousticEchoCanceler(
+                        false,
                     )
                 }
 

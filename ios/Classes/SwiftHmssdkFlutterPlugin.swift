@@ -15,12 +15,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var logsEventChannel: FlutterEventChannel?
     var rtcStatsEventChannel: FlutterEventChannel?
     var sessionEventChannel: FlutterEventChannel?
+    var hlsPlayerChannel: FlutterEventChannel?
 
     var eventSink: FlutterEventSink?
     var previewSink: FlutterEventSink?
     var logsSink: FlutterEventSink?
     var rtcSink: FlutterEventSink?
     var sessionSink: FlutterEventSink?
+    var hlsPlayerSink: FlutterEventSink?
 
     var roleChangeRequest: HMSRoleChangeRequest?
 
@@ -31,6 +33,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     internal var sessionStore: HMSSessionStore?
 
     private var sessionStoreChangeObservers = [HMSSessionStoreKeyChangeListener]()
+
+    var hlsStreamUrl: String?
 
     // MARK: - Flutter Setup
 
@@ -43,22 +47,28 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let logsChannel = FlutterEventChannel(name: "logs_event_channel", binaryMessenger: registrar.messenger())
         let rtcChannel = FlutterEventChannel(name: "rtc_event_channel", binaryMessenger: registrar.messenger())
         let sessionChannel = FlutterEventChannel(name: "session_event_channel", binaryMessenger: registrar.messenger())
+        let hlsChannel = FlutterEventChannel(name: "hls_player_channel", binaryMessenger: registrar.messenger())
 
         let instance = SwiftHmssdkFlutterPlugin(channel: channel,
                                                 meetingEventChannel: eventChannel,
                                                 previewEventChannel: previewChannel,
                                                 logsEventChannel: logsChannel,
                                                 rtcStatsEventChannel: rtcChannel,
-                                                sessionEventChannel: sessionChannel)
+                                                sessionEventChannel: sessionChannel,
+                                                hlsPlayerChannel: hlsChannel)
 
         let videoViewFactory = HMSFlutterPlatformViewFactory(plugin: instance)
         registrar.register(videoViewFactory, withId: "HMSFlutterPlatformView")
+
+        let hlsPlayerFactory = HMSHLSPlayerViewFactory(plugin: instance)
+        registrar.register(hlsPlayerFactory, withId: "HMSHLSPlayer")
 
         eventChannel.setStreamHandler(instance)
         previewChannel.setStreamHandler(instance)
         logsChannel.setStreamHandler(instance)
         rtcChannel.setStreamHandler(instance)
         sessionChannel.setStreamHandler(instance)
+        hlsChannel.setStreamHandler(instance)
 
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
@@ -68,7 +78,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 previewEventChannel: FlutterEventChannel,
                 logsEventChannel: FlutterEventChannel,
                 rtcStatsEventChannel: FlutterEventChannel,
-                sessionEventChannel: FlutterEventChannel) {
+                sessionEventChannel: FlutterEventChannel,
+                hlsPlayerChannel: FlutterEventChannel) {
 
         self.channel = channel
         self.meetingEventChannel = meetingEventChannel
@@ -76,6 +87,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         self.logsEventChannel = logsEventChannel
         self.rtcStatsEventChannel = rtcStatsEventChannel
         self.sessionEventChannel = sessionEventChannel
+        self.hlsPlayerChannel = hlsPlayerChannel
     }
 
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
@@ -96,6 +108,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             rtcSink = events
         case "session_store":
             sessionSink = events
+        case "hls_player":
+            hlsPlayerSink = events
         default:
             return FlutterError(code: #function, message: "invalid event sink name", details: arguments)
         }
@@ -137,6 +151,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             sessionSink = nil
         } else {
             print(#function, "sessionEventChannel not found")
+        }
+        if hlsPlayerChannel != nil {
+            hlsPlayerChannel!.setStreamHandler(nil)
+            hlsPlayerSink = nil
+        } else {
+            print(#function, "hlsPlayerChannel not found")
         }
     }
 
@@ -188,7 +208,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - HLS
 
-        case "hls_start_streaming", "hls_stop_streaming":
+        case "hls_start_streaming", "hls_stop_streaming", "send_hls_timed_metadata":
             HMSHLSAction.hlsActions(call, result, hmsSDK)
 
             // MARK: - Logging
@@ -219,13 +239,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - Switch Audio Output
 
-        case "switch_audio_output", "get_audio_devices_list":
+        case "switch_audio_output", "get_audio_devices_list", "switch_audio_output_using_ios_ui":
             HMSAudioDeviceAction.audioActions(call, result, hmsSDK)
-
-            // MARK: - Session Metadata
-
-        case "get_session_metadata", "set_session_metadata":
-            sessionMetadataAction(call, result)
 
             // MARK: - Simulcast
 
@@ -261,6 +276,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "remove_key_change_listener":
             removeKeyChangeListener(call, result)
+
+            // MARK: - HLS Player
+
+        case "start_hls_player", "stop_hls_player", "pause_hls_player", "resume_hls_player", "seek_to_live_position", "seek_forward", "seek_backward", "set_hls_player_volume", "add_hls_stats_listener", "remove_hls_stats_listener":
+            HMSHLSPlayerAction.hlsPlayerAction(call, result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -464,21 +484,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "is_screen_share_active":
             result(isScreenShareOn)
-        default:
-            result(FlutterMethodNotImplemented)
-        }
-    }
-
-    // MARK: - Session Metadata
-    private func sessionMetadataAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        switch call.method {
-
-        case "get_session_metadata":
-            getSessionMetadata(result)
-
-        case "set_session_metadata":
-            setSessionMetadata(call, result)
-
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -1041,7 +1046,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
      * send the [logsDump] through the platform channel
      **/
     var logsBuffer = [Any]()
-    var logsDump = [Any?]()
+    var logsDump = [Any]()
     public func log(_ message: String, _ level: HMSLogLevel) {
         /**
         * Here we filter the logs based on the level we have set
@@ -1051,6 +1056,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         logsBuffer.append(message)
         logsDump.append(message)
+
         if logsBuffer.count >= 512 {
             var args = [String: Any]()
             args["event_name"] = "on_logs_update"
@@ -1058,7 +1064,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             logsSink?(args)
             logsBuffer = []
         }
-
     }
 
     private func getAllLogs(_ result: @escaping FlutterResult) {
@@ -1071,42 +1076,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         logsDump.removeAll()
         logsBuffer.removeAll()
         hmsSDK?.logger = nil
-    }
-
-    private func getSessionMetadata(_ result: @escaping FlutterResult) {
-        hmsSDK?.getSessionMetadata(completion: { metadata, _ in
-            if let metadata = metadata {
-                let data = [
-                    "event_name": "session_metadata",
-                    "data": [
-                        "metadata": metadata
-                    ]
-                ] as [String: Any]
-                result(data)
-            } else {
-                result(nil)
-            }
-        })
-    }
-
-    private func setSessionMetadata(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-
-        let arguments = call.arguments as? [AnyHashable: Any]
-
-        guard let metadata = arguments?["session_metadata"] as? String? ?? "" else {
-            result(HMSErrorExtension.getError("No session metadata found in \(#function)"))
-            return
-        }
-
-        hmsSDK?.setSessionMetadata(metadata, completion: { _, error in
-            if let error = error {
-                result(HMSErrorExtension.toDictionary(error))
-                return
-            } else {
-                result(nil)
-            }
-        }
-        )
     }
 
     private func setPlaybackAllowedForTrack(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
@@ -1172,6 +1141,20 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var previewEnded = false
     public func on(join room: HMSRoom) {
         previewEnded = true
+
+        /**
+         * This sets the [hlsStreamUrl] variable to
+         * fetch the stream URL directly from onRoomUpdate
+         * This helps to play the HLS Stream even if user doesn't send
+         * the stream URL.
+         */
+
+        if room.hlsStreamingState.running {
+            if !room.hlsStreamingState.variants.isEmpty {
+                hlsStreamUrl = room.hlsStreamingState.variants[0].url.absoluteString
+            }
+        }
+
         let data = [
             "event_name": "on_join_room",
             "data": [
@@ -1183,6 +1166,20 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     public func on(room: HMSRoom, update: HMSRoomUpdate) {
+
+        /**
+         * This sets the [hlsStreamUrl] variable to
+         * fetch the stream URL directly from onRoomUpdate
+         * This helps to play the HLS Stream even if user doesn't send
+         * the stream URL.
+         */
+
+        if room.hlsStreamingState.running {
+            if !room.hlsStreamingState.variants.isEmpty {
+                hlsStreamUrl = room.hlsStreamingState.variants[0].url.absoluteString
+            }
+        }
+
         let data = [
             "event_name": "on_room_update",
             "data": [
@@ -1496,5 +1493,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private func performCleanupOnLeavingRoom() {
         destroyPIPController()
         removeAllKeyChangeListener()
+        removeHMSLogger()
     }
 }

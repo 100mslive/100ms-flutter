@@ -4,7 +4,7 @@ description: Demonstrates how to use the hmssdk_flutter plugin.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 1.6.1
+version: 1.8.0
 environment:
   sdk: ">=2.16.0 <4.0.0"
 
@@ -15,16 +15,15 @@ dependencies:
   hmssdk_flutter:
     path: ../
 
-  wakelock:
   cupertino_icons:
   provider:
   http:
   permission_handler:
   intl:
-  firebase_crashlytics:
-  firebase_core:
-  firebase_analytics:
-  firebase_performance:
+  firebase_crashlytics: 3.3.2
+  firebase_core: 2.13.1
+  firebase_analytics: 10.4.2
+  firebase_performance: 0.9.2+2
   firebase_dynamic_links:
   flutter_launcher_icons:
   package_info_plus:
@@ -44,11 +43,11 @@ dependencies:
   draggable_widget:
   badges:
   url_launcher:
-  pip_flutter:
   share_plus:
   flutter_linkify:
-  flutter_foreground_task:
+  flutter_foreground_task: 4.1.0
   image_gallery_saver:
+  wakelock: 0.6.1+2
 
 dev_dependencies:
   flutter_test:

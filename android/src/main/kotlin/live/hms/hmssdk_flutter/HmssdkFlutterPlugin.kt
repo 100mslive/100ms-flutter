@@ -9,6 +9,7 @@ import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.NonNull
+import com.google.gson.JsonElement
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -21,7 +22,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.Constants.Companion.METHOD_CALL
+import live.hms.hmssdk_flutter.hls_player.HMSHLSPlayerAction
 import live.hms.hmssdk_flutter.methods.*
+import live.hms.hmssdk_flutter.views.HMSHLSPlayerFactory
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
 import live.hms.video.audio.HMSAudioManager.*
 import live.hms.video.connection.stats.*
@@ -56,18 +59,22 @@ class HmssdkFlutterPlugin :
     private var logsEventChannel: EventChannel? = null
     private var rtcStatsChannel: EventChannel? = null
     private var sessionStoreChannel: EventChannel? = null
+    var hlsPlayerChannel: EventChannel? = null
     private var eventSink: EventChannel.EventSink? = null
     private var previewSink: EventChannel.EventSink? = null
     private var logsSink: EventChannel.EventSink? = null
     private var rtcSink: EventChannel.EventSink? = null
     private var sessionStoreSink: EventChannel.EventSink? = null
+    var hlsPlayerSink: EventChannel.EventSink? = null
     private lateinit var activity: Activity
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
+    private lateinit var hmsHLSPlayerFactory: HMSHLSPlayerFactory
     private var requestChange: HMSRoleChangeRequest? = null
     var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
     private var hmsSessionStore: HmsSessionStore? = null
     private var hmsKeyChangeObserverList = ArrayList<HMSKeyChangeObserver>()
+    var hlsStreamUrl: String? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         if (hmssdkFlutterPlugin == null) {
@@ -86,17 +93,27 @@ class HmssdkFlutterPlugin :
             this.sessionStoreChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "session_event_channel")
 
+            this.hlsPlayerChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger, "hls_player_channel")
+
             this.meetingEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Meeting event channel not found")
             this.channel?.setMethodCallHandler(this) ?: Log.e("Channel Error", "Event channel not found")
             this.previewChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Preview channel not found")
             this.logsEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Logs event channel not found")
             this.rtcStatsChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "RTC Stats channel not found")
             this.sessionStoreChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Session Store channel not found")
+            this.hlsPlayerChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "HLS Player channel not found")
             this.hmsVideoFactory = HMSVideoViewFactory(this)
+            this.hmsHLSPlayerFactory = HMSHLSPlayerFactory(this)
 
             flutterPluginBinding.platformViewRegistry.registerViewFactory(
                 "HMSVideoView",
                 hmsVideoFactory,
+            )
+
+            flutterPluginBinding.platformViewRegistry.registerViewFactory(
+                "HMSHLSPlayer",
+                hmsHLSPlayerFactory,
             )
             hmssdkFlutterPlugin = this
         } else {
@@ -151,7 +168,7 @@ class HmssdkFlutterPlugin :
             }
 
             // MARK: HLS
-            "hls_start_streaming", "hls_stop_streaming" -> {
+            "hls_start_streaming", "hls_stop_streaming", "send_hls_timed_metadata" -> {
                 HMSHLSAction.hlsActions(call, result, hmssdk!!)
             }
 
@@ -184,9 +201,7 @@ class HmssdkFlutterPlugin :
             "get_track_settings" -> {
                 trackSettings(call, result)
             }
-            "get_session_metadata", "set_session_metadata" -> {
-                HMSSessionMetadataAction.sessionMetadataActions(call, result, hmssdk!!)
-            }
+
             "set_playback_allowed_for_track" -> {
                 setPlaybackAllowedForTrack(call, result)
             }
@@ -210,6 +225,9 @@ class HmssdkFlutterPlugin :
             }
             "remove_key_change_listener" -> {
                 removeKeyChangeListener(call, result)
+            }
+            "start_hls_player", "stop_hls_player", "pause_hls_player", "resume_hls_player", "seek_to_live_position", "seek_forward", "seek_backward", "set_hls_player_volume", "add_hls_stats_listener", "remove_hls_stats_listener" -> {
+                HMSHLSPlayerAction.hlsPlayerAction(call, result, activity)
             }
             else -> {
                 result.notImplemented()
@@ -385,11 +403,13 @@ class HmssdkFlutterPlugin :
             logsEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Logs event channel not found")
             rtcStatsChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "RTC Stats channel not found")
             sessionStoreChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Session Store channel not found")
+            hlsPlayerChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "HLS Player channel not found")
             eventSink = null
             previewSink = null
             rtcSink = null
             logsSink = null
             sessionStoreSink = null
+            hlsPlayerSink = null
             hmssdkFlutterPlugin = null
         } else {
             Log.e("Plugin Error", "hmssdkFlutterPlugin is null in onDetachedFromEngine")
@@ -492,6 +512,8 @@ class HmssdkFlutterPlugin :
             this.rtcSink = events
         } else if (nameOfEventSink == "session_store") {
             this.sessionStoreSink = events
+        } else if (nameOfEventSink == "hls_player") {
+            this.hlsPlayerSink = events
         }
     }
 
@@ -797,6 +819,23 @@ class HmssdkFlutterPlugin :
 
         override fun onJoin(room: HMSRoom) {
             hmssdk!!.addAudioObserver(hmsAudioListener)
+
+            /**
+             * This sets the [hlsStreamUrl] variable to
+             * fetch the stream URL directly from onRoomUpdate
+             * This helps to play the HLS Stream even if user doesn't send
+             * the stream URL.
+             */
+            room.hlsStreamingState?.let { streamingState ->
+                if (streamingState.running) {
+                    streamingState.variants?.let { variants ->
+                        if (variants.isNotEmpty()) {
+                            hlsStreamUrl = variants[0].hlsStreamUrl
+                        }
+                    }
+                }
+            }
+
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_join_room")
 
@@ -823,14 +862,13 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
-            if (type == HMSPeerUpdate.AUDIO_TOGGLED || type == HMSPeerUpdate.VIDEO_TOGGLED ||
-                type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER ||
-                type == HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER || type == HMSPeerUpdate.STARTED_SPEAKING ||
-                type == HMSPeerUpdate.STOPPED_SPEAKING
-            ) {
+            /**
+             * Since these methods are not part of HMSPeerUpdate enum in flutter
+             * We return the method call and don't send update to flutter layer
+             */
+            if (type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER) {
                 return
             }
-
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_peer_update"
 
@@ -844,6 +882,23 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {
+            /**
+             * This sets the [hlsStreamUrl] variable to
+             * fetch the stream URL directly from onRoomUpdate
+             * This helps to play the HLS Stream even if user doesn't send
+             * the stream URL.
+             */
+            if (type == HMSRoomUpdate.HLS_STREAMING_STATE_UPDATED) {
+                hmsRoom.hlsStreamingState?.let { streamingState ->
+                    if (streamingState.running) {
+                        streamingState.variants?.let { variants ->
+                            if (variants.isNotEmpty()) {
+                                hlsStreamUrl = variants[0].hlsStreamUrl
+                            }
+                        }
+                    }
+                }
+            }
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_room_update")
             args.put("data", HMSRoomUpdateExtension.toDictionary(hmsRoom, type))
@@ -935,11 +990,11 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
-            if (type == HMSPeerUpdate.AUDIO_TOGGLED || type == HMSPeerUpdate.VIDEO_TOGGLED ||
-                type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER ||
-                type == HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER || type == HMSPeerUpdate.STARTED_SPEAKING ||
-                type == HMSPeerUpdate.STOPPED_SPEAKING
-            ) {
+            /**
+             * Since these methods are not part of HMSPeerUpdate enum in flutter
+             * We return the method call and don't send update to flutter layer
+             */
+            if (type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER) {
                 return
             }
 
@@ -1035,11 +1090,19 @@ class HmssdkFlutterPlugin :
         )
     }
 
-    public fun onVideoViewError(args: HashMap<String, Any?>) {
-        if (args["data"] != null) {
-            CoroutineScope(Dispatchers.Main).launch {
-                eventSink?.success(args)
-            }
+    fun onVideoViewError(methodName: String, error: String, errorMessage: String) {
+        val args = HashMap<String, Any?>()
+        args["event_name"] = "on_error"
+        val hmsException = HMSException(
+            action = "Check the logs for more info",
+            code = 6004,
+            description = error,
+            message = errorMessage,
+            name = "$methodName Error",
+        )
+        args["data"] = HMSExceptionExtension.toDictionary(hmsException)
+        CoroutineScope(Dispatchers.Main).launch {
+            eventSink?.success(args)
         }
     }
 
@@ -1229,17 +1292,31 @@ class HmssdkFlutterPlugin :
 
         uid?.let {
             val keyChangeListener = object : HMSKeyChangeListener {
-                override fun onKeyChanged(key: String, value: Any?) {
+                override fun onKeyChanged(key: String, value: JsonElement?) {
                     val args = HashMap<String, Any?>()
                     args["event_name"] = "on_key_changed"
                     val newData = HashMap<String, String?>()
                     newData["key"] = key
-                    if (value is String?) {
-                        newData["value"] = value
-                    } else {
-                        HMSErrorLogger.logError("onKeyChanged", "Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error")
+
+                    /**
+                     * Here depending on the value we parse the JsonElement
+                     * if it's a JsonPrimitive we parse it as String and then send to flutter
+                     * if it's a JsonObject,JsonArray we convert it to String and then send to flutter
+                     * if it's a JsonNull we send it as null
+                     */
+
+                    value?.let {
+                        if (it.isJsonPrimitive) {
+                            newData["value"] = value.asString
+                        } else if (it.isJsonNull) {
+                            newData["value"] = null
+                        } else {
+                            newData["value"] = value.toString()
+                        }
+                    } ?: run {
                         newData["value"] = null
                     }
+
                     newData["uid"] = uid as String
                     args["data"] = newData
                     CoroutineScope(Dispatchers.Main).launch {
