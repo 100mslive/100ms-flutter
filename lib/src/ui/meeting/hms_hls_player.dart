@@ -21,7 +21,7 @@ import 'package:flutter/services.dart' show StandardMessageCodec;
 ///
 /// **showPlayerControls** - To show the default player UI set this to true. Default is false
 ///
-/// Refer [HMSVideoView guide here](https://www.100ms.live/docs/flutter/v2/features/render-video)
+/// Refer [HMSHLSPlayer guide here](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player)
 class HMSHLSPlayer extends StatelessWidget {
   /// This will render stream with the given stream URL
   /// [hlsUrl] - the video track to be displayed

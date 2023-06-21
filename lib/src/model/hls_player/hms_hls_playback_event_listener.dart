@@ -4,6 +4,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 ///100ms HMSHLSPlaybackEventsListener
 ///
 ///100ms provides callbacks to the client app about any changes in HLS Player
+///Refer for more info [HMSHLSPlaybackEventsListener](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player#how-to-get-hls-callbacks)
 abstract class HMSHLSPlaybackEventsListener {
   ///Callback to know about the errors that happen during playback.
   ///
