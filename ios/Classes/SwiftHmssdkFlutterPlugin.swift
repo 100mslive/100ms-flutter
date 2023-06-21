@@ -1056,7 +1056,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         logsBuffer.append(message)
         logsDump.append(message)
-        
+
         if logsBuffer.count >= 512 {
             var args = [String: Any]()
             args["event_name"] = "on_logs_update"
