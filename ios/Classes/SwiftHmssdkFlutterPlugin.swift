@@ -776,13 +776,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 when enabled.
      */
     private func toggleAlwaysScreenOn(_ result: @escaping FlutterResult){
-        
-        if(UIApplication.shared.isIdleTimerDisabled){
-            UIApplication.shared.isIdleTimerDisabled = false
-        }
-        else{
-            UIApplication.shared.isIdleTimerDisabled = true
-        }
+        UIApplication.shared.isIdleTimerDisabled = !UIApplication.shared.isIdleTimerDisabled
         result(nil)
     }
 
