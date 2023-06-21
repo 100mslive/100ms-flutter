@@ -3,6 +3,7 @@
 ///[HMSHLSPlayerStats] is a data class, confirming to the HLSPlayerStats
 ///
 ///Whenever the player stats are attached, we get an object of [HMSHLSPlayerStats] in [onHLSEventUpdate] callback.
+///Refer for more info [HMSHLSPlayerStats](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player#how-to-know-the-stats-related-to-hls-playback)
 class HMSHLSPlayerStats {
   /// The current bandwidth, as estimated by the player
   final double bandWidthEstimate;
