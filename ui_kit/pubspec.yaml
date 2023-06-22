@@ -16,7 +16,6 @@ dependencies:
 
   wakelock:
   intl:
-  flutter_foreground_task:
   permission_handler:
   provider:
   flutter_staggered_grid_view:
@@ -34,6 +33,7 @@ dependencies:
   tuple:
   url_launcher:
   share_plus:
+  flutter_foreground_task: ^6.0.0+1
 
 dev_dependencies:
   flutter_test:
