@@ -49,8 +49,7 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
-  runZonedGuarded(() => runApp(HMSExampleApp(initialLink: initialLink?.link)),
-      FirebaseCrashlytics.instance.recordError);
+  runApp(HMSExampleApp(initialLink: initialLink?.link));
 }
 
 class HMSExampleApp extends StatefulWidget {
