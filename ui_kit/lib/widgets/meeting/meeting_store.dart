@@ -199,7 +199,7 @@ class MeetingStore extends ChangeNotifier
 
       //If the link is not valid then we might not get the code and whether the link is a
       //PROD or QA so we return the error in this case
-      if (roomData.isEmpty) {
+      if (roomData != null && roomData.isEmpty) {
         return HMSException(
             message: "Invalid meeting URL",
             description: "Provided meeting URL is invalid",
