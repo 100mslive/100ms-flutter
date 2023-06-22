@@ -183,7 +183,8 @@ enum PlatformMethod {
   addHLSStatsListener,
   removeHLSStatsListener,
   switchAudioOutputUsingiOSUI,
-  sendHLSTimedMetadata
+  sendHLSTimedMetadata,
+  toggleAlwaysScreenOn
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -451,6 +452,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "switch_audio_output_using_ios_ui";
       case PlatformMethod.sendHLSTimedMetadata:
         return "send_hls_timed_metadata";
+      case PlatformMethod.toggleAlwaysScreenOn:
+        return "toggle_always_screen_on";
       default:
         return 'unknown';
     }
@@ -720,6 +723,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.switchAudioOutputUsingiOSUI;
       case "send_hls_timed_metadata":
         return PlatformMethod.sendHLSTimedMetadata;
+      case "toggle_always_screen_on":
+        return PlatformMethod.toggleAlwaysScreenOn;
       default:
         return PlatformMethod.unknown;
     }
