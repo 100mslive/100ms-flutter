@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  
+
   hmssdk_uikit:
     path: ../ui_kit
 

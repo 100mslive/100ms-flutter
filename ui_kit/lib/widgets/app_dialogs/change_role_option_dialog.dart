@@ -18,7 +18,8 @@ class ChangeRoleOptionDialog extends StatefulWidget {
   final Function(HMSRole, bool) changeRole;
   final bool force;
   final HMSPeer peer;
-  const ChangeRoleOptionDialog({super.key, 
+  const ChangeRoleOptionDialog({
+    super.key,
     required this.peerName,
     required this.roles,
     required this.changeRole,
@@ -54,7 +55,8 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
       actionsPadding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
       backgroundColor: themeBottomSheetColor,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      contentPadding: const EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
+      contentPadding:
+          const EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

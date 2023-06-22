@@ -136,7 +136,7 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                                       .map((role) => DropdownMenuItem(
                                             value: role.name,
                                             child: Text(
-                                              "${role.name}",
+                                              role.name,
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                               style: GoogleFonts.inter(
@@ -174,8 +174,8 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                                     ],
                                   ),
                                 ),
-                                buttonStyleData:
-                                    const ButtonStyleData(width: 100, height: 35),
+                                buttonStyleData: const ButtonStyleData(
+                                    width: 100, height: 35),
                                 dropdownStyleData: DropdownStyleData(
                                     width:
                                         MediaQuery.of(context).size.width * 0.4,

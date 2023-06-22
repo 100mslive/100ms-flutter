@@ -5,14 +5,16 @@ import 'package:hmssdk_uikit/widgets/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
 class HLSStatsView extends StatelessWidget {
+  const HLSStatsView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(5),
-      margin: EdgeInsets.all(2),
+      padding: const EdgeInsets.all(5),
+      margin: const EdgeInsets.all(2),
       decoration: BoxDecoration(
           color: Colors.black38.withOpacity(0.3),
-          borderRadius: BorderRadius.all(Radius.circular(10))),
+          borderRadius: const BorderRadius.all(Radius.circular(10))),
       child: ListView(
         shrinkWrap: true,
         children: [
@@ -24,7 +26,7 @@ class HLSStatsView extends StatelessWidget {
               },
               selector: (_, meetingStore) =>
                   meetingStore.hlsPlayerStats?.averageBitrate),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Selector<MeetingStore, double?>(
@@ -35,40 +37,37 @@ class HLSStatsView extends StatelessWidget {
               },
               selector: (_, meetingStore) =>
                   meetingStore.hlsPlayerStats?.bufferedDuration),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Selector<MeetingStore, double?>(
               builder: (_, videoWidth, __) {
-                return Text(
-                    "Video Width : ${videoWidth == null ? "-" : videoWidth} px",
+                return Text("Video Width : ${videoWidth ?? "-"} px",
                     style: GoogleFonts.inter(color: iconColor, fontSize: 12));
               },
               selector: (_, meetingStore) =>
                   meetingStore.hlsPlayerStats?.videoWidth),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Selector<MeetingStore, double?>(
               builder: (_, videoHeight, __) {
-                return Text(
-                    "Video Height : ${videoHeight == null ? "-" : videoHeight} px",
+                return Text("Video Height : ${videoHeight ?? "-"} px",
                     style: GoogleFonts.inter(color: iconColor, fontSize: 12));
               },
               selector: (_, meetingStore) =>
                   meetingStore.hlsPlayerStats?.videoHeight),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Selector<MeetingStore, int?>(
               builder: (_, droppedFrameCount, __) {
-                return Text(
-                    "Dropped Frames : ${droppedFrameCount == null ? "-" : droppedFrameCount} ",
+                return Text("Dropped Frames : ${droppedFrameCount ?? "-"} ",
                     style: GoogleFonts.inter(color: iconColor, fontSize: 12));
               },
               selector: (_, meetingStore) =>
                   meetingStore.hlsPlayerStats?.droppedFrameCount),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Selector<MeetingStore, double?>(

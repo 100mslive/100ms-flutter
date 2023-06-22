@@ -13,7 +13,8 @@ import 'package:hmssdk_uikit/widgets/meeting/meeting_store.dart';
 class AspectRatioOptionDialog extends StatefulWidget {
   final List<String> availableAspectRatios;
   final MeetingStore meetingStore;
-  const AspectRatioOptionDialog({super.key, 
+  const AspectRatioOptionDialog({
+    super.key,
     required this.availableAspectRatios,
     required this.meetingStore,
   });
@@ -44,7 +45,8 @@ class _AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
       actionsPadding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
       backgroundColor: themeBottomSheetColor,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      contentPadding: const EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
+      contentPadding:
+          const EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

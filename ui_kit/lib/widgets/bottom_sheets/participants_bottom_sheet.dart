@@ -355,7 +355,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                       .map((role) => DropdownMenuItem(
                                             value: role.name,
                                             child: Text(
-                                              "${role.name}",
+                                              role.name,
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                               style: GoogleFonts.inter(

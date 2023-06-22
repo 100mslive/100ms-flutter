@@ -17,7 +17,8 @@ class ChangeSimulcastLayerOptionDialog extends StatefulWidget {
   final HMSSimulcastLayer selectedLayer;
   final HMSRemoteVideoTrack track;
   const ChangeSimulcastLayerOptionDialog(
-      {super.key, required this.layerDefinitions,
+      {super.key,
+      required this.layerDefinitions,
       required this.selectedLayer,
       required this.track});
 
@@ -48,7 +49,8 @@ class _ChangeSimulcastLayerOptionDialogState
       actionsPadding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
       backgroundColor: themeBottomSheetColor,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      contentPadding: const EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
+      contentPadding:
+          const EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -85,7 +87,8 @@ class _ChangeSimulcastLayerOptionDialogState
                       .map((layer) => DropdownMenuItem(
                             value: layer.hmsSimulcastLayer,
                             child: TitleText(
-                              text: "${layer.hmsSimulcastLayer.name} ${layer.hmsResolution.width.toStringAsFixed(0)} x ${layer.hmsResolution.height.toStringAsFixed(0)}",
+                              text:
+                                  "${layer.hmsSimulcastLayer.name} ${layer.hmsResolution.width.toStringAsFixed(0)} x ${layer.hmsResolution.height.toStringAsFixed(0)}",
                               textColor: themeDefaultColor,
                               fontWeight: FontWeight.w400,
                             ),

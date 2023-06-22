@@ -15,7 +15,6 @@ import 'package:hmssdk_uikit/model/peer_track_node.dart';
 import 'package:hmssdk_uikit/widgets/app_dialogs/audio_device_change_dialog.dart';
 import 'package:hmssdk_uikit/widgets/bottom_sheets/chat_bottom_sheet.dart';
 import 'package:hmssdk_uikit/widgets/bottom_sheets/more_settings_bottom_sheet.dart';
-import 'package:hmssdk_uikit/widgets/bottom_sheets/start_hls_bottom_sheet.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/hms_embedded_button.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/stream_timer.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/subtitle_text.dart';
@@ -34,9 +33,7 @@ class MeetingPage extends StatefulWidget {
   final String meetingLink;
   final bool isRoomMute;
   const MeetingPage(
-      {Key? key,
-      required this.meetingLink,
-      this.isRoomMute = true})
+      {Key? key, required this.meetingLink, this.isRoomMute = true})
       : super(key: key);
 
   @override
@@ -308,7 +305,13 @@ class _MeetingPageState extends State<MeetingPage> {
                                                      * - Remaining as the mode from bottom sheet is selected corresponding grid layout is rendered
                                                     */
                                                     child: Container(
-                                                        child: (((modeData.item1 == MeetingMode.OneToOne) || ((data.item3 == 2) && context.read<MeetingStore>().peers.length == 2)) &&
+                                                        child: (((modeData.item1 ==
+                                                                        MeetingMode
+                                                                            .OneToOne) ||
+                                                                    ((data.item3 ==
+                                                                            2) &&
+                                                                        context.read<MeetingStore>().peers.length ==
+                                                                            2)) &&
                                                                 (modeData.item2 !=
                                                                     null))
                                                             ? OneToOneMode(
@@ -325,8 +328,11 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                     MeetingMode
                                                                         .ActiveSpeaker)
                                                                 ? basicGridView(
-                                                                    peerTracks:
-                                                                        data.item1.sublist(0, min(data.item1.length, data.item4 + 4)),
+                                                                    peerTracks: data
+                                                                        .item1
+                                                                        .sublist(
+                                                                            0,
+                                                                            min(data.item1.length, data.item4 + 4)),
                                                                     itemCount: min(data.item3, data.item4 + 4),
                                                                     screenShareCount: data.item4,
                                                                     context: context,
@@ -473,7 +479,8 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                     child: SvgPicture
                                                                         .asset(
                                                                       "packages/hmssdk_uikit/lib/assets/icons/live_stream.svg",
-                                                                      color: errorColor,
+                                                                      color:
+                                                                          errorColor,
                                                                       fit: BoxFit
                                                                           .scaleDown,
                                                                     ),

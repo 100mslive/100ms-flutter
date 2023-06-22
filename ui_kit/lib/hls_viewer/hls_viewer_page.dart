@@ -18,7 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class HLSViewerPage extends StatefulWidget {
-  HLSViewerPage({
+  const HLSViewerPage({
     Key? key,
   }) : super(key: key);
   @override
@@ -27,34 +27,34 @@ class HLSViewerPage extends StatefulWidget {
 
 class _HLSViewerPageState extends State<HLSViewerPage> {
   String recordingState() {
-    String _message = "";
+    String message = "";
 
-    Map<String, bool> _recordingType =
+    Map<String, bool> recordingType =
         context.read<MeetingStore>().recordingType;
 
-    if (_recordingType["hls"] ?? false) {
-      _message += "HLS ";
+    if (recordingType["hls"] ?? false) {
+      message += "HLS ";
     }
-    if (_recordingType["server"] ?? false) {
-      _message += "Server ";
+    if (recordingType["server"] ?? false) {
+      message += "Server ";
     }
-    if (_recordingType["browser"] ?? false) {
-      _message += "Beam ";
+    if (recordingType["browser"] ?? false) {
+      message += "Beam ";
     }
-    _message += "Recording";
-    return _message;
+    message += "Recording";
+    return message;
   }
 
   String streamingState() {
-    String _message = "Live";
-    Map<String, bool> _streamingType =
+    String message = "Live";
+    Map<String, bool> streamingType =
         context.read<MeetingStore>().streamingType;
-    if (_streamingType["hls"] ?? false) {
-      _message += " with HLS";
-    } else if (_streamingType["rtmp"] ?? false) {
-      _message += " with RTMP";
+    if (streamingType["hls"] ?? false) {
+      message += " with HLS";
+    } else if (streamingType["rtmp"] ?? false) {
+      message += " with RTMP";
     }
-    return _message;
+    return message;
   }
 
   @override
@@ -108,7 +108,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                           ? Padding(
                                               padding: const EdgeInsets.only(
                                                   top: 50.0),
-                                              child: Container(
+                                              child: SizedBox(
                                                   height: MediaQuery.of(context)
                                                       .size
                                                       .height,
@@ -160,13 +160,14 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                 context)
                                                       },
                                                       disabledBorderColor:
-                                                          Color(0xffCC525F),
+                                                          const Color(
+                                                              0xffCC525F),
                                                       width: 40,
                                                       height: 40,
-                                                      offColor:
-                                                          Color(0xffCC525F),
-                                                      onColor:
-                                                          Color(0xffCC525F),
+                                                      offColor: const Color(
+                                                          0xffCC525F),
+                                                      onColor: const Color(
+                                                          0xffCC525F),
                                                       isActive: false,
                                                       child: SvgPicture.asset(
                                                         "assets/icons/leave_hls.svg",
@@ -176,7 +177,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                             "leave_button",
                                                       ),
                                                     ),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 10,
                                                     ),
                                                     Selector<
@@ -211,7 +212,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                         builder:
                                                             (_, roomState, __) {
                                                           if (roomState.item1 ||
-                                                              roomState.item2)
+                                                              roomState.item2) {
                                                             return Column(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
@@ -240,9 +241,10 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                       onTap:
                                                                           () {
                                                                         if (!roomState.item1 &&
-                                                                            roomState.item2)
+                                                                            roomState.item2) {
                                                                           Utilities.showToast(
                                                                               recordingState());
+                                                                        }
                                                                       },
                                                                       child:
                                                                           Text(
@@ -282,13 +284,13 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                                       color: themeSubHeadingColor,
                                                                                       fit: BoxFit.scaleDown,
                                                                                     ),
-                                                                                    SizedBox(
+                                                                                    const SizedBox(
                                                                                       width: 6,
                                                                                     ),
                                                                                     Selector<MeetingStore, HMSRoom?>(
                                                                                         selector: (_, meetingStore) => meetingStore.hmsRoom,
                                                                                         builder: (_, hmsRoom, __) {
-                                                                                          if (hmsRoom != null && hmsRoom.hmshlsStreamingState != null && hmsRoom.hmshlsStreamingState!.variants.length != 0 && hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt != null) {
+                                                                                          if (hmsRoom != null && hmsRoom.hmshlsStreamingState != null && hmsRoom.hmshlsStreamingState!.variants.isNotEmpty && hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt != null) {
                                                                                             return HMSStreamTimer(startedAt: hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt!);
                                                                                           }
                                                                                           return SubtitleText(
@@ -312,7 +314,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                                 color: themeSubHeadingColor,
                                                                                 fit: BoxFit.scaleDown,
                                                                               ),
-                                                                              SizedBox(
+                                                                              const SizedBox(
                                                                                 width: 6,
                                                                               ),
                                                                               Selector<MeetingStore, int>(
@@ -327,7 +329,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                     : Container()
                                                               ],
                                                             );
-                                                          return SizedBox();
+                                                          }
+                                                          return const SizedBox();
                                                         })
                                                   ],
                                                 ),
@@ -367,7 +370,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                         .read<
                                                                             MeetingStore>(),
                                                                     child:
-                                                                        ChatBottomSheet()),
+                                                                        const ChatBottomSheet()),
                                                               )
                                                             },
                                                             width: 40,
@@ -389,7 +392,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                             ),
                                                           );
                                                         }),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 10,
                                                     ),
                                                     HMSEmbeddedButton(
@@ -413,7 +416,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                         .read<
                                                                             MeetingStore>(),
                                                                     child:
-                                                                        ViewerSettingsBottomSheet()))
+                                                                        const ViewerSettingsBottomSheet()))
                                                       },
                                                       width: 40,
                                                       height: 40,
@@ -454,7 +457,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                   currentRequest, context);
                                         });
                                       }
-                                      return SizedBox();
+                                      return const SizedBox();
                                     }),
                                 Selector<MeetingStore, HMSTrackChangeRequest?>(
                                     selector: (_, meetingStore) =>
@@ -473,7 +476,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                   context, currentRequest);
                                         });
                                       }
-                                      return SizedBox();
+                                      return const SizedBox();
                                     }),
                                 Selector<MeetingStore, bool>(
                                     selector: (_, meetingStore) =>
@@ -507,7 +510,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                   ));
                                         });
                                       }
-                                      return SizedBox();
+                                      return const SizedBox();
                                     }),
                                 Selector<MeetingStore, bool>(
                                     selector: (_, meetingStore) =>
@@ -517,7 +520,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                         return UtilityComponents
                                             .showReconnectingDialog(context);
                                       }
-                                      return SizedBox();
+                                      return const SizedBox();
                                     }),
                               ],
                             ),

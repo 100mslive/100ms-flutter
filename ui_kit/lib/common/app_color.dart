@@ -18,21 +18,25 @@ void updateColor(ThemeMode mode) {
   themeSurfaceColor = mode == ThemeMode.dark
       ? const Color.fromRGBO(29, 34, 41, 1)
       : const Color.fromRGBO(245, 249, 255, 0.95);
-  themeSubHeadingColor =
-      mode == ThemeMode.dark ? const Color.fromRGBO(224, 236, 255, 0.8) : borderColor;
+  themeSubHeadingColor = mode == ThemeMode.dark
+      ? const Color.fromRGBO(224, 236, 255, 0.8)
+      : borderColor;
 
-  themeScreenBackgroundColor =
-      mode == ThemeMode.dark ? const Color.fromRGBO(11, 13, 15, 1) : hmsWhiteColor;
+  themeScreenBackgroundColor = mode == ThemeMode.dark
+      ? const Color.fromRGBO(11, 13, 15, 1)
+      : hmsWhiteColor;
 
   themeHintColor = mode == ThemeMode.dark
       ? const Color.fromRGBO(195, 208, 229, 0.5)
       : hmsWhiteColor;
 
-  themeHMSBorderColor =
-      mode == ThemeMode.dark ? const Color.fromRGBO(45, 52, 64, 1) : hmsWhiteColor;
+  themeHMSBorderColor = mode == ThemeMode.dark
+      ? const Color.fromRGBO(45, 52, 64, 1)
+      : hmsWhiteColor;
 
-  themeTileNameColor =
-      mode == ThemeMode.dark ? const Color.fromRGBO(0, 0, 0, 0.9) : hmsHintColor;
+  themeTileNameColor = mode == ThemeMode.dark
+      ? const Color.fromRGBO(0, 0, 0, 0.9)
+      : hmsHintColor;
 
   themeDisabledTextColor = mode == ThemeMode.dark
       ? const Color.fromRGBO(255, 255, 255, 0.48)

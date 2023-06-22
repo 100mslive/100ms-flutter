@@ -16,7 +16,9 @@ class AudioModeSelectDialog extends StatefulWidget {
   final Function(HMSAudioMode) changeAudioMode;
 
   const AudioModeSelectDialog(
-      {super.key, required this.currentAudioMode, required this.changeAudioMode});
+      {super.key,
+      required this.currentAudioMode,
+      required this.changeAudioMode});
 
   @override
   _AudioModeSelectDialogState createState() => _AudioModeSelectDialogState();
@@ -43,7 +45,8 @@ class _AudioModeSelectDialogState extends State<AudioModeSelectDialog> {
       actionsPadding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
       backgroundColor: themeBottomSheetColor,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      contentPadding: const EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
+      contentPadding:
+          const EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

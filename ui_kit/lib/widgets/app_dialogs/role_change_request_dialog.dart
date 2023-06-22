@@ -22,7 +22,8 @@ class RoleChangeRequestDialog extends StatefulWidget {
 class _RoleChangeRequestDialogState extends State<RoleChangeRequestDialog> {
   @override
   Widget build(BuildContext context) {
-    String message = "‘${widget.roleChangeRequest.suggestedBy?.name ?? "Anonymus"}’ requested to change your role to ‘${widget.roleChangeRequest.suggestedRole.name}’";
+    String message =
+        "‘${widget.roleChangeRequest.suggestedBy?.name ?? "Anonymus"}’ requested to change your role to ‘${widget.roleChangeRequest.suggestedRole.name}’";
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),

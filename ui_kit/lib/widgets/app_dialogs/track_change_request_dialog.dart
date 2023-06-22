@@ -14,7 +14,8 @@ class TrackChangeRequestDialog extends StatefulWidget {
   final MeetingStore meetingStore;
   final bool isAudioModeOn;
   const TrackChangeRequestDialog(
-      {super.key, required this.trackChangeRequest,
+      {super.key,
+      required this.trackChangeRequest,
       required this.meetingStore,
       this.isAudioModeOn = false});
 
@@ -26,10 +27,8 @@ class TrackChangeRequestDialog extends StatefulWidget {
 class _TrackChangeRequestDialogState extends State<TrackChangeRequestDialog> {
   @override
   Widget build(BuildContext context) {
-    String message = "‘${widget.trackChangeRequest.requestBy.name}’ requested to ${(widget.trackChangeRequest.mute) ? "mute" : "unmute"} your ‘${(widget.trackChangeRequest.track.kind ==
-                HMSTrackKind.kHMSTrackKindAudio)
-            ? "Audio’"
-            : "Video’"}${(widget.isAudioModeOn) ? " and switch to video view" : ""}";
+    String message =
+        "‘${widget.trackChangeRequest.requestBy.name}’ requested to ${(widget.trackChangeRequest.mute) ? "mute" : "unmute"} your ‘${(widget.trackChangeRequest.track.kind == HMSTrackKind.kHMSTrackKindAudio) ? "Audio’" : "Video’"}${(widget.isAudioModeOn) ? " and switch to video view" : ""}";
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),

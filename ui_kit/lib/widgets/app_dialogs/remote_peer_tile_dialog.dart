@@ -23,7 +23,8 @@ class RemotePeerTileDialog extends StatefulWidget {
   final Function() changePinTileStatus;
   final Function() setOnSpotlight;
   const RemotePeerTileDialog(
-      {super.key, required this.isVideoMuted,
+      {super.key,
+      required this.isVideoMuted,
       required this.isAudioMuted,
       required this.changeVideoTrack,
       required this.changeAudioTrack,

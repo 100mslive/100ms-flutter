@@ -13,7 +13,7 @@ dependencies:
 
   hmssdk_flutter:
     path: ../
-  
+
   intl:
   permission_handler:
   provider:

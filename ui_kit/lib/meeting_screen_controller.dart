@@ -29,7 +29,8 @@ class MeetingScreenController extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<MeetingScreenController> createState() => _MeetingScreenControllerState();
+  State<MeetingScreenController> createState() =>
+      _MeetingScreenControllerState();
 }
 
 class _MeetingScreenControllerState extends State<MeetingScreenController> {
@@ -66,7 +67,7 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
     return Selector<MeetingStore, String?>(
         builder: (_, data, __) {
           if (data?.contains("hls-") ?? false) {
-            return HLSViewerPage();
+            return const HLSViewerPage();
           }
           return MeetingPage(
             meetingLink: widget.meetingLink,

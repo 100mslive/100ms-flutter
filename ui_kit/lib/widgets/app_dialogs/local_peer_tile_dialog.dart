@@ -17,7 +17,8 @@ class LocalPeerTileDialog extends StatefulWidget {
   final Function() setOnSpotlight;
   final bool isSpotlightedPeer;
   const LocalPeerTileDialog(
-      {super.key, required this.isAudioMode,
+      {super.key,
+      required this.isAudioMode,
       this.isVideoOn = false,
       required this.toggleCamera,
       required this.peerName,

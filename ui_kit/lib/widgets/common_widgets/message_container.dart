@@ -191,7 +191,7 @@ class MessageContainer extends StatelessWidget {
                             .setSessionMetadataForKey(
                                 key: SessionStoreKeyValues.getNameFromMethod(
                                     SessionStoreKey.PINNED_MESSAGE_SESSION_KEY),
-                                metadata: senderName! + ": " + message),
+                                metadata: "${senderName!}: $message"),
                       );
                     });
                   },

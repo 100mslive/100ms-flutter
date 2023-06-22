@@ -10,7 +10,8 @@ class HMSListenableButton extends StatelessWidget {
   final String errorMessage;
 
   const HMSListenableButton(
-      {super.key, required this.width,
+      {super.key,
+      required this.width,
       this.shadowColor,
       required this.onPressed,
       required this.childWidget,

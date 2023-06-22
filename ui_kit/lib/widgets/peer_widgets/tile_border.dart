@@ -13,7 +13,8 @@ class TileBorder extends StatelessWidget {
   final String name;
 
   const TileBorder(
-      {super.key, required this.itemHeight,
+      {super.key,
+      required this.itemHeight,
       required this.itemWidth,
       required this.uid,
       required this.name});

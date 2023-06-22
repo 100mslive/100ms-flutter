@@ -16,16 +16,16 @@ class MoreOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MeetingStore _meetingStore = context.read<MeetingStore>();
+    MeetingStore meetingStore = context.read<MeetingStore>();
 
     bool mutePermission =
-        _meetingStore.localPeer?.role.permissions.mute ?? false;
+        meetingStore.localPeer?.role.permissions.mute ?? false;
     bool unMutePermission =
-        _meetingStore.localPeer?.role.permissions.unMute ?? false;
+        meetingStore.localPeer?.role.permissions.unMute ?? false;
     bool removePeerPermission =
-        _meetingStore.localPeer?.role.permissions.removeOthers ?? false;
+        meetingStore.localPeer?.role.permissions.removeOthers ?? false;
     bool changeRolePermission =
-        _meetingStore.localPeer?.role.permissions.changeRole ?? false;
+        meetingStore.localPeer?.role.permissions.changeRole ?? false;
 
     return Positioned(
       bottom: 5,
@@ -33,7 +33,7 @@ class MoreOption extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           var peerTrackNode = context.read<PeerTrackNode>();
-          if (peerTrackNode.peer.peerId != _meetingStore.localPeer!.peerId) {
+          if (peerTrackNode.peer.peerId != meetingStore.localPeer!.peerId) {
             showDialog(
                 context: context,
                 builder: (_) => RemotePeerTileDialog(
@@ -44,21 +44,21 @@ class MoreOption extends StatelessWidget {
                       peerName: peerTrackNode.peer.name,
                       changeVideoTrack: (mute, isVideoTrack) {
                         Navigator.pop(context);
-                        _meetingStore.changeTrackState(
+                        meetingStore.changeTrackState(
                             peerTrackNode.track!, mute);
                       },
                       changeAudioTrack: (mute, isAudioTrack) {
                         Navigator.pop(context);
-                        _meetingStore.changeTrackState(
+                        meetingStore.changeTrackState(
                             peerTrackNode.audioTrack!, mute);
                       },
                       isSpotlightedPeer:
                           context.read<MeetingStore>().spotLightPeer?.uid ==
                               peerTrackNode.uid,
                       setOnSpotlight: () {
-                                              if (context.read<MeetingStore>().spotLightPeer?.uid ==
+                        if (context.read<MeetingStore>().spotLightPeer?.uid ==
                             peerTrackNode.uid) {
-                          _meetingStore.setSessionMetadataForKey(
+                          meetingStore.setSessionMetadataForKey(
                               key: SessionStoreKeyValues.getNameFromMethod(
                                   SessionStoreKey.SPOTLIGHT),
                               metadata: null);
@@ -70,16 +70,16 @@ class MoreOption extends StatelessWidget {
                         String? metadata = (peerTrackNode.audioTrack == null)
                             ? peerTrackNode.track?.trackId
                             : peerTrackNode.audioTrack?.trackId;
-                        _meetingStore.setSessionMetadataForKey(
+                        meetingStore.setSessionMetadataForKey(
                             key: SessionStoreKeyValues.getNameFromMethod(
                                 SessionStoreKey.SPOTLIGHT),
                             metadata: metadata);
                       },
                       removePeer: () async {
                         Navigator.pop(context);
-                        var peer = await _meetingStore.getPeer(
+                        var peer = await meetingStore.getPeer(
                             peerId: peerTrackNode.peer.peerId);
-                        _meetingStore.removePeerFromRoom(peer!);
+                        meetingStore.removePeerFromRoom(peer!);
                       },
                       changeRole: () {
                         Navigator.pop(context);
@@ -87,10 +87,10 @@ class MoreOption extends StatelessWidget {
                             context: context,
                             builder: (_) => ChangeRoleOptionDialog(
                                   peerName: peerTrackNode.peer.name,
-                                  roles: _meetingStore.roles,
+                                  roles: meetingStore.roles,
                                   peer: peerTrackNode.peer,
                                   changeRole: (role, forceChange) {
-                                    _meetingStore.changeRoleOfPeer(
+                                    meetingStore.changeRoleOfPeer(
                                         peer: peerTrackNode.peer,
                                         roleName: role,
                                         forceChange: forceChange);
@@ -125,7 +125,7 @@ class MoreOption extends StatelessWidget {
                           !(peerTrackNode.track as HMSRemoteVideoTrack).isMute),
                       pinTile: peerTrackNode.pinTile,
                       changePinTileStatus: () {
-                        _meetingStore.changePinTileStatus(peerTrackNode);
+                        meetingStore.changePinTileStatus(peerTrackNode);
                         Navigator.pop(context);
                       },
                     ));
@@ -137,8 +137,8 @@ class MoreOption extends StatelessWidget {
                         !(context.read<PeerTrackNode>().track?.isMute ?? true),
                     isAudioMode: false,
                     toggleCamera: () {
-                      if (_meetingStore.isVideoOn) {
-                        _meetingStore.switchCamera();
+                      if (meetingStore.isVideoOn) {
+                        meetingStore.switchCamera();
                       }
                     },
                     peerName: peerTrackNode.peer.name,
@@ -149,24 +149,24 @@ class MoreOption extends StatelessWidget {
                         context.read<MeetingStore>().spotLightPeer?.uid ==
                             peerTrackNode.uid,
                     setOnSpotlight: () {
-                        if (context.read<MeetingStore>().spotLightPeer?.uid ==
-                            peerTrackNode.uid) {
-                          _meetingStore.setSessionMetadataForKey(
-                              key: SessionStoreKeyValues.getNameFromMethod(
-                                  SessionStoreKey.SPOTLIGHT),
-                              metadata: null);
-                          return;
-                        }
-
-                        ///Setting the metadata as audio trackId if it's not present
-                        ///then setting it as video trackId
-                        String? metadata = (peerTrackNode.audioTrack == null)
-                            ? peerTrackNode.track?.trackId
-                            : peerTrackNode.audioTrack?.trackId;
-                        _meetingStore.setSessionMetadataForKey(
+                      if (context.read<MeetingStore>().spotLightPeer?.uid ==
+                          peerTrackNode.uid) {
+                        meetingStore.setSessionMetadataForKey(
                             key: SessionStoreKeyValues.getNameFromMethod(
                                 SessionStoreKey.SPOTLIGHT),
-                            metadata: metadata);
+                            metadata: null);
+                        return;
+                      }
+
+                      ///Setting the metadata as audio trackId if it's not present
+                      ///then setting it as video trackId
+                      String? metadata = (peerTrackNode.audioTrack == null)
+                          ? peerTrackNode.track?.trackId
+                          : peerTrackNode.audioTrack?.trackId;
+                      meetingStore.setSessionMetadataForKey(
+                          key: SessionStoreKeyValues.getNameFromMethod(
+                              SessionStoreKey.SPOTLIGHT),
+                          metadata: metadata);
                     },
                     changeRole: () {
                       Navigator.pop(context);
@@ -174,10 +174,10 @@ class MoreOption extends StatelessWidget {
                           context: context,
                           builder: (_) => ChangeRoleOptionDialog(
                                 peerName: peerTrackNode.peer.name,
-                                roles: _meetingStore.roles,
+                                roles: meetingStore.roles,
                                 peer: peerTrackNode.peer,
                                 changeRole: (role, forceChange) {
-                                  _meetingStore.changeRoleOfPeer(
+                                  meetingStore.changeRoleOfPeer(
                                       peer: peerTrackNode.peer,
                                       roleName: role,
                                       forceChange: forceChange);
@@ -197,7 +197,7 @@ class MoreOption extends StatelessWidget {
                                       ?.name ??
                                   "");
                       if (name.isNotEmpty) {
-                        _meetingStore.changeName(name: name);
+                        meetingStore.changeName(name: name);
                       }
                     }));
           }

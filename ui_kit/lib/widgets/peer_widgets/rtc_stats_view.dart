@@ -47,7 +47,8 @@ class Stats extends StatelessWidget {
                   margin: const EdgeInsets.all(2),
                   decoration: BoxDecoration(
                       color: Colors.black38.withOpacity(0.3),
-                      borderRadius: const BorderRadius.all(Radius.circular(10))),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10))),
                   child: ListView(
                     shrinkWrap: true,
                     children: [

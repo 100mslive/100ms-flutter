@@ -8,10 +8,9 @@ import 'package:provider/provider.dart';
 
 //Project imports
 
-
 class HLSPlayer extends StatefulWidget {
   final double? ratio;
-  HLSPlayer({Key? key, this.ratio}) : super(key: key);
+  const HLSPlayer({Key? key, this.ratio}) : super(key: key);
   @override
   _HLSPlayerState createState() => _HLSPlayerState();
 }
@@ -47,7 +46,7 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
                           alignment: Alignment.topLeft,
                           child: ChangeNotifierProvider.value(
                             value: context.read<MeetingStore>(),
-                            child: HLSStatsView(),
+                            child: const HLSStatsView(),
                           ),
                         )
                       : Container();
@@ -61,10 +60,10 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
                     HMSHLSPlayerController.seekToLivePosition();
                   },
                   child: Container(
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                     child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
+                        children: const [
                           Icon(
                             Icons.circle,
                             color: Colors.red,
@@ -87,16 +86,16 @@ class _HLSPlayerState extends State<HLSPlayer> with TickerProviderStateMixin {
               alignment: Alignment.topRight,
               child: GestureDetector(
                 onTap: () {
-                  var _meetingStore = context.read<MeetingStore>();
-                  if (_meetingStore.isLandscapeLocked) {
-                    _meetingStore.setLandscapeLock(false);
-                    if (_meetingStore.isDefaultAspectRatioSelected) {
-                      _meetingStore.setAspectRatio(9 / 16);
+                  var meetingStore = context.read<MeetingStore>();
+                  if (meetingStore.isLandscapeLocked) {
+                    meetingStore.setLandscapeLock(false);
+                    if (meetingStore.isDefaultAspectRatioSelected) {
+                      meetingStore.setAspectRatio(9 / 16);
                     }
                   } else {
-                    _meetingStore.setLandscapeLock(true);
-                    if (_meetingStore.isDefaultAspectRatioSelected) {
-                      _meetingStore.setAspectRatio(16 / 9);
+                    meetingStore.setLandscapeLock(true);
+                    if (meetingStore.isDefaultAspectRatioSelected) {
+                      meetingStore.setAspectRatio(16 / 9);
                     }
                   }
                 },

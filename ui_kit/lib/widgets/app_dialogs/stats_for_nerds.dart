@@ -12,7 +12,8 @@ import 'package:provider/provider.dart';
 
 class StatsForNerds extends StatefulWidget {
   final List<PeerTrackNode> peerTrackNode;
-  const StatsForNerds({Key? key, required this.peerTrackNode}) : super(key: key);
+  const StatsForNerds({Key? key, required this.peerTrackNode})
+      : super(key: key);
 
   @override
   State<StatsForNerds> createState() => _StatsForNerdsState();
@@ -65,7 +66,8 @@ class _StatsForNerdsState extends State<StatsForNerds> {
       actionsPadding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
       backgroundColor: themeBottomSheetColor,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      contentPadding: const EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
+      contentPadding:
+          const EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

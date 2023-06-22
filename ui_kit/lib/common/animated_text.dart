@@ -4,7 +4,8 @@ class AnimatedTextWidget extends StatefulWidget {
   final String text;
   final Duration duration;
 
-  const AnimatedTextWidget({super.key, required this.text, required this.duration});
+  const AnimatedTextWidget(
+      {super.key, required this.text, required this.duration});
 
   @override
   _AnimatedTextWidgetState createState() => _AnimatedTextWidgetState();
