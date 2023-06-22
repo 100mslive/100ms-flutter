@@ -49,7 +49,7 @@ class HMSSessionStoreAction {
                         }
 
                         override fun onSuccess(sessionMetadata: JsonElement?) {
-                            var value : Any? = null
+                            var value: Any? = null
 
                             /**
                              * Here depending on the value we parse the JsonElement
@@ -58,11 +58,11 @@ class HMSSessionStoreAction {
                              * if it's a JsonNull we send it as null
                              */
                             sessionMetadata?.let {
-                                value = if(it.isJsonPrimitive){
+                                value = if (it.isJsonPrimitive) {
                                     it.asString
-                                } else if (it.isJsonNull){
+                                } else if (it.isJsonNull) {
                                     null
-                                } else{
+                                } else {
                                     it.toString()
                                 }
                             }

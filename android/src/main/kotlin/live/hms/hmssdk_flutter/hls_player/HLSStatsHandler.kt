@@ -1,6 +1,5 @@
 package live.hms.hmssdk_flutter.hls_player
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,7 +27,6 @@ class HLSStatsHandler {
          */
         fun addHLSStatsListener(hmssdkFlutterPlugin: HmssdkFlutterPlugin?, hlsPlayer: HmsHlsPlayer?) {
             hlsPlayer?.setStatsMonitor(object : PlayerStatsListener {
-
 
                 /**
                  * Callback method triggered when an HLS error occurs during playback.

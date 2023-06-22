@@ -130,7 +130,7 @@ Future<void> makeFakeCallInComing() async {
         incomingCallNotificationChannelName: 'Incoming Call',
         missedCallNotificationChannelName: 'Missed Call',
       ),
-      ios: IOSParams(
+      ios: const IOSParams(
         iconName: 'CallKitLogo',
         handleType: '',
         supportsVideo: true,
@@ -160,7 +160,7 @@ Future<void> startOutGoingCall() async {
     handle: '0123456789',
     type: 1,
     extra: <String, dynamic>{'userId': '1a2b3c4d'},
-    ios: IOSParams(handleType: 'number'),
+    ios: const IOSParams(handleType: 'number'),
   );
   await FlutterCallkitIncoming.startCall(params);
 }

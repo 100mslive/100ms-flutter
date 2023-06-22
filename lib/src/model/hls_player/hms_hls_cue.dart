@@ -4,6 +4,7 @@ import 'package:hmssdk_flutter/src/model/hms_date_extension.dart';
 ///100ms HMSHLSCue
 ///
 ///[HMSHLSCue] is used to parse the timed metadata sent across the platforms.
+///Checkout the docs [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player#how-to-get-hls-callbacks)
 class HMSHLSCue {
   // Unique id of the timed event
   final String? id;

@@ -39,9 +39,9 @@ class HMSHLSPlayerAction {
          * @param result The result object to be returned after starting the player.
          * @param activity The current activity from which the method is called.
          */
-        private fun start(call:MethodCall,result: Result, activity: Activity) {
+        private fun start(call: MethodCall, result: Result, activity: Activity) {
             val hlsUrl = call.argument<String?>("hls_url")
-            activity.sendBroadcast(Intent(HLS_PLAYER_INTENT).putExtra(METHOD_CALL, "start_hls_player").putExtra("hls_url",hlsUrl))
+            activity.sendBroadcast(Intent(HLS_PLAYER_INTENT).putExtra(METHOD_CALL, "start_hls_player").putExtra("hls_url", hlsUrl))
             result.success(null)
         }
 

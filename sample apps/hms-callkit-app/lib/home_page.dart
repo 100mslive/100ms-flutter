@@ -198,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.95,
                       child: TextField(
-                        key: Key('fcm_token_field'),
+                        key: const Key('fcm_token_field'),
                         textInputAction: TextInputAction.done,
                         onSubmitted: (value) {},
                         controller: fcmTokenController,
@@ -207,7 +207,7 @@ class _HomePageState extends State<HomePage> {
                         },
                         decoration: InputDecoration(
                             focusColor: hmsdefaultColor,
-                            contentPadding: EdgeInsets.only(left: 16),
+                            contentPadding: const EdgeInsets.only(left: 16),
                             fillColor: Colors.white,
                             filled: true,
                             hintText: 'Enter the FCM token here',

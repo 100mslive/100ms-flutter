@@ -118,10 +118,10 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
      Deinitializes the HLS player and performs necessary cleanup.
      */
     deinit {
-        
+
         // Remove the HLS stats listener
         HMSHLSStatsHandler.removeHLSStatsListener()
-        
+
         // Set the hlsPlayer to nil to release its resources
         hlsPlayer = nil
     }
@@ -173,15 +173,14 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
      */
     private func start(_ hlsUrl: String?) {
 
-        if(hlsUrl != nil){
+        if hlsUrl != nil {
             guard let hlsStreamURL =  URL(string: hlsUrl!) else {
                 HMSErrorLogger.logError(#function, "hlsUrl not found", "NULL_ERROR")
                 return
             }
             hlsPlayer?.play(hlsStreamURL)
             return
-        }
-        else{
+        } else {
             guard let hmssdkFlutterPlugin else {
                 HMSErrorLogger.logError(#function, "hmssdkFlutterPlugin is null", "NULL_ERROR")
                 return
@@ -208,7 +207,4 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
     private func removeHLSStatsListener() {
         HMSHLSStatsHandler.removeHLSStatsListener()
     }
-    
-    /***********************************************************************************************************************************/
-
 }

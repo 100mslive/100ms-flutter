@@ -954,7 +954,7 @@ class HMSSDK {
   ///
   /// **hmsActionResultListener** - [hmsActionResultListener] is a callback whose [HMSActionResultListener.onSuccess] will be called when the action completes successfully.
   ///
-  ///Refer TODO: ADD Docs Link
+  ///Refer [send HLS Timed Metadata](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player#how-to-send-hls-timed-metadata)
   Future<void> sendHLSTimedMetadata(
       {required List<HMSHLSTimedMetadata> metadata,
       HMSActionResultListener? hmsActionResultListener}) async {
@@ -1196,6 +1196,7 @@ class HMSSDK {
   ///**** Only for iOS ****
   /// Method to show the native iOS UI for switching the audio output device.
   /// This method natively switches the audio output to the selected device.
+  /// Refer [switch audio output iOS UI](https://www.100ms.live/docs/flutter/v2/how-to-guides/configure-your-device/speaker/audio-output-routing#switch-audio-output-device-ui-ios-only)
   void switchAudioOutputUsingiOSUI() {
     if (Platform.isIOS) {
       PlatformService.invokeMethod(PlatformMethod.switchAudioOutputUsingiOSUI);

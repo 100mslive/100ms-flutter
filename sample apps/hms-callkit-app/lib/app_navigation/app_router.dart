@@ -17,7 +17,7 @@ class AppRoute {
     switch (settings.name) {
       case homePage:
         return MaterialPageRoute(
-            builder: (_) => HomePage(), settings: settings);
+            builder: (_) => const HomePage(), settings: settings);
       case callingPage:
         return MaterialPageRoute(
             builder: (_) => MeetingPage(
