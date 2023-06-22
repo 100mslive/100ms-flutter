@@ -2,7 +2,7 @@ library hmssdk_uikit;
 
 import 'package:flutter/widgets.dart';
 import 'package:hmssdk_uikit/hms_prebuilt_options.dart';
-import 'package:hmssdk_uikit/widgets/screen_controller.dart';
+import 'package:hmssdk_uikit/screen_controller.dart';
 
 export 'package:hmssdk_uikit/hmssdk_uikit.dart';
 

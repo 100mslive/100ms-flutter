@@ -8,6 +8,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_uikit/common/app_color.dart';
 import 'package:hmssdk_uikit/common/utility_components.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
+import 'package:hmssdk_uikit/meeting_screen_controller.dart';
 import 'package:hmssdk_uikit/preview/preview_device_settings.dart';
 import 'package:hmssdk_uikit/preview/preview_participant_sheet.dart';
 import 'package:hmssdk_uikit/preview/preview_store.dart';
@@ -63,10 +64,10 @@ class _PreviewPageState extends State<PreviewPage> {
     final double height = size.height;
     final double width = size.width;
     final Orientation orientation = MediaQuery.of(context).orientation;
-    final previewStore = context.watch<PreviewStore>();
+    final _previewStore = context.watch<PreviewStore>();
     return WillPopScope(
       onWillPop: () async {
-        previewStore.leave();
+        _previewStore.leave();
         return true;
       },
       child: Selector<PreviewStore, HMSException?>(
@@ -97,13 +98,13 @@ class _PreviewPageState extends State<PreviewPage> {
             return Scaffold(
               body: Stack(
                 children: [
-                  (previewStore.peer == null)
+                  (_previewStore.peer == null)
                       ? const Center(
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                           ),
                         )
-                      : (previewStore.peer!.role.name.contains("hls-"))
+                      : (_previewStore.peer!.role.name.contains("hls-"))
                           ? Container(
                               child: Center(
                                 child: CircleAvatar(
@@ -111,7 +112,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                     radius: 40,
                                     child: Text(
                                       Utilities.getAvatarTitle(
-                                          previewStore.peer!.name),
+                                          _previewStore.peer!.name),
                                       style: GoogleFonts.inter(
                                         fontSize: 40,
                                         color: Colors.white,
@@ -119,8 +120,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                     )),
                               ),
                             )
-                          : (previewStore.localTracks.isEmpty &&
-                                  previewStore.isVideoOn)
+                          : (_previewStore.localTracks.isEmpty &&
+                                  _previewStore.isVideoOn)
                               ? const Center(
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
@@ -129,11 +130,11 @@ class _PreviewPageState extends State<PreviewPage> {
                               : SizedBox(
                                   height: height,
                                   width: width,
-                                  child: (previewStore.isVideoOn)
+                                  child: (_previewStore.isVideoOn)
                                       ? HMSVideoView(
                                           scaleType:
                                               ScaleType.SCALE_ASPECT_FILL,
-                                          track: previewStore.localTracks[0],
+                                          track: _previewStore.localTracks[0],
                                           setMirror: true,
                                         )
                                       : Container(
@@ -144,7 +145,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 radius: 40,
                                                 child: Text(
                                                   Utilities.getAvatarTitle(
-                                                      previewStore.peer!.name),
+                                                      _previewStore.peer!.name),
                                                   style: GoogleFonts.inter(
                                                     fontSize: 40,
                                                     color: Colors.white,
@@ -205,16 +206,16 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 context: context,
                                                 builder: (ctx) =>
                                                     ChangeNotifierProvider.value(
-                                                        value: previewStore,
+                                                        value: _previewStore,
                                                         child:
                                                             const PreviewDeviceSettings()),
                                               )
-                                            : previewStore.toggleSpeaker(),
+                                            : _previewStore.toggleSpeaker(),
                                         offColor: themeHintColor,
                                         onColor: themeScreenBackgroundColor,
                                         isActive: true,
                                         child: SvgPicture.asset(
-                                          !previewStore.isRoomMute
+                                          !_previewStore.isRoomMute
                                               ? "assets/icons/speaker_state_on.svg"
                                               : "assets/icons/speaker_state_off.svg",
                                           color: themeDefaultColor,
@@ -231,7 +232,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                         badgeStyle: badge.BadgeStyle(
                                             badgeColor: hmsdefaultColor),
                                         badgeContent: Text(
-                                            previewStore.peerCount.toString()),
+                                            _previewStore.peerCount.toString()),
                                         child: HMSEmbeddedButton(
                                           height: 40,
                                           width: 40,
@@ -278,11 +279,11 @@ class _PreviewPageState extends State<PreviewPage> {
                       Padding(
                           padding: const EdgeInsets.only(
                               bottom: 15.0, left: 8, right: 8),
-                          child: (previewStore.peer != null)
+                          child: (_previewStore.peer != null)
                               ? Column(
                                   children: [
-                                    if (previewStore.peer != null &&
-                                        !previewStore.peer!.role.name
+                                    if (_previewStore.peer != null &&
+                                        !_previewStore.peer!.role.name
                                             .contains("hls-"))
                                       Row(
                                         mainAxisAlignment:
@@ -290,7 +291,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                         children: [
                                           Row(
                                             children: [
-                                              if (previewStore.peer != null &&
+                                              if (_previewStore.peer != null &&
                                                   context
                                                       .read<PreviewStore>()
                                                       .peer!
@@ -302,18 +303,18 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   height: 40,
                                                   width: 40,
                                                   onTap: () async =>
-                                                      previewStore
+                                                      _previewStore
                                                           .toggleMicMuteState(),
                                                   offColor: hmsWhiteColor,
                                                   onColor: themeHMSBorderColor,
                                                   isActive:
-                                                      previewStore.isAudioOn,
+                                                      _previewStore.isAudioOn,
                                                   child: SvgPicture.asset(
-                                                    previewStore.isAudioOn
+                                                    _previewStore.isAudioOn
                                                         ? "assets/icons/mic_state_on.svg"
                                                         : "assets/icons/mic_state_off.svg",
                                                     color:
-                                                        previewStore.isAudioOn
+                                                        _previewStore.isAudioOn
                                                             ? themeDefaultColor
                                                             : Colors.black,
                                                     fit: BoxFit.scaleDown,
@@ -324,28 +325,28 @@ class _PreviewPageState extends State<PreviewPage> {
                                               const SizedBox(
                                                 width: 10,
                                               ),
-                                              if (previewStore.peer != null &&
-                                                  previewStore.peer!.role
+                                              if (_previewStore.peer != null &&
+                                                  _previewStore.peer!.role
                                                       .publishSettings!.allowed
                                                       .contains("video"))
                                                 HMSEmbeddedButton(
                                                   height: 40,
                                                   width: 40,
-                                                  onTap: () async => (previewStore
+                                                  onTap: () async => (_previewStore
                                                           .localTracks.isEmpty)
                                                       ? null
-                                                      : previewStore
+                                                      : _previewStore
                                                           .toggleCameraMuteState(),
                                                   offColor: hmsWhiteColor,
                                                   onColor: themeHMSBorderColor,
                                                   isActive:
-                                                      previewStore.isVideoOn,
+                                                      _previewStore.isVideoOn,
                                                   child: SvgPicture.asset(
-                                                    previewStore.isVideoOn
+                                                    _previewStore.isVideoOn
                                                         ? "assets/icons/cam_state_on.svg"
                                                         : "assets/icons/cam_state_off.svg",
                                                     color:
-                                                        previewStore.isVideoOn
+                                                        _previewStore.isVideoOn
                                                             ? themeDefaultColor
                                                             : Colors.black,
                                                     fit: BoxFit.scaleDown,
@@ -357,17 +358,17 @@ class _PreviewPageState extends State<PreviewPage> {
                                           ),
                                           Row(
                                             children: [
-                                              if (previewStore
+                                              if (_previewStore
                                                           .networkQuality !=
                                                       null &&
-                                                  previewStore
+                                                  _previewStore
                                                           .networkQuality !=
                                                       -1)
                                                 HMSEmbeddedButton(
                                                     height: 40,
                                                     width: 40,
                                                     onTap: () {
-                                                      switch (previewStore
+                                                      switch (_previewStore
                                                           .networkQuality) {
                                                         case 0:
                                                           Utilities.showToast(
@@ -401,7 +402,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                     onColor: dividerColor,
                                                     isActive: true,
                                                     child: SvgPicture.asset(
-                                                      'assets/icons/network_${previewStore.networkQuality}.svg',
+                                                      'assets/icons/network_${_previewStore.networkQuality}.svg',
                                                       fit: BoxFit.scaleDown,
                                                       semanticsLabel:
                                                           "network_button",
@@ -419,19 +420,27 @@ class _PreviewPageState extends State<PreviewPage> {
                                         context
                                             .read<PreviewStore>()
                                             .removePreviewListener(),
-                                        setMeetingStore(previewStore),
-                                        _meetingStore.join(
-                                            widget.name, widget.meetingLink,
-                                            roomConfig:
-                                                previewStore.roomConfig),
+                                        setMeetingStore(_previewStore),
                                         Navigator.of(context).pushReplacement(
                                             MaterialPageRoute(
                                                 builder: (_) =>
                                                     ListenableProvider.value(
                                                       value: _meetingStore,
-                                                      child: MeetingPage(
-                                                          meetingLink: widget
-                                                              .meetingLink),
+                                                      child:  MeetingScreenController(
+                                                        isRoomMute:
+                                                            _previewStore
+                                                                .isRoomMute,
+                                                        meetingLink:
+                                                            widget.meetingLink,
+                                                        localPeerNetworkQuality:
+                                                            _previewStore
+                                                                .networkQuality,
+                                                        user: widget.name,
+                                                        role: _previewStore
+                                                            .peer?.role,
+                                                        config: _previewStore
+                                                            .roomConfig,
+                                                      ),
                                                     )))
                                       },
                                       childWidget: Container(

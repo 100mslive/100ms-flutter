@@ -32,12 +32,10 @@ import 'package:tuple/tuple.dart';
 
 class MeetingPage extends StatefulWidget {
   final String meetingLink;
-  final bool isStreamingLink;
   final bool isRoomMute;
   const MeetingPage(
       {Key? key,
       required this.meetingLink,
-      this.isStreamingLink = false,
       this.isRoomMute = true})
       : super(key: key);
 
@@ -290,15 +288,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                     MediaQuery.of(context)
                                                             .size
                                                             .height -
-                                                        ((widget.isStreamingLink &&
-                                                                (modeData
-                                                                        .item2
-                                                                        ?.role
-                                                                        .permissions
-                                                                        .hlsStreaming ==
-                                                                    true))
-                                                            ? 163
-                                                            : 122) -
+                                                        122 -
                                                         MediaQuery.of(context)
                                                             .padding
                                                             .bottom -
@@ -309,9 +299,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                     top: 55,
                                                     left: 0,
                                                     right: 0,
-                                                    bottom: (widget.isStreamingLink && (modeData.item2?.role.permissions.hlsStreaming == true))
-                                                        ? 108
-                                                        : 68,
+                                                    bottom: 68,
                                                     /***
                                                      * The logic for gridview is as follows:
                                                      * - Default mode is Active Speaker mode which displays only 4 tiles on screen without scroll and updates the tile according to who is currently speaking
@@ -325,9 +313,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                     null))
                                                             ? OneToOneMode(
                                                                 bottomMargin:
-                                                                    (widget.isStreamingLink && (modeData.item2?.role.permissions.hlsStreaming == true))
-                                                                        ? 272
-                                                                        : 235,
+                                                                    235,
                                                                 peerTracks:
                                                                     data.item1,
                                                                 screenShareCount:
@@ -886,185 +872,6 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                           "stats_button"),
                                                                 );
                                                               }),
-                                                    if ((Provider.of<MeetingStore>(
-                                                                    context)
-                                                                .localPeer !=
-                                                            null) &&
-                                                        (context
-                                                                .read<
-                                                                    MeetingStore>()
-                                                                .localPeer
-                                                                ?.role
-                                                                .permissions
-                                                                .hlsStreaming ==
-                                                            true) &&
-                                                        widget.isStreamingLink)
-                                                      Selector<
-                                                              MeetingStore,
-                                                              Tuple2<bool,
-                                                                  bool>>(
-                                                          selector: (_,
-                                                                  meetingStore) =>
-                                                              Tuple2(
-                                                                  meetingStore
-                                                                      .hasHlsStarted,
-                                                                  meetingStore
-                                                                      .isHLSLoading),
-                                                          builder:
-                                                              (_, data, __) {
-                                                            if (data.item1) {
-                                                              return Column(
-                                                                children: [
-                                                                  const SizedBox(
-                                                                    height: 10,
-                                                                  ),
-                                                                  InkWell(
-                                                                    onTap: () {
-                                                                      UtilityComponents.onEndStream(
-                                                                          context:
-                                                                              context,
-                                                                          title:
-                                                                              'End live stream for all?',
-                                                                          content:
-                                                                              "Your live stream will end and stream viewers will go offline immediately in this room. You can’t undo this action.",
-                                                                          ignoreText:
-                                                                              "Don't End ",
-                                                                          actionText:
-                                                                              'End Stream');
-                                                                    },
-                                                                    child:
-                                                                        CircleAvatar(
-                                                                      radius:
-                                                                          40,
-                                                                      backgroundColor:
-                                                                          errorColor,
-                                                                      child: SvgPicture.asset(
-                                                                          "packages/hmssdk_uikit/lib/assets/icons/end.svg",
-                                                                          color:
-                                                                              themeDefaultColor,
-                                                                          height:
-                                                                              36,
-                                                                          semanticsLabel:
-                                                                              "hls_end_button"),
-                                                                    ),
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height: 5,
-                                                                  ),
-                                                                  Text(
-                                                                    "END STREAM",
-                                                                    style: GoogleFonts.inter(
-                                                                        letterSpacing:
-                                                                            1.5,
-                                                                        fontSize:
-                                                                            10,
-                                                                        height:
-                                                                            1.6,
-                                                                        fontWeight:
-                                                                            FontWeight.w600),
-                                                                  )
-                                                                ],
-                                                              );
-                                                            } else if (data
-                                                                .item2) {
-                                                              return Column(
-                                                                children: [
-                                                                  const SizedBox(
-                                                                    height: 10,
-                                                                  ),
-                                                                  InkWell(
-                                                                    onTap:
-                                                                        () {},
-                                                                    child: CircleAvatar(
-                                                                        radius: 40,
-                                                                        backgroundColor: themeScreenBackgroundColor,
-                                                                        child: CircularProgressIndicator(
-                                                                          semanticsLabel:
-                                                                              "hls_loader",
-                                                                          strokeWidth:
-                                                                              2,
-                                                                          color:
-                                                                              hmsdefaultColor,
-                                                                        )),
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height: 5,
-                                                                  ),
-                                                                  Text(
-                                                                    "STARTING HLS",
-                                                                    style: GoogleFonts.inter(
-                                                                        letterSpacing:
-                                                                            1.5,
-                                                                        fontSize:
-                                                                            10,
-                                                                        height:
-                                                                            1.6,
-                                                                        fontWeight:
-                                                                            FontWeight.w600),
-                                                                  )
-                                                                ],
-                                                              );
-                                                            }
-                                                            return Column(
-                                                              children: [
-                                                                const SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                                InkWell(
-                                                                  onTap: () {
-                                                                    showModalBottomSheet(
-                                                                      isScrollControlled:
-                                                                          true,
-                                                                      backgroundColor:
-                                                                          themeBottomSheetColor,
-                                                                      shape:
-                                                                          RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(20),
-                                                                      ),
-                                                                      context:
-                                                                          context,
-                                                                      builder: (ctx) => ChangeNotifierProvider.value(
-                                                                          value: context.read<
-                                                                              MeetingStore>(),
-                                                                          child:
-                                                                              const StartHLSBottomSheet()),
-                                                                    );
-                                                                  },
-                                                                  child:
-                                                                      CircleAvatar(
-                                                                    radius: 40,
-                                                                    backgroundColor:
-                                                                        hmsdefaultColor,
-                                                                    child: SvgPicture.asset(
-                                                                        "packages/hmssdk_uikit/lib/assets/icons/live.svg",
-                                                                        color:
-                                                                            themeDefaultColor,
-                                                                        fit: BoxFit
-                                                                            .scaleDown,
-                                                                        semanticsLabel:
-                                                                            "start_hls_button"),
-                                                                  ),
-                                                                ),
-                                                                const SizedBox(
-                                                                  height: 5,
-                                                                ),
-                                                                Text(
-                                                                  "GO LIVE",
-                                                                  style: GoogleFonts.inter(
-                                                                      letterSpacing:
-                                                                          1.5,
-                                                                      fontSize:
-                                                                          10,
-                                                                      height:
-                                                                          1.6,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600),
-                                                                )
-                                                              ],
-                                                            );
-                                                          }),
                                                     if (Provider.of<MeetingStore>(context)
                                                             .localPeer !=
                                                         null)

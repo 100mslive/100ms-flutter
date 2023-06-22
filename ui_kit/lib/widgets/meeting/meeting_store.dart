@@ -14,6 +14,7 @@ import 'package:hmssdk_uikit/enums/session_store_keys.dart';
 import 'package:hmssdk_uikit/hmssdk_interactor.dart';
 import 'package:hmssdk_uikit/model/peer_track_node.dart';
 import 'package:hmssdk_uikit/model/rtc_stats.dart';
+import 'package:hmssdk_uikit/service/room_service.dart';
 import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
 
@@ -27,7 +28,8 @@ class MeetingStore extends ChangeNotifier
         HMSActionResultListener,
         HMSStatsListener,
         HMSLogListener,
-        HMSKeyChangeListener,HMSHLSPlaybackEventsListener {
+        HMSKeyChangeListener,
+        HMSHLSPlaybackEventsListener {
   late HMSSDKInteractor _hmsSDKInteractor;
 
   MeetingStore({required HMSSDKInteractor hmsSDKInteractor}) {
@@ -179,42 +181,55 @@ class MeetingStore extends ChangeNotifier
 
   String? spotlightMetadata;
 
-  ///These variables are used in HLS Player implementation *************************************************
+  ///HLS Player Stats
 
   HMSHLSPlayerStats? hlsPlayerStats;
 
   bool isHLSStatsEnabled = false;
 
-  Future<HMSException?> join(String userName, String roomCode,
+  bool isDefaultAspectRatioSelected = true;
+
+  Future<HMSException?> join(String userName, String roomUrl,
       {HMSConfig? roomConfig}) async {
-    dynamic tokenData;
     //If roomConfig is null then only we call the methods to get the authToken
     //If we are joining the room from preview we already have authToken so we don't
     //need to call the getAuthTokenByRoomCode method
     if (roomConfig == null) {
-      //qaTokenEndPoint is only required for 100ms internal testing
-      //It can be removed and should not affect the join method call
-      //For _endPoint just pass it as null
-      //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
+      List<String?>? _roomData = RoomService().getCode(roomUrl);
+
+      //If the link is not valid then we might not get the code and whether the link is a
+      //PROD or QA so we return the error in this case
+      if (_roomData?.length == 0) {
+        return HMSException(
+            message: "Invalid meeting URL",
+            description: "Provided meeting URL is invalid",
+            action: "Please Check the meeting URL",
+            isTerminal: false);
+      }
+
+      Constant.meetingCode = _roomData?[0] ?? '';
 
       //We use this to get the auth token from room code
-      tokenData =
-          await _hmsSDKInteractor.getAuthTokenByRoomCode(roomCode: roomCode);
+      dynamic _tokenData = await _hmsSDKInteractor.getAuthTokenByRoomCode(
+          roomCode: Constant.meetingCode);
 
-      if ((tokenData is String?) && tokenData != null) {
+      if ((_tokenData is String?) && _tokenData != null) {
         roomConfig = HMSConfig(
-            authToken: tokenData,
-            userName: userName,
-            captureNetworkQualityInPreview: true);
+          authToken: _tokenData,
+          userName: userName,
+          captureNetworkQualityInPreview: true,
+        );
       } else {
-        return tokenData;
+        return _tokenData;
       }
     }
 
     _hmsSDKInteractor.addUpdateListener(this);
     _hmsSDKInteractor.addLogsListener(this);
+    HMSHLSPlayerController.addHMSHLSPlaybackEventsListener(this);
     WidgetsBinding.instance.addObserver(this);
     _hmsSDKInteractor.join(config: roomConfig);
+    this.meetingUrl = roomUrl;
     return null;
   }
 
@@ -258,7 +273,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   void endRoom(bool lock, String? reason) {
-    _hmsSDKInteractor.endRoom(lock, reason ?? "", this);
+    _hmsSDKInteractor.endRoom(lock, reason == null ? "" : reason, this);
     _hmsSDKInteractor.destroy();
   }
 
@@ -315,7 +330,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   Future<void> isScreenShareActive() async {
-    isScreenShareOn = await _hmsSDKInteractor.isScreenShareActive();
+    this.isScreenShareOn = await _hmsSDKInteractor.isScreenShareActive();
   }
 
   void changeStatsVisible() {
@@ -363,10 +378,10 @@ class MeetingStore extends ChangeNotifier
   }
 
   void startRtmpOrRecording(
-      {required String meetingUrl,
+      {String? meetingUrl,
       required bool toRecord,
       List<String>? rtmpUrls}) async {
-    HMSRecordingConfig hmsRecordingConfig = HMSRecordingConfig(
+    HMSRecordingConfig hmsRecordingConfig = new HMSRecordingConfig(
         meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
 
     _hmsSDKInteractor.startRtmpOrRecording(hmsRecordingConfig, this);
@@ -431,6 +446,10 @@ class MeetingStore extends ChangeNotifier
 
   void stopHLSStreaming() {
     _hmsSDKInteractor.stopHLSStreaming(hmsActionResultListener: this);
+  }
+
+  void sendHLSTimedMetadata(List<HMSHLSTimedMetadata> metadata) {
+    _hmsSDKInteractor.sendHLSTimedMetadata(metadata, this);
   }
 
   void changeTrackStateForRole(bool mute, List<HMSRole>? roles) {
@@ -499,24 +518,23 @@ class MeetingStore extends ChangeNotifier
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
         int index = peerTracks
-            .indexWhere((element) => element.uid == "${each.peerId}mainVideo");
-        if (index == -1) {
+            .indexWhere((element) => element.uid == each.peerId + "mainVideo");
+        if (index == -1)
           peerTracks.add(PeerTrackNode(
               peer: each,
-              uid: "${each.peerId}mainVideo",
+              uid: each.peerId + "mainVideo",
               networkQuality: localPeerNetworkQuality,
               stats: RTCStats()));
-        }
         localPeer = each;
         addPeer(localPeer!);
         if (localPeer!.role.name.contains("hls-") == true) isHLSLink = true;
         index = peerTracks
-            .indexWhere((element) => element.uid == "${each.peerId}mainVideo");
+            .indexWhere((element) => element.uid == each.peerId + "mainVideo");
         if (each.videoTrack != null) {
           if (each.videoTrack!.kind == HMSTrackKind.kHMSTrackKindVideo) {
             peerTracks[index].track = each.videoTrack!;
             if (each.videoTrack!.isMute) {
-              isVideoOn = false;
+              this.isVideoOn = false;
             }
           }
         }
@@ -524,7 +542,7 @@ class MeetingStore extends ChangeNotifier
           if (each.audioTrack!.kind == HMSTrackKind.kHMSTrackKindAudio) {
             peerTracks[index].audioTrack = each.audioTrack!;
             if (each.audioTrack!.isMute) {
-              isMicOn = false;
+              this.isMicOn = false;
             }
           }
         }
@@ -533,7 +551,7 @@ class MeetingStore extends ChangeNotifier
     }
     roles = await getRoles();
     roles.removeWhere((element) => element.name == "__internal_recorder");
-    Utilities.saveStringData(key: "meetingLink", value: meetingUrl);
+    Utilities.saveStringData(key: "meetingLink", value: this.meetingUrl);
     getCurrentAudioDevice();
     getAudioDevicesList();
     notifyListeners();
@@ -626,11 +644,11 @@ class MeetingStore extends ChangeNotifier
     if (peer.isLocal) {
       if (track.kind == HMSTrackKind.kHMSTrackKindAudio &&
           track.source == "REGULAR") {
-        isMicOn = !track.isMute;
+        this.isMicOn = !track.isMute;
       }
       if (track.kind == HMSTrackKind.kHMSTrackKindVideo &&
           track.source == "REGULAR") {
-        isVideoOn = !track.isMute;
+        this.isVideoOn = !track.isMute;
       }
       notifyListeners();
     }
@@ -638,15 +656,15 @@ class MeetingStore extends ChangeNotifier
     if (track.kind == HMSTrackKind.kHMSTrackKindAudio &&
         trackUpdate != HMSTrackUpdate.trackRemoved) {
       int index = peerTracks
-          .indexWhere((element) => element.uid == "${peer.peerId}mainVideo");
+          .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
       if (index != -1) {
         PeerTrackNode peerTrackNode = peerTracks[index];
         peerTrackNode.audioTrack = track as HMSAudioTrack;
         peerTrackNode.notify();
       } else {
-        peerTracks.add(PeerTrackNode(
+        peerTracks.add(new PeerTrackNode(
             peer: peer,
-            uid: "${peer.peerId}mainVideo",
+            uid: peer.peerId + "mainVideo",
             stats: RTCStats(),
             audioTrack: track as HMSAudioTrack));
         notifyListeners();
@@ -658,7 +676,7 @@ class MeetingStore extends ChangeNotifier
     if (track.source == "REGULAR" &&
         trackUpdate != HMSTrackUpdate.trackRemoved) {
       int index = peerTracks
-          .indexWhere((element) => element.uid == "${peer.peerId}mainVideo");
+          .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
       if (index != -1) {
         PeerTrackNode peerTrackNode = peerTracks[index];
         peerTrackNode.track = track as HMSVideoTrack;
@@ -669,9 +687,9 @@ class MeetingStore extends ChangeNotifier
         setSpotlightOnTrackUpdate(track);
         return;
       } else {
-        peerTracks.add(PeerTrackNode(
+        peerTracks.add(new PeerTrackNode(
             peer: peer,
-            uid: "${peer.peerId}mainVideo",
+            uid: peer.peerId + "mainVideo",
             stats: RTCStats(),
             track: track as HMSVideoTrack));
         notifyListeners();
@@ -685,7 +703,7 @@ class MeetingStore extends ChangeNotifier
   @override
   void onHMSError({required HMSException error}) {
     log("onHMSError-> error: ${error.code} ${error.message}");
-    hmsException = error;
+    this.hmsException = error;
     Utilities.showNotification(error.message ?? "", "error");
     notifyListeners();
   }
@@ -709,7 +727,7 @@ class MeetingStore extends ChangeNotifier
   @override
   void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
     log("onRoleChangeRequest-> sender: ${roleChangeRequest.suggestedBy} role: ${roleChangeRequest.suggestedRole}");
-    currentRoleChangeRequest = roleChangeRequest;
+    this.currentRoleChangeRequest = roleChangeRequest;
     notifyListeners();
   }
 
@@ -729,12 +747,12 @@ class MeetingStore extends ChangeNotifier
        *  - if peer is present in the peerTracks list(this is done just to make sure that peer is still in the room)
        *  - Insert the peer after screenShare tracks and remove the peer from it's previous position
       */
-      for (var speaker in updateSpeakers) {
+      updateSpeakers.forEach((speaker) {
         int index = activeSpeakerList.indexWhere((previousSpeaker) =>
-            previousSpeaker.uid == "${speaker.peer.peerId}mainVideo");
+            previousSpeaker.uid == speaker.peer.peerId + "mainVideo");
         if (index == -1) {
           int peerIndex = peerTracks.indexWhere(
-              (node) => node.uid == "${speaker.peer.peerId}mainVideo");
+              (node) => node.uid == speaker.peer.peerId + "mainVideo");
           if (peerIndex != -1) {
             if (peerTracks[peerIndex].uid != spotLightPeer?.uid) {
               PeerTrackNode activeSpeaker = peerTracks[peerIndex];
@@ -747,7 +765,7 @@ class MeetingStore extends ChangeNotifier
             }
           }
         }
-      }
+      });
       activeSpeakerList.clear();
       notifyListeners();
     }
@@ -755,24 +773,24 @@ class MeetingStore extends ChangeNotifier
     //This is to handle the borders around the tiles of peers who are currently speaking
     //Reseting the borders of the tile everytime the update is received
     if (activeSpeakerIds.isNotEmpty) {
-      for (var key in activeSpeakerIds) {
+      activeSpeakerIds.forEach((key) {
         int index = peerTracks.indexWhere((element) => element.uid == key);
         if (index != -1) {
           peerTracks[index].setAudioLevel(-1);
         }
-      }
+      });
       activeSpeakerIds.clear();
     }
 
     //Setting the border for peers who are speaking
-    for (var element in updateSpeakers) {
-      activeSpeakerIds.add("${element.peer.peerId}mainVideo");
+    updateSpeakers.forEach((element) {
+      activeSpeakerIds.add(element.peer.peerId + "mainVideo");
       int index = peerTracks
           .indexWhere((element) => element.uid == activeSpeakerIds.last);
       if (index != -1) {
         peerTracks[index].setAudioLevel(element.audioLevel);
       }
-    }
+    });
 
     // Below code for change track and text in PIP mode iOS and android.
     if (updateSpeakers.isNotEmpty) {
@@ -787,9 +805,47 @@ class MeetingStore extends ChangeNotifier
               text: updateSpeakers[0].peer.name, ratio: [9, 16]);
         }
       } else if (Platform.isAndroid) {
-        changePIPWindowOnAndroid("${updateSpeakers[0].peer.peerId}mainVideo");
+        changePIPWindowOnAndroid(updateSpeakers[0].peer.peerId + "mainVideo");
       }
     }
+
+    // if (updateSpeakers.isNotEmpty) {
+    //   highestSpeaker = updateSpeakers[0].peer.name;
+    // } else {
+    //   highestSpeaker = null;
+    // }
+    // activeSpeakerIds.clear();
+    // updateSpeakers.forEach((element) {
+    //   activeSpeakerIds[element.peer.peerId + "mainVideo"] = element.audioLevel;
+    // });
+    // int firstScreenPeersCount = (meetingMode == MeetingMode.Audio) ? 6 : 4;
+    // if ((isActiveSpeakerMode && peerTracks.length > firstScreenPeersCount) ||
+    //     meetingMode == MeetingMode.Hero) {
+    //   List<HMSSpeaker> activeSpeaker = [];
+    //   if (updateSpeakers.length > firstScreenPeersCount) {
+    //     activeSpeaker.addAll(updateSpeakers.sublist(0, firstScreenPeersCount));
+    //   } else {
+    //     activeSpeaker.addAll(updateSpeakers);
+    //   }
+    //   for (int i = activeSpeaker.length - 1; i > -1; i--) {
+    //     if (isActiveSpeakerMode) {
+    //       List<PeerTrackNode> tempTracks = peerTracks.sublist(
+    //           screenShareCount, screenShareCount + firstScreenPeersCount);
+    //       int indexTrack = tempTracks.indexWhere(
+    //           (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
+    //       if (indexTrack != -1) {
+    //         continue;
+    //       }
+    //     }
+    //     int index = peerTracks.indexWhere(
+    //         (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
+    //     if (index != -1) {
+    //       PeerTrackNode peerTrackNode = peerTracks.removeAt(index);
+    //       peerTracks.insert(screenShareCount, peerTrackNode);
+    //     }
+    //   }
+    // }
+    // notifyListeners();
   }
 
   @override
@@ -841,7 +897,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + track.trackId);
     } else {
       index = peerTracks
-          .indexWhere((element) => element.uid == "${peer.peerId}mainVideo");
+          .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
       peerTracks[index].setHMSLocalAudioStats(hmsLocalAudioStats);
@@ -859,7 +915,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + track.trackId);
     } else {
       index = peerTracks
-          .indexWhere((element) => element.uid == "${peer.peerId}mainVideo");
+          .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
       peerTracks[index].setHMSLocalVideoStats(hmsLocalVideoStats);
@@ -877,7 +933,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + track.trackId);
     } else {
       index = peerTracks
-          .indexWhere((element) => element.uid == "${peer.peerId}mainVideo");
+          .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
       peerTracks[index].setHMSRemoteAudioStats(hmsRemoteAudioStats);
@@ -895,7 +951,7 @@ class MeetingStore extends ChangeNotifier
           .indexWhere((element) => element.uid == peer.peerId + track.trackId);
     } else {
       index = peerTracks
-          .indexWhere((element) => element.uid == "${peer.peerId}mainVideo");
+          .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
     }
     if (index != -1) {
       peerTracks[index].setHMSRemoteVideoStats(hmsRemoteVideoStats);
@@ -921,28 +977,28 @@ class MeetingStore extends ChangeNotifier
       List<HMSAudioDevice>? availableAudioDevice}) {
     if (currentAudioDeviceMode != HMSAudioDevice.AUTOMATIC &&
         !selfChangeAudioDevice) {
-      showAudioDeviceChangePopup = true;
+      this.showAudioDeviceChangePopup = true;
     }
     if (selfChangeAudioDevice) {
       selfChangeAudioDevice = false;
     }
     if (currentAudioDevice != null &&
-        currentAudioOutputDevice != currentAudioDevice) {
+        this.currentAudioOutputDevice != currentAudioDevice) {
       Utilities.showToast(
           "Output Device changed to ${currentAudioDevice.name}");
-      currentAudioOutputDevice = currentAudioDevice;
+      this.currentAudioOutputDevice = currentAudioDevice;
     }
 
     if (availableAudioDevice != null) {
-      availableAudioOutputDevices.clear();
-      availableAudioOutputDevices.addAll(availableAudioDevice);
+      this.availableAudioOutputDevices.clear();
+      this.availableAudioOutputDevices.addAll(availableAudioDevice);
     }
   }
 
 // Helper Methods
 
   void clearRoomState() async {
-    HMSLogList? logsDump = await _hmsSDKInteractor.getAllogs();
+    HMSLogList? _logsDump = await _hmsSDKInteractor.getAllogs();
     if (Platform.isAndroid) {
       HMSAndroidPIPController.destroy();
     } else if (Platform.isIOS) {
@@ -982,39 +1038,39 @@ class MeetingStore extends ChangeNotifier
   }
 
   void addMessage(HMSMessage message) {
-    messages.add(message);
+    this.messages.add(message);
   }
 
   void updatePeerAt(HMSPeer peer) {
-    int index = peers.indexOf(peer);
-    peers.removeAt(index);
-    peers.insert(index, peer);
+    int index = this.peers.indexOf(peer);
+    this.peers.removeAt(index);
+    this.peers.insert(index, peer);
   }
 
   void updateFilteredList(HMSPeerUpdate peerUpdate, HMSPeer peer) {
-    String currentRole = selectedRoleFilter;
+    String currentRole = this.selectedRoleFilter;
     int index =
         filteredPeers.indexWhere((element) => element.peerId == peer.peerId);
 
     if (index != -1) {
-      filteredPeers.removeAt(index);
+      this.filteredPeers.removeAt(index);
       if ((peerUpdate == HMSPeerUpdate.nameChanged)) {
-        filteredPeers.insert(index, peer);
+        this.filteredPeers.insert(index, peer);
       } else if (peerUpdate == HMSPeerUpdate.metadataChanged) {
         if ((peer.metadata?.contains("\"isHandRaised\":true") ?? false) ||
             ((currentRole == "Everyone") || (currentRole == peer.role.name))) {
-          filteredPeers.insert(index, peer);
+          this.filteredPeers.insert(index, peer);
         }
       } else if (peerUpdate == HMSPeerUpdate.roleUpdated &&
           ((currentRole == "Everyone") || (currentRole == "Raised Hand"))) {
-        filteredPeers.insert(index, peer);
+        this.filteredPeers.insert(index, peer);
       }
     } else {
       if ((peerUpdate == HMSPeerUpdate.metadataChanged &&
               currentRole == "Raised Hand") ||
           (peerUpdate == HMSPeerUpdate.roleUpdated &&
               currentRole == peer.role.name)) {
-        filteredPeers.add(peer);
+        this.filteredPeers.add(peer);
       }
     }
   }
@@ -1048,7 +1104,7 @@ class MeetingStore extends ChangeNotifier
       case HMSPeerUpdate.peerLeft:
         Utilities.showNotification("${peer.name} left", "peer-left");
         int index = peerTracks.indexWhere(
-            (leftPeer) => leftPeer.uid == "${peer.peerId}mainVideo");
+            (leftPeer) => leftPeer.uid == peer.peerId + "mainVideo");
         if (index != -1) {
           peerTracks.removeAt(index);
           notifyListeners();
@@ -1064,7 +1120,7 @@ class MeetingStore extends ChangeNotifier
         if (peer.role.name.contains("hls-")) {
           isHLSLink = peer.isLocal;
           peerTracks.removeWhere(
-              (leftPeer) => leftPeer.uid == "${peer.peerId}mainVideo");
+              (leftPeer) => leftPeer.uid == peer.peerId + "mainVideo");
         } else {
           if (peer.isLocal) {
             isHLSLink = false;
@@ -1084,7 +1140,7 @@ class MeetingStore extends ChangeNotifier
           }
         }
 
-        Utilities.showToast("${peer.name}'s role changed to ${peer.role.name}");
+        Utilities.showToast("${peer.name}'s role changed to " + peer.role.name);
         updatePeerAt(peer);
         updateFilteredList(update, peer);
         notifyListeners();
@@ -1093,14 +1149,13 @@ class MeetingStore extends ChangeNotifier
       case HMSPeerUpdate.metadataChanged:
         if (peer.isLocal) localPeer = peer;
         int index = peerTracks
-            .indexWhere((element) => element.uid == "${peer.peerId}mainVideo");
+            .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
         if (index != -1) {
           PeerTrackNode peerTrackNode = peerTracks[index];
           peerTrackNode.peer = peer;
-          if (peer.metadata?.contains("\"isHandRaised\":true") ?? false) {
+          if (peer.metadata?.contains("\"isHandRaised\":true") ?? false)
             Utilities.showNotification(
                 "${peer.name} raised hand", "hand-raise");
-          }
           peerTrackNode.notify();
         }
         updatePeerAt(peer);
@@ -1110,7 +1165,7 @@ class MeetingStore extends ChangeNotifier
       case HMSPeerUpdate.nameChanged:
         if (peer.isLocal) {
           int localPeerIndex = peerTracks.indexWhere(
-              (element) => element.uid == "${localPeer!.peerId}mainVideo");
+              (element) => element.uid == localPeer!.peerId + "mainVideo");
           if (localPeerIndex != -1) {
             PeerTrackNode peerTrackNode = peerTracks[localPeerIndex];
             peerTrackNode.peer = peer;
@@ -1120,7 +1175,7 @@ class MeetingStore extends ChangeNotifier
           }
         } else {
           int remotePeerIndex = peerTracks.indexWhere(
-              (element) => element.uid == "${peer.peerId}mainVideo");
+              (element) => element.uid == peer.peerId + "mainVideo");
           if (remotePeerIndex != -1) {
             PeerTrackNode peerTrackNode = peerTracks[remotePeerIndex];
             peerTrackNode.peer = peer;
@@ -1133,7 +1188,7 @@ class MeetingStore extends ChangeNotifier
 
       case HMSPeerUpdate.networkQualityUpdated:
         int index = peerTracks
-            .indexWhere((element) => element.uid == "${peer.peerId}mainVideo");
+            .indexWhere((element) => element.uid == peer.peerId + "mainVideo");
         if (index != -1) {
           peerTracks[index].setNetworkQuality(peer.networkQuality?.quality);
         }
@@ -1191,7 +1246,7 @@ class MeetingStore extends ChangeNotifier
           return;
         } else {
           int peerIndex = peerTracks.indexWhere(
-              (element) => element.uid == "${peer.peerId}mainVideo");
+              (element) => element.uid == peer.peerId + "mainVideo");
           if (peerIndex != -1) {
             if (track.kind == HMSTrackKind.kHMSTrackKindAudio) {
               peerTracks[peerIndex].audioTrack = null;
@@ -1330,9 +1385,8 @@ class MeetingStore extends ChangeNotifier
               peerTracks[type1] = peerTrackNode;
             }
             type1--;
-          } else {
+          } else
             type0++;
-          }
         }
         break;
       default:
@@ -1369,7 +1423,7 @@ class MeetingStore extends ChangeNotifier
 
   void setNewMessageFalse() {
     if (!isNewMessageReceived) return;
-    isNewMessageReceived = false;
+    this.isNewMessageReceived = false;
     notifyListeners();
   }
 
@@ -1443,7 +1497,7 @@ class MeetingStore extends ChangeNotifier
     audioPlayerVolume = volume;
   }
 
-  void setSessionMetadata({required String key, String? metadata}) {
+  void setSessionMetadataForKey({required String key, String? metadata}) {
     _hmsSessionStore?.setSessionMetadataForKey(
         key: key, data: metadata, hmsActionResultListener: this);
   }
@@ -1465,8 +1519,8 @@ class MeetingStore extends ChangeNotifier
   void enterPipModeOnAndroid() async {
     //to check whether pip is available in android
     if (Platform.isAndroid) {
-      bool isPipAvailable = await HMSAndroidPIPController.isAvailable();
-      if (isPipAvailable) {
+      bool _isPipAvailable = await HMSAndroidPIPController.isAvailable();
+      if (_isPipAvailable) {
         //[isPipActive] method can also be used to check whether application is in pip Mode or not
         isPipActive = await HMSAndroidPIPController.start();
         notifyListeners();
@@ -1475,11 +1529,9 @@ class MeetingStore extends ChangeNotifier
   }
 
   Future<bool> isPIPActive() async {
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid)
       isPipActive = await HMSAndroidPIPController.isActive();
-    } else if (Platform.isIOS) {
-      isPipActive = await HMSIOSPIPController.isActive();
-    }
+    else if (Platform.isIOS) isPipActive = await HMSIOSPIPController.isActive();
     return isPipActive;
   }
 
@@ -1494,6 +1546,10 @@ class MeetingStore extends ChangeNotifier
       }
       notifyListeners();
     }
+  }
+
+  void switchAudioOutputUsingiOSUI() {
+    _hmsSDKInteractor.switchAudioOutputUsingiOSUI();
   }
 
   void changePIPWindowTrackOnIOS(
@@ -1603,9 +1659,12 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         if (arguments != null) {
-          if (arguments["rtmp_urls"].length == 0 && arguments["to_record"]) {
+          if (arguments["rtmp_urls"] != null &&
+              arguments["rtmp_urls"].length == 0 &&
+              arguments["to_record"]) {
             Utilities.showToast("Recording Started");
-          } else if (arguments["rtmp_urls"].length != 0 &&
+          } else if (arguments["rtmp_urls"] != null &&
+              arguments["rtmp_urls"].length != 0 &&
               arguments["to_record"] == false) {
             Utilities.showToast("RTMP Started");
           }
@@ -1681,7 +1740,7 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.setSessionMetadataForKey:
         break;
       case HMSActionResultListenerMethod.sendHLSTimedMetadata:
-        // TODO: Handle this case.
+        Utilities.showToast("Metadata sent successfully");
         break;
     }
   }
@@ -1827,12 +1886,11 @@ class MeetingStore extends ChangeNotifier
           int peerIndex = peerTracks.indexWhere((element) =>
               element.uid ==
               element.peer.peerId + (element.track?.trackId ?? ""));
-          if (peerIndex != -1) {
+          if (peerIndex != -1)
             changePIPWindowTrackOnIOS(
                 track: peerTracks[peerIndex].track,
                 alternativeText: peerTracks[peerIndex].peer.name,
                 ratio: [9, 16]);
-          }
         }
       }
     } else if (state == AppLifecycleState.inactive) {

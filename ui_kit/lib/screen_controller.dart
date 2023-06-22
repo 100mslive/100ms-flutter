@@ -52,15 +52,6 @@ class _ScreenControllerState extends State<ScreenController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // builder: BotToastInit(), //1. call BotToastInit
-      // navigatorObservers: [BotToastNavigatorObserver()],
-      // themeMode: ThemeMode.dark,
-      // darkTheme: ThemeData(
-      //     bottomSheetTheme: BottomSheetThemeData(
-      //         backgroundColor: themeBottomSheetColor, elevation: 5),
-      //     brightness: Brightness.dark,
-      //     primaryColor: Color.fromARGB(255, 13, 107, 184),
-      //     scaffoldBackgroundColor: Colors.black),
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(
