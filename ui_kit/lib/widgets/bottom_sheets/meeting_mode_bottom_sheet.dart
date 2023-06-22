@@ -97,7 +97,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         "packages/hmssdk_uikit/lib/assets/icons/role_change.svg",
                         semanticsLabel: "fl_normal_mode",
                         color: (_meetingStore.meetingMode == MeetingMode.Grid)
-                            ? errorColor
+                            ? colorScheme.error
                             : themeDefaultColor,
                         fit: BoxFit.scaleDown,
                       ),
@@ -107,7 +107,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                             fontSize: 14,
                             color:
                                 (_meetingStore.meetingMode == MeetingMode.Grid)
-                                    ? errorColor
+                                    ? colorScheme.error
                                     : themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
@@ -131,7 +131,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         semanticsLabel: "fl_active_speaker_mode",
                         color: (_meetingStore.meetingMode ==
                                 MeetingMode.ActiveSpeaker)
-                            ? errorColor
+                            ? colorScheme.error
                             : themeDefaultColor,
                         fit: BoxFit.scaleDown,
                       ),
@@ -141,7 +141,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                             fontSize: 14,
                             color: (_meetingStore.meetingMode ==
                                     MeetingMode.ActiveSpeaker)
-                                ? errorColor
+                                ? colorScheme.error
                                 : themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
@@ -164,7 +164,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         semanticsLabel: "fl_one_to_one_mode",
                         color:
                             (_meetingStore.meetingMode == MeetingMode.OneToOne)
-                                ? errorColor
+                                ? colorScheme.error
                                 : themeDefaultColor,
                         fit: BoxFit.scaleDown,
                       ),
@@ -174,7 +174,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                             fontSize: 14,
                             color: (_meetingStore.meetingMode ==
                                     MeetingMode.OneToOne)
-                                ? errorColor
+                                ? colorScheme.error
                                 : themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
@@ -195,7 +195,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       leading: SvgPicture.asset(
                         'packages/hmssdk_uikit/lib/assets/icons/mic_state_on.svg',
                         color: _meetingStore.meetingMode == MeetingMode.Audio
-                            ? errorColor
+                            ? colorScheme.error
                             : themeDefaultColor,
                         semanticsLabel: "fl_audio_video_view",
                         fit: BoxFit.scaleDown,
@@ -207,7 +207,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                             fontSize: 14,
                             color:
                                 _meetingStore.meetingMode == MeetingMode.Audio
-                                    ? errorColor
+                                    ? colorScheme.error
                                     : themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
@@ -229,7 +229,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         "packages/hmssdk_uikit/lib/assets/icons/participants.svg",
                         semanticsLabel: "fl_hero_mode",
                         color: _meetingStore.meetingMode == MeetingMode.Hero
-                            ? errorColor
+                            ? colorScheme.error
                             : themeDefaultColor,
                         fit: BoxFit.scaleDown,
                       ),
@@ -238,7 +238,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         style: GoogleFonts.inter(
                             fontSize: 14,
                             color: _meetingStore.meetingMode == MeetingMode.Hero
-                                ? errorColor
+                                ? colorScheme.error
                                 : themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
@@ -260,7 +260,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         "packages/hmssdk_uikit/lib/assets/icons/single_tile.svg",
                         semanticsLabel: "fl_single_mode",
                         color: _meetingStore.meetingMode == MeetingMode.Single
-                            ? errorColor
+                            ? colorScheme.error
                             : themeDefaultColor,
                         fit: BoxFit.scaleDown,
                       ),
@@ -270,7 +270,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                             fontSize: 14,
                             color:
                                 _meetingStore.meetingMode == MeetingMode.Single
-                                    ? errorColor
+                                    ? colorScheme.error
                                     : themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),

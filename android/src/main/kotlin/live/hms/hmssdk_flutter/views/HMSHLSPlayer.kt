@@ -44,7 +44,7 @@ class HMSHLSPlayer(
      *  Otherwise, log an error indicating that the HLS player view is null.
      *  If inflation is successful, then we add the HLS Controls based on the parameter
      *  passed from flutter i.e. whether to show controls or not.
-    */
+     */
     init {
         // Inflate the HLS player view using the layout inflater service.
         hlsPlayerView = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.hms_hls_player, this)?.findViewById(R.id.hlsView)
@@ -58,7 +58,6 @@ class HMSHLSPlayer(
 
             // Set the native player of the HLS player view.
             it.player = hlsPlayer?.getNativePlayer()
-
         } ?: run {
             HMSErrorLogger.logError("init HMSHLSPlayer", "hlsPlayerView is null", "NULL_ERROR")
         }
@@ -269,7 +268,7 @@ class HMSHLSPlayer(
     private fun start(hlsUrl: String?) {
         hlsUrl?.let {
             hlsPlayer?.play(hlsUrl)
-        }?:run {
+        } ?: run {
             hmssdkFlutterPlugin?.hlsStreamUrl?.let {
                 hlsPlayer?.play(it)
             } ?: run {

@@ -16,7 +16,7 @@ class HMSHLSPlayerAction {
     companion object {
         fun hlsPlayerAction(call: MethodCall, result: Result, activity: Activity) {
             when (call.method) {
-                "start_hls_player" -> start(call,result, activity)
+                "start_hls_player" -> start(call, result, activity)
                 "stop_hls_player" -> stop(result, activity)
                 "pause_hls_player" -> pause(result, activity)
                 "resume_hls_player" -> resume(result, activity)

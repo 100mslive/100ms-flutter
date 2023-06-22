@@ -30,7 +30,6 @@ import 'package:hmssdk_uikit/widgets/meeting/meeting_store.dart';
 import 'package:hmssdk_uikit/widgets/meeting/pip_view.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
-import 'package:wakelock/wakelock.dart';
 
 class MeetingPage extends StatefulWidget {
   final String meetingLink;
@@ -54,7 +53,7 @@ class _MeetingPageState extends State<MeetingPage> {
   void initState() {
     super.initState();
     checkAudioState();
-    Wakelock.enable();
+    _enableAlwaysScreenOn();
   }
 
   void checkAudioState() async {
@@ -63,6 +62,10 @@ class _MeetingPageState extends State<MeetingPage> {
         context.read<MeetingStore>().toggleSpeaker();
       });
     }
+  }
+
+  void _enableAlwaysScreenOn() {
+    context.read<MeetingStore>().toggleAlwaysScreenOn();
   }
 
   String recordingState() {
@@ -156,13 +159,13 @@ class _MeetingPageState extends State<MeetingPage> {
                   SvgPicture.asset(
                       "packages/hmssdk_uikit/lib/assets/icons/end_warning.svg",
                       width: 17,
-                      color: errorColor),
+                      color: colorScheme.error),
                   const SizedBox(
                     width: 12,
                   ),
                   TitleText(
                     text: "End Session",
-                    textColor: errorColor,
+                    textColor: colorScheme.error,
                     fontSize: 14,
                     lineHeight: 20,
                     letterSpacing: 0.25,
@@ -486,7 +489,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                         .asset(
                                                                       "packages/hmssdk_uikit/lib/assets/icons/live_stream.svg",
                                                                       color:
-                                                                          errorColor,
+                                                                          colorScheme.error,
                                                                       fit: BoxFit
                                                                           .scaleDown,
                                                                     ),
@@ -936,7 +939,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                       radius:
                                                                           40,
                                                                       backgroundColor:
-                                                                          errorColor,
+                                                                          colorScheme.error,
                                                                       child: SvgPicture.asset(
                                                                           "packages/hmssdk_uikit/lib/assets/icons/end.svg",
                                                                           color:

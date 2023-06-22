@@ -11,7 +11,6 @@ import 'package:hmssdk_uikit/widgets/common_widgets/hms_dropdown.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/subtitle_text.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
-import 'package:collection/collection.dart';
 
 class PreviewDeviceSettings extends StatefulWidget {
   PreviewDeviceSettings({

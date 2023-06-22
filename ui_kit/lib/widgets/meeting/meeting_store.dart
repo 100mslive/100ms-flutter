@@ -21,7 +21,9 @@ import 'package:collection/collection.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:wakelock/wakelock.dart';
+import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
+import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
+import 'package:hmssdk_flutter_example/service/room_service.dart';
 
 class MeetingStore extends ChangeNotifier
     with WidgetsBindingObserver
@@ -303,6 +305,10 @@ class MeetingStore extends ChangeNotifier
 
   void setAudioMixingMode(HMSAudioMixingMode audioMixingMode) {
     _hmsSDKInteractor.setAudioMixingMode(audioMixingMode);
+  }
+
+  void toggleAlwaysScreenOn() {
+    _hmsSDKInteractor.toggleAlwaysScreenOn();
   }
 
   Future<bool> isAudioMute(HMSPeer? peer) async {
@@ -989,8 +995,9 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.removeLogsListener(this);
     _hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeListener: this);
     _hmsSDKInteractor.removeHMSLogger();
+    HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(this);
+    toggleAlwaysScreenOn();
     _hmsSDKInteractor.destroy();
-    Wakelock.disable();
     _hmsSessionStore = null;
     peerTracks.clear();
     isRoomEnded = true;

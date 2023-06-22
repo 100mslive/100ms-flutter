@@ -3,6 +3,9 @@ Board: https://github.com/100mslive/100ms-flutter/projects/20
 - Added Hybrid composition videoview on Android to improve performance
 https://github.com/100mslive/100ms-flutter/pull/1330
 
+- Replaced Wakelock dependency with Android Activity Flags
+https://github.com/100mslive/100ms-flutter/issues/1373
+
 Flutter SDK: 1.8.0
 Android SDK: 2.6.7
 iOS SDK: 0.9.5

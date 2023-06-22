@@ -81,10 +81,10 @@ class _TrackChangeRequestDialogState extends State<TrackChangeRequestDialog> {
             ElevatedButton(
               style: ButtonStyle(
                   shadowColor: MaterialStateProperty.all(themeSurfaceColor),
-                  backgroundColor: MaterialStateProperty.all(errorColor),
+                  backgroundColor: MaterialStateProperty.all(colorScheme.error),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                    side: BorderSide(width: 1, color: errorColor),
+                    side: BorderSide(width: 1, color: colorScheme.error),
                     borderRadius: BorderRadius.circular(8.0),
                   ))),
               child: Padding(

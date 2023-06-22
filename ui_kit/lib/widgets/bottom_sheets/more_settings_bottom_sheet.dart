@@ -317,41 +317,41 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       style: GoogleFonts.inter(
                           fontSize: 14,
                           color: _meetingStore.isBRB
-                              ? errorColor
+                              ? colorScheme.error
                               : themeDefaultColor,
                           letterSpacing: 0.25,
                           fontWeight: FontWeight.w600),
                     ),
                   ),
-                  if(Constant.debugMode)
-                  ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        Navigator.pop(context);
-                        showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (_) => ListenableProvider.value(
-                                value: _meetingStore,
-                                child: StatsForNerds(
-                                  peerTrackNode: _meetingStore.peerTracks,
-                                )));
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "packages/hmssdk_uikit/lib/assets/icons/stats.svg",
-                        fit: BoxFit.scaleDown,
-                        color: themeDefaultColor,
-                      ),
-                      title: Text(
-                        "Stats for nerds",
-                        semanticsLabel: "fl_stats_list_tile",
-                        style: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: themeDefaultColor,
-                            letterSpacing: 0.25,
-                            fontWeight: FontWeight.w600),
-                      )),
+                  if (Constant.debugMode)
+                    ListTile(
+                        horizontalTitleGap: 2,
+                        onTap: () async {
+                          Navigator.pop(context);
+                          showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (_) => ListenableProvider.value(
+                                  value: _meetingStore,
+                                  child: StatsForNerds(
+                                    peerTrackNode: _meetingStore.peerTracks,
+                                  )));
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        leading: SvgPicture.asset(
+                          "packages/hmssdk_uikit/lib/assets/icons/stats.svg",
+                          fit: BoxFit.scaleDown,
+                          color: themeDefaultColor,
+                        ),
+                        title: Text(
+                          "Stats for nerds",
+                          semanticsLabel: "fl_stats_list_tile",
+                          style: GoogleFonts.inter(
+                              fontSize: 14,
+                              color: themeDefaultColor,
+                              letterSpacing: 0.25,
+                              fontWeight: FontWeight.w600),
+                        )),
                   if ((_meetingStore.localPeer?.role.permissions.mute ??
                           false) &&
                       (_meetingStore.localPeer?.role.permissions.unMute ??
@@ -448,7 +448,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 "packages/hmssdk_uikit/lib/assets/icons/stream.svg",
                                 fit: BoxFit.scaleDown,
                                 color: isRTMPRunning
-                                    ? errorColor
+                                    ? colorScheme.error
                                     : themeDefaultColor,
                               ),
                               title: Text(
@@ -459,7 +459,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 style: GoogleFonts.inter(
                                     fontSize: 14,
                                     color: isRTMPRunning
-                                        ? errorColor
+                                        ? colorScheme.error
                                         : themeDefaultColor,
                                     letterSpacing: 0.25,
                                     fontWeight: FontWeight.w600),
@@ -490,7 +490,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 "packages/hmssdk_uikit/lib/assets/icons/record.svg",
                                 fit: BoxFit.scaleDown,
                                 color: isBrowserRecording
-                                    ? errorColor
+                                    ? colorScheme.error
                                     : themeDefaultColor,
                               ),
                               title: Text(
@@ -503,7 +503,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 style: GoogleFonts.inter(
                                     fontSize: 14,
                                     color: isBrowserRecording
-                                        ? errorColor
+                                        ? colorScheme.error
                                         : themeDefaultColor,
                                     letterSpacing: 0.25,
                                     fontWeight: FontWeight.w600),
@@ -542,7 +542,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 "packages/hmssdk_uikit/lib/assets/icons/hls.svg",
                                 fit: BoxFit.scaleDown,
                                 color: hasHLSStarted
-                                    ? errorColor
+                                    ? colorScheme.error
                                     : themeDefaultColor,
                               ),
                               title: Text(
@@ -553,7 +553,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 style: GoogleFonts.inter(
                                     fontSize: 14,
                                     color: hasHLSStarted
-                                        ? errorColor
+                                        ? colorScheme.error
                                         : themeDefaultColor,
                                     letterSpacing: 0.25,
                                     fontWeight: FontWeight.w600),

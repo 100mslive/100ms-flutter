@@ -1,6 +1,5 @@
 //Dart imports
 import 'dart:async';
-import 'dart:developer';
 
 //Package imports
 import 'package:firebase_core/firebase_core.dart';
@@ -46,8 +45,7 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
-  runZonedGuarded(() => runApp(HMSExampleApp(initialLink: initialLink?.link)),
-      FirebaseCrashlytics.instance.recordError);
+  runApp(HMSExampleApp(initialLink: initialLink?.link));
 }
 
 class HMSExampleApp extends StatefulWidget {
@@ -269,13 +267,12 @@ class _HomePageState extends State<HomePage> {
     }
     FocusManager.instance.primaryFocus?.unfocus();
     Utilities.setRTMPUrl(meetingLinkController.text);
-     Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (_) => UserDetailScreen(
-                    autofocusField: true,
-                    meetingLink: meetingLinkController.text.trim()
-                  )));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => UserDetailScreen(
+                autofocusField: true,
+                meetingLink: meetingLinkController.text.trim())));
   }
 
   @override

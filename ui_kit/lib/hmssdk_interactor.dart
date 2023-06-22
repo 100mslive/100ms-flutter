@@ -4,7 +4,7 @@
 import 'dart:io';
 
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_uikit/common/utility_functions.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 
 class HMSSDKInteractor {
   late HMSSDK hmsSDK;
@@ -347,5 +347,19 @@ class HMSSDKInteractor {
       {required String roomCode, String? userId, String? endPoint}) async {
     return await hmsSDK.getAuthTokenByRoomCode(
         roomCode: roomCode, userId: userId, endPoint: endPoint);
+  }
+
+  void switchAudioOutputUsingiOSUI() {
+    return hmsSDK.switchAudioOutputUsingiOSUI();
+  }
+
+  void sendHLSTimedMetadata(List<HMSHLSTimedMetadata> metadata,
+      HMSActionResultListener? hmsActionResultListener) {
+    hmsSDK.sendHLSTimedMetadata(
+        metadata: metadata, hmsActionResultListener: hmsActionResultListener);
+  }
+
+  void toggleAlwaysScreenOn() {
+    hmsSDK.toggleAlwaysScreenOn();
   }
 }

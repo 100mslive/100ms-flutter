@@ -72,8 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 27),
-                child: Text(
-                    'Try out the HMS Prebuilt SDK',
+                child: Text('Try out the HMS Prebuilt SDK',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
                         letterSpacing: 0.5,

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -233,7 +232,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                     "packages/hmssdk_uikit/lib/assets/icons/hand_outline.svg",
                     fit: BoxFit.scaleDown,
                     color: context.read<MeetingStore>().isRaisedHand
-                        ? errorColor
+                        ? colorScheme.error
                         : themeDefaultColor,
                   ),
                   title: Text(
@@ -242,7 +241,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                     style: GoogleFonts.inter(
                         fontSize: 14,
                         color: context.read<MeetingStore>().isRaisedHand
-                            ? errorColor
+                            ? colorScheme.error
                             : themeDefaultColor,
                         letterSpacing: 0.25,
                         fontWeight: FontWeight.w600),
