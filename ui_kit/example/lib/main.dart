@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_uikit/common/app_color.dart';
-import 'package:hmssdk_uikit/common/utility_functions.dart';
-import 'package:hmssdk_uikit/hmssdk_uikit.dart';
-import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
 
 void main() {
   runApp(const MyApp());
