@@ -770,12 +770,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         hmsSDK = nil
         result(nil)
     }
-    
+
     /**
                 [toggleAlwaysScreenOn] provides a way to keep the screen always ON
                 when enabled.
      */
-    private func toggleAlwaysScreenOn(_ result: @escaping FlutterResult){
+    private func toggleAlwaysScreenOn(_ result: @escaping FlutterResult) {
         UIApplication.shared.isIdleTimerDisabled = !UIApplication.shared.isIdleTimerDisabled
         result(nil)
     }
