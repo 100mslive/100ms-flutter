@@ -234,7 +234,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                     "packages/hmssdk_uikit/lib/assets/icons/hand_outline.svg",
                     fit: BoxFit.scaleDown,
                     color: context.read<MeetingStore>().isRaisedHand
-                        ? colorScheme.error
+                        ? errorColor
                         : themeDefaultColor,
                   ),
                   title: Text(
@@ -243,7 +243,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                     style: GoogleFonts.inter(
                         fontSize: 14,
                         color: context.read<MeetingStore>().isRaisedHand
-                            ? colorScheme.error
+                            ? errorColor
                             : themeDefaultColor,
                         letterSpacing: 0.25,
                         fontWeight: FontWeight.w600),
@@ -259,7 +259,8 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         context: context,
-                        builder: (ctx) => const NotificationSettingsBottomSheet());
+                        builder: (ctx) =>
+                            const NotificationSettingsBottomSheet());
                   },
                   contentPadding: EdgeInsets.zero,
                   leading: SvgPicture.asset(

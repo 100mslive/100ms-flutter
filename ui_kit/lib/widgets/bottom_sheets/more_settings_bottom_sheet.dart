@@ -317,7 +317,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       style: GoogleFonts.inter(
                           fontSize: 14,
                           color: meetingStore.isBRB
-                              ? colorScheme.error
+                              ? errorColor
                               : themeDefaultColor,
                           letterSpacing: 0.25,
                           fontWeight: FontWeight.w600),
@@ -448,7 +448,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 "packages/hmssdk_uikit/lib/assets/icons/stream.svg",
                                 fit: BoxFit.scaleDown,
                                 color: isRTMPRunning
-                                    ? colorScheme.error
+                                    ? errorColor
                                     : themeDefaultColor,
                               ),
                               title: Text(
@@ -459,7 +459,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 style: GoogleFonts.inter(
                                     fontSize: 14,
                                     color: isRTMPRunning
-                                        ? colorScheme.error
+                                        ? errorColor
                                         : themeDefaultColor,
                                     letterSpacing: 0.25,
                                     fontWeight: FontWeight.w600),
@@ -490,7 +490,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 "packages/hmssdk_uikit/lib/assets/icons/record.svg",
                                 fit: BoxFit.scaleDown,
                                 color: isBrowserRecording
-                                    ? colorScheme.error
+                                    ? errorColor
                                     : themeDefaultColor,
                               ),
                               title: Text(
@@ -503,7 +503,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 style: GoogleFonts.inter(
                                     fontSize: 14,
                                     color: isBrowserRecording
-                                        ? colorScheme.error
+                                        ? errorColor
                                         : themeDefaultColor,
                                     letterSpacing: 0.25,
                                     fontWeight: FontWeight.w600),
@@ -542,7 +542,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 "packages/hmssdk_uikit/lib/assets/icons/hls.svg",
                                 fit: BoxFit.scaleDown,
                                 color: hasHLSStarted
-                                    ? colorScheme.error
+                                    ? errorColor
                                     : themeDefaultColor,
                               ),
                               title: Text(
@@ -553,7 +553,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 style: GoogleFonts.inter(
                                     fontSize: 14,
                                     color: hasHLSStarted
-                                        ? colorScheme.error
+                                        ? errorColor
                                         : themeDefaultColor,
                                     letterSpacing: 0.25,
                                     fontWeight: FontWeight.w600),
@@ -634,8 +634,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       )),
-                  if (meetingStore.localPeer?.role.permissions.endRoom ??
-                      false)
+                  if (meetingStore.localPeer?.role.permissions.endRoom ?? false)
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {

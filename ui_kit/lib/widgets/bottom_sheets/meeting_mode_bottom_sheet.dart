@@ -97,7 +97,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         "packages/hmssdk_uikit/lib/assets/icons/role_change.svg",
                         semanticsLabel: "fl_normal_mode",
                         color: (meetingStore.meetingMode == MeetingMode.Grid)
-                            ? colorScheme.error
+                            ? errorColor
                             : themeDefaultColor,
                         fit: BoxFit.scaleDown,
                       ),
@@ -107,7 +107,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                             fontSize: 14,
                             color:
                                 (meetingStore.meetingMode == MeetingMode.Grid)
-                                    ? colorScheme.error
+                                    ? errorColor
                                     : themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
@@ -131,7 +131,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         semanticsLabel: "fl_active_speaker_mode",
                         color: (meetingStore.meetingMode ==
                                 MeetingMode.ActiveSpeaker)
-                            ? colorScheme.error
+                            ? errorColor
                             : themeDefaultColor,
                         fit: BoxFit.scaleDown,
                       ),
@@ -141,7 +141,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                             fontSize: 14,
                             color: (meetingStore.meetingMode ==
                                     MeetingMode.ActiveSpeaker)
-                                ? colorScheme.error
+                                ? errorColor
                                 : themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
@@ -164,7 +164,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         semanticsLabel: "fl_one_to_one_mode",
                         color:
                             (meetingStore.meetingMode == MeetingMode.OneToOne)
-                                ? colorScheme.error
+                                ? errorColor
                                 : themeDefaultColor,
                         fit: BoxFit.scaleDown,
                       ),
@@ -174,7 +174,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                             fontSize: 14,
                             color: (meetingStore.meetingMode ==
                                     MeetingMode.OneToOne)
-                                ? colorScheme.error
+                                ? errorColor
                                 : themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
@@ -195,7 +195,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       leading: SvgPicture.asset(
                         'packages/hmssdk_uikit/lib/assets/icons/mic_state_on.svg',
                         color: meetingStore.meetingMode == MeetingMode.Audio
-                            ? colorScheme.error
+                            ? errorColor
                             : themeDefaultColor,
                         semanticsLabel: "fl_audio_video_view",
                         fit: BoxFit.scaleDown,
@@ -205,10 +205,9 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         semanticsLabel: "fl_audio_video_mode",
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color:
-                                meetingStore.meetingMode == MeetingMode.Audio
-                                    ? colorScheme.error
-                                    : themeDefaultColor,
+                            color: meetingStore.meetingMode == MeetingMode.Audio
+                                ? errorColor
+                                : themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       ),
@@ -229,7 +228,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         "packages/hmssdk_uikit/lib/assets/icons/participants.svg",
                         semanticsLabel: "fl_hero_mode",
                         color: meetingStore.meetingMode == MeetingMode.Hero
-                            ? colorScheme.error
+                            ? errorColor
                             : themeDefaultColor,
                         fit: BoxFit.scaleDown,
                       ),
@@ -238,7 +237,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         style: GoogleFonts.inter(
                             fontSize: 14,
                             color: meetingStore.meetingMode == MeetingMode.Hero
-                                ? colorScheme.error
+                                ? errorColor
                                 : themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
@@ -260,7 +259,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         "packages/hmssdk_uikit/lib/assets/icons/single_tile.svg",
                         semanticsLabel: "fl_single_mode",
                         color: meetingStore.meetingMode == MeetingMode.Single
-                            ? colorScheme.error
+                            ? errorColor
                             : themeDefaultColor,
                         fit: BoxFit.scaleDown,
                       ),
@@ -270,7 +269,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                             fontSize: 14,
                             color:
                                 meetingStore.meetingMode == MeetingMode.Single
-                                    ? colorScheme.error
+                                    ? errorColor
                                     : themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),

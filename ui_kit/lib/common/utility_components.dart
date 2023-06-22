@@ -45,7 +45,7 @@ class UtilityComponents {
               Text(
                 'Do you wish to leave?',
                 style: GoogleFonts.inter(
-                    color: colorScheme.error,
+                    color: errorColor,
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.25),
@@ -98,11 +98,10 @@ class UtilityComponents {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       shadowColor: MaterialStateProperty.all(themeSurfaceColor),
-                      backgroundColor:
-                          MaterialStateProperty.all(colorScheme.error),
+                      backgroundColor: MaterialStateProperty.all(errorColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: colorScheme.error),
+                        side: BorderSide(width: 1, color: errorColor),
                         borderRadius: BorderRadius.circular(8.0),
                       ))),
                   onPressed: () => {
@@ -204,11 +203,10 @@ class UtilityComponents {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       shadowColor: MaterialStateProperty.all(themeSurfaceColor),
-                      backgroundColor:
-                          MaterialStateProperty.all(colorScheme.error),
+                      backgroundColor: MaterialStateProperty.all(errorColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: colorScheme.error),
+                        side: BorderSide(width: 1, color: errorColor),
                         borderRadius: BorderRadius.circular(8.0),
                       ))),
                   onPressed: () => {
@@ -511,13 +509,12 @@ class UtilityComponents {
                                       shadowColor: MaterialStateProperty.all(
                                           themeSurfaceColor),
                                       backgroundColor:
-                                          MaterialStateProperty.all(
-                                              colorScheme.error),
+                                          MaterialStateProperty.all(errorColor),
                                       shape: MaterialStateProperty.all<
                                               RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
                                         side: BorderSide(
-                                            width: 1, color: colorScheme.error),
+                                            width: 1, color: errorColor),
                                         borderRadius:
                                             BorderRadius.circular(8.0),
                                       ))),
@@ -676,13 +673,12 @@ class UtilityComponents {
                                       shadowColor: MaterialStateProperty.all(
                                           themeSurfaceColor),
                                       backgroundColor:
-                                          MaterialStateProperty.all(
-                                              colorScheme.error),
+                                          MaterialStateProperty.all(errorColor),
                                       shape: MaterialStateProperty.all<
                                               RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
                                         side: BorderSide(
-                                            width: 1, color: colorScheme.error),
+                                            width: 1, color: errorColor),
                                         borderRadius:
                                             BorderRadius.circular(8.0),
                                       ))),
@@ -891,7 +887,7 @@ class UtilityComponents {
               Text(
                 "End Room",
                 style: GoogleFonts.inter(
-                    color: colorScheme.error,
+                    color: errorColor,
                     fontSize: 20,
                     height: 24 / 20,
                     fontWeight: FontWeight.w600,
@@ -946,11 +942,10 @@ class UtilityComponents {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       shadowColor: MaterialStateProperty.all(themeSurfaceColor),
-                      backgroundColor:
-                          MaterialStateProperty.all(colorScheme.error),
+                      backgroundColor: MaterialStateProperty.all(errorColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: colorScheme.error),
+                        side: BorderSide(width: 1, color: errorColor),
                         borderRadius: BorderRadius.circular(8.0),
                       ))),
                   onPressed: () => {
@@ -1159,7 +1154,7 @@ class UtilityComponents {
               Text(
                 title,
                 style: GoogleFonts.inter(
-                    color: colorScheme.error,
+                    color: errorColor,
                     fontSize: 20,
                     height: 24 / 20,
                     fontWeight: FontWeight.w600,
@@ -1213,11 +1208,10 @@ class UtilityComponents {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       shadowColor: MaterialStateProperty.all(themeSurfaceColor),
-                      backgroundColor:
-                          MaterialStateProperty.all(colorScheme.error),
+                      backgroundColor: MaterialStateProperty.all(errorColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: colorScheme.error),
+                        side: BorderSide(width: 1, color: errorColor),
                         borderRadius: BorderRadius.circular(8.0),
                       ))),
                   onPressed: () => {

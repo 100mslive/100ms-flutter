@@ -158,13 +158,13 @@ class _MeetingPageState extends State<MeetingPage> {
                   SvgPicture.asset(
                       "packages/hmssdk_uikit/lib/assets/icons/end_warning.svg",
                       width: 17,
-                      color: colorScheme.error),
+                      color: errorColor),
                   const SizedBox(
                     width: 12,
                   ),
                   TitleText(
                     text: "End Session",
-                    textColor: colorScheme.error,
+                    textColor: errorColor,
                     fontSize: 14,
                     lineHeight: 20,
                     letterSpacing: 0.25,
@@ -487,8 +487,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                     child: SvgPicture
                                                                         .asset(
                                                                       "packages/hmssdk_uikit/lib/assets/icons/live_stream.svg",
-                                                                      color: colorScheme
-                                                                          .error,
+                                                                      color: errorColor,
                                                                       fit: BoxFit
                                                                           .scaleDown,
                                                                     ),
@@ -938,8 +937,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                       radius:
                                                                           40,
                                                                       backgroundColor:
-                                                                          colorScheme
-                                                                              .error,
+                                                                          errorColor,
                                                                       child: SvgPicture.asset(
                                                                           "packages/hmssdk_uikit/lib/assets/icons/end.svg",
                                                                           color:
