@@ -19,7 +19,7 @@ import '../peer_widgets/peer_name.dart';
 class AudioTile extends StatelessWidget {
   final double itemHeight;
   final double itemWidth;
-  AudioTile({this.itemHeight = 200.0, this.itemWidth = 200.0, Key? key})
+  const AudioTile({this.itemHeight = 200.0, this.itemWidth = 200.0, Key? key})
       : super(key: key);
 
   @override
@@ -53,7 +53,7 @@ class AudioTile extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: const [
                         NetworkIconWidget(),
                         PeerName(),
                       ],
@@ -62,9 +62,9 @@ class AudioTile extends StatelessWidget {
                 ),
               ),
             ),
-            HandRaise(), //bottom left
-            BRBTag(), //top right
-            AudioMuteStatus(),
+            const HandRaise(), //bottom left
+            const BRBTag(), //top right
+            const AudioMuteStatus(),
             TileBorder(
                 name: context.read<PeerTrackNode>().peer.name,
                 itemHeight: itemHeight,

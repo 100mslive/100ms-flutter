@@ -6,7 +6,6 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_uikit/common/constants.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
 import 'package:hmssdk_uikit/hmssdk_interactor.dart';
-import 'package:hmssdk_uikit/service/room_service.dart';
 
 class PreviewStore extends ChangeNotifier
     implements HMSPreviewListener, HMSLogListener {
@@ -90,7 +89,7 @@ class PreviewStore extends ChangeNotifier
       }
     }
     this.localTracks = videoTracks;
-    Utilities.saveStringData(key: "meetingLink", value: this.meetingUrl);
+    Utilities.saveStringData(key: "meetingLink", value: meetingUrl);
     getRoles();
     getCurrentAudioDevice();
     getAudioDevicesList();
@@ -102,12 +101,12 @@ class PreviewStore extends ChangeNotifier
     Constant.meetingCode = meetingLink;
 
     //We use this to get the auth token from room code
-    dynamic _tokenData = await hmsSDKInteractor.getAuthTokenByRoomCode(
+    dynamic tokenData = await hmsSDKInteractor.getAuthTokenByRoomCode(
         roomCode: Constant.meetingCode, endPoint: null);
 
-    if ((_tokenData is String?) && _tokenData != null) {
+    if ((tokenData is String?) && tokenData != null) {
       roomConfig = HMSConfig(
-          authToken: _tokenData,
+          authToken: tokenData,
           userName: userName,
           captureNetworkQualityInPreview: true);
       hmsSDKInteractor.startHMSLogger(
@@ -117,7 +116,7 @@ class PreviewStore extends ChangeNotifier
       meetingUrl = meetingLink;
       return null;
     }
-    return _tokenData;
+    return tokenData;
   }
 
   @override
@@ -216,12 +215,12 @@ class PreviewStore extends ChangeNotifier
   }
 
   void toggleSpeaker() async {
-    if (!this.isRoomMute) {
+    if (!isRoomMute) {
       hmsSDKInteractor.muteRoomAudioLocally();
     } else {
       hmsSDKInteractor.unMuteRoomAudioLocally();
     }
-    this.isRoomMute = !this.isRoomMute;
+    isRoomMute = !isRoomMute;
     notifyListeners();
   }
 
@@ -253,15 +252,15 @@ class PreviewStore extends ChangeNotifier
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice}) {
     if (currentAudioDevice != null &&
-        this.currentAudioOutputDevice != currentAudioDevice) {
+        currentAudioOutputDevice != currentAudioDevice) {
       Utilities.showToast(
           "Output Device changed to ${currentAudioDevice.name}");
-      this.currentAudioOutputDevice = currentAudioDevice;
+      currentAudioOutputDevice = currentAudioDevice;
     }
 
     if (availableAudioDevice != null) {
-      this.availableAudioOutputDevices.clear();
-      this.availableAudioOutputDevices.addAll(availableAudioDevice);
+      availableAudioOutputDevices.clear();
+      availableAudioOutputDevices.addAll(availableAudioDevice);
     }
     notifyListeners();
   }

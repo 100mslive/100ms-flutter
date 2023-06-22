@@ -17,7 +17,7 @@ class LocalPeerTileDialog extends StatefulWidget {
   final Function() setOnSpotlight;
   final bool isSpotlightedPeer;
   const LocalPeerTileDialog(
-      {required this.isAudioMode,
+      {super.key, required this.isAudioMode,
       this.isVideoOn = false,
       required this.toggleCamera,
       required this.peerName,
@@ -41,7 +41,7 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
         style: GoogleFonts.inter(color: iconColor, fontWeight: FontWeight.bold),
       ),
       backgroundColor: themeBottomSheetColor,
-      content: Container(
+      content: SizedBox(
         width: double.infinity,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -60,7 +60,7 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                         "packages/hmssdk_uikit/lib/assets/icons/camera.svg",
                         color: iconColor,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 16,
                       ),
                       Text(
@@ -84,7 +84,7 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                       "packages/hmssdk_uikit/lib/assets/icons/pencil.svg",
                       color: iconColor,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 16,
                     ),
                     Text(
@@ -108,7 +108,7 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                         "packages/hmssdk_uikit/lib/assets/icons/role_change.svg",
                         color: iconColor,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 16,
                       ),
                       Text(
@@ -129,8 +129,8 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                   padding: const EdgeInsets.only(bottom: 20.0),
                   child: Row(
                     children: [
-                      Icon(Icons.flashlight_on_outlined),
-                      SizedBox(
+                      const Icon(Icons.flashlight_on_outlined),
+                      const SizedBox(
                         width: 16,
                       ),
                       Text(
@@ -154,7 +154,7 @@ class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                       "packages/hmssdk_uikit/lib/assets/icons/spotlight.svg",
                       color: iconColor,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 16,
                     ),
                     Text(

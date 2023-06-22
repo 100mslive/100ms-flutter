@@ -33,7 +33,7 @@ class _AudioLevelAvatarState extends State<AudioLevelAvatar> {
                 : AvatarGlow(
                     repeat: true,
                     showTwoGlows: true,
-                    duration: Duration(seconds: 1),
+                    duration: const Duration(seconds: 1),
                     endRadius:
                         (audioLevel != -1) ? 36 + (audioLevel).toDouble() : 36,
                     glowColor: Utilities.getBackgroundColour(

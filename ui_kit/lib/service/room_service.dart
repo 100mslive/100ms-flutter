@@ -25,10 +25,11 @@ class RoomService {
     codeAndDomain =
         isProd ? url.split(".app.100ms.live") : url.split(".qa-app.100ms.live");
     code = codeAndDomain[1];
-    if (code.contains("meeting"))
+    if (code.contains("meeting")) {
       code = code.split("/meeting/")[1];
-    else
+    } else {
       code = code.split("/preview/")[1];
+    }
     return [code, isProd ? "true" : "false"];
   }
 }

@@ -9,6 +9,8 @@ import 'package:tuple/tuple.dart';
 //Project imports
 
 class PeerName extends StatefulWidget {
+  const PeerName({super.key});
+
   @override
   State<PeerName> createState() => _PeerNameState();
 }

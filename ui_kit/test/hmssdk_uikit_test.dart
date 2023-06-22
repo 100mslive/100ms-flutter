@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:hmssdk_uikit/hmssdk_uikit.dart';
 
 void main() {
   test('adds one to input values', () {

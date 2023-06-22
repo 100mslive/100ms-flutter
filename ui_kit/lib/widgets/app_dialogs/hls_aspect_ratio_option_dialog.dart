@@ -3,7 +3,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_uikit/common/app_color.dart';
-import 'package:hmssdk_uikit/common/utility_functions.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/hms_dropdown.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/subtitle_text.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
@@ -14,7 +13,7 @@ import 'package:hmssdk_uikit/widgets/meeting/meeting_store.dart';
 class AspectRatioOptionDialog extends StatefulWidget {
   final List<String> availableAspectRatios;
   final MeetingStore meetingStore;
-  AspectRatioOptionDialog({
+  const AspectRatioOptionDialog({super.key, 
     required this.availableAspectRatios,
     required this.meetingStore,
   });
@@ -42,10 +41,10 @@ class _AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
     String message = "Select aspect ratio of HLS player";
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      actionsPadding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+      actionsPadding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
       backgroundColor: themeBottomSheetColor,
-      insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      contentPadding: EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      contentPadding: const EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -55,7 +54,7 @@ class _AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
             letterSpacing: 0.15,
             textColor: themeDefaultColor,
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
           SubtitleText(text: message, textColor: themeSubHeadingColor),
@@ -66,7 +65,7 @@ class _AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: EdgeInsets.only(left: 10, right: 5),
+            padding: const EdgeInsets.only(left: 10, right: 5),
             decoration: BoxDecoration(
               color: themeSurfaceColor,
               borderRadius: BorderRadius.circular(10.0),
@@ -78,23 +77,23 @@ class _AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
                     dropDownItems: <DropdownMenuItem>[
                   ...widget.availableAspectRatios
                       .map((aspectRatio) => DropdownMenuItem(
+                            value: aspectRatio,
                             child: TitleText(
                               text: aspectRatio,
                               textColor: themeDefaultColor,
                               fontWeight: FontWeight.w400,
                             ),
-                            value: aspectRatio,
                           ))
                       .toList(),
                 ],
                     iconStyleData: IconStyleData(
-                      icon: Icon(Icons.keyboard_arrow_down),
+                      icon: const Icon(Icons.keyboard_arrow_down),
                       iconEnabledColor: themeDefaultColor,
                     ),
                     selectedValue: valueChoose,
                     updateSelectedValue: _updateDropDownValue)),
           ),
-          SizedBox(
+          const SizedBox(
             height: 15,
           ),
         ],
@@ -110,7 +109,7 @@ class _AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
                         MaterialStateProperty.all(themeBottomSheetColor),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
-                      side: BorderSide(
+                      side: const BorderSide(
                           width: 1, color: Color.fromRGBO(107, 125, 153, 1)),
                       borderRadius: BorderRadius.circular(8.0),
                     ))),

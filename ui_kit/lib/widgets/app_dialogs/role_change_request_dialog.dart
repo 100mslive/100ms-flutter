@@ -12,8 +12,7 @@ class RoleChangeRequestDialog extends StatefulWidget {
   final HMSRoleChangeRequest roleChangeRequest;
   final MeetingStore meetingStore;
   const RoleChangeRequestDialog(
-      {required this.roleChangeRequest, required this.meetingStore})
-      : super();
+      {super.key, required this.roleChangeRequest, required this.meetingStore});
 
   @override
   _RoleChangeRequestDialogState createState() =>
@@ -23,15 +22,11 @@ class RoleChangeRequestDialog extends StatefulWidget {
 class _RoleChangeRequestDialogState extends State<RoleChangeRequestDialog> {
   @override
   Widget build(BuildContext context) {
-    String message = "‘" +
-        (widget.roleChangeRequest.suggestedBy?.name ?? "Anonymus") +
-        "’ requested to change your role to ‘" +
-        widget.roleChangeRequest.suggestedRole.name +
-        "’";
+    String message = "‘${widget.roleChangeRequest.suggestedBy?.name ?? "Anonymus"}’ requested to change your role to ‘${widget.roleChangeRequest.suggestedRole.name}’";
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      actionsPadding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      actionsPadding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
       backgroundColor: themeBottomSheetColor,
       content: Container(
         child: Column(

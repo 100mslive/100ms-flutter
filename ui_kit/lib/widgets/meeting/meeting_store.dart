@@ -14,8 +14,6 @@ import 'package:hmssdk_uikit/enums/session_store_keys.dart';
 import 'package:hmssdk_uikit/hmssdk_interactor.dart';
 import 'package:hmssdk_uikit/model/peer_track_node.dart';
 import 'package:hmssdk_uikit/model/rtc_stats.dart';
-import 'package:hmssdk_uikit/service/app_secrets.dart';
-import 'package:hmssdk_uikit/service/room_service.dart';
 import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
 
@@ -263,7 +261,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   void endRoom(bool lock, String? reason) {
-    _hmsSDKInteractor.endRoom(lock, reason == null ? "" : reason, this);
+    _hmsSDKInteractor.endRoom(lock, reason ?? "", this);
     _hmsSDKInteractor.destroy();
   }
 
@@ -320,7 +318,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   Future<void> isScreenShareActive() async {
-    this.isScreenShareOn = await _hmsSDKInteractor.isScreenShareActive();
+    isScreenShareOn = await _hmsSDKInteractor.isScreenShareActive();
   }
 
   void changeStatsVisible() {
@@ -521,7 +519,7 @@ class MeetingStore extends ChangeNotifier
           if (each.videoTrack!.kind == HMSTrackKind.kHMSTrackKindVideo) {
             peerTracks[index].track = each.videoTrack!;
             if (each.videoTrack!.isMute) {
-              this.isVideoOn = false;
+              isVideoOn = false;
             }
           }
         }
@@ -529,7 +527,7 @@ class MeetingStore extends ChangeNotifier
           if (each.audioTrack!.kind == HMSTrackKind.kHMSTrackKindAudio) {
             peerTracks[index].audioTrack = each.audioTrack!;
             if (each.audioTrack!.isMute) {
-              this.isMicOn = false;
+              isMicOn = false;
             }
           }
         }
@@ -538,7 +536,7 @@ class MeetingStore extends ChangeNotifier
     }
     roles = await getRoles();
     roles.removeWhere((element) => element.name == "__internal_recorder");
-    Utilities.saveStringData(key: "meetingLink", value: this.meetingUrl);
+    Utilities.saveStringData(key: "meetingLink", value: meetingUrl);
     getCurrentAudioDevice();
     getAudioDevicesList();
     notifyListeners();
@@ -631,11 +629,11 @@ class MeetingStore extends ChangeNotifier
     if (peer.isLocal) {
       if (track.kind == HMSTrackKind.kHMSTrackKindAudio &&
           track.source == "REGULAR") {
-        this.isMicOn = !track.isMute;
+        isMicOn = !track.isMute;
       }
       if (track.kind == HMSTrackKind.kHMSTrackKindVideo &&
           track.source == "REGULAR") {
-        this.isVideoOn = !track.isMute;
+        isVideoOn = !track.isMute;
       }
       notifyListeners();
     }
@@ -690,7 +688,7 @@ class MeetingStore extends ChangeNotifier
   @override
   void onHMSError({required HMSException error}) {
     log("onHMSError-> error: ${error.code} ${error.message}");
-    this.hmsException = error;
+    hmsException = error;
     Utilities.showNotification(error.message ?? "", "error");
     notifyListeners();
   }
@@ -714,7 +712,7 @@ class MeetingStore extends ChangeNotifier
   @override
   void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
     log("onRoleChangeRequest-> sender: ${roleChangeRequest.suggestedBy} role: ${roleChangeRequest.suggestedRole}");
-    this.currentRoleChangeRequest = roleChangeRequest;
+    currentRoleChangeRequest = roleChangeRequest;
     notifyListeners();
   }
 
@@ -734,7 +732,7 @@ class MeetingStore extends ChangeNotifier
        *  - if peer is present in the peerTracks list(this is done just to make sure that peer is still in the room)
        *  - Insert the peer after screenShare tracks and remove the peer from it's previous position
       */
-      updateSpeakers.forEach((speaker) {
+      for (var speaker in updateSpeakers) {
         int index = activeSpeakerList.indexWhere((previousSpeaker) =>
             previousSpeaker.uid == "${speaker.peer.peerId}mainVideo");
         if (index == -1) {
@@ -752,7 +750,7 @@ class MeetingStore extends ChangeNotifier
             }
           }
         }
-      });
+      }
       activeSpeakerList.clear();
       notifyListeners();
     }
@@ -760,24 +758,24 @@ class MeetingStore extends ChangeNotifier
     //This is to handle the borders around the tiles of peers who are currently speaking
     //Reseting the borders of the tile everytime the update is received
     if (activeSpeakerIds.isNotEmpty) {
-      activeSpeakerIds.forEach((key) {
+      for (var key in activeSpeakerIds) {
         int index = peerTracks.indexWhere((element) => element.uid == key);
         if (index != -1) {
           peerTracks[index].setAudioLevel(-1);
         }
-      });
+      }
       activeSpeakerIds.clear();
     }
 
     //Setting the border for peers who are speaking
-    updateSpeakers.forEach((element) {
+    for (var element in updateSpeakers) {
       activeSpeakerIds.add("${element.peer.peerId}mainVideo");
       int index = peerTracks
           .indexWhere((element) => element.uid == activeSpeakerIds.last);
       if (index != -1) {
         peerTracks[index].setAudioLevel(element.audioLevel);
       }
-    });
+    }
 
     // Below code for change track and text in PIP mode iOS and android.
     if (updateSpeakers.isNotEmpty) {
@@ -964,21 +962,21 @@ class MeetingStore extends ChangeNotifier
       List<HMSAudioDevice>? availableAudioDevice}) {
     if (currentAudioDeviceMode != HMSAudioDevice.AUTOMATIC &&
         !selfChangeAudioDevice) {
-      this.showAudioDeviceChangePopup = true;
+      showAudioDeviceChangePopup = true;
     }
     if (selfChangeAudioDevice) {
       selfChangeAudioDevice = false;
     }
     if (currentAudioDevice != null &&
-        this.currentAudioOutputDevice != currentAudioDevice) {
+        currentAudioOutputDevice != currentAudioDevice) {
       Utilities.showToast(
           "Output Device changed to ${currentAudioDevice.name}");
-      this.currentAudioOutputDevice = currentAudioDevice;
+      currentAudioOutputDevice = currentAudioDevice;
     }
 
     if (availableAudioDevice != null) {
-      this.availableAudioOutputDevices.clear();
-      this.availableAudioOutputDevices.addAll(availableAudioDevice);
+      availableAudioOutputDevices.clear();
+      availableAudioOutputDevices.addAll(availableAudioDevice);
     }
   }
 
@@ -1025,39 +1023,39 @@ class MeetingStore extends ChangeNotifier
   }
 
   void addMessage(HMSMessage message) {
-    this.messages.add(message);
+    messages.add(message);
   }
 
   void updatePeerAt(HMSPeer peer) {
-    int index = this.peers.indexOf(peer);
-    this.peers.removeAt(index);
-    this.peers.insert(index, peer);
+    int index = peers.indexOf(peer);
+    peers.removeAt(index);
+    peers.insert(index, peer);
   }
 
   void updateFilteredList(HMSPeerUpdate peerUpdate, HMSPeer peer) {
-    String currentRole = this.selectedRoleFilter;
+    String currentRole = selectedRoleFilter;
     int index =
         filteredPeers.indexWhere((element) => element.peerId == peer.peerId);
 
     if (index != -1) {
-      this.filteredPeers.removeAt(index);
+      filteredPeers.removeAt(index);
       if ((peerUpdate == HMSPeerUpdate.nameChanged)) {
-        this.filteredPeers.insert(index, peer);
+        filteredPeers.insert(index, peer);
       } else if (peerUpdate == HMSPeerUpdate.metadataChanged) {
         if ((peer.metadata?.contains("\"isHandRaised\":true") ?? false) ||
             ((currentRole == "Everyone") || (currentRole == peer.role.name))) {
-          this.filteredPeers.insert(index, peer);
+          filteredPeers.insert(index, peer);
         }
       } else if (peerUpdate == HMSPeerUpdate.roleUpdated &&
           ((currentRole == "Everyone") || (currentRole == "Raised Hand"))) {
-        this.filteredPeers.insert(index, peer);
+        filteredPeers.insert(index, peer);
       }
     } else {
       if ((peerUpdate == HMSPeerUpdate.metadataChanged &&
               currentRole == "Raised Hand") ||
           (peerUpdate == HMSPeerUpdate.roleUpdated &&
               currentRole == peer.role.name)) {
-        this.filteredPeers.add(peer);
+        filteredPeers.add(peer);
       }
     }
   }
@@ -1412,7 +1410,7 @@ class MeetingStore extends ChangeNotifier
 
   void setNewMessageFalse() {
     if (!isNewMessageReceived) return;
-    this.isNewMessageReceived = false;
+    isNewMessageReceived = false;
     notifyListeners();
   }
 

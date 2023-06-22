@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class PipView extends StatefulWidget {
+  const PipView({super.key});
+
   @override
   State<PipView> createState() => _PipViewState();
 }
@@ -33,7 +35,7 @@ class _PipViewState extends State<PipView> {
                                 peerTrackToDisplay.item1?.isDegraded == true)
                             ? Semantics(
                                 label: "fl_video_off",
-                                child: AudioLevelAvatar())
+                                child: const AudioLevelAvatar())
                             : HMSVideoView(
                                 key: Key(
                                     "${peerTrackToDisplay.item1!.trackId}pipView"),

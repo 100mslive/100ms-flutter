@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 //Project imports
 
 class HandRaise extends StatelessWidget {
+  const HandRaise({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Selector<PeerTrackNode, String?>(

@@ -4,7 +4,7 @@ class AnimatedTextWidget extends StatefulWidget {
   final String text;
   final Duration duration;
 
-  AnimatedTextWidget({required this.text, required this.duration});
+  const AnimatedTextWidget({super.key, required this.text, required this.duration});
 
   @override
   _AnimatedTextWidgetState createState() => _AnimatedTextWidgetState();
@@ -27,8 +27,8 @@ class _AnimatedTextWidgetState extends State<AnimatedTextWidget>
 
     // Create a tween animation for vertical offset
     _animation = Tween<Offset>(
-      begin: Offset(0.0, 1.0), // Start from the bottom of the screen
-      end: Offset(0.0, 0.0), // Fly to the top of the screen
+      begin: const Offset(0.0, 1.0), // Start from the bottom of the screen
+      end: const Offset(0.0, 0.0), // Fly to the top of the screen
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
@@ -50,7 +50,7 @@ class _AnimatedTextWidgetState extends State<AnimatedTextWidget>
       position: _animation,
       child: Text(
         widget.text,
-        style: TextStyle(fontSize: 24),
+        style: const TextStyle(fontSize: 24),
       ),
     );
   }

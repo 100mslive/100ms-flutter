@@ -11,6 +11,8 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class PreviewParticipantSheet extends StatefulWidget {
+  const PreviewParticipantSheet({super.key});
+
   @override
   State<PreviewParticipantSheet> createState() =>
       _PreviewParticipantSheetState();
@@ -66,7 +68,7 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                           letterSpacing: 0.15,
                           fontWeight: FontWeight.w600),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                     ),
                     DropdownButtonHideUnderline(
@@ -76,6 +78,7 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                             return HMSDropDown(
                                 dropDownItems: <DropdownMenuItem>[
                                   DropdownMenuItem(
+                                    value: "Everyone",
                                     child: Row(
                                       children: [
                                         SvgPicture.asset(
@@ -84,7 +87,7 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                                           color: themeDefaultColor,
                                           height: 16,
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 11,
                                         ),
                                         Text(
@@ -99,9 +102,9 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                                         ),
                                       ],
                                     ),
-                                    value: "Everyone",
                                   ),
                                   DropdownMenuItem(
+                                    value: "Raised Hand",
                                     child: Row(
                                       children: [
                                         SvgPicture.asset(
@@ -110,7 +113,7 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                                           color: themeDefaultColor,
                                           height: 16,
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 11,
                                         ),
                                         Text(
@@ -125,12 +128,12 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                                         ),
                                       ],
                                     ),
-                                    value: "Raised Hand",
                                   ),
                                   ...roles
                                       .sortedBy((element) =>
                                           element.priority.toString())
                                       .map((role) => DropdownMenuItem(
+                                            value: role.name,
                                             child: Text(
                                               "${role.name}",
                                               overflow: TextOverflow.ellipsis,
@@ -139,12 +142,11 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                                                   fontSize: 12,
                                                   color: iconColor),
                                             ),
-                                            value: role.name,
                                           ))
                                       .toList(),
                                 ],
                                 dropdownButton: Container(
-                                  padding: EdgeInsets.only(
+                                  padding: const EdgeInsets.only(
                                       left: 10, right: 8, top: 4, bottom: 4),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
@@ -164,27 +166,27 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 5,
                                       ),
-                                      Icon(Icons.keyboard_arrow_down),
+                                      const Icon(Icons.keyboard_arrow_down),
                                     ],
                                   ),
                                 ),
                                 buttonStyleData:
-                                    ButtonStyleData(width: 100, height: 35),
+                                    const ButtonStyleData(width: 100, height: 35),
                                 dropdownStyleData: DropdownStyleData(
                                     width:
                                         MediaQuery.of(context).size.width * 0.4,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
                                         color: themeSurfaceColor),
-                                    offset: Offset(-10, -10)),
+                                    offset: const Offset(-10, -10)),
                                 iconStyleData: IconStyleData(
-                                  icon: Icon(Icons.keyboard_arrow_down),
+                                  icon: const Icon(Icons.keyboard_arrow_down),
                                   iconEnabledColor: iconColor,
                                 ),
-                                menuItemStyleData: MenuItemStyleData(
+                                menuItemStyleData: const MenuItemStyleData(
                                   height: 45,
                                 ),
                                 selectedValue: valueChoose,
@@ -210,7 +212,7 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 15, bottom: 10),
+                  padding: const EdgeInsets.only(top: 15, bottom: 10),
                   child: Divider(
                     color: dividerColor,
                     height: 5,
@@ -220,7 +222,7 @@ class _PreviewParticipantSheetState extends State<PreviewParticipantSheet> {
                     selector: (_, previewStore) =>
                         getFilteredPeers(valueChoose, previewStore.peers),
                     builder: (_, data, __) {
-                      return Container(
+                      return SizedBox(
                         height: MediaQuery.of(context).size.height * 0.65,
                         child: ListView.builder(
                             shrinkWrap: true,

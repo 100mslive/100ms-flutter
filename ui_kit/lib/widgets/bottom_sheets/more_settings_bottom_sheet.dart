@@ -31,7 +31,7 @@ class MoreSettingsBottomSheet extends StatefulWidget {
 class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
   @override
   Widget build(BuildContext context) {
-    MeetingStore _meetingStore = context.read<MeetingStore>();
+    MeetingStore meetingStore = context.read<MeetingStore>();
     return FractionallySizedBox(
       heightFactor: 0.6,
       child: Padding(
@@ -95,7 +95,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             context: context,
                             builder: (ctx) => ChangeNotifierProvider.value(
                                 value: context.read<MeetingStore>(),
-                                child: ParticipantsBottomSheet()),
+                                child: const ParticipantsBottomSheet()),
                           );
                         },
                         child: Container(
@@ -148,8 +148,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             ),
                             context: context,
                             builder: (ctx) => ChangeNotifierProvider.value(
-                                value: _meetingStore,
-                                child: AudioSettingsBottomSheet()),
+                                value: meetingStore,
+                                child: const AudioSettingsBottomSheet()),
                           );
                         },
                         child: Container(
@@ -198,8 +198,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         ),
                         context: context,
                         builder: (ctx) => ChangeNotifierProvider.value(
-                            value: _meetingStore,
-                            child: MeetingModeBottomSheet()),
+                            value: meetingStore,
+                            child: const MeetingModeBottomSheet()),
                       );
                     },
                     contentPadding: EdgeInsets.zero,
@@ -233,7 +233,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                       ?.name ??
                                   "");
                       if (name.isNotEmpty) {
-                        _meetingStore.changeName(name: name);
+                        meetingStore.changeName(name: name);
                       }
                       // Navigator.pop(context);
                     },
@@ -256,19 +256,19 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                   ListTile(
                     horizontalTitleGap: 2,
                     onTap: () {
-                      _meetingStore.toggleSpeaker();
+                      meetingStore.toggleSpeaker();
                       Navigator.pop(context);
                     },
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      _meetingStore.isSpeakerOn
+                      meetingStore.isSpeakerOn
                           ? "packages/hmssdk_uikit/lib/assets/icons/speaker_state_on.svg"
                           : "packages/hmssdk_uikit/lib/assets/icons/speaker_state_off.svg",
                       fit: BoxFit.scaleDown,
                       color: themeDefaultColor,
                     ),
                     title: Text(
-                      _meetingStore.isSpeakerOn ? "Mute Room" : "Unmute Room",
+                      meetingStore.isSpeakerOn ? "Mute Room" : "Unmute Room",
                       semanticsLabel: "fl_mute_room",
                       style: GoogleFonts.inter(
                           fontSize: 14,
@@ -280,7 +280,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                   ListTile(
                     horizontalTitleGap: 2,
                     onTap: () {
-                      _meetingStore.switchCamera();
+                      meetingStore.switchCamera();
                       Navigator.pop(context);
                     },
                     contentPadding: EdgeInsets.zero,
@@ -302,7 +302,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                   ListTile(
                     horizontalTitleGap: 2,
                     onTap: () async {
-                      _meetingStore.changeMetadataBRB();
+                      meetingStore.changeMetadataBRB();
                       Navigator.pop(context);
                     },
                     contentPadding: EdgeInsets.zero,
@@ -316,7 +316,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       semanticsLabel: "fl_brb_list_tile",
                       style: GoogleFonts.inter(
                           fontSize: 14,
-                          color: _meetingStore.isBRB
+                          color: meetingStore.isBRB
                               ? colorScheme.error
                               : themeDefaultColor,
                           letterSpacing: 0.25,
@@ -332,9 +332,9 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               barrierDismissible: false,
                               context: context,
                               builder: (_) => ListenableProvider.value(
-                                  value: _meetingStore,
+                                  value: meetingStore,
                                   child: StatsForNerds(
-                                    peerTrackNode: _meetingStore.peerTracks,
+                                    peerTrackNode: meetingStore.peerTracks,
                                   )));
                         },
                         contentPadding: EdgeInsets.zero,
@@ -352,17 +352,17 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               letterSpacing: 0.25,
                               fontWeight: FontWeight.w600),
                         )),
-                  if ((_meetingStore.localPeer?.role.permissions.mute ??
+                  if ((meetingStore.localPeer?.role.permissions.mute ??
                           false) &&
-                      (_meetingStore.localPeer?.role.permissions.unMute ??
+                      (meetingStore.localPeer?.role.permissions.unMute ??
                           false))
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
                           Navigator.pop(context);
-                          List<HMSRole> roles = await _meetingStore.getRoles();
+                          List<HMSRole> roles = await meetingStore.getRoles();
                           UtilityComponents.showRoleListForMute(
-                              context, roles, _meetingStore);
+                              context, roles, meetingStore);
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(
@@ -379,15 +379,15 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               letterSpacing: 0.25,
                               fontWeight: FontWeight.w600),
                         )),
-                  if (_meetingStore.localPeer?.role.permissions.changeRole ??
+                  if (meetingStore.localPeer?.role.permissions.changeRole ??
                       false)
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
                           Navigator.pop(context);
-                          List<HMSRole> roles = await _meetingStore.getRoles();
+                          List<HMSRole> roles = await meetingStore.getRoles();
                           UtilityComponents.showDialogForBulkRoleChange(
-                              context, roles, _meetingStore);
+                              context, roles, meetingStore);
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(
@@ -404,7 +404,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               letterSpacing: 0.25,
                               fontWeight: FontWeight.w600),
                         )),
-                  if (_meetingStore.localPeer?.role.permissions.rtmpStreaming ??
+                  if (meetingStore.localPeer?.role.permissions.rtmpStreaming ??
                       false)
                     Selector<MeetingStore, bool>(
                         selector: (_, meetingStore) =>
@@ -414,7 +414,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               horizontalTitleGap: 2,
                               onTap: () async {
                                 if (isRTMPRunning) {
-                                  _meetingStore.stopRtmpAndRecording();
+                                  meetingStore.stopRtmpAndRecording();
                                   Navigator.pop(context);
                                 } else {
                                   Navigator.pop(context);
@@ -423,7 +423,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                           context: context,
                                           placeholder:
                                               "Enter Comma separated RTMP Urls",
-                                          isRecordingEnabled: _meetingStore
+                                          isRecordingEnabled: meetingStore
                                                   .recordingType["browser"] ==
                                               true);
                                   List<String>? urls;
@@ -431,12 +431,12 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                     urls = data["url"]!.split(",");
                                   }
                                   if (urls != null) {
-                                    _meetingStore.startRtmpOrRecording(
+                                    meetingStore.startRtmpOrRecording(
                                         meetingUrl: Constant.streamingUrl,
                                         toRecord: data["toRecord"] ?? false,
                                         rtmpUrls: urls);
                                   } else if (data["toRecord"] ?? false) {
-                                    _meetingStore.startRtmpOrRecording(
+                                    meetingStore.startRtmpOrRecording(
                                         meetingUrl: Constant.streamingUrl,
                                         toRecord: data["toRecord"] ?? false,
                                         rtmpUrls: null);
@@ -465,7 +465,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                     fontWeight: FontWeight.w600),
                               ));
                         }),
-                  if (_meetingStore
+                  if (meetingStore
                           .localPeer?.role.permissions.browserRecording ??
                       false)
                     Selector<MeetingStore, bool>(
@@ -476,9 +476,9 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               horizontalTitleGap: 2,
                               onTap: () async {
                                 if (isBrowserRecording) {
-                                  _meetingStore.stopRtmpAndRecording();
+                                  meetingStore.stopRtmpAndRecording();
                                 } else {
-                                  _meetingStore.startRtmpOrRecording(
+                                  meetingStore.startRtmpOrRecording(
                                       meetingUrl: Constant.streamingUrl,
                                       toRecord: true,
                                       rtmpUrls: []);
@@ -509,7 +509,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                     fontWeight: FontWeight.w600),
                               ));
                         }),
-                  if (_meetingStore.localPeer?.role.permissions.hlsStreaming ??
+                  if (meetingStore.localPeer?.role.permissions.hlsStreaming ??
                       false)
                     Selector<MeetingStore, bool>(
                         selector: ((_, meetingStore) =>
@@ -519,7 +519,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               horizontalTitleGap: 2,
                               onTap: () async {
                                 if (hasHLSStarted) {
-                                  _meetingStore.stopHLSStreaming();
+                                  meetingStore.stopHLSStreaming();
                                   Navigator.pop(context);
                                   return;
                                 }
@@ -533,8 +533,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                   context: context,
                                   builder: (ctx) =>
                                       ChangeNotifierProvider.value(
-                                          value: _meetingStore,
-                                          child: StartHLSBottomSheet()),
+                                          value: meetingStore,
+                                          child: const StartHLSBottomSheet()),
                                 );
                               },
                               contentPadding: EdgeInsets.zero,
@@ -587,8 +587,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         showDialog(
                             context: context,
                             builder: (_) => ShareLinkOptionDialog(
-                                roles: _meetingStore.roles,
-                                roomID: _meetingStore.hmsRoom!.id));
+                                roles: meetingStore.roles,
+                                roomID: meetingStore.hmsRoom!.id));
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
@@ -617,7 +617,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             ),
                             context: context,
                             builder: (ctx) =>
-                                NotificationSettingsBottomSheet());
+                                const NotificationSettingsBottomSheet());
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
@@ -634,7 +634,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       )),
-                  if (_meetingStore.localPeer?.role.permissions.endRoom ??
+                  if (meetingStore.localPeer?.role.permissions.endRoom ??
                       false)
                     ListTile(
                         horizontalTitleGap: 2,

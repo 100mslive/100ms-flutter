@@ -15,7 +15,7 @@ import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
 
 class AppSettingsBottomSheet extends StatefulWidget {
   final String appVersion;
-  AppSettingsBottomSheet({required this.appVersion});
+  const AppSettingsBottomSheet({super.key, required this.appVersion});
   @override
   State<AppSettingsBottomSheet> createState() => _AppSettingsBottomSheetState();
 }
@@ -44,13 +44,13 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
         .loadString('packages/hmssdk_flutter/assets/sdk-versions.json');
     versions = json.decode(sdkVersions);
     if (versions['flutter'] == null) {
-      throw FormatException("flutter version not found");
+      throw const FormatException("flutter version not found");
     }
     if (Platform.isIOS && versions['ios'] == null) {
-      throw FormatException("ios version not found");
+      throw const FormatException("ios version not found");
     }
     if (Platform.isAndroid && versions['android'] == null) {
-      throw FormatException("android version not found");
+      throw const FormatException("android version not found");
     }
     joinWithMutedAudio =
         await Utilities.getBoolData(key: 'join-with-muted-audio') ?? true;
@@ -127,7 +127,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(top: 15, bottom: 10),
+              padding: const EdgeInsets.only(top: 15, bottom: 10),
               child: Divider(
                 color: dividerColor,
                 height: 5,
@@ -439,7 +439,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                             ),
                             context: context,
                             builder: (ctx) =>
-                                NotificationSettingsBottomSheet());
+                                const NotificationSettingsBottomSheet());
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(

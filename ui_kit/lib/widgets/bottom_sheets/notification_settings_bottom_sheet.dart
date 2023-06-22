@@ -6,6 +6,8 @@ import 'package:hmssdk_uikit/common/app_color.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
 
 class NotificationSettingsBottomSheet extends StatefulWidget {
+  const NotificationSettingsBottomSheet({super.key});
+
   @override
   State<NotificationSettingsBottomSheet> createState() =>
       _NotificationSettingsBottomSheetState();
@@ -82,7 +84,7 @@ class _NotificationSettingsBottomSheetState
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(top: 15, bottom: 10),
+              padding: const EdgeInsets.only(top: 15, bottom: 10),
               child: Divider(
                 color: dividerColor,
                 height: 5,

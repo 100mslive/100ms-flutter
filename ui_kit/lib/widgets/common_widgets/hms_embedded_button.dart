@@ -12,8 +12,8 @@ class HMSEmbeddedButton extends StatelessWidget {
   final Color? enabledBorderColor;
   final Color? disabledBorderColor;
 
-  HMSEmbeddedButton(
-      {required this.onTap,
+  const HMSEmbeddedButton(
+      {super.key, required this.onTap,
       required this.offColor,
       required this.onColor,
       required this.isActive,
@@ -41,7 +41,7 @@ class HMSEmbeddedButton extends StatelessWidget {
                           ? themeDefaultColor
                           : disabledBorderColor!,
                       width: 1),
-              borderRadius: BorderRadius.all(Radius.circular(12)),
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
               color: isActive ? onColor : offColor),
           child: child),
     );

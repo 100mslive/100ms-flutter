@@ -16,7 +16,7 @@ import 'package:share_plus/share_plus.dart';
 class ShareLinkOptionDialog extends StatefulWidget {
   final List<HMSRole> roles;
   final String roomID;
-  ShareLinkOptionDialog({required this.roles, required this.roomID});
+  const ShareLinkOptionDialog({super.key, required this.roles, required this.roomID});
 
   @override
   _ShareLinkOptionDialogState createState() => _ShareLinkOptionDialogState();

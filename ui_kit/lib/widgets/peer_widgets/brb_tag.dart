@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 //Project imports
 
 class BRBTag extends StatelessWidget {
+  const BRBTag({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Selector<PeerTrackNode, String?>(

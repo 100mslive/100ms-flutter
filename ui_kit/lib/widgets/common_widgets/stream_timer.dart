@@ -5,7 +5,7 @@ import 'package:hmssdk_uikit/widgets/common_widgets/subtitle_text.dart';
 class HMSStreamTimer extends StatefulWidget {
   final DateTime startedAt;
 
-  HMSStreamTimer({required this.startedAt});
+  const HMSStreamTimer({super.key, required this.startedAt});
   @override
   State<HMSStreamTimer> createState() => _HMSStreamTimerState();
 }

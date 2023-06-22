@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 //Project imports
 
 class AudioMuteStatus extends StatefulWidget {
+  const AudioMuteStatus({super.key});
+
   @override
   State<AudioMuteStatus> createState() => _AudioMuteStatusState();
 }

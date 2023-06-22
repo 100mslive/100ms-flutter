@@ -18,9 +18,10 @@ import 'package:tuple/tuple.dart';
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class ChatBottomSheet extends StatefulWidget {
+  const ChatBottomSheet({super.key});
+
   @override
   State<ChatBottomSheet> createState() => _ChatBottomSheetState();
 }
@@ -71,15 +72,15 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
       rolesName.add(hmsRoles[i].name);
     }
 
-    if (this.valueChoose == "Everyone") {
+    if (valueChoose == "Everyone") {
       meetingStore.sendBroadcastMessage(message);
-    } else if (rolesName.contains(this.valueChoose)) {
+    } else if (rolesName.contains(valueChoose)) {
       List<HMSRole> selectedRoles = [];
       selectedRoles
-          .add(hmsRoles.firstWhere((role) => role.name == this.valueChoose));
+          .add(hmsRoles.firstWhere((role) => role.name == valueChoose));
       meetingStore.sendGroupMessage(message, selectedRoles);
-    } else if (meetingStore.localPeer!.peerId != this.valueChoose) {
-      var peer = await meetingStore.getPeer(peerId: this.valueChoose);
+    } else if (meetingStore.localPeer!.peerId != valueChoose) {
+      var peer = await meetingStore.getPeer(peerId: valueChoose);
       meetingStore.sendDirectMessage(message, peer!);
     }
     messageTextController.clear();
@@ -173,6 +174,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                               ),
                                               dropDownItems: <DropdownMenuItem>[
                                                 DropdownMenuItem(
+                                                  value: "Everyone",
                                                   child: Text(
                                                     "Everyone",
                                                     style: GoogleFonts.inter(
@@ -185,7 +187,6 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                         TextOverflow.ellipsis,
                                                     maxLines: 1,
                                                   ),
-                                                  value: "Everyone",
                                                 ),
                                                 ...roles
                                                     .sortedBy((element) =>
@@ -193,8 +194,9 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                             .toString())
                                                     .map((role) =>
                                                         DropdownMenuItem(
+                                                          value: role.name,
                                                           child: Text(
-                                                            "${role.name}",
+                                                            role.name,
                                                             overflow:
                                                                 TextOverflow
                                                                     .ellipsis,
@@ -206,7 +208,6 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                                     color:
                                                                         iconColor),
                                                           ),
-                                                          value: role.name,
                                                         ))
                                                     .toList(),
                                                 ...data.item2
@@ -215,6 +216,8 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                     .map((peer) {
                                                       return !peer.isLocal
                                                           ? DropdownMenuItem(
+                                                              value:
+                                                                  peer.peerId,
                                                               child: Text(
                                                                 "${peer.name} ${peer.isLocal ? "(You)" : ""}",
                                                                 style: GoogleFonts
@@ -228,8 +231,6 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                                         .ellipsis,
                                                                 maxLines: 1,
                                                               ),
-                                                              value:
-                                                                  peer.peerId,
                                                             )
                                                           : null;
                                                     })
@@ -433,7 +434,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                             ? true
                                             : false,
                                     message:
-                                        "${data.item1[index].message.trim().toString()}",
+                                        data.item1[index].message.trim().toString(),
                                     senderName:
                                         data.item1[index].sender?.name ??
                                             "Anonymous",

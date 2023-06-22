@@ -12,8 +12,8 @@ class TileBorder extends StatelessWidget {
   final String uid;
   final String name;
 
-  TileBorder(
-      {required this.itemHeight,
+  const TileBorder(
+      {super.key, required this.itemHeight,
       required this.itemWidth,
       required this.uid,
       required this.name});
@@ -32,7 +32,7 @@ class TileBorder extends StatelessWidget {
                       ? hmsdefaultColor
                       : themeBottomSheetColor,
                   width: (audioLevel != -1) ? 4.0 : 0.0),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
             ),
           );
         });

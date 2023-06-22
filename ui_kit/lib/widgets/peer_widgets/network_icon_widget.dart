@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 //Project imports
 
 class NetworkIconWidget extends StatelessWidget {
+  const NetworkIconWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Selector<PeerTrackNode, int?>(

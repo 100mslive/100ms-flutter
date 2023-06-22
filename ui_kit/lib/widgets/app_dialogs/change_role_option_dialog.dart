@@ -18,7 +18,7 @@ class ChangeRoleOptionDialog extends StatefulWidget {
   final Function(HMSRole, bool) changeRole;
   final bool force;
   final HMSPeer peer;
-  ChangeRoleOptionDialog({
+  const ChangeRoleOptionDialog({super.key, 
     required this.peerName,
     required this.roles,
     required this.changeRole,
@@ -51,10 +51,10 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
     double width = MediaQuery.of(context).size.width;
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      actionsPadding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+      actionsPadding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
       backgroundColor: themeBottomSheetColor,
-      insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      contentPadding: EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      contentPadding: const EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -64,7 +64,7 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
             letterSpacing: 0.15,
             textColor: themeDefaultColor,
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
           SubtitleText(text: message, textColor: themeSubHeadingColor),
@@ -75,7 +75,7 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: EdgeInsets.only(left: 10, right: 5),
+            padding: const EdgeInsets.only(left: 10, right: 5),
             decoration: BoxDecoration(
               color: themeSurfaceColor,
               borderRadius: BorderRadius.circular(10.0),
@@ -88,23 +88,23 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                   ...widget.roles
                       .sortedBy((element) => element.priority.toString())
                       .map((role) => DropdownMenuItem(
+                            value: role,
                             child: TitleText(
                               text: role.name,
                               textColor: themeDefaultColor,
                               fontWeight: FontWeight.w400,
                             ),
-                            value: role,
                           ))
                       .toList(),
                 ],
                     iconStyleData: IconStyleData(
-                      icon: Icon(Icons.keyboard_arrow_down),
+                      icon: const Icon(Icons.keyboard_arrow_down),
                       iconEnabledColor: themeDefaultColor,
                     ),
                     selectedValue: valueChoose,
                     updateSelectedValue: _updateDropDownValue)),
           ),
-          SizedBox(
+          const SizedBox(
             height: 15,
           ),
           if (!widget.peer.isLocal)
@@ -123,7 +123,7 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                         }
                       }),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10.5,
                 ),
                 SizedBox(
@@ -152,7 +152,7 @@ class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                         MaterialStateProperty.all(themeBottomSheetColor),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
-                      side: BorderSide(
+                      side: const BorderSide(
                           width: 1, color: Color.fromRGBO(107, 125, 153, 1)),
                       borderRadius: BorderRadius.circular(8.0),
                     ))),

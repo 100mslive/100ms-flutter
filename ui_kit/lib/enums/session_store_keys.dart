@@ -27,12 +27,12 @@ extension SessionStoreKeyValues on SessionStoreKey {
   }
 
   static List<String> getSessionStoreKeys() {
-    List<String> _keys = [];
-    SessionStoreKey.values.forEach((key) {
+    List<String> keys = [];
+    for (var key in SessionStoreKey.values) {
       if (key != SessionStoreKey.unknown) {
-        _keys.add(getNameFromMethod(key));
+        keys.add(getNameFromMethod(key));
       }
-    });
-    return _keys;
+    }
+    return keys;
   }
 }

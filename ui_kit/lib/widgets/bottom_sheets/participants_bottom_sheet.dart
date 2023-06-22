@@ -14,6 +14,8 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class ParticipantsBottomSheet extends StatefulWidget {
+  const ParticipantsBottomSheet({super.key});
+
   @override
   State<ParticipantsBottomSheet> createState() =>
       _ParticipantsBottomSheetState();
@@ -31,21 +33,21 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
   }
 
   Widget _kebabMenu(HMSPeer peer) {
-    final _meetingStore = context.read<MeetingStore>();
+    final meetingStore = context.read<MeetingStore>();
     PeerTrackNode? peerTrackNode;
     try {
-      peerTrackNode = _meetingStore.peerTracks
-          .firstWhere((element) => element.uid == peer.peerId + "mainVideo");
+      peerTrackNode = meetingStore.peerTracks
+          .firstWhere((element) => element.uid == "${peer.peerId}mainVideo");
     } catch (e) {
       peerTrackNode = null;
     }
 
     bool mutePermission =
-        _meetingStore.localPeer?.role.permissions.mute ?? false;
+        meetingStore.localPeer?.role.permissions.mute ?? false;
     bool removePeerPermission =
-        _meetingStore.localPeer?.role.permissions.removeOthers ?? false;
+        meetingStore.localPeer?.role.permissions.removeOthers ?? false;
     bool changeRolePermission =
-        _meetingStore.localPeer?.role.permissions.changeRole ?? false;
+        meetingStore.localPeer?.role.permissions.changeRole ?? false;
 
     //For HLS-Viewer
     if (peerTrackNode == null) {
@@ -67,10 +69,10 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                         context: context,
                         builder: (_) => ChangeRoleOptionDialog(
                               peerName: peer.name,
-                              roles: _meetingStore.roles,
+                              roles: meetingStore.roles,
                               peer: peer,
                               changeRole: (role, forceChange) {
-                                _meetingStore.changeRoleOfPeer(
+                                meetingStore.changeRoleOfPeer(
                                     peer: peer,
                                     roleName: role,
                                     forceChange: forceChange);
@@ -118,10 +120,10 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                       context: context,
                       builder: (_) => ChangeRoleOptionDialog(
                             peerName: peerTrackNode!.peer.name,
-                            roles: _meetingStore.roles,
+                            roles: meetingStore.roles,
                             peer: peerTrackNode.peer,
                             changeRole: (role, forceChange) {
-                              _meetingStore.changeRoleOfPeer(
+                              meetingStore.changeRoleOfPeer(
                                   peer: peerTrackNode!.peer,
                                   roleName: role,
                                   forceChange: forceChange);
@@ -133,23 +135,23 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                   if (peerTrackNode!.track == null) {
                     return;
                   }
-                  _meetingStore.changeTrackState(
+                  meetingStore.changeTrackState(
                       peerTrackNode.track!, !peerTrackNode.track!.isMute);
                   break;
                 case 3:
                   if (peerTrackNode!.audioTrack == null) {
                     return;
                   }
-                  _meetingStore.changeTrackState(peerTrackNode.audioTrack!,
+                  meetingStore.changeTrackState(peerTrackNode.audioTrack!,
                       !peerTrackNode.audioTrack!.isMute);
                   break;
                 case 4:
-                  var peer = await _meetingStore.getPeer(
+                  var peer = await meetingStore.getPeer(
                       peerId: peerTrackNode!.peer.peerId);
                   if (peer == null) {
                     return;
                   }
-                  _meetingStore.removePeerFromRoom(peer);
+                  meetingStore.removePeerFromRoom(peer);
                   break;
                 default:
                   break;
@@ -441,7 +443,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                         meetingStore.filteredPeers,
                         meetingStore.filteredPeers.length),
                     builder: (_, data, __) {
-                      return Container(
+                      return SizedBox(
                         height: MediaQuery.of(context).size.height * 0.65,
                         child: ListView.builder(
                             shrinkWrap: true,

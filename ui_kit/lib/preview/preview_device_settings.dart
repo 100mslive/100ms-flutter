@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class PreviewDeviceSettings extends StatefulWidget {
-  PreviewDeviceSettings({
+  const PreviewDeviceSettings({
     Key? key,
   }) : super(key: key);
   @override
@@ -24,8 +24,9 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
   GlobalKey? dropdownKey;
 
   void _updateDropDownValue(dynamic newValue) {
-    if (newValue != null)
+    if (newValue != null) {
       context.read<PreviewStore>().switchAudioOutput(audioDevice: newValue);
+    }
     dropdownKey = null;
   }
 
@@ -93,7 +94,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 10),
+                    padding: const EdgeInsets.only(top: 15, bottom: 10),
                     child: Divider(
                       color: dividerColor,
                       height: 5,
@@ -105,11 +106,11 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                           letterSpacing: 0.25)),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Container(
-                    padding: EdgeInsets.only(left: 10, right: 5),
+                    padding: const EdgeInsets.only(left: 10, right: 5),
                     decoration: BoxDecoration(
                       color: themeSurfaceColor,
                       borderRadius: BorderRadius.circular(10.0),
@@ -125,13 +126,14 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                               .sortedBy((element) => element.toString())
                               .map((device) => DropdownMenuItem(
                                     key: UniqueKey(),
+                                    value: device,
                                     child: Row(
                                       children: [
                                         SvgPicture.asset(
                                           "assets/icons/music_wave.svg",
                                           color: themeDefaultColor,
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 10,
                                         ),
                                         Container(
@@ -142,28 +144,27 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                         ),
                                       ],
                                     ),
-                                    value: device,
                                   ))
                               .toList(),
                         ],
-                            buttonStyleData: ButtonStyleData(height: 48),
-                            menuItemStyleData: MenuItemStyleData(
+                            buttonStyleData: const ButtonStyleData(height: 48),
+                            menuItemStyleData: const MenuItemStyleData(
                               height: 45,
                             ),
                             iconStyleData: IconStyleData(
-                                icon: Icon(Icons.keyboard_arrow_down),
+                                icon: const Icon(Icons.keyboard_arrow_down),
                                 iconEnabledColor: iconColor),
                             dropdownStyleData: DropdownStyleData(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
                                   color: themeSurfaceColor),
-                              offset: Offset(-10, -10),
+                              offset: const Offset(-10, -10),
                             ),
                             selectedValue:
                                 Platform.isAndroid ? data.item3 : data.item1[0],
                             updateSelectedValue: _updateDropDownValue)),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   ListTile(

@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class PipView extends StatefulWidget {
+  const PipView({super.key});
+
   @override
   State<PipView> createState() => _PipViewState();
 }

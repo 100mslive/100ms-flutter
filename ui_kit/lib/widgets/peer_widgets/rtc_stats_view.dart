@@ -14,20 +14,20 @@ import 'package:flutter/material.dart';
 class RTCStatsView extends StatelessWidget {
   final bool isLocal;
 
-  RTCStatsView({required this.isLocal});
+  const RTCStatsView({super.key, required this.isLocal});
   @override
   Widget build(BuildContext context) {
     return Selector<MeetingStore, bool>(
         builder: (_, statsVisible, __) {
-          return statsVisible ? Stats(isLocal: isLocal) : SizedBox();
+          return statsVisible ? Stats(isLocal: isLocal) : const SizedBox();
         },
-        selector: (_, _meetingStore) => _meetingStore.isStatsVisible);
+        selector: (_, meetingStore) => meetingStore.isStatsVisible);
   }
 }
 
 class Stats extends StatelessWidget {
   final isLocal;
-  Stats({Key? key, required this.isLocal}) : super(key: key);
+  const Stats({Key? key, required this.isLocal}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,18 +43,18 @@ class Stats extends StatelessWidget {
                 peerTrackNode.networkQuality),
             builder: (_, data, __) {
               return Container(
-                  padding: EdgeInsets.all(5),
-                  margin: EdgeInsets.all(2),
+                  padding: const EdgeInsets.all(5),
+                  margin: const EdgeInsets.all(2),
                   decoration: BoxDecoration(
                       color: Colors.black38.withOpacity(0.3),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                      borderRadius: const BorderRadius.all(Radius.circular(10))),
                   child: ListView(
                     shrinkWrap: true,
                     children: [
                       if ((data.item3 != null) &&
                           (data.item3!.hmsLocalVideoStats != null))
                         localVideoStats(data.item3!.hmsLocalVideoStats!),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Text("Downlink\t ${data.item4 ?? "-1"}",
@@ -75,11 +75,11 @@ class Stats extends StatelessWidget {
                 peerTrackNode.networkQuality),
             builder: (_, data, __) {
               return Container(
-                padding: EdgeInsets.all(5),
-                margin: EdgeInsets.all(2),
+                padding: const EdgeInsets.all(5),
+                margin: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
                     color: Colors.black38.withOpacity(0.3),
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                    borderRadius: const BorderRadius.all(Radius.circular(10))),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -123,7 +123,7 @@ class Stats extends StatelessWidget {
   }
 
   Widget localVideoStats(List<HMSLocalVideoStats?> videoStats) {
-    Map<int, TableColumnWidth> columnWidth = {0: FixedColumnWidth(50)};
+    Map<int, TableColumnWidth> columnWidth = {0: const FixedColumnWidth(50)};
 
     return Table(
       columnWidths: columnWidth,
@@ -150,7 +150,7 @@ class Stats extends StatelessWidget {
           ...videoStats
               .map(
                 (layerStats) => Text(
-                  "${layerStats?.resolution.width.toStringAsFixed(2) ?? "0.00"}",
+                  layerStats?.resolution.width.toStringAsFixed(2) ?? "0.00",
                   style: GoogleFonts.inter(color: iconColor, fontSize: 10),
                 ),
               )
@@ -163,7 +163,7 @@ class Stats extends StatelessWidget {
           ...videoStats
               .map(
                 (layerStats) => Text(
-                  "${layerStats?.resolution.height.toStringAsFixed(2) ?? "0.00"}",
+                  layerStats?.resolution.height.toStringAsFixed(2) ?? "0.00",
                   style: GoogleFonts.inter(color: iconColor, fontSize: 10),
                 ),
               )
@@ -176,7 +176,7 @@ class Stats extends StatelessWidget {
           ...videoStats
               .map(
                 (layerStats) => Text(
-                  "${layerStats?.frameRate.toStringAsFixed(2) ?? "0.00"}",
+                  layerStats?.frameRate.toStringAsFixed(2) ?? "0.00",
                   style: GoogleFonts.inter(color: iconColor, fontSize: 10),
                 ),
               )
@@ -191,7 +191,7 @@ class Stats extends StatelessWidget {
           ...videoStats
               .map(
                 (layerStats) => Text(
-                  "${layerStats?.bitrate.toStringAsFixed(2) ?? "0.00"}",
+                  layerStats?.bitrate.toStringAsFixed(2) ?? "0.00",
                   style: GoogleFonts.inter(color: iconColor, fontSize: 10),
                 ),
               )
@@ -206,7 +206,7 @@ class Stats extends StatelessWidget {
           ...videoStats
               .map(
                 (layerStats) => Text(
-                  "${layerStats?.hmsQualityLimitationReasons?.reason.name ?? ""}",
+                  layerStats?.hmsQualityLimitationReasons?.reason.name ?? "",
                   style: GoogleFonts.inter(color: iconColor, fontSize: 10),
                 ),
               )

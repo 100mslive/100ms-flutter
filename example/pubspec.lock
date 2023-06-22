@@ -371,11 +371,10 @@ packages:
   hmssdk_flutter:
     dependency: transitive
     description:
-      name: hmssdk_flutter
-      sha256: "05448ad5298eb4fb3768b258cf7408823e18f4fa427be6abdc2d7349a5804480"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.7.0"
+      path: ".."
+      relative: true
+    source: path
+    version: "1.8.0"
   hmssdk_uikit:
     dependency: "direct main"
     description:

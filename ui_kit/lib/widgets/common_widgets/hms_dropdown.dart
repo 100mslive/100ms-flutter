@@ -14,8 +14,8 @@ class HMSDropDown extends StatefulWidget {
   final dynamic selectedValue;
   final Function(dynamic) updateSelectedValue;
   final bool isExpanded;
-  HMSDropDown(
-      {this.dropdownKey,
+  const HMSDropDown(
+      {super.key, this.dropdownKey,
       this.dropdownHint,
       this.dropdownButton,
       this.buttonStyleData,

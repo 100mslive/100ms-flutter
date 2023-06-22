@@ -9,8 +9,9 @@ import 'package:hmssdk_uikit/widgets/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
 class StartHLSBottomSheet extends StatefulWidget {
+  @override
   final Key? key;
-  StartHLSBottomSheet({this.key}) : super(key: key);
+  const StartHLSBottomSheet({this.key}) : super(key: key);
 
   @override
   State<StartHLSBottomSheet> createState() => _StartHLSBottomSheetState();
@@ -185,7 +186,7 @@ class _StartHLSBottomSheetState extends State<StartHLSBottomSheet> {
               const SizedBox(
                 height: 20,
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width - 30,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,

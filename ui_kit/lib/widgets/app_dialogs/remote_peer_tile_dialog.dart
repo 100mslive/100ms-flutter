@@ -23,7 +23,7 @@ class RemotePeerTileDialog extends StatefulWidget {
   final Function() changePinTileStatus;
   final Function() setOnSpotlight;
   const RemotePeerTileDialog(
-      {required this.isVideoMuted,
+      {super.key, required this.isVideoMuted,
       required this.isAudioMuted,
       required this.changeVideoTrack,
       required this.changeAudioTrack,
@@ -54,7 +54,7 @@ class _RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
         widget.peerName,
         style: GoogleFonts.inter(color: iconColor, fontWeight: FontWeight.bold),
       ),
-      content: Container(
+      content: SizedBox(
         width: double.infinity,
         child: Column(
           mainAxisSize: MainAxisSize.min,

@@ -19,10 +19,10 @@ Widget audioMode(
     itemCount: itemCount,
     itemBuilder: (context, index) {
       return ChangeNotifierProvider.value(
-          key: ValueKey(peerTracks[index].uid + "audio_view"),
+          key: ValueKey("${peerTracks[index].uid}audio_view"),
           value: peerTracks[index],
           child: AudioTile(
-            key: ValueKey(peerTracks[index].uid + "audio_tile"),
+            key: ValueKey("${peerTracks[index].uid}audio_tile"),
             itemHeight: size.height,
             itemWidth: size.width,
           ));
@@ -32,7 +32,7 @@ Widget audioMode(
         pattern: isPortrait
             ? portraitPattern(peerTracks, size, context)
             : landscapePattern(itemCount, size, context)),
-    physics: PageScrollPhysics(),
+    physics: const PageScrollPhysics(),
     scrollDirection: Axis.horizontal,
   );
 }

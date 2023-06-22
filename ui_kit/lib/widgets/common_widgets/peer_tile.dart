@@ -25,7 +25,7 @@ class PeerTile extends StatefulWidget {
   final ScaleType scaleType;
   final bool islongPressEnabled;
   final bool isOneToOne;
-  PeerTile(
+  const PeerTile(
       {Key? key,
       this.itemHeight = 200.0,
       this.itemWidth = 200.0,
@@ -110,7 +110,7 @@ class _PeerTileState extends State<PeerTile> {
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
+                                  children: const [
                                     NetworkIconWidget(),
                                     PeerName(),
                                   ],
@@ -119,9 +119,9 @@ class _PeerTileState extends State<PeerTile> {
                             ),
                           ),
                         ),
-                      HandRaise(), //top left
-                      BRBTag(), //top left
-                      AudioMuteStatus(), //top right
+                      const HandRaise(), //top left
+                      const BRBTag(), //top left
+                      const AudioMuteStatus(), //top right
                       const MoreOption(), //bottom right
                       if (!widget.isOneToOne)
                         Semantics(
@@ -164,16 +164,16 @@ class _PeerTileState extends State<PeerTile> {
                           decoration: BoxDecoration(
                               color: themeTileNameColor,
                               borderRadius: BorderRadius.circular(8)),
-                          child: Center(
+                          child: const Center(
                             child: Padding(
-                              padding: const EdgeInsets.only(
+                              padding: EdgeInsets.only(
                                   left: 8.0, right: 4, top: 4, bottom: 4),
                               child: PeerName(),
                             ),
                           ),
                         ),
                       ),
-                      RTCStatsView(isLocal: false),
+                      const RTCStatsView(isLocal: false),
                       Align(
                         alignment: Alignment.topRight,
                         child: widget.islongPressEnabled

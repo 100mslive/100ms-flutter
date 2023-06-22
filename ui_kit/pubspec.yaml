@@ -4,14 +4,16 @@ version: 0.0.1
 homepage:
 
 environment:
-  sdk: '>=2.19.6 <3.0.0'
+  sdk: ">=2.19.6 <3.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  
-  hmssdk_flutter: 1.7.0
+
+  hmssdk_flutter:
+    path: ../
+
   wakelock:
   intl:
   flutter_foreground_task:
@@ -43,7 +45,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # To add assets to your package, add an assets section, like this:
   assets:
     - lib/assets/

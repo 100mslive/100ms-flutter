@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
           bottomSheetTheme: BottomSheetThemeData(
               backgroundColor: themeBottomSheetColor, elevation: 5),
           brightness: Brightness.dark,
-          primaryColor: Color.fromARGB(255, 13, 107, 184),
+          primaryColor: const Color.fromARGB(255, 13, 107, 184),
           scaffoldBackgroundColor: Colors.black),
     );
   }

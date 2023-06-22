@@ -13,7 +13,7 @@ class DegradeTile extends StatefulWidget {
   final double itemHeight;
   final double itemWidth;
   final bool isOneToOne;
-  DegradeTile(
+  const DegradeTile(
       {Key? key,
       this.itemHeight = 200,
       this.itemWidth = 200,
@@ -36,7 +36,7 @@ class _DegradeTileState extends State<DegradeTile> {
                 width: widget.itemWidth - 4,
                 decoration: BoxDecoration(
                     color: themeBottomSheetColor,
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                    borderRadius: const BorderRadius.all(Radius.circular(10))),
                 child: Stack(
                   children: [
                     Padding(
@@ -54,13 +54,13 @@ class _DegradeTileState extends State<DegradeTile> {
                                   'packages/hmssdk_uikit/lib/assets/icons/degrade.svg',
                                 ),
                               ),
-                            SubtitleText(
+                            const SubtitleText(
                                 text: "DEGRADED", textColor: Colors.white),
                           ],
                         ),
                       ),
                     ),
-                    AudioLevelAvatar()
+                    const AudioLevelAvatar()
                   ],
                 ),
               ));

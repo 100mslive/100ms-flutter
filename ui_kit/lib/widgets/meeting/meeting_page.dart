@@ -11,7 +11,6 @@ import 'package:hmssdk_uikit/common/utility_components.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
 import 'package:hmssdk_uikit/enums/meeting_mode.dart';
 import 'package:hmssdk_uikit/enums/session_store_keys.dart';
-import 'package:hmssdk_uikit/hmssdk_interactor.dart';
 import 'package:hmssdk_uikit/model/peer_track_node.dart';
 import 'package:hmssdk_uikit/widgets/app_dialogs/audio_device_change_dialog.dart';
 import 'package:hmssdk_uikit/widgets/bottom_sheets/chat_bottom_sheet.dart';
@@ -228,7 +227,7 @@ class _MeetingPageState extends State<MeetingPage> {
                     selector: (_, meetingStore) => meetingStore.isPipActive,
                     builder: (_, isPipActive, __) {
                       return isPipActive && Platform.isAndroid
-                          ? PipView()
+                          ? const PipView()
                           : Scaffold(
                               resizeToAvoidBottomInset: false,
                               body: SafeArea(
@@ -488,8 +487,8 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                     child: SvgPicture
                                                                         .asset(
                                                                       "packages/hmssdk_uikit/lib/assets/icons/live_stream.svg",
-                                                                      color:
-                                                                          colorScheme.error,
+                                                                      color: colorScheme
+                                                                          .error,
                                                                       fit: BoxFit
                                                                           .scaleDown,
                                                                     ),
@@ -673,7 +672,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                           .read<
                                                                               MeetingStore>(),
                                                                       child:
-                                                                          ChatBottomSheet()),
+                                                                          const ChatBottomSheet()),
                                                             )
                                                           },
                                                           width: 40,
@@ -939,7 +938,8 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                       radius:
                                                                           40,
                                                                       backgroundColor:
-                                                                          colorScheme.error,
+                                                                          colorScheme
+                                                                              .error,
                                                                       child: SvgPicture.asset(
                                                                           "packages/hmssdk_uikit/lib/assets/icons/end.svg",
                                                                           color:
@@ -1030,7 +1030,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                           value: context.read<
                                                                               MeetingStore>(),
                                                                           child:
-                                                                              StartHLSBottomSheet()),
+                                                                              const StartHLSBottomSheet()),
                                                                     );
                                                                   },
                                                                   child:

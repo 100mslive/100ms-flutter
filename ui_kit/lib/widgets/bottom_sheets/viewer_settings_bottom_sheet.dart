@@ -14,6 +14,8 @@ import 'package:badges/badges.dart' as badge;
 import 'notification_settings_bottom_sheet.dart';
 
 class ViewerSettingsBottomSheet extends StatefulWidget {
+  const ViewerSettingsBottomSheet({super.key});
+
   @override
   State<ViewerSettingsBottomSheet> createState() =>
       _ViewerSettingsBottomSheetState();
@@ -89,7 +91,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                         context: context,
                         builder: (ctx) => ChangeNotifierProvider.value(
                             value: context.read<MeetingStore>(),
-                            child: ParticipantsBottomSheet()),
+                            child: const ParticipantsBottomSheet()),
                       );
                     },
                     child: Container(
@@ -257,7 +259,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         context: context,
-                        builder: (ctx) => NotificationSettingsBottomSheet());
+                        builder: (ctx) => const NotificationSettingsBottomSheet());
                   },
                   contentPadding: EdgeInsets.zero,
                   leading: SvgPicture.asset(

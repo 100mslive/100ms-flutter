@@ -7,8 +7,8 @@ class HMSButton extends StatelessWidget {
   final Function() onPressed;
   final Widget childWidget;
   final Color? buttonBackgroundColor;
-  HMSButton(
-      {required this.width,
+  const HMSButton(
+      {super.key, required this.width,
       this.shadowColor,
       required this.onPressed,
       required this.childWidget,

@@ -1,14 +1,10 @@
-import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_uikit/common/app_color.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
 import 'package:hmssdk_uikit/hms_prebuilt_options.dart';
 import 'package:hmssdk_uikit/hmssdk_interactor.dart';
 import 'package:hmssdk_uikit/preview/preview_page.dart';
 import 'package:hmssdk_uikit/preview/preview_store.dart';
-import 'package:hmssdk_uikit/widgets/meeting/meeting_page.dart';
-import 'package:hmssdk_uikit/widgets/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
 class ScreenController extends StatefulWidget {
@@ -67,7 +63,7 @@ class _ScreenControllerState extends State<ScreenController> {
       //     scaffoldBackgroundColor: Colors.black),
       body: isLoading
           ? const Center(
-              child: const CircularProgressIndicator(
+              child: CircularProgressIndicator(
                 strokeWidth: 2,
               ),
             )

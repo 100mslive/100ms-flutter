@@ -40,13 +40,13 @@ class PeerTrackNode extends ChangeNotifier {
   }
 
   void setOffScreenStatus(bool currentState) {
-    this.isOffscreen = currentState;
+    isOffscreen = currentState;
     notify();
   }
 
   void setAudioLevel(int audioLevel) {
     this.audioLevel = audioLevel;
-    if (!this.isOffscreen) {
+    if (!isOffscreen) {
       notify();
     }
   }
@@ -54,7 +54,7 @@ class PeerTrackNode extends ChangeNotifier {
   void setNetworkQuality(int? networkQuality) {
     if (networkQuality != null) {
       this.networkQuality = networkQuality;
-      if (!this.isOffscreen) {
+      if (!isOffscreen) {
         notify();
       }
     }
@@ -62,34 +62,30 @@ class PeerTrackNode extends ChangeNotifier {
 
   void setHMSRemoteAudioStats(HMSRemoteAudioStats hmsRemoteAudioStats) {
     stats?.hmsRemoteAudioStats = hmsRemoteAudioStats;
-    if (!this.isOffscreen) {
+    if (!isOffscreen) {
       notify();
     }
   }
 
   void setHMSRemoteVideoStats(HMSRemoteVideoStats hmsRemoteVideoStats) {
     stats?.hmsRemoteVideoStats = hmsRemoteVideoStats;
-    if (!this.isOffscreen) {
+    if (!isOffscreen) {
       notify();
     }
   }
 
   void setHMSLocalVideoStats(List<HMSLocalVideoStats> hmsLocalVideoStats) {
     stats?.hmsLocalVideoStats = hmsLocalVideoStats;
-    if (!this.isOffscreen) {
+    if (!isOffscreen) {
       notify();
     }
   }
 
   void setHMSLocalAudioStats(HMSLocalAudioStats hmsLocalAudioStats) {
     stats?.hmsLocalAudioStats = hmsLocalAudioStats;
-    if (!this.isOffscreen) {
+    if (!isOffscreen) {
       notify();
     }
   }
 
-  @override
-  bool operator ==(Object other) {
-    return super == other;
-  }
 }

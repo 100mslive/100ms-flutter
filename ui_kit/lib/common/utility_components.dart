@@ -30,7 +30,7 @@ class UtilityComponents {
         insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         actionsPadding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
         backgroundColor: const Color.fromRGBO(32, 22, 23, 1),
-        title: Container(
+        title: SizedBox(
           width: 300,
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -98,7 +98,8 @@ class UtilityComponents {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       shadowColor: MaterialStateProperty.all(themeSurfaceColor),
-                      backgroundColor: MaterialStateProperty.all(colorScheme.error),
+                      backgroundColor:
+                          MaterialStateProperty.all(colorScheme.error),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                         side: BorderSide(width: 1, color: colorScheme.error),
@@ -138,7 +139,7 @@ class UtilityComponents {
         insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         actionsPadding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
         backgroundColor: themeBottomSheetColor,
-        title: Container(
+        title: SizedBox(
           width: 300,
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -203,7 +204,8 @@ class UtilityComponents {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       shadowColor: MaterialStateProperty.all(themeSurfaceColor),
-                      backgroundColor: MaterialStateProperty.all(colorScheme.error),
+                      backgroundColor:
+                          MaterialStateProperty.all(colorScheme.error),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                         side: BorderSide(width: 1, color: colorScheme.error),
@@ -447,7 +449,7 @@ class UtilityComponents {
                     color: iconColor,
                   ),
                 ),
-                content: Container(
+                content: SizedBox(
                     width: 300,
                     child: SingleChildScrollView(
                       child: Column(
@@ -509,7 +511,8 @@ class UtilityComponents {
                                       shadowColor: MaterialStateProperty.all(
                                           themeSurfaceColor),
                                       backgroundColor:
-                                          MaterialStateProperty.all(colorScheme.error),
+                                          MaterialStateProperty.all(
+                                              colorScheme.error),
                                       shape: MaterialStateProperty.all<
                                               RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
@@ -585,7 +588,7 @@ class UtilityComponents {
                     color: iconColor,
                   ),
                 ),
-                content: Container(
+                content: SizedBox(
                     width: 300,
                     child: SingleChildScrollView(
                       child: Column(
@@ -673,7 +676,8 @@ class UtilityComponents {
                                       shadowColor: MaterialStateProperty.all(
                                           themeSurfaceColor),
                                       backgroundColor:
-                                          MaterialStateProperty.all(colorScheme.error),
+                                          MaterialStateProperty.all(
+                                              colorScheme.error),
                                       shape: MaterialStateProperty.all<
                                               RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
@@ -872,7 +876,7 @@ class UtilityComponents {
         insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         actionsPadding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
         backgroundColor: const Color.fromRGBO(32, 22, 23, 1),
-        title: Container(
+        title: SizedBox(
           width: 300,
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -942,7 +946,8 @@ class UtilityComponents {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       shadowColor: MaterialStateProperty.all(themeSurfaceColor),
-                      backgroundColor: MaterialStateProperty.all(colorScheme.error),
+                      backgroundColor:
+                          MaterialStateProperty.all(colorScheme.error),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                         side: BorderSide(width: 1, color: colorScheme.error),
@@ -978,9 +983,9 @@ class UtilityComponents {
     MeetingStore meetingStore = Provider.of<MeetingStore>(context);
     return GestureDetector(
       onTap: () {
-        if (meetingStore.isLandscapeLocked)
+        if (meetingStore.isLandscapeLocked) {
           meetingStore.setLandscapeLock(false);
-        else {
+        } else {
           meetingStore.setLandscapeLock(true);
         }
       },
@@ -1068,8 +1073,8 @@ class UtilityComponents {
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(12)),
             color: themeBottomSheetColor,
-            boxShadow: [
-              const BoxShadow(
+            boxShadow: const [
+              BoxShadow(
                 color: Colors.black,
                 offset: Offset(0.0, 1.0),
                 blurRadius: 6.0,
@@ -1139,7 +1144,7 @@ class UtilityComponents {
         insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         actionsPadding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
         backgroundColor: const Color.fromRGBO(32, 22, 23, 1),
-        title: Container(
+        title: SizedBox(
           width: 300,
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -1208,7 +1213,8 @@ class UtilityComponents {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       shadowColor: MaterialStateProperty.all(themeSurfaceColor),
-                      backgroundColor: MaterialStateProperty.all(colorScheme.error),
+                      backgroundColor:
+                          MaterialStateProperty.all(colorScheme.error),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                         side: BorderSide(width: 1, color: colorScheme.error),

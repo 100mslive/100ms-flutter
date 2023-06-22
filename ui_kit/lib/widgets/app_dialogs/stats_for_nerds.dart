@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 class StatsForNerds extends StatefulWidget {
   final List<PeerTrackNode> peerTrackNode;
-  StatsForNerds({Key? key, required this.peerTrackNode}) : super(key: key);
+  const StatsForNerds({Key? key, required this.peerTrackNode}) : super(key: key);
 
   @override
   State<StatsForNerds> createState() => _StatsForNerdsState();
@@ -62,10 +62,10 @@ class _StatsForNerdsState extends State<StatsForNerds> {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      actionsPadding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+      actionsPadding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
       backgroundColor: themeBottomSheetColor,
-      insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      contentPadding: EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      contentPadding: const EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -75,7 +75,7 @@ class _StatsForNerdsState extends State<StatsForNerds> {
             letterSpacing: 0.15,
             textColor: themeDefaultColor,
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
           Row(
@@ -96,7 +96,7 @@ class _StatsForNerdsState extends State<StatsForNerds> {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
           SubtitleText(
@@ -115,7 +115,7 @@ class _StatsForNerdsState extends State<StatsForNerds> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                padding: EdgeInsets.only(left: 10, right: 5),
+                padding: const EdgeInsets.only(left: 10, right: 5),
                 decoration: BoxDecoration(
                   color: themeSurfaceColor,
                   borderRadius: BorderRadius.circular(10.0),
@@ -129,12 +129,12 @@ class _StatsForNerdsState extends State<StatsForNerds> {
                         dropDownItems: <DropdownMenuItem>[
                       ...widget.peerTrackNode
                           .map((peerNode) => DropdownMenuItem(
+                                value: peerNode,
                                 child: TitleText(
                                   text: peerNode.peer.name,
                                   textColor: themeDefaultColor,
                                   fontWeight: FontWeight.w400,
                                 ),
-                                value: peerNode,
                               ))
                           .toList(),
                     ],
@@ -144,18 +144,18 @@ class _StatsForNerdsState extends State<StatsForNerds> {
                           fontWeight: FontWeight.w400,
                         ),
                         iconStyleData: IconStyleData(
-                          icon: Icon(Icons.keyboard_arrow_down),
+                          icon: const Icon(Icons.keyboard_arrow_down),
                           iconEnabledColor: themeDefaultColor,
                         ),
                         selectedValue: valueChoose,
                         updateSelectedValue: _updateDropDownValue)),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               if (valueChoose != null)
                 Container(
-                  padding: EdgeInsets.only(left: 10, right: 5),
+                  padding: const EdgeInsets.only(left: 10, right: 5),
                   decoration: BoxDecoration(
                     color: themeSurfaceColor,
                     borderRadius: BorderRadius.circular(10.0),
@@ -170,39 +170,39 @@ class _StatsForNerdsState extends State<StatsForNerds> {
                         if (valueChoose!.stats?.hmsLocalAudioStats != null ||
                             valueChoose!.stats?.hmsRemoteAudioStats != null)
                           DropdownMenuItem(
+                            value: "Regular Audio",
                             child: TitleText(
                               text: "Regular Audio",
                               textColor: themeDefaultColor,
                               fontWeight: FontWeight.w400,
                             ),
-                            value: "Regular Audio",
                           ),
                         if (valueChoose!.stats?.hmsRemoteVideoStats != null)
                           DropdownMenuItem(
+                            value: "Regular Video",
                             child: TitleText(
                               text: "Regular Video",
                               textColor: themeDefaultColor,
                               fontWeight: FontWeight.w400,
                             ),
-                            value: "Regular Video",
                           ),
                         ...?valueChoose!.stats?.hmsLocalVideoStats
                             ?.map(
                               (localVideoStats) => DropdownMenuItem(
+                                value:
+                                    "Regular Video - ${HMSSimulcastLayerValue.getValueFromHMSSimulcastLayer(localVideoStats.hmsLayer)}",
                                 child: TitleText(
                                   text:
                                       "Regular Video - ${HMSSimulcastLayerValue.getValueFromHMSSimulcastLayer(localVideoStats.hmsLayer)}",
                                   textColor: themeDefaultColor,
                                   fontWeight: FontWeight.w400,
                                 ),
-                                value:
-                                    "Regular Video - ${HMSSimulcastLayerValue.getValueFromHMSSimulcastLayer(localVideoStats.hmsLayer)}",
                               ),
                             )
                             .toList()
                       ],
                           iconStyleData: IconStyleData(
-                            icon: Icon(Icons.keyboard_arrow_down),
+                            icon: const Icon(Icons.keyboard_arrow_down),
                             iconEnabledColor: themeDefaultColor,
                           ),
                           selectedValue: statsType,
@@ -210,7 +210,7 @@ class _StatsForNerdsState extends State<StatsForNerds> {
                 ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           if (valueChoose != null && statsType != null)
@@ -228,7 +228,7 @@ class _StatsForNerdsState extends State<StatsForNerds> {
                       MaterialStateProperty.all(themeBottomSheetColor),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                    side: BorderSide(
+                    side: const BorderSide(
                         width: 1, color: Color.fromRGBO(107, 125, 153, 1)),
                     borderRadius: BorderRadius.circular(8.0),
                   ))),
@@ -255,12 +255,12 @@ class _StatsForNerdsState extends State<StatsForNerds> {
 class StatsUI extends StatelessWidget {
   final PeerTrackNode peerNode;
   final String statsType;
-  StatsUI({Key? key, required this.peerNode, required this.statsType})
+  const StatsUI({Key? key, required this.peerNode, required this.statsType})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (statsType.toLowerCase().contains("audio") && peerNode.peer.isLocal)
+    if (statsType.toLowerCase().contains("audio") && peerNode.peer.isLocal) {
       return Selector<PeerTrackNode, HMSLocalAudioStats?>(
           selector: (_, peerTrackNode) =>
               peerTrackNode.stats?.hmsLocalAudioStats,
@@ -271,7 +271,7 @@ class StatsUI extends StatelessWidget {
               alignment: WrapAlignment.center,
               children: [
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -290,7 +290,7 @@ class StatsUI extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -310,7 +310,7 @@ class StatsUI extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -332,7 +332,8 @@ class StatsUI extends StatelessWidget {
               ],
             );
           });
-    if (statsType.toLowerCase().contains("audio") && !peerNode.peer.isLocal)
+    }
+    if (statsType.toLowerCase().contains("audio") && !peerNode.peer.isLocal) {
       return Selector<PeerTrackNode, HMSRemoteAudioStats?>(
           selector: (_, peerTrackNode) =>
               peerTrackNode.stats?.hmsRemoteAudioStats,
@@ -343,7 +344,7 @@ class StatsUI extends StatelessWidget {
               alignment: WrapAlignment.center,
               children: [
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -362,7 +363,7 @@ class StatsUI extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -382,7 +383,7 @@ class StatsUI extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -401,7 +402,7 @@ class StatsUI extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -421,7 +422,7 @@ class StatsUI extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -443,7 +444,8 @@ class StatsUI extends StatelessWidget {
               ],
             );
           });
-    if (statsType.toLowerCase().contains("video") && peerNode.peer.isLocal)
+    }
+    if (statsType.toLowerCase().contains("video") && peerNode.peer.isLocal) {
       return Selector<PeerTrackNode, HMSLocalVideoStats?>(
           selector: (_, peerTrackNode) => peerTrackNode
               .stats?.hmsLocalVideoStats
@@ -457,7 +459,7 @@ class StatsUI extends StatelessWidget {
               alignment: WrapAlignment.center,
               children: [
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -476,7 +478,7 @@ class StatsUI extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -496,7 +498,7 @@ class StatsUI extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -516,7 +518,7 @@ class StatsUI extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -536,7 +538,7 @@ class StatsUI extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -558,7 +560,8 @@ class StatsUI extends StatelessWidget {
               ],
             );
           });
-    if (statsType.toLowerCase().contains("video") && !peerNode.peer.isLocal)
+    }
+    if (statsType.toLowerCase().contains("video") && !peerNode.peer.isLocal) {
       return Selector<PeerTrackNode, HMSRemoteVideoStats?>(
           selector: (_, peerTrackNode) =>
               peerTrackNode.stats?.hmsRemoteVideoStats,
@@ -569,7 +572,7 @@ class StatsUI extends StatelessWidget {
               alignment: WrapAlignment.center,
               children: [
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -588,7 +591,7 @@ class StatsUI extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -608,7 +611,7 @@ class StatsUI extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -627,7 +630,7 @@ class StatsUI extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -647,7 +650,7 @@ class StatsUI extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -667,7 +670,7 @@ class StatsUI extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.blueGrey,
                       borderRadius: BorderRadius.circular(10)),
@@ -689,9 +692,10 @@ class StatsUI extends StatelessWidget {
               ],
             );
           });
+    }
 
     return Container(
-      child: Text("Stats not available"),
+      child: const Text("Stats not available"),
     );
   }
 }

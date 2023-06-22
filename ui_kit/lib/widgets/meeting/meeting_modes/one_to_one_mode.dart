@@ -53,7 +53,7 @@ class _OneToOneModeState extends State<OneToOneMode> {
         child: Stack(
           children: [
             ChangeNotifierProvider.value(
-              key: ValueKey(screenPeer?.uid ?? "" + "video_view"),
+              key: ValueKey(screenPeer?.uid ?? "" "video_view"),
               value: screenPeer,
               child: PeerTile(
                 itemHeight: widget.size.height,
@@ -72,9 +72,9 @@ class _OneToOneModeState extends State<OneToOneMode> {
                     width: 100,
                     height: 150,
                     child: ChangeNotifierProvider.value(
-                      key: ValueKey(oneToOnePeer?.uid ?? "" + "video_view"),
+                      key: ValueKey(oneToOnePeer?.uid ?? "" "video_view"),
                       value: oneToOnePeer,
-                      child: PeerTile(
+                      child: const PeerTile(
                         isOneToOne: true,
                         itemHeight: 150,
                         itemWidth: 100,

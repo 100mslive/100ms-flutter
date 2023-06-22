@@ -16,8 +16,8 @@ class AudioDeviceChangeDialog extends StatefulWidget {
   final List<HMSAudioDevice> audioDevicesList;
   final Function(HMSAudioDevice) changeAudioDevice;
 
-  AudioDeviceChangeDialog(
-      {required this.audioDevicesList,
+  const AudioDeviceChangeDialog(
+      {super.key, required this.audioDevicesList,
       required this.changeAudioDevice,
       required this.currentAudioDevice});
 
@@ -44,10 +44,10 @@ class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
     String message = "Route the audio output to";
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      actionsPadding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+      actionsPadding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
       backgroundColor: themeBottomSheetColor,
-      insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      contentPadding: EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      contentPadding: const EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -57,7 +57,7 @@ class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
             letterSpacing: 0.15,
             textColor: themeDefaultColor,
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
           SubtitleText(text: message, textColor: themeSubHeadingColor),
@@ -68,7 +68,7 @@ class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: EdgeInsets.only(left: 10, right: 5),
+            padding: const EdgeInsets.only(left: 10, right: 5),
             decoration: BoxDecoration(
               color: themeSurfaceColor,
               borderRadius: BorderRadius.circular(10.0),
@@ -80,17 +80,17 @@ class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
                     dropDownItems: <DropdownMenuItem>[
                   ...widget.audioDevicesList
                       .map((device) => DropdownMenuItem(
+                            value: device,
                             child: TitleText(
                               text: device.name,
                               textColor: themeDefaultColor,
                               fontWeight: FontWeight.w400,
                             ),
-                            value: device,
                           ))
                       .toList(),
                 ],
                     iconStyleData: IconStyleData(
-                      icon: Icon(Icons.keyboard_arrow_down),
+                      icon: const Icon(Icons.keyboard_arrow_down),
                       iconEnabledColor: themeDefaultColor,
                     ),
                     selectedValue: valueChoose,
@@ -109,7 +109,7 @@ class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
                         MaterialStateProperty.all(themeBottomSheetColor),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
-                      side: BorderSide(
+                      side: const BorderSide(
                           width: 1, color: Color.fromRGBO(107, 125, 153, 1)),
                       borderRadius: BorderRadius.circular(8.0),
                     ))),

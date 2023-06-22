@@ -9,8 +9,8 @@ class HMSListenableButton extends StatelessWidget {
   final TextEditingController textController;
   final String errorMessage;
 
-  HMSListenableButton(
-      {required this.width,
+  const HMSListenableButton(
+      {super.key, required this.width,
       this.shadowColor,
       required this.onPressed,
       required this.childWidget,

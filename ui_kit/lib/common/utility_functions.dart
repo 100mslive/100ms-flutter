@@ -41,7 +41,7 @@ class Utilities {
     if (name.contains(regexEmoji)) {
       name = name.replaceAll(regexEmoji, '');
       if (name.trim().isEmpty) {
-        return Color(0xFF6554C0);
+        return const Color(0xFF6554C0);
       }
     }
     return Utilities
@@ -58,11 +58,11 @@ class Utilities {
 
   /// List of alignments for timed metadata toasts
   static List<Alignment> timedMetadataAlignment = [
-    Alignment(-0.9, 0.4),
-    Alignment(-0.4, 0.2),
-    Alignment(0, 0.8),
-    Alignment(0.4, 0.9),
-    Alignment(0.8, 0.5)
+    const Alignment(-0.9, 0.4),
+    const Alignment(-0.4, 0.2),
+    const Alignment(0, 0.8),
+    const Alignment(0.4, 0.9),
+    const Alignment(0.8, 0.5)
   ];
 
   static double getRatio(Size size, BuildContext context) {
@@ -98,7 +98,7 @@ class Utilities {
     if (index != -1) {
       urlSplit[index] = "preview";
     }
-    Constant.streamingUrl = urlSplit.join('/') + "?skip_preview=true";
+    Constant.streamingUrl = "${urlSplit.join('/')}?skip_preview=true";
   }
 
   static Future<bool> getPermissions() async {
@@ -183,7 +183,7 @@ class Utilities {
   static Future<bool?> getBoolData({required String key}) async {
     final prefs = await SharedPreferences.getInstance();
 
-    return prefs.getBool(key) ?? null;
+    return prefs.getBool(key);
   }
 
   static Future<bool> saveBoolData(

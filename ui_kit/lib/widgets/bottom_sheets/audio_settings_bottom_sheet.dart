@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class AudioSettingsBottomSheet extends StatefulWidget {
-  AudioSettingsBottomSheet({
+  const AudioSettingsBottomSheet({
     Key? key,
   }) : super(key: key);
   @override
@@ -40,7 +40,7 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    MeetingStore _meetingStore = context.read<MeetingStore>();
+    MeetingStore meetingStore = context.read<MeetingStore>();
     return FractionallySizedBox(
       heightFactor: 0.5,
       child: Padding(
@@ -97,7 +97,7 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 10),
+                    padding: const EdgeInsets.only(top: 15, bottom: 10),
                     child: Divider(
                       color: dividerColor,
                       height: 5,
@@ -109,11 +109,11 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                           letterSpacing: 0.25)),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Container(
-                    padding: EdgeInsets.only(left: 10, right: 5),
+                    padding: const EdgeInsets.only(left: 10, right: 5),
                     decoration: BoxDecoration(
                       color: themeSurfaceColor,
                       borderRadius: BorderRadius.circular(10.0),
@@ -125,14 +125,14 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
                     child: DropdownButtonHideUnderline(
                         child: HMSDropDown(
                             dropdownKey: dropdownKey,
-                            buttonStyleData: ButtonStyleData(
+                            buttonStyleData: const ButtonStyleData(
                               height: 48,
                             ),
                             dropdownStyleData: DropdownStyleData(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
                                   color: themeSurfaceColor),
-                              offset: Offset(-10, -10),
+                              offset: const Offset(-10, -10),
                             ),
                             dropDownItems: <DropdownMenuItem>[
                               ...data.item1
@@ -160,7 +160,7 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
                             ],
                             selectedValue: Platform.isAndroid
                                 ? data.item3
-                                : _meetingStore.currentAudioDeviceMode,
+                                : meetingStore.currentAudioDeviceMode,
                             updateSelectedValue: _updateDropDownValue)),
                   ),
                 ],

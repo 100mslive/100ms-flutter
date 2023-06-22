@@ -16,8 +16,8 @@ class ChangeSimulcastLayerOptionDialog extends StatefulWidget {
   final List<HMSSimulcastLayerDefinition> layerDefinitions;
   final HMSSimulcastLayer selectedLayer;
   final HMSRemoteVideoTrack track;
-  ChangeSimulcastLayerOptionDialog(
-      {required this.layerDefinitions,
+  const ChangeSimulcastLayerOptionDialog(
+      {super.key, required this.layerDefinitions,
       required this.selectedLayer,
       required this.track});
 
@@ -45,10 +45,10 @@ class _ChangeSimulcastLayerOptionDialogState
     String message = "Current Layer: ${widget.selectedLayer.name}";
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      actionsPadding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+      actionsPadding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
       backgroundColor: themeBottomSheetColor,
-      insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      contentPadding: EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      contentPadding: const EdgeInsets.only(top: 20, bottom: 15, left: 24, right: 24),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -58,7 +58,7 @@ class _ChangeSimulcastLayerOptionDialogState
             letterSpacing: 0.15,
             textColor: themeDefaultColor,
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
           SubtitleText(text: message, textColor: themeSubHeadingColor),
@@ -69,7 +69,7 @@ class _ChangeSimulcastLayerOptionDialogState
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: EdgeInsets.only(left: 10, right: 5),
+            padding: const EdgeInsets.only(left: 10, right: 5),
             decoration: BoxDecoration(
               color: themeSurfaceColor,
               borderRadius: BorderRadius.circular(10.0),
@@ -83,27 +83,23 @@ class _ChangeSimulcastLayerOptionDialogState
                       .sortedBy(
                           (element) => element.hmsSimulcastLayer.toString())
                       .map((layer) => DropdownMenuItem(
+                            value: layer.hmsSimulcastLayer,
                             child: TitleText(
-                              text: layer.hmsSimulcastLayer.name +
-                                  " " +
-                                  layer.hmsResolution.width.toStringAsFixed(0) +
-                                  " x " +
-                                  layer.hmsResolution.height.toStringAsFixed(0),
+                              text: "${layer.hmsSimulcastLayer.name} ${layer.hmsResolution.width.toStringAsFixed(0)} x ${layer.hmsResolution.height.toStringAsFixed(0)}",
                               textColor: themeDefaultColor,
                               fontWeight: FontWeight.w400,
                             ),
-                            value: layer.hmsSimulcastLayer,
                           ))
                       .toList(),
                 ],
                     iconStyleData: IconStyleData(
-                      icon: Icon(Icons.keyboard_arrow_down),
+                      icon: const Icon(Icons.keyboard_arrow_down),
                       iconEnabledColor: themeDefaultColor,
                     ),
                     selectedValue: valueChoose,
                     updateSelectedValue: _updateDropDownValue)),
           ),
-          SizedBox(
+          const SizedBox(
             height: 15,
           ),
         ],
@@ -119,7 +115,7 @@ class _ChangeSimulcastLayerOptionDialogState
                         MaterialStateProperty.all(themeBottomSheetColor),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
-                      side: BorderSide(
+                      side: const BorderSide(
                           width: 1, color: Color.fromRGBO(107, 125, 153, 1)),
                       borderRadius: BorderRadius.circular(8.0),
                     ))),
