@@ -13,6 +13,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/home_screen/user_detail_screen.dart';
 import 'package:hmssdk_uikit/common/app_color.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
+import 'package:hmssdk_uikit/hms_prebuilt_options.dart';
+import 'package:hmssdk_uikit/hmssdk_uikit.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -266,13 +268,13 @@ class _HomePageState extends State<HomePage> {
       return;
     }
     FocusManager.instance.primaryFocus?.unfocus();
-    Utilities.setRTMPUrl(meetingLinkController.text);
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (_) => UserDetailScreen(
-                autofocusField: true,
-                meetingLink: meetingLinkController.text.trim())));
+            builder: (_) => HMSPrebuilt(
+                  roomCode: meetingLinkController.text,
+                  hmsConfig: HMSPrebuiltOptions(userName: ""),
+                )));
   }
 
   @override

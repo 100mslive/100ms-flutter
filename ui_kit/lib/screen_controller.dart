@@ -62,7 +62,7 @@ class _ScreenControllerState extends State<ScreenController> {
               value: _previewStore,
               child: PreviewPage(
                 meetingLink: widget.roomCode,
-                name: widget.hmsConfig?.userName ?? "Test User",
+                name: "",
               )),
     );
   }

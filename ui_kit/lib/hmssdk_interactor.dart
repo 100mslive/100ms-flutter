@@ -15,8 +15,8 @@ class HMSSDKInteractor {
   /// state while room is joined. By default both audio and video are kept as unmute.
   HMSSDKInteractor(
       {HMSIOSScreenshareConfig? iOSScreenshareConfig,
-      bool joinWithMutedAudio = true,
-      bool joinWithMutedVideo = true,
+      bool joinWithMutedAudio = false,
+      bool joinWithMutedVideo = false,
       bool isSoftwareDecoderDisabled = true,
       bool isAudioMixerDisabled = true,
       HMSAudioMode audioMode = HMSAudioMode.VOICE}) {

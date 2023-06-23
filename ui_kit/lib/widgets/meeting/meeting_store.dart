@@ -195,19 +195,19 @@ class MeetingStore extends ChangeNotifier
     //If we are joining the room from preview we already have authToken so we don't
     //need to call the getAuthTokenByRoomCode method
     if (roomConfig == null) {
-      List<String?>? roomData = RoomService().getCode(roomUrl);
+      // List<String?>? roomData = RoomService().getCode(roomUrl);
 
       //If the link is not valid then we might not get the code and whether the link is a
       //PROD or QA so we return the error in this case
-      if (roomData != null && roomData.isEmpty) {
-        return HMSException(
-            message: "Invalid meeting URL",
-            description: "Provided meeting URL is invalid",
-            action: "Please Check the meeting URL",
-            isTerminal: false);
-      }
+      // if (roomData != null && roomData.isEmpty) {
+      //   return HMSException(
+      //       message: "Invalid meeting URL",
+      //       description: "Provided meeting URL is invalid",
+      //       action: "Please Check the meeting URL",
+      //       isTerminal: false);
+      // }
 
-      Constant.meetingCode = roomData?[0] ?? '';
+      Constant.meetingCode = roomUrl;
 
       //We use this to get the auth token from room code
       dynamic tokenData = await _hmsSDKInteractor.getAuthTokenByRoomCode(

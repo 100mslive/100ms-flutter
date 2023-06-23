@@ -30,8 +30,8 @@ class HMSListenableButton extends StatelessWidget {
                     shadowColor: MaterialStateProperty.all(
                         shadowColor ?? themeSurfaceColor),
                     backgroundColor: textController.text.isEmpty
-                        ? MaterialStateProperty.all(themeSurfaceColor)
-                        : MaterialStateProperty.all(hmsdefaultColor),
+                        ? MaterialStateProperty.all(primaryDisabled)
+                        : MaterialStateProperty.all(primaryDefault),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
