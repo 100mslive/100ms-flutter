@@ -23,13 +23,13 @@ import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/start_hls_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/more_settings_bottom_sheet.dart';
-import 'package:hmssdk_flutter_example/hls_viewer/hls_player.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting_modes/basic_grid_view.dart';
 import 'package:hmssdk_flutter_example/common/widgets/pip_view.dart';
 import 'package:hmssdk_flutter_example/model/peer_track_node.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
+import 'package:wakelock/wakelock.dart';
 
 class MeetingPage extends StatefulWidget {
   final String meetingLink;
@@ -52,26 +52,7 @@ class _MeetingPageState extends State<MeetingPage> {
   void initState() {
     super.initState();
     checkAudioState();
-    _initForegroundTask();
-  }
-
-  void _initForegroundTask() {
-    FlutterForegroundTask.init(
-        androidNotificationOptions: AndroidNotificationOptions(
-            channelId: '100ms_flutter_notification',
-            channelName: '100ms Flutter Notification',
-            channelDescription:
-                'This notification appears when the foreground service is running.',
-            channelImportance: NotificationChannelImportance.LOW,
-            priority: NotificationPriority.LOW,
-            iconData: const NotificationIconData(
-              resType: ResourceType.mipmap,
-              resPrefix: ResourcePrefix.ic,
-              name: 'launcher',
-            )),
-        iosNotificationOptions:
-            const IOSNotificationOptions(showNotification: false),
-        foregroundTaskOptions: const ForegroundTaskOptions());
+    Wakelock.enable();
   }
 
   void checkAudioState() async {
@@ -265,64 +246,6 @@ class _MeetingPageState extends State<MeetingPage> {
                                                         .screenShareCount]
                                                 : null),
                                         builder: (_, data, __) {
-                                          if (data.item2) {
-                                            return Selector<MeetingStore, bool>(
-                                                selector: (_, meetingStore) =>
-                                                    meetingStore.hasHlsStarted,
-                                                builder:
-                                                    (_, hasHlsStarted, __) {
-                                                  return hasHlsStarted
-                                                      ? Container(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height *
-                                                              0.735,
-                                                          child: Center(
-                                                            child: HLSPlayer(
-                                                              ratio: Utilities
-                                                                  .getHLSPlayerDefaultRatio(
-                                                                      MediaQuery.of(
-                                                                              context)
-                                                                          .size),
-                                                            ),
-                                                          ),
-                                                        )
-                                                      : Container(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height *
-                                                              0.735,
-                                                          child: Center(
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .only(
-                                                                      bottom:
-                                                                          8.0),
-                                                                  child: Text(
-                                                                    "Waiting for HLS to start...",
-                                                                    style: GoogleFonts.inter(
-                                                                        color:
-                                                                            iconColor,
-                                                                        fontSize:
-                                                                            20),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        );
-                                                });
-                                          }
                                           if (data.item3 == 0) {
                                             return Center(
                                                 child: Column(
@@ -379,9 +302,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                     top: 55,
                                                     left: 0,
                                                     right: 0,
-                                                    bottom: (widget.isStreamingLink &&
-                                                            (modeData.item2?.role.permissions.hlsStreaming ==
-                                                                true))
+                                                    bottom: (widget.isStreamingLink && (modeData.item2?.role.permissions.hlsStreaming == true))
                                                         ? 108
                                                         : 68,
                                                     /***
@@ -392,7 +313,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                      * - Remaining as the mode from bottom sheet is selected corresponding grid layout is rendered
                                                     */
                                                     child: Container(
-                                                        child: (((modeData.item1 == MeetingMode.OneToOne) || data.item3 == 2) &&
+                                                        child: (((modeData.item1 == MeetingMode.OneToOne) || ((data.item3 == 2) && context.read<MeetingStore>().peers.length == 2)) &&
                                                                 (modeData.item2 !=
                                                                     null))
                                                             ? OneToOneMode(
@@ -411,7 +332,8 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                     MeetingMode
                                                                         .ActiveSpeaker)
                                                                 ? basicGridView(
-                                                                    peerTracks: data.item1.sublist(0, min(data.item1.length, data.item4 + 4)),
+                                                                    peerTracks:
+                                                                        data.item1.sublist(0, min(data.item1.length, data.item4 + 4)),
                                                                     itemCount: min(data.item3, data.item4 + 4),
                                                                     screenShareCount: data.item4,
                                                                     context: context,

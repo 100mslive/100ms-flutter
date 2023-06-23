@@ -188,7 +188,7 @@ class MessageContainer extends StatelessWidget {
                         child: Text('Pin Message'),
                         onTap: () => context
                             .read<MeetingStore>()
-                            .setSessionMetadata(
+                            .setSessionMetadataForKey(
                                 key: SessionStoreKeyValues.getNameFromMethod(
                                     SessionStoreKey.PINNED_MESSAGE_SESSION_KEY),
                                 metadata: senderName! + ": " + message),

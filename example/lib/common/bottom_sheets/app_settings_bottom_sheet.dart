@@ -69,8 +69,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
         await Utilities.getBoolData(key: 'audio-mixer-disabled') ?? true;
     isAutoSimulcast =
         await Utilities.getBoolData(key: 'is-auto-simulcast') ?? true;
-    int audio_mode_index = await Utilities.getIntData(key: 'audio-mode');
-    currentAudioMode = await HMSAudioMode.values[audio_mode_index];
+    int audioModeIndex = await Utilities.getIntData(key: 'audio-mode');
+    currentAudioMode = HMSAudioMode.values[audioModeIndex];
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
     });
@@ -481,9 +481,13 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                   ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                        File logFile = await getLogFile;
-                        Share.shareXFiles([XFile(logFile.path)],
-                            text: "HMS Log file");
+                        File? logFile = await getLogFile;
+                        if (logFile != null) {
+                          Share.shareXFiles([XFile(logFile.path)],
+                              text: "HMS Log file");
+                        } else {
+                          Utilities.showToast("No file found");
+                        }
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(

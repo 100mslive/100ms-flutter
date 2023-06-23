@@ -13,7 +13,7 @@ import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 
 class AspectRatioOptionDialog extends StatefulWidget {
   final List<String> availableAspectRatios;
-  MeetingStore meetingStore;
+  final MeetingStore meetingStore;
   AspectRatioOptionDialog({
     required this.availableAspectRatios,
     required this.meetingStore,
@@ -140,16 +140,17 @@ class _AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
                 } else {
                   double ratio;
                   if (valueChoose!.contains("Default")) {
+                    widget.meetingStore.isDefaultAspectRatioSelected = true;
                     ratio = Utilities.getHLSPlayerDefaultRatio(
                         MediaQuery.of(context).size);
                   } else {
+                    widget.meetingStore.isDefaultAspectRatioSelected = false;
                     List number = valueChoose!.split(":");
                     ratio = double.parse(number[0]) / double.parse(number[1]);
                   }
                   Utilities.showToast(
                       "Player aspect ratio changed to $valueChoose");
-                  widget.meetingStore
-                      .setPIPVideoController(true, aspectRatio: ratio);
+                  widget.meetingStore.setAspectRatio(ratio);
                   Navigator.pop(context);
                 }
               },

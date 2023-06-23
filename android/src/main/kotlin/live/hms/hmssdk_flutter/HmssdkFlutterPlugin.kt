@@ -1,7 +1,6 @@
 package live.hms.hmssdk_flutter
 
 import android.app.Activity
-import android.app.PictureInPictureParams
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -10,6 +9,7 @@ import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.NonNull
+import com.google.gson.JsonElement
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -21,7 +21,10 @@ import io.flutter.plugin.common.MethodChannel.Result
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import live.hms.hmssdk_flutter.Constants.Companion.METHOD_CALL
+import live.hms.hmssdk_flutter.hls_player.HMSHLSPlayerAction
 import live.hms.hmssdk_flutter.methods.*
+import live.hms.hmssdk_flutter.views.HMSHLSPlayerFactory
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
 import live.hms.video.audio.HMSAudioManager.*
 import live.hms.video.connection.stats.*
@@ -55,19 +58,23 @@ class HmssdkFlutterPlugin :
     private var previewChannel: EventChannel? = null
     private var logsEventChannel: EventChannel? = null
     private var rtcStatsChannel: EventChannel? = null
-    private var sessionStoreChannel : EventChannel? = null
+    private var sessionStoreChannel: EventChannel? = null
+    var hlsPlayerChannel: EventChannel? = null
     private var eventSink: EventChannel.EventSink? = null
     private var previewSink: EventChannel.EventSink? = null
     private var logsSink: EventChannel.EventSink? = null
     private var rtcSink: EventChannel.EventSink? = null
     private var sessionStoreSink: EventChannel.EventSink? = null
+    var hlsPlayerSink: EventChannel.EventSink? = null
     private lateinit var activity: Activity
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
+    private lateinit var hmsHLSPlayerFactory: HMSHLSPlayerFactory
     private var requestChange: HMSRoleChangeRequest? = null
     var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
     private var hmsSessionStore: HmsSessionStore? = null
-    private var hmsKeyChangeObserverList  =  ArrayList<HMSKeyChangeObserver>()
+    private var hmsKeyChangeObserverList = ArrayList<HMSKeyChangeObserver>()
+    var hlsStreamUrl: String? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         if (hmssdkFlutterPlugin == null) {
@@ -84,19 +91,29 @@ class HmssdkFlutterPlugin :
                 EventChannel(flutterPluginBinding.binaryMessenger, "rtc_event_channel")
 
             this.sessionStoreChannel =
-                EventChannel(flutterPluginBinding.binaryMessenger,"session_event_channel")
+                EventChannel(flutterPluginBinding.binaryMessenger, "session_event_channel")
+
+            this.hlsPlayerChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger, "hls_player_channel")
 
             this.meetingEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Meeting event channel not found")
             this.channel?.setMethodCallHandler(this) ?: Log.e("Channel Error", "Event channel not found")
             this.previewChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Preview channel not found")
             this.logsEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Logs event channel not found")
             this.rtcStatsChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "RTC Stats channel not found")
-            this.sessionStoreChannel?.setStreamHandler(this) ?: Log.e("Channel Error","Session Store channel not found")
+            this.sessionStoreChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Session Store channel not found")
+            this.hlsPlayerChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "HLS Player channel not found")
             this.hmsVideoFactory = HMSVideoViewFactory(this)
+            this.hmsHLSPlayerFactory = HMSHLSPlayerFactory(this)
 
             flutterPluginBinding.platformViewRegistry.registerViewFactory(
                 "HMSVideoView",
-                hmsVideoFactory
+                hmsVideoFactory,
+            )
+
+            flutterPluginBinding.platformViewRegistry.registerViewFactory(
+                "HMSHLSPlayer",
+                hmsHLSPlayerFactory,
             )
             hmssdkFlutterPlugin = this
         } else {
@@ -151,7 +168,7 @@ class HmssdkFlutterPlugin :
             }
 
             // MARK: HLS
-            "hls_start_streaming", "hls_stop_streaming" -> {
+            "hls_start_streaming", "hls_stop_streaming", "send_hls_timed_metadata" -> {
                 HMSHLSAction.hlsActions(call, result, hmssdk!!)
             }
 
@@ -184,9 +201,7 @@ class HmssdkFlutterPlugin :
             "get_track_settings" -> {
                 trackSettings(call, result)
             }
-            "get_session_metadata", "set_session_metadata" -> {
-                HMSSessionMetadataAction.sessionMetadataActions(call, result, hmssdk!!)
-            }
+
             "set_playback_allowed_for_track" -> {
                 setPlaybackAllowedForTrack(call, result)
             }
@@ -203,13 +218,16 @@ class HmssdkFlutterPlugin :
                 HMSCameraControlsAction.cameraControlsAction(call, result, hmssdk!!, activity.applicationContext)
             }
             "get_session_metadata_for_key", "set_session_metadata_for_key" -> {
-                HMSSessionStoreAction.sessionStoreActions(call,result,hmsSessionStore)
+                HMSSessionStoreAction.sessionStoreActions(call, result, hmsSessionStore)
             }
-            "add_key_change_listener"-> {
-                addKeyChangeListener(call,result)
+            "add_key_change_listener" -> {
+                addKeyChangeListener(call, result)
             }
             "remove_key_change_listener" -> {
-                removeKeyChangeListener(call)
+                removeKeyChangeListener(call, result)
+            }
+            "start_hls_player", "stop_hls_player", "pause_hls_player", "resume_hls_player", "seek_to_live_position", "seek_forward", "seek_backward", "set_hls_player_volume", "add_hls_stats_listener", "remove_hls_stats_listener" -> {
+                HMSHLSPlayerAction.hlsPlayerAction(call, result, activity)
             }
             else -> {
                 result.notImplemented()
@@ -384,12 +402,14 @@ class HmssdkFlutterPlugin :
             previewChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Preview channel not found")
             logsEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Logs event channel not found")
             rtcStatsChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "RTC Stats channel not found")
-            sessionStoreChannel?.setStreamHandler(null)?:Log.e("Channel Error","Session Store channel not found")
+            sessionStoreChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Session Store channel not found")
+            hlsPlayerChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "HLS Player channel not found")
             eventSink = null
             previewSink = null
             rtcSink = null
             logsSink = null
             sessionStoreSink = null
+            hlsPlayerSink = null
             hmssdkFlutterPlugin = null
         } else {
             Log.e("Plugin Error", "hmssdkFlutterPlugin is null in onDetachedFromEngine")
@@ -419,7 +439,7 @@ class HmssdkFlutterPlugin :
     }
 
     private fun getConfig(
-        call: MethodCall
+        call: MethodCall,
     ): HMSConfig {
         val userName = call.argument<String>("user_name")
         val authToken = call.argument<String>("auth_token")
@@ -433,7 +453,7 @@ class HmssdkFlutterPlugin :
                 authtoken = authToken!!,
                 metadata = metaData,
                 initEndpoint = endPoint.trim(),
-                captureNetworkQualityInPreview = captureNetworkQualityInPreview
+                captureNetworkQualityInPreview = captureNetworkQualityInPreview,
             )
         }
 
@@ -441,7 +461,7 @@ class HmssdkFlutterPlugin :
             userName = userName!!,
             authtoken = authToken!!,
             metadata = metaData,
-            captureNetworkQualityInPreview = captureNetworkQualityInPreview
+            captureNetworkQualityInPreview = captureNetworkQualityInPreview,
         )
     }
 
@@ -471,7 +491,7 @@ class HmssdkFlutterPlugin :
 
     private fun leave(result: Result) {
         hmssdk!!.leave(hmsActionResultListener = HMSCommonAction.getActionListener(result))
-        disposePIP()
+        HMSPipAction.disposePIP(activity)
         removeAllKeyChangeListener()
     }
 
@@ -490,8 +510,10 @@ class HmssdkFlutterPlugin :
             this.logsSink = events
         } else if (nameOfEventSink == "rtc_stats") {
             this.rtcSink = events
-        } else if(nameOfEventSink == "session_store") {
+        } else if (nameOfEventSink == "session_store") {
             this.sessionStoreSink = events
+        } else if (nameOfEventSink == "hls_player") {
+            this.hlsPlayerSink = events
         }
     }
 
@@ -537,7 +559,7 @@ class HmssdkFlutterPlugin :
                 code = 6004,
                 description = "Room code is null",
                 message = "Room code is null",
-                name = "Room code null error"
+                name = "Room code null error",
             )
             val args = HMSExceptionExtension.toDictionary(hmsException)
             result.success(HMSResultExtension.toDictionary(false, args))
@@ -561,7 +583,7 @@ class HmssdkFlutterPlugin :
             peer,
             roleToChangeTo,
             forceChange ?: false,
-            hmsActionResultListener = HMSCommonAction.getActionListener(result)
+            hmsActionResultListener = HMSCommonAction.getActionListener(result),
         )
     }
 
@@ -578,7 +600,7 @@ class HmssdkFlutterPlugin :
             peer,
             roleToChangeTo,
             forceChange ?: false,
-            hmsActionResultListener = HMSCommonAction.getActionListener(result)
+            hmsActionResultListener = HMSCommonAction.getActionListener(result),
         )
     }
 
@@ -597,7 +619,7 @@ class HmssdkFlutterPlugin :
         if (requestChange != null) {
             hmssdk!!.acceptChangeRole(
                 this.requestChange!!,
-                hmsActionResultListener = HMSCommonAction.getActionListener(result)
+                hmsActionResultListener = HMSCommonAction.getActionListener(result),
             )
             requestChange = null
         } else {
@@ -606,7 +628,7 @@ class HmssdkFlutterPlugin :
                 code = 6004,
                 description = "Role Change Request is Expired.",
                 message = "Role Change Request is Expired.",
-                name = "Role Change Request Error"
+                name = "Role Change Request Error",
             )
             val args = HMSExceptionExtension.toDictionary(hmsException)
             result.success(args)
@@ -619,7 +641,7 @@ class HmssdkFlutterPlugin :
 
             HMSLogger.i(
                 "onAudioLevelUpdateHMSLogger",
-                HMSLogger.level.toString()
+                HMSLogger.level.toString(),
             )
 
             if (speakers.isNotEmpty()) {
@@ -656,7 +678,7 @@ class HmssdkFlutterPlugin :
         hmssdk!!.changeTrackState(
             track,
             mute!!,
-            hmsActionResultListener = HMSCommonAction.getActionListener(result)
+            hmsActionResultListener = HMSCommonAction.getActionListener(result),
         )
     }
 
@@ -670,7 +692,7 @@ class HmssdkFlutterPlugin :
         hmssdk!!.removePeerRequest(
             peer = peer,
             hmsActionResultListener = HMSCommonAction.getActionListener(result),
-            reason = reason
+            reason = reason,
         )
     }
 
@@ -686,9 +708,9 @@ class HmssdkFlutterPlugin :
         hmssdk!!.endRoom(
             lock = lock!!,
             reason = reason,
-            hmsActionResultListener = HMSCommonAction.getActionListener(result)
+            hmsActionResultListener = HMSCommonAction.getActionListener(result),
         )
-        disposePIP()
+        HMSPipAction.disposePIP(activity)
         removeAllKeyChangeListener()
     }
 
@@ -712,7 +734,7 @@ class HmssdkFlutterPlugin :
             type = HMSTrackExtension.getKindFromString(type),
             source = source,
             roles = hmsRoles,
-            hmsActionResultListener = HMSCommonAction.getActionListener(result)
+            hmsActionResultListener = HMSCommonAction.getActionListener(result),
         )
     }
 
@@ -766,7 +788,7 @@ class HmssdkFlutterPlugin :
 
         hmssdk!!.changeMetadata(
             metadata!!,
-            hmsActionResultListener = HMSCommonAction.getActionListener(result)
+            hmsActionResultListener = HMSCommonAction.getActionListener(result),
         )
     }
 
@@ -797,6 +819,23 @@ class HmssdkFlutterPlugin :
 
         override fun onJoin(room: HMSRoom) {
             hmssdk!!.addAudioObserver(hmsAudioListener)
+
+            /**
+             * This sets the [hlsStreamUrl] variable to
+             * fetch the stream URL directly from onRoomUpdate
+             * This helps to play the HLS Stream even if user doesn't send
+             * the stream URL.
+             */
+            room.hlsStreamingState?.let { streamingState ->
+                if (streamingState.running) {
+                    streamingState.variants?.let { variants ->
+                        if (variants.isNotEmpty()) {
+                            hlsStreamUrl = variants[0].hlsStreamUrl
+                        }
+                    }
+                }
+            }
+
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_join_room")
 
@@ -823,14 +862,13 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
-            if (type == HMSPeerUpdate.AUDIO_TOGGLED || type == HMSPeerUpdate.VIDEO_TOGGLED ||
-                type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER ||
-                type == HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER || type == HMSPeerUpdate.STARTED_SPEAKING ||
-                type == HMSPeerUpdate.STOPPED_SPEAKING
-            ) {
+            /**
+             * Since these methods are not part of HMSPeerUpdate enum in flutter
+             * We return the method call and don't send update to flutter layer
+             */
+            if (type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER) {
                 return
             }
-
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_peer_update"
 
@@ -844,6 +882,23 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onRoomUpdate(type: HMSRoomUpdate, hmsRoom: HMSRoom) {
+            /**
+             * This sets the [hlsStreamUrl] variable to
+             * fetch the stream URL directly from onRoomUpdate
+             * This helps to play the HLS Stream even if user doesn't send
+             * the stream URL.
+             */
+            if (type == HMSRoomUpdate.HLS_STREAMING_STATE_UPDATED) {
+                hmsRoom.hlsStreamingState?.let { streamingState ->
+                    if (streamingState.running) {
+                        streamingState.variants?.let { variants ->
+                            if (variants.isNotEmpty()) {
+                                hlsStreamUrl = variants[0].hlsStreamUrl
+                            }
+                        }
+                    }
+                }
+            }
             val args = HashMap<String, Any?>()
             args.put("event_name", "on_room_update")
             args.put("data", HMSRoomUpdateExtension.toDictionary(hmsRoom, type))
@@ -872,7 +927,7 @@ class HmssdkFlutterPlugin :
             args.put("data", HMSRemovedFromRoomExtension.toDictionary(notification))
             if (HMSPipAction.isPIPActive(activity)) {
                 activity.moveTaskToBack(true)
-                disposePIP()
+                HMSPipAction.disposePIP(activity)
                 removeAllKeyChangeListener()
             }
             if (args["data"] != null) {
@@ -919,7 +974,6 @@ class HmssdkFlutterPlugin :
                 eventSink?.success(args)
             }
         }
-
     }
 
     private val hmsPreviewListener = object : HMSPreviewListener {
@@ -936,11 +990,11 @@ class HmssdkFlutterPlugin :
         }
 
         override fun onPeerUpdate(type: HMSPeerUpdate, peer: HMSPeer) {
-            if (type == HMSPeerUpdate.AUDIO_TOGGLED || type == HMSPeerUpdate.VIDEO_TOGGLED ||
-                type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER ||
-                type == HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER || type == HMSPeerUpdate.STARTED_SPEAKING ||
-                type == HMSPeerUpdate.STOPPED_SPEAKING
-            ) {
+            /**
+             * Since these methods are not part of HMSPeerUpdate enum in flutter
+             * We return the method call and don't send update to flutter layer
+             */
+            if (type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER || type == HMSPeerUpdate.NO_DOMINANT_SPEAKER) {
                 return
             }
 
@@ -997,7 +1051,7 @@ class HmssdkFlutterPlugin :
             level: HMSLogger.LogLevel,
             tag: String,
             message: String,
-            isWebRtCLog: Boolean
+            isWebRtCLog: Boolean,
         ) {
             /***
              * Here we filter the logs based on the level we have set
@@ -1032,15 +1086,23 @@ class HmssdkFlutterPlugin :
         val name = call.argument<String>("name")
         hmssdk!!.changeName(
             name = name!!,
-            hmsActionResultListener = HMSCommonAction.getActionListener(result)
+            hmsActionResultListener = HMSCommonAction.getActionListener(result),
         )
     }
 
-    public fun onVideoViewError(args: HashMap<String, Any?>) {
-        if (args["data"] != null) {
-            CoroutineScope(Dispatchers.Main).launch {
-                eventSink?.success(args)
-            }
+    fun onVideoViewError(methodName: String, error: String, errorMessage: String) {
+        val args = HashMap<String, Any?>()
+        args["event_name"] = "on_error"
+        val hmsException = HMSException(
+            action = "Check the logs for more info",
+            code = 6004,
+            description = error,
+            message = errorMessage,
+            name = "$methodName Error",
+        )
+        args["data"] = HMSExceptionExtension.toDictionary(hmsException)
+        CoroutineScope(Dispatchers.Main).launch {
+            eventSink?.success(args)
         }
     }
 
@@ -1049,11 +1111,11 @@ class HmssdkFlutterPlugin :
         androidScreenshareResult = result
         activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"))
         val mediaProjectionManager: MediaProjectionManager = activity.getSystemService(
-            Context.MEDIA_PROJECTION_SERVICE
+            Context.MEDIA_PROJECTION_SERVICE,
         ) as MediaProjectionManager
         activity.startActivityForResult(
             mediaProjectionManager.createScreenCaptureIntent(),
-            Constants.SCREEN_SHARE_INTENT_REQUEST_CODE
+            Constants.SCREEN_SHARE_INTENT_REQUEST_CODE,
         )
     }
 
@@ -1089,7 +1151,7 @@ class HmssdkFlutterPlugin :
                     }
                 }
             },
-            data
+            data,
         )
         activity.applicationContext?.unregisterReceiver(activityBroadcastReceiver)
     }
@@ -1105,11 +1167,11 @@ class HmssdkFlutterPlugin :
         mode = call.argument<String>("audio_mixing_mode")
         activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"))
         val mediaProjectionManager: MediaProjectionManager? = activity.getSystemService(
-            Context.MEDIA_PROJECTION_SERVICE
+            Context.MEDIA_PROJECTION_SERVICE,
         ) as MediaProjectionManager
         activity.startActivityForResult(
             mediaProjectionManager?.createScreenCaptureIntent(),
-            Constants.AUDIO_SHARE_INTENT_REQUEST_CODE
+            Constants.AUDIO_SHARE_INTENT_REQUEST_CODE,
         )
     }
 
@@ -1131,7 +1193,7 @@ class HmssdkFlutterPlugin :
                 }
             },
             data,
-            audioMixingMode = AudioMixingMode.valueOf(mode!!)
+            audioMixingMode = AudioMixingMode.valueOf(mode!!),
         )
         activity.applicationContext?.unregisterReceiver(activityBroadcastReceiver)
     }
@@ -1172,7 +1234,7 @@ class HmssdkFlutterPlugin :
         val trackId: String? = call.argument<String>("track_id")
         if (trackId != null) {
             hmsVideoViewResult = result
-            activity.sendBroadcast(Intent(trackId).putExtra("method_name", "CAPTURE_SNAPSHOT"))
+            activity.sendBroadcast(Intent(trackId).putExtra(METHOD_CALL, "CAPTURE_SNAPSHOT"))
         }
     }
 
@@ -1210,12 +1272,6 @@ class HmssdkFlutterPlugin :
         result.success(map)
     }
 
-    private fun disposePIP() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            activity.setPictureInPictureParams(PictureInPictureParams.Builder().setAutoEnterEnabled(false).build())
-        }
-    }
-
     /**
      *  This method is used to add key change listener for
      *  keys passed while calling this method
@@ -1225,30 +1281,42 @@ class HmssdkFlutterPlugin :
      *  - keyChangeListener: Instance of HMSKeyChangeListener to listen to the metadata changes for corresponding keys
      *  - hmsActionResultListener: Instance of HMSActionResultListener to notify success or failure of the method call
      */
-    private fun addKeyChangeListener(call: MethodCall,result: Result){
-
+    private fun addKeyChangeListener(call: MethodCall, result: Result) {
         val keys = call.argument<List<String>>("keys") ?: run {
             HMSErrorLogger.returnArgumentsError("keys parameter is null")
         }
 
-        val uid = call.argument<String>("uid")?: run {
+        val uid = call.argument<String>("uid") ?: run {
             HMSErrorLogger.returnArgumentsError("uid is null")
         }
 
-        uid.let {
-             val keyChangeListener = object : HMSKeyChangeListener {
-                override fun onKeyChanged(key: String, value: Any?) {
+        uid?.let {
+            val keyChangeListener = object : HMSKeyChangeListener {
+                override fun onKeyChanged(key: String, value: JsonElement?) {
                     val args = HashMap<String, Any?>()
                     args["event_name"] = "on_key_changed"
-                    val newData = HashMap<String,String?>()
+                    val newData = HashMap<String, String?>()
                     newData["key"] = key
-                    if(value is String?){
-                        newData["value"] = value
-                    }
-                    else{
-                        HMSErrorLogger.logError("onKeyChanged","Session metadata type is not compatible, Please use String? type while setting metadata","Type Incompatibility Error")
+
+                    /**
+                     * Here depending on the value we parse the JsonElement
+                     * if it's a JsonPrimitive we parse it as String and then send to flutter
+                     * if it's a JsonObject,JsonArray we convert it to String and then send to flutter
+                     * if it's a JsonNull we send it as null
+                     */
+
+                    value?.let {
+                        if (it.isJsonPrimitive) {
+                            newData["value"] = value.asString
+                        } else if (it.isJsonNull) {
+                            newData["value"] = null
+                        } else {
+                            newData["value"] = value.toString()
+                        }
+                    } ?: run {
                         newData["value"] = null
                     }
+
                     newData["uid"] = uid as String
                     args["data"] = newData
                     CoroutineScope(Dispatchers.Main).launch {
@@ -1256,9 +1324,10 @@ class HmssdkFlutterPlugin :
                     }
                 }
             }
-            hmsKeyChangeObserverList.add(HMSKeyChangeObserver(uid as String,keyChangeListener))
-            keys.let { keys as List<String>
-                hmsSessionStore?.addKeyChangeListener(keys,keyChangeListener,HMSCommonAction.getActionListener(result))
+            hmsKeyChangeObserverList.add(HMSKeyChangeObserver(uid as String, keyChangeListener))
+            keys.let {
+                keys as List<String>
+                hmsSessionStore?.addKeyChangeListener(keys, keyChangeListener, HMSCommonAction.getActionListener(result))
             }
         }
     }
@@ -1267,21 +1336,29 @@ class HmssdkFlutterPlugin :
      * This method is used to remove the attached key change listeners
      * attached using [addKeyChangeListener] method
      */
-    private fun removeKeyChangeListener(call: MethodCall){
-
-        val uid = call.argument<String>("uid")?: run {
+    private fun removeKeyChangeListener(call: MethodCall, result: Result) {
+        val uid = call.argument<String>("uid") ?: run {
             HMSErrorLogger.returnArgumentsError("uid is null")
+        }
+        // There is no need to call removeKeyChangeListener since
+        // there is no keyChangeListener attached
+        if (hmsKeyChangeObserverList.isEmpty()) {
+            result.success(HMSResultExtension.toDictionary(true, null))
+            return
         }
 
         uid?.let {
-            hmsKeyChangeObserverList.forEach{
+            hmsKeyChangeObserverList.forEach {
                     hmsKeyChangeObserver ->
-                if(hmsKeyChangeObserver.uid == uid){
+                if (hmsKeyChangeObserver.uid == uid) {
                     hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeObserver.keyChangeListener)
                     hmsKeyChangeObserverList.remove(hmsKeyChangeObserver)
+                    result.success(HMSResultExtension.toDictionary(true, null))
                     return
                 }
             }
+        } ?: run {
+            result.success(HMSResultExtension.toDictionary(false, "keyChangeListener uid is null"))
         }
     }
 
@@ -1290,9 +1367,10 @@ class HmssdkFlutterPlugin :
      * This is used while cleaning the room state i.e after calling leave room,
      * onRemovedFromRoom or endRoom
      */
-    private fun removeAllKeyChangeListener(){
-        hmsKeyChangeObserverList.forEach{
-            hmsKeyChangeObserver -> hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeObserver.keyChangeListener)
+    private fun removeAllKeyChangeListener() {
+        hmsKeyChangeObserverList.forEach {
+                hmsKeyChangeObserver ->
+            hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeObserver.keyChangeListener)
         }
         hmsKeyChangeObserverList.clear()
     }
@@ -1302,7 +1380,7 @@ class HmssdkFlutterPlugin :
         override fun onRemoteVideoStats(
             videoStats: HMSRemoteVideoStats,
             hmsTrack: HMSTrack?,
-            hmsPeer: HMSPeer?
+            hmsPeer: HMSPeer?,
         ) {
             if (hmsPeer == null) {
                 Log.e("RemoteVideoStats err", "Peer is null")
@@ -1319,7 +1397,7 @@ class HmssdkFlutterPlugin :
             args["data"] = HMSRtcStatsExtension.toDictionary(
                 hmsRemoteVideoStats = videoStats,
                 peer = hmsPeer,
-                track = hmsTrack
+                track = hmsTrack,
             )
             if (args["data"] != null) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -1331,7 +1409,7 @@ class HmssdkFlutterPlugin :
         override fun onRemoteAudioStats(
             audioStats: HMSRemoteAudioStats,
             hmsTrack: HMSTrack?,
-            hmsPeer: HMSPeer?
+            hmsPeer: HMSPeer?,
         ) {
             if (hmsPeer == null) {
                 Log.e("RemoteAudioStats err", "Peer is null")
@@ -1348,7 +1426,7 @@ class HmssdkFlutterPlugin :
             args["data"] = HMSRtcStatsExtension.toDictionary(
                 hmsRemoteAudioStats = audioStats,
                 peer = hmsPeer,
-                track = hmsTrack
+                track = hmsTrack,
             )
 
             if (args["data"] != null) {
@@ -1361,7 +1439,7 @@ class HmssdkFlutterPlugin :
         override fun onLocalVideoStats(
             videoStats: List<HMSLocalVideoStats>,
             hmsTrack: HMSTrack?,
-            hmsPeer: HMSPeer?
+            hmsPeer: HMSPeer?,
         ) {
             if (hmsPeer == null) {
                 Log.e("LocalVideoStats err", "Peer is null")
@@ -1378,7 +1456,7 @@ class HmssdkFlutterPlugin :
             args["data"] = HMSRtcStatsExtension.toDictionary(
                 hmsLocalVideoStats = videoStats,
                 peer = hmsPeer,
-                track = hmsTrack
+                track = hmsTrack,
             )
 
             if (args["data"] != null) {
@@ -1391,7 +1469,7 @@ class HmssdkFlutterPlugin :
         override fun onLocalAudioStats(
             audioStats: HMSLocalAudioStats,
             hmsTrack: HMSTrack?,
-            hmsPeer: HMSPeer?
+            hmsPeer: HMSPeer?,
         ) {
             if (hmsPeer == null) {
                 Log.e("LocalAudioStats err", "Peer is null")
@@ -1408,7 +1486,7 @@ class HmssdkFlutterPlugin :
             args["data"] = HMSRtcStatsExtension.toDictionary(
                 hmsLocalAudioStats = audioStats,
                 peer = hmsPeer,
-                track = hmsTrack
+                track = hmsTrack,
             )
 
             if (args["data"] != null) {

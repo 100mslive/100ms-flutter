@@ -73,8 +73,8 @@ The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/e
 
 ## 🤝 Recommended Configuration
 
-- Flutter 3.3.0 or above
-- Android API level 32 or above
+- Flutter 3.7.0 or above
+- Android API level 33 or above
 - Java 11 or above
 - iOS 16 or above
 - Xcode 14 or above
@@ -246,6 +246,14 @@ abstract class HMSUpdateListener {
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice});
+      
+      
+  /// Whenever a user joins a room [onSessionStoreAvailable] is fired to get an instance of [HMSSessionStore]
+  /// which can be used to perform session metadata operations
+  /// - Parameters:
+  ///   - hmsSessionStore: An instance of HMSSessionStore which will be used to call session metadata methods
+  void onSessionStoreAvailable(
+      {HMSSessionStore? hmsSessionStore});
 }
 ```
 

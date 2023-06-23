@@ -21,13 +21,17 @@ example/android/fastlane/Appfile
 example/android/fastlane/Fastfile
 example/android/fastlane/Pluginfile
 example/android/fastlane/README.md
+example/android/flutter-hms-4aea6d38fd2a.json
 /example/android/fastlane/report.xml
 
 example/ios/fastlane/Appfile
 example/ios/fastlane/Fastfile
 example/ios/fastlane/Pluginfile
+example/ios/flutter-hms-4aea6d38fd2a.json
 example/ios/fastlane/README.md
 /example/ios/fastlane/report.xml
 example/ios/Runner/GoogleService-Info.plist
 example/ios/config/GoogleService-Info.plist
 *.p8
+sample apps/hms-callkit-app/.flutter-plugins
+sample apps/hms-callkit-app/.flutter-plugins-dependencies

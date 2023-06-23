@@ -21,6 +21,8 @@ export 'src/enum/hms_track_init_state.dart';
 export 'src/enum/hms_Quality_limitation_reason.dart';
 export 'src/enum/hms_simulcast_layer.dart';
 export 'src/enum/hms_audio_mode.dart';
+export 'src/enum/hms_hls_playback_state.dart';
+
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';
 export 'src/exceptions/hms_in_sufficient_data.dart';
@@ -55,7 +57,6 @@ export 'src/model/hms_video_setting.dart';
 export 'src/model/hms_video_track.dart';
 export 'src/model/hms_video_track_setting.dart';
 export 'src/model/platform_method_response.dart';
-export 'src/ui/meeting/hms_video_view.dart';
 export 'src/model/hms_track_change_request.dart';
 export 'src/model/hms_peer_removed_from_room.dart';
 export 'src/model/hms_message_recipient.dart';
@@ -92,3 +93,12 @@ export 'src/model/hms_log_list.dart';
 export 'src/model/hms_camera_controls.dart';
 export 'src/model/hms_session_store.dart';
 export 'src/model/hms_key_change_listener.dart';
+export 'src/model/hls_player/hms_hls_playback_event_listener.dart';
+export 'src/model/hls_player/hms_hls_player_controller.dart';
+export 'src/model/hls_player/hms_hls_player_stats.dart';
+export 'src/model/hls_player/hms_hls_cue.dart';
+export 'src/model/hls_player/hms_hls_timed_metadata.dart';
+
+//Views
+export 'src/ui/meeting/hms_video_view.dart';
+export 'src/ui/meeting/hms_hls_player.dart';

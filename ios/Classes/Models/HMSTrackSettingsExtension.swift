@@ -149,9 +149,9 @@ class HMSTrackSettingsExtension {
             return nil
         }
     }
-    
+
     static private func getStringFromAudioMode(from mode: HMSAudioMode) -> String? {
-        switch mode{
+        switch mode {
         case .music:
             return "music"
 

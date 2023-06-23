@@ -1,8 +1,5 @@
 package live.hms.hmssdk_flutter
 import io.flutter.plugin.common.MethodChannel.Result
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import live.hms.video.error.HMSException
 import live.hms.video.sdk.*
 import live.hms.video.sdk.models.*
@@ -25,7 +22,7 @@ class HMSCommonAction {
 
         fun getActionListener(result: Result) = object : HMSActionResultListener {
             override fun onError(error: HMSException) {
-                    result.success(HMSExceptionExtension.toDictionary(error))
+                result.success(HMSExceptionExtension.toDictionary(error))
             }
 
             override fun onSuccess() {

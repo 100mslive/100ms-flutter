@@ -287,7 +287,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                   .width *
                                               0.66,
                                           child: Text(
-                                            "Messages can only be seen by people in the call and are deleted when the call ends.",
+                                            "Messages can only be seen by people in the call and are deleted when the call ends.\nLong Press the send button to send timed metadata",
                                             style: GoogleFonts.inter(
                                                 fontWeight: FontWeight.w400,
                                                 color: themeSubHeadingColor,
@@ -367,11 +367,13 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                 ),
                                 GestureDetector(
                                     onTap: () {
-                                      context.read<MeetingStore>().setSessionMetadata(
-                                          key: SessionStoreKeyValues
-                                              .getNameFromMethod(SessionStoreKey
-                                                  .PINNED_MESSAGE_SESSION_KEY),
-                                          metadata: null);
+                                      context
+                                          .read<MeetingStore>()
+                                          .setSessionMetadataForKey(
+                                              key: SessionStoreKeyValues
+                                                  .getNameFromMethod(SessionStoreKey
+                                                      .PINNED_MESSAGE_SESSION_KEY),
+                                              metadata: null);
                                     },
                                     child: SvgPicture.asset(
                                         "assets/icons/close.svg"))
@@ -420,9 +422,8 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                 false
                                             ? true
                                             : false,
-                                    message: data.item1[index].message
-                                        .trim()
-                                        .toString(),
+                                    message:
+                                        "${data.item1[index].message.trim().toString()}",
                                     senderName:
                                         data.item1[index].sender?.name ??
                                             "Anonymous",
@@ -478,6 +479,30 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                 Utilities.showToast("Message can't be empty");
                               }
                               sendMessage();
+                            },
+                            onLongPress: () {
+                              if (!(context
+                                      .read<MeetingStore>()
+                                      .localPeer
+                                      ?.role
+                                      .name
+                                      .contains("hls-") ??
+                                  false)) {
+                                if (messageTextController.text.isEmpty) {
+                                  Utilities.showToast("Message can't be empty");
+                                  return;
+                                }
+                                context
+                                    .read<MeetingStore>()
+                                    .sendHLSTimedMetadata([
+                                  HMSHLSTimedMetadata(
+                                      metadata: messageTextController.text)
+                                ]);
+                                messageTextController.clear();
+                              } else {
+                                Utilities.showToast(
+                                    "Role doesn't have permission");
+                              }
                             },
                             child: Container(
                               width: 40,

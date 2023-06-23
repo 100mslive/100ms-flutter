@@ -16,6 +16,7 @@ class HMSSessionStore {
   ///
   /// **hmsKeyChangeListener** An instance of [HMSKeyChangeListener] implemented in the class where changes needs to be listened
   ///
+  ///Refer: Read more about addKeyChangeListener [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store#retrieve-the-current-value-and-receive-updates)
   Future<HMSException?> addKeyChangeListener(
       {required List<String> keys,
       required HMSKeyChangeListener hmsKeyChangeListener}) async {
@@ -28,7 +29,7 @@ class HMSSessionStore {
           uid: uid, hmsKeyChangeListener: hmsKeyChangeListener));
       return null;
     } else {
-      return HMSException.fromMap(result["data"]);
+      return HMSException.fromMap(result["error"]);
     }
   }
 
@@ -38,9 +39,10 @@ class HMSSessionStore {
   ///
   /// **hmsKeyChangeListener** An instance of [HMSKeyChangeListener] which was attaced earlier in [addKeyChangeListener]
   ///
-  void removeKeyChangeListener(
-      {required HMSKeyChangeListener hmsKeyChangeListener}) {
-    PlatformService.removeKeyChangeObserver(hmsKeyChangeListener);
+  ///Refer: Read more about removeKeyChangeListener [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store#stop-listening-to-updates-for-keys)
+  Future<HMSException?> removeKeyChangeListener(
+      {required HMSKeyChangeListener hmsKeyChangeListener}) async {
+    return PlatformService.removeKeyChangeObserver(hmsKeyChangeListener);
   }
 
   ///[getSessionMetadataForKey] method is used to get metadata corresponding to the given key.
@@ -50,6 +52,7 @@ class HMSSessionStore {
   ///
   /// **key** key for which metadata is required
   ///
+  ///Refer: Read more about getSessionMetadataForKey [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store#retrieve-the-current-value-once)
   Future<dynamic> getSessionMetadataForKey({required String key}) async {
     dynamic result = await PlatformService.invokeMethod(
         PlatformMethod.getSessionMetadataForKey,
@@ -71,6 +74,7 @@ class HMSSessionStore {
   ///
   /// **hmsActionResultListener** [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess] and [HMSActionResultListener.onException] will be called.
   ///
+  ///Refer: Read more about setSessionMetadataForKey [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store#setting-a-value-for-a-specific-key)
   Future<void> setSessionMetadataForKey(
       {required String key,
       required String? data,

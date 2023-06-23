@@ -93,9 +93,9 @@ class HomePage extends StatelessWidget {
                   padding: const EdgeInsets.all(4.0),
                   decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(16))),
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(Icons.video_call_outlined, size: 48),
                       SizedBox(
                         width: 8,

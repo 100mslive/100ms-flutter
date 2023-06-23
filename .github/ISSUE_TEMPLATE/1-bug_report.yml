@@ -1,5 +1,6 @@
 name: 🐛 Bug Report
 description: Report a reproducible bug or regression in 100ms Flutter Package
+title: "🐛 "
 labels: ["Needs Triage 🔍"]
 body:
   - type: markdown
@@ -68,7 +69,7 @@ body:
         ```dart
         ```
     validations:
-      required: true    
+      required: true
   - type: textarea
     attributes:
       label: Logs

@@ -65,16 +65,19 @@ class MoreOption extends StatelessWidget {
                       setOnSpotlight: () {
                         if (context.read<MeetingStore>().spotLightPeer?.uid ==
                             peerTrackNode.uid) {
-                          _meetingStore.setSessionMetadata(
+                          _meetingStore.setSessionMetadataForKey(
                               key: SessionStoreKeyValues.getNameFromMethod(
                                   SessionStoreKey.SPOTLIGHT),
                               metadata: null);
                           return;
                         }
-                        String? metadata = (peerTrackNode.track == null)
-                            ? peerTrackNode.audioTrack?.trackId
-                            : peerTrackNode.track?.trackId;
-                        _meetingStore.setSessionMetadata(
+
+                        ///Setting the metadata as audio trackId if it's not present
+                        ///then setting it as video trackId
+                        String? metadata = (peerTrackNode.audioTrack == null)
+                            ? peerTrackNode.track?.trackId
+                            : peerTrackNode.audioTrack?.trackId;
+                        _meetingStore.setSessionMetadataForKey(
                             key: SessionStoreKeyValues.getNameFromMethod(
                                 SessionStoreKey.SPOTLIGHT),
                             metadata: metadata);
@@ -272,16 +275,19 @@ class MoreOption extends StatelessWidget {
                       setOnSpotlight: () {
                         if (context.read<MeetingStore>().spotLightPeer?.uid ==
                             peerTrackNode.uid) {
-                          _meetingStore.setSessionMetadata(
+                          _meetingStore.setSessionMetadataForKey(
                               key: SessionStoreKeyValues.getNameFromMethod(
                                   SessionStoreKey.SPOTLIGHT),
                               metadata: null);
                           return;
                         }
-                        String? metadata = (peerTrackNode.track == null)
-                            ? peerTrackNode.audioTrack?.trackId
-                            : peerTrackNode.track?.trackId;
-                        _meetingStore.setSessionMetadata(
+
+                        ///Setting the metadata as audio trackId if it's not present
+                        ///then setting it as video trackId
+                        String? metadata = (peerTrackNode.audioTrack == null)
+                            ? peerTrackNode.track?.trackId
+                            : peerTrackNode.audioTrack?.trackId;
+                        _meetingStore.setSessionMetadataForKey(
                             key: SessionStoreKeyValues.getNameFromMethod(
                                 SessionStoreKey.SPOTLIGHT),
                             metadata: metadata);

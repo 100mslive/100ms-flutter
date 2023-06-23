@@ -9,7 +9,6 @@ import 'package:hmssdk_flutter_example/common/app_dialogs/stats_for_nerds.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/logger_view_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/notification_settings_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/participants_bottom_sheet.dart';
-import 'package:hmssdk_flutter_example/service/constant.dart';
 import 'package:hmssdk_flutter_example/common/widgets/share_link_option.dart';
 import 'package:hmssdk_flutter_example/common/util/app_color.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
@@ -141,17 +140,24 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       InkWell(
                         onTap: () async {
                           Navigator.pop(context);
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: themeBottomSheetColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            context: context,
-                            builder: (ctx) => ChangeNotifierProvider.value(
-                                value: _meetingStore,
-                                child: AudioSettingsBottomSheet()),
-                          );
+
+                          if (Platform.isAndroid) {
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              backgroundColor: themeBottomSheetColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              context: context,
+                              builder: (ctx) => ChangeNotifierProvider.value(
+                                  value: _meetingStore,
+                                  child: AudioSettingsBottomSheet()),
+                            );
+                          } else {
+                            context
+                                .read<MeetingStore>()
+                                .switchAudioOutputUsingiOSUI();
+                          }
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -432,12 +438,10 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                   }
                                   if (urls != null) {
                                     _meetingStore.startRtmpOrRecording(
-                                        meetingUrl: Constant.streamingUrl,
                                         toRecord: data["toRecord"] ?? false,
                                         rtmpUrls: urls);
                                   } else if (data["toRecord"] ?? false) {
                                     _meetingStore.startRtmpOrRecording(
-                                        meetingUrl: Constant.streamingUrl,
                                         toRecord: data["toRecord"] ?? false,
                                         rtmpUrls: null);
                                   }
@@ -479,9 +483,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                   _meetingStore.stopRtmpAndRecording();
                                 } else {
                                   _meetingStore.startRtmpOrRecording(
-                                      meetingUrl: Constant.streamingUrl,
-                                      toRecord: true,
-                                      rtmpUrls: []);
+                                      toRecord: true, rtmpUrls: []);
                                 }
                                 Navigator.pop(context);
                               },

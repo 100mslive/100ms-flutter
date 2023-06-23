@@ -83,7 +83,8 @@ class HMSVideoView extends StatelessWidget {
       {Key? key,
       required this.track,
       this.setMirror = false,
-      this.matchParent = true,
+      @Deprecated("matchParent is not longer necessary and will be removed in future version")
+          this.matchParent = true,
       this.scaleType = ScaleType.SCALE_ASPECT_FIT,
       this.disableAutoSimulcastLayerSelect = false})
       : super(key: key);

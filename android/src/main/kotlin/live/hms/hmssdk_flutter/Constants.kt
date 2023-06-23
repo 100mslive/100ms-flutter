@@ -13,5 +13,7 @@ class Constants {
         const val SCREEN_SHARE_REQUEST = "REQUEST_SCREEN_SHARE"
 
         const val AUDIO_SHARE_REQUEST = "REQUEST_AUDIO_SHARE"
+
+        const val HLS_PLAYER_INTENT = "HLS_PLAYER"
     }
 }

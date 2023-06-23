@@ -269,6 +269,11 @@ class _MeetingPageState extends State<MeetingPage>
   }
 
   @override
+  void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
+    // Checkout the docs for sessions store here: https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {

@@ -17,6 +17,7 @@ Pod::Spec.new do |s|
   s.dependency 'Flutter'
   s.dependency "HMSSDK", sdkVersions["ios"]
   s.dependency 'HMSBroadcastExtensionSDK', sdkVersions['iOSBroadcastExtension']
+  s.dependency 'HMSHLSPlayerSDK', sdkVersions['iOSHLSPlayerSDK']
   s.platform = :ios, '12.0'
   s.ios.deployment_target  = '12.0'
   # Flutter.framework does not contain a i386 slice.

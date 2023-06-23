@@ -1,5 +1,6 @@
 package live.hms.hmssdk_flutter.methods
 
+import com.google.gson.JsonElement
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
 import live.hms.hmssdk_flutter.HMSCommonAction
@@ -12,15 +13,15 @@ import live.hms.video.sessionstore.HmsSessionStore
 
 class HMSSessionStoreAction {
 
-    companion object{
+    companion object {
 
-        fun sessionStoreActions(call: MethodCall, result: Result, hmsSessionStore: HmsSessionStore?){
-            when(call.method){
+        fun sessionStoreActions(call: MethodCall, result: Result, hmsSessionStore: HmsSessionStore?) {
+            when (call.method) {
                 "get_session_metadata_for_key" -> {
-                    getSessionMetadataForKey(call,result,hmsSessionStore)
+                    getSessionMetadataForKey(call, result, hmsSessionStore)
                 }
                 "set_session_metadata_for_key" -> {
-                    setSessionMetadataForKey(call,result,hmsSessionStore)
+                    setSessionMetadataForKey(call, result, hmsSessionStore)
                 }
             }
         }
@@ -33,26 +34,43 @@ class HMSSessionStoreAction {
          *
          * This method returns [sessionMetadata] is the session metadata is available for corresponding key
          */
-        private fun getSessionMetadataForKey(call: MethodCall,result: Result,hmsSessionStore: HmsSessionStore?){
+        private fun getSessionMetadataForKey(call: MethodCall, result: Result, hmsSessionStore: HmsSessionStore?) {
             val key = call.argument<String?>("key") ?: run {
                 HMSErrorLogger.returnArgumentsError("key is null")
             }
 
-            key?.let { key as String
-                hmsSessionStore?.get(key,object:HMSSessionMetadataListener{
-                    override fun onError(error: HMSException) {
-                        result.success(HMSResultExtension.toDictionary(false,HMSExceptionExtension.toDictionary(error)))
-                    }
+            key?.let {
+                key as String
+                hmsSessionStore?.get(
+                    key,
+                    object : HMSSessionMetadataListener {
+                        override fun onError(error: HMSException) {
+                            result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)))
+                        }
 
-                    override fun onSuccess(sessionMetadata: Any?) {
-                        if(sessionMetadata is String?){
-                            result.success(HMSResultExtension.toDictionary(true,sessionMetadata))
+                        override fun onSuccess(sessionMetadata: JsonElement?) {
+                            var value: Any? = null
+
+                            /**
+                             * Here depending on the value we parse the JsonElement
+                             * if it's a JsonPrimitive we parse it as String and then send to flutter
+                             * if it's a JsonObject,JsonArray we convert it to String and then send to flutter
+                             * if it's a JsonNull we send it as null
+                             */
+                            sessionMetadata?.let {
+                                value = if (it.isJsonPrimitive) {
+                                    it.asString
+                                } else if (it.isJsonNull) {
+                                    null
+                                } else {
+                                    it.toString()
+                                }
+                            }
+
+                            result.success(HMSResultExtension.toDictionary(true, value))
                         }
-                        else{
-                            HMSErrorLogger.returnHMSException("getSessionMetadataForKey","Session metadata type is not compatible, Please use String? type while setting metadata","Type Incompatibility Error",result)
-                        }
-                    }
-                })
+                    },
+                )
             }
         }
 
@@ -65,17 +83,17 @@ class HMSSessionStoreAction {
          * This method sets the [data] provided during the method call
          * The completion of this method is marked by actionResultListener's [onSuccess] or [onError] callback
          */
-        private fun setSessionMetadataForKey(call: MethodCall,result: Result,hmsSessionStore: HmsSessionStore?){
+        private fun setSessionMetadataForKey(call: MethodCall, result: Result, hmsSessionStore: HmsSessionStore?) {
             val key = call.argument<String?>("key") ?: run {
                 HMSErrorLogger.returnArgumentsError("key is null")
             }
 
             val data = call.argument<String?>("data")
 
-            key?.let { key as String
-                hmsSessionStore?.set(data,key,HMSCommonAction.getActionListener(result))
+            key?.let {
+                key as String
+                hmsSessionStore?.set(data, key, HMSCommonAction.getActionListener(result))
             }
         }
-
     }
 }
