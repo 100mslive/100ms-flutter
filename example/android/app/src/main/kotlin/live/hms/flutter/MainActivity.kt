@@ -43,7 +43,7 @@ class MainActivity : FlutterActivity() {
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onPictureInPictureRequested(): Boolean {
         super.onPictureInPictureRequested()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             HMSPipAction.autoEnterPipMode(this)
         }
         return false
