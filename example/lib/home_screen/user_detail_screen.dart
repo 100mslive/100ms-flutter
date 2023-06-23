@@ -1,35 +1,24 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter_example/common/widgets/hms_listenable_button.dart';
-import 'package:hmssdk_flutter_example/common/util/app_color.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
-import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
-import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/hms_sdk_interactor.dart';
-import 'package:hmssdk_flutter_example/home_screen/screen_controller.dart';
-import 'package:hmssdk_flutter_example/preview/preview_page.dart';
-import 'package:hmssdk_flutter_example/preview/preview_store.dart';
-import 'package:provider/provider.dart';
+import 'package:hmssdk_uikit/common/app_color.dart';
+import 'package:hmssdk_uikit/common/utility_functions.dart';
+import 'package:hmssdk_uikit/hms_prebuilt_options.dart';
+import 'package:hmssdk_uikit/hmssdk_uikit.dart';
+import 'package:hmssdk_uikit/widgets/common_widgets/hms_listenable_button.dart';
 
 class UserDetailScreen extends StatefulWidget {
   final String meetingLink;
-  final MeetingFlow meetingFlow;
   final bool autofocusField;
-  UserDetailScreen(
-      {required this.meetingLink,
-      required this.meetingFlow,
-      this.autofocusField = false});
+  UserDetailScreen({required this.meetingLink, this.autofocusField = false});
   @override
   State<UserDetailScreen> createState() => _UserDetailScreenState();
 }
 
 class _UserDetailScreenState extends State<UserDetailScreen> {
   TextEditingController nameController = TextEditingController();
-  late PreviewStore _previewStore;
-  late MeetingStore _meetingStore;
-  late HMSSDKInteractor _hmsSDKInteractor;
 
   @override
   void initState() {
@@ -37,99 +26,11 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
     loadData();
   }
 
-  Future<void> setHMSSDKInteractor(
-      {required bool joinWithMutedAudio,
-      required bool joinWithMutedVideo,
-      required bool isSoftwareDecoderDisabled,
-      required bool isAudioMixerDisabled,
-      required HMSAudioMode audioMode}) async {
-    /// [iOSScreenshareConfig] of [HMSSDKInteractor] are optional values only required for implementing Screen & Audio Share on iOS. They are not required for Android.
-    /// Remove [appGroup] & [preferredExtension] if your app does not implements Screen or Audio Share on iOS.
-    /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
-    /// state while room is joined.By default both audio and video are kept as mute.
-
-    HMSIOSScreenshareConfig iOSScreenshareConfig = HMSIOSScreenshareConfig(
-        appGroup: "group.flutterhms",
-        preferredExtension:
-            "live.100ms.flutter.FlutterBroadcastUploadExtension");
-
-    _hmsSDKInteractor = HMSSDKInteractor(
-        iOSScreenshareConfig: iOSScreenshareConfig,
-        joinWithMutedAudio: joinWithMutedAudio,
-        joinWithMutedVideo: joinWithMutedVideo,
-        isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
-        isAudioMixerDisabled: isAudioMixerDisabled,
-        audioMode: audioMode);
-    //build call should be a blocking call
-    await _hmsSDKInteractor.build();
-  }
-
   void loadData() async {
     nameController.text = await Utilities.getStringData(key: "name");
     nameController.selection = TextSelection.fromPosition(
         TextPosition(offset: nameController.text.length));
     setState(() {});
-  }
-
-  void showPreview(bool res) async {
-    if (nameController.text.isEmpty) {
-      Utilities.showToast("Please enter you name");
-    } else {
-      Utilities.saveStringData(key: "name", value: nameController.text.trim());
-      res = await Utilities.getPermissions();
-      bool skipPreview =
-          await Utilities.getBoolData(key: 'skip-preview') ?? false;
-      bool joinWithMutedAudio =
-          await Utilities.getBoolData(key: 'join-with-muted-audio') ?? true;
-      bool joinWithMutedVideo =
-          await Utilities.getBoolData(key: 'join-with-muted-video') ?? true;
-      bool isSoftwareDecoderDisabled =
-          await Utilities.getBoolData(key: 'software-decoder-disabled') ?? true;
-      bool isAudioMixerDisabled =
-          await Utilities.getBoolData(key: 'audio-mixer-disabled') ?? true;
-      int audioModeIndex = await Utilities.getIntData(key: 'audio-mode');
-      if (res) {
-        await setHMSSDKInteractor(
-            joinWithMutedAudio: joinWithMutedAudio,
-            joinWithMutedVideo: joinWithMutedVideo,
-            isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
-            isAudioMixerDisabled: isAudioMixerDisabled,
-            audioMode: HMSAudioMode.values[audioModeIndex]);
-
-        if (!skipPreview) {
-          _previewStore = PreviewStore(hmsSDKInteractor: _hmsSDKInteractor);
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (_) => ListenableProvider.value(
-                    value: _previewStore,
-                    child: PreviewPage(
-                        meetingFlow: widget.meetingFlow,
-                        name: nameController.text,
-                        meetingLink: widget.meetingLink),
-                  )));
-        } else {
-          bool showStats =
-              await Utilities.getBoolData(key: 'show-stats') ?? false;
-          bool mirrorCamera =
-              await Utilities.getBoolData(key: 'mirror-camera') ?? false;
-          _meetingStore = MeetingStore(hmsSDKInteractor: _hmsSDKInteractor);
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (_) => ListenableProvider.value(
-                    value: _meetingStore,
-                    child: ScreenController(
-                      isRoomMute: false,
-                      isStreamingLink: widget.meetingFlow == MeetingFlow.meeting
-                          ? false
-                          : true,
-                      meetingLink: widget.meetingLink,
-                      localPeerNetworkQuality: -1,
-                      user: nameController.text.trim(),
-                      mirrorCamera: mirrorCamera,
-                      showStats: showStats,
-                    ),
-                  )));
-        }
-      }
-    }
   }
 
   @override
@@ -171,7 +72,14 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
               child: TextField(
                 textInputAction: TextInputAction.done,
                 onSubmitted: (value) {
-                  showPreview(res);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => HMSPrebuilt(
+                                roomCode: widget.meetingLink,
+                                hmsConfig: HMSPrebuiltOptions(
+                                    userName: nameController.text),
+                              )));
                 },
                 autofocus: widget.autofocusField,
                 textCapitalization: TextCapitalization.words,
@@ -214,8 +122,16 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
             HMSListenableButton(
                 width: width * 0.5,
                 onPressed: () async => {
+                      log(context.hashCode.toString()),
                       FocusManager.instance.primaryFocus?.unfocus(),
-                      showPreview(res),
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => HMSPrebuilt(
+                                    roomCode: widget.meetingLink,
+                                    hmsConfig: HMSPrebuiltOptions(
+                                        userName: nameController.text),
+                                  )))
                     },
                 childWidget: Container(
                   padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),

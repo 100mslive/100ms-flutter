@@ -34,7 +34,7 @@ packages:
     source: hosted
     version: "2.10.0"
   avatar_glow:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: avatar_glow
       sha256: "3627f6f97d1f10d3c1996ae108d3488eabaf68c0cf0c3eac7e7c746a3812881d"
@@ -42,7 +42,7 @@ packages:
     source: hosted
     version: "2.0.2"
   badges:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: badges
       sha256: "6e7f3ec561ec08f47f912cfe349d4a1707afdc8dda271e17b046aa6d42c89e77"
@@ -58,7 +58,7 @@ packages:
     source: hosted
     version: "2.1.1"
   bot_toast:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: bot_toast
       sha256: db6950851aab00ef04b386eb3c76c83739eaffcb6b80d0dc42a675ef7584623b
@@ -138,7 +138,7 @@ packages:
     source: hosted
     version: "1.0.5"
   draggable_widget:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: draggable_widget
       sha256: d7f6b1eb9cb79b724b02dc2ac699f82d1ab20b99920b8b1f25812054d72ca803
@@ -146,7 +146,7 @@ packages:
     source: hosted
     version: "2.0.0"
   dropdown_button2:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: dropdown_button2
       sha256: "107444581478342c6511040c2eb52850748400df4f3295df3da8be75693180a5"
@@ -177,14 +177,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.4"
-  file_picker:
-    dependency: "direct main"
-    description:
-      name: file_picker
-      sha256: b85eb92b175767fdaa0c543bf3b0d1f610fe966412ea72845fe5ba7801e763ff
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.2.10"
   firebase_analytics:
     dependency: "direct main"
     description:
@@ -295,13 +287,13 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_foreground_task:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_foreground_task
-      sha256: a7bafaec32e33ec1670906850241340fd721ae040ed23db03cb7216848afbbbc
+      sha256: "9d71e28c0f9657b7366d5c769a25b4c6efe1bb4080ee4c74764295e419036000"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.0"
+    version: "6.0.0+1"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -311,23 +303,15 @@ packages:
     source: hosted
     version: "0.13.1"
   flutter_linkify:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_linkify
       sha256: "74669e06a8f358fee4512b4320c0b80e51cffc496607931de68d28f099254073"
       url: "https://pub.dev"
     source: hosted
     version: "6.0.0"
-  flutter_plugin_android_lifecycle:
-    dependency: transitive
-    description:
-      name: flutter_plugin_android_lifecycle
-      sha256: "950e77c2bbe1692bc0874fc7fb491b96a4dc340457f4ea1641443d0a6c1ea360"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.15"
   flutter_staggered_grid_view:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_staggered_grid_view
       sha256: "1312314293acceb65b92754298754801b0e1f26a1845833b740b30415bbbcf07"
@@ -335,7 +319,7 @@ packages:
     source: hosted
     version: "0.6.2"
   flutter_svg:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_svg
       sha256: f991fdb1533c3caeee0cdc14b04f50f0c3916f0dbcbc05237ccbe4e3c6b93f3f
@@ -353,7 +337,7 @@ packages:
     source: sdk
     version: "0.0.0"
   focus_detector:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: focus_detector
       sha256: "05e32d9dd378cd54f1a3f9ce813c05156f28eb83f8e68f5bf1a37e9cdb21af1c"
@@ -369,14 +353,21 @@ packages:
     source: hosted
     version: "4.0.4"
   hmssdk_flutter:
-    dependency: "direct main"
+    dependency: transitive
     description:
       path: ".."
       relative: true
     source: path
     version: "1.8.0"
-  http:
+  hmssdk_uikit:
     dependency: "direct main"
+    description:
+      path: "../ui_kit"
+      relative: true
+    source: path
+    version: "0.0.1"
+  http:
+    dependency: transitive
     description:
       name: http
       sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
@@ -399,14 +390,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.17"
-  image_gallery_saver:
-    dependency: "direct main"
-    description:
-      name: image_gallery_saver
-      sha256: "467de169167b5c4e1ddde65395e4653c336a82f760b6700ea295085b7f2dd248"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.2"
   intl:
     dependency: "direct main"
     description:
@@ -483,10 +466,10 @@ packages:
     dependency: "direct main"
     description:
       name: package_info_plus
-      sha256: "10259b111176fba5c505b102e3a5b022b51dd97e30522e906d6922c745584745"
+      sha256: ceb027f6bc6a60674a233b4a90a7658af1aebdea833da0b5b53c1e9821a78c7b
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.2"
+    version: "4.0.2"
   package_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -512,7 +495,7 @@ packages:
     source: hosted
     version: "1.0.1"
   path_provider:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path_provider
       sha256: "3087813781ab814e4157b172f1a11c46be20179fcc9bea043e0fba36bc0acaa2"
@@ -560,7 +543,7 @@ packages:
     source: hosted
     version: "2.1.7"
   permission_handler:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: permission_handler
       sha256: "1b6b3e73f0bcbc856548bbdfb1c33084a401c4f143e220629a9055233d76c331"
@@ -640,7 +623,7 @@ packages:
     source: hosted
     version: "4.2.4"
   provider:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: provider
       sha256: cdbe7530b12ecd9eb455bdaa2fcb8d4dad22e80b8afb4798b41479d5ce26847f
@@ -656,13 +639,13 @@ packages:
     source: hosted
     version: "1.0.1"
   share_plus:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: share_plus
-      sha256: b1f15232d41e9701ab2f04181f21610c36c83a12ae426b79b4bd011c567934b1
+      sha256: ed3fcea4f789ed95913328e629c0c53e69e80e08b6c24542f1b3576046c614e8
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.4"
+    version: "7.0.2"
   share_plus_platform_interface:
     dependency: transitive
     description:
@@ -781,7 +764,7 @@ packages:
     source: hosted
     version: "0.4.16"
   tuple:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: tuple
       sha256: a97ce2013f240b2f3807bcbaf218765b6f301c3eff91092bcfa23a039e7dd151
@@ -821,7 +804,7 @@ packages:
     source: hosted
     version: "0.1.0"
   url_launcher:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: url_launcher
       sha256: eb1e00ab44303d50dd487aab67ebc575456c146c6af44422f9c13889984c00f3
@@ -932,54 +915,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.2"
-  wakelock:
-    dependency: "direct main"
-    description:
-      name: wakelock
-      sha256: b18a1a7b1ec71b1a9105766e06a73a2411e3eb5564bc569d99df92b57530bb4b
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.6.1+2"
-  wakelock_macos:
-    dependency: transitive
-    description:
-      name: wakelock_macos
-      sha256: "047c6be2f88cb6b76d02553bca5a3a3b95323b15d30867eca53a19a0a319d4cd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.0"
-  wakelock_platform_interface:
-    dependency: transitive
-    description:
-      name: wakelock_platform_interface
-      sha256: "1f4aeb81fb592b863da83d2d0f7b8196067451e4df91046c26b54a403f9de621"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.0"
-  wakelock_web:
-    dependency: transitive
-    description:
-      name: wakelock_web
-      sha256: "1b256b811ee3f0834888efddfe03da8d18d0819317f20f6193e2922b41a501b5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.0"
-  wakelock_windows:
-    dependency: transitive
-    description:
-      name: wakelock_windows
-      sha256: "857f77b3fe6ae82dd045455baa626bc4b93cb9bb6c86bf3f27c182167c3a5567"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.1"
   win32:
     dependency: transitive
     description:
       name: win32
-      sha256: a6f0236dbda0f63aa9a25ad1ff9a9d8a4eaaa5012da0dc59d21afdb1dc361ca4
+      sha256: "5a751eddf9db89b3e5f9d50c20ab8612296e4e8db69009788d6c8b060a84191c"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.4"
+    version: "4.1.4"
   xdg_directories:
     dependency: transitive
     description:
@@ -1005,5 +948,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=2.19.0 <3.0.0"
+  dart: ">=2.19.6 <3.0.0"
   flutter: ">=3.7.0-0"

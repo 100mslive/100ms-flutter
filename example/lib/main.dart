@@ -2,7 +2,6 @@
 import 'dart:async';
 
 //Package imports
-import 'package:bot_toast/bot_toast.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -11,13 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hmssdk_flutter_example/common/widgets/title_text.dart';
-import 'package:hmssdk_flutter_example/common/util/app_color.dart';
-import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
-import 'package:hmssdk_flutter_example/enum/meeting_flow.dart';
-import 'package:hmssdk_flutter_example/common/bottom_sheets/app_settings_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/home_screen/user_detail_screen.dart';
-import 'package:hmssdk_flutter_example/home_screen/qr_code_screen.dart';
+import 'package:hmssdk_uikit/common/app_color.dart';
+import 'package:hmssdk_uikit/common/utility_functions.dart';
+import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uni_links/uni_links.dart';
@@ -190,8 +186,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      builder: BotToastInit(), //1. call BotToastInit
-      navigatorObservers: [BotToastNavigatorObserver()],
       home: HomePage(
         deepLinkURL: _currentURI == null ? null : _currentURI.toString(),
       ),
@@ -273,19 +267,12 @@ class _HomePageState extends State<HomePage> {
     }
     FocusManager.instance.primaryFocus?.unfocus();
     Utilities.setRTMPUrl(meetingLinkController.text);
-    MeetingFlow flow = Utilities.deriveFlow(meetingLinkController.text.trim());
-    if (flow == MeetingFlow.meeting || flow == MeetingFlow.hlsStreaming) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (_) => UserDetailScreen(
-                    autofocusField: true,
-                    meetingLink: meetingLinkController.text.trim(),
-                    meetingFlow: flow,
-                  )));
-    } else {
-      Utilities.showToast("Please enter valid url");
-    }
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => UserDetailScreen(
+                autofocusField: true,
+                meetingLink: meetingLinkController.text.trim())));
   }
 
   @override
@@ -342,8 +329,8 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text("Joining Link",
-                          key: Key('joining_link_text'),
+                      Text("Room Code",
+                          key: Key('room_code_text'),
                           style: GoogleFonts.inter(
                               color: themeDefaultColor,
                               height: 1.5,
@@ -355,7 +342,7 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   width: width * 0.95,
                   child: TextField(
-                    key: Key('meeting_link_field'),
+                    key: Key('room_code_field'),
                     textInputAction: TextInputAction.done,
                     onSubmitted: (value) {
                       joinMeeting();
@@ -370,7 +357,7 @@ class _HomePageState extends State<HomePage> {
                         contentPadding: EdgeInsets.only(left: 16),
                         fillColor: themeSurfaceColor,
                         filled: true,
-                        hintText: 'Paste the link here',
+                        hintText: 'Paste the room code here',
                         hintStyle: GoogleFonts.inter(
                             color: hmsHintColor,
                             height: 1.5,
@@ -432,7 +419,7 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 child: Container(
                                   padding:
-                                      const EdgeInsets.fromLTRB(60, 12, 8, 12),
+                                      const EdgeInsets.fromLTRB(12, 12, 8, 12),
                                   decoration: BoxDecoration(
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(8))),
@@ -452,29 +439,6 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               )),
-                              GestureDetector(
-                                onTap: (() => showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    context: context,
-                                    builder: (ctx) => AppSettingsBottomSheet(
-                                          appVersion: _packageInfo.version +
-                                              " (${_packageInfo.buildNumber})",
-                                        ))),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 8.0, right: 8),
-                                  child: SvgPicture.asset(
-                                    "assets/icons/more.svg",
-                                    color: meetingLinkController.text.isEmpty
-                                        ? themeDisabledTextColor
-                                        : hmsWhiteColor,
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                ),
-                              )
                             ],
                           ),
                         );
@@ -489,53 +453,6 @@ class _HomePageState extends State<HomePage> {
                       height: 5,
                       color: dividerColor,
                     )),
-                SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  width: width * 0.95,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(hmsdefaultColor),
-                        backgroundColor:
-                            MaterialStateProperty.all(hmsdefaultColor),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ))),
-                    onPressed: () async {
-                      bool res = await Utilities.getCameraPermissions();
-                      if (res) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => QRCodeScreen()));
-                      }
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.qr_code,
-                            size: 18,
-                            color: enabledTextColor,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          TitleText(
-                              key: Key("scan_qr_code"),
-                              text: 'Scan QR Code',
-                              textColor: enabledTextColor)
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),

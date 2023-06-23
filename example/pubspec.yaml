@@ -12,13 +12,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  hmssdk_flutter:
-    path: ../
+  hmssdk_uikit:
+    path: ../ui_kit
 
   cupertino_icons:
-  provider:
-  http:
-  permission_handler:
   intl:
   firebase_crashlytics: 3.3.2
   firebase_core: 2.13.1
@@ -27,26 +24,10 @@ dependencies:
   firebase_dynamic_links:
   flutter_launcher_icons:
   package_info_plus:
-  path_provider:
-  dropdown_button2:
-  focus_detector:
-  flutter_staggered_grid_view:
-  tuple:
-  avatar_glow:
-  flutter_svg:
   google_fonts:
-  bot_toast:
   qr_code_scanner:
   shared_preferences:
   uni_links:
-  file_picker:
-  draggable_widget:
-  badges:
-  url_launcher:
-  share_plus:
-  flutter_linkify:
-  flutter_foreground_task: 4.1.0
-  image_gallery_saver:
 
 dev_dependencies:
   flutter_test:

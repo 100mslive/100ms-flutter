@@ -1,5 +1,8 @@
 Board: https://github.com/100mslive/100ms-flutter/projects/20
 
+- App built using the Prebuilt UI Kit
+https://github.com/100mslive/100ms-flutter/issues/1359
+
 - Added Hybrid composition videoview on Android to improve performance
 https://github.com/100mslive/100ms-flutter/pull/1330
 

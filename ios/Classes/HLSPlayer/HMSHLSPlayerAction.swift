@@ -175,7 +175,6 @@ class HMSHLSPlayerAction {
         NotificationCenter.default.post(name: NSNotification.Name(HLS_PLAYER_METHOD), object: nil, userInfo: [METHOD_CALL: "set_hls_player_volume", "volume": volume])
         result(nil)
     }
-
     /**
      * Adds a listener to receive HLS player statistics by posting a notification with the corresponding method call.
      *
