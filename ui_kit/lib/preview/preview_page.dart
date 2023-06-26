@@ -549,10 +549,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 .read<PreviewStore>()
                                                 .removePreviewListener(),
                                             setMeetingStore(previewStore),
-                                            _meetingStore.join(
-                                              nameController.text,
-                                              widget.meetingLink,
-                                            ),
                                             Navigator.of(context)
                                                 .pushReplacement(
                                                     MaterialPageRoute(

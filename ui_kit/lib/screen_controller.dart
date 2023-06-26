@@ -24,7 +24,6 @@ class _ScreenControllerState extends State<ScreenController> {
   void initState() {
     super.initState();
     initMeeting();
-    Utilities.initForegroundTask();
   }
 
   void initMeeting() async {
