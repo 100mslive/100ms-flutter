@@ -25,8 +25,9 @@ class SubheadingText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(text,
         overflow: textOverflow,
+        softWrap: true,
+        maxLines: 1,
         style: GoogleFonts.inter(
-            height: lineHeight! / fontSize!,
             fontSize: fontSize,
             letterSpacing: letterSpacing,
             color: textColor,

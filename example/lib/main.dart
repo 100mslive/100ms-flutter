@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hmssdk_flutter_example/home_screen/user_detail_screen.dart';
 import 'package:hmssdk_uikit/common/app_color.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
 import 'package:hmssdk_uikit/hms_prebuilt_options.dart';
