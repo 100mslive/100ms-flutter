@@ -6,6 +6,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_uikit/common/constants.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
 import 'package:hmssdk_uikit/hmssdk_interactor.dart';
+import 'package:hmssdk_uikit/service/app_secrets.dart';
 import 'package:hmssdk_uikit/service/room_service.dart';
 
 class PreviewStore extends ChangeNotifier
@@ -99,36 +100,47 @@ class PreviewStore extends ChangeNotifier
 
   Future<HMSException?> startPreview(
       {required String userName, required String meetingLink}) async {
+    String? tokenEndPoint;
+    String? initEndPoint;
 
-    if(meetingLink.contains("app.100ms.live")){
+    if (meetingLink.contains("app.100ms.live")) {
+      List<String?>? roomData = RoomService().getCode(meetingLink);
 
-         List<String?>? _roomData = RoomService().getCode(meetingLink);
+      //If the link is not valid then we might not get the code and whether the link is a
+      //PROD or QA so we return the error in this case
+      if (roomData?.length == 0) {
+        return HMSException(
+            message: "Invalid meeting URL",
+            description: "Provided meeting URL is invalid",
+            action: "Please Check the meeting URL",
+            isTerminal: false);
+      }
 
-        //If the link is not valid then we might not get the code and whether the link is a
-        //PROD or QA so we return the error in this case
-        if (_roomData?.length == 0) {
-          return HMSException(
-              message: "Invalid meeting URL",
-              description: "Provided meeting URL is invalid",
-              action: "Please Check the meeting URL",
-              isTerminal: false);
-        }
+      //qaTokenEndPoint is only required for 100ms internal testing
+      //It can be removed and should not affect the join method call
+      //For _endPoint just pass it as null
+      //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
+      tokenEndPoint = roomData?[1] == "true" ? null : qaTokenEndPoint;
+      initEndPoint = roomData?[1] == "true" ? "" : qaInitEndPoint;
 
-
+      Constant.meetingCode = roomData?[0] ?? '';
+    } else {
+      Constant.meetingCode = meetingLink;
     }
-
-
-    Constant.meetingCode = meetingLink;
 
     //We use this to get the auth token from room code
     dynamic tokenData = await hmsSDKInteractor.getAuthTokenByRoomCode(
-        roomCode: Constant.meetingCode, endPoint: null);
+        roomCode: Constant.meetingCode, endPoint: tokenEndPoint);
 
     if ((tokenData is String?) && tokenData != null) {
       roomConfig = HMSConfig(
           authToken: tokenData,
           userName: userName,
-          captureNetworkQualityInPreview: true);
+          captureNetworkQualityInPreview: true,
+          // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
+          //This is only for 100ms internal testing, endPoint can be safely removed from
+          //the HMSConfig for external usage
+          endPoint: initEndPoint);
       hmsSDKInteractor.startHMSLogger(
           Constant.webRTCLogLevel, Constant.sdkLogLevel);
       hmsSDKInteractor.addPreviewListener(this);
@@ -213,8 +225,8 @@ class PreviewStore extends ChangeNotifier
     notifyListeners();
   }
 
-  void switchCamera(){
-    if(isVideoOn){
+  void switchCamera() {
+    if (isVideoOn) {
       hmsSDKInteractor.switchCamera();
     }
   }
