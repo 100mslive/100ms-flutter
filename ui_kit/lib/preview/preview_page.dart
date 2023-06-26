@@ -62,7 +62,7 @@ class _PreviewPageState extends State<PreviewPage> {
 
     switch (peers.length) {
       case 1:
-        message = "${peers[0].name}";
+        message = peers[0].name;
         return Row(
           children: [
             Container(
@@ -463,7 +463,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                 value:
                                                                     previewStore,
                                                                 child:
-                                                                    PreviewDeviceSettings()));
+                                                                    const PreviewDeviceSettings()));
                                                   },
                                                   isActive: true,
                                                   child: SvgPicture.asset(

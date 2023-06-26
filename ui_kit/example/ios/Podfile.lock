@@ -1,0 +1,84 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_foreground_task (0.0.1):
+    - Flutter
+  - HMSAnalyticsSDK (0.0.2)
+  - HMSBroadcastExtensionSDK (0.0.9)
+  - HMSHLSPlayerSDK (0.0.2):
+    - HMSAnalyticsSDK (= 0.0.2)
+  - HMSSDK (0.9.5):
+    - HMSAnalyticsSDK (= 0.0.2)
+    - HMSWebRTC (= 1.0.5116)
+  - hmssdk_flutter (1.8.0):
+    - Flutter
+    - HMSBroadcastExtensionSDK (= 0.0.9)
+    - HMSHLSPlayerSDK (= 0.0.2)
+    - HMSSDK (= 0.9.5)
+  - HMSWebRTC (1.0.5116)
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - permission_handler_apple (9.0.4):
+    - Flutter
+  - share_plus (0.0.1):
+    - Flutter
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - url_launcher_ios (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_foreground_task (from `.symlinks/plugins/flutter_foreground_task/ios`)
+  - hmssdk_flutter (from `.symlinks/plugins/hmssdk_flutter/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - share_plus (from `.symlinks/plugins/share_plus/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
+
+SPEC REPOS:
+  trunk:
+    - HMSAnalyticsSDK
+    - HMSBroadcastExtensionSDK
+    - HMSHLSPlayerSDK
+    - HMSSDK
+    - HMSWebRTC
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_foreground_task:
+    :path: ".symlinks/plugins/flutter_foreground_task/ios"
+  hmssdk_flutter:
+    :path: ".symlinks/plugins/hmssdk_flutter/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
+  share_plus:
+    :path: ".symlinks/plugins/share_plus/ios"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/ios"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
+
+SPEC CHECKSUMS:
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_foreground_task: 21ef182ab0a29a3005cc72cd70e5f45cb7f7f817
+  HMSAnalyticsSDK: 4d2a88a729b1eb42f3d25f217c28937ec318a5b7
+  HMSBroadcastExtensionSDK: d80fe325f6c928bd8e5176290b5a4b7ae15d6fbb
+  HMSHLSPlayerSDK: 6a54ad4d12f3dc2270d1ecd24019d71282a4f6a3
+  HMSSDK: 81804295a3c5ec6016c0966f2053d7f5f51ccc26
+  hmssdk_flutter: 5cdb0b06fc8dfd4f9283b44dcc0fd6f9cfba222a
+  HMSWebRTC: ae54e9dd91b869051b283b43b14f57d43b7bf8e1
+  path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
+  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
+  share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
+  shared_preferences_foundation: e2dae3258e06f44cc55f49d42024fd8dd03c590c
+  url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
+
+PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
+
+COCOAPODS: 1.12.1
