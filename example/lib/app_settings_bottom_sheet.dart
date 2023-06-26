@@ -14,8 +14,7 @@ import 'package:hmssdk_uikit/widgets/bottom_sheets/notification_settings_bottom_
 import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
 
 class AppSettingsBottomSheet extends StatefulWidget {
-  final String appVersion;
-  const AppSettingsBottomSheet({super.key, required this.appVersion});
+  const AppSettingsBottomSheet();
   @override
   State<AppSettingsBottomSheet> createState() => _AppSettingsBottomSheetState();
 }
@@ -501,33 +500,6 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                   //           letterSpacing: 0.25,
                   //           fontWeight: FontWeight.w600),
                   //     )),
-
-                  SizedBox(
-                    height: 30,
-                    child: ListTile(
-                      horizontalTitleGap: 2,
-                      enabled: true,
-                      contentPadding: EdgeInsets.zero,
-                      leading: Text(
-                        "App Version",
-                        semanticsLabel: "app_version",
-                        style: GoogleFonts.inter(
-                            fontSize: 12,
-                            color: themeDefaultColor,
-                            letterSpacing: 0.25,
-                            fontWeight: FontWeight.w400),
-                      ),
-                      trailing: Text(
-                        widget.appVersion,
-                        semanticsLabel: "app_version",
-                        style: GoogleFonts.inter(
-                            fontSize: 12,
-                            color: themeDefaultColor,
-                            letterSpacing: 0.25,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ),
                   SizedBox(
                     height: 30,
                     child: ListTile(

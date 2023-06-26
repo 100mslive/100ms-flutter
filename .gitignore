@@ -39,3 +39,4 @@ sample apps/flutter-quickstart-app/.flutter-plugins
 sample apps/flutter-quickstart-app/.flutter-plugins-dependencies
 ui_kit/.flutter-plugins
 ui_kit/.flutter-plugins-dependencies
+ui_kit/lib/service/app_secrets.dart

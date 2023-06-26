@@ -6,6 +6,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_uikit/common/constants.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
 import 'package:hmssdk_uikit/hmssdk_interactor.dart';
+import 'package:hmssdk_uikit/service/room_service.dart';
 
 class PreviewStore extends ChangeNotifier
     implements HMSPreviewListener, HMSLogListener {
@@ -98,6 +99,25 @@ class PreviewStore extends ChangeNotifier
 
   Future<HMSException?> startPreview(
       {required String userName, required String meetingLink}) async {
+
+    if(meetingLink.contains("app.100ms.live")){
+
+         List<String?>? _roomData = RoomService().getCode(meetingLink);
+
+        //If the link is not valid then we might not get the code and whether the link is a
+        //PROD or QA so we return the error in this case
+        if (_roomData?.length == 0) {
+          return HMSException(
+              message: "Invalid meeting URL",
+              description: "Provided meeting URL is invalid",
+              action: "Please Check the meeting URL",
+              isTerminal: false);
+        }
+
+
+    }
+
+
     Constant.meetingCode = meetingLink;
 
     //We use this to get the auth token from room code
@@ -191,6 +211,12 @@ class PreviewStore extends ChangeNotifier
     hmsSDKInteractor.toggleMicMuteState();
     isAudioOn = !isAudioOn;
     notifyListeners();
+  }
+
+  void switchCamera(){
+    if(isVideoOn){
+      hmsSDKInteractor.switchCamera();
+    }
   }
 
   void addLogsListener(HMSLogListener hmsLogListener) {

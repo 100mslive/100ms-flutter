@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,11 +6,10 @@ import 'package:hmssdk_uikit/common/app_color.dart';
 import 'package:hmssdk_uikit/common/utility_components.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
 import 'package:hmssdk_uikit/preview/preview_device_settings.dart';
-import 'package:hmssdk_uikit/preview/preview_participant_sheet.dart';
 import 'package:hmssdk_uikit/preview/preview_store.dart';
-import 'package:hmssdk_uikit/widgets/common_widgets/hms_button.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/hms_embedded_button.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/hms_listenable_button.dart';
+import 'package:hmssdk_uikit/widgets/common_widgets/subheading_text.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/subtitle_text.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
 import 'package:hmssdk_uikit/widgets/meeting/meeting_page.dart';
@@ -211,9 +207,12 @@ class _PreviewPageState extends State<PreviewPage> {
                         height: 20,
                       ),
                       (previewStore.peer == null)
-                          ? const Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
+                          ? SizedBox(
+                              height: height - 200,
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               ),
                             )
                           : (previewStore.peer!.role.name.contains("hls-"))
@@ -237,39 +236,103 @@ class _PreviewPageState extends State<PreviewPage> {
                                         strokeWidth: 2,
                                       ),
                                     )
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.circular(16),
-                                      child: Container(
-                                        height: height * 0.5,
-                                        width: width - 20,
-                                        decoration: BoxDecoration(
-                                            color: surfaceDefault),
-                                        child: (previewStore.isVideoOn)
-                                            ? Center(
-                                                child: HMSVideoView(
-                                                  scaleType: ScaleType
-                                                      .SCALE_ASPECT_FILL,
-                                                  track: previewStore
-                                                      .localTracks[0],
-                                                  setMirror: true,
+                                  :
+                                  /**
+                                   * This componet is used to render the video if it's ON
+                                   * Otherwise it will render the circular avatar
+                                   */
+                                  Stack(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          child: Container(
+                                            height: height * 0.5,
+                                            width: width - 20,
+                                            decoration: BoxDecoration(
+                                                color: surfaceDefault),
+                                            child: (previewStore.isVideoOn)
+                                                ? Center(
+                                                    child: HMSVideoView(
+                                                      scaleType: ScaleType
+                                                          .SCALE_ASPECT_FILL,
+                                                      track: previewStore
+                                                          .localTracks[0],
+                                                      setMirror: true,
+                                                    ),
+                                                  )
+                                                : Center(
+                                                    child: CircleAvatar(
+                                                        backgroundColor:
+                                                            defaultAvatarColor,
+                                                        radius: 40,
+                                                        child: Text(
+                                                          Utilities
+                                                              .getAvatarTitle(
+                                                                  previewStore
+                                                                      .peer!
+                                                                      .name),
+                                                          style:
+                                                              GoogleFonts.inter(
+                                                                  fontSize: 34,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  height:
+                                                                      40 / 34,
+                                                                  letterSpacing:
+                                                                      0.25,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600),
+                                                        )),
+                                                  ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          bottom: 8,
+                                          left: 8,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                color: const Color.fromRGBO(
+                                                    0, 0, 0, 0.8)),
+                                            child: Center(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(4),
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Container(
+                                                      constraints: BoxConstraints(
+                                                          maxWidth: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.3),
+                                                      child: SubheadingText(
+                                                          text: nameController
+                                                              .text,
+                                                          textColor:
+                                                              onSecondaryHighEmphasis),
+                                                    ),
+                                                    SvgPicture.asset(
+                                                      'packages/hmssdk_uikit/lib/assets/icons/network_${previewStore.networkQuality}.svg',
+                                                      fit: BoxFit.contain,
+                                                      semanticsLabel:
+                                                          "fl_network_icon_label",
+                                                    ),
+                                                  ],
                                                 ),
-                                              )
-                                            : Center(
-                                                child: CircleAvatar(
-                                                    backgroundColor:
-                                                        defaultAvatarColor,
-                                                    radius: 40,
-                                                    child: Text(
-                                                      Utilities.getAvatarTitle(
-                                                          previewStore
-                                                              .peer!.name),
-                                                      style: GoogleFonts.inter(
-                                                        fontSize: 40,
-                                                        color: Colors.white,
-                                                      ),
-                                                    )),
                                               ),
-                                      ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
                                     ),
                       const SizedBox(
                         height: 20,
@@ -303,8 +366,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   onTap: () async =>
                                                       previewStore
                                                           .toggleMicMuteState(),
-                                                  offColor: hmsWhiteColor,
-                                                  onColor: themeHMSBorderColor,
                                                   isActive:
                                                       previewStore.isAudioOn,
                                                   child: SvgPicture.asset(
@@ -312,16 +373,14 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         ? "assets/icons/mic_state_on.svg"
                                                         : "assets/icons/mic_state_off.svg",
                                                     color:
-                                                        previewStore.isAudioOn
-                                                            ? themeDefaultColor
-                                                            : Colors.black,
+                                                        onSurfaceHighEmphasis,
                                                     fit: BoxFit.scaleDown,
                                                     semanticsLabel:
                                                         "audio_mute_button",
                                                   ),
                                                 ),
                                               const SizedBox(
-                                                width: 10,
+                                                width: 16,
                                               ),
                                               if (previewStore.peer != null &&
                                                   previewStore.peer!.role
@@ -335,8 +394,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                       ? null
                                                       : previewStore
                                                           .toggleCameraMuteState(),
-                                                  offColor: hmsWhiteColor,
-                                                  onColor: themeHMSBorderColor,
                                                   isActive:
                                                       previewStore.isVideoOn,
                                                   child: SvgPicture.asset(
@@ -344,35 +401,60 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         ? "assets/icons/cam_state_on.svg"
                                                         : "assets/icons/cam_state_off.svg",
                                                     color:
-                                                        previewStore.isVideoOn
-                                                            ? themeDefaultColor
-                                                            : Colors.black,
+                                                        onSurfaceHighEmphasis,
                                                     fit: BoxFit.scaleDown,
                                                     semanticsLabel:
                                                         "video_mute_button",
                                                   ),
                                                 ),
+                                              const SizedBox(
+                                                width: 16,
+                                              ),
+                                              HMSEmbeddedButton(
+                                                height: 40,
+                                                width: 40,
+                                                onTap: () async =>
+                                                    previewStore.switchCamera(),
+                                                isActive: true,
+                                                child: SvgPicture.asset(
+                                                  "assets/icons/camera.svg",
+                                                  color: previewStore.isVideoOn?onSurfaceHighEmphasis:onSurfaceLowEmphasis,
+                                                  fit: BoxFit.scaleDown,
+                                                  semanticsLabel:
+                                                      "switch_camera_button",
+                                                ),
+                                              ),
                                             ],
                                           ),
                                           Row(
                                             children: [
-                                              if (previewStore.networkQuality !=
-                                                      null &&
-                                                  previewStore.networkQuality !=
-                                                      -1)
-                                                HMSEmbeddedButton(
-                                                    height: 40,
-                                                    width: 40,
-                                                    onTap: () {},
-                                                    offColor: dividerColor,
-                                                    onColor: dividerColor,
-                                                    isActive: true,
-                                                    child: SvgPicture.asset(
-                                                      'assets/icons/settings.svg',
-                                                      fit: BoxFit.scaleDown,
-                                                      semanticsLabel:
-                                                          "network_button",
-                                                    )),
+                                              HMSEmbeddedButton(
+                                                  height: 40,
+                                                  width: 40,
+                                                  onTap: () {
+                                                     showModalBottomSheet(
+                                                isScrollControlled: true,
+                                                backgroundColor:
+                                                    themeBottomSheetColor,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                context: context,
+                                                builder: (ctx) =>
+                                                    ChangeNotifierProvider.value(
+                                                        value: previewStore,
+                                                        child:
+                                                            PreviewDeviceSettings())
+                                              );    
+                                                  },
+                                                  isActive: true,
+                                                  child: SvgPicture.asset(
+                                                    'assets/icons/settings.svg',
+                                                    fit: BoxFit.scaleDown,
+                                                    semanticsLabel:
+                                                        "settings_button",
+                                                  )),
                                             ],
                                           )
                                         ],
@@ -391,7 +473,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                             textInputAction:
                                                 TextInputAction.done,
                                             onSubmitted: (value) {},
-                                            autofocus: false,
                                             textCapitalization:
                                                 TextCapitalization.words,
                                             style: GoogleFonts.inter(),
