@@ -5,6 +5,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_uikit/common/app_color.dart';
 import 'package:hmssdk_uikit/common/utility_components.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
+import 'package:hmssdk_uikit/meeting_screen_controller.dart';
 import 'package:hmssdk_uikit/preview/preview_device_settings.dart';
 import 'package:hmssdk_uikit/preview/preview_store.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/hms_embedded_button.dart';
@@ -12,7 +13,6 @@ import 'package:hmssdk_uikit/widgets/common_widgets/hms_listenable_button.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/subheading_text.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/subtitle_text.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
-import 'package:hmssdk_uikit/widgets/meeting/meeting_page.dart';
 import 'package:hmssdk_uikit/widgets/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
@@ -222,7 +222,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                       radius: 40,
                                       child: Text(
                                         Utilities.getAvatarTitle(
-                                            previewStore.peer!.name),
+                                            nameController.text.isEmpty
+                                                ? previewStore.peer!.name
+                                                : nameController.text),
                                         style: GoogleFonts.inter(
                                           fontSize: 40,
                                           color: Colors.white,
@@ -267,11 +269,15 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             defaultAvatarColor,
                                                         radius: 40,
                                                         child: Text(
-                                                          Utilities
-                                                              .getAvatarTitle(
-                                                                  previewStore
+                                                          Utilities.getAvatarTitle(
+                                                              nameController
+                                                                      .text
+                                                                      .isEmpty
+                                                                  ? previewStore
                                                                       .peer!
-                                                                      .name),
+                                                                      .name
+                                                                  : nameController
+                                                                      .text),
                                                           style:
                                                               GoogleFonts.inter(
                                                                   fontSize: 34,
@@ -320,12 +326,18 @@ class _PreviewPageState extends State<PreviewPage> {
                                                           textColor:
                                                               onSecondaryHighEmphasis),
                                                     ),
-                                                    SvgPicture.asset(
-                                                      'packages/hmssdk_uikit/lib/assets/icons/network_${previewStore.networkQuality}.svg',
-                                                      fit: BoxFit.contain,
-                                                      semanticsLabel:
-                                                          "fl_network_icon_label",
-                                                    ),
+                                                    if (previewStore
+                                                                .networkQuality !=
+                                                            null &&
+                                                        previewStore
+                                                                .networkQuality !=
+                                                            -1)
+                                                      SvgPicture.asset(
+                                                        'packages/hmssdk_uikit/lib/assets/icons/network_${previewStore.networkQuality}.svg',
+                                                        fit: BoxFit.contain,
+                                                        semanticsLabel:
+                                                            "fl_network_icon_label",
+                                                      ),
                                                   ],
                                                 ),
                                               ),
@@ -418,7 +430,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 isActive: true,
                                                 child: SvgPicture.asset(
                                                   "assets/icons/camera.svg",
-                                                  color: previewStore.isVideoOn?onSurfaceHighEmphasis:onSurfaceLowEmphasis,
+                                                  color: previewStore.isVideoOn
+                                                      ? onSurfaceHighEmphasis
+                                                      : onSurfaceLowEmphasis,
                                                   fit: BoxFit.scaleDown,
                                                   semanticsLabel:
                                                       "switch_camera_button",
@@ -432,21 +446,24 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   height: 40,
                                                   width: 40,
                                                   onTap: () {
-                                                     showModalBottomSheet(
-                                                isScrollControlled: true,
-                                                backgroundColor:
-                                                    themeBottomSheetColor,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                ),
-                                                context: context,
-                                                builder: (ctx) =>
-                                                    ChangeNotifierProvider.value(
-                                                        value: previewStore,
-                                                        child:
-                                                            PreviewDeviceSettings())
-                                              );    
+                                                    showModalBottomSheet(
+                                                        isScrollControlled:
+                                                            true,
+                                                        backgroundColor:
+                                                            themeBottomSheetColor,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                        ),
+                                                        context: context,
+                                                        builder: (ctx) =>
+                                                            ChangeNotifierProvider.value(
+                                                                value:
+                                                                    previewStore,
+                                                                child:
+                                                                    PreviewDeviceSettings()));
                                                   },
                                                   isActive: true,
                                                   child: SvgPicture.asset(
@@ -544,10 +561,20 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                 .value(
                                                               value:
                                                                   _meetingStore,
-                                                              child: MeetingPage(
-                                                                  meetingLink:
-                                                                      widget
-                                                                          .meetingLink),
+                                                              child:
+                                                                  MeetingScreenController(
+                                                                role:
+                                                                    previewStore
+                                                                        .peer
+                                                                        ?.role,
+                                                                meetingLink: widget
+                                                                    .meetingLink,
+                                                                localPeerNetworkQuality:
+                                                                    null,
+                                                                user:
+                                                                    nameController
+                                                                        .text,
+                                                              ),
                                                             )))
                                           },
                                           childWidget: Container(

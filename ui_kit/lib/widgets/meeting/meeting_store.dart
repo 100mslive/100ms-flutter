@@ -14,6 +14,7 @@ import 'package:hmssdk_uikit/enums/session_store_keys.dart';
 import 'package:hmssdk_uikit/hmssdk_interactor.dart';
 import 'package:hmssdk_uikit/model/peer_track_node.dart';
 import 'package:hmssdk_uikit/model/rtc_stats.dart';
+import 'package:hmssdk_uikit/service/app_secrets.dart';
 import 'package:hmssdk_uikit/service/room_service.dart';
 import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
@@ -206,19 +207,43 @@ class MeetingStore extends ChangeNotifier
       //       action: "Please Check the meeting URL",
       //       isTerminal: false);
       // }
+      String? tokenEndPoint;
+      String? initEndPoint;
 
-      Constant.meetingCode = roomUrl;
+      if (roomUrl.contains("app.100ms.live")) {
+        List<String?>? roomData = RoomService().getCode(roomUrl);
 
+        //If the link is not valid then we might not get the code and whether the link is a
+        //PROD or QA so we return the error in this case
+        if (roomData?.length == 0) {
+          return HMSException(
+              message: "Invalid meeting URL",
+              description: "Provided meeting URL is invalid",
+              action: "Please Check the meeting URL",
+              isTerminal: false);
+        }
+
+        //qaTokenEndPoint is only required for 100ms internal testing
+        //It can be removed and should not affect the join method call
+        //For _endPoint just pass it as null
+        //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
+        tokenEndPoint = roomData?[1] == "true" ? null : qaTokenEndPoint;
+        initEndPoint = roomData?[1] == "true" ? "" : qaInitEndPoint;
+
+        Constant.meetingCode = roomData?[0] ?? '';
+      } else {
+        Constant.meetingCode = roomUrl;
+      }
       //We use this to get the auth token from room code
       dynamic tokenData = await _hmsSDKInteractor.getAuthTokenByRoomCode(
-          roomCode: Constant.meetingCode);
+          roomCode: Constant.meetingCode, endPoint: tokenEndPoint);
 
       if ((tokenData is String?) && tokenData != null) {
         roomConfig = HMSConfig(
-          authToken: tokenData,
-          userName: userName,
-          captureNetworkQualityInPreview: true,
-        );
+            authToken: tokenData,
+            userName: userName,
+            captureNetworkQualityInPreview: true,
+            endPoint: initEndPoint);
       } else {
         return tokenData;
       }

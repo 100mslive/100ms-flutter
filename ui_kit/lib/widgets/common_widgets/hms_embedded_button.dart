@@ -41,17 +41,17 @@ class HMSEmbeddedButton extends StatelessWidget {
                */
               border: isActive
                   ? Border.all(
-                      color: enabledBorderColor??borderBright,
-                      width: 1)
+                      color: enabledBorderColor ?? borderBright, width: 1)
                   : Border.all(
-                      color: disabledBorderColor??secondaryDim,
-                      width: 1),
+                      color: disabledBorderColor ?? secondaryDim, width: 1),
               borderRadius: const BorderRadius.all(Radius.circular(8)),
               /**
                * The color of icon is set using the iconColor property
                * If the iconColor is not set, we use the default color which is onSurfaceHighEmphasis
                */
-              color: isActive ? (onColor??(Colors.black)) : (offColor??secondaryDim)),
+              color: isActive
+                  ? (onColor ?? (Colors.black))
+                  : (offColor ?? secondaryDim)),
           child: child),
     );
   }
