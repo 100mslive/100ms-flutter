@@ -140,17 +140,21 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       InkWell(
                         onTap: () async {
                           Navigator.pop(context);
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: themeBottomSheetColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            context: context,
-                            builder: (ctx) => ChangeNotifierProvider.value(
-                                value: meetingStore,
-                                child: const AudioSettingsBottomSheet()),
-                          );
+                          if (Platform.isAndroid) {
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              backgroundColor: themeBottomSheetColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              context: context,
+                              builder: (ctx) => ChangeNotifierProvider.value(
+                                  value: meetingStore,
+                                  child: const AudioSettingsBottomSheet()),
+                            );
+                          } else {
+                            meetingStore.switchAudioOutputUsingiOSUI();
+                          }
                         },
                         child: Container(
                           decoration: BoxDecoration(

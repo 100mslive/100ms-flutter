@@ -10,10 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter_example/app_settings_bottom_sheet.dart';
 import 'package:hmssdk_uikit/common/app_color.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
 import 'package:hmssdk_uikit/hms_prebuilt_options.dart';
 import 'package:hmssdk_uikit/hmssdk_uikit.dart';
+import 'package:hmssdk_uikit/service/app_debug_config.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -218,6 +220,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController meetingLinkController = TextEditingController();
+  bool _isDebugMode = false;
 
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -272,7 +275,8 @@ class _HomePageState extends State<HomePage> {
         MaterialPageRoute(
             builder: (_) => HMSPrebuilt(
                   roomCode: meetingLinkController.text,
-                  hmsConfig: HMSPrebuiltOptions(userName: ""),
+                  hmsConfig:
+                      HMSPrebuiltOptions(userName: "", debugInfo: _isDebugMode),
                 )));
   }
 
@@ -287,9 +291,23 @@ class _HomePageState extends State<HomePage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SvgPicture.asset(
-                  'assets/welcome.svg',
-                  width: width * 0.95,
+                /**
+                 * On long pressing the welcome image we 
+                 * toggle the debug mode which we use to show/hide the settings in the application
+                 */
+                GestureDetector(
+                  onLongPress: () {
+                    if (_isDebugMode) {
+                      AppDebugConfig.resetToDefault();
+                    }
+                    setState(() {
+                      _isDebugMode = !_isDebugMode;
+                    });
+                  },
+                  child: SvgPicture.asset(
+                    'assets/welcome.svg',
+                    width: width * 0.95,
+                  ),
                 ),
                 SizedBox(
                   height: 20,
@@ -440,6 +458,30 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               )),
+                              if (_isDebugMode)
+                                GestureDetector(
+                                  onTap: (() => showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      context: context,
+                                      builder: (ctx) => AppSettingsBottomSheet(
+                                            appVersion: _packageInfo.version +
+                                                " (${_packageInfo.buildNumber})",
+                                          ))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8.0, right: 8),
+                                    child: SvgPicture.asset(
+                                      "assets/icons/more.svg",
+                                      color: meetingLinkController.text.isEmpty
+                                          ? themeDisabledTextColor
+                                          : hmsWhiteColor,
+                                      fit: BoxFit.scaleDown,
+                                    ),
+                                  ),
+                                )
                             ],
                           ),
                         );

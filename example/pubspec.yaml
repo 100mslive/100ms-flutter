@@ -25,6 +25,7 @@ dependencies:
   flutter_launcher_icons:
   package_info_plus:
   google_fonts:
+  url_launcher:
   qr_code_scanner:
   shared_preferences:
   uni_links:
