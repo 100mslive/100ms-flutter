@@ -108,7 +108,7 @@ class PreviewStore extends ChangeNotifier
 
       //If the link is not valid then we might not get the code and whether the link is a
       //PROD or QA so we return the error in this case
-      if (roomData?.length == 0) {
+      if (roomData == null || roomData.isEmpty) {
         return HMSException(
             message: "Invalid meeting URL",
             description: "Provided meeting URL is invalid",
@@ -120,10 +120,10 @@ class PreviewStore extends ChangeNotifier
       //It can be removed and should not affect the join method call
       //For _endPoint just pass it as null
       //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
-      tokenEndPoint = roomData?[1] == "true" ? null : qaTokenEndPoint;
-      initEndPoint = roomData?[1] == "true" ? "" : qaInitEndPoint;
+      tokenEndPoint = roomData[1] == "true" ? null : qaTokenEndPoint;
+      initEndPoint = roomData[1] == "true" ? "" : qaInitEndPoint;
 
-      Constant.meetingCode = roomData?[0] ?? '';
+      Constant.meetingCode = roomData[0] ?? '';
     } else {
       Constant.meetingCode = meetingLink;
     }
