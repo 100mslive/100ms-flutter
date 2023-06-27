@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_uikit/common/constants.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
 import 'package:hmssdk_uikit/hms_prebuilt_options.dart';
 import 'package:hmssdk_uikit/hmssdk_interactor.dart';
 import 'package:hmssdk_uikit/preview/preview_page.dart';
 import 'package:hmssdk_uikit/preview/preview_store.dart';
+import 'package:hmssdk_uikit/service/app_debug_config.dart';
 import 'package:provider/provider.dart';
 
 class ScreenController extends StatefulWidget {
@@ -23,28 +24,26 @@ class _ScreenControllerState extends State<ScreenController> {
   @override
   void initState() {
     super.initState();
-    initMeeting();
+    initPreview();
   }
 
-  void initMeeting() async {
+  void initPreview() async {
+    //Getting all the required permissions here such as microphone,camera and bluetooth
     var res = await Utilities.getPermissions();
-    HMSIOSScreenshareConfig iOSScreenshareConfig = HMSIOSScreenshareConfig(
-        appGroup: "group.flutterhms",
-        preferredExtension:
-            "live.100ms.flutter.FlutterBroadcastUploadExtension");
 
     if (res) {
       _hmsSDKInteractor = HMSSDKInteractor(
-          iOSScreenshareConfig: iOSScreenshareConfig,
-          joinWithMutedAudio: true,
-          joinWithMutedVideo: true,
-          isSoftwareDecoderDisabled: true,
-          isAudioMixerDisabled: true);
+          iOSScreenshareConfig: AppDebugConfig.iOSScreenshareConfig,
+          joinWithMutedAudio: AppDebugConfig.joinWithMutedAudio,
+          joinWithMutedVideo: AppDebugConfig.joinWithMutedVideo,
+          isSoftwareDecoderDisabled: AppDebugConfig.isSoftwareDecoderDisabled,
+          isAudioMixerDisabled: AppDebugConfig.isAudioMixerDisabled);
       await _hmsSDKInteractor.build();
       _previewStore = PreviewStore(hmsSDKInteractor: _hmsSDKInteractor);
       setState(() {
         isLoading = false;
       });
+      Constant.debugMode = widget.hmsConfig?.debugInfo ?? false;
     }
   }
 

@@ -12,6 +12,7 @@ import 'package:hmssdk_uikit/common/utility_functions.dart';
 import 'package:hmssdk_uikit/enums/meeting_mode.dart';
 import 'package:hmssdk_uikit/enums/session_store_keys.dart';
 import 'package:hmssdk_uikit/model/peer_track_node.dart';
+import 'package:hmssdk_uikit/service/app_debug_config.dart';
 import 'package:hmssdk_uikit/widgets/app_dialogs/audio_device_change_dialog.dart';
 import 'package:hmssdk_uikit/widgets/bottom_sheets/chat_bottom_sheet.dart';
 import 'package:hmssdk_uikit/widgets/bottom_sheets/more_settings_bottom_sheet.dart';
@@ -999,7 +1000,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                         child:
                                                                             MoreSettingsBottomSheet(
                                                                           isAudioMixerDisabled:
-                                                                              isAudioMixerDisabled,
+                                                                              AppDebugConfig.isAudioMixerDisabled,
                                                                         )),
                                                           )
                                                         },

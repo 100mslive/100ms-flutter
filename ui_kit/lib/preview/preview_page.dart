@@ -294,56 +294,60 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   ),
                                           ),
                                         ),
-                                        Positioned(
-                                          bottom: 8,
-                                          left: 8,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                color: const Color.fromRGBO(
-                                                    0, 0, 0, 0.8)),
-                                            child: Center(
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(4),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    Container(
-                                                      constraints: BoxConstraints(
-                                                          maxWidth: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.3),
-                                                      child: SubheadingText(
-                                                          text: nameController
-                                                              .text,
-                                                          textColor:
-                                                              onSecondaryHighEmphasis),
-                                                    ),
-                                                    if (previewStore
-                                                                .networkQuality !=
-                                                            null &&
-                                                        previewStore
-                                                                .networkQuality !=
-                                                            -1)
-                                                      SvgPicture.asset(
-                                                        'packages/hmssdk_uikit/lib/assets/icons/network_${previewStore.networkQuality}.svg',
-                                                        fit: BoxFit.contain,
-                                                        semanticsLabel:
-                                                            "fl_network_icon_label",
+                                        if (previewStore.networkQuality !=
+                                                null ||
+                                            nameController.text.isNotEmpty)
+                                          Positioned(
+                                            bottom: 8,
+                                            left: 8,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  color: const Color.fromRGBO(
+                                                      0, 0, 0, 0.8)),
+                                              child: Center(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4),
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      Container(
+                                                        constraints: BoxConstraints(
+                                                            maxWidth: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.3),
+                                                        child: SubheadingText(
+                                                            text: nameController
+                                                                .text,
+                                                            textColor:
+                                                                onSecondaryHighEmphasis),
                                                       ),
-                                                  ],
+                                                      if (previewStore
+                                                                  .networkQuality !=
+                                                              null &&
+                                                          previewStore
+                                                                  .networkQuality !=
+                                                              -1)
+                                                        SvgPicture.asset(
+                                                          'packages/hmssdk_uikit/lib/assets/icons/network_${previewStore.networkQuality}.svg',
+                                                          fit: BoxFit.contain,
+                                                          semanticsLabel:
+                                                              "fl_network_icon_label",
+                                                        ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        )
+                                          )
                                       ],
                                     ),
                       const SizedBox(

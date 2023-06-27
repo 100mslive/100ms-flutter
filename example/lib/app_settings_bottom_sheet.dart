@@ -9,12 +9,16 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:hmssdk_uikit/common/app_color.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
+import 'package:hmssdk_uikit/service/app_debug_config.dart';
 import 'package:hmssdk_uikit/widgets/app_dialogs/audio_mode_select_dialog.dart';
 import 'package:hmssdk_uikit/widgets/bottom_sheets/notification_settings_bottom_sheet.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AppSettingsBottomSheet extends StatefulWidget {
-  const AppSettingsBottomSheet();
+  final String appVersion;
+
+  const AppSettingsBottomSheet({required this.appVersion});
   @override
   State<AppSettingsBottomSheet> createState() => _AppSettingsBottomSheetState();
 }
@@ -22,7 +26,6 @@ class AppSettingsBottomSheet extends StatefulWidget {
 class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
   bool joinWithMutedAudio = true;
   bool joinWithMutedVideo = true;
-  bool isDarkMode = true;
   bool skipPreview = false;
   bool mirrorCamera = true;
   bool showStats = false;
@@ -35,10 +38,10 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
   @override
   void initState() {
     super.initState();
-    getAppSettings();
+    _getAppSettings();
   }
 
-  Future<void> getAppSettings() async {
+  Future<void> _getAppSettings() async {
     final String sdkVersions = await rootBundle
         .loadString('packages/hmssdk_flutter/assets/sdk-versions.json');
     versions = json.decode(sdkVersions);
@@ -58,7 +61,6 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     skipPreview = await Utilities.getBoolData(key: 'skip-preview') ?? false;
     mirrorCamera = await Utilities.getBoolData(key: 'mirror-camera') ?? true;
     showStats = await Utilities.getBoolData(key: 'show-stats') ?? false;
-    isDarkMode = await Utilities.getBoolData(key: 'dark-mode') ?? true;
     isSoftwareDecoderDisabled =
         await Utilities.getBoolData(key: 'software-decoder-disabled') ?? true;
     isAudioMixerDisabled =
@@ -70,13 +72,26 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
     });
+
+    _setDebugData();
+  }
+
+  void _setDebugData() {
+    AppDebugConfig.isAudioMixerDisabled = isAudioMixerDisabled;
+    AppDebugConfig.isAutoSimulcast = isAutoSimulcast;
+    AppDebugConfig.isSoftwareDecoderDisabled = isSoftwareDecoderDisabled;
+    AppDebugConfig.joinWithMutedAudio = joinWithMutedAudio;
+    AppDebugConfig.joinWithMutedVideo = joinWithMutedVideo;
+    AppDebugConfig.mirrorCamera = mirrorCamera;
+    AppDebugConfig.showStats = showStats;
+    AppDebugConfig.skipPreview = skipPreview;
   }
 
   Future<void> _launchUrl() async {
-    // final Uri _url = Uri.parse('https://discord.gg/YtUqvA6j');
-    // if (!await launchUrl(_url, mode: LaunchMode.externalApplication)) {
-    //   throw 'Could not launch $_url';
-    // }
+    final Uri _url = Uri.parse('https://discord.gg/YtUqvA6j');
+    if (!await launchUrl(_url, mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $_url';
+    }
   }
 
   void setAudioMode(HMSAudioMode newMode) {
@@ -227,34 +242,34 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               setState(() {})
                             }),
                   ),
-                  ListTile(
-                    horizontalTitleGap: 2,
-                    enabled: false,
-                    contentPadding: EdgeInsets.zero,
-                    leading: SvgPicture.asset(
-                      "packages/hmssdk_uikit/lib/assets/icons/preview_state_on.svg",
-                      fit: BoxFit.scaleDown,
-                      color: themeDefaultColor,
-                    ),
-                    title: Text(
-                      "Skip Preview",
-                      semanticsLabel: "fl_preview_enable",
-                      style: GoogleFonts.inter(
-                          fontSize: 14,
-                          color: themeDefaultColor,
-                          letterSpacing: 0.25,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    trailing: CupertinoSwitch(
-                        activeColor: hmsdefaultColor,
-                        value: skipPreview,
-                        onChanged: (value) => {
-                              skipPreview = value,
-                              Utilities.saveBoolData(
-                                  key: 'skip-preview', value: value),
-                              setState(() {})
-                            }),
-                  ),
+                  // ListTile(
+                  //   horizontalTitleGap: 2,
+                  //   enabled: false,
+                  //   contentPadding: EdgeInsets.zero,
+                  //   leading: SvgPicture.asset(
+                  //     "packages/hmssdk_uikit/lib/assets/icons/preview_state_on.svg",
+                  //     fit: BoxFit.scaleDown,
+                  //     color: themeDefaultColor,
+                  //   ),
+                  //   title: Text(
+                  //     "Skip Preview",
+                  //     semanticsLabel: "fl_preview_enable",
+                  //     style: GoogleFonts.inter(
+                  //         fontSize: 14,
+                  //         color: themeDefaultColor,
+                  //         letterSpacing: 0.25,
+                  //         fontWeight: FontWeight.w600),
+                  //   ),
+                  //   trailing: CupertinoSwitch(
+                  //       activeColor: hmsdefaultColor,
+                  //       value: skipPreview,
+                  //       onChanged: (value) => {
+                  //             skipPreview = value,
+                  //             Utilities.saveBoolData(
+                  //                 key: 'skip-preview', value: value),
+                  //             setState(() {})
+                  //           }),
+                  // ),
                   ListTile(
                     horizontalTitleGap: 2,
                     enabled: false,
@@ -455,51 +470,51 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       )),
-                  // ListTile(
-                  //   horizontalTitleGap: 2,
-                  //   enabled: true,
-                  //   onTap: _launchUrl,
-                  //   contentPadding: EdgeInsets.zero,
-                  //   leading: SvgPicture.asset(
-                  //     'packages/hmssdk_uikit/lib/assets/icons/bug.svg',
-                  //     color: themeDefaultColor,
-                  //   ),
-                  //   title: Text(
-                  //     "Ask on Discord",
-                  //     semanticsLabel: "fl_ask_feedback",
-                  //     style: GoogleFonts.inter(
-                  //         fontSize: 14,
-                  //         color: themeDefaultColor,
-                  //         letterSpacing: 0.25,
-                  //         fontWeight: FontWeight.w600),
-                  //   ),
-                  // ),
-                  // ListTile(
-                  //     horizontalTitleGap: 2,
-                  //     onTap: () async {
-                  //       File? logFile = await getLogFile;
-                  //       if (logFile != null) {
-                  //         Share.shareXFiles([XFile(logFile.path)],
-                  //             text: "HMS Log file");
-                  //       } else {
-                  //         Utilities.showToast("No file found");
-                  //       }
-                  //     },
-                  //     contentPadding: EdgeInsets.zero,
-                  //     leading: SvgPicture.asset(
-                  //       "packages/hmssdk_uikit/lib/assets/icons/share.svg",
-                  //       fit: BoxFit.scaleDown,
-                  //       color: themeDefaultColor,
-                  //     ),
-                  //     title: Text(
-                  //       "Share logs",
-                  //       semanticsLabel: "fl_share_logs",
-                  //       style: GoogleFonts.inter(
-                  //           fontSize: 14,
-                  //           color: themeDefaultColor,
-                  //           letterSpacing: 0.25,
-                  //           fontWeight: FontWeight.w600),
-                  //     )),
+                  ListTile(
+                    horizontalTitleGap: 2,
+                    enabled: true,
+                    onTap: _launchUrl,
+                    contentPadding: EdgeInsets.zero,
+                    leading: SvgPicture.asset(
+                      'packages/hmssdk_uikit/lib/assets/icons/bug.svg',
+                      color: themeDefaultColor,
+                    ),
+                    title: Text(
+                      "Ask on Discord",
+                      semanticsLabel: "fl_ask_feedback",
+                      style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: themeDefaultColor,
+                          letterSpacing: 0.25,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                    child: ListTile(
+                      horizontalTitleGap: 2,
+                      enabled: true,
+                      contentPadding: EdgeInsets.zero,
+                      leading: Text(
+                        "App Version",
+                        semanticsLabel: "app_version",
+                        style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      trailing: Text(
+                        widget.appVersion,
+                        semanticsLabel: "app_version",
+                        style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.25,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                  ),
                   SizedBox(
                     height: 30,
                     child: ListTile(
