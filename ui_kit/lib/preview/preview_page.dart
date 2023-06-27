@@ -44,7 +44,7 @@ class _PreviewPageState extends State<PreviewPage> {
   void initPreview() async {
     HMSException? ans = await context
         .read<PreviewStore>()
-        .startPreview(userName: "Test User", meetingLink: widget.meetingLink);
+        .startPreview(userName: "", meetingLink: widget.meetingLink);
     if (ans != null) {
       UtilityComponents.showErrorDialog(
           context: context,
@@ -218,13 +218,13 @@ class _PreviewPageState extends State<PreviewPage> {
                           : (previewStore.peer!.role.name.contains("hls-"))
                               ? Center(
                                   child: CircleAvatar(
-                                      backgroundColor: defaultAvatarColor,
+                                      backgroundColor:
+                                          Utilities.getBackgroundColour(
+                                              nameController.text),
                                       radius: 40,
                                       child: Text(
                                         Utilities.getAvatarTitle(
-                                            nameController.text.isEmpty
-                                                ? previewStore.peer!.name
-                                                : nameController.text),
+                                            nameController.text),
                                         style: GoogleFonts.inter(
                                           fontSize: 40,
                                           color: Colors.white,
@@ -265,18 +265,15 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   )
                                                 : Center(
                                                     child: CircleAvatar(
-                                                        backgroundColor:
-                                                            defaultAvatarColor,
+                                                        backgroundColor: Utilities
+                                                            .getBackgroundColour(
+                                                                nameController
+                                                                    .text),
                                                         radius: 40,
                                                         child: Text(
-                                                          Utilities.getAvatarTitle(
-                                                              nameController
-                                                                      .text
-                                                                      .isEmpty
-                                                                  ? previewStore
-                                                                      .peer!
-                                                                      .name
-                                                                  : nameController
+                                                          Utilities
+                                                              .getAvatarTitle(
+                                                                  nameController
                                                                       .text),
                                                           style:
                                                               GoogleFonts.inter(

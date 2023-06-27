@@ -18,7 +18,7 @@ class Utilities {
 
   static String getAvatarTitle(String name) {
     if (name.isEmpty) {
-      return "";
+      return "👤";
     }
     if (name.contains(regexEmoji)) {
       name = name.replaceAll(regexEmoji, '');
@@ -41,6 +41,9 @@ class Utilities {
   }
 
   static Color getBackgroundColour(String name) {
+    if (name.isEmpty) {
+      return surfaceDefault;
+    }
     if (name.contains(regexEmoji)) {
       name = name.replaceAll(regexEmoji, '');
       if (name.trim().isEmpty) {
