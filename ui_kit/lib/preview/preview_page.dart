@@ -156,7 +156,7 @@ class _PreviewPageState extends State<PreviewPage> {
                 child: Stack(
                   children: [
                     Positioned(
-                      top: 30,
+                      top: 35,
                       left: 10,
                       child: CircleAvatar(
                         radius: 18,
@@ -174,7 +174,7 @@ class _PreviewPageState extends State<PreviewPage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 80.0),
+                      padding: const EdgeInsets.only(top: 90.0),
                       child: Column(
                         children: [
                           TitleText(
