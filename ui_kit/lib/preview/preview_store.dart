@@ -268,9 +268,9 @@ class PreviewStore extends ChangeNotifier
   }
 
   Future<void> getAudioDevicesList() async {
+    var devices = await hmsSDKInteractor.getAudioDevicesList();
     availableAudioOutputDevices.clear();
-    availableAudioOutputDevices
-        .addAll(await hmsSDKInteractor.getAudioDevicesList());
+    availableAudioOutputDevices.addAll(devices);
     notifyListeners();
   }
 
@@ -283,6 +283,10 @@ class PreviewStore extends ChangeNotifier
     currentAudioDeviceMode = audioDevice;
     hmsSDKInteractor.switchAudioOutput(audioDevice: audioDevice);
     notifyListeners();
+  }
+
+  void switchAudioOutputUsingiOSUI() {
+    hmsSDKInteractor.switchAudioOutputUsingiOSUI();
   }
 
   @override

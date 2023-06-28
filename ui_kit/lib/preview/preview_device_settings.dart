@@ -8,6 +8,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_uikit/common/app_color.dart';
 import 'package:hmssdk_uikit/preview/preview_store.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/hms_dropdown.dart';
+import 'package:hmssdk_uikit/widgets/common_widgets/subheading_text.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/subtitle_text.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -42,7 +43,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
     return FractionallySizedBox(
       heightFactor: 0.5,
       child: Padding(
-        padding: const EdgeInsets.only(top: 20.0, left: 15, right: 15),
+        padding: const EdgeInsets.only(top: 24.0, left: 24, right: 24),
         child: Selector<PreviewStore,
                 Tuple3<List<HMSAudioDevice>, int, HMSAudioDevice?>>(
             selector: (_, previewStore) => Tuple3(
@@ -57,31 +58,15 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      CircleAvatar(
-                        radius: 18,
-                        backgroundColor: borderColor,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.arrow_back_ios_new,
-                            size: 16,
-                            color: hmsWhiteColor,
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          "Device Settings",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.inter(
-                              fontSize: 16,
-                              color: themeDefaultColor,
-                              letterSpacing: 0.15,
-                              fontWeight: FontWeight.w600),
-                        ),
+                      Text(
+                        "Device Settings",
+                        style: GoogleFonts.inter(
+                            fontSize: 16,
+                            color: themeDefaultColor,
+                            letterSpacing: 0.15,
+                            fontWeight: FontWeight.w600),
                       ),
                       IconButton(
                         icon: SvgPicture.asset(
@@ -101,70 +86,91 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                       height: 5,
                     ),
                   ),
-                  Text("Speakers",
-                      style: GoogleFonts.inter(
-                          color: themeDefaultColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.25)),
+                  SubheadingText(
+                    text: "Speakers",
+                    textColor: onSurfaceHighEmphasis,
+                  ),
                   const SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
-                  Container(
-                    padding: const EdgeInsets.only(left: 10, right: 5),
-                    decoration: BoxDecoration(
-                      color: themeSurfaceColor,
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(
-                          color: borderColor,
-                          style: BorderStyle.solid,
-                          width: 0.80),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                        child: HMSDropDown(
-                            dropDownItems: <DropdownMenuItem>[
-                          ...data.item1
-                              .sortedBy((element) => element.toString())
-                              .map((device) => DropdownMenuItem(
-                                    key: UniqueKey(),
-                                    value: device,
-                                    child: Row(
-                                      children: [
-                                        SvgPicture.asset(
-                                          "assets/icons/music_wave.svg",
-                                          color: themeDefaultColor,
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Container(
-                                          child: SubtitleText(
-                                            text: device.name,
-                                            textColor: themeDefaultColor,
+                  Platform.isIOS
+                      ? ListTile(
+                          horizontalTitleGap: 2,
+                          onTap: () {
+                            Navigator.pop(context);
+                            context
+                                .read<PreviewStore>()
+                                .switchAudioOutputUsingiOSUI();
+                          },
+                          contentPadding: EdgeInsets.zero,
+                          leading: SvgPicture.asset(
+                            "assets/icons/music_wave.svg",
+                            fit: BoxFit.scaleDown,
+                            color: onSurfaceHighEmphasis,
+                          ),
+                          title: SubtitleText(
+                            text: "Switch Audio Output Device",
+                            textColor: onSurfaceHighEmphasis,
+                          ),
+                        )
+                      : Container(
+                          padding: const EdgeInsets.only(left: 10, right: 5),
+                          decoration: BoxDecoration(
+                            color: themeSurfaceColor,
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(
+                                color: borderColor,
+                                style: BorderStyle.solid,
+                                width: 0.80),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                              child: HMSDropDown(
+                                  dropDownItems: <DropdownMenuItem>[
+                                ...data.item1
+                                    .sortedBy((element) => element.toString())
+                                    .map((device) => DropdownMenuItem(
+                                          key: UniqueKey(),
+                                          value: device,
+                                          child: Row(
+                                            children: [
+                                              SvgPicture.asset(
+                                                "assets/icons/music_wave.svg",
+                                                color: themeDefaultColor,
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Container(
+                                                child: SubtitleText(
+                                                  text: device.name,
+                                                  textColor: themeDefaultColor,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ))
-                              .toList(),
-                        ],
-                            buttonStyleData: const ButtonStyleData(height: 48),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 45,
-                            ),
-                            iconStyleData: IconStyleData(
-                                icon: const Icon(Icons.keyboard_arrow_down),
-                                iconEnabledColor: iconColor),
-                            dropdownStyleData: DropdownStyleData(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: themeSurfaceColor),
-                              offset: const Offset(-10, -10),
-                            ),
-                            selectedValue:
-                                Platform.isAndroid ? data.item3 : data.item1[0],
-                            updateSelectedValue: _updateDropDownValue)),
-                  ),
+                                        ))
+                                    .toList(),
+                              ],
+                                  buttonStyleData:
+                                      const ButtonStyleData(height: 48),
+                                  menuItemStyleData: const MenuItemStyleData(
+                                    height: 45,
+                                  ),
+                                  iconStyleData: IconStyleData(
+                                      icon:
+                                          const Icon(Icons.keyboard_arrow_down),
+                                      iconEnabledColor: iconColor),
+                                  dropdownStyleData: DropdownStyleData(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: themeSurfaceColor),
+                                    offset: const Offset(-10, -10),
+                                  ),
+                                  selectedValue: Platform.isAndroid
+                                      ? data.item3
+                                      : data.item1[0],
+                                  updateSelectedValue: _updateDropDownValue)),
+                        ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -180,13 +186,13 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                           ? "assets/icons/speaker_state_off.svg"
                           : "assets/icons/speaker_state_on.svg",
                       fit: BoxFit.scaleDown,
-                      color: themeDefaultColor,
+                      color: onSurfaceHighEmphasis,
                     ),
                     title: SubtitleText(
                       text: (context.read<PreviewStore>().isRoomMute
                           ? "Unmute Room"
                           : "Mute Room"),
-                      textColor: themeDefaultColor,
+                      textColor: onSurfaceHighEmphasis,
                     ),
                   )
                 ],
