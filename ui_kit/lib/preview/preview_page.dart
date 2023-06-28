@@ -42,7 +42,6 @@ class _PreviewPageState extends State<PreviewPage> {
 
   Widget _getParticipantsText(List<HMSPeer> peers, double width) {
     String message = "";
-
     switch (peers.length) {
       case 1:
         message = peers[0].name;
