@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -155,7 +157,7 @@ class _PreviewPageState extends State<PreviewPage> {
                 child: Stack(
                   children: [
                     Positioned(
-                      top: 35,
+                      top: Platform.isIOS?50:35,
                       left: 10,
                       child: CircleAvatar(
                         radius: 18,
