@@ -167,6 +167,7 @@ class _PreviewPageState extends State<PreviewPage> {
                             color: hmsWhiteColor,
                           ),
                           onPressed: () {
+                            previewStore.leave();
                             Navigator.pop(context);
                           },
                         ),
