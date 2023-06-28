@@ -42,8 +42,8 @@ class HMSTrackSettingsExtension {
                 }
 
                 val phoneCallMuteState = audioHashMap["phone_call_mute_state"] as? String
-                phoneCallMuteState?.let {
-                    when (it) {
+                phoneCallMuteState?.let { callMuteState ->
+                    when (callMuteState) {
                         "ENABLE_MUTE_ON_PHONE_CALL_RING" -> hmsAudioTrackSettings.setPhoneCallMuteState(PhoneCallState.ENABLE_MUTE_ON_PHONE_CALL_RING)
                         else -> hmsAudioTrackSettings.setPhoneCallMuteState(PhoneCallState.DISABLE_MUTE_ON_VOIP_PHONE_CALL_RING)
                     }
