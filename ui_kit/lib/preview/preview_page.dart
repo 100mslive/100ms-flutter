@@ -227,7 +227,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                             nameController.text),
                                         style: GoogleFonts.inter(
                                           fontSize: 40,
-                                          color: Colors.white,
+                                          color: onSurfaceHighEmphasis,
                                         ),
                                       )),
                                 )
@@ -278,8 +278,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                           style:
                                                               GoogleFonts.inter(
                                                                   fontSize: 34,
-                                                                  color: Colors
-                                                                      .white,
+                                                                  color: onSurfaceHighEmphasis,
                                                                   height:
                                                                       40 / 34,
                                                                   letterSpacing:
@@ -451,7 +450,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         isScrollControlled:
                                                             true,
                                                         backgroundColor:
-                                                            themeBottomSheetColor,
+                                                            surfaceDim,
                                                         shape:
                                                             RoundedRectangleBorder(
                                                           borderRadius:
@@ -526,14 +525,12 @@ class _PreviewPageState extends State<PreviewPage> {
                                                     letterSpacing: 0.5,
                                                     fontWeight:
                                                         FontWeight.w400),
-                                                enabledBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: borderColor,
-                                                        width: 1),
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                            Radius.circular(
-                                                                8))),
+                                                enabledBorder:
+                                                    const OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    8))),
                                                 border: const OutlineInputBorder(
                                                     borderRadius:
                                                         BorderRadius.all(
@@ -589,7 +586,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                               children: [
                                                 Text('Join',
                                                     style: GoogleFonts.inter(
-                                                        color: enabledTextColor,
+                                                        color: onPrimaryHighEmphasis,
                                                         height: 1,
                                                         fontSize: 16,
                                                         fontWeight:
@@ -599,7 +596,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 ),
                                                 Icon(
                                                   Icons.arrow_forward,
-                                                  color: enabledTextColor,
+                                                  color: onPrimaryHighEmphasis,
                                                   size: 16,
                                                 )
                                               ],
