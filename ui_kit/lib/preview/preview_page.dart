@@ -157,7 +157,7 @@ class _PreviewPageState extends State<PreviewPage> {
                 child: Stack(
                   children: [
                     Positioned(
-                      top: Platform.isIOS?50:35,
+                      top: Platform.isIOS ? 50 : 35,
                       left: 10,
                       child: CircleAvatar(
                         radius: 18,

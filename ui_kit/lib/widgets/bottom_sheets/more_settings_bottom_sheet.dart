@@ -11,7 +11,6 @@ import 'package:hmssdk_uikit/common/utility_components.dart';
 import 'package:hmssdk_uikit/widgets/app_dialogs/stats_for_nerds.dart';
 import 'package:hmssdk_uikit/widgets/bottom_sheets/audio_settings_bottom_sheet.dart';
 import 'package:hmssdk_uikit/widgets/bottom_sheets/meeting_mode_bottom_sheet.dart';
-import 'package:hmssdk_uikit/widgets/bottom_sheets/notification_settings_bottom_sheet.dart';
 import 'package:hmssdk_uikit/widgets/bottom_sheets/participants_bottom_sheet.dart';
 import 'package:hmssdk_uikit/widgets/bottom_sheets/start_hls_bottom_sheet.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/share_link_option.dart';
