@@ -32,29 +32,12 @@ class _PreviewPageState extends State<PreviewPage> {
   @override
   void initState() {
     super.initState();
-    initPreview();
   }
 
   void setMeetingStore(PreviewStore previewStore) {
     _meetingStore = MeetingStore(
       hmsSDKInteractor: previewStore.hmsSDKInteractor,
     );
-  }
-
-  void initPreview() async {
-    HMSException? ans = await context
-        .read<PreviewStore>()
-        .startPreview(userName: "", meetingLink: widget.meetingLink);
-    if (ans != null) {
-      UtilityComponents.showErrorDialog(
-          context: context,
-          errorMessage: "ACTION: ${ans.action} DESCRIPTION: ${ans.description}",
-          errorTitle: ans.message ?? "Join Error",
-          actionMessage: "OK",
-          action: () {
-            Navigator.popUntil(context, (route) => route.isFirst);
-          });
-    }
   }
 
   Widget _getParticipantsText(List<HMSPeer> peers, double width) {
@@ -66,7 +49,7 @@ class _PreviewPageState extends State<PreviewPage> {
         return Row(
           children: [
             Container(
-              constraints: BoxConstraints(maxWidth: width * 0.2),
+              constraints: BoxConstraints(maxWidth: width * 0.28),
               child:
                   SubtitleText(text: message, textColor: onSurfaceHighEmphasis),
             ),
@@ -78,7 +61,7 @@ class _PreviewPageState extends State<PreviewPage> {
         return Row(
           children: [
             Container(
-              constraints: BoxConstraints(maxWidth: width * 0.35),
+              constraints: BoxConstraints(maxWidth: width * 0.38),
               child:
                   SubtitleText(text: message, textColor: onSurfaceHighEmphasis),
             ),
@@ -90,7 +73,7 @@ class _PreviewPageState extends State<PreviewPage> {
         return Row(
           children: [
             Container(
-              constraints: BoxConstraints(maxWidth: width * 0.35),
+              constraints: BoxConstraints(maxWidth: width * 0.28),
               child:
                   SubtitleText(text: message, textColor: onSurfaceHighEmphasis),
             ),
@@ -102,7 +85,8 @@ class _PreviewPageState extends State<PreviewPage> {
         return Row(
           children: [
             Container(
-              constraints: BoxConstraints(maxWidth: width * 0.33),
+              constraints: BoxConstraints(
+                  maxWidth: _getRemainingWidth(peers.length, width)),
               child:
                   SubtitleText(text: message, textColor: onSurfaceHighEmphasis),
             ),
@@ -112,6 +96,22 @@ class _PreviewPageState extends State<PreviewPage> {
           ],
         );
     }
+  }
+
+  double _getRemainingWidth(int peerCount, double width) {
+    double remainingWidth = width * 0.33;
+    if (peerCount < 10) {
+      remainingWidth = width * 0.33;
+    } else if (peerCount < 100) {
+      remainingWidth = width * 0.30;
+    } else if (peerCount < 1000) {
+      remainingWidth = width * 0.28;
+    } else if (peerCount <= 10000) {
+      remainingWidth = width * 0.25;
+    } else {
+      remainingWidth = width * 0.2;
+    }
+    return remainingWidth;
   }
 
   @override
@@ -181,7 +181,7 @@ class _PreviewPageState extends State<PreviewPage> {
                             border: Border.all(color: borderDefault),
                             borderRadius: BorderRadius.circular(20)),
                         child: Center(
-                          child: previewStore.peerCount < 1
+                          child: previewStore.peers.isEmpty
                               ? SubtitleText(
                                   text: "You are the first to join",
                                   textColor: onSurfaceHighEmphasis)
@@ -546,33 +546,35 @@ class _PreviewPageState extends State<PreviewPage> {
                                           errorMessage: "Please enter you name",
                                           width: width * 0.3,
                                           onPressed: () async => {
-                                            context
-                                                .read<PreviewStore>()
-                                                .removePreviewListener(),
-                                            setMeetingStore(previewStore),
-                                            Navigator.of(context)
-                                                .pushReplacement(
-                                                    MaterialPageRoute(
-                                                        builder: (_) =>
-                                                            ListenableProvider
-                                                                .value(
-                                                              value:
-                                                                  _meetingStore,
-                                                              child:
-                                                                  MeetingScreenController(
-                                                                role:
-                                                                    previewStore
+                                            if (nameController.text.isNotEmpty)
+                                              {
+                                                context
+                                                    .read<PreviewStore>()
+                                                    .removePreviewListener(),
+                                                setMeetingStore(previewStore),
+                                                Navigator.of(context)
+                                                    .pushReplacement(
+                                                        MaterialPageRoute(
+                                                            builder: (_) =>
+                                                                ListenableProvider
+                                                                    .value(
+                                                                  value:
+                                                                      _meetingStore,
+                                                                  child:
+                                                                      MeetingScreenController(
+                                                                    role: previewStore
                                                                         .peer
                                                                         ?.role,
-                                                                meetingLink: widget
-                                                                    .meetingLink,
-                                                                localPeerNetworkQuality:
-                                                                    null,
-                                                                user:
-                                                                    nameController
+                                                                    meetingLink:
+                                                                        widget
+                                                                            .meetingLink,
+                                                                    localPeerNetworkQuality:
+                                                                        null,
+                                                                    user: nameController
                                                                         .text,
-                                                              ),
-                                                            )))
+                                                                  ),
+                                                                )))
+                                              }
                                           },
                                           childWidget: Container(
                                             padding: const EdgeInsets.fromLTRB(
