@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_uikit/common/constants.dart';
+import 'package:hmssdk_uikit/common/utility_components.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
 import 'package:hmssdk_uikit/hms_prebuilt_options.dart';
 import 'package:hmssdk_uikit/hmssdk_interactor.dart';
@@ -40,10 +42,24 @@ class _ScreenControllerState extends State<ScreenController> {
           isAudioMixerDisabled: AppDebugConfig.isAudioMixerDisabled);
       await _hmsSDKInteractor.build();
       _previewStore = PreviewStore(hmsSDKInteractor: _hmsSDKInteractor);
-      setState(() {
-        isLoading = false;
-      });
-      Constant.debugMode = widget.hmsConfig?.debugInfo ?? false;
+      HMSException? ans = await _previewStore.startPreview(
+          userName: "", meetingLink: widget.roomCode);
+      if (ans != null) {
+        UtilityComponents.showErrorDialog(
+            context: context,
+            errorMessage:
+                "ACTION: ${ans.action} DESCRIPTION: ${ans.description}",
+            errorTitle: ans.message ?? "Join Error",
+            actionMessage: "OK",
+            action: () {
+              Navigator.popUntil(context, (route) => route.isFirst);
+            });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        Constant.debugMode = widget.hmsConfig?.debugInfo ?? false;
+      }
     }
   }
 

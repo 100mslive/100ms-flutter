@@ -266,7 +266,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void joinMeeting() {
-    if (meetingLinkController.text.isEmpty) {
+    if (meetingLinkController.text.trim().isEmpty) {
       return;
     }
     FocusManager.instance.primaryFocus?.unfocus();
@@ -274,7 +274,7 @@ class _HomePageState extends State<HomePage> {
         context,
         MaterialPageRoute(
             builder: (_) => HMSPrebuilt(
-                  roomCode: meetingLinkController.text,
+                  roomCode: meetingLinkController.text.trim(),
                   hmsConfig:
                       HMSPrebuiltOptions(userName: "", debugInfo: _isDebugMode),
                 )));
