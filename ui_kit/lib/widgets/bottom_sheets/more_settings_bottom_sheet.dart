@@ -15,6 +15,8 @@ import 'package:hmssdk_uikit/widgets/bottom_sheets/notification_settings_bottom_
 import 'package:hmssdk_uikit/widgets/bottom_sheets/participants_bottom_sheet.dart';
 import 'package:hmssdk_uikit/widgets/bottom_sheets/start_hls_bottom_sheet.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/share_link_option.dart';
+import 'package:hmssdk_uikit/widgets/common_widgets/subheading_text.dart';
+import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
 import 'package:hmssdk_uikit/widgets/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
@@ -44,13 +46,12 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
               children: [
                 Row(
                   children: [
-                    Text(
-                      "More Options",
-                      style: GoogleFonts.inter(
-                          fontSize: 16,
-                          color: themeDefaultColor,
-                          letterSpacing: 0.15,
-                          fontWeight: FontWeight.w600),
+                    TitleText(
+                      text: "Settings",
+                      textColor: onSurfaceHighEmphasis,
+                      fontSize: 20,
+                      lineHeight: 24 / 20,
+                      letterSpacing: 0.15,
                     ),
                   ],
                 ),
@@ -73,7 +74,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
             Padding(
               padding: const EdgeInsets.only(top: 15, bottom: 10),
               child: Divider(
-                color: dividerColor,
+                color: borderDefault,
                 height: 5,
               ),
             ),
@@ -196,7 +197,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       Navigator.pop(context);
                       showModalBottomSheet(
                         isScrollControlled: true,
-                        backgroundColor: themeBottomSheetColor,
+                        backgroundColor: surfaceDim,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -209,19 +210,51 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
                       "packages/hmssdk_uikit/lib/assets/icons/participants.svg",
-                      fit: BoxFit.scaleDown,
-                      color: themeDefaultColor,
+                      height: 20,
+                      width: 20,
+                      color: onSurfaceHighEmphasis,
                     ),
-                    title: Text(
-                      "Meeting mode",
-                      semanticsLabel: "fl_meeting_mode",
-                      style: GoogleFonts.inter(
-                          fontSize: 14,
-                          color: themeDefaultColor,
-                          letterSpacing: 0.25,
-                          fontWeight: FontWeight.w600),
+                    title: SubheadingText(
+                      text: "Meeting mode",
+                      textColor: onSurfaceHighEmphasis,
+                      letterSpacing: 0.15,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
+                  if (meetingStore.localPeer?.role.publishSettings?.allowed
+                          .contains("screen") ??
+                      false)
+                    Selector<MeetingStore, bool>(
+                        selector: ((_, meetingStore) =>
+                            meetingStore.isScreenShareOn),
+                        builder: (_, isScreenShareOn, __) {
+                          return ListTile(
+                            horizontalTitleGap: 2,
+                            onTap: () async {
+                              Navigator.pop(context);
+                              if (isScreenShareOn) {
+                                meetingStore.stopScreenShare();
+                              } else {
+                                meetingStore.startScreenShare();
+                              }
+                            },
+                            contentPadding: EdgeInsets.zero,
+                            leading: SvgPicture.asset(
+                              "packages/hmssdk_uikit/lib/assets/icons/screen_share.svg",
+                              height: 20,
+                              width: 20,
+                              color: onSurfaceHighEmphasis,
+                            ),
+                            title: SubheadingText(
+                              text: isScreenShareOn
+                                  ? "Stop Screen Share"
+                                  : "Share Screen",
+                              textColor: onSurfaceHighEmphasis,
+                              letterSpacing: 0.15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        }),
                   ListTile(
                     horizontalTitleGap: 2,
                     onTap: () async {
@@ -239,22 +272,19 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       if (name.isNotEmpty) {
                         meetingStore.changeName(name: name);
                       }
-                      // Navigator.pop(context);
                     },
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
                       "packages/hmssdk_uikit/lib/assets/icons/pencil.svg",
-                      fit: BoxFit.scaleDown,
-                      color: themeDefaultColor,
+                      height: 20,
+                      width: 20,
+                      color: onSurfaceHighEmphasis,
                     ),
-                    title: Text(
-                      "Change Name",
-                      semanticsLabel: "fl_change_name",
-                      style: GoogleFonts.inter(
-                          fontSize: 14,
-                          color: themeDefaultColor,
-                          letterSpacing: 0.25,
-                          fontWeight: FontWeight.w600),
+                    title: SubheadingText(
+                      text: "Change Name",
+                      textColor: onSurfaceHighEmphasis,
+                      letterSpacing: 0.15,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   ListTile(
@@ -268,41 +298,39 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       meetingStore.isSpeakerOn
                           ? "packages/hmssdk_uikit/lib/assets/icons/speaker_state_on.svg"
                           : "packages/hmssdk_uikit/lib/assets/icons/speaker_state_off.svg",
-                      fit: BoxFit.scaleDown,
-                      color: themeDefaultColor,
+                      height: 20,
+                      width: 20,
+                      color: onSurfaceHighEmphasis,
                     ),
-                    title: Text(
-                      meetingStore.isSpeakerOn ? "Mute Room" : "Unmute Room",
-                      semanticsLabel: "fl_mute_room",
-                      style: GoogleFonts.inter(
-                          fontSize: 14,
-                          color: themeDefaultColor,
-                          letterSpacing: 0.25,
-                          fontWeight: FontWeight.w600),
+                    title: SubheadingText(
+                      text: meetingStore.isSpeakerOn
+                          ? "Mute Room"
+                          : "Unmute Room",
+                      textColor: onSurfaceHighEmphasis,
+                      letterSpacing: 0.15,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   ListTile(
-                    horizontalTitleGap: 2,
-                    onTap: () {
-                      meetingStore.switchCamera();
-                      Navigator.pop(context);
-                    },
-                    contentPadding: EdgeInsets.zero,
-                    leading: SvgPicture.asset(
-                      "packages/hmssdk_uikit/lib/assets/icons/camera.svg",
-                      fit: BoxFit.scaleDown,
-                      color: themeDefaultColor,
-                    ),
-                    title: Text(
-                      "Switch Camera",
-                      semanticsLabel: "fl_switch_camera",
-                      style: GoogleFonts.inter(
-                          fontSize: 14,
-                          color: themeDefaultColor,
-                          letterSpacing: 0.25,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        context.read<MeetingStore>().changeMetadata();
+                        Navigator.pop(context);
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "packages/hmssdk_uikit/lib/assets/icons/hand_outline.svg",
+                        height: 20,
+                        width: 20,
+                        color: onSurfaceHighEmphasis,
+                      ),
+                      title: SubheadingText(
+                        text: meetingStore.isRaisedHand
+                            ? "Lower Hand"
+                            : "Raise Hand",
+                        textColor: onSurfaceHighEmphasis,
+                        fontWeight: FontWeight.w600,
+                      )),
                   ListTile(
                     horizontalTitleGap: 2,
                     onTap: () async {
@@ -312,102 +340,97 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
                       "packages/hmssdk_uikit/lib/assets/icons/brb.svg",
-                      fit: BoxFit.scaleDown,
-                      color: themeDefaultColor,
+                      height: 20,
+                      width: 20,
+                      color: onSurfaceHighEmphasis,
                     ),
-                    title: Text(
-                      "BRB",
-                      semanticsLabel: "fl_brb_list_tile",
-                      style: GoogleFonts.inter(
-                          fontSize: 14,
-                          color: meetingStore.isBRB
-                              ? errorColor
-                              : themeDefaultColor,
-                          letterSpacing: 0.25,
-                          fontWeight: FontWeight.w600),
+                    title: SubheadingText(
+                      text: "BRB",
+                      textColor: meetingStore.isBRB
+                          ? alertErrorDefault
+                          : onSurfaceHighEmphasis,
+                      letterSpacing: 0.15,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   if (Constant.debugMode)
                     ListTile(
-                        horizontalTitleGap: 2,
-                        onTap: () async {
-                          Navigator.pop(context);
-                          showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (_) => ListenableProvider.value(
-                                  value: meetingStore,
-                                  child: StatsForNerds(
-                                    peerTrackNode: meetingStore.peerTracks,
-                                  )));
-                        },
-                        contentPadding: EdgeInsets.zero,
-                        leading: SvgPicture.asset(
-                          "packages/hmssdk_uikit/lib/assets/icons/stats.svg",
-                          fit: BoxFit.scaleDown,
-                          color: themeDefaultColor,
-                        ),
-                        title: Text(
-                          "Stats for nerds",
-                          semanticsLabel: "fl_stats_list_tile",
-                          style: GoogleFonts.inter(
-                              fontSize: 14,
-                              color: themeDefaultColor,
-                              letterSpacing: 0.25,
-                              fontWeight: FontWeight.w600),
-                        )),
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        Navigator.pop(context);
+                        showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (_) => ListenableProvider.value(
+                                value: meetingStore,
+                                child: StatsForNerds(
+                                  peerTrackNode: meetingStore.peerTracks,
+                                )));
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "packages/hmssdk_uikit/lib/assets/icons/stats.svg",
+                        height: 20,
+                        width: 20,
+                        color: onSurfaceHighEmphasis,
+                      ),
+                      title: SubheadingText(
+                        text: "Stats for nerds",
+                        textColor: onSurfaceHighEmphasis,
+                        letterSpacing: 0.15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   if ((meetingStore.localPeer?.role.permissions.mute ??
                           false) &&
                       (meetingStore.localPeer?.role.permissions.unMute ??
                           false))
                     ListTile(
-                        horizontalTitleGap: 2,
-                        onTap: () async {
-                          Navigator.pop(context);
-                          List<HMSRole> roles = await meetingStore.getRoles();
-                          UtilityComponents.showRoleListForMute(
-                              context, roles, meetingStore);
-                        },
-                        contentPadding: EdgeInsets.zero,
-                        leading: SvgPicture.asset(
-                          "packages/hmssdk_uikit/lib/assets/icons/mic_state_off.svg",
-                          fit: BoxFit.scaleDown,
-                          color: themeDefaultColor,
-                        ),
-                        title: Text(
-                          "Mute Role",
-                          semanticsLabel: "fl_mute_role",
-                          style: GoogleFonts.inter(
-                              fontSize: 14,
-                              color: themeDefaultColor,
-                              letterSpacing: 0.25,
-                              fontWeight: FontWeight.w600),
-                        )),
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        Navigator.pop(context);
+                        List<HMSRole> roles = await meetingStore.getRoles();
+                        UtilityComponents.showRoleListForMute(
+                            context, roles, meetingStore);
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "packages/hmssdk_uikit/lib/assets/icons/mic_state_off.svg",
+                        height: 20,
+                        width: 20,
+                        color: onSurfaceHighEmphasis,
+                      ),
+                      title: SubheadingText(
+                        text: "Mute Role",
+                        textColor: onSurfaceHighEmphasis,
+                        letterSpacing: 0.15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   if (meetingStore.localPeer?.role.permissions.changeRole ??
                       false)
                     ListTile(
-                        horizontalTitleGap: 2,
-                        onTap: () async {
-                          Navigator.pop(context);
-                          List<HMSRole> roles = await meetingStore.getRoles();
-                          UtilityComponents.showDialogForBulkRoleChange(
-                              context, roles, meetingStore);
-                        },
-                        contentPadding: EdgeInsets.zero,
-                        leading: SvgPicture.asset(
-                          "packages/hmssdk_uikit/lib/assets/icons/role_change.svg",
-                          fit: BoxFit.scaleDown,
-                          color: themeDefaultColor,
-                        ),
-                        title: Text(
-                          "Bulk Role Change",
-                          semanticsLabel: "fl_bulk_roles_change",
-                          style: GoogleFonts.inter(
-                              fontSize: 14,
-                              color: themeDefaultColor,
-                              letterSpacing: 0.25,
-                              fontWeight: FontWeight.w600),
-                        )),
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        Navigator.pop(context);
+                        List<HMSRole> roles = await meetingStore.getRoles();
+                        UtilityComponents.showDialogForBulkRoleChange(
+                            context, roles, meetingStore);
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "packages/hmssdk_uikit/lib/assets/icons/role_change.svg",
+                        height: 20,
+                        width: 20,
+                        color: onSurfaceHighEmphasis,
+                      ),
+                      title: SubheadingText(
+                        text: "Bulk Role Change",
+                        textColor: onSurfaceHighEmphasis,
+                        letterSpacing: 0.15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   if (meetingStore.localPeer?.role.permissions.rtmpStreaming ??
                       false)
                     Selector<MeetingStore, bool>(
@@ -415,59 +438,56 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             meetingStore.streamingType["rtmp"] ?? false,
                         builder: (_, isRTMPRunning, __) {
                           return ListTile(
-                              horizontalTitleGap: 2,
-                              onTap: () async {
-                                if (isRTMPRunning) {
-                                  meetingStore.stopRtmpAndRecording();
-                                  Navigator.pop(context);
-                                } else {
-                                  Navigator.pop(context);
-                                  Map<String, dynamic> data =
-                                      await UtilityComponents.showRTMPInputDialog(
-                                          context: context,
-                                          placeholder:
-                                              "Enter Comma separated RTMP Urls",
-                                          isRecordingEnabled: meetingStore
-                                                  .recordingType["browser"] ==
-                                              true);
-                                  List<String>? urls;
-                                  if (data["url"]!.isNotEmpty) {
-                                    urls = data["url"]!.split(",");
-                                  }
-                                  if (urls != null) {
-                                    meetingStore.startRtmpOrRecording(
-                                        meetingUrl: Constant.streamingUrl,
-                                        toRecord: data["toRecord"] ?? false,
-                                        rtmpUrls: urls);
-                                  } else if (data["toRecord"] ?? false) {
-                                    meetingStore.startRtmpOrRecording(
-                                        meetingUrl: Constant.streamingUrl,
-                                        toRecord: data["toRecord"] ?? false,
-                                        rtmpUrls: null);
-                                  }
+                            horizontalTitleGap: 2,
+                            onTap: () async {
+                              if (isRTMPRunning) {
+                                meetingStore.stopRtmpAndRecording();
+                                Navigator.pop(context);
+                              } else {
+                                Navigator.pop(context);
+                                Map<String, dynamic> data =
+                                    await UtilityComponents.showRTMPInputDialog(
+                                        context: context,
+                                        placeholder:
+                                            "Enter Comma separated RTMP Urls",
+                                        isRecordingEnabled: meetingStore
+                                                .recordingType["browser"] ==
+                                            true);
+                                List<String>? urls;
+                                if (data["url"]!.isNotEmpty) {
+                                  urls = data["url"]!.split(",");
                                 }
-                              },
-                              contentPadding: EdgeInsets.zero,
-                              leading: SvgPicture.asset(
-                                "packages/hmssdk_uikit/lib/assets/icons/stream.svg",
-                                fit: BoxFit.scaleDown,
-                                color: isRTMPRunning
-                                    ? errorColor
-                                    : themeDefaultColor,
-                              ),
-                              title: Text(
-                                isRTMPRunning ? "Stop RTMP" : "Start RTMP",
-                                semanticsLabel: isRTMPRunning
-                                    ? "fl_stop_rtmp"
-                                    : "fl_start_rtmp",
-                                style: GoogleFonts.inter(
-                                    fontSize: 14,
-                                    color: isRTMPRunning
-                                        ? errorColor
-                                        : themeDefaultColor,
-                                    letterSpacing: 0.25,
-                                    fontWeight: FontWeight.w600),
-                              ));
+                                if (urls != null) {
+                                  meetingStore.startRtmpOrRecording(
+                                      meetingUrl: Constant.streamingUrl,
+                                      toRecord: data["toRecord"] ?? false,
+                                      rtmpUrls: urls);
+                                } else if (data["toRecord"] ?? false) {
+                                  meetingStore.startRtmpOrRecording(
+                                      meetingUrl: Constant.streamingUrl,
+                                      toRecord: data["toRecord"] ?? false,
+                                      rtmpUrls: null);
+                                }
+                              }
+                            },
+                            contentPadding: EdgeInsets.zero,
+                            leading: SvgPicture.asset(
+                              "packages/hmssdk_uikit/lib/assets/icons/stream.svg",
+                              height: 20,
+                              width: 20,
+                              color: isRTMPRunning
+                                  ? alertErrorDefault
+                                  : onSurfaceHighEmphasis,
+                            ),
+                            title: SubheadingText(
+                              text: isRTMPRunning ? "Stop RTMP" : "Start RTMP",
+                              textColor: isRTMPRunning
+                                  ? alertErrorDefault
+                                  : onSurfaceHighEmphasis,
+                              letterSpacing: 0.15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
                         }),
                   if (meetingStore
                           .localPeer?.role.permissions.browserRecording ??
@@ -477,41 +497,38 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             meetingStore.recordingType["browser"] ?? false,
                         builder: (_, isBrowserRecording, __) {
                           return ListTile(
-                              horizontalTitleGap: 2,
-                              onTap: () async {
-                                if (isBrowserRecording) {
-                                  meetingStore.stopRtmpAndRecording();
-                                } else {
-                                  meetingStore.startRtmpOrRecording(
-                                      meetingUrl: Constant.streamingUrl,
-                                      toRecord: true,
-                                      rtmpUrls: []);
-                                }
-                                Navigator.pop(context);
-                              },
-                              contentPadding: EdgeInsets.zero,
-                              leading: SvgPicture.asset(
-                                "packages/hmssdk_uikit/lib/assets/icons/record.svg",
-                                fit: BoxFit.scaleDown,
-                                color: isBrowserRecording
-                                    ? errorColor
-                                    : themeDefaultColor,
-                              ),
-                              title: Text(
-                                isBrowserRecording
-                                    ? "Stop Recording"
-                                    : "Start Recording",
-                                semanticsLabel: isBrowserRecording
-                                    ? "fl_stop_recording"
-                                    : "fl_start_recording",
-                                style: GoogleFonts.inter(
-                                    fontSize: 14,
-                                    color: isBrowserRecording
-                                        ? errorColor
-                                        : themeDefaultColor,
-                                    letterSpacing: 0.25,
-                                    fontWeight: FontWeight.w600),
-                              ));
+                            horizontalTitleGap: 2,
+                            onTap: () async {
+                              if (isBrowserRecording) {
+                                meetingStore.stopRtmpAndRecording();
+                              } else {
+                                meetingStore.startRtmpOrRecording(
+                                    meetingUrl: Constant.streamingUrl,
+                                    toRecord: true,
+                                    rtmpUrls: []);
+                              }
+                              Navigator.pop(context);
+                            },
+                            contentPadding: EdgeInsets.zero,
+                            leading: SvgPicture.asset(
+                              "packages/hmssdk_uikit/lib/assets/icons/record.svg",
+                              height: 20,
+                              width: 20,
+                              color: isBrowserRecording
+                                  ? alertErrorDefault
+                                  : onSurfaceHighEmphasis,
+                            ),
+                            title: SubheadingText(
+                              text: isBrowserRecording
+                                  ? "Stop Recording"
+                                  : "Start Recording",
+                              textColor: isBrowserRecording
+                                  ? alertErrorDefault
+                                  : onSurfaceHighEmphasis,
+                              letterSpacing: 0.15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
                         }),
                   if (meetingStore.localPeer?.role.permissions.hlsStreaming ??
                       false)
@@ -520,145 +537,143 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             meetingStore.hasHlsStarted),
                         builder: (_, hasHLSStarted, __) {
                           return ListTile(
-                              horizontalTitleGap: 2,
-                              onTap: () async {
-                                if (hasHLSStarted) {
-                                  meetingStore.stopHLSStreaming();
-                                  Navigator.pop(context);
-                                  return;
-                                }
+                            horizontalTitleGap: 2,
+                            onTap: () async {
+                              if (hasHLSStarted) {
+                                meetingStore.stopHLSStreaming();
                                 Navigator.pop(context);
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  backgroundColor: themeBottomSheetColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  context: context,
-                                  builder: (ctx) =>
-                                      ChangeNotifierProvider.value(
-                                          value: meetingStore,
-                                          child: const StartHLSBottomSheet()),
-                                );
-                              },
-                              contentPadding: EdgeInsets.zero,
-                              leading: SvgPicture.asset(
-                                "packages/hmssdk_uikit/lib/assets/icons/hls.svg",
-                                fit: BoxFit.scaleDown,
-                                color: hasHLSStarted
-                                    ? errorColor
-                                    : themeDefaultColor,
-                              ),
-                              title: Text(
-                                hasHLSStarted ? "Stop HLS" : "Start HLS",
-                                semanticsLabel: hasHLSStarted
-                                    ? "fl_stop_hls"
-                                    : "fl_start_hls",
-                                style: GoogleFonts.inter(
-                                    fontSize: 14,
-                                    color: hasHLSStarted
-                                        ? errorColor
-                                        : themeDefaultColor,
-                                    letterSpacing: 0.25,
-                                    fontWeight: FontWeight.w600),
-                              ));
+                                return;
+                              }
+                              Navigator.pop(context);
+                              showModalBottomSheet(
+                                isScrollControlled: true,
+                                backgroundColor: themeBottomSheetColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                context: context,
+                                builder: (ctx) => ChangeNotifierProvider.value(
+                                    value: meetingStore,
+                                    child: const StartHLSBottomSheet()),
+                              );
+                            },
+                            contentPadding: EdgeInsets.zero,
+                            leading: SvgPicture.asset(
+                              "packages/hmssdk_uikit/lib/assets/icons/hls.svg",
+                              height: 20,
+                              width: 20,
+                              color: hasHLSStarted
+                                  ? alertErrorDefault
+                                  : onSurfaceHighEmphasis,
+                            ),
+                            title: SubheadingText(
+                              text: hasHLSStarted ? "Stop HLS" : "Start HLS",
+                              textColor: hasHLSStarted
+                                  ? alertErrorDefault
+                                  : onSurfaceHighEmphasis,
+                              letterSpacing: 0.15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
                         }),
                   if (Platform.isAndroid)
                     ListTile(
-                        horizontalTitleGap: 2,
-                        onTap: () async {
-                          Navigator.pop(context);
-                          context.read<MeetingStore>().enterPipModeOnAndroid();
-                        },
-                        contentPadding: EdgeInsets.zero,
-                        leading: SvgPicture.asset(
-                          "packages/hmssdk_uikit/lib/assets/icons/screen_share.svg",
-                          fit: BoxFit.scaleDown,
-                          color: themeDefaultColor,
-                        ),
-                        title: Text(
-                          "Enter Pip Mode",
-                          semanticsLabel: "fl_pip_mode",
-                          style: GoogleFonts.inter(
-                              fontSize: 14,
-                              color: themeDefaultColor,
-                              letterSpacing: 0.25,
-                              fontWeight: FontWeight.w600),
-                        )),
-                  ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        showDialog(
-                            context: context,
-                            builder: (_) => ShareLinkOptionDialog(
-                                roles: meetingStore.roles,
-                                roomID: meetingStore.hmsRoom!.id));
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "packages/hmssdk_uikit/lib/assets/icons/share.svg",
-                        fit: BoxFit.scaleDown,
-                        color: themeDefaultColor,
-                      ),
-                      title: Text(
-                        "Share Link",
-                        semanticsLabel: "fl_share_link",
-                        style: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: themeDefaultColor,
-                            letterSpacing: 0.25,
-                            fontWeight: FontWeight.w600),
-                      )),
-                  ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
                         Navigator.pop(context);
-                        showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: themeBottomSheetColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            context: context,
-                            builder: (ctx) =>
-                                const NotificationSettingsBottomSheet());
+                        context.read<MeetingStore>().enterPipModeOnAndroid();
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hmssdk_uikit/lib/assets/icons/notification.svg",
-                        fit: BoxFit.scaleDown,
-                        color: themeDefaultColor,
+                        "packages/hmssdk_uikit/lib/assets/icons/screen_share.svg",
+                        height: 20,
+                        width: 20,
+                        color: onSurfaceHighEmphasis,
                       ),
-                      title: Text(
-                        "Modify Notifications",
-                        semanticsLabel: "fl_notification_setting",
-                        style: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: themeDefaultColor,
-                            letterSpacing: 0.25,
-                            fontWeight: FontWeight.w600),
-                      )),
+                      title: SubheadingText(
+                        text: "Enter Pip Mode",
+                        textColor: onSurfaceHighEmphasis,
+                        letterSpacing: 0.15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ListTile(
+                    horizontalTitleGap: 2,
+                    onTap: () async {
+                      showDialog(
+                          context: context,
+                          builder: (_) => ShareLinkOptionDialog(
+                              roles: meetingStore.roles,
+                              roomID: meetingStore.hmsRoom!.id));
+                    },
+                    contentPadding: EdgeInsets.zero,
+                    leading: SvgPicture.asset(
+                      "packages/hmssdk_uikit/lib/assets/icons/share.svg",
+                      height: 20,
+                      width: 20,
+                      color: onSurfaceHighEmphasis,
+                    ),
+                    title: SubheadingText(
+                      text: "Share Link",
+                      textColor: onSurfaceHighEmphasis,
+                      letterSpacing: 0.15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  /**
+                   * This has been turned OFF by default for now 
+                   * Needs some discussion around the toasts
+                   */
+                  // ListTile(
+                  //     horizontalTitleGap: 2,
+                  //     onTap: () async {
+                  //       Navigator.pop(context);
+                  //       showModalBottomSheet(
+                  //           isScrollControlled: true,
+                  //           backgroundColor: themeBottomSheetColor,
+                  //           shape: RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(20),
+                  //           ),
+                  //           context: context,
+                  //           builder: (ctx) =>
+                  //               const NotificationSettingsBottomSheet());
+                  //     },
+                  //     contentPadding: EdgeInsets.zero,
+                  //     leading: SvgPicture.asset(
+                  //       "packages/hmssdk_uikit/lib/assets/icons/notification.svg",
+                  //       height: 20,
+                  //       width: 20,
+                  //       color: onSurfaceHighEmphasis,
+                  //     ),
+                  //     title: Text(
+                  //       "Modify Notifications",
+                  //       semanticsLabel: "fl_notification_setting",
+                  //       style: GoogleFonts.inter(
+                  //           fontSize: 14,
+                  //           color: themeDefaultColor,
+                  //           letterSpacing: 0.25,
+                  //           fontWeight: FontWeight.w600),
+                  //     )),
                   if (meetingStore.localPeer?.role.permissions.endRoom ?? false)
                     ListTile(
-                        horizontalTitleGap: 2,
-                        onTap: () async {
-                          UtilityComponents.onEndRoomPressed(context);
-                        },
-                        contentPadding: EdgeInsets.zero,
-                        leading: SvgPicture.asset(
-                          "packages/hmssdk_uikit/lib/assets/icons/end_room.svg",
-                          fit: BoxFit.scaleDown,
-                          color: themeDefaultColor,
-                        ),
-                        title: Text(
-                          "End Room",
-                          semanticsLabel: "fl_end_room",
-                          style: GoogleFonts.inter(
-                              fontSize: 14,
-                              color: themeDefaultColor,
-                              letterSpacing: 0.25,
-                              fontWeight: FontWeight.w600),
-                        )),
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        UtilityComponents.onEndRoomPressed(context);
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "packages/hmssdk_uikit/lib/assets/icons/end_room.svg",
+                        height: 20,
+                        width: 20,
+                        color: onSurfaceHighEmphasis,
+                      ),
+                      title: SubheadingText(
+                        text: "End Room",
+                        textColor: onSurfaceHighEmphasis,
+                        letterSpacing: 0.15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                 ],
               ),
             )

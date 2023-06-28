@@ -591,103 +591,34 @@ class _MeetingPageState extends State<MeetingPage> {
                                                       selector: (_,
                                                               meetingStore) =>
                                                           meetingStore
-                                                              .isRaisedHand,
+                                                              .isVideoOn,
                                                       builder:
-                                                          (_, handRaised, __) {
+                                                          (_, isVideoOn, __) {
                                                         return HMSEmbeddedButton(
                                                           onTap: () => {
-                                                            context
+                                                            if(isVideoOn){
+                                                              context
                                                                 .read<
-                                                                    MeetingStore>()
-                                                                .changeMetadata()
+                                                                    MeetingStore>().switchCamera()
+                                                            }
                                                           },
                                                           width: 40,
                                                           height: 40,
-                                                          disabledBorderColor:
-                                                              borderColor,
-                                                          offColor:
-                                                              themeScreenBackgroundColor,
-                                                          onColor:
-                                                              themeHintColor,
-                                                          isActive: handRaised,
-                                                          child:
-                                                              SvgPicture.asset(
-                                                            "packages/hmssdk_uikit/lib/assets/icons/hand_outline.svg",
-                                                            color:
-                                                                themeDefaultColor,
-                                                            fit: BoxFit
-                                                                .scaleDown,
-                                                            semanticsLabel:
-                                                                "hand_raise_button",
-                                                          ),
-                                                        );
-                                                      }),
-                                                  const SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Selector<MeetingStore, bool>(
-                                                      selector: (_,
-                                                              meetingStore) =>
-                                                          meetingStore
-                                                              .isNewMessageReceived,
-                                                      builder: (_,
-                                                          isNewMessageReceived,
-                                                          __) {
-                                                        return HMSEmbeddedButton(
-                                                          onTap: () => {
-                                                            context
-                                                                .read<
-                                                                    MeetingStore>()
-                                                                .getSessionMetadata(
-                                                                    SessionStoreKeyValues.getNameFromMethod(
-                                                                        SessionStoreKey
-                                                                            .PINNED_MESSAGE_SESSION_KEY)),
-                                                            context
-                                                                .read<
-                                                                    MeetingStore>()
-                                                                .setNewMessageFalse(),
-                                                            showModalBottomSheet(
-                                                              isScrollControlled:
-                                                                  true,
-                                                              backgroundColor:
-                                                                  themeBottomSheetColor,
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            20),
-                                                              ),
-                                                              context: context,
-                                                              builder: (ctx) =>
-                                                                  ChangeNotifierProvider.value(
-                                                                      value: context
-                                                                          .read<
-                                                                              MeetingStore>(),
-                                                                      child:
-                                                                          const ChatBottomSheet()),
-                                                            )
-                                                          },
-                                                          width: 40,
-                                                          height: 40,
-                                                          offColor:
-                                                              themeHintColor,
-                                                          onColor:
-                                                              themeScreenBackgroundColor,
                                                           isActive: true,
                                                           child:
                                                               SvgPicture.asset(
-                                                            isNewMessageReceived
-                                                                ? "packages/hmssdk_uikit/lib/assets/icons/message_badge_on.svg"
-                                                                : "packages/hmssdk_uikit/lib/assets/icons/message_badge_off.svg",
+                                                            "packages/hmssdk_uikit/lib/assets/icons/camera.svg",
+                                                            color:
+                                                                isVideoOn?onSurfaceHighEmphasis:onSurfaceLowEmphasis,
                                                             fit: BoxFit
                                                                 .scaleDown,
                                                             semanticsLabel:
-                                                                "chat_button",
+                                                                "fl_switch_camera",
                                                           ),
                                                         );
-                                                      })
-                                                ],
+                                                      }),
+                                                
+                                                   ],
                                               )
                                             ],
                                           ),
@@ -880,93 +811,69 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                           "stats_button"),
                                                                 );
                                                               }),
-                                                    if (Provider.of<MeetingStore>(context)
-                                                            .localPeer !=
-                                                        null)
-                                                      (Provider.of<MeetingStore>(context)
-                                                                  .localPeer
-                                                                  ?.role
-                                                                  .publishSettings
-                                                                  ?.allowed
-                                                                  .contains(
-                                                                      "screen") ??
-                                                              false)
-                                                          ? Selector<
-                                                                  MeetingStore,
-                                                                  bool>(
-                                                              selector: (_,
-                                                                      meetingStore) =>
-                                                                  meetingStore
-                                                                      .isScreenShareOn,
-                                                              builder: (_, data,
-                                                                  __) {
-                                                                return HMSEmbeddedButton(
-                                                                  onTap: () {
-                                                                    MeetingStore
-                                                                        meetingStore =
-                                                                        Provider.of<MeetingStore>(
-                                                                            context,
-                                                                            listen:
-                                                                                false);
-                                                                    if (meetingStore
-                                                                        .isScreenShareOn) {
-                                                                      meetingStore
-                                                                          .stopScreenShare();
-                                                                    } else {
-                                                                      meetingStore
-                                                                          .startScreenShare();
-                                                                    }
-                                                                  },
-                                                                  width: 40,
-                                                                  height: 40,
-                                                                  disabledBorderColor:
-                                                                      borderColor,
-                                                                  offColor:
-                                                                      themeScreenBackgroundColor,
-                                                                  onColor:
-                                                                      borderColor,
-                                                                  isActive:
-                                                                      data,
-                                                                  child: SvgPicture.asset(
-                                                                      "packages/hmssdk_uikit/lib/assets/icons/screen_share.svg",
-                                                                      color:
-                                                                          themeDefaultColor,
-                                                                      fit: BoxFit
-                                                                          .scaleDown,
-                                                                      semanticsLabel:
-                                                                          "screen_share_button"),
-                                                                );
-                                                              })
-                                                          : Selector<
-                                                                  MeetingStore,
-                                                                  bool>(
-                                                              selector: (_,
-                                                                      meetingStore) =>
-                                                                  (meetingStore.isBRB),
-                                                              builder: (_, isBRB, __) {
-                                                                return HMSEmbeddedButton(
-                                                                  width: 40,
-                                                                  height: 40,
-                                                                  onTap: () => context
-                                                                      .read<
-                                                                          MeetingStore>()
-                                                                      .changeMetadataBRB(),
-                                                                  disabledBorderColor:
-                                                                      borderColor,
-                                                                  offColor:
-                                                                      themeScreenBackgroundColor,
-                                                                  onColor:
-                                                                      borderColor,
-                                                                  isActive:
-                                                                      isBRB,
-                                                                  child: SvgPicture.asset(
-                                                                      "packages/hmssdk_uikit/lib/assets/icons/brb.svg",
-                                                                      fit: BoxFit
-                                                                          .scaleDown,
-                                                                      semanticsLabel:
-                                                                          "brb_button"),
-                                                                );
-                                                              }),
+                                                               Selector<MeetingStore, bool>(
+                                                      selector: (_,
+                                                              meetingStore) =>
+                                                          meetingStore
+                                                              .isNewMessageReceived,
+                                                      builder: (_,
+                                                          isNewMessageReceived,
+                                                          __) {
+                                                        return HMSEmbeddedButton(
+                                                          onTap: () => {
+                                                            context
+                                                                .read<
+                                                                    MeetingStore>()
+                                                                .getSessionMetadata(
+                                                                    SessionStoreKeyValues.getNameFromMethod(
+                                                                        SessionStoreKey
+                                                                            .PINNED_MESSAGE_SESSION_KEY)),
+                                                            context
+                                                                .read<
+                                                                    MeetingStore>()
+                                                                .setNewMessageFalse(),
+                                                            showModalBottomSheet(
+                                                              isScrollControlled:
+                                                                  true,
+                                                              backgroundColor:
+                                                                  themeBottomSheetColor,
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                              ),
+                                                              context: context,
+                                                              builder: (ctx) =>
+                                                                  ChangeNotifierProvider.value(
+                                                                      value: context
+                                                                          .read<
+                                                                              MeetingStore>(),
+                                                                      child:
+                                                                          const ChatBottomSheet()),
+                                                            )
+                                                          },
+                                                          width: 40,
+                                                          height: 40,
+                                                          offColor:
+                                                              themeHintColor,
+                                                          onColor:
+                                                              themeScreenBackgroundColor,
+                                                          isActive: true,
+                                                          child:
+                                                              SvgPicture.asset(
+                                                            isNewMessageReceived
+                                                                ? "packages/hmssdk_uikit/lib/assets/icons/message_badge_on.svg"
+                                                                : "packages/hmssdk_uikit/lib/assets/icons/message_badge_off.svg",
+                                                            fit: BoxFit
+                                                                .scaleDown,
+                                                            semanticsLabel:
+                                                                "chat_button",
+                                                          ),
+                                                        );
+                                                      })
+                                              ,
                                                     if (Provider.of<MeetingStore>(
                                                                 context)
                                                             .localPeer !=
