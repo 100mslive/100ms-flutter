@@ -9,6 +9,9 @@ https://github.com/100mslive/100ms-flutter/pull/1330
 - Replaced Wakelock dependency with Android Activity Flags
 https://github.com/100mslive/100ms-flutter/issues/1373
 
+- Added support to Not mute local peer when incoming phone call is ringing
+https://github.com/100mslive/100ms-flutter/pull/1403
+
 Flutter SDK: 1.8.0
-Android SDK: 2.6.7
+Android SDK: 2.6.8
 iOS SDK: 0.9.5
