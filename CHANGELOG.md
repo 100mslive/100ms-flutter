@@ -1,3 +1,17 @@
+## 1.7.1 - 2023-06-30
+
+### Added
+
+- Added phoneCallState property in `HMSAudioTrackSetting`
+
+  The `phoneCallState` property can be used to set the microphone state when you receive a phone call.
+
+  Read more about the `phoneCallState` property [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/track/set-track-settings#phonecallstate-android-only).
+
+Updated to Android SDK 2.6.8 & iOS SDK 0.9.5
+
+**Full Changelog**: [1.7.0...1.7.1](https://github.com/100mslive/100ms-flutter/compare/1.7.0...1.7.1)
+
 ## 1.7.0 - 2023-06-20
 
 ### Breaking

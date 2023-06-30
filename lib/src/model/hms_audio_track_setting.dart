@@ -28,6 +28,11 @@ class HMSAudioTrackSetting {
   ///Refer: Read more about audio mode [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/configure-your-device/microphone/music-mode)
   final HMSAudioMode? audioMode;
 
+  ///[phoneCallState] property to set the state of microphone i.e mute/unmute on phone call ring
+  ///If set to `DISABLE_MUTE_ON_VOIP_PHONE_CALL_RING` then the microphone will not be muted on phone call ring
+  ///Similarly if set to `ENABLE_MUTE_ON_PHONE_CALL_RING` then the microphone will be muted on phone call ring
+  ///By default it's set to `DISABLE_MUTE_ON_VOIP_PHONE_CALL_RING`
+  ///Refer: Read more about phone call state [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/track/set-track-settings#phonecallstate-android-only)
   final HMSAndroidPhoneCallState phoneCallState;
 
   HMSAudioTrackSetting(
