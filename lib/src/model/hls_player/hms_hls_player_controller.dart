@@ -49,7 +49,7 @@ class HMSHLSPlayerController {
   }
 
   /// Resumes the paused HLS playback.
-  /// Refer [Resume HLS Playback](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player#how-to-pause-and-resume-the-playback) 
+  /// Refer [Resume HLS Playback](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player#how-to-pause-and-resume-the-playback)
   static Future<void> resume() async {
     await PlatformService.invokeMethod(PlatformMethod.resume);
   }

@@ -1,6 +1,7 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/model/hms_audio_node.dart';
+import 'package:hmssdk_flutter/src/enum/hms_phone_call_state.dart';
 
 ///100ms HMSAudioTrackSetting
 ///
@@ -27,11 +28,20 @@ class HMSAudioTrackSetting {
   ///Refer: Read more about audio mode [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/configure-your-device/microphone/music-mode)
   final HMSAudioMode? audioMode;
 
+  ///[phoneCallState] property to set the state of microphone i.e mute/unmute on phone call ring
+  ///If set to `DISABLE_MUTE_ON_VOIP_PHONE_CALL_RING` then the microphone will not be muted on phone call ring
+  ///Similarly if set to `ENABLE_MUTE_ON_PHONE_CALL_RING` then the microphone will be muted on phone call ring
+  ///By default it's set to `DISABLE_MUTE_ON_VOIP_PHONE_CALL_RING`
+  ///Refer: Read more about phone call state [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/track/set-track-settings#phonecallstate-android-only)
+  final HMSAndroidPhoneCallState phoneCallState;
+
   HMSAudioTrackSetting(
       {this.useHardwareAcousticEchoCanceler,
       this.audioSource,
       this.trackInitialState = HMSTrackInitState.UNMUTED,
-      this.audioMode});
+      this.audioMode,
+      this.phoneCallState =
+          HMSAndroidPhoneCallState.DISABLE_MUTE_ON_VOIP_PHONE_CALL_RING});
 
   factory HMSAudioTrackSetting.fromMap(Map map) {
     List<HMSAudioNode> nodeList = [];
@@ -52,6 +62,16 @@ class HMSAudioTrackSetting {
     if ((map.containsKey("audio_mode")) && (map["audio_mode"] != null)) {
       audioMode = HMSAudioModeValues.getAudioModeFromName(map["audio_mode"]);
     }
+
+    HMSAndroidPhoneCallState phoneCallState =
+        HMSAndroidPhoneCallState.DISABLE_MUTE_ON_VOIP_PHONE_CALL_RING;
+    if (map.containsKey("phone_call_state")) {
+      if (map["phone_call_state"] != "DISABLE_MUTE_ON_VOIP_PHONE_CALL_RING") {
+        phoneCallState =
+            HMSAndroidPhoneCallState.ENABLE_MUTE_ON_PHONE_CALL_RING;
+      }
+    }
+
     return HMSAudioTrackSetting(
         useHardwareAcousticEchoCanceler:
             map['user_hardware_acoustic_echo_canceler'] ?? null,
@@ -60,7 +80,8 @@ class HMSAudioTrackSetting {
             ? HMSTrackInitStateValue.getHMSTrackInitStateFromName(
                 map['track_initial_state'])
             : HMSTrackInitState.UNMUTED,
-        audioMode: audioMode);
+        audioMode: audioMode,
+        phoneCallState: phoneCallState);
   }
 
   Map<String, dynamic> toMap() {
@@ -72,7 +93,10 @@ class HMSAudioTrackSetting {
               trackInitialState),
       'audio_mode': (audioMode != null)
           ? HMSAudioModeValues.getNameFromHMSAudioMode(audioMode!)
-          : null
+          : null,
+      'phone_call_state':
+          HMSAndroidPhoneCallStateValue.getValuefromHMSPhoneCallState(
+              phoneCallState)
     };
   }
 }
