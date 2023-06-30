@@ -1,5 +1,9 @@
 enum HMSAndroidPhoneCallState {
+
+  // To keep the microphone unmuted while receiving a phone call
   DISABLE_MUTE_ON_VOIP_PHONE_CALL_RING,
+
+  // To mute the microphone while receiving a phone call
   ENABLE_MUTE_ON_PHONE_CALL_RING,
 }
 
