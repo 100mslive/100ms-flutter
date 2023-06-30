@@ -108,7 +108,7 @@ class Utilities {
     await Permission.microphone.request();
     await Permission.bluetoothConnect.request();
     await Permission.phone.request();
-    
+
     // storage permission is required to save Snapshot to device gallery.
     await Permission.storage.request();
 
