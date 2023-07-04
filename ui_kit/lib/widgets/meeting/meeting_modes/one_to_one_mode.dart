@@ -2,6 +2,7 @@ import 'package:draggable_widget/draggable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hmssdk_uikit/model/peer_track_node.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/peer_tile.dart';
+import 'package:hmssdk_uikit/widgets/meeting/meeting_modes/inset_grid_view.dart';
 import 'package:provider/provider.dart';
 
 class OneToOneMode extends StatefulWidget {
@@ -26,6 +27,7 @@ class OneToOneMode extends StatefulWidget {
 class _OneToOneModeState extends State<OneToOneMode> {
   PeerTrackNode? oneToOnePeer;
   PeerTrackNode? screenPeer;
+
   @override
   void initState() {
     super.initState();
@@ -33,52 +35,40 @@ class _OneToOneModeState extends State<OneToOneMode> {
       oneToOnePeer =
           widget.peerTracks.firstWhere((element) => element.peer.isLocal);
       oneToOnePeer?.setOffScreenStatus(false);
-      screenPeer =
-          widget.peerTracks.firstWhere((element) => !element.peer.isLocal);
     }
-  }
-
-  void switchView() {
-    PeerTrackNode? tempPeer = oneToOnePeer;
-    oneToOnePeer = screenPeer;
-    screenPeer = tempPeer;
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    // EdgeInsets viewPadding = MediaQuery.of(context).viewPadding;
     return Scaffold(
       body: SafeArea(
         child: Stack(
           children: [
-            ChangeNotifierProvider.value(
-              key: ValueKey(screenPeer?.uid ?? "" "video_view"),
-              value: screenPeer,
-              child: PeerTile(
-                itemHeight: widget.size.height,
-                itemWidth: widget.size.width,
-              ),
-            ),
+            insetGridView(
+                peerTracks: widget.peerTracks
+                    .where((element) => !element.peer.isLocal)
+                    .toList(),
+                itemCount: widget.peerTracks.length - 1,
+                screenShareCount: widget.screenShareCount,
+                context: context,
+                isPortrait: true,
+                size: widget.size),
             DraggableWidget(
               topMargin: 10,
               bottomMargin: widget.bottomMargin,
               horizontalSpace: 10,
-              child: GestureDetector(
-                onDoubleTap: (() => switchView()),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: SizedBox(
-                    width: 100,
-                    height: 150,
-                    child: ChangeNotifierProvider.value(
-                      key: ValueKey(oneToOnePeer?.uid ?? "" "video_view"),
-                      value: oneToOnePeer,
-                      child: const PeerTile(
-                        isOneToOne: true,
-                        itemHeight: 150,
-                        itemWidth: 100,
-                      ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16.0),
+                child: SizedBox(
+                  width: 123,
+                  height: 219,
+                  child: ChangeNotifierProvider.value(
+                    key: ValueKey(oneToOnePeer?.uid ?? "" "video_view"),
+                    value: oneToOnePeer,
+                    child: const PeerTile(
+                      isOneToOne: true,
+                      itemHeight: 219,
+                      itemWidth: 123,
                     ),
                   ),
                 ),

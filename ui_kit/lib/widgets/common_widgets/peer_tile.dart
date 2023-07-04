@@ -25,14 +25,18 @@ class PeerTile extends StatefulWidget {
   final ScaleType scaleType;
   final bool islongPressEnabled;
   final bool isOneToOne;
-  const PeerTile(
-      {Key? key,
-      this.itemHeight = 200.0,
-      this.itemWidth = 200.0,
-      this.scaleType = ScaleType.SCALE_ASPECT_FILL,
-      this.islongPressEnabled = true,
-      this.isOneToOne = false})
-      : super(key: key);
+  final double avatarRadius;
+  final double avatarTitleFontSize;
+  const PeerTile({
+    Key? key,
+    this.itemHeight = 200.0,
+    this.itemWidth = 200.0,
+    this.scaleType = ScaleType.SCALE_ASPECT_FILL,
+    this.islongPressEnabled = true,
+    this.isOneToOne = false,
+    this.avatarRadius = 36,
+    this.avatarTitleFontSize = 36,
+  }) : super(key: key);
 
   @override
   State<PeerTile> createState() => _PeerTileState();
@@ -58,6 +62,11 @@ class _PeerTileState extends State<PeerTile> {
               .setOffScreenStatus(false);
         },
         key: Key(context.read<PeerTrackNode>().uid),
+        //Here we check whether the video track is a regular
+        //video track or a screen share track
+        //We check this by checking the uid of the track
+        //If it contains `mainVideo` then it is a regular video track
+        //else it is a screen share track
         child: context.read<PeerTrackNode>().uid.contains("mainVideo")
             ? Container(
                 key: key,
@@ -67,7 +76,7 @@ class _PeerTileState extends State<PeerTile> {
                 width: widget.itemWidth - 5.0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: themeBottomSheetColor,
+                  color: surfaceDim,
                 ),
                 child: Semantics(
                   label:
@@ -92,6 +101,8 @@ class _PeerTileState extends State<PeerTile> {
                           isOneToOne: widget.isOneToOne,
                           itemHeight: widget.itemHeight,
                           itemWidth: widget.itemWidth,
+                          avatarRadius: widget.avatarRadius,
+                          avatarTitleFontSize: widget.avatarTitleFontSize,
                         ),
                       ),
                       if (!widget.isOneToOne)
@@ -101,7 +112,7 @@ class _PeerTileState extends State<PeerTile> {
                           left: 5,
                           child: Container(
                             decoration: BoxDecoration(
-                                color: themeTileNameColor,
+                                color: transparentBackgroundColor,
                                 borderRadius: BorderRadius.circular(8)),
                             child: Center(
                               child: Padding(

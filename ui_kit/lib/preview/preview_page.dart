@@ -323,8 +323,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                           BorderRadius.circular(
                                                               8),
                                                       color:
-                                                          const Color.fromRGBO(
-                                                              0, 0, 0, 0.8)),
+                                                          transparentBackgroundColor),
                                                   child: Center(
                                                     child: Padding(
                                                       padding:
