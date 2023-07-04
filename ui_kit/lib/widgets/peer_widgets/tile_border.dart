@@ -29,9 +29,7 @@ class TileBorder extends StatelessWidget {
             width: itemWidth - 4,
             decoration: BoxDecoration(
               border: Border.all(
-                  color: (audioLevel != -1)
-                      ? hmsdefaultColor
-                      : themeBottomSheetColor,
+                  color: (audioLevel != -1) ? primaryDefault : surfaceDim,
                   width: (audioLevel != -1) ? 4.0 : 0.0),
               borderRadius: const BorderRadius.all(Radius.circular(10)),
             ),

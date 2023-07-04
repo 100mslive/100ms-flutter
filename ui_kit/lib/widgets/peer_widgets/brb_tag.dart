@@ -1,6 +1,7 @@
 //Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hmssdk_uikit/common/app_color.dart';
 import 'package:hmssdk_uikit/model/peer_track_node.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +25,7 @@ class BRBTag extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                       child: SvgPicture.asset(
                         "packages/hmssdk_uikit/lib/assets/icons/brb.svg",
-                        color: Colors.white,
+                        color: onSurfaceHighEmphasis,
                         width: 26,
                         semanticsLabel: "brb_label",
                       ),

@@ -317,7 +317,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                     null))
                                                             ? OneToOneMode(
                                                                 bottomMargin:
-                                                                    235,
+                                                                    225,
                                                                 peerTracks:
                                                                     data.item1,
                                                                 screenShareCount:

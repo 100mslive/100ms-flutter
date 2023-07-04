@@ -204,9 +204,15 @@ class MoreOption extends StatelessWidget {
         },
         child: Semantics(
           label: "fl_${context.read<PeerTrackNode>().peer.name}more_option",
-          child: const Padding(
-            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-            child: Icon(Icons.more_horiz),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: const Color.fromRGBO(0, 0, 0, 0.6),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.fromLTRB(6, 4, 6, 4),
+              child: Icon(Icons.more_horiz),
+            ),
           ),
         ),
       ),

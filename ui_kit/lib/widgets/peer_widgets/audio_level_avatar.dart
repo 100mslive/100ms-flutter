@@ -1,12 +1,17 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_uikit/common/app_color.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
 import 'package:hmssdk_uikit/model/peer_track_node.dart';
 import 'package:provider/provider.dart';
 
 class AudioLevelAvatar extends StatefulWidget {
-  const AudioLevelAvatar({Key? key}) : super(key: key);
+  final double avatarRadius;
+  final double avatarTitleFontSize;
+  const AudioLevelAvatar(
+      {Key? key, this.avatarRadius = 36, this.avatarTitleFontSize = 36})
+      : super(key: key);
 
   @override
   State<AudioLevelAvatar> createState() => _AudioLevelAvatarState();
@@ -23,30 +28,33 @@ class _AudioLevelAvatarState extends State<AudioLevelAvatar> {
                 ? CircleAvatar(
                     backgroundColor: Utilities.getBackgroundColour(
                         context.read<PeerTrackNode>().peer.name),
-                    radius: 36,
+                    radius: widget.avatarRadius,
                     child: Text(
                       Utilities.getAvatarTitle(
                           context.read<PeerTrackNode>().peer.name),
-                      style:
-                          GoogleFonts.inter(fontSize: 36, color: Colors.white),
+                      style: GoogleFonts.inter(
+                          fontSize: widget.avatarTitleFontSize,
+                          color: onSurfaceHighEmphasis),
                     ))
                 : AvatarGlow(
                     repeat: true,
                     showTwoGlows: true,
                     duration: const Duration(seconds: 1),
-                    endRadius:
-                        (audioLevel != -1) ? 36 + (audioLevel).toDouble() : 36,
+                    endRadius: (audioLevel != -1)
+                        ? widget.avatarRadius + (audioLevel).toDouble()
+                        : widget.avatarRadius,
                     glowColor: Utilities.getBackgroundColour(
                         context.read<PeerTrackNode>().peer.name),
                     child: CircleAvatar(
                         backgroundColor: Utilities.getBackgroundColour(
                             context.read<PeerTrackNode>().peer.name),
-                        radius: 36,
+                        radius: widget.avatarRadius,
                         child: Text(
                           Utilities.getAvatarTitle(
                               context.read<PeerTrackNode>().peer.name),
                           style: GoogleFonts.inter(
-                              fontSize: 36, color: Colors.white),
+                              fontSize: widget.avatarTitleFontSize,
+                              color: onSurfaceHighEmphasis),
                         )),
                   );
           }),

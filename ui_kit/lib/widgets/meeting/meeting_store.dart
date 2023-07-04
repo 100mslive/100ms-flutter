@@ -121,7 +121,7 @@ class MeetingStore extends ChangeNotifier
 
   ScrollController controller = ScrollController();
 
-  MeetingMode meetingMode = MeetingMode.Grid;
+  MeetingMode meetingMode = MeetingMode.OneToOne;
 
   bool isLandscapeLocked = false;
 

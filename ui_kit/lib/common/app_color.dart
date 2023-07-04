@@ -123,3 +123,5 @@ Color borderPrimary = Color(_getColorFromHex("#2572ED"));
 
 Color baseBlack = Color(_getColorFromHex("#000000"));
 Color baseWhite = Color(_getColorFromHex("#FFFFFF"));
+
+Color transparentBackgroundColor = const Color.fromRGBO(0, 0, 0, 0.8);
