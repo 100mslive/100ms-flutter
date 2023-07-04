@@ -110,8 +110,6 @@ Widget insetGridView(
                 child: PeerTile(
                   itemHeight: size.height,
                   itemWidth: size.width,
-                  avatarRadius: 24,
-                  avatarTitleFontSize: 23,
                 ))
             : Container();
       },
