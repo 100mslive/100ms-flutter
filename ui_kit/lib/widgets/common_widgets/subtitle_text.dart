@@ -9,6 +9,7 @@ class SubtitleText extends StatelessWidget {
   final double? fontSize;
   final FontWeight? fontWeight;
   final TextOverflow? textOverflow;
+  final TextAlign? textAlign;
 
   const SubtitleText(
       {Key? key,
@@ -18,13 +19,15 @@ class SubtitleText extends StatelessWidget {
       this.lineHeight = 16,
       this.fontSize = 12,
       this.fontWeight = FontWeight.w400,
-      this.textOverflow = TextOverflow.ellipsis})
+      this.textOverflow = TextOverflow.ellipsis,
+      this.textAlign})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Text(text,
         overflow: textOverflow,
+        textAlign: textAlign,
         style: GoogleFonts.inter(
             height: lineHeight! / fontSize!,
             fontSize: fontSize,

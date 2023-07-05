@@ -21,27 +21,29 @@ class _AudioMuteStatusState extends State<AudioMuteStatus> {
         selector: (_, peerTrackNode) =>
             peerTrackNode.audioTrack?.isMute ?? true,
         builder: (_, data, __) {
-          return data?Positioned(
-            top: 5,
-            right: 5,
-            child: Semantics(
-              label: "fl_${context.read<PeerTrackNode>().peer.name}_audio_mute",
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: alertErrorDefault),
-                child: Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-                    child:SvgPicture.asset(
+          return data
+              ? Positioned(
+                  top: 5,
+                  right: 5,
+                  child: Semantics(
+                    label:
+                        "fl_${context.read<PeerTrackNode>().peer.name}_audio_mute",
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: alertErrorDefault),
+                      child: Padding(
+                          padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                          child: SvgPicture.asset(
                             'packages/hmssdk_uikit/lib/assets/icons/mic_state_off.svg',
                             width: 24,
                             height: 24,
                             semanticsLabel: "audio_mute_label",
-                          )
-                        ),
-              ),
-            ),
-          ):Container();
+                          )),
+                    ),
+                  ),
+                )
+              : Container();
         });
   }
 }
