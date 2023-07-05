@@ -51,45 +51,60 @@ class _PreviewPageState extends State<PreviewPage> {
           children: [
             Container(
               constraints: BoxConstraints(maxWidth: width * 0.28),
-              child:
-                  SubtitleText(text: message, textColor: onSurfaceHighEmphasis),
+              child: SubtitleText(
+                text: message,
+                textColor: onSurfaceHighEmphasis,
+                textAlign: TextAlign.center,
+              ),
             ),
             SubtitleText(text: " has joined", textColor: onSurfaceHighEmphasis)
           ],
         );
       case 2:
-        message = "${peers[0].name}, ${peers[1].name}";
         return Row(
           children: [
             Container(
-              constraints: BoxConstraints(maxWidth: width * 0.38),
-              child:
-                  SubtitleText(text: message, textColor: onSurfaceHighEmphasis),
+              constraints: BoxConstraints(maxWidth: width * 0.15),
+              child: SubtitleText(
+                  text: peers[0].name, textColor: onSurfaceHighEmphasis),
+            ),
+            Container(
+              constraints: BoxConstraints(maxWidth: width * 0.20),
+              child: SubtitleText(
+                  text: ", ${peers[1].name}", textColor: onSurfaceHighEmphasis),
             ),
             SubtitleText(text: " joined", textColor: onSurfaceHighEmphasis)
           ],
         );
       case 3:
-        message = "${peers[0].name}, ${peers[1].name}";
         return Row(
           children: [
             Container(
-              constraints: BoxConstraints(maxWidth: width * 0.28),
-              child:
-                  SubtitleText(text: message, textColor: onSurfaceHighEmphasis),
+              constraints: BoxConstraints(maxWidth: width * 0.15),
+              child: SubtitleText(
+                  text: peers[0].name, textColor: onSurfaceHighEmphasis),
+            ),
+            Container(
+              constraints: BoxConstraints(maxWidth: width * 0.20),
+              child: SubtitleText(
+                  text: ", ${peers[1].name}", textColor: onSurfaceHighEmphasis),
             ),
             SubtitleText(text: ", +1 other", textColor: onSurfaceHighEmphasis)
           ],
         );
       default:
-        message = "${peers[0].name}, ${peers[1].name}";
+        double totalWidth = _getRemainingWidth(peers.length, width);
         return Row(
           children: [
             Container(
-              constraints: BoxConstraints(
-                  maxWidth: _getRemainingWidth(peers.length, width)),
-              child:
-                  SubtitleText(text: message, textColor: onSurfaceHighEmphasis),
+              constraints: BoxConstraints(maxWidth: totalWidth * 0.3),
+              child: SubtitleText(
+                  text: peers[0].name, textColor: onSurfaceHighEmphasis),
+            ),
+            Container(
+              constraints: BoxConstraints(maxWidth: totalWidth * 0.7),
+              child: SubtitleText(
+                  text: ", ${peers[1].name}", textColor: onSurfaceHighEmphasis),
             ),
             SubtitleText(
                 text: ", +${peers.length - 2} others",
@@ -311,8 +326,11 @@ class _PreviewPageState extends State<PreviewPage> {
                                                       ),
                                               ),
                                             ),
-                                            if (previewStore.networkQuality !=
-                                                    null ||
+                                            if ((previewStore.networkQuality !=
+                                                        null &&
+                                                    previewStore
+                                                            .networkQuality !=
+                                                        -1) ||
                                                 nameController.text.isNotEmpty)
                                               Positioned(
                                                 bottom: 8,

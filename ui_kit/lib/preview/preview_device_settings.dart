@@ -171,30 +171,6 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                       : data.item1[0],
                                   updateSelectedValue: _updateDropDownValue)),
                         ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  ListTile(
-                    horizontalTitleGap: 2,
-                    onTap: () {
-                      Navigator.pop(context);
-                      context.read<PreviewStore>().toggleSpeaker();
-                    },
-                    contentPadding: EdgeInsets.zero,
-                    leading: SvgPicture.asset(
-                      context.read<PreviewStore>().isRoomMute
-                          ? "assets/icons/speaker_state_off.svg"
-                          : "assets/icons/speaker_state_on.svg",
-                      fit: BoxFit.scaleDown,
-                      color: onSurfaceHighEmphasis,
-                    ),
-                    title: SubtitleText(
-                      text: (context.read<PreviewStore>().isRoomMute
-                          ? "Unmute Room"
-                          : "Mute Room"),
-                      textColor: onSurfaceHighEmphasis,
-                    ),
-                  )
                 ],
               );
             }),
