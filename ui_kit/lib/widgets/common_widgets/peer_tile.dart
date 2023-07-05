@@ -5,6 +5,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_uikit/common/app_color.dart';
 import 'package:hmssdk_uikit/common/utility_components.dart';
 import 'package:hmssdk_uikit/model/peer_track_node.dart';
+import 'package:hmssdk_uikit/widgets/common_widgets/degrade_text.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/degrade_tile.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/video_view.dart';
 import 'package:hmssdk_uikit/widgets/peer_widgets/audio_mute_status.dart';
@@ -124,6 +125,7 @@ class _PeerTileState extends State<PeerTile> {
                                   children: const [
                                     NetworkIconWidget(),
                                     PeerName(),
+                                    DegradeText()
                                   ],
                                 ),
                               ),
