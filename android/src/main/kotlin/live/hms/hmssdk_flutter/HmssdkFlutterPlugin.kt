@@ -769,21 +769,21 @@ class HmssdkFlutterPlugin :
         hmssdk!!.changeRoleOfPeersWithRoles(toRole = toRole, ofRoles = ofRoles, hmsActionResultListener = HMSCommonAction.getActionListener(result))
     }
 
-    fun build(activity: Activity, call: MethodCall, result: Result) {
+    private fun build(activity: Activity, call: MethodCall, result: Result) {
         val dartSDKVersion = call.argument<String>("dart_sdk_version")
         val hmsSDKVersion = call.argument<String>("hmssdk_version")
         val framework = FrameworkInfo(framework = AgentType.FLUTTER, frameworkVersion = dartSDKVersion, frameworkSdkVersion = hmsSDKVersion)
         val builder = HMSSDK.Builder(activity).setFrameworkInfo(framework)
 
-        val hmsTrackSettingMap =
+        val settings =
             call.argument<HashMap<String, HashMap<String, Any?>?>?>("hms_track_setting")
 
-        if (hmsTrackSettingMap != null) {
-            val hmsAudioTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["audio_track_setting"]
-            val hmsVideoTrackHashMap: HashMap<String, Any?>? = hmsTrackSettingMap["video_track_setting"]
-            val hmsTrackSettings = HMSTrackSettingsExtension.setTrackSettings(hmsAudioTrackHashMap, hmsVideoTrackHashMap)
-            builder.setTrackSettings(hmsTrackSettings)
-        }
+        builder.setTrackSettings(
+            HMSTrackSettingsExtension.setTrackSettings(
+                settings?.get("audio_track_setting"),
+                settings?.get("video_track_setting"),
+            ),
+        )
 
         val hmsLogSettingsMap =
             call.argument<HashMap<String, Any>?>("hms_log_settings")
