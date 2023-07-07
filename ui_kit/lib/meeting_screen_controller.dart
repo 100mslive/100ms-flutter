@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_uikit/common/utility_components.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
+import 'package:hmssdk_uikit/hls_viewer/hls_player_store.dart';
 import 'package:hmssdk_uikit/hls_viewer/hls_viewer_page.dart';
 import 'package:hmssdk_uikit/widgets/meeting/meeting_page.dart';
 import 'package:hmssdk_uikit/widgets/meeting/meeting_store.dart';
@@ -67,7 +68,9 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
     return Selector<MeetingStore, String?>(
         builder: (_, data, __) {
           if (data?.contains("hls-") ?? false) {
-            return const HLSViewerPage();
+            HLSPlayerStore hlsPlayerStore = HLSPlayerStore();
+            return ListenableProvider.value(
+                value: hlsPlayerStore, child: const HLSViewerPage());
           }
           return MeetingPage(
             meetingLink: widget.meetingLink,

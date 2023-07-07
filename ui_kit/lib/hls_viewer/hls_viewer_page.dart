@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_uikit/common/app_color.dart';
 import 'package:hmssdk_uikit/common/utility_components.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
+import 'package:hmssdk_uikit/hls_viewer/hls_chat.dart';
 import 'package:hmssdk_uikit/hls_viewer/hls_player.dart';
+import 'package:hmssdk_uikit/hls_viewer/hls_player_store.dart';
+import 'package:hmssdk_uikit/hls_viewer/hls_waiting_ui.dart';
 import 'package:hmssdk_uikit/widgets/app_dialogs/audio_device_change_dialog.dart';
 import 'package:hmssdk_uikit/widgets/bottom_sheets/chat_bottom_sheet.dart';
-import 'package:hmssdk_uikit/widgets/bottom_sheets/viewer_settings_bottom_sheet.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/hms_embedded_button.dart';
-import 'package:hmssdk_uikit/widgets/common_widgets/stream_timer.dart';
+import 'package:hmssdk_uikit/widgets/common_widgets/subheading_text.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/subtitle_text.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
 import 'package:hmssdk_uikit/widgets/meeting/meeting_store.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -58,6 +60,16 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    if (mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<HLSPlayerStore>().startTimerToHideButtons();
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
@@ -96,433 +108,558 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                   return isPipActive
                       ? HMSHLSPlayer()
                       : Scaffold(
-                          resizeToAvoidBottomInset: false,
+                          resizeToAvoidBottomInset: true,
                           body: SafeArea(
-                            child: Stack(
-                              children: [
-                                Selector<MeetingStore, bool>(
-                                    selector: (_, meetingStore) =>
-                                        meetingStore.hasHlsStarted,
-                                    builder: (_, hasHlsStarted, __) {
-                                      return (hasHlsStarted)
-                                          ? Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 50.0),
-                                              child: SizedBox(
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .height,
-                                                  child: Center(
-                                                    child: HLSPlayer(
-                                                      ratio: Utilities
-                                                          .getHLSPlayerDefaultRatio(
-                                                              MediaQuery.of(
-                                                                      context)
-                                                                  .size),
-                                                    ),
-                                                  )),
-                                            )
-                                          : Center(
-                                              child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 8.0),
-                                                  child: TitleText(
-                                                      text:
-                                                          "Waiting for HLS to start...",
-                                                      textColor:
-                                                          themeDefaultColor)),
-                                            );
-                                    }),
-                                isPipActive
-                                    ? Container()
-                                    : Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Padding(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  Selector<HLSPlayerStore, bool>(
+                                      selector: (_, hlsPlayerStore) =>
+                                          hlsPlayerStore.isFullScreen,
+                                      builder: (_, isFullScreen, __) {
+                                        return Visibility(
+                                          visible: !isFullScreen,
+                                          child: Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 15,
                                                 right: 15,
                                                 top: 5,
                                                 bottom: 2),
                                             child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
                                               children: [
-                                                Row(
-                                                  children: [
-                                                    HMSEmbeddedButton(
-                                                      onTap: () async => {
-                                                        await UtilityComponents
-                                                            .onBackPressed(
-                                                                context)
-                                                      },
-                                                      disabledBorderColor:
-                                                          const Color(
-                                                              0xffCC525F),
-                                                      width: 40,
-                                                      height: 40,
-                                                      offColor: const Color(
-                                                          0xffCC525F),
-                                                      onColor: const Color(
-                                                          0xffCC525F),
-                                                      isActive: false,
-                                                      child: SvgPicture.asset(
-                                                        "assets/icons/leave_hls.svg",
-                                                        color: Colors.white,
-                                                        fit: BoxFit.scaleDown,
-                                                        semanticsLabel:
-                                                            "leave_button",
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Selector<
-                                                            MeetingStore,
-                                                            Tuple4<
-                                                                bool,
-                                                                bool,
-                                                                Map<String,
-                                                                    bool>,
-                                                                Map<String,
-                                                                    bool>>>(
-                                                        selector: (_, meetingStore) => Tuple4(
-                                                            ((meetingStore.streamingType["rtmp"] ??
-                                                                    false) ||
-                                                                (meetingStore.streamingType[
-                                                                        "hls"] ??
-                                                                    false)),
-                                                            ((meetingStore.recordingType[
-                                                                        "browser"] ??
-                                                                    false) ||
-                                                                (meetingStore.recordingType[
-                                                                        "server"] ??
-                                                                    false) ||
-                                                                ((meetingStore
-                                                                            .recordingType[
-                                                                        "hls"] ??
-                                                                    false))),
-                                                            meetingStore
-                                                                .streamingType,
-                                                            meetingStore
-                                                                .recordingType),
-                                                        builder:
-                                                            (_, roomState, __) {
-                                                          if (roomState.item1 ||
-                                                              roomState.item2) {
-                                                            return Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Row(
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .only(
-                                                                          right:
-                                                                              5.0),
-                                                                      child: SvgPicture
-                                                                          .asset(
-                                                                        "assets/icons/live_stream.svg",
-                                                                        color:
-                                                                            errorColor,
-                                                                        fit: BoxFit
-                                                                            .scaleDown,
-                                                                      ),
-                                                                    ),
-                                                                    GestureDetector(
-                                                                      onTap:
-                                                                          () {
-                                                                        if (!roomState.item1 &&
-                                                                            roomState.item2) {
-                                                                          Utilities.showToast(
-                                                                              recordingState());
-                                                                        }
-                                                                      },
-                                                                      child:
-                                                                          Text(
-                                                                        (roomState.item1 &&
-                                                                                roomState.item2)
-                                                                            ? "Live & Recording"
-                                                                            : (roomState.item1)
-                                                                                ? streamingState()
-                                                                                : (roomState.item2)
-                                                                                    ? "Recording"
-                                                                                    : "",
-                                                                        semanticsLabel:
-                                                                            "fl_live_stream_running",
-                                                                        style: GoogleFonts.inter(
-                                                                            fontSize:
-                                                                                16,
-                                                                            color:
-                                                                                themeDefaultColor,
-                                                                            letterSpacing:
-                                                                                0.5,
-                                                                            fontWeight:
-                                                                                FontWeight.w600),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                roomState.item1
-                                                                    ? Row(
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.spaceBetween,
-                                                                        children: [
-                                                                          (roomState.item3["hls"] ?? false)
-                                                                              ? Row(
-                                                                                  children: [
-                                                                                    SvgPicture.asset(
-                                                                                      "assets/icons/clock.svg",
-                                                                                      color: themeSubHeadingColor,
-                                                                                      fit: BoxFit.scaleDown,
-                                                                                    ),
-                                                                                    const SizedBox(
-                                                                                      width: 6,
-                                                                                    ),
-                                                                                    Selector<MeetingStore, HMSRoom?>(
-                                                                                        selector: (_, meetingStore) => meetingStore.hmsRoom,
-                                                                                        builder: (_, hmsRoom, __) {
-                                                                                          if (hmsRoom != null && hmsRoom.hmshlsStreamingState != null && hmsRoom.hmshlsStreamingState!.variants.isNotEmpty && hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt != null) {
-                                                                                            return HMSStreamTimer(startedAt: hmsRoom.hmshlsStreamingState!.variants[0]!.startedAt!);
-                                                                                          }
-                                                                                          return SubtitleText(
-                                                                                            text: "00:00",
-                                                                                            textColor: themeSubHeadingColor,
-                                                                                          );
-                                                                                        }),
-                                                                                  ],
-                                                                                )
-                                                                              : Container(),
-                                                                          SubtitleText(
-                                                                            text:
-                                                                                " | ",
-                                                                            textColor:
-                                                                                dividerColor,
-                                                                          ),
-                                                                          Row(
-                                                                            children: [
-                                                                              SvgPicture.asset(
-                                                                                "assets/icons/watching.svg",
-                                                                                color: themeSubHeadingColor,
-                                                                                fit: BoxFit.scaleDown,
-                                                                              ),
-                                                                              const SizedBox(
-                                                                                width: 6,
-                                                                              ),
-                                                                              Selector<MeetingStore, int>(
-                                                                                  selector: (_, meetingStore) => meetingStore.peers.length,
-                                                                                  builder: (_, length, __) {
-                                                                                    return SubtitleText(text: length.toString(), textColor: themeSubHeadingColor);
-                                                                                  })
-                                                                            ],
-                                                                          )
-                                                                        ],
-                                                                      )
-                                                                    : Container()
-                                                              ],
-                                                            );
-                                                          }
-                                                          return const SizedBox();
-                                                        })
-                                                  ],
+                                                SvgPicture.asset(
+                                                  "packages/hmssdk_uikit/lib/assets/icons/generic.svg",
+                                                  width: 45,
+                                                  height: 40,
                                                 ),
-                                                Row(
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
-                                                    Selector<MeetingStore,
-                                                            bool>(
-                                                        selector: (_,
-                                                                meetingStore) =>
-                                                            meetingStore
-                                                                .isNewMessageReceived,
-                                                        builder: (_,
-                                                            isNewMessageReceived,
-                                                            __) {
-                                                          return HMSEmbeddedButton(
-                                                            onTap: () => {
-                                                              context
-                                                                  .read<
-                                                                      MeetingStore>()
-                                                                  .setNewMessageFalse(),
-                                                              showModalBottomSheet(
-                                                                isScrollControlled:
-                                                                    true,
-                                                                backgroundColor:
-                                                                    themeBottomSheetColor,
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              20),
-                                                                ),
-                                                                context:
-                                                                    context,
-                                                                builder: (ctx) => ChangeNotifierProvider.value(
-                                                                    value: context
-                                                                        .read<
-                                                                            MeetingStore>(),
-                                                                    child:
-                                                                        const ChatBottomSheet()),
-                                                              )
-                                                            },
-                                                            width: 40,
-                                                            height: 40,
-                                                            offColor:
-                                                                themeHintColor,
-                                                            onColor:
-                                                                themeScreenBackgroundColor,
-                                                            isActive: true,
-                                                            child: SvgPicture
-                                                                .asset(
-                                                              isNewMessageReceived
-                                                                  ? "assets/icons/message_badge_on.svg"
-                                                                  : "assets/icons/message_badge_off.svg",
-                                                              fit: BoxFit
-                                                                  .scaleDown,
-                                                              semanticsLabel:
-                                                                  "chat_button",
-                                                            ),
-                                                          );
-                                                        }),
-                                                    const SizedBox(
-                                                      width: 10,
+                                                    SubheadingText(
+                                                      text: "100ms HLS Player",
+                                                      textColor:
+                                                          onSurfaceHighEmphasis,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      letterSpacing: 0.1,
                                                     ),
-                                                    HMSEmbeddedButton(
-                                                      onTap: () => {
-                                                        showModalBottomSheet(
-                                                            isScrollControlled:
-                                                                true,
-                                                            backgroundColor:
-                                                                themeBottomSheetColor,
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20),
-                                                            ),
-                                                            context: context,
-                                                            builder: (ctx) =>
-                                                                ChangeNotifierProvider.value(
-                                                                    value: context
-                                                                        .read<
-                                                                            MeetingStore>(),
-                                                                    child:
-                                                                        const ViewerSettingsBottomSheet()))
-                                                      },
-                                                      width: 40,
-                                                      height: 40,
-                                                      offColor: themeHintColor,
-                                                      onColor:
-                                                          themeScreenBackgroundColor,
-                                                      isActive: true,
-                                                      child: SvgPicture.asset(
-                                                        "assets/icons/more.svg",
-                                                        color:
-                                                            themeDefaultColor,
-                                                        fit: BoxFit.scaleDown,
-                                                        semanticsLabel:
-                                                            "more_button",
-                                                      ),
-                                                    ),
+                                                    SubtitleText(
+                                                        text:
+                                                            "Session ${DateFormat("dd/MM/yyyy").format(DateTime.now())}",
+                                                        textColor:
+                                                            onSurfaceLowEmphasis)
                                                   ],
                                                 )
                                               ],
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                Selector<MeetingStore, HMSRoleChangeRequest?>(
-                                    selector: (_, meetingStore) =>
-                                        meetingStore.currentRoleChangeRequest,
-                                    builder: (_, roleChangeRequest, __) {
-                                      if (roleChangeRequest != null) {
-                                        HMSRoleChangeRequest currentRequest =
-                                            roleChangeRequest;
-                                        context
-                                            .read<MeetingStore>()
-                                            .currentRoleChangeRequest = null;
-                                        WidgetsBinding.instance
-                                            .addPostFrameCallback((_) {
-                                          UtilityComponents
-                                              .showRoleChangeDialog(
-                                                  currentRequest, context);
-                                        });
-                                      }
-                                      return const SizedBox();
-                                    }),
-                                Selector<MeetingStore, HMSTrackChangeRequest?>(
-                                    selector: (_, meetingStore) =>
-                                        meetingStore.hmsTrackChangeRequest,
-                                    builder: (_, hmsTrackChangeRequest, __) {
-                                      if (hmsTrackChangeRequest != null) {
-                                        HMSTrackChangeRequest currentRequest =
-                                            hmsTrackChangeRequest;
-                                        context
-                                            .read<MeetingStore>()
-                                            .hmsTrackChangeRequest = null;
-                                        WidgetsBinding.instance
-                                            .addPostFrameCallback((_) {
-                                          UtilityComponents
-                                              .showTrackChangeDialog(
-                                                  context, currentRequest);
-                                        });
-                                      }
-                                      return const SizedBox();
-                                    }),
-                                Selector<MeetingStore, bool>(
-                                    selector: (_, meetingStore) =>
-                                        meetingStore.showAudioDeviceChangePopup,
-                                    builder:
-                                        (_, showAudioDeviceChangePopup, __) {
-                                      if (showAudioDeviceChangePopup) {
-                                        context
-                                            .read<MeetingStore>()
-                                            .showAudioDeviceChangePopup = false;
-                                        WidgetsBinding.instance
-                                            .addPostFrameCallback((_) {
-                                          showDialog(
-                                              context: context,
-                                              builder: (_) =>
-                                                  AudioDeviceChangeDialog(
-                                                    currentAudioDevice: context
-                                                        .read<MeetingStore>()
-                                                        .currentAudioOutputDevice!,
-                                                    audioDevicesList: context
-                                                        .read<MeetingStore>()
-                                                        .availableAudioOutputDevices,
-                                                    changeAudioDevice:
-                                                        (audioDevice) {
-                                                      context
+                                        );
+                                      }),
+                                  Selector<MeetingStore, bool>(
+                                      selector: (_, meetingStore) =>
+                                          meetingStore.hasHlsStarted,
+                                      builder: (_, hasHlsStarted, __) {
+                                        return (hasHlsStarted)
+                                            ? Selector<HLSPlayerStore, bool>(
+                                                selector: (_, hlsPlayerStore) =>
+                                                    hlsPlayerStore.isFullScreen,
+                                                builder: (_, isFullScreen, __) {
+                                                  return SizedBox(
+                                                    height: isFullScreen
+                                                        ? MediaQuery.of(context)
+                                                            .size
+                                                            .height
+                                                        : MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.3,
+                                                    child: Stack(
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            context
+                                                                .read<
+                                                                    HLSPlayerStore>()
+                                                                .toggleButtonsVisibility();
+                                                          },
+                                                          child: Center(
+                                                            child: HLSPlayer(
+                                                              key: Key(context
+                                                                      .read<
+                                                                          MeetingStore>()
+                                                                      .localPeer
+                                                                      ?.peerId ??
+                                                                  "HLS_PLAYER"),
+                                                              ratio: Utilities
+                                                                  .getHLSPlayerDefaultRatio(
+                                                                      MediaQuery.of(
+                                                                              context)
+                                                                          .size),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Align(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: Selector<
+                                                                  HLSPlayerStore,
+                                                                  bool>(
+                                                              selector: (_,
+                                                                      hlsPlayerStore) =>
+                                                                  hlsPlayerStore
+                                                                      .areStreamControlsVisible,
+                                                              builder: (_,
+                                                                  areButtonsVisible,
+                                                                  __) {
+                                                                return AnimatedOpacity(
+                                                                  opacity:
+                                                                      areButtonsVisible
+                                                                          ? 1.0
+                                                                          : 0.0,
+                                                                  duration: const Duration(
+                                                                      milliseconds:
+                                                                          200),
+                                                                  child: Selector<
+                                                                          HLSPlayerStore,
+                                                                          bool>(
+                                                                      selector: (_,
+                                                                              hlsPlayerStore) =>
+                                                                          hlsPlayerStore
+                                                                              .isStreamPlaying,
+                                                                      builder: (_,
+                                                                          isPlaying,
+                                                                          __) {
+                                                                        return ElevatedButton(
+                                                                          onPressed:
+                                                                              () {
+                                                                            context.read<HLSPlayerStore>().togglePlayPause();
+                                                                          },
+                                                                          style: ButtonStyle(
+                                                                              enableFeedback: false,
+                                                                              backgroundColor: isPlaying ? MaterialStatePropertyAll(primaryDefault) : MaterialStatePropertyAll(surfaceDefault),
+                                                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.9)),
+                                                                              ),
+                                                                              fixedSize: MaterialStateProperty.all<Size>(const Size(8, 8))),
+                                                                          child:
+                                                                              Icon(
+                                                                            isPlaying
+                                                                                ? Icons.pause
+                                                                                : Icons.play_arrow_rounded,
+                                                                            color:
+                                                                                onSurfaceHighEmphasis,
+                                                                          ),
+                                                                        );
+                                                                      }),
+                                                                );
+                                                              }),
+                                                        ),
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .bottomRight,
+                                                          child: Selector<
+                                                                  HLSPlayerStore,
+                                                                  bool>(
+                                                              selector: (_,
+                                                                      hlsPlayerStore) =>
+                                                                  hlsPlayerStore
+                                                                      .areStreamControlsVisible,
+                                                              builder: (_,
+                                                                  areButtonsVisible,
+                                                                  __) {
+                                                                return AnimatedOpacity(
+                                                                  opacity:
+                                                                      areButtonsVisible
+                                                                          ? 1.0
+                                                                          : 0.0,
+                                                                  duration: const Duration(
+                                                                      milliseconds:
+                                                                          200),
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        right:
+                                                                            10.0,
+                                                                        bottom:
+                                                                            10),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .end,
+                                                                      children: [
+                                                                        SvgPicture
+                                                                            .asset(
+                                                                          "packages/hmssdk_uikit/lib/assets/icons/red_dot.svg",
+                                                                          width:
+                                                                              4,
+                                                                          height:
+                                                                              4,
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          width:
+                                                                              2,
+                                                                        ),
+                                                                        GestureDetector(
+                                                                            onTap: () =>
+                                                                                HMSHLSPlayerController.seekToLivePosition(),
+                                                                            child: TitleText(
+                                                                              text: "LIVE",
+                                                                              textColor: onSurfaceHighEmphasis,
+                                                                              fontSize: 12,
+                                                                              lineHeight: 16,
+                                                                              letterSpacing: 0.4,
+                                                                            )),
+                                                                        const SizedBox(
+                                                                          width:
+                                                                              20,
+                                                                        ),
+                                                                        SvgPicture
+                                                                            .asset(
+                                                                          "assets/icons/settings.svg",
+                                                                          width:
+                                                                              20,
+                                                                          height:
+                                                                              20,
+                                                                          semanticsLabel:
+                                                                              "settings",
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          width:
+                                                                              20,
+                                                                        ),
+                                                                        GestureDetector(
+                                                                          onTap: () => context
+                                                                              .read<HLSPlayerStore>()
+                                                                              .toggleFullScreen(context),
+                                                                          child:
+                                                                              SvgPicture.asset(
+                                                                            "packages/hmssdk_uikit/lib/assets/icons/${isFullScreen ? "minimize" : "maximize"}.svg",
+                                                                            width:
+                                                                                20,
+                                                                            height:
+                                                                                20,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              }),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  );
+                                                })
+                                            : const Center(
+                                                child: HLSWaitingUI());
+                                      }),
+                                  Selector<HLSPlayerStore, bool>(
+                                      selector: (_, hlsPlayerStore) =>
+                                          hlsPlayerStore.isFullScreen,
+                                      builder: (_, isFullScreen, __) {
+                                        return Visibility(
+                                          visible: !isFullScreen,
+                                          child: ChangeNotifierProvider.value(
+                                              value:
+                                                  context.read<MeetingStore>(),
+                                              child: SizedBox(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.50,
+                                                  child: const HLSChat())),
+                                        );
+                                      }),
+                                  isPipActive
+                                      ? Container()
+                                      : Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 10.0),
+                                          child: Selector<HLSPlayerStore, bool>(
+                                              selector: (_, hlsPlayerStore) =>
+                                                  hlsPlayerStore.isFullScreen,
+                                              builder: (_, isFullScreen, __) {
+                                                return Visibility(
+                                                  visible: !isFullScreen,
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                bottom: 20.0),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            HMSEmbeddedButton(
+                                                              onTap: () async =>
+                                                                  {
+                                                                await UtilityComponents
+                                                                    .onBackPressed(
+                                                                        context)
+                                                              },
+                                                              width: 40,
+                                                              height: 40,
+                                                              offColor:
+                                                                  const Color(
+                                                                      0xffCC525F),
+                                                              onColor:
+                                                                  const Color(
+                                                                      0xffCC525F),
+                                                              disabledBorderColor:
+                                                                  const Color(
+                                                                      0xffCC525F),
+                                                              isActive: false,
+                                                              child: SvgPicture
+                                                                  .asset(
+                                                                "packages/hmssdk_uikit/lib/assets/icons/phone_hangup.svg",
+                                                                color:
+                                                                    onSurfaceHighEmphasis,
+                                                                fit: BoxFit
+                                                                    .scaleDown,
+                                                                semanticsLabel:
+                                                                    "leave_button",
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 20,
+                                                            ),
+                                                            if (Provider.of<MeetingStore>(
+                                                                        context)
+                                                                    .localPeer !=
+                                                                null)
+                                                              Selector<
+                                                                      MeetingStore,
+                                                                      bool>(
+                                                                  selector: (_,
+                                                                          meetingStore) =>
+                                                                      meetingStore
+                                                                          .isMicOn,
+                                                                  builder: (_,
+                                                                      isMicOn,
+                                                                      __) {
+                                                                    return HMSEmbeddedButton(
+                                                                      onTap:
+                                                                          () =>
+                                                                              {
+                                                                        if (!(context.read<MeetingStore>().localPeer?.role.publishSettings?.allowed.contains("audio") ??
+                                                                            true))
+                                                                          {
+                                                                            context.read<MeetingStore>().toggleMicMuteState()
+                                                                          }
+                                                                      },
+                                                                      width: 40,
+                                                                      height:
+                                                                          40,
+                                                                      disabledBorderColor:
+                                                                          borderColor,
+                                                                      offColor:
+                                                                          themeHMSBorderColor,
+                                                                      onColor:
+                                                                          themeScreenBackgroundColor,
+                                                                      isActive:
+                                                                          isMicOn,
+                                                                      child: SvgPicture
+                                                                          .asset(
+                                                                        isMicOn
+                                                                            ? "packages/hmssdk_uikit/lib/assets/icons/mic_state_on.svg"
+                                                                            : "packages/hmssdk_uikit/lib/assets/icons/mic_state_off.svg",
+                                                                        color: (context.read<MeetingStore>().localPeer?.role.publishSettings?.allowed.contains("audio") ??
+                                                                                false)
+                                                                            ? onSurfaceHighEmphasis
+                                                                            : onSurfaceLowEmphasis,
+                                                                        fit: BoxFit
+                                                                            .scaleDown,
+                                                                        semanticsLabel:
+                                                                            "audio_mute_button",
+                                                                      ),
+                                                                    );
+                                                                  }),
+                                                            const SizedBox(
+                                                              width: 15,
+                                                            ),
+                                                            GestureDetector(
+                                                              onTap: () => {},
+                                                              child: SvgPicture
+                                                                  .asset(
+                                                                "assets/icons/message_badge_off.svg",
+                                                                fit: BoxFit
+                                                                    .scaleDown,
+                                                                semanticsLabel:
+                                                                    "chat_button",
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 15,
+                                                            ),
+                                                            HMSEmbeddedButton(
+                                                              height: 40,
+                                                              width: 40,
+                                                              onTap: () async =>
+                                                                  {},
+                                                              isActive: true,
+                                                              child: SvgPicture
+                                                                  .asset(
+                                                                "assets/icons/emoji.svg",
+                                                                color:
+                                                                    onSurfaceHighEmphasis,
+                                                                fit: BoxFit
+                                                                    .scaleDown,
+                                                                semanticsLabel:
+                                                                    "emoji_button",
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            Selector<
+                                                                    MeetingStore,
+                                                                    bool>(
+                                                                selector: (_,
+                                                                        meetingStore) =>
+                                                                    meetingStore
+                                                                        .isRaisedHand,
+                                                                builder: (_,
+                                                                    handRaised,
+                                                                    __) {
+                                                                  return HMSEmbeddedButton(
+                                                                    height: 40,
+                                                                    width: 40,
+                                                                    onTap: () =>
+                                                                        {
+                                                                      context
+                                                                          .read<
+                                                                              MeetingStore>()
+                                                                          .changeMetadata()
+                                                                    },
+                                                                    isActive:
+                                                                        true,
+                                                                    child: SvgPicture
+                                                                        .asset(
+                                                                      "assets/icons/hand_outline.svg",
+                                                                      color: handRaised
+                                                                          ? const Color.fromRGBO(
+                                                                              250,
+                                                                              201,
+                                                                              25,
+                                                                              1)
+                                                                          : onSurfaceHighEmphasis,
+                                                                      fit: BoxFit
+                                                                          .scaleDown,
+                                                                      semanticsLabel:
+                                                                          "hand_raise_button",
+                                                                    ),
+                                                                  );
+                                                                }),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                );
+                                              }),
+                                        ),
+                                  Selector<MeetingStore, HMSRoleChangeRequest?>(
+                                      selector: (_, meetingStore) =>
+                                          meetingStore.currentRoleChangeRequest,
+                                      builder: (_, roleChangeRequest, __) {
+                                        if (roleChangeRequest != null) {
+                                          HMSRoleChangeRequest currentRequest =
+                                              roleChangeRequest;
+                                          context
+                                              .read<MeetingStore>()
+                                              .currentRoleChangeRequest = null;
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) {
+                                            UtilityComponents
+                                                .showRoleChangeDialog(
+                                                    currentRequest, context);
+                                          });
+                                        }
+                                        return const SizedBox();
+                                      }),
+                                  Selector<MeetingStore,
+                                          HMSTrackChangeRequest?>(
+                                      selector: (_, meetingStore) =>
+                                          meetingStore.hmsTrackChangeRequest,
+                                      builder: (_, hmsTrackChangeRequest, __) {
+                                        if (hmsTrackChangeRequest != null) {
+                                          HMSTrackChangeRequest currentRequest =
+                                              hmsTrackChangeRequest;
+                                          context
+                                              .read<MeetingStore>()
+                                              .hmsTrackChangeRequest = null;
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) {
+                                            UtilityComponents
+                                                .showTrackChangeDialog(
+                                                    context, currentRequest);
+                                          });
+                                        }
+                                        return const SizedBox();
+                                      }),
+                                  Selector<MeetingStore, bool>(
+                                      selector: (_, meetingStore) =>
+                                          meetingStore
+                                              .showAudioDeviceChangePopup,
+                                      builder:
+                                          (_, showAudioDeviceChangePopup, __) {
+                                        if (showAudioDeviceChangePopup) {
+                                          context
+                                                  .read<MeetingStore>()
+                                                  .showAudioDeviceChangePopup =
+                                              false;
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) {
+                                            showDialog(
+                                                context: context,
+                                                builder: (_) =>
+                                                    AudioDeviceChangeDialog(
+                                                      currentAudioDevice: context
                                                           .read<MeetingStore>()
-                                                          .switchAudioOutput(
-                                                              audioDevice:
-                                                                  audioDevice);
-                                                    },
-                                                  ));
-                                        });
-                                      }
-                                      return const SizedBox();
-                                    }),
-                                Selector<MeetingStore, bool>(
-                                    selector: (_, meetingStore) =>
-                                        meetingStore.reconnecting,
-                                    builder: (_, reconnecting, __) {
-                                      if (reconnecting) {
-                                        return UtilityComponents
-                                            .showReconnectingDialog(context);
-                                      }
-                                      return const SizedBox();
-                                    }),
-                              ],
+                                                          .currentAudioOutputDevice!,
+                                                      audioDevicesList: context
+                                                          .read<MeetingStore>()
+                                                          .availableAudioOutputDevices,
+                                                      changeAudioDevice:
+                                                          (audioDevice) {
+                                                        context
+                                                            .read<
+                                                                MeetingStore>()
+                                                            .switchAudioOutput(
+                                                                audioDevice:
+                                                                    audioDevice);
+                                                      },
+                                                    ));
+                                          });
+                                        }
+                                        return const SizedBox();
+                                      }),
+                                  Selector<MeetingStore, bool>(
+                                      selector: (_, meetingStore) =>
+                                          meetingStore.reconnecting,
+                                      builder: (_, reconnecting, __) {
+                                        if (reconnecting) {
+                                          return UtilityComponents
+                                              .showReconnectingDialog(context);
+                                        }
+                                        return const SizedBox();
+                                      }),
+                                ],
+                              ),
                             ),
                           ),
                         );
