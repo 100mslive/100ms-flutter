@@ -9,7 +9,6 @@ import 'package:hmssdk_uikit/hls_viewer/hls_player.dart';
 import 'package:hmssdk_uikit/hls_viewer/hls_player_store.dart';
 import 'package:hmssdk_uikit/hls_viewer/hls_waiting_ui.dart';
 import 'package:hmssdk_uikit/widgets/app_dialogs/audio_device_change_dialog.dart';
-import 'package:hmssdk_uikit/widgets/bottom_sheets/chat_bottom_sheet.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/hms_embedded_button.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/subheading_text.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/subtitle_text.dart';
