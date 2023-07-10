@@ -3,6 +3,7 @@ import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_uikit/common/app_color.dart';
+import 'package:hmssdk_uikit/common/utility_functions.dart';
 import 'package:hmssdk_uikit/enums/session_store_keys.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/subtitle_text.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
@@ -48,10 +49,25 @@ class MessageContainer extends StatelessWidget {
                     children: [
                       Row(
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 5.0),
+                            child: CircleAvatar(
+                                backgroundColor: Utilities.getBackgroundColour(
+                                    senderName ?? "Anonymous"),
+                                radius: 10,
+                                child: Text(
+                                  Utilities.getAvatarTitle(
+                                      senderName ?? "Anonymous"),
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10,
+                                    color: onSurfaceHighEmphasis,
+                                  ),
+                                )),
+                          ),
                           Container(
                             constraints: BoxConstraints(
                                 maxWidth:
-                                    role != "" ? width * 0.25 : width * 0.5),
+                                    role != "" ? width * 0.22 : width * 0.47),
                             child: TitleText(
                               text: senderName ?? "Anonymous",
                               fontSize: 14,

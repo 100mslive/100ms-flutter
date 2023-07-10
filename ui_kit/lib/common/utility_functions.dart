@@ -90,7 +90,7 @@ class Utilities {
     if (Platform.isAndroid) {
       return size.width / (size.height - 100);
     } else {
-      return 9 / 16;
+      return 16 / 9;
     }
   }
 

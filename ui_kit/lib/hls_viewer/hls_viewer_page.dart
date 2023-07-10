@@ -128,9 +128,10 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                             child: Row(
                                               children: [
                                                 SvgPicture.asset(
-                                                  "packages/hmssdk_uikit/lib/assets/icons/generic.svg",
-                                                  width: 45,
+                                                  "packages/hmssdk_uikit/lib/assets/icons/hms_logo.svg",
+                                                  width: 40,
                                                   height: 40,
+                                                  color: primaryDefault,
                                                 ),
                                                 const SizedBox(
                                                   width: 10,
@@ -358,15 +359,24 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                     ),
                                                   );
                                                 })
-                                            : const Center(
-                                                child: HLSWaitingUI());
+                                            : SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height -
+                                                    200,
+                                                child: const Center(
+                                                    child: HLSWaitingUI()),
+                                              );
                                       }),
                                   Selector<HLSPlayerStore, bool>(
                                       selector: (_, hlsPlayerStore) =>
                                           hlsPlayerStore.isFullScreen,
                                       builder: (_, isFullScreen, __) {
                                         return Visibility(
-                                          visible: !isFullScreen,
+                                          visible: !isFullScreen &&
+                                              context
+                                                  .watch<MeetingStore>()
+                                                  .hasHlsStarted,
                                           child: ChangeNotifierProvider.value(
                                               value:
                                                   context.read<MeetingStore>(),
@@ -374,7 +384,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                   height: MediaQuery.of(context)
                                                           .size
                                                           .height *
-                                                      0.50,
+                                                      0.46,
                                                   child: const HLSChat())),
                                         );
                                       }),
