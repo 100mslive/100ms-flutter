@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/app_settings_bottom_sheet.dart';
+import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:hmssdk_uikit/common/app_color.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
 import 'package:hmssdk_uikit/hms_prebuilt_options.dart';
@@ -220,7 +221,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController meetingLinkController = TextEditingController();
-  bool _isDebugMode = false;
+  bool _isDebugMode = true;
 
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -496,6 +497,54 @@ class _HomePageState extends State<HomePage> {
                       height: 5,
                       color: dividerColor,
                     )),
+                SizedBox(
+                  width: width * 0.95,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                        shadowColor: MaterialStateProperty.all(hmsdefaultColor),
+                        backgroundColor:
+                            MaterialStateProperty.all(hmsdefaultColor),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ))),
+                    onPressed: () async {
+                      bool res = await Utilities.getCameraPermissions();
+                      if (res) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => QRCodeScreen(
+                                      isDebugMode: _isDebugMode,
+                                    )));
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.qr_code,
+                            size: 18,
+                            color: enabledTextColor,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          TitleText(
+                              key: Key("scan_qr_code"),
+                              text: 'Scan QR Code',
+                              textColor: enabledTextColor)
+                        ],
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           ),
