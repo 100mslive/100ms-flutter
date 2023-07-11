@@ -46,7 +46,7 @@ void main() async {
       await FirebaseDynamicLinks.instance.getInitialLink();
 
   await SystemChrome.setPreferredOrientations(
-    [DeviceOrientation.portraitUp],
+    [DeviceOrientation.portraitUp,DeviceOrientation.landscapeRight,DeviceOrientation.landscapeLeft],
   );
   runApp(HMSExampleApp(initialLink: initialLink?.link));
 }

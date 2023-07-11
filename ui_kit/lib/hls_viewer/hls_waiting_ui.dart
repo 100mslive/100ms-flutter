@@ -11,7 +11,6 @@ class HLSWaitingUI extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SvgPicture.asset(
           "packages/hmssdk_uikit/lib/assets/icons/time.svg",
