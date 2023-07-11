@@ -211,6 +211,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               joinWithMutedAudio = value,
                               Utilities.saveBoolData(
                                   key: 'join-with-muted-audio', value: value),
+                                  AppDebugConfig.joinWithMutedAudio = value,
                               setState(() {})
                             }),
                   ),
@@ -239,6 +240,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               joinWithMutedVideo = value,
                               Utilities.saveBoolData(
                                   key: 'join-with-muted-video', value: value),
+                                  AppDebugConfig.joinWithMutedVideo = value,
                               setState(() {})
                             }),
                   ),
@@ -294,6 +296,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               mirrorCamera = value,
                               Utilities.saveBoolData(
                                   key: 'mirror-camera', value: value),
+                              AppDebugConfig.mirrorCamera = value,
                               setState(() {})
                             }),
                   ),
@@ -321,6 +324,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               showStats = value,
                               Utilities.saveBoolData(
                                   key: 'show-stats', value: value),
+                              AppDebugConfig.showStats = value,
                               setState(() {})
                             }),
                   ),
@@ -350,6 +354,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                                 Utilities.saveBoolData(
                                     key: 'software-decoder-disabled',
                                     value: value),
+                                AppDebugConfig.isSoftwareDecoderDisabled =
+                                    value,
                                 setState(() {})
                               }),
                     ),
@@ -378,6 +384,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                                 isAudioMixerDisabled = value,
                                 Utilities.saveBoolData(
                                     key: 'audio-mixer-disabled', value: value),
+                                AppDebugConfig.isAudioMixerDisabled = value,
                                 setState(() {})
                               }),
                     ),
@@ -405,6 +412,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               isAutoSimulcast = value,
                               Utilities.saveBoolData(
                                   key: 'is-auto-simulcast', value: value),
+                              AppDebugConfig.isAutoSimulcast = value,
                               setState(() {})
                             }),
                   ),
