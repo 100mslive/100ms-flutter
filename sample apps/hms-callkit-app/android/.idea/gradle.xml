@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="testRunner" value="GRADLE" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/cloud_functions-4.0.8/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/firebase_core-2.5.0/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/firebase_messaging-14.2.2/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/flutter_callkit_incoming-1.0.3+3/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/hmssdk_flutter-1.6.0/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/path_provider_android-2.0.22/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/permission_handler_android-10.2.0/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/share_plus-6.3.0/android" />
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
