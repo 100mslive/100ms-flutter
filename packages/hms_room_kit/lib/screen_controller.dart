@@ -58,7 +58,7 @@ class _ScreenControllerState extends State<ScreenController> {
         setState(() {
           isLoading = false;
         });
-        Constant.debugMode = widget.hmsConfig?.debugInfo ?? false;
+        Constant.debugMode = AppDebugConfig.isDebugMode;
       }
     }
   }
