@@ -8,9 +8,8 @@ import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRCodeScreen extends StatefulWidget {
-  final bool isDebugMode;
 
-  QRCodeScreen({this.isDebugMode = false, key}) : super(key: key);
+  QRCodeScreen({Key? key}) : super(key: key);
 
   @override
   State<QRCodeScreen> createState() => _QRCodeScreenState();
@@ -47,7 +46,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
             builder: (_) => HMSPrebuilt(
                   roomCode: scanData.code!.trim(),
                   hmsConfig: HMSPrebuiltOptions(
-                      userName: "", debugInfo: widget.isDebugMode),
+                      userName: ""),
                 )));
       }
     });

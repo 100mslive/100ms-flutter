@@ -16,7 +16,6 @@ import 'package:hmssdk_uikit/common/app_color.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
 import 'package:hmssdk_uikit/hms_prebuilt_options.dart';
 import 'package:hmssdk_uikit/hmssdk_uikit.dart';
-import 'package:hmssdk_uikit/service/app_debug_config.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -221,7 +220,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController meetingLinkController = TextEditingController();
-  bool _isDebugMode = true;
 
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -277,7 +275,7 @@ class _HomePageState extends State<HomePage> {
             builder: (_) => HMSPrebuilt(
                   roomCode: meetingLinkController.text.trim(),
                   hmsConfig:
-                      HMSPrebuiltOptions(userName: "", debugInfo: _isDebugMode),
+                      HMSPrebuiltOptions(userName: ""),
                 )));
   }
 
@@ -296,19 +294,9 @@ class _HomePageState extends State<HomePage> {
                  * On long pressing the welcome image we 
                  * toggle the debug mode which we use to show/hide the settings in the application
                  */
-                GestureDetector(
-                  onLongPress: () {
-                    if (_isDebugMode) {
-                      AppDebugConfig.resetToDefault();
-                    }
-                    setState(() {
-                      _isDebugMode = !_isDebugMode;
-                    });
-                  },
-                  child: SvgPicture.asset(
-                    'assets/welcome.svg',
-                    width: width * 0.95,
-                  ),
+                SvgPicture.asset(
+                  'assets/welcome.svg',
+                  width: width * 0.95,
                 ),
                 SizedBox(
                   height: 20,
@@ -459,7 +447,6 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               )),
-                              if (_isDebugMode)
                                 GestureDetector(
                                   onTap: (() => showModalBottomSheet(
                                       isScrollControlled: true,
@@ -516,7 +503,6 @@ class _HomePageState extends State<HomePage> {
                             context,
                             MaterialPageRoute(
                                 builder: (_) => QRCodeScreen(
-                                      isDebugMode: _isDebugMode,
                                     )));
                       }
                     },
