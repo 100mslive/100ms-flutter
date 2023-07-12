@@ -32,6 +32,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
   bool isSoftwareDecoderDisabled = true;
   bool isAudioMixerDisabled = true;
   bool isAutoSimulcast = true;
+  bool isDebugMode = false;
   HMSAudioMode currentAudioMode = HMSAudioMode.VOICE;
   var versions = {};
 
@@ -69,6 +70,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
         await Utilities.getBoolData(key: 'is-auto-simulcast') ?? true;
     int audioModeIndex = await Utilities.getIntData(key: 'audio-mode');
     currentAudioMode = HMSAudioMode.values[audioModeIndex];
+
+    isDebugMode = await Utilities.getBoolData(key: 'enable-debug-mode') ?? false;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
     });
@@ -85,6 +88,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     AppDebugConfig.mirrorCamera = mirrorCamera;
     AppDebugConfig.showStats = showStats;
     AppDebugConfig.skipPreview = skipPreview;
+    AppDebugConfig.isDebugMode = isDebugMode;
   }
 
   Future<void> _launchUrl() async {
@@ -191,6 +195,35 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
+                      "packages/hmssdk_uikit/lib/assets/icons/bug.svg",
+                      fit: BoxFit.scaleDown,
+                      color: themeDefaultColor,
+                    ),
+                    title: Text(
+                      "Enable Debug Mode",
+                      semanticsLabel: "fl_enable_debug_mode",
+                      style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: themeDefaultColor,
+                          letterSpacing: 0.25,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    trailing: CupertinoSwitch(
+                        activeColor: hmsdefaultColor,
+                        value: isDebugMode,
+                        onChanged: (value) => {
+                              isDebugMode = value,
+                              Utilities.saveBoolData(
+                                  key: 'enable-debug-mode', value: value),
+                              AppDebugConfig.isDebugMode = value,
+                              setState(() {})
+                            }),
+                  ),
+                  ListTile(
+                    horizontalTitleGap: 2,
+                    enabled: false,
+                    contentPadding: EdgeInsets.zero,
+                    leading: SvgPicture.asset(
                       "packages/hmssdk_uikit/lib/assets/icons/mic_state_off.svg",
                       fit: BoxFit.scaleDown,
                       color: themeDefaultColor,
@@ -211,6 +244,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               joinWithMutedAudio = value,
                               Utilities.saveBoolData(
                                   key: 'join-with-muted-audio', value: value),
+                              AppDebugConfig.joinWithMutedAudio = value,
                               setState(() {})
                             }),
                   ),
@@ -239,6 +273,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               joinWithMutedVideo = value,
                               Utilities.saveBoolData(
                                   key: 'join-with-muted-video', value: value),
+                              AppDebugConfig.joinWithMutedVideo = value,
                               setState(() {})
                             }),
                   ),
@@ -294,6 +329,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               mirrorCamera = value,
                               Utilities.saveBoolData(
                                   key: 'mirror-camera', value: value),
+                              AppDebugConfig.mirrorCamera = value,
                               setState(() {})
                             }),
                   ),
@@ -321,6 +357,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               showStats = value,
                               Utilities.saveBoolData(
                                   key: 'show-stats', value: value),
+                              AppDebugConfig.showStats = value,
                               setState(() {})
                             }),
                   ),
@@ -350,6 +387,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                                 Utilities.saveBoolData(
                                     key: 'software-decoder-disabled',
                                     value: value),
+                                AppDebugConfig.isSoftwareDecoderDisabled =
+                                    value,
                                 setState(() {})
                               }),
                     ),
@@ -378,6 +417,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                                 isAudioMixerDisabled = value,
                                 Utilities.saveBoolData(
                                     key: 'audio-mixer-disabled', value: value),
+                                AppDebugConfig.isAudioMixerDisabled = value,
                                 setState(() {})
                               }),
                     ),
@@ -405,6 +445,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               isAutoSimulcast = value,
                               Utilities.saveBoolData(
                                   key: 'is-auto-simulcast', value: value),
+                              AppDebugConfig.isAutoSimulcast = value,
                               setState(() {})
                             }),
                   ),

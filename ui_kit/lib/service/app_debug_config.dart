@@ -14,6 +14,8 @@ class AppDebugConfig {
   static bool isAudioMixerDisabled = true;
   static bool isAutoSimulcast = true;
 
+  static bool isDebugMode = false;
+
   static HMSIOSScreenshareConfig iOSScreenshareConfig = HMSIOSScreenshareConfig(
       appGroup: "group.flutterhms",
       preferredExtension: "live.100ms.flutter.FlutterBroadcastUploadExtension");

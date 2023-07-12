@@ -11,11 +11,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter_example/app_settings_bottom_sheet.dart';
+import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:hmssdk_uikit/common/app_color.dart';
 import 'package:hmssdk_uikit/common/utility_functions.dart';
 import 'package:hmssdk_uikit/hms_prebuilt_options.dart';
 import 'package:hmssdk_uikit/hmssdk_uikit.dart';
-import 'package:hmssdk_uikit/service/app_debug_config.dart';
 import 'package:hmssdk_uikit/widgets/common_widgets/title_text.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -220,7 +220,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController meetingLinkController = TextEditingController();
-  bool _isDebugMode = false;
 
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -276,7 +275,7 @@ class _HomePageState extends State<HomePage> {
             builder: (_) => HMSPrebuilt(
                   roomCode: meetingLinkController.text.trim(),
                   hmsConfig:
-                      HMSPrebuiltOptions(userName: "", debugInfo: _isDebugMode),
+                      HMSPrebuiltOptions(userName: ""),
                 )));
   }
 
@@ -295,19 +294,9 @@ class _HomePageState extends State<HomePage> {
                  * On long pressing the welcome image we 
                  * toggle the debug mode which we use to show/hide the settings in the application
                  */
-                GestureDetector(
-                  onLongPress: () {
-                    if (_isDebugMode) {
-                      AppDebugConfig.resetToDefault();
-                    }
-                    setState(() {
-                      _isDebugMode = !_isDebugMode;
-                    });
-                  },
-                  child: SvgPicture.asset(
-                    'assets/welcome.svg',
-                    width: width * 0.95,
-                  ),
+                SvgPicture.asset(
+                  'assets/welcome.svg',
+                  width: width * 0.95,
                 ),
                 SizedBox(
                   height: 20,
@@ -458,7 +447,6 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               )),
-                              if (_isDebugMode)
                                 GestureDetector(
                                   onTap: (() => showModalBottomSheet(
                                       isScrollControlled: true,
@@ -496,6 +484,53 @@ class _HomePageState extends State<HomePage> {
                       height: 5,
                       color: dividerColor,
                     )),
+                SizedBox(
+                  width: width * 0.95,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                        shadowColor: MaterialStateProperty.all(hmsdefaultColor),
+                        backgroundColor:
+                            MaterialStateProperty.all(hmsdefaultColor),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ))),
+                    onPressed: () async {
+                      bool res = await Utilities.getCameraPermissions();
+                      if (res) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => QRCodeScreen(
+                                    )));
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.qr_code,
+                            size: 18,
+                            color: enabledTextColor,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          TitleText(
+                              key: Key("scan_qr_code"),
+                              text: 'Scan QR Code',
+                              textColor: enabledTextColor)
+                        ],
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           ),
