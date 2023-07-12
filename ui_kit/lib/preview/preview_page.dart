@@ -191,7 +191,7 @@ class _PreviewPageState extends State<PreviewPage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 90.0),
+                      padding:  EdgeInsets.only(top: ((previewStore.peer?.role.name.contains("hls-")??true)?MediaQuery.of(context).size.height * 0.3:80.0)),
                       child: Column(
                         children: [
                           TitleText(

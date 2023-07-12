@@ -17,7 +17,8 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HLSChat extends StatefulWidget {
-  const HLSChat({super.key});
+  final double? width;
+  const HLSChat({super.key,this.width});
 
   @override
   State<HLSChat> createState() => _HLSChatState();
@@ -85,7 +86,7 @@ class _HLSChatState extends State<HLSChat> {
 
   @override
   Widget build(BuildContext context) {
-    widthOfScreen = MediaQuery.of(context).size.width;
+    widthOfScreen = (widget.width == null)? MediaQuery.of(context).size.width:widget.width!;
 
     return WillPopScope(
       onWillPop: () async {
@@ -127,119 +128,7 @@ class _HLSChatState extends State<HLSChat> {
                                 const SizedBox(
                                   width: 15,
                                 ),
-                                // Container(
-                                //   padding:
-                                //       const EdgeInsets.only(left: 10, right: 5),
-                                //   decoration: BoxDecoration(
-                                //     borderRadius: BorderRadius.circular(10.0),
-                                //     border: Border.all(
-                                //         color: borderColor,
-                                //         style: BorderStyle.solid,
-                                //         width: 0.80),
-                                //   ),
-                                //   child: DropdownButtonHideUnderline(
-                                //     child: Selector<
-                                //             MeetingStore,
-                                //             Tuple2<List<HMSRole>,
-                                //                 List<HMSPeer>>>(
-                                //         selector: (_, meetingStore) => Tuple2(
-                                //             meetingStore.roles,
-                                //             meetingStore.peers),
-                                //         builder: (context, data, _) {
-                                //           List<HMSRole> roles = data.item1;
 
-                                //           return HMSDropDown(
-                                //               selectedValue: valueChoose,
-                                //               buttonStyleData:
-                                //                   const ButtonStyleData(
-                                //                       width: 100, height: 35),
-                                //               menuItemStyleData:
-                                //                   const MenuItemStyleData(
-                                //                 height: 45,
-                                //               ),
-                                //               dropdownStyleData:
-                                //                   DropdownStyleData(
-                                //                 width: MediaQuery.of(context)
-                                //                         .size
-                                //                         .width *
-                                //                     0.4,
-                                //                 decoration: BoxDecoration(
-                                //                     borderRadius:
-                                //                         BorderRadius.circular(
-                                //                             8),
-                                //                     color: themeSurfaceColor),
-                                //                 offset: const Offset(-10, -10),
-                                //               ),
-                                //               dropDownItems: <DropdownMenuItem>[
-                                //                 DropdownMenuItem(
-                                //                   value: "Everyone",
-                                //                   child: Text(
-                                //                     "Everyone",
-                                //                     style: GoogleFonts.inter(
-                                //                       fontWeight:
-                                //                           FontWeight.w400,
-                                //                       fontSize: 12,
-                                //                       letterSpacing: 0.4,
-                                //                     ),
-                                //                     overflow:
-                                //                         TextOverflow.ellipsis,
-                                //                     maxLines: 1,
-                                //                   ),
-                                //                 ),
-                                //                 ...roles
-                                //                     .sortedBy((element) =>
-                                //                         element.priority
-                                //                             .toString())
-                                //                     .map((role) =>
-                                //                         DropdownMenuItem(
-                                //                           value: role.name,
-                                //                           child: Text(
-                                //                             role.name,
-                                //                             overflow:
-                                //                                 TextOverflow
-                                //                                     .ellipsis,
-                                //                             maxLines: 1,
-                                //                             style: GoogleFonts
-                                //                                 .inter(
-                                //                                     fontSize:
-                                //                                         12,
-                                //                                     color:
-                                //                                         iconColor),
-                                //                           ),
-                                //                         ))
-                                //                     .toList(),
-                                //                 ...data.item2
-                                //                     .sortedBy((element) =>
-                                //                         element.name)
-                                //                     .map((peer) {
-                                //                       return !peer.isLocal
-                                //                           ? DropdownMenuItem(
-                                //                               value:
-                                //                                   peer.peerId,
-                                //                               child: Text(
-                                //                                 "${peer.name} ${peer.isLocal ? "(You)" : ""}",
-                                //                                 style: GoogleFonts
-                                //                                     .inter(
-                                //                                         fontSize:
-                                //                                             12,
-                                //                                         color:
-                                //                                             iconColor),
-                                //                                 overflow:
-                                //                                     TextOverflow
-                                //                                         .ellipsis,
-                                //                                 maxLines: 1,
-                                //                               ),
-                                //                             )
-                                //                           : null;
-                                //                     })
-                                //                     .whereNotNull()
-                                //                     .toList(),
-                                //               ],
-                                //               updateSelectedValue:
-                                //                   _updateDropDownValue);
-                                //         }),
-                                //   ),
-                                // )
                               ],
                             ),
                           ),
@@ -285,9 +174,7 @@ class _HLSChatState extends State<HLSChat> {
                                             "packages/hmssdk_uikit/lib/assets/icons/info.svg"),
                                         const SizedBox(width: 18.5),
                                         SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
+                                          width: widthOfScreen *
                                               0.66,
                                           child: Text(
                                             "Messages can only be seen by people in the call and are deleted when the call ends.",
@@ -340,7 +227,7 @@ class _HLSChatState extends State<HLSChat> {
                                         "packages/hmssdk_uikit/lib/assets/icons/pin.svg"),
                                     const SizedBox(width: 18.5),
                                     SizedBox(
-                                      width: MediaQuery.of(context).size.width *
+                                      width: widthOfScreen *
                                           0.66,
                                       child: SelectableLinkify(
                                         text: sessionMetadata,
