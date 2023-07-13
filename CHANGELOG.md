@@ -2,7 +2,7 @@
 
 ### Changes
 
-- Removed unnecessary imports for `hls-player`
+- Removed unnecessary imports for `HMSHLSPlayer`
 
   Unnecessary HLS Player imports are removed to streamline the codebase and minimize the SDK size. 
 
