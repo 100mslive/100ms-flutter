@@ -68,7 +68,7 @@ PODS:
     - Firebase/Performance (= 10.9.0)
     - firebase_core
     - Flutter
-  - FirebaseABTesting (10.11.0):
+  - FirebaseABTesting (10.12.0):
     - FirebaseCore (~> 10.0)
   - FirebaseAnalytics (10.9.0):
     - FirebaseAnalytics/AdIdSupport (= 10.9.0)
@@ -92,9 +92,9 @@ PODS:
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/Logger (~> 7.8)
-  - FirebaseCoreExtension (10.11.0):
+  - FirebaseCoreExtension (10.12.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseCoreInternal (10.11.0):
+  - FirebaseCoreInternal (10.12.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
   - FirebaseCrashlytics (10.9.0):
     - FirebaseCore (~> 10.5)
@@ -106,7 +106,7 @@ PODS:
     - PromisesObjC (~> 2.1)
   - FirebaseDynamicLinks (10.9.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseInstallations (10.11.0):
+  - FirebaseInstallations (10.12.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
@@ -121,13 +121,13 @@ PODS:
     - GoogleUtilities/ISASwizzler (~> 7.8)
     - GoogleUtilities/MethodSwizzler (~> 7.8)
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - FirebaseRemoteConfig (10.11.0):
+  - FirebaseRemoteConfig (10.12.0):
     - FirebaseABTesting (~> 10.0)
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
-  - FirebaseSessions (10.11.0):
+  - FirebaseSessions (10.12.0):
     - FirebaseCore (~> 10.5)
     - FirebaseCoreExtension (~> 10.0)
     - FirebaseInstallations (~> 10.0)
@@ -189,7 +189,7 @@ PODS:
   - HMSSDK (0.9.5):
     - HMSAnalyticsSDK (= 0.0.2)
     - HMSWebRTC (= 1.0.5116)
-  - hmssdk_flutter (1.7.1):
+  - hmssdk_flutter (1.7.2):
     - Flutter
     - HMSBroadcastExtensionSDK (= 0.0.9)
     - HMSHLSPlayerSDK (= 0.0.2)
@@ -208,7 +208,7 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - permission_handler_apple (9.1.0):
+  - permission_handler_apple (9.1.1):
     - Flutter
   - PromisesObjC (2.2.0)
   - PromisesSwift (2.2.0):
@@ -245,11 +245,11 @@ DEPENDENCIES:
   - hmssdk_flutter (from `.symlinks/plugins/hmssdk_flutter/ios`)
   - image_gallery_saver (from `.symlinks/plugins/image_gallery_saver/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
-  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
-  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - uni_links (from `.symlinks/plugins/uni_links/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
@@ -309,7 +309,7 @@ EXTERNAL SOURCES:
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
-    :path: ".symlinks/plugins/path_provider_foundation/ios"
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   qr_code_scanner:
@@ -317,7 +317,7 @@ EXTERNAL SOURCES:
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
   shared_preferences_foundation:
-    :path: ".symlinks/plugins/shared_preferences_foundation/ios"
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   uni_links:
     :path: ".symlinks/plugins/uni_links/ios"
   url_launcher_ios:
@@ -335,17 +335,17 @@ SPEC CHECKSUMS:
   firebase_crashlytics: 9b80d1944507cc07fa1c4455797f7d2eb7c8873f
   firebase_dynamic_links: db9f2ebcc3ea646e76a1d3ee37e9e57890ff0a83
   firebase_performance: d11d1fd9591547f6b75f325aaadd6550eaf7e090
-  FirebaseABTesting: 3f6b711718feb87346dc05f8c964601bc8fb2cf6
+  FirebaseABTesting: 09c328e6a86d562b4e1146c8a9073deadc566b77
   FirebaseAnalytics: 5ea0db4893825e7b0149d575352cd838236313dc
   FirebaseCore: b68d3616526ec02e4d155166bbafb8eca64af557
-  FirebaseCoreExtension: cacdad57fdb60e0b86dcbcac058ec78237946759
-  FirebaseCoreInternal: 9e46c82a14a3b3a25be4e1e151ce6d21536b89c0
+  FirebaseCoreExtension: 0ce5ac36042001cfa233ce7bfa28e5c313cf80f4
+  FirebaseCoreInternal: 950500ad8a08963657f6d8c67b579740c06d6aa1
   FirebaseCrashlytics: b60329455285aff853e54139d8ddbfe1e5f2b9f9
   FirebaseDynamicLinks: 8cb66c4f403aa6ddf86ff3bc3c383a652f344ce9
-  FirebaseInstallations: 2a2c6859354cbec0a228a863d4daf6de7c74ced4
+  FirebaseInstallations: 7b99ef103f013624444c614397038219c45f8e63
   FirebasePerformance: eee2f5da94fd7e5d15487649f8fe10a90c87c174
-  FirebaseRemoteConfig: 5f907cd5cf6f64d026c8bfd196a1086cbe1e95e2
-  FirebaseSessions: a62ba5c45284adb7714f4126cfbdb32b17c260bd
+  FirebaseRemoteConfig: bc7f260e6596956fafbb532443c19bd3c30f5258
+  FirebaseSessions: a4ee211eeb31a2224cd8d9d4e30a0fccde9aa00c
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_foreground_task: 21ef182ab0a29a3005cc72cd70e5f45cb7f7f817
   GoogleAppMeasurement: 373bcbead1bb6a85be7a64d5d8f96284b762ea9c
@@ -355,20 +355,20 @@ SPEC CHECKSUMS:
   HMSBroadcastExtensionSDK: d80fe325f6c928bd8e5176290b5a4b7ae15d6fbb
   HMSHLSPlayerSDK: 6a54ad4d12f3dc2270d1ecd24019d71282a4f6a3
   HMSSDK: 81804295a3c5ec6016c0966f2053d7f5f51ccc26
-  hmssdk_flutter: aaba93b8324a1a4b735b7d0cc94d171987c77f5b
+  hmssdk_flutter: f73b3eb0f4bf568043a4425d851f52ffdbaa49e7
   HMSWebRTC: ae54e9dd91b869051b283b43b14f57d43b7bf8e1
   image_gallery_saver: cb43cc43141711190510e92c460eb1655cd343cb
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
-  permission_handler_apple: 8f116445eff3c0e7c65ad60f5fef5490aa94b4e4
+  permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   PromisesSwift: cf9eb58666a43bbe007302226e510b16c1e10959
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
   SDWebImage: 2aea163b50bfcb569a2726b6a754c54a4506fcf6
   share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
-  shared_preferences_foundation: e2dae3258e06f44cc55f49d42024fd8dd03c590c
+  shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
