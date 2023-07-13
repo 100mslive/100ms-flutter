@@ -1,3 +1,15 @@
+## 1.7.2 - 2023-07-13
+
+### Changes
+
+- Removed unnecessary imports for `hls-player`
+
+  Unnecessary HLS Player imports are removed to streamline the codebase and minimize the SDK size. 
+
+Updated to Android SDK 2.6.9 & iOS SDK 0.9.5
+
+**Full Changelog**: [1.7.1...1.7.2](https://github.com/100mslive/100ms-flutter/compare/1.7.1...1.7.2)
+
 ## 1.7.1 - 2023-06-30
 
 ### Added
