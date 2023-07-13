@@ -3,12 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/common/app_color.dart';
 import 'package:hms_room_kit/hms_prebuilt_options.dart';
-import 'package:hms_room_kit/hmssdk_uikit.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/widgets/common_widgets/title_text.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRCodeScreen extends StatefulWidget {
-
   QRCodeScreen({Key? key}) : super(key: key);
 
   @override
@@ -45,8 +44,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (_) => HMSPrebuilt(
                   roomCode: scanData.code!.trim(),
-                  hmsConfig: HMSPrebuiltOptions(
-                      userName: ""),
+                  hmsConfig: HMSPrebuiltOptions(userName: ""),
                 )));
       }
     });
