@@ -13,7 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/common/app_color.dart';
 import 'package:hms_room_kit/common/utility_functions.dart';
 import 'package:hms_room_kit/hms_prebuilt_options.dart';
-import 'package:hms_room_kit/hmssdk_uikit.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/widgets/common_widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/app_settings_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
@@ -274,8 +274,7 @@ class _HomePageState extends State<HomePage> {
         MaterialPageRoute(
             builder: (_) => HMSPrebuilt(
                   roomCode: meetingLinkController.text.trim(),
-                  hmsConfig:
-                      HMSPrebuiltOptions(userName: ""),
+                  hmsConfig: HMSPrebuiltOptions(userName: ""),
                 )));
   }
 
@@ -447,29 +446,29 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               )),
-                                GestureDetector(
-                                  onTap: (() => showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      context: context,
-                                      builder: (ctx) => AppSettingsBottomSheet(
-                                            appVersion: _packageInfo.version +
-                                                " (${_packageInfo.buildNumber})",
-                                          ))),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 8.0, right: 8),
-                                    child: SvgPicture.asset(
-                                      "assets/icons/more.svg",
-                                      color: meetingLinkController.text.isEmpty
-                                          ? themeDisabledTextColor
-                                          : hmsWhiteColor,
-                                      fit: BoxFit.scaleDown,
+                              GestureDetector(
+                                onTap: (() => showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
                                     ),
+                                    context: context,
+                                    builder: (ctx) => AppSettingsBottomSheet(
+                                          appVersion: _packageInfo.version +
+                                              " (${_packageInfo.buildNumber})",
+                                        ))),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0, right: 8),
+                                  child: SvgPicture.asset(
+                                    "assets/icons/more.svg",
+                                    color: meetingLinkController.text.isEmpty
+                                        ? themeDisabledTextColor
+                                        : hmsWhiteColor,
+                                    fit: BoxFit.scaleDown,
                                   ),
-                                )
+                                ),
+                              )
                             ],
                           ),
                         );
@@ -499,11 +498,8 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () async {
                       bool res = await Utilities.getCameraPermissions();
                       if (res) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => QRCodeScreen(
-                                    )));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => QRCodeScreen()));
                       }
                     },
                     child: Container(

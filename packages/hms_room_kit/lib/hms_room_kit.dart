@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:hms_room_kit/hms_prebuilt_options.dart';
 import 'package:hms_room_kit/screen_controller.dart';
 
-export 'package:hms_room_kit/hmssdk_uikit.dart';
+export 'package:hms_room_kit/hms_room_kit.dart';
 
 class HMSPrebuilt extends StatelessWidget {
   final String roomCode;
