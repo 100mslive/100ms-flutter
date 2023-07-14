@@ -23,11 +23,11 @@ class ChangeSimulcastLayerOptionDialog extends StatefulWidget {
       required this.track});
 
   @override
-  _ChangeSimulcastLayerOptionDialogState createState() =>
-      _ChangeSimulcastLayerOptionDialogState();
+  ChangeSimulcastLayerOptionDialogState createState() =>
+      ChangeSimulcastLayerOptionDialogState();
 }
 
-class _ChangeSimulcastLayerOptionDialogState
+class ChangeSimulcastLayerOptionDialogState
     extends State<ChangeSimulcastLayerOptionDialog> {
   HMSSimulcastLayer? valueChoose;
 

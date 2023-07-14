@@ -204,10 +204,13 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                       placeholder: "Enter Name",
                       prefilledValue:
                           context.read<MeetingStore>().localPeer?.name ?? "");
-                  if (name.isNotEmpty) {
+
+                  if (name.isNotEmpty && mounted) {
                     context.read<MeetingStore>().changeName(name: name);
                   }
-                  Navigator.pop(context);
+                  if (mounted) {
+                    Navigator.pop(context);
+                  }
                 },
                 contentPadding: EdgeInsets.zero,
                 leading: SvgPicture.asset(

@@ -20,10 +20,10 @@ class ShareLinkOptionDialog extends StatefulWidget {
       {super.key, required this.roles, required this.roomID});
 
   @override
-  _ShareLinkOptionDialogState createState() => _ShareLinkOptionDialogState();
+  ShareLinkOptionDialogState createState() => ShareLinkOptionDialogState();
 }
 
-class _ShareLinkOptionDialogState extends State<ShareLinkOptionDialog> {
+class ShareLinkOptionDialogState extends State<ShareLinkOptionDialog> {
   late bool askPermission;
   HMSRole? valueChoose;
 

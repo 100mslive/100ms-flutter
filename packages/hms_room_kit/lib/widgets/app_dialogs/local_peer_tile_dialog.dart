@@ -30,10 +30,10 @@ class LocalPeerTileDialog extends StatefulWidget {
       this.isSpotlightedPeer = false});
 
   @override
-  _LocalPeerTileDialogState createState() => _LocalPeerTileDialogState();
+  LocalPeerTileDialogState createState() => LocalPeerTileDialogState();
 }
 
-class _LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
+class LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

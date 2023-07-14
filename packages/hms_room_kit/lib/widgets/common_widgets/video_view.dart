@@ -10,7 +10,7 @@ import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class VideoView extends StatefulWidget {
-  final matchParent;
+  final bool matchParent;
 
   final Size? viewSize;
   final bool setMirror;

@@ -249,7 +249,7 @@ class UtilityComponents {
         builder: (ctx) => TrackChangeRequestDialog(
               trackChangeRequest: trackChangeRequest,
               meetingStore: context.read<MeetingStore>(),
-              isAudioModeOn: meetingStore.meetingMode == MeetingMode.Audio,
+              isAudioModeOn: meetingStore.meetingMode == MeetingMode.audio,
             ));
   }
 
@@ -297,21 +297,19 @@ class UtilityComponents {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
               backgroundColor: themeBottomSheetColor,
-              content: Container(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      autofocus: true,
-                      controller: textController,
-                      decoration: InputDecoration(
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(16)),
-                          ),
-                          hintText: placeholder),
-                    ),
-                  ],
-                ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    autofocus: true,
+                    controller: textController,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                        ),
+                        hintText: placeholder),
+                  ),
+                ],
               ),
               actions: [
                 ElevatedButton(
@@ -353,53 +351,51 @@ class UtilityComponents {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 backgroundColor: themeBottomSheetColor,
-                content: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text("Recording"),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Single file per layer",
-                            style: GoogleFonts.inter(
-                              color: iconColor,
-                            ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text("Recording"),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Single file per layer",
+                          style: GoogleFonts.inter(
+                            color: iconColor,
                           ),
-                          Checkbox(
-                              value: isSingleFileChecked,
-                              activeColor: Colors.blue,
-                              onChanged: (bool? value) {
-                                if (value != null) {
-                                  isSingleFileChecked = value;
-                                  setState(() {});
-                                }
-                              }),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Video on Demand",
-                            style: GoogleFonts.inter(
-                              color: iconColor,
-                            ),
+                        ),
+                        Checkbox(
+                            value: isSingleFileChecked,
+                            activeColor: Colors.blue,
+                            onChanged: (bool? value) {
+                              if (value != null) {
+                                isSingleFileChecked = value;
+                                setState(() {});
+                              }
+                            }),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Video on Demand",
+                          style: GoogleFonts.inter(
+                            color: iconColor,
                           ),
-                          Checkbox(
-                              value: isVODChecked,
-                              activeColor: Colors.blue,
-                              onChanged: (bool? value) {
-                                if (value != null) {
-                                  isVODChecked = value;
-                                  setState(() {});
-                                }
-                              }),
-                        ],
-                      )
-                    ],
-                  ),
+                        ),
+                        Checkbox(
+                            value: isVODChecked,
+                            activeColor: Colors.blue,
+                            onChanged: (bool? value) {
+                              if (value != null) {
+                                isVODChecked = value;
+                                setState(() {});
+                              }
+                            }),
+                      ],
+                    )
+                  ],
                 ),
                 actions: [
                   ElevatedButton(
@@ -568,7 +564,7 @@ class UtilityComponents {
     List<HMSRole> selectedRoles = [];
     HMSRole toRole = roles[0];
 
-    void _updateDropDownValue(dynamic newValue) {
+    void updateDropDownValue(dynamic newValue) {
       toRole = newValue;
     }
 
@@ -660,7 +656,7 @@ class UtilityComponents {
                                       iconEnabledColor: themeDefaultColor,
                                     ),
                                     selectedValue: toRole,
-                                    updateSelectedValue: _updateDropDownValue)),
+                                    updateSelectedValue: updateDropDownValue)),
                           ),
                           const SizedBox(
                             height: 8,
@@ -747,38 +743,35 @@ class UtilityComponents {
                 backgroundColor: themeBottomSheetColor,
                 contentPadding: const EdgeInsets.only(
                     left: 14, right: 10, top: 15, bottom: 15),
-                content: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextField(
-                        autofocus: true,
-                        controller: textController,
-                        decoration: InputDecoration(
-                            border: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16)),
-                            ),
-                            hintText: placeholder),
-                      ),
-                      CheckboxListTile(
-                          contentPadding: EdgeInsets.zero,
-                          title: Text(
-                            "Recording",
-                            style: GoogleFonts.inter(
-                              color: iconColor,
-                            ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      autofocus: true,
+                      controller: textController,
+                      decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
                           ),
-                          activeColor: Colors.blue,
-                          controlAffinity: ListTileControlAffinity.trailing,
-                          value: isRecordingEnabled,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isRecordingEnabled = value ?? false;
-                            });
-                          })
-                    ],
-                  ),
+                          hintText: placeholder),
+                    ),
+                    CheckboxListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(
+                          "Recording",
+                          style: GoogleFonts.inter(
+                            color: iconColor,
+                          ),
+                        ),
+                        activeColor: Colors.blue,
+                        controlAffinity: ListTileControlAffinity.trailing,
+                        value: isRecordingEnabled,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            isRecordingEnabled = value ?? false;
+                          });
+                        })
+                  ],
                 ),
                 actions: [
                   Row(
@@ -1264,36 +1257,33 @@ class UtilityComponents {
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.15,
                       fontSize: 20)),
-              content: Container(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      textCapitalization: TextCapitalization.words,
-                      textInputAction: TextInputAction.done,
-                      onSubmitted: (value) => (textController.text == "")
-                          ? Utilities.showToast("Name can't be empty")
-                          : Navigator.pop(context, textController.text.trim()),
-                      autofocus: true,
-                      controller: textController,
-                      decoration: InputDecoration(
-                        fillColor: themeSurfaceColor,
-                        filled: true,
-                        hintText: "Enter Name",
-                        contentPadding:
-                            const EdgeInsets.only(left: 10, right: 10),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: borderColor, width: 1),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(8))),
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                        ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    textCapitalization: TextCapitalization.words,
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (value) => (textController.text == "")
+                        ? Utilities.showToast("Name can't be empty")
+                        : Navigator.pop(context, textController.text.trim()),
+                    autofocus: true,
+                    controller: textController,
+                    decoration: InputDecoration(
+                      fillColor: themeSurfaceColor,
+                      filled: true,
+                      hintText: "Enter Name",
+                      contentPadding:
+                          const EdgeInsets.only(left: 10, right: 10),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: borderColor, width: 1),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8))),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               actions: [
                 Row(
@@ -1368,7 +1358,7 @@ class UtilityComponents {
     HMSAudioMixingMode valueChoose = HMSAudioMixingMode.TALK_AND_MUSIC;
     MeetingStore meetingStore = context.read<MeetingStore>();
 
-    void _updateDropDownValue(dynamic newValue) {
+    void updateDropDownValue(dynamic newValue) {
       valueChoose = newValue;
     }
 
@@ -1446,7 +1436,7 @@ class UtilityComponents {
                             iconEnabledColor: themeDefaultColor,
                           ),
                           selectedValue: valueChoose,
-                          updateSelectedValue: _updateDropDownValue)),
+                          updateSelectedValue: updateDropDownValue)),
                 ),
                 actions: [
                   Row(

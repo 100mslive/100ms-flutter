@@ -36,7 +36,7 @@ class _HLSChatState extends State<HLSChat> {
     super.dispose();
   }
 
-  void _updateDropDownValue(dynamic newValue) {
+  void updateDropDownValue(dynamic newValue) {
     valueChoose = newValue;
   }
 
@@ -377,7 +377,7 @@ class _HLSChatState extends State<HLSChat> {
                                           .setSessionMetadataForKey(
                                               key: SessionStoreKeyValues
                                                   .getNameFromMethod(SessionStoreKey
-                                                      .PINNED_MESSAGE_SESSION_KEY),
+                                                      .pinnedMessageSessionKey),
                                               metadata: null);
                                     },
                                     child: SvgPicture.asset(

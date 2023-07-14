@@ -11,8 +11,26 @@ import 'package:hms_room_kit/widgets/app_dialogs/remote_peer_tile_dialog.dart';
 import 'package:hms_room_kit/widgets/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
-class MoreOption extends StatelessWidget {
+class MoreOption extends StatefulWidget {
   const MoreOption({Key? key}) : super(key: key);
+
+  @override
+  State<MoreOption> createState() => _MoreOptionState();
+}
+
+class _MoreOptionState extends State<MoreOption> {
+  void _showChangeLayerDialog(
+      {required BuildContext context,
+      required List<HMSSimulcastLayerDefinition> layerDefinitions,
+      required HMSSimulcastLayer selectedLayer,
+      required HMSRemoteVideoTrack track}) {
+    showDialog(
+        context: context,
+        builder: (_) => ChangeSimulcastLayerOptionDialog(
+            layerDefinitions: layerDefinitions,
+            selectedLayer: selectedLayer,
+            track: track));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +78,7 @@ class MoreOption extends StatelessWidget {
                             peerTrackNode.uid) {
                           meetingStore.setSessionMetadataForKey(
                               key: SessionStoreKeyValues.getNameFromMethod(
-                                  SessionStoreKey.SPOTLIGHT),
+                                  SessionStoreKey.spotlight),
                               metadata: null);
                           return;
                         }
@@ -72,7 +90,7 @@ class MoreOption extends StatelessWidget {
                             : peerTrackNode.audioTrack?.trackId;
                         meetingStore.setSessionMetadataForKey(
                             key: SessionStoreKeyValues.getNameFromMethod(
-                                SessionStoreKey.SPOTLIGHT),
+                                SessionStoreKey.spotlight),
                             metadata: metadata);
                       },
                       removePeer: () async {
@@ -106,12 +124,14 @@ class MoreOption extends StatelessWidget {
                         HMSSimulcastLayer selectedLayer =
                             await track.getLayer();
                         if (layerDefinitions.isNotEmpty) {
-                          showDialog(
+                          if (mounted) {
+                            _showChangeLayerDialog(
                               context: context,
-                              builder: (_) => ChangeSimulcastLayerOptionDialog(
-                                  layerDefinitions: layerDefinitions,
-                                  selectedLayer: selectedLayer,
-                                  track: track));
+                              layerDefinitions: layerDefinitions,
+                              selectedLayer: selectedLayer,
+                              track: track,
+                            );
+                          }
                         } else {
                           Utilities.showToast(
                               "Simulcast not enabled for the role");
@@ -153,7 +173,7 @@ class MoreOption extends StatelessWidget {
                           peerTrackNode.uid) {
                         meetingStore.setSessionMetadataForKey(
                             key: SessionStoreKeyValues.getNameFromMethod(
-                                SessionStoreKey.SPOTLIGHT),
+                                SessionStoreKey.spotlight),
                             metadata: null);
                         return;
                       }
@@ -165,7 +185,7 @@ class MoreOption extends StatelessWidget {
                           : peerTrackNode.audioTrack?.trackId;
                       meetingStore.setSessionMetadataForKey(
                           key: SessionStoreKeyValues.getNameFromMethod(
-                              SessionStoreKey.SPOTLIGHT),
+                              SessionStoreKey.spotlight),
                           metadata: metadata);
                     },
                     changeRole: () {

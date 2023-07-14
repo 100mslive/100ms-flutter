@@ -15,11 +15,11 @@ class RoleChangeRequestDialog extends StatefulWidget {
       {super.key, required this.roleChangeRequest, required this.meetingStore});
 
   @override
-  _RoleChangeRequestDialogState createState() =>
-      _RoleChangeRequestDialogState();
+  RoleChangeRequestDialogState createState() =>
+      RoleChangeRequestDialogState();
 }
 
-class _RoleChangeRequestDialogState extends State<RoleChangeRequestDialog> {
+class RoleChangeRequestDialogState extends State<RoleChangeRequestDialog> {
   @override
   Widget build(BuildContext context) {
     String message =
@@ -29,18 +29,16 @@ class _RoleChangeRequestDialogState extends State<RoleChangeRequestDialog> {
       insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       actionsPadding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
       backgroundColor: themeBottomSheetColor,
-      content: Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              message,
-              style: GoogleFonts.inter(
-                color: iconColor,
-              ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            message,
+            style: GoogleFonts.inter(
+              color: iconColor,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       actions: [
         Row(

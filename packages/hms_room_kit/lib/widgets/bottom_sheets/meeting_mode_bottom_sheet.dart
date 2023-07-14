@@ -84,19 +84,19 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                        if (meetingStore.meetingMode == MeetingMode.Grid) {
+                        if (meetingStore.meetingMode == MeetingMode.grid) {
                           Utilities.showToast(
                               "Meeting mode is already set to Grid View");
                           return;
                         }
-                        meetingStore.setMode(MeetingMode.Grid);
+                        meetingStore.setMode(MeetingMode.grid);
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
                         "packages/hms_room_kit/lib/assets/icons/role_change.svg",
                         semanticsLabel: "fl_normal_mode",
-                        color: (meetingStore.meetingMode == MeetingMode.Grid)
+                        color: (meetingStore.meetingMode == MeetingMode.grid)
                             ? errorColor
                             : themeDefaultColor,
                         fit: BoxFit.scaleDown,
@@ -106,7 +106,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         style: GoogleFonts.inter(
                             fontSize: 14,
                             color:
-                                (meetingStore.meetingMode == MeetingMode.Grid)
+                                (meetingStore.meetingMode == MeetingMode.grid)
                                     ? errorColor
                                     : themeDefaultColor,
                             letterSpacing: 0.25,
@@ -117,12 +117,12 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       horizontalTitleGap: 2,
                       onTap: () async {
                         if (meetingStore.meetingMode ==
-                            MeetingMode.ActiveSpeaker) {
+                            MeetingMode.activeSpeaker) {
                           Utilities.showToast(
                               "Meeting mode is already set to Active Speaker");
                           return;
                         }
-                        meetingStore.setMode(MeetingMode.ActiveSpeaker);
+                        meetingStore.setMode(MeetingMode.activeSpeaker);
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
@@ -130,7 +130,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         "packages/hms_room_kit/lib/assets/icons/participants.svg",
                         semanticsLabel: "fl_active_speaker_mode",
                         color: (meetingStore.meetingMode ==
-                                MeetingMode.ActiveSpeaker)
+                                MeetingMode.activeSpeaker)
                             ? errorColor
                             : themeDefaultColor,
                         fit: BoxFit.scaleDown,
@@ -140,7 +140,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         style: GoogleFonts.inter(
                             fontSize: 14,
                             color: (meetingStore.meetingMode ==
-                                    MeetingMode.ActiveSpeaker)
+                                    MeetingMode.activeSpeaker)
                                 ? errorColor
                                 : themeDefaultColor,
                             letterSpacing: 0.25,
@@ -150,12 +150,12 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                        if (meetingStore.meetingMode == MeetingMode.OneToOne) {
+                        if (meetingStore.meetingMode == MeetingMode.oneToOne) {
                           Utilities.showToast(
                               "Meeting mode is already set to One to one Mode");
                           return;
                         }
-                        meetingStore.setMode(MeetingMode.OneToOne);
+                        meetingStore.setMode(MeetingMode.oneToOne);
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
@@ -163,7 +163,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         "packages/hms_room_kit/lib/assets/icons/participants.svg",
                         semanticsLabel: "fl_one_to_one_mode",
                         color:
-                            (meetingStore.meetingMode == MeetingMode.OneToOne)
+                            (meetingStore.meetingMode == MeetingMode.oneToOne)
                                 ? errorColor
                                 : themeDefaultColor,
                         fit: BoxFit.scaleDown,
@@ -173,7 +173,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         style: GoogleFonts.inter(
                             fontSize: 14,
                             color: (meetingStore.meetingMode ==
-                                    MeetingMode.OneToOne)
+                                    MeetingMode.oneToOne)
                                 ? errorColor
                                 : themeDefaultColor,
                             letterSpacing: 0.25,
@@ -183,18 +183,18 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                        if (meetingStore.meetingMode == MeetingMode.Audio) {
+                        if (meetingStore.meetingMode == MeetingMode.audio) {
                           Utilities.showToast(
                               "Meeting mode is already set to Audio Mode");
                           return;
                         }
-                        meetingStore.setMode(MeetingMode.Audio);
+                        meetingStore.setMode(MeetingMode.audio);
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
                         'packages/hms_room_kit/lib/assets/icons/mic_state_on.svg',
-                        color: meetingStore.meetingMode == MeetingMode.Audio
+                        color: meetingStore.meetingMode == MeetingMode.audio
                             ? errorColor
                             : themeDefaultColor,
                         semanticsLabel: "fl_audio_video_view",
@@ -205,7 +205,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         semanticsLabel: "fl_audio_video_mode",
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color: meetingStore.meetingMode == MeetingMode.Audio
+                            color: meetingStore.meetingMode == MeetingMode.audio
                                 ? errorColor
                                 : themeDefaultColor,
                             letterSpacing: 0.25,
@@ -215,19 +215,19 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                        if (meetingStore.meetingMode == MeetingMode.Hero) {
+                        if (meetingStore.meetingMode == MeetingMode.hero) {
                           Utilities.showToast(
                               "Meeting mode is already set to Hero Mode");
                           return;
                         }
-                        meetingStore.setMode(MeetingMode.Hero);
+                        meetingStore.setMode(MeetingMode.hero);
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
                         "packages/hms_room_kit/lib/assets/icons/participants.svg",
                         semanticsLabel: "fl_hero_mode",
-                        color: meetingStore.meetingMode == MeetingMode.Hero
+                        color: meetingStore.meetingMode == MeetingMode.hero
                             ? errorColor
                             : themeDefaultColor,
                         fit: BoxFit.scaleDown,
@@ -236,7 +236,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         "Hero Mode",
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color: meetingStore.meetingMode == MeetingMode.Hero
+                            color: meetingStore.meetingMode == MeetingMode.hero
                                 ? errorColor
                                 : themeDefaultColor,
                             letterSpacing: 0.25,
@@ -246,19 +246,19 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                        if (meetingStore.meetingMode == MeetingMode.Single) {
+                        if (meetingStore.meetingMode == MeetingMode.single) {
                           Utilities.showToast(
                               "Meeting mode is already set to Single Mode");
                           return;
                         }
-                        meetingStore.setMode(MeetingMode.Single);
+                        meetingStore.setMode(MeetingMode.single);
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
                         "packages/hms_room_kit/lib/assets/icons/single_tile.svg",
                         semanticsLabel: "fl_single_mode",
-                        color: meetingStore.meetingMode == MeetingMode.Single
+                        color: meetingStore.meetingMode == MeetingMode.single
                             ? errorColor
                             : themeDefaultColor,
                         fit: BoxFit.scaleDown,
@@ -268,7 +268,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         style: GoogleFonts.inter(
                             fontSize: 14,
                             color:
-                                meetingStore.meetingMode == MeetingMode.Single
+                                meetingStore.meetingMode == MeetingMode.single
                                     ? errorColor
                                     : themeDefaultColor,
                             letterSpacing: 0.25,

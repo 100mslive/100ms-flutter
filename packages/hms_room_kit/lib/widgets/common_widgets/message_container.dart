@@ -190,7 +190,7 @@ class MessageContainer extends StatelessWidget {
                             .read<MeetingStore>()
                             .setSessionMetadataForKey(
                                 key: SessionStoreKeyValues.getNameFromMethod(
-                                    SessionStoreKey.PINNED_MESSAGE_SESSION_KEY),
+                                    SessionStoreKey.pinnedMessageSessionKey),
                                 metadata: "${senderName!}: $message"),
                       );
                     });

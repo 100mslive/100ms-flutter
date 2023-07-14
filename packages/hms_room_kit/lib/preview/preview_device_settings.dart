@@ -140,11 +140,9 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                               const SizedBox(
                                                 width: 10,
                                               ),
-                                              Container(
-                                                child: SubtitleText(
-                                                  text: device.name,
-                                                  textColor: themeDefaultColor,
-                                                ),
+                                              SubtitleText(
+                                                text: device.name,
+                                                textColor: themeDefaultColor,
                                               ),
                                             ],
                                           ),

@@ -44,7 +44,7 @@ class _ScreenControllerState extends State<ScreenController> {
       _previewStore = PreviewStore(hmsSDKInteractor: _hmsSDKInteractor);
       HMSException? ans = await _previewStore.startPreview(
           userName: "", meetingLink: widget.roomCode);
-      if (ans != null) {
+      if (ans != null && mounted) {
         UtilityComponents.showErrorDialog(
             context: context,
             errorMessage:
