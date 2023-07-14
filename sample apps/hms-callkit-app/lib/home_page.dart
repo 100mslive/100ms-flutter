@@ -182,13 +182,12 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(
                       height: 100,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 8),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.end,
-                        children: const [
+                        children: [
                           Text("Paste the FCM Token here",
                               key: Key('fcm_token_text'),
                               style: TextStyle(color: Colors.white))
@@ -233,13 +232,12 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(
                       height: 30,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 8),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.end,
-                        children: const [
+                        children: [
                           Text("Paste the room-id here",
                               key: Key('room_id_text'),
                               style: TextStyle(color: Colors.white))
@@ -315,12 +313,12 @@ class _HomePageState extends State<HomePage> {
                               args: authToken);
                         }
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
+                      child: const Padding(
+                        padding: EdgeInsets.all(12.0),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Icon(
                               Icons.call,
                               color: Colors.white,
