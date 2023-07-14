@@ -1024,7 +1024,6 @@ class MeetingStore extends ChangeNotifier
 // Helper Methods
 
   void clearRoomState() async {
-    HMSLogList? logsDump = await _hmsSDKInteractor.getAllogs();
     if (Platform.isAndroid) {
       HMSAndroidPIPController.destroy();
     } else if (Platform.isIOS) {

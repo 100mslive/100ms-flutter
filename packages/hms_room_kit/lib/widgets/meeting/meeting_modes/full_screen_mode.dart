@@ -58,7 +58,7 @@ Widget fullScreenMode(
                               height: 24 / 20),
                         ),
                         HMSButton(
-                            buttonBackgroundColor: colorScheme.error,
+                            buttonBackgroundColor: errorColor,
                             width: MediaQuery.of(context).size.width * 0.6,
                             onPressed: () {
                               context.read<MeetingStore>().stopScreenShare();

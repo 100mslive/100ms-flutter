@@ -234,7 +234,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                     "packages/hms_room_kit/lib/assets/icons/hand_outline.svg",
                     fit: BoxFit.scaleDown,
                     color: context.read<MeetingStore>().isRaisedHand
-                        ? colorScheme.error
+                        ? errorColor
                         : themeDefaultColor,
                   ),
                   title: Text(
@@ -243,7 +243,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                     style: GoogleFonts.inter(
                         fontSize: 14,
                         color: context.read<MeetingStore>().isRaisedHand
-                            ? colorScheme.error
+                            ? errorColor
                             : themeDefaultColor,
                         letterSpacing: 0.25,
                         fontWeight: FontWeight.w600),
