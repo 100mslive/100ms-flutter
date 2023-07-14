@@ -8,10 +8,10 @@ class AnimatedTextWidget extends StatefulWidget {
       {super.key, required this.text, required this.duration});
 
   @override
-  _AnimatedTextWidgetState createState() => _AnimatedTextWidgetState();
+  AnimatedTextWidgetState createState() => AnimatedTextWidgetState();
 }
 
-class _AnimatedTextWidgetState extends State<AnimatedTextWidget>
+class AnimatedTextWidgetState extends State<AnimatedTextWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _animation;

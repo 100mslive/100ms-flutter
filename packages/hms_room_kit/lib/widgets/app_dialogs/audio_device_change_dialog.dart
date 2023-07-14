@@ -23,11 +23,11 @@ class AudioDeviceChangeDialog extends StatefulWidget {
       required this.currentAudioDevice});
 
   @override
-  _AudioDeviceChangeDialogState createState() =>
-      _AudioDeviceChangeDialogState();
+  AudioDeviceChangeDialogState createState() =>
+      AudioDeviceChangeDialogState();
 }
 
-class _AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
+class AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
   HMSAudioDevice? valueChoose;
 
   void _updateDropDownValue(dynamic newValue) {

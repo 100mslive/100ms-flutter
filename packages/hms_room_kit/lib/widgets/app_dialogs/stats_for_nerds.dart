@@ -696,8 +696,6 @@ class StatsUI extends StatelessWidget {
           });
     }
 
-    return Container(
-      child: const Text("Stats not available"),
-    );
+    return const Text("Stats not available");
   }
 }

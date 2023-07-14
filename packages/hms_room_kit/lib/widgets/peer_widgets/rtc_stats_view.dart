@@ -10,7 +10,6 @@ import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 
 //Project imports
-
 class RTCStatsView extends StatelessWidget {
   final bool isLocal;
 
@@ -26,7 +25,7 @@ class RTCStatsView extends StatelessWidget {
 }
 
 class Stats extends StatelessWidget {
-  final isLocal;
+  final bool isLocal;
   const Stats({Key? key, required this.isLocal}) : super(key: key);
 
   @override

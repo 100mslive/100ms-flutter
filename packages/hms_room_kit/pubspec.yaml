@@ -1,38 +1,40 @@
 name: hms_room_kit
-description: A new Flutter package project.
+description: A powerful prebuilt UI library for audio/video conferencing, live streaming, and one-to-one calls. This package provides developers with a comprehensive set of tools and components to quickly integrate high-quality audio and video communication features into their Flutter applications.
 version: 0.0.1
-homepage:
+homepage: https://www.100ms.live/
+repository: https://github.com/100mslive/100ms-flutter
+issue_tracker: https://github.com/100mslive/100ms-flutter/issues
+documentation: https://www.100ms.live/docs
 
 environment:
-  sdk: ">=2.19.6 <3.0.0"
-  flutter: ">=1.17.0"
+  sdk: ">=2.17.0 <4.0.0"
+  flutter: ">=2.10.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  hmssdk_flutter:
-    path: ../hmssdk_flutter
-
-  intl:
-  permission_handler:
-  provider:
-  flutter_staggered_grid_view:
-  google_fonts:
-  bot_toast:
-  draggable_widget:
-  badges:
-  shared_preferences:
-  avatar_glow:
-  flutter_svg:
-  path_provider:
-  dropdown_button2:
-  focus_detector:
-  flutter_linkify:
-  tuple:
-  url_launcher:
-  share_plus:
+  hmssdk_flutter: ^1.7.2
+  intl: ^0.18.1
+  permission_handler: ^10.4.3
+  provider: ^6.0.5
+  flutter_staggered_grid_view: ^0.6.2
+  google_fonts: ^5.1.0
+  bot_toast: ^4.0.4
+  draggable_widget: ^2.0.0
+  badges: ^3.1.1
+  shared_preferences: ^2.2.0
+  avatar_glow: ^2.0.2
+  flutter_svg: ^2.0.7
+  path_provider: ^2.0.15
+  dropdown_button2: ^2.1.4
+  focus_detector: ^2.0.1
+  flutter_linkify: ^6.0.0
+  tuple: ^2.0.2
+  url_launcher: ^6.1.12
+  share_plus: ^7.0.2
   flutter_foreground_task: ^6.0.0+1
+  collection: ^1.17.1
 
 dev_dependencies:
   flutter_test:

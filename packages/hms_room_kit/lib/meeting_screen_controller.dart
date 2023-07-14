@@ -47,7 +47,7 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
     HMSException? ans = await context
         .read<MeetingStore>()
         .join(widget.user, widget.meetingLink, roomConfig: widget.config);
-    if (ans != null) {
+    if (ans != null && mounted) { 
       UtilityComponents.showErrorDialog(
           context: context,
           errorMessage: "ACTION: ${ans.action} DESCRIPTION: ${ans.description}",

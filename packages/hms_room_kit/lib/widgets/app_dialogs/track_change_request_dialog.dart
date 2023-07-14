@@ -20,11 +20,11 @@ class TrackChangeRequestDialog extends StatefulWidget {
       this.isAudioModeOn = false});
 
   @override
-  _TrackChangeRequestDialogState createState() =>
-      _TrackChangeRequestDialogState();
+  TrackChangeRequestDialogState createState() =>
+      TrackChangeRequestDialogState();
 }
 
-class _TrackChangeRequestDialogState extends State<TrackChangeRequestDialog> {
+class TrackChangeRequestDialogState extends State<TrackChangeRequestDialog> {
   @override
   Widget build(BuildContext context) {
     String message =
@@ -34,18 +34,16 @@ class _TrackChangeRequestDialogState extends State<TrackChangeRequestDialog> {
       insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       actionsPadding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
       backgroundColor: themeBottomSheetColor,
-      content: Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              message,
-              style: GoogleFonts.inter(
-                color: iconColor,
-              ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            message,
+            style: GoogleFonts.inter(
+              color: iconColor,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       actions: [
         Row(
@@ -91,7 +89,7 @@ class _TrackChangeRequestDialogState extends State<TrackChangeRequestDialog> {
                 if (widget.trackChangeRequest.track.kind ==
                         HMSTrackKind.kHMSTrackKindVideo &&
                     widget.isAudioModeOn) {
-                  widget.meetingStore.setMode(MeetingMode.ActiveSpeaker);
+                  widget.meetingStore.setMode(MeetingMode.activeSpeaker);
                 }
                 widget.meetingStore.changeTracks(widget.trackChangeRequest);
                 Navigator.pop(context);

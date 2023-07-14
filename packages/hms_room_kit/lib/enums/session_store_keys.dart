@@ -1,14 +1,14 @@
 //Enum to store the session metadata keys
 // PINNED_MESSAGE_SESSION_KEY: for pinning messages
 // SPOTLIGHT: for adding spotlight feature in application
-enum SessionStoreKey { PINNED_MESSAGE_SESSION_KEY, SPOTLIGHT, unknown }
+enum SessionStoreKey { pinnedMessageSessionKey, spotlight, unknown }
 
 extension SessionStoreKeyValues on SessionStoreKey {
   static String getNameFromMethod(SessionStoreKey method) {
     switch (method) {
-      case SessionStoreKey.PINNED_MESSAGE_SESSION_KEY:
+      case SessionStoreKey.pinnedMessageSessionKey:
         return "pinnedMessage";
-      case SessionStoreKey.SPOTLIGHT:
+      case SessionStoreKey.spotlight:
         return "spotlight";
       default:
         return "";
@@ -18,9 +18,9 @@ extension SessionStoreKeyValues on SessionStoreKey {
   static SessionStoreKey getMethodFromName(String key) {
     switch (key) {
       case "pinnedMessage":
-        return SessionStoreKey.PINNED_MESSAGE_SESSION_KEY;
+        return SessionStoreKey.pinnedMessageSessionKey;
       case "spotlight":
-        return SessionStoreKey.SPOTLIGHT;
+        return SessionStoreKey.spotlight;
       default:
         return SessionStoreKey.unknown;
     }

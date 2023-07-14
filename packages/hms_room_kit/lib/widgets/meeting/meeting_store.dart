@@ -3,7 +3,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:math' as Math;
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
@@ -121,7 +121,7 @@ class MeetingStore extends ChangeNotifier
 
   ScrollController controller = ScrollController();
 
-  MeetingMode meetingMode = MeetingMode.OneToOne;
+  MeetingMode meetingMode = MeetingMode.oneToOne;
 
   bool isLandscapeLocked = false;
 
@@ -707,7 +707,7 @@ class MeetingStore extends ChangeNotifier
         PeerTrackNode peerTrackNode = peerTracks[index];
         peerTrackNode.track = track as HMSVideoTrack;
         peerTrackNode.notify();
-        if (meetingMode == MeetingMode.Single) {
+        if (meetingMode == MeetingMode.single) {
           rearrangeTile(peerTrackNode, index);
         }
         setSpotlightOnTrackUpdate(track);
@@ -760,11 +760,11 @@ class MeetingStore extends ChangeNotifier
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     //To handle the active speaker mode scenario
-    if (meetingMode == MeetingMode.ActiveSpeaker) {
+    if (meetingMode == MeetingMode.activeSpeaker) {
       //Picking up the first four peers from the peerTracks list
       List<PeerTrackNode> activeSpeakerList = peerTracks.sublist(
           screenShareCount + (spotLightPeer != null ? 1 : 0),
-          Math.min(peerTracks.length, 4));
+          math.min(peerTracks.length, 4));
 
       /* Here we iterate through the updateSpeakers list
        * and do the following:
@@ -1341,10 +1341,10 @@ class MeetingStore extends ChangeNotifier
     log("onKeyChanged --> key: $key value: $value");
     SessionStoreKey keyType = SessionStoreKeyValues.getMethodFromName(key);
     switch (keyType) {
-      case SessionStoreKey.PINNED_MESSAGE_SESSION_KEY:
+      case SessionStoreKey.pinnedMessageSessionKey:
         sessionMetadata = value;
         break;
-      case SessionStoreKey.SPOTLIGHT:
+      case SessionStoreKey.spotlight:
         setPeerToSpotlight(value);
         break;
       case SessionStoreKey.unknown:
@@ -1387,17 +1387,17 @@ class MeetingStore extends ChangeNotifier
 
   void setMode(MeetingMode meetingMode) {
     //Turning the videos on if the previously mode was audio
-    if (this.meetingMode == MeetingMode.Audio &&
-        meetingMode != MeetingMode.Audio) {
+    if (this.meetingMode == MeetingMode.audio &&
+        meetingMode != MeetingMode.audio) {
       unMuteRoomVideoLocally();
     }
 
     switch (meetingMode) {
-      case MeetingMode.Audio:
+      case MeetingMode.audio:
         //Muting the videos of peers in room locally
         muteRoomVideoLocally();
         break;
-      case MeetingMode.Single:
+      case MeetingMode.single:
         //This is to place the peers with there videos ON
         //in the beginning
         int type0 = 0;
@@ -1963,14 +1963,14 @@ class MeetingStore extends ChangeNotifier
             time: hlsCue.endDate == null
                 ? 2
                 : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds,
-            align: Utilities.timedMetadataAlignment[Math.Random()
+            align: Utilities.timedMetadataAlignment[math.Random()
                 .nextInt(Utilities.timedMetadataAlignment.length)]);
       } catch (e) {
         Utilities.showTimedMetadata(hlsCue.payload!,
             time: hlsCue.endDate == null
                 ? 2
                 : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds,
-            align: Utilities.timedMetadataAlignment[Math.Random()
+            align: Utilities.timedMetadataAlignment[math.Random()
                 .nextInt(Utilities.timedMetadataAlignment.length)]);
       }
     }

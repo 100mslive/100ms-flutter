@@ -21,10 +21,10 @@ class AudioModeSelectDialog extends StatefulWidget {
       required this.changeAudioMode});
 
   @override
-  _AudioModeSelectDialogState createState() => _AudioModeSelectDialogState();
+  AudioModeSelectDialogState createState() => AudioModeSelectDialogState();
 }
 
-class _AudioModeSelectDialogState extends State<AudioModeSelectDialog> {
+class AudioModeSelectDialogState extends State<AudioModeSelectDialog> {
   HMSAudioMode? valueChoose;
 
   void _updateDropDownValue(dynamic newValue) {

@@ -308,7 +308,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                     child: Container(
                                                         child: (((modeData.item1 ==
                                                                         MeetingMode
-                                                                            .OneToOne) ||
+                                                                            .oneToOne) ||
                                                                     ((data.item3 ==
                                                                             2) &&
                                                                         context.read<MeetingStore>().peers.length ==
@@ -327,7 +327,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                 size: size)
                                                             : (modeData.item1 ==
                                                                     MeetingMode
-                                                                        .ActiveSpeaker)
+                                                                        .activeSpeaker)
                                                                 ? basicGridView(
                                                                     peerTracks: data
                                                                         .item1
@@ -339,11 +339,11 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                     context: context,
                                                                     isPortrait: true,
                                                                     size: size)
-                                                                : (modeData.item1 == MeetingMode.Hero)
+                                                                : (modeData.item1 == MeetingMode.hero)
                                                                     ? heroMode(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: isPortraitMode, size: size)
-                                                                    : (modeData.item1 == MeetingMode.Audio)
+                                                                    : (modeData.item1 == MeetingMode.audio)
                                                                         ? audioMode(peerTracks: data.item1.sublist(data.item4), itemCount: data.item1.sublist(data.item4).length, context: context, isPortrait: isPortraitMode, size: size)
-                                                                        : (data.item5 == MeetingMode.Single)
+                                                                        : (data.item5 == MeetingMode.single)
                                                                             ? fullScreenMode(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: isPortraitMode, size: size)
                                                                             : basicGridView(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: true, size: size)));
                                               });
@@ -752,7 +752,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                       .isVideoOn,
                                                                   meetingStore.meetingMode ==
                                                                       MeetingMode
-                                                                          .Audio),
+                                                                          .audio),
                                                               builder: (_, data, __) {
                                                                 return HMSEmbeddedButton(
                                                                   onTap: () => {
@@ -830,7 +830,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                   .getSessionMetadata(
                                                                       SessionStoreKeyValues.getNameFromMethod(
                                                                           SessionStoreKey
-                                                                              .PINNED_MESSAGE_SESSION_KEY)),
+                                                                              .pinnedMessageSessionKey)),
                                                               context
                                                                   .read<
                                                                       MeetingStore>()

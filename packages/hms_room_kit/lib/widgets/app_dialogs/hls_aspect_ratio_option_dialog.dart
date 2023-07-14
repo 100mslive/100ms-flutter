@@ -20,11 +20,11 @@ class AspectRatioOptionDialog extends StatefulWidget {
   });
 
   @override
-  _AspectRatioOptionDialogState createState() =>
-      _AspectRatioOptionDialogState();
+  AspectRatioOptionDialogState createState() =>
+      AspectRatioOptionDialogState();
 }
 
-class _AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
+class AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {
   String? valueChoose;
 
   void _updateDropDownValue(dynamic newValue) {

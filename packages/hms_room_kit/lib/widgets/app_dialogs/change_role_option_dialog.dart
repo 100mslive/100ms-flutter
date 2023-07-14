@@ -2,10 +2,11 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:collection/collection.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:collection/collection.dart';
+
 import 'package:hms_room_kit/common/app_color.dart';
 import 'package:hms_room_kit/common/utility_functions.dart';
 import 'package:hms_room_kit/widgets/common_widgets/hms_dropdown.dart';
@@ -28,10 +29,10 @@ class ChangeRoleOptionDialog extends StatefulWidget {
   });
 
   @override
-  _ChangeRoleOptionDialogState createState() => _ChangeRoleOptionDialogState();
+  ChangeRoleOptionDialogState createState() => ChangeRoleOptionDialogState();
 }
 
-class _ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
+class ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
   late bool askPermission;
   HMSRole? valueChoose;
 
