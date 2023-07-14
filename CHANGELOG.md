@@ -1,10 +1,8 @@
 ## 1.7.2 - 2023-07-14
 
-### Changes
+### Changed
 
-- Removed unnecessary imports for `HMSHLSPlayer`
-
-  Unnecessary HLS Player imports are removed to streamline the codebase and minimize the SDK size. 
+- Removed redundant package imports on Android which drastically reduces the SDK & App binary size.
 
 Updated to Android SDK 2.7.1 & iOS SDK 0.9.5
 
