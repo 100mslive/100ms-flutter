@@ -208,38 +208,42 @@ class _PreviewPageState extends State<PreviewPage> {
                           const SizedBox(
                             height: 20,
                           ),
-                          Container(
-                            constraints: BoxConstraints(
-                                minWidth: width * 0.5, maxWidth: width * 0.6),
-                            height: 40,
-                            decoration: BoxDecoration(
-                                color: surfaceDefault,
-                                border: Border.all(color: borderDefault),
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Center(
-                              child: previewStore.peers.isEmpty
-                                  ? SubtitleText(
-                                      text: "You are the first to join",
-                                      textColor: onSurfaceHighEmphasis)
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SvgPicture.asset(
-                                          "assets/icons/participants.svg",
-                                          color: onSurfaceMediumEmphasis,
-                                          fit: BoxFit.scaleDown,
-                                          semanticsLabel: "audio_mute_button",
-                                        ),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                        _getParticipantsText(
-                                            previewStore.peers, width),
-                                      ],
-                                    ),
-                            ),
-                          ),
+                          previewStore.peers == null
+                              ? Container()
+                              : Container(
+                                  constraints: BoxConstraints(
+                                      minWidth: width * 0.5,
+                                      maxWidth: width * 0.6),
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                      color: surfaceDefault,
+                                      border: Border.all(color: borderDefault),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Center(
+                                    child: previewStore.peers!.isEmpty
+                                        ? SubtitleText(
+                                            text: "You are the first to join",
+                                            textColor: onSurfaceHighEmphasis)
+                                        : Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SvgPicture.asset(
+                                                "assets/icons/participants.svg",
+                                                color: onSurfaceMediumEmphasis,
+                                                fit: BoxFit.scaleDown,
+                                                semanticsLabel:
+                                                    "audio_mute_button",
+                                              ),
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              _getParticipantsText(
+                                                  previewStore.peers!, width),
+                                            ],
+                                          ),
+                                  ),
+                                ),
                           const SizedBox(
                             height: 20,
                           ),

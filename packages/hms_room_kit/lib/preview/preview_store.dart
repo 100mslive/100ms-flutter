@@ -36,7 +36,7 @@ class PreviewStore extends ChangeNotifier
 
   bool isRTMPStreamingStarted = false;
 
-  List<HMSPeer> peers = [];
+  List<HMSPeer>? peers;
 
   int? networkQuality;
 
@@ -156,10 +156,11 @@ class PreviewStore extends ChangeNotifier
     log("onPeerUpdate-> peer: ${peer.name} update: ${update.name}");
     switch (update) {
       case HMSPeerUpdate.peerJoined:
-        peers.add(peer);
+        peers ??= [];
+        peers?.add(peer);
         break;
       case HMSPeerUpdate.peerLeft:
-        peers.remove(peer);
+        peers?.remove(peer);
         break;
       case HMSPeerUpdate.networkQualityUpdated:
         if (peer.isLocal) {
@@ -168,8 +169,12 @@ class PreviewStore extends ChangeNotifier
         }
         break;
       case HMSPeerUpdate.roleUpdated:
-        int index = peers.indexOf(peer);
-        if (index != -1) peers[index] = peer;
+        if (peers != null) {
+          int index = peers!.indexOf(peer);
+          if (index != -1) {
+            peers![index] = peer;
+          }
+        }
         break;
       default:
         break;
