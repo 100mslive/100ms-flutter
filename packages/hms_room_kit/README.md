@@ -9,7 +9,7 @@
 [![Activity](https://img.shields.io/github/commit-activity/m/100mslive/100ms-flutter.svg)](https://github.com/100mslive/100ms-flutter/projects/1)
 [![Register](https://img.shields.io/badge/Contact-Know%20More-blue)](https://dashboard.100ms.live/register)
 
-# 100ms Room Kit🎉
+# 100ms Room Kit 🎉
 
 A powerful prebuilt UI library for audio/video conferencing, live streaming, and one-to-one calls.
 This package provides developers with a comprehensive set of tools and components to quickly integrate high-quality audio and video communication features into their Flutter applications.
