@@ -47,12 +47,12 @@ class _ReceiveCallState extends State<ReceiveCall> {
                       AppRoute.callingPage,
                       args: widget.callKitParams!["extra"]["authToken"]);
                 },
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
+                child: const Padding(
+                  padding: EdgeInsets.all(12.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(
                         Icons.call,
                         color: Colors.white,
