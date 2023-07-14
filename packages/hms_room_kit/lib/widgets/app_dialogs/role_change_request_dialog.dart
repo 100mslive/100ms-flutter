@@ -15,8 +15,7 @@ class RoleChangeRequestDialog extends StatefulWidget {
       {super.key, required this.roleChangeRequest, required this.meetingStore});
 
   @override
-  RoleChangeRequestDialogState createState() =>
-      RoleChangeRequestDialogState();
+  RoleChangeRequestDialogState createState() => RoleChangeRequestDialogState();
 }
 
 class RoleChangeRequestDialogState extends State<RoleChangeRequestDialog> {

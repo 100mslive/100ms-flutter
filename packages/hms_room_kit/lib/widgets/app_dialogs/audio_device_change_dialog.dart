@@ -23,8 +23,7 @@ class AudioDeviceChangeDialog extends StatefulWidget {
       required this.currentAudioDevice});
 
   @override
-  AudioDeviceChangeDialogState createState() =>
-      AudioDeviceChangeDialogState();
+  AudioDeviceChangeDialogState createState() => AudioDeviceChangeDialogState();
 }
 
 class AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
