@@ -218,10 +218,10 @@ class _MeetingPageState extends State<MeetingPage>
                       width: MediaQuery.of(context).size.width,
                       color: Colors.black,
                       height: MediaQuery.of(context).size.height,
-                      child: Column(
+                      child: const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const [
+                        children: [
                           Text(
                             "Waiting for other peer to join",
                             style: TextStyle(color: Colors.white, fontSize: 20),

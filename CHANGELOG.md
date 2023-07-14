@@ -1,3 +1,13 @@
+## 1.7.2 - 2023-07-14
+
+### Changed
+
+- Reduced SDK & App binary size on Android by removing redundant package imports
+
+Updated to Android SDK 2.7.1 & iOS SDK 0.9.5
+
+**Full Changelog**: [1.7.1...1.7.2](https://github.com/100mslive/100ms-flutter/compare/1.7.1...1.7.2)
+
 ## 1.7.1 - 2023-06-30
 
 ### Added
