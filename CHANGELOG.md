@@ -2,7 +2,7 @@
 
 ### Changed
 
-- Removed redundant package imports on Android which drastically reduces the SDK & App binary size.
+- Reduced SDK & App binary size on Android by removing redundant package imports
 
 Updated to Android SDK 2.7.1 & iOS SDK 0.9.5
 
