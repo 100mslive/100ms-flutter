@@ -154,13 +154,13 @@ class _MeetingPageState extends State<MeetingPage> {
                   SvgPicture.asset(
                       "packages/hms_room_kit/lib/assets/icons/end_warning.svg",
                       width: 17,
-                      color: errorColor),
+                      color: colorScheme.error),
                   const SizedBox(
                     width: 12,
                   ),
                   TitleText(
                     text: "End Session",
-                    textColor: errorColor,
+                    textColor: colorScheme.error,
                     fontSize: 14,
                     lineHeight: 20,
                     letterSpacing: 0.25,
@@ -481,7 +481,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                         .asset(
                                                                       "packages/hms_room_kit/lib/assets/icons/live_stream.svg",
                                                                       color:
-                                                                          errorColor,
+                                                                          colorScheme.error,
                                                                       fit: BoxFit
                                                                           .scaleDown,
                                                                     ),

@@ -71,7 +71,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     int audioModeIndex = await Utilities.getIntData(key: 'audio-mode');
     currentAudioMode = HMSAudioMode.values[audioModeIndex];
 
-    isDebugMode = await Utilities.getBoolData(key: 'enable-debug-mode') ?? false;
+    isDebugMode =
+        await Utilities.getBoolData(key: 'enable-debug-mode') ?? false;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
     });

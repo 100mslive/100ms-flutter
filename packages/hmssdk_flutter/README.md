@@ -21,7 +21,6 @@ With support for HLS and RTMP Live Streaming and Recording, Picture-in-Picture (
 
 🤖 Download the Sample Android app here: <https://appdistribution.firebase.dev/i/b623e5310929ab70>
 
-
 100ms Flutter apps are also released on the App Stores, you can download them here:
 
 📲 iOS app on Apple App Store: <https://apps.apple.com/app/100ms-live/id1576541989>
@@ -47,21 +46,21 @@ The fully fledged Example app is [available here](https://github.com/100mslive/1
 🚀 We have added explanations & recommended usage guide for different features, UI Layouts, Data Store, etc in [Example app ReadMe](https://github.com/100mslive/100ms-flutter/blob/main/example/README.md).
 
 To run the Example App on your system follow these steps -
+
 1. Clone the 100ms Flutter [Github Repo](https://github.com/100mslive/100ms-flutter.git)
 
 2. In project root, run `flutter pub get` to build the Flutter package
 3. Change directory to `example` folder
 4. Now, to run the app, simply execute the `flutter run` command to run the app on a connected device, or iOS simulator, or Android Emulator.
-5. For running on an iOS Device (iPhone or iPad), ensure you have set the Correct Development Team in Xcode Signing & Capabilities section. 
+5. For running on an iOS Device (iPhone or iPad), ensure you have set the Correct Development Team in Xcode Signing & Capabilities section.
 
 The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/example) uses Provider State Management library. For other implementations please check out -
 
-* [Bloc](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/bloc)
-* [Getx](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/getx)
-* [Riverpod](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/riverpod)
-* [Mobx](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/mobx)
-* [Simple QuickStart](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/flutter-quickstart-app)
-
+- [Bloc](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/bloc)
+- [Getx](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/getx)
+- [Riverpod](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/riverpod)
+- [Mobx](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/mobx)
+- [Simple QuickStart](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/flutter-quickstart-app)
 
 ## ☝️ Minimum Configuration
 
@@ -139,7 +138,6 @@ Add following permissions in iOS Info.plist file
 - `Track` A track is a segment of media (audio/video) captured from the peer's camera and microphone. Peers in a session publish local tracks and subscribe to remote tracks from other peers.
 
 - `Role` A role defines who can a peer see/hear, the quality at which they publish their video, whether they have permissions to publish video/screenshare, mute someone, change someone's role.
-  
 
 ## ♻️ [Setup Update Listeners](https://www.100ms.live/docs/flutter/v2/features/update-listeners)
 
@@ -235,7 +233,7 @@ abstract class HMSUpdateListener {
   /// when someone kicks you out or when someone ends the room at that time it is triggered
   /// [hmsPeerRemovedFromPeer] it consists of info about who removed you and why.
   void onRemovedFromRoom({required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer});
-  
+
 
   /// whenever a new audio device is plugged in or audio output is changed we
   /// get the onAudioDeviceChanged update
@@ -246,8 +244,8 @@ abstract class HMSUpdateListener {
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice});
-      
-      
+
+
   /// Whenever a user joins a room [onSessionStoreAvailable] is fired to get an instance of [HMSSessionStore]
   /// which can be used to perform session metadata operations
   /// - Parameters:
@@ -259,13 +257,13 @@ abstract class HMSUpdateListener {
 
 ## 🤔 [How to listen to Peer & Track updates?](https://www.100ms.live/docs/flutter/v2/features/update-listener-enums)
 
-  The 100ms SDK sends updates to the application about any change in HMSPeer, HMSTrack, HMSRoom, etc via the callbacks in `HMSUpdateListener`.
+The 100ms SDK sends updates to the application about any change in HMSPeer, HMSTrack, HMSRoom, etc via the callbacks in `HMSUpdateListener`.
 
-  The methods of HMSUpdateListener are invoked to notify updates happening in the room like a peer join/leave, track mute/unmute etc.
+The methods of HMSUpdateListener are invoked to notify updates happening in the room like a peer join/leave, track mute/unmute etc.
 
-  More information about Update Listeners is [available here](https://www.100ms.live/docs/flutter/v2/features/update-listeners).
+More information about Update Listeners is [available here](https://www.100ms.live/docs/flutter/v2/features/update-listeners).
 
-  The following are the different types of updates that are emitted by the SDK -
+The following are the different types of updates that are emitted by the SDK -
 
 ```txt
 HMSPeerUpdate
@@ -294,7 +292,7 @@ HMSRoomUpdate
   .hlsStreamingStateUpdated: When HLS is started or stopped
   .hlsRecordingStateUpdated: When HLS recording state is updated
 ```
-  
+
 ## 🙏 [Join a Room](https://www.100ms.live/docs/flutter/v2/features/join)
 
 To join and interact with others in audio or video call, the user needs to `join` a `room`.
@@ -308,14 +306,15 @@ To join a Room, your app should have -
 
 To join a room we need an authentication token as mentioned above. There are two methods to get the token:
 
-#### Fetch token using room-code method (Recommended) 
+#### Fetch token using room-code method (Recommended)
 
 We can get the authentication token using room-code from meeting URL.
 
 Let's understand the subdomain and code from the sample URL
 In this URL: `http://100ms-rocks.app.100ms.live/meeting/abc-defg-hij`
- -  Subdomain is `100ms-rocks`
- -  Room code is `abc-defg-ghi`
+
+- Subdomain is `100ms-rocks`
+- Room code is `abc-defg-ghi`
 
 Now to get the room-code from meeting URL we can write our own logic or use the `getCode` method from [here](https://github.com/100mslive/100ms-flutter/blob/main/example/lib/service/room_service.dart)
 
@@ -353,7 +352,7 @@ To test audio/video functionality, you need to connect to a 100ms room; please c
 1. Navigate to your [100ms dashboard](https://dashboard.100ms.live/dashboard) or [create an account](https://dashboard.100ms.live/register) if you don't have one.
 2. Use the `Video Conferencing Starter Kit` to create a room with a default template assigned to it to test this app quickly.
 3. Go to the [Rooms page](https://dashboard.100ms.live/rooms) in your dashboard, click on the `Room Id` of the room you created above, and click on the `Join Room` button on the top right.
-4. In the Join with SDK section you can find the `Auth Token for role` ; you can click on the 'copy' icon to copy the authentication token.  
+4. In the Join with SDK section you can find the `Auth Token for role` ; you can click on the 'copy' icon to copy the authentication token.
 
 > Token from 100ms dashboard is for testing purposes only, For production applications you must generate tokens on your own server.
 > Refer to the [Management Token section](/flutter/v2/foundation/security-and-tokens#management-token) in Authentication and Tokens guide for more information.
@@ -389,8 +388,6 @@ class Meeting implements HMSUpdateListener {
 }
 ```
 
-
-
 ## 🎞 [Display a Track](https://www.100ms.live/docs/flutter/v2/features/render-video)
 
 It all comes down to this. All the setup so far has been done so that we can show live-streaming videos in our beautiful app.
@@ -410,12 +407,12 @@ HMSVideoView(
 
 More information about displaying a Video is [available here](https://www.100ms.live/docs/react-native/v2/features/render-video).
 
-
 ## 👋 [Leave Room](https://www.100ms.live/docs/flutter/v2/features/leave)
 
 Once you're done with the meeting and want to exit, call leave on the HMSSDK instance that you created to join the room.
 
 Before calling leave, remove the `HMSUpdateListener` instance as:
+
 ```dart
 // updateListener is the instance of class in which HMSUpdateListener is implemented
 hmsSDK.removeUpdateListener(updateListener);
@@ -424,7 +421,7 @@ hmsSDK.removeUpdateListener(updateListener);
 To leave the meeting, call the `leave` method of `HMSSDK` and pass the `hmsActionResultListener` parameter to get a success callback from SDK in the `onSuccess` override method as follow.
 
 > You will need to implement the `HMSActionResultListener` interface in a class to get `onSuccess` and `onException` callback.
->  To know about how to implement `HMSActionResultListener`  check the docs [here](https://www.100ms.live/docs/flutter/v2/features/action-result-listeners)
+> To know about how to implement `HMSActionResultListener` check the docs [here](https://www.100ms.live/docs/flutter/v2/features/action-result-listeners)
 
 ```dart
 class Meeting implements HMSActionResultListener{
@@ -447,11 +444,10 @@ await hmsSDK.leave(hmsActionResultListener: this);
 
 More information about Leaving a Room is [available here](https://www.100ms.live/docs/flutter/v2/features/leave).
 
-  
 ## 🛤 HMSTracks Explained
-  
+
 `HMSTrack` is the super-class of all the tracks that are used inside `HMSSDK`. Its hierarchy looks like this -
-  
+
 ```dart
 HMSTrack
     - AudioTrack
@@ -464,15 +460,15 @@ HMSTrack
 
 ## 🛤 How to know the type and source of Track?
 
-  HMSTrack contains a field called source which denotes the source of the Track.
+HMSTrack contains a field called source which denotes the source of the Track.
 
-  `Source` can have the following values -
-  - `regular` For normal Audio or Video being published by peers
-  - `screen` For Screenshare track whenver a peer starts Broadcasting their Screen in a Room
-  - `plugin` For a custom Audio or Video plugin being used in Room
+`Source` can have the following values -
 
-  To know the type of track, check the value of type which would be one of the enum values - `AUDIO` or `VIDEO`
+- `regular` For normal Audio or Video being published by peers
+- `screen` For Screenshare track whenver a peer starts Broadcasting their Screen in a Room
+- `plugin` For a custom Audio or Video plugin being used in Room
 
+To know the type of track, check the value of type which would be one of the enum values - `AUDIO` or `VIDEO`
 
 ## 📨 [Chat Messaging](https://www.100ms.live/docs/flutter/v2/features/chat)
 
@@ -583,11 +579,9 @@ void onException(
 
 📖 Do refer the Complete Documentation Guide [available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart).
 
-
 🏃‍♀️ Checkout the Example app implementation [available here](https://github.com/100mslive/100ms-flutter/tree/main/example).
 
 🚀 We have added explanations & recommended usage guide for different features, UI Layouts, Data Store, etc in [Example app ReadMe](https://github.com/100mslive/100ms-flutter/blob/main/example/README.md).
-
 
 100ms Flutter apps are released on the App Stores, you can download them here:
 

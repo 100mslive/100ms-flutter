@@ -867,7 +867,7 @@ Error codes and their description can be found [here](https://www.100ms.live/doc
 
 There are two ways in which SDK provides error callbacks as:
 
-- `onHMSError` method of ` HMSUpdateListener``onHMSError ` callbacks is received when there is some issue with the methods like join, connection errors or errors related to SDK.
+- `onHMSError` method of `HMSUpdateListener``onHMSError` callbacks is received when there is some issue with the methods like join, connection errors or errors related to SDK.
 
 ```dart
 @override

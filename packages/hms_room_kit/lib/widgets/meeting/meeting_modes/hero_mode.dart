@@ -64,7 +64,7 @@ Widget heroMode(
                           height: 40,
                         ),
                         HMSButton(
-                            buttonBackgroundColor: errorColor,
+                            buttonBackgroundColor: colorScheme.error,
                             width: MediaQuery.of(context).size.width * 0.6,
                             onPressed: () {
                               context.read<MeetingStore>().stopScreenShare();
