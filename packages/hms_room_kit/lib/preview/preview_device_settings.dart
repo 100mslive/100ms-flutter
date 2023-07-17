@@ -106,7 +106,8 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                           leading: SvgPicture.asset(
                             "assets/icons/music_wave.svg",
                             fit: BoxFit.scaleDown,
-                            color: onSurfaceHighEmphasis,
+                            colorFilter: ColorFilter.mode(
+                                onSurfaceHighEmphasis, BlendMode.srcIn),
                           ),
                           title: SubtitleText(
                             text: "Switch Audio Output Device",
@@ -135,7 +136,9 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                             children: [
                                               SvgPicture.asset(
                                                 "assets/icons/music_wave.svg",
-                                                color: themeDefaultColor,
+                                                colorFilter: ColorFilter.mode(
+                                                    themeDefaultColor,
+                                                    BlendMode.srcIn),
                                               ),
                                               const SizedBox(
                                                 width: 10,

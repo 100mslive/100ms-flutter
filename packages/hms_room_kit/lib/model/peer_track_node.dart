@@ -32,9 +32,6 @@ class PeerTrackNode extends ChangeNotifier {
     return 'PeerTrackNode{peerId: ${peer.peerId}, name: ${peer.name}, track: $track}, isVideoOn: $isOffscreen }';
   }
 
-  @override
-  int get hashCode => peer.peerId.hashCode;
-
   void notify() {
     notifyListeners();
   }

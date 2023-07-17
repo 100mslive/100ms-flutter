@@ -164,7 +164,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                   //         ? "packages/hms_room_kit/lib/assets/icons/dark_mode.svg"
                   //         : 'packages/hms_room_kit/lib/assets/icons/light_mode.svg',
                   //     fit: BoxFit.scaleDown,
-                  //     color: themeDefaultColor,
+                  //     colorFilter:  ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                   //   ),
                   //   title: Text(
                   //     "Dark Mode",
@@ -198,7 +198,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     leading: SvgPicture.asset(
                       "packages/hmssdk_uikit/lib/assets/icons/bug.svg",
                       fit: BoxFit.scaleDown,
-                      color: themeDefaultColor,
+                      colorFilter:
+                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
                     title: Text(
                       "Enable Debug Mode",
@@ -227,7 +228,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     leading: SvgPicture.asset(
                       "packages/hmssdk_uikit/lib/assets/icons/mic_state_off.svg",
                       fit: BoxFit.scaleDown,
-                      color: themeDefaultColor,
+                      colorFilter:
+                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
                     title: Text(
                       "Join with muted audio",
@@ -256,7 +258,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     leading: SvgPicture.asset(
                       "packages/hms_room_kit/lib/assets/icons/cam_state_off.svg",
                       fit: BoxFit.scaleDown,
-                      color: themeDefaultColor,
+                      colorFilter:
+                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
                     title: Text(
                       "Join with muted video",
@@ -285,7 +288,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                   //   leading: SvgPicture.asset(
                   //     "packages/hms_room_kit/lib/assets/icons/preview_state_on.svg",
                   //     fit: BoxFit.scaleDown,
-                  //     color: themeDefaultColor,
+                  //     colorFilter:  ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                   //   ),
                   //   title: Text(
                   //     "Skip Preview",
@@ -340,7 +343,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
                       'packages/hms_room_kit/lib/assets/icons/stats.svg',
-                      color: themeDefaultColor,
+                      colorFilter:
+                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
                     title: Text(
                       "Enable Stats",
@@ -369,7 +373,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
                         'packages/hms_room_kit/lib/assets/icons/decoder.svg',
-                        color: themeDefaultColor,
+                        colorFilter: ColorFilter.mode(
+                            themeDefaultColor, BlendMode.srcIn),
                       ),
                       title: Text(
                         "Software Decoder",
@@ -400,7 +405,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
                         'packages/hms_room_kit/lib/assets/icons/settings.svg',
-                        color: themeDefaultColor,
+                        colorFilter: ColorFilter.mode(
+                            themeDefaultColor, BlendMode.srcIn),
                       ),
                       title: Text(
                         "Disable Audio Mixer",
@@ -428,7 +434,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
                       'packages/hms_room_kit/lib/assets/icons/simulcast.svg',
-                      color: themeDefaultColor,
+                      colorFilter:
+                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
                     title: Text(
                       "Enable Auto Simulcast",
@@ -469,7 +476,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       leading: SvgPicture.asset(
                         "packages/hms_room_kit/lib/assets/icons/audio_mode.svg",
                         fit: BoxFit.scaleDown,
-                        color: themeDefaultColor,
+                        colorFilter: ColorFilter.mode(
+                            themeDefaultColor, BlendMode.srcIn),
                       ),
                       title: Text(
                         "Audio Mode",
@@ -501,7 +509,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       leading: SvgPicture.asset(
                         "packages/hms_room_kit/lib/assets/icons/notification.svg",
                         fit: BoxFit.scaleDown,
-                        color: themeDefaultColor,
+                        colorFilter: ColorFilter.mode(
+                            themeDefaultColor, BlendMode.srcIn),
                       ),
                       title: Text(
                         "Modify Notifications",
@@ -519,7 +528,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
                       'packages/hms_room_kit/lib/assets/icons/bug.svg',
-                      color: themeDefaultColor,
+                      colorFilter:
+                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
                     title: Text(
                       "Ask on Discord",

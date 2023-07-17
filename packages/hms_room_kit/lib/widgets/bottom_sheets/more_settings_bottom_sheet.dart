@@ -119,7 +119,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: SvgPicture.asset(
                                     "packages/hms_room_kit/lib/assets/icons/participants.svg",
-                                    color: themeDefaultColor,
+                                    colorFilter: ColorFilter.mode(
+                                        themeDefaultColor, BlendMode.srcIn),
                                   ),
                                 ),
                               ),
@@ -167,7 +168,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             children: [
                               SvgPicture.asset(
                                 "packages/hms_room_kit/lib/assets/icons/settings.svg",
-                                color: themeDefaultColor,
+                                colorFilter: ColorFilter.mode(
+                                    themeDefaultColor, BlendMode.srcIn),
                               ),
                               const SizedBox(
                                 height: 10,
@@ -211,7 +213,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       "packages/hms_room_kit/lib/assets/icons/participants.svg",
                       height: 20,
                       width: 20,
-                      color: onSurfaceHighEmphasis,
+                      colorFilter: ColorFilter.mode(
+                          onSurfaceHighEmphasis, BlendMode.srcIn),
                     ),
                     title: SubheadingText(
                       text: "Meeting mode",
@@ -242,7 +245,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               "packages/hms_room_kit/lib/assets/icons/screen_share.svg",
                               height: 20,
                               width: 20,
-                              color: onSurfaceHighEmphasis,
+                              colorFilter: ColorFilter.mode(
+                                  onSurfaceHighEmphasis, BlendMode.srcIn),
                             ),
                             title: SubheadingText(
                               text: isScreenShareOn
@@ -277,7 +281,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       "packages/hms_room_kit/lib/assets/icons/pencil.svg",
                       height: 20,
                       width: 20,
-                      color: onSurfaceHighEmphasis,
+                      colorFilter: ColorFilter.mode(
+                          onSurfaceHighEmphasis, BlendMode.srcIn),
                     ),
                     title: SubheadingText(
                       text: "Change Name",
@@ -299,7 +304,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                           : "packages/hms_room_kit/lib/assets/icons/speaker_state_off.svg",
                       height: 20,
                       width: 20,
-                      color: onSurfaceHighEmphasis,
+                      colorFilter: ColorFilter.mode(
+                          onSurfaceHighEmphasis, BlendMode.srcIn),
                     ),
                     title: SubheadingText(
                       text: meetingStore.isSpeakerOn
@@ -321,7 +327,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         "packages/hms_room_kit/lib/assets/icons/hand_outline.svg",
                         height: 20,
                         width: 20,
-                        color: onSurfaceHighEmphasis,
+                        colorFilter: ColorFilter.mode(
+                            onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
                       title: SubheadingText(
                         text: meetingStore.isRaisedHand
@@ -341,7 +348,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       "packages/hms_room_kit/lib/assets/icons/brb.svg",
                       height: 20,
                       width: 20,
-                      color: onSurfaceHighEmphasis,
+                      colorFilter: ColorFilter.mode(
+                          onSurfaceHighEmphasis, BlendMode.srcIn),
                     ),
                     title: SubheadingText(
                       text: "BRB",
@@ -371,7 +379,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         "packages/hms_room_kit/lib/assets/icons/stats.svg",
                         height: 20,
                         width: 20,
-                        color: onSurfaceHighEmphasis,
+                        colorFilter: ColorFilter.mode(
+                            onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
                       title: SubheadingText(
                         text: "Stats for nerds",
@@ -397,7 +406,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         "packages/hms_room_kit/lib/assets/icons/mic_state_off.svg",
                         height: 20,
                         width: 20,
-                        color: onSurfaceHighEmphasis,
+                        colorFilter: ColorFilter.mode(
+                            onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
                       title: SubheadingText(
                         text: "Mute Role",
@@ -421,7 +431,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         "packages/hms_room_kit/lib/assets/icons/role_change.svg",
                         height: 20,
                         width: 20,
-                        color: onSurfaceHighEmphasis,
+                        colorFilter: ColorFilter.mode(
+                            onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
                       title: SubheadingText(
                         text: "Bulk Role Change",
@@ -474,9 +485,11 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               "packages/hms_room_kit/lib/assets/icons/stream.svg",
                               height: 20,
                               width: 20,
-                              color: isRTMPRunning
-                                  ? alertErrorDefault
-                                  : onSurfaceHighEmphasis,
+                              colorFilter: ColorFilter.mode(
+                                  isRTMPRunning
+                                      ? alertErrorDefault
+                                      : onSurfaceHighEmphasis,
+                                  BlendMode.srcIn),
                             ),
                             title: SubheadingText(
                               text: isRTMPRunning ? "Stop RTMP" : "Start RTMP",
@@ -513,9 +526,11 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               "packages/hms_room_kit/lib/assets/icons/record.svg",
                               height: 20,
                               width: 20,
-                              color: isBrowserRecording
-                                  ? alertErrorDefault
-                                  : onSurfaceHighEmphasis,
+                              colorFilter: ColorFilter.mode(
+                                  isBrowserRecording
+                                      ? alertErrorDefault
+                                      : onSurfaceHighEmphasis,
+                                  BlendMode.srcIn),
                             ),
                             title: SubheadingText(
                               text: isBrowserRecording
@@ -558,13 +573,14 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             },
                             contentPadding: EdgeInsets.zero,
                             leading: SvgPicture.asset(
-                              "packages/hms_room_kit/lib/assets/icons/hls.svg",
-                              height: 20,
-                              width: 20,
-                              color: hasHLSStarted
-                                  ? alertErrorDefault
-                                  : onSurfaceHighEmphasis,
-                            ),
+                                "packages/hms_room_kit/lib/assets/icons/hls.svg",
+                                height: 20,
+                                width: 20,
+                                colorFilter: ColorFilter.mode(
+                                    hasHLSStarted
+                                        ? alertErrorDefault
+                                        : onSurfaceHighEmphasis,
+                                    BlendMode.srcIn)),
                             title: SubheadingText(
                               text: hasHLSStarted ? "Stop HLS" : "Start HLS",
                               textColor: hasHLSStarted
@@ -587,7 +603,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         "packages/hms_room_kit/lib/assets/icons/screen_share.svg",
                         height: 20,
                         width: 20,
-                        color: onSurfaceHighEmphasis,
+                        colorFilter: ColorFilter.mode(
+                            onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
                       title: SubheadingText(
                         text: "Enter Pip Mode",
@@ -610,7 +627,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       "packages/hms_room_kit/lib/assets/icons/share.svg",
                       height: 20,
                       width: 20,
-                      color: onSurfaceHighEmphasis,
+                      colorFilter: ColorFilter.mode(
+                          onSurfaceHighEmphasis, BlendMode.srcIn),
                     ),
                     title: SubheadingText(
                       text: "Share Link",
@@ -649,7 +667,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                   //       semanticsLabel: "fl_notification_setting",
                   //       style: GoogleFonts.inter(
                   //           fontSize: 14,
-                  //           color: themeDefaultColor,
+                  //           colorFilter:  ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                   //           letterSpacing: 0.25,
                   //           fontWeight: FontWeight.w600),
                   //     )),
@@ -664,7 +682,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         "packages/hms_room_kit/lib/assets/icons/end_room.svg",
                         height: 20,
                         width: 20,
-                        color: onSurfaceHighEmphasis,
+                        colorFilter: ColorFilter.mode(
+                            onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
                       title: SubheadingText(
                         text: "End Room",

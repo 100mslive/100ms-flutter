@@ -145,7 +145,9 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
                                           children: [
                                             SvgPicture.asset(
                                               "packages/hms_room_kit/lib/assets/icons/music_wave.svg",
-                                              color: themeDefaultColor,
+                                              colorFilter: ColorFilter.mode(
+                                                  themeDefaultColor,
+                                                  BlendMode.srcIn),
                                             ),
                                             const SizedBox(
                                               width: 10,

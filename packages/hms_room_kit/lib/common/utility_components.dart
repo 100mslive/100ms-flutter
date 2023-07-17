@@ -980,9 +980,10 @@ class UtilityComponents {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SvgPicture.asset(
-          "packages/hms_room_kit/lib/assets/icons/rotate.svg",
-          color: meetingStore.isLandscapeLocked ? Colors.blue : iconColor,
-        ),
+            "packages/hms_room_kit/lib/assets/icons/rotate.svg",
+            colorFilter: ColorFilter.mode(
+                meetingStore.isLandscapeLocked ? Colors.blue : iconColor,
+                BlendMode.srcIn)),
       ),
     );
   }

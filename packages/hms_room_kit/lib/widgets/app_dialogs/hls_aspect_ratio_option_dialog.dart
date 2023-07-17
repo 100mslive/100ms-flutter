@@ -20,8 +20,7 @@ class AspectRatioOptionDialog extends StatefulWidget {
   });
 
   @override
-  AspectRatioOptionDialogState createState() =>
-      AspectRatioOptionDialogState();
+  AspectRatioOptionDialogState createState() => AspectRatioOptionDialogState();
 }
 
 class AspectRatioOptionDialogState extends State<AspectRatioOptionDialog> {

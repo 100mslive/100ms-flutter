@@ -25,7 +25,8 @@ class BRBTag extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                       child: SvgPicture.asset(
                         "packages/hms_room_kit/lib/assets/icons/brb.svg",
-                        color: onSurfaceHighEmphasis,
+                        colorFilter: ColorFilter.mode(
+                            onSurfaceHighEmphasis, BlendMode.srcIn),
                         width: 26,
                         semanticsLabel: "brb_label",
                       ),

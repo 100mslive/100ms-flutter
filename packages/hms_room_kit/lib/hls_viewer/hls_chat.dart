@@ -494,7 +494,8 @@ class _HLSChatState extends State<HLSChat> {
                               height: 40,
                               child: SvgPicture.asset(
                                 "packages/hms_room_kit/lib/assets/icons/send_message.svg",
-                                color: themeDefaultColor,
+                                colorFilter: ColorFilter.mode(
+                                    themeDefaultColor, BlendMode.srcIn),
                                 fit: BoxFit.scaleDown,
                               ),
                             ))
