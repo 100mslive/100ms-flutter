@@ -425,8 +425,10 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                               child: SvgPicture
                                                                   .asset(
                                                                 "packages/hms_room_kit/lib/assets/icons/phone_hangup.svg",
-                                                                color:
+                                                                colorFilter: ColorFilter.mode(
                                                                     onSurfaceHighEmphasis,
+                                                                    BlendMode
+                                                                        .srcIn),
                                                                 fit: BoxFit
                                                                     .scaleDown,
                                                                 semanticsLabel:
@@ -476,10 +478,11 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                         isMicOn
                                                                             ? "packages/hms_room_kit/lib/assets/icons/mic_state_on.svg"
                                                                             : "packages/hms_room_kit/lib/assets/icons/mic_state_off.svg",
-                                                                        color: (context.read<MeetingStore>().localPeer?.role.publishSettings?.allowed.contains("audio") ??
-                                                                                false)
-                                                                            ? onSurfaceHighEmphasis
-                                                                            : onSurfaceLowEmphasis,
+                                                                        colorFilter: ColorFilter.mode(
+                                                                            (context.read<MeetingStore>().localPeer?.role.publishSettings?.allowed.contains("audio") ?? false)
+                                                                                ? onSurfaceHighEmphasis
+                                                                                : onSurfaceLowEmphasis,
+                                                                            BlendMode.srcIn),
                                                                         fit: BoxFit
                                                                             .scaleDown,
                                                                         semanticsLabel:
@@ -513,8 +516,10 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                               child: SvgPicture
                                                                   .asset(
                                                                 "assets/icons/emoji.svg",
-                                                                color:
+                                                                colorFilter: ColorFilter.mode(
                                                                     onSurfaceHighEmphasis,
+                                                                    BlendMode
+                                                                        .srcIn),
                                                                 fit: BoxFit
                                                                     .scaleDown,
                                                                 semanticsLabel:
@@ -549,13 +554,13 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                     child: SvgPicture
                                                                         .asset(
                                                                       "assets/icons/hand_outline.svg",
-                                                                      color: handRaised
-                                                                          ? const Color.fromRGBO(
-                                                                              250,
-                                                                              201,
-                                                                              25,
-                                                                              1)
-                                                                          : onSurfaceHighEmphasis,
+                                                                      colorFilter: ColorFilter.mode(
+                                                                          handRaised
+                                                                              ? const Color.fromRGBO(250, 201, 25,
+                                                                                  1)
+                                                                              : onSurfaceHighEmphasis,
+                                                                          BlendMode
+                                                                              .srcIn),
                                                                       fit: BoxFit
                                                                           .scaleDown,
                                                                       semanticsLabel:

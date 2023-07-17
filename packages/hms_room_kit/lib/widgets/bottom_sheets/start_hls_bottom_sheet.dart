@@ -76,7 +76,7 @@ class _StartHLSBottomSheetState extends State<StartHLSBottomSheet> {
             ),
             SvgPicture.asset(
               "packages/hms_room_kit/lib/assets/icons/live.svg",
-              color: themeDefaultColor,
+              colorFilter: ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
               width: 33,
             ),
             const SizedBox(
@@ -120,7 +120,8 @@ class _StartHLSBottomSheetState extends State<StartHLSBottomSheet> {
                       children: [
                         SvgPicture.asset(
                           "packages/hms_room_kit/lib/assets/icons/record.svg",
-                          color: themeDefaultColor,
+                          colorFilter: ColorFilter.mode(
+                              themeDefaultColor, BlendMode.srcIn),
                         ),
                         const SizedBox(
                           width: 10,
@@ -171,7 +172,8 @@ class _StartHLSBottomSheetState extends State<StartHLSBottomSheet> {
                     children: [
                       SvgPicture.asset(
                         "packages/hms_room_kit/lib/assets/icons/live.svg",
-                        color: themeDefaultColor,
+                        colorFilter: ColorFilter.mode(
+                            themeDefaultColor, BlendMode.srcIn),
                         width: 24,
                       ),
                       const SizedBox(
@@ -191,7 +193,8 @@ class _StartHLSBottomSheetState extends State<StartHLSBottomSheet> {
                 children: [
                   SvgPicture.asset(
                     "packages/hms_room_kit/lib/assets/icons/info.svg",
-                    color: themeSubHeadingColor,
+                    colorFilter:
+                        ColorFilter.mode(themeSubHeadingColor, BlendMode.srcIn),
                     width: 15,
                   ),
                   const SizedBox(

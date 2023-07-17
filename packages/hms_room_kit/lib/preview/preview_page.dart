@@ -230,7 +230,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                             children: [
                                               SvgPicture.asset(
                                                 "assets/icons/participants.svg",
-                                                color: onSurfaceMediumEmphasis,
+                                                colorFilter: ColorFilter.mode(
+                                                    onSurfaceHighEmphasis,
+                                                    BlendMode.srcIn),
                                                 fit: BoxFit.scaleDown,
                                                 semanticsLabel:
                                                     "audio_mute_button",
@@ -433,8 +435,11 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         previewStore.isAudioOn
                                                             ? "assets/icons/mic_state_on.svg"
                                                             : "assets/icons/mic_state_off.svg",
-                                                        color:
-                                                            onSurfaceHighEmphasis,
+                                                        colorFilter:
+                                                            ColorFilter.mode(
+                                                                onSurfaceHighEmphasis,
+                                                                BlendMode
+                                                                    .srcIn),
                                                         fit: BoxFit.scaleDown,
                                                         semanticsLabel:
                                                             "audio_mute_button",
@@ -467,8 +472,11 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         previewStore.isVideoOn
                                                             ? "assets/icons/cam_state_on.svg"
                                                             : "assets/icons/cam_state_off.svg",
-                                                        color:
-                                                            onSurfaceHighEmphasis,
+                                                        colorFilter:
+                                                            ColorFilter.mode(
+                                                                onSurfaceHighEmphasis,
+                                                                BlendMode
+                                                                    .srcIn),
                                                         fit: BoxFit.scaleDown,
                                                         semanticsLabel:
                                                             "video_mute_button",
@@ -486,10 +494,11 @@ class _PreviewPageState extends State<PreviewPage> {
                                                     isActive: true,
                                                     child: SvgPicture.asset(
                                                       "assets/icons/camera.svg",
-                                                      color: previewStore
-                                                              .isVideoOn
-                                                          ? onSurfaceHighEmphasis
-                                                          : onSurfaceLowEmphasis,
+                                                      colorFilter: ColorFilter.mode(
+                                                          previewStore.isVideoOn
+                                                              ? onSurfaceHighEmphasis
+                                                              : onSurfaceLowEmphasis,
+                                                          BlendMode.srcIn),
                                                       fit: BoxFit.scaleDown,
                                                       semanticsLabel:
                                                           "switch_camera_button",

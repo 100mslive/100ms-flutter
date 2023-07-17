@@ -101,7 +101,7 @@ class _MeetingPageState extends State<MeetingPage> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         icon: SvgPicture.asset(
           "packages/hms_room_kit/lib/assets/icons/leave_hls.svg",
-          color: Colors.white,
+          colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
           fit: BoxFit.scaleDown,
         ),
         color: themeBottomSheetColor,
@@ -131,7 +131,8 @@ class _MeetingPageState extends State<MeetingPage> {
                   SvgPicture.asset(
                       "packages/hms_room_kit/lib/assets/icons/leave_hls.svg",
                       width: 17,
-                      color: themeDefaultColor),
+                      colorFilter:
+                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn)),
                   const SizedBox(
                     width: 12,
                   ),
@@ -152,9 +153,10 @@ class _MeetingPageState extends State<MeetingPage> {
                 value: 2,
                 child: Row(children: [
                   SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/end_warning.svg",
-                      width: 17,
-                      color: errorColor),
+                    "packages/hms_room_kit/lib/assets/icons/end_warning.svg",
+                    width: 17,
+                    colorFilter: ColorFilter.mode(errorColor, BlendMode.srcIn),
+                  ),
                   const SizedBox(
                     width: 12,
                   ),
@@ -415,8 +417,12 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                     SvgPicture
                                                                         .asset(
                                                                   "packages/hms_room_kit/lib/assets/icons/leave_hls.svg",
-                                                                  color: Colors
-                                                                      .white,
+                                                                  colorFilter: const ColorFilter
+                                                                          .mode(
+                                                                      Colors
+                                                                          .white,
+                                                                      BlendMode
+                                                                          .srcIn),
                                                                   fit: BoxFit
                                                                       .scaleDown,
                                                                   semanticsLabel:
@@ -480,8 +486,10 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                     child: SvgPicture
                                                                         .asset(
                                                                       "packages/hms_room_kit/lib/assets/icons/live_stream.svg",
-                                                                      color:
+                                                                      colorFilter: ColorFilter.mode(
                                                                           errorColor,
+                                                                          BlendMode
+                                                                              .srcIn),
                                                                       fit: BoxFit
                                                                           .scaleDown,
                                                                     ),
@@ -532,7 +540,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                                 children: [
                                                                                   SvgPicture.asset(
                                                                                     "packages/hms_room_kit/lib/assets/icons/clock.svg",
-                                                                                    color: themeSubHeadingColor,
+                                                                                    colorFilter: ColorFilter.mode(themeSubHeadingColor, BlendMode.srcIn),
                                                                                     fit: BoxFit.scaleDown,
                                                                                   ),
                                                                                   const SizedBox(
@@ -562,7 +570,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                           children: [
                                                                             SvgPicture.asset(
                                                                               "packages/hms_room_kit/lib/assets/icons/watching.svg",
-                                                                              color: themeSubHeadingColor,
+                                                                              colorFilter: ColorFilter.mode(themeSubHeadingColor, BlendMode.srcIn),
                                                                               fit: BoxFit.scaleDown,
                                                                             ),
                                                                             const SizedBox(
@@ -610,9 +618,13 @@ class _MeetingPageState extends State<MeetingPage> {
                                                           child:
                                                               SvgPicture.asset(
                                                             "packages/hms_room_kit/lib/assets/icons/camera.svg",
-                                                            color: isVideoOn
-                                                                ? onSurfaceHighEmphasis
-                                                                : onSurfaceLowEmphasis,
+                                                            colorFilter:
+                                                                ColorFilter.mode(
+                                                                    isVideoOn
+                                                                        ? onSurfaceHighEmphasis
+                                                                        : onSurfaceLowEmphasis,
+                                                                    BlendMode
+                                                                        .srcIn),
                                                             fit: BoxFit
                                                                 .scaleDown,
                                                             semanticsLabel:
@@ -687,8 +699,10 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                     isMicOn
                                                                         ? "packages/hms_room_kit/lib/assets/icons/mic_state_on.svg"
                                                                         : "packages/hms_room_kit/lib/assets/icons/mic_state_off.svg",
-                                                                    color:
+                                                                    colorFilter: ColorFilter.mode(
                                                                         themeDefaultColor,
+                                                                        BlendMode
+                                                                            .srcIn),
                                                                     fit: BoxFit
                                                                         .scaleDown,
                                                                     semanticsLabel:
@@ -724,8 +738,10 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                       isSpeakerOn
                                                                           ? "packages/hms_room_kit/lib/assets/icons/speaker_state_on.svg"
                                                                           : "packages/hms_room_kit/lib/assets/icons/speaker_state_off.svg",
-                                                                      color:
+                                                                      colorFilter: ColorFilter.mode(
                                                                           themeDefaultColor,
+                                                                          BlendMode
+                                                                              .srcIn),
                                                                       fit: BoxFit
                                                                           .scaleDown,
                                                                       semanticsLabel:
@@ -776,8 +792,10 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                       data.item1
                                                                           ? "packages/hms_room_kit/lib/assets/icons/cam_state_on.svg"
                                                                           : "packages/hms_room_kit/lib/assets/icons/cam_state_off.svg",
-                                                                      color:
+                                                                      colorFilter: ColorFilter.mode(
                                                                           themeDefaultColor,
+                                                                          BlendMode
+                                                                              .srcIn),
                                                                       fit: BoxFit
                                                                           .scaleDown,
                                                                       semanticsLabel:
@@ -922,8 +940,11 @@ class _MeetingPageState extends State<MeetingPage> {
                                                         isActive: true,
                                                         child: SvgPicture.asset(
                                                             "packages/hms_room_kit/lib/assets/icons/more.svg",
-                                                            color:
-                                                                themeDefaultColor,
+                                                            colorFilter:
+                                                                ColorFilter.mode(
+                                                                    themeDefaultColor,
+                                                                    BlendMode
+                                                                        .srcIn),
                                                             fit: BoxFit
                                                                 .scaleDown,
                                                             semanticsLabel:

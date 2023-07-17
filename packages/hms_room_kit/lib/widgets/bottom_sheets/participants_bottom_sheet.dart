@@ -59,7 +59,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
               color: themeSurfaceColor,
               icon: SvgPicture.asset(
                 "packages/hms_room_kit/lib/assets/icons/more.svg",
-                color: themeDefaultColor,
+                colorFilter:
+                    ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                 fit: BoxFit.scaleDown,
               ),
               onSelected: (int value) async {
@@ -91,7 +92,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                         SvgPicture.asset(
                             "packages/hms_room_kit/lib/assets/icons/role_change.svg",
                             width: 15,
-                            color: themeDefaultColor),
+                            colorFilter: ColorFilter.mode(
+                                themeDefaultColor, BlendMode.srcIn)),
                         const SizedBox(
                           width: 12,
                         ),
@@ -160,7 +162,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
             },
             icon: SvgPicture.asset(
               "packages/hms_room_kit/lib/assets/icons/more.svg",
-              color: themeDefaultColor,
+              colorFilter: ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
               fit: BoxFit.scaleDown,
             ),
             itemBuilder: (context) => [
@@ -171,7 +173,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                         SvgPicture.asset(
                             "packages/hms_room_kit/lib/assets/icons/role_change.svg",
                             width: 15,
-                            color: themeDefaultColor),
+                            colorFilter: ColorFilter.mode(
+                                themeDefaultColor, BlendMode.srcIn)),
                         const SizedBox(
                           width: 12,
                         ),
@@ -192,7 +195,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                           peerTrackNode.track?.isMute ?? false
                               ? "packages/hms_room_kit/lib/assets/icons/cam_state_on.svg"
                               : "packages/hms_room_kit/lib/assets/icons/cam_state_off.svg",
-                          color: themeDefaultColor,
+                          colorFilter: ColorFilter.mode(
+                              themeDefaultColor, BlendMode.srcIn),
                           width: 15,
                         ),
                         const SizedBox(
@@ -216,7 +220,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                           peerTrackNode.audioTrack?.isMute ?? false
                               ? "packages/hms_room_kit/lib/assets/icons/mic_state_on.svg"
                               : "packages/hms_room_kit/lib/assets/icons/mic_state_off.svg",
-                          color: themeDefaultColor,
+                          colorFilter: ColorFilter.mode(
+                              themeDefaultColor, BlendMode.srcIn),
                           width: 15,
                         ),
                         const SizedBox(
@@ -239,7 +244,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                         SvgPicture.asset(
                             "packages/hms_room_kit/lib/assets/icons/peer_remove.svg",
                             width: 15,
-                            color: themeDefaultColor),
+                            colorFilter: ColorFilter.mode(
+                                themeDefaultColor, BlendMode.srcIn)),
                         const SizedBox(
                           width: 12,
                         ),
@@ -304,7 +310,9 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                         SvgPicture.asset(
                                           "packages/hms_room_kit/lib/assets/icons/participants.svg",
                                           fit: BoxFit.scaleDown,
-                                          color: themeDefaultColor,
+                                          colorFilter: ColorFilter.mode(
+                                              themeDefaultColor,
+                                              BlendMode.srcIn),
                                           height: 16,
                                         ),
                                         const SizedBox(
@@ -330,7 +338,9 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                         SvgPicture.asset(
                                           "packages/hms_room_kit/lib/assets/icons/hand_outline.svg",
                                           fit: BoxFit.scaleDown,
-                                          color: themeDefaultColor,
+                                          colorFilter: ColorFilter.mode(
+                                              themeDefaultColor,
+                                              BlendMode.srcIn),
                                           height: 16,
                                         ),
                                         const SizedBox(
@@ -504,8 +514,11 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                     "\"isHandRaised\":true")
                                                 ? SvgPicture.asset(
                                                     "packages/hms_room_kit/lib/assets/icons/hand.svg",
-                                                    color: const Color.fromRGBO(
-                                                        250, 201, 25, 1),
+                                                    colorFilter:
+                                                        const ColorFilter.mode(
+                                                            Color.fromRGBO(250,
+                                                                201, 25, 1),
+                                                            BlendMode.srcIn),
                                                     height: 15,
                                                   )
                                                 : const SizedBox(),

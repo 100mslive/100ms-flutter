@@ -462,9 +462,11 @@ class _HomePageState extends State<HomePage> {
                                       left: 8.0, right: 8),
                                   child: SvgPicture.asset(
                                     "assets/icons/more.svg",
-                                    color: meetingLinkController.text.isEmpty
-                                        ? themeDisabledTextColor
-                                        : hmsWhiteColor,
+                                    colorFilter: ColorFilter.mode(
+                                        meetingLinkController.text.isEmpty
+                                            ? themeDisabledTextColor
+                                            : hmsWhiteColor,
+                                        BlendMode.srcIn),
                                     fit: BoxFit.scaleDown,
                                   ),
                                 ),

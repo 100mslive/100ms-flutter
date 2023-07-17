@@ -100,7 +100,8 @@ class _NotificationSettingsBottomSheetState
                     leading: SvgPicture.asset(
                       "packages/hms_room_kit/lib/assets/icons/person.svg",
                       fit: BoxFit.scaleDown,
-                      color: themeDefaultColor,
+                      colorFilter:
+                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
                     title: Text(
                       "Peer Joined",
@@ -128,7 +129,8 @@ class _NotificationSettingsBottomSheetState
                     leading: SvgPicture.asset(
                       "packages/hms_room_kit/lib/assets/icons/end_room.svg",
                       fit: BoxFit.scaleDown,
-                      color: themeDefaultColor,
+                      colorFilter:
+                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
                     title: Text(
                       "Peer Left",
@@ -156,7 +158,8 @@ class _NotificationSettingsBottomSheetState
                     leading: SvgPicture.asset(
                       "packages/hms_room_kit/lib/assets/icons/message_badge_off.svg",
                       fit: BoxFit.scaleDown,
-                      color: themeDefaultColor,
+                      colorFilter:
+                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
                     title: Text(
                       "New Message",
@@ -183,7 +186,8 @@ class _NotificationSettingsBottomSheetState
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
                       'packages/hms_room_kit/lib/assets/icons/hand_outline.svg',
-                      color: themeDefaultColor,
+                      colorFilter:
+                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
                     title: Text(
                       "Hand Raise",
@@ -210,7 +214,8 @@ class _NotificationSettingsBottomSheetState
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
                       'packages/hms_room_kit/lib/assets/icons/warning.svg',
-                      color: themeDefaultColor,
+                      colorFilter:
+                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
                     title: Text(
                       "Error",

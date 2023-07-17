@@ -50,7 +50,8 @@ Widget insetGridView(
                       children: [
                         SvgPicture.asset(
                           "packages/hms_room_kit/lib/assets/icons/screen_share.svg",
-                          color: Colors.white,
+                          colorFilter: const ColorFilter.mode(
+                              Colors.white, BlendMode.srcIn),
                           height: 55.2,
                         ),
                         const SizedBox(
@@ -163,7 +164,6 @@ List<StairedGridTile> portraitPattern(List<PeerTrackNode> peerTrack,
   return tiles;
 }
 
-///TODO: Add the logic for landscape pattern
 List<StairedGridTile> landscapePattern(
     int itemCount, int screenShareCount, Size size, BuildContext context) {
   double ratio = Utilities.getHLSRatio(size, context);

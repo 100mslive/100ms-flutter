@@ -43,10 +43,10 @@ class RemotePeerTileDialog extends StatefulWidget {
       this.isSpotlightedPeer = false});
 
   @override
-  _RemotePeerTileDialogState createState() => _RemotePeerTileDialogState();
+  RemotePeerTileDialogState createState() => RemotePeerTileDialogState();
 }
 
-class _RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
+class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -73,12 +73,14 @@ class _RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                       if (widget.isVideoMuted)
                         SvgPicture.asset(
                           "packages/hms_room_kit/lib/assets/icons/cam_state_on.svg",
-                          color: iconColor,
+                          colorFilter:
+                              ColorFilter.mode(iconColor, BlendMode.srcIn),
                         )
                       else
                         SvgPicture.asset(
                           "packages/hms_room_kit/lib/assets/icons/cam_state_off.svg",
-                          color: iconColor,
+                          colorFilter:
+                              ColorFilter.mode(iconColor, BlendMode.srcIn),
                         ),
                       const SizedBox(
                         width: 16,
@@ -107,12 +109,14 @@ class _RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                       if (widget.isAudioMuted)
                         SvgPicture.asset(
                           "packages/hms_room_kit/lib/assets/icons/mic_state_on.svg",
-                          color: iconColor,
+                          colorFilter:
+                              ColorFilter.mode(iconColor, BlendMode.srcIn),
                         )
                       else
                         SvgPicture.asset(
                           "packages/hms_room_kit/lib/assets/icons/mic_state_off.svg",
-                          color: iconColor,
+                          colorFilter:
+                              ColorFilter.mode(iconColor, BlendMode.srcIn),
                         ),
                       const SizedBox(
                         width: 16,
@@ -139,7 +143,8 @@ class _RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                     children: [
                       SvgPicture.asset(
                         "packages/hms_room_kit/lib/assets/icons/peer_remove.svg",
-                        color: iconColor,
+                        colorFilter:
+                            ColorFilter.mode(iconColor, BlendMode.srcIn),
                       ),
                       const SizedBox(
                         width: 16,
@@ -163,7 +168,8 @@ class _RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                     children: [
                       SvgPicture.asset(
                         "packages/hms_room_kit/lib/assets/icons/role_change.svg",
-                        color: iconColor,
+                        colorFilter:
+                            ColorFilter.mode(iconColor, BlendMode.srcIn),
                       ),
                       const SizedBox(
                         width: 16,
@@ -187,7 +193,8 @@ class _RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                     children: [
                       SvgPicture.asset(
                         "packages/hms_room_kit/lib/assets/icons/layers.svg",
-                        color: iconColor,
+                        colorFilter:
+                            ColorFilter.mode(iconColor, BlendMode.srcIn),
                       ),
                       const SizedBox(
                         width: 16,
@@ -210,7 +217,7 @@ class _RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                   children: [
                     SvgPicture.asset(
                       "packages/hms_room_kit/lib/assets/icons/pin.svg",
-                      color: iconColor,
+                      colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
                     ),
                     const SizedBox(
                       width: 16,
@@ -234,7 +241,7 @@ class _RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                   children: [
                     SvgPicture.asset(
                       "packages/hms_room_kit/lib/assets/icons/spotlight.svg",
-                      color: iconColor,
+                      colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
                     ),
                     const SizedBox(
                       width: 16,

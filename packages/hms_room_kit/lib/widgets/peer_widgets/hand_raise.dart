@@ -24,7 +24,8 @@ class HandRaise extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                       child: SvgPicture.asset(
                         "packages/hms_room_kit/lib/assets/icons/hand.svg",
-                        color: const Color.fromRGBO(250, 201, 25, 1),
+                        colorFilter: const ColorFilter.mode(
+                            Color.fromRGBO(250, 201, 25, 1), BlendMode.srcIn),
                         height: 30,
                         semanticsLabel: "hand_raise_label",
                       ),

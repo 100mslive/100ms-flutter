@@ -96,9 +96,11 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       leading: SvgPicture.asset(
                         "packages/hms_room_kit/lib/assets/icons/role_change.svg",
                         semanticsLabel: "fl_normal_mode",
-                        color: (meetingStore.meetingMode == MeetingMode.grid)
-                            ? errorColor
-                            : themeDefaultColor,
+                        colorFilter: ColorFilter.mode(
+                            (meetingStore.meetingMode == MeetingMode.grid)
+                                ? errorColor
+                                : themeDefaultColor,
+                            BlendMode.srcIn),
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(
@@ -129,10 +131,12 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       leading: SvgPicture.asset(
                         "packages/hms_room_kit/lib/assets/icons/participants.svg",
                         semanticsLabel: "fl_active_speaker_mode",
-                        color: (meetingStore.meetingMode ==
-                                MeetingMode.activeSpeaker)
-                            ? errorColor
-                            : themeDefaultColor,
+                        colorFilter: ColorFilter.mode(
+                            (meetingStore.meetingMode ==
+                                    MeetingMode.activeSpeaker)
+                                ? errorColor
+                                : themeDefaultColor,
+                            BlendMode.srcIn),
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(
@@ -162,10 +166,11 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       leading: SvgPicture.asset(
                         "packages/hms_room_kit/lib/assets/icons/participants.svg",
                         semanticsLabel: "fl_one_to_one_mode",
-                        color:
+                        colorFilter: ColorFilter.mode(
                             (meetingStore.meetingMode == MeetingMode.oneToOne)
                                 ? errorColor
                                 : themeDefaultColor,
+                            BlendMode.srcIn),
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(
@@ -194,9 +199,11 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
                         'packages/hms_room_kit/lib/assets/icons/mic_state_on.svg',
-                        color: meetingStore.meetingMode == MeetingMode.audio
-                            ? errorColor
-                            : themeDefaultColor,
+                        colorFilter: ColorFilter.mode(
+                            meetingStore.meetingMode == MeetingMode.audio
+                                ? errorColor
+                                : themeDefaultColor,
+                            BlendMode.srcIn),
                         semanticsLabel: "fl_audio_video_view",
                         fit: BoxFit.scaleDown,
                       ),
@@ -227,9 +234,11 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       leading: SvgPicture.asset(
                         "packages/hms_room_kit/lib/assets/icons/participants.svg",
                         semanticsLabel: "fl_hero_mode",
-                        color: meetingStore.meetingMode == MeetingMode.hero
-                            ? errorColor
-                            : themeDefaultColor,
+                        colorFilter: ColorFilter.mode(
+                            meetingStore.meetingMode == MeetingMode.hero
+                                ? errorColor
+                                : themeDefaultColor,
+                            BlendMode.srcIn),
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(
@@ -258,9 +267,11 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       leading: SvgPicture.asset(
                         "packages/hms_room_kit/lib/assets/icons/single_tile.svg",
                         semanticsLabel: "fl_single_mode",
-                        color: meetingStore.meetingMode == MeetingMode.single
-                            ? errorColor
-                            : themeDefaultColor,
+                        colorFilter: ColorFilter.mode(
+                            meetingStore.meetingMode == MeetingMode.single
+                                ? errorColor
+                                : themeDefaultColor,
+                            BlendMode.srcIn),
                         fit: BoxFit.scaleDown,
                       ),
                       title: Text(

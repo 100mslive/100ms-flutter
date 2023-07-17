@@ -45,7 +45,8 @@ Widget heroMode(
                       children: [
                         SvgPicture.asset(
                           "packages/hms_room_kit/lib/assets/icons/screen_share.svg",
-                          color: Colors.white,
+                          colorFilter: const ColorFilter.mode(
+                              Colors.white, BlendMode.srcIn),
                           height: 55.2,
                         ),
                         const SizedBox(

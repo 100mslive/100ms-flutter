@@ -124,7 +124,8 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                                       : 10)),
                               child: SvgPicture.asset(
                                 "packages/hms_room_kit/lib/assets/icons/participants.svg",
-                                color: themeDefaultColor,
+                                colorFilter: ColorFilter.mode(
+                                    themeDefaultColor, BlendMode.srcIn),
                               ),
                             ),
                           ),
@@ -172,7 +173,8 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                         children: [
                           SvgPicture.asset(
                             "packages/hms_room_kit/lib/assets/icons/aspect_ratio.svg",
-                            color: themeDefaultColor,
+                            colorFilter: ColorFilter.mode(
+                                themeDefaultColor, BlendMode.srcIn),
                           ),
                           const SizedBox(
                             height: 10,
@@ -236,9 +238,11 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                   leading: SvgPicture.asset(
                     "packages/hms_room_kit/lib/assets/icons/hand_outline.svg",
                     fit: BoxFit.scaleDown,
-                    color: context.read<MeetingStore>().isRaisedHand
-                        ? errorColor
-                        : themeDefaultColor,
+                    colorFilter: ColorFilter.mode(
+                        context.read<MeetingStore>().isRaisedHand
+                            ? errorColor
+                            : themeDefaultColor,
+                        BlendMode.srcIn),
                   ),
                   title: Text(
                     "Raise Hand",
@@ -269,7 +273,8 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                   leading: SvgPicture.asset(
                     "packages/hms_room_kit/lib/assets/icons/notification.svg",
                     fit: BoxFit.scaleDown,
-                    color: themeDefaultColor,
+                    colorFilter:
+                        ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                   ),
                   title: Text(
                     "Modify Notifications",
@@ -291,7 +296,8 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                     leading: SvgPicture.asset(
                       "packages/hms_room_kit/lib/assets/icons/screen_share.svg",
                       fit: BoxFit.scaleDown,
-                      color: themeDefaultColor,
+                      colorFilter:
+                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
                     title: Text(
                       "Enter Pip Mode",
