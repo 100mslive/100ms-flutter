@@ -129,7 +129,7 @@ Widget insetGridView(
 ///5. For remaining tiles if count is 2 we add a tile of half screen width
 List<StairedGridTile> portraitPattern(List<PeerTrackNode> peerTrack,
     int screenShareCount, Size size, BuildContext context) {
-  double ratio = Utilities.getHLSRatio(size, context);
+  double ratio = (size.height - 6)/ size.width;
   List<StairedGridTile> tiles = [];
   for (int i = 0; i < screenShareCount; i++) {
     tiles.add(StairedGridTile(1, ratio));

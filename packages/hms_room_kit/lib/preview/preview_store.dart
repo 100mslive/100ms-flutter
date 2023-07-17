@@ -14,7 +14,7 @@ class PreviewStore extends ChangeNotifier
   late HMSSDKInteractor hmsSDKInteractor;
 
   PreviewStore({required HMSSDKInteractor hmsSDKInteractor}) {
-    hmsSDKInteractor = hmsSDKInteractor;
+    this.hmsSDKInteractor = hmsSDKInteractor;
   }
 
   List<HMSVideoTrack> localTracks = [];
