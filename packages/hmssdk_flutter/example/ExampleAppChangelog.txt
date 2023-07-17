@@ -13,5 +13,5 @@ https://github.com/100mslive/100ms-flutter/issues/1373
 https://github.com/100mslive/100ms-flutter/pull/1403
 
 Flutter SDK: 1.8.0
-Android SDK: 2.6.8
+Android SDK: 2.7.1
 iOS SDK: 0.9.5
