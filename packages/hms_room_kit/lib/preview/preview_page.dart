@@ -5,10 +5,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/preview/preview_get_participants_text.dart';
 import 'package:hms_room_kit/widgets/common_widgets/error_dialog.dart';
+import 'package:hms_room_kit/widgets/common_widgets/hms_circular_avatar.dart';
 import 'package:hms_room_kit/widgets/hms_buttons.dart/hms_back_button.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/common/app_color.dart';
-import 'package:hms_room_kit/common/utility_functions.dart';
 import 'package:hms_room_kit/meeting_screen_controller.dart';
 import 'package:hms_room_kit/preview/preview_device_settings.dart';
 import 'package:hms_room_kit/preview/preview_store.dart';
@@ -76,7 +76,12 @@ class _PreviewPageState extends State<PreviewPage> {
                                   Navigator.pop(context)
                                 })),
                     Padding(
-                      padding: const EdgeInsets.only(top: 90.0),
+                      padding: EdgeInsets.only(
+                          top:
+                              ((previewStore.peer?.role.name.contains("hls-") ??
+                                      true)
+                                  ? MediaQuery.of(context).size.height * 0.3
+                                  : 80.0)),
                       child: Column(
                         children: [
                           TitleText(
@@ -146,28 +151,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                 )
                               : (previewStore.peer!.role.name.contains("hls-"))
                                   ? Center(
-                                      child: CircleAvatar(
-                                          backgroundColor:
-                                              Utilities.getBackgroundColour(
-                                                  nameController.text),
-                                          radius: 40,
-                                          child: nameController.text.isEmpty
-                                              ? SvgPicture.asset(
-                                                  'packages/hms_room_kit/lib/assets/icons/user.svg',
-                                                  fit: BoxFit.contain,
-                                                  semanticsLabel:
-                                                      "fl_user_icon_label",
-                                                )
-                                              : Text(
-                                                  Utilities.getAvatarTitle(
-                                                      nameController.text),
-                                                  style: GoogleFonts.inter(
-                                                    fontSize: 40,
-                                                    color:
-                                                        onSurfaceHighEmphasis,
-                                                  ),
-                                                )),
-                                    )
+                                      child: HMSCircularAvatar(
+                                          name: nameController.text))
                                   : (previewStore.localTracks.isEmpty &&
                                           previewStore.isVideoOn)
                                       ? const Center(
@@ -201,39 +186,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         ),
                                                       )
                                                     : Center(
-                                                        child: CircleAvatar(
-                                                            backgroundColor: Utilities
-                                                                .getBackgroundColour(
-                                                                    nameController
-                                                                        .text),
-                                                            radius: 40,
-                                                            child:
-                                                                nameController
-                                                                        .text
-                                                                        .isEmpty
-                                                                    ? SvgPicture
-                                                                        .asset(
-                                                                        'packages/hms_room_kit/lib/assets/icons/user.svg',
-                                                                        fit: BoxFit
-                                                                            .contain,
-                                                                        semanticsLabel:
-                                                                            "fl_user_icon_label",
-                                                                      )
-                                                                    : Text(
-                                                                        Utilities.getAvatarTitle(
-                                                                            nameController.text),
-                                                                        style: GoogleFonts.inter(
-                                                                            fontSize:
-                                                                                34,
-                                                                            color:
-                                                                                onSurfaceHighEmphasis,
-                                                                            height: 40 /
-                                                                                34,
-                                                                            letterSpacing:
-                                                                                0.25,
-                                                                            fontWeight:
-                                                                                FontWeight.w600),
-                                                                      )),
+                                                        child: HMSCircularAvatar(
+                                                            name: nameController
+                                                                .text),
                                                       ),
                                               ),
                                             ),
