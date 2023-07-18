@@ -1674,9 +1674,6 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.acceptChangeRole:
         Utilities.showToast("Accept role change successful");
         break;
-      case HMSActionResultListenerMethod.changeRole:
-        Utilities.showToast("Change role successful");
-        break;
       case HMSActionResultListenerMethod.changeRoleOfPeer:
         Utilities.showToast("Change role successful");
         break;
@@ -1794,8 +1791,6 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.removePeer:
         break;
       case HMSActionResultListenerMethod.acceptChangeRole:
-        break;
-      case HMSActionResultListenerMethod.changeRole:
         break;
       case HMSActionResultListenerMethod.changeRoleOfPeer:
         break;
