@@ -274,7 +274,7 @@ class _HomePageState extends State<HomePage> {
         MaterialPageRoute(
             builder: (_) => HMSPrebuilt(
                   roomCode: meetingLinkController.text.trim(),
-                  hmsConfig: HMSPrebuiltOptions(userName: ""),
+                  options: HMSPrebuiltOptions(userName: ""),
                 )));
   }
 

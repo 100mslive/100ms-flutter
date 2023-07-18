@@ -8,15 +8,15 @@ export 'package:hms_room_kit/hms_room_kit.dart';
 
 class HMSPrebuilt extends StatelessWidget {
   final String roomCode;
-  final HMSPrebuiltOptions? hmsConfig;
+  final HMSPrebuiltOptions? options;
 
-  const HMSPrebuilt({super.key, required this.roomCode, this.hmsConfig});
+  const HMSPrebuilt({super.key, required this.roomCode, this.options});
 
   @override
   Widget build(BuildContext context) {
     return ScreenController(
       roomCode: roomCode,
-      hmsConfig: hmsConfig,
+      options: options,
     );
   }
 }

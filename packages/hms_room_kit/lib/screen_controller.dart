@@ -12,9 +12,9 @@ import 'package:provider/provider.dart';
 
 class ScreenController extends StatefulWidget {
   final String roomCode;
-  final HMSPrebuiltOptions? hmsConfig;
+  final HMSPrebuiltOptions? options;
 
-  const ScreenController({super.key, required this.roomCode, this.hmsConfig});
+  const ScreenController({super.key, required this.roomCode, this.options});
   @override
   State<ScreenController> createState() => _ScreenControllerState();
 }
