@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/preview/preview_get_participants_text.dart';
+import 'package:hms_room_kit/widgets/common_widgets/error_dialog.dart';
+import 'package:hms_room_kit/widgets/hms_buttons.dart/hms_back_button.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/common/app_color.dart';
-import 'package:hms_room_kit/common/utility_components.dart';
 import 'package:hms_room_kit/common/utility_functions.dart';
 import 'package:hms_room_kit/meeting_screen_controller.dart';
 import 'package:hms_room_kit/preview/preview_device_settings.dart';
@@ -42,94 +44,6 @@ class _PreviewPageState extends State<PreviewPage> {
     );
   }
 
-  Widget _getParticipantsText(List<HMSPeer> peers, double width) {
-    String message = "";
-    switch (peers.length) {
-      case 1:
-        message = peers[0].name;
-        return Row(
-          children: [
-            Container(
-              constraints: BoxConstraints(maxWidth: width * 0.28),
-              child: SubtitleText(
-                text: message,
-                textColor: onSurfaceHighEmphasis,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            SubtitleText(text: " has joined", textColor: onSurfaceHighEmphasis)
-          ],
-        );
-      case 2:
-        return Row(
-          children: [
-            Container(
-              constraints: BoxConstraints(maxWidth: width * 0.15),
-              child: SubtitleText(
-                  text: peers[0].name, textColor: onSurfaceHighEmphasis),
-            ),
-            Container(
-              constraints: BoxConstraints(maxWidth: width * 0.20),
-              child: SubtitleText(
-                  text: ", ${peers[1].name}", textColor: onSurfaceHighEmphasis),
-            ),
-            SubtitleText(text: " joined", textColor: onSurfaceHighEmphasis)
-          ],
-        );
-      case 3:
-        return Row(
-          children: [
-            Container(
-              constraints: BoxConstraints(maxWidth: width * 0.15),
-              child: SubtitleText(
-                  text: peers[0].name, textColor: onSurfaceHighEmphasis),
-            ),
-            Container(
-              constraints: BoxConstraints(maxWidth: width * 0.20),
-              child: SubtitleText(
-                  text: ", ${peers[1].name}", textColor: onSurfaceHighEmphasis),
-            ),
-            SubtitleText(text: ", +1 other", textColor: onSurfaceHighEmphasis)
-          ],
-        );
-      default:
-        double totalWidth = _getRemainingWidth(peers.length, width);
-        return Row(
-          children: [
-            Container(
-              constraints: BoxConstraints(maxWidth: totalWidth * 0.3),
-              child: SubtitleText(
-                  text: peers[0].name, textColor: onSurfaceHighEmphasis),
-            ),
-            Container(
-              constraints: BoxConstraints(maxWidth: totalWidth * 0.7),
-              child: SubtitleText(
-                  text: ", ${peers[1].name}", textColor: onSurfaceHighEmphasis),
-            ),
-            SubtitleText(
-                text: ", +${peers.length - 2} others",
-                textColor: onSurfaceHighEmphasis)
-          ],
-        );
-    }
-  }
-
-  double _getRemainingWidth(int peerCount, double width) {
-    double remainingWidth = width * 0.33;
-    if (peerCount < 10) {
-      remainingWidth = width * 0.33;
-    } else if (peerCount < 100) {
-      remainingWidth = width * 0.30;
-    } else if (peerCount < 1000) {
-      remainingWidth = width * 0.28;
-    } else if (peerCount <= 10000) {
-      remainingWidth = width * 0.25;
-    } else {
-      remainingWidth = width * 0.2;
-    }
-    return remainingWidth;
-  }
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -145,26 +59,8 @@ class _PreviewPageState extends State<PreviewPage> {
           selector: (_, previewStore) => previewStore.error,
           builder: (_, error, __) {
             if (error != null) {
-              if ((error.code?.errorCode == 1003) ||
-                  (error.code?.errorCode == 2000) ||
-                  (error.code?.errorCode == 4005)) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  UtilityComponents.showErrorDialog(
-                      context: context,
-                      errorMessage:
-                          "Error Code: ${error.code?.errorCode ?? ""} ${error.description}",
-                      errorTitle: error.message ?? "",
-                      actionMessage: "Leave Room",
-                      action: () {
-                        Navigator.of(context)
-                            .popUntil((route) => route.isFirst);
-                      });
-                });
-              } else {
-                Utilities.showToast(
-                    "Error : ${error.code?.errorCode ?? ""} ${error.description} ${error.message}",
-                    time: 5);
-              }
+              ErrorDialog.showTerminalErrorDialog(
+                  context: context, error: error);
             }
             return Scaffold(
               resizeToAvoidBottomInset: true,
@@ -172,24 +68,13 @@ class _PreviewPageState extends State<PreviewPage> {
                 child: Stack(
                   children: [
                     Positioned(
-                      top: Platform.isIOS ? 50 : 35,
-                      left: 10,
-                      child: CircleAvatar(
-                        radius: 18,
-                        backgroundColor: borderColor,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.arrow_back_ios_new,
-                            size: 16,
-                            color: hmsWhiteColor,
-                          ),
-                          onPressed: () {
-                            previewStore.leave();
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ),
-                    ),
+                        top: Platform.isIOS ? 50 : 35,
+                        left: 10,
+                        child: HMSBackButton(
+                            onPressed: () => {
+                                  previewStore.leave(),
+                                  Navigator.pop(context)
+                                })),
                     Padding(
                       padding: const EdgeInsets.only(top: 90.0),
                       child: Column(
@@ -240,8 +125,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                               const SizedBox(
                                                 width: 5,
                                               ),
-                                              _getParticipantsText(
-                                                  previewStore.peers!, width),
+                                              PreviewParticipantsText(
+                                                  peers: previewStore.peers!,
+                                                  width: width),
                                             ],
                                           ),
                                   ),
@@ -265,14 +151,22 @@ class _PreviewPageState extends State<PreviewPage> {
                                               Utilities.getBackgroundColour(
                                                   nameController.text),
                                           radius: 40,
-                                          child: Text(
-                                            Utilities.getAvatarTitle(
-                                                nameController.text),
-                                            style: GoogleFonts.inter(
-                                              fontSize: 40,
-                                              color: onSurfaceHighEmphasis,
-                                            ),
-                                          )),
+                                          child: nameController.text.isEmpty
+                                              ? SvgPicture.asset(
+                                                  'packages/hms_room_kit/lib/assets/icons/user.svg',
+                                                  fit: BoxFit.contain,
+                                                  semanticsLabel:
+                                                      "fl_user_icon_label",
+                                                )
+                                              : Text(
+                                                  Utilities.getAvatarTitle(
+                                                      nameController.text),
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 40,
+                                                    color:
+                                                        onSurfaceHighEmphasis,
+                                                  ),
+                                                )),
                                     )
                                   : (previewStore.localTracks.isEmpty &&
                                           previewStore.isVideoOn)
@@ -283,7 +177,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                         )
                                       :
                                       /**
-                                       * This componet is used to render the video if it's ON
+                                       * This component is used to render the video if it's ON
                                        * Otherwise it will render the circular avatar
                                        */
                                       Stack(
@@ -313,22 +207,33 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                     nameController
                                                                         .text),
                                                             radius: 40,
-                                                            child: Text(
-                                                              Utilities.getAvatarTitle(
-                                                                  nameController
-                                                                      .text),
-                                                              style: GoogleFonts.inter(
-                                                                  fontSize: 34,
-                                                                  color:
-                                                                      onSurfaceHighEmphasis,
-                                                                  height:
-                                                                      40 / 34,
-                                                                  letterSpacing:
-                                                                      0.25,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600),
-                                                            )),
+                                                            child:
+                                                                nameController
+                                                                        .text
+                                                                        .isEmpty
+                                                                    ? SvgPicture
+                                                                        .asset(
+                                                                        'packages/hms_room_kit/lib/assets/icons/user.svg',
+                                                                        fit: BoxFit
+                                                                            .contain,
+                                                                        semanticsLabel:
+                                                                            "fl_user_icon_label",
+                                                                      )
+                                                                    : Text(
+                                                                        Utilities.getAvatarTitle(
+                                                                            nameController.text),
+                                                                        style: GoogleFonts.inter(
+                                                                            fontSize:
+                                                                                34,
+                                                                            color:
+                                                                                onSurfaceHighEmphasis,
+                                                                            height: 40 /
+                                                                                34,
+                                                                            letterSpacing:
+                                                                                0.25,
+                                                                            fontWeight:
+                                                                                FontWeight.w600),
+                                                                      )),
                                                       ),
                                               ),
                                             ),
