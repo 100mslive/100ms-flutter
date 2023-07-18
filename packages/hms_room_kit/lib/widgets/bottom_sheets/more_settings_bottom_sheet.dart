@@ -30,6 +30,16 @@ class MoreSettingsBottomSheet extends StatefulWidget {
 }
 
 class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
+  void _showRoleList(
+      {required List<HMSRole> roles, required MeetingStore meetingStore}) {
+    UtilityComponents.showRoleListForMute(context, roles, meetingStore);
+  }
+
+  void _showDialogForBulkRoleChange(
+      {required List<HMSRole> roles, required MeetingStore meetingStore}) {
+    UtilityComponents.showDialogForBulkRoleChange(context, roles, meetingStore);
+  }
+
   @override
   Widget build(BuildContext context) {
     MeetingStore meetingStore = context.read<MeetingStore>();
@@ -398,8 +408,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       onTap: () async {
                         Navigator.pop(context);
                         List<HMSRole> roles = await meetingStore.getRoles();
-                        UtilityComponents.showRoleListForMute(
-                            context, roles, meetingStore);
+                        _showRoleList(roles: roles, meetingStore: meetingStore);
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
@@ -423,8 +432,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       onTap: () async {
                         Navigator.pop(context);
                         List<HMSRole> roles = await meetingStore.getRoles();
-                        UtilityComponents.showDialogForBulkRoleChange(
-                            context, roles, meetingStore);
+                        _showDialogForBulkRoleChange(
+                            roles: roles, meetingStore: meetingStore);
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
