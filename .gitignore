@@ -2132,3 +2132,9 @@ example/ios/Pods/Target Support Files/wakelock/wakelock.modulemap
 example/ios/Pods/Target Support Files/wakelock/wakelock.release.xcconfig
 example/ios/Runner/GeneratedPluginRegistrant.h
 example/ios/Runner/GeneratedPluginRegistrant.m
+sample apps/flutter-quickstart-app/.dart_tool/package_config.json
+sample apps/flutter-quickstart-app/.dart_tool/package_config_subset
+sample apps/flutter-quickstart-app/.dart_tool/version
+sample apps/hms-callkit-app/.dart_tool/package_config.json
+sample apps/hms-callkit-app/.dart_tool/package_config_subset
+sample apps/hms-callkit-app/.dart_tool/version

@@ -44,7 +44,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (_) => HMSPrebuilt(
                   roomCode: scanData.code!.trim(),
-                  hmsConfig: HMSPrebuiltOptions(userName: ""),
+                  options: HMSPrebuiltOptions(userName: ""),
                 )));
       }
     });
