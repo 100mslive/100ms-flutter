@@ -42,7 +42,7 @@ class Utilities {
 
   static Color getBackgroundColour(String name) {
     if (name.isEmpty) {
-      return surfaceDefault;
+      return const Color.fromRGBO(126, 71, 235, 1);
     }
     if (name.contains(regexEmoji)) {
       name = name.replaceAll(regexEmoji, '');
