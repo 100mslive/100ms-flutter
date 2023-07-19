@@ -1765,6 +1765,9 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.sendHLSTimedMetadata:
         Utilities.showToast("Metadata sent successfully");
         break;
+      default:
+        log("ActionResultListener onException-> method: ${methodType.toString()}Could not find a valid case while switching");
+        break;
     }
   }
 
@@ -1841,6 +1844,9 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.sendHLSTimedMetadata:
         // TODO: Handle this case.
+        break;
+      default:
+        log("ActionResultListener onException-> method: ${methodType.toString()} Could not find a valid case while switching");
         break;
     }
     notifyListeners();

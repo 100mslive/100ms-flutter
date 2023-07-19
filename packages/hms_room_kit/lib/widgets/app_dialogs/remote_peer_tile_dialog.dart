@@ -184,17 +184,42 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                 ),
               ),
             if (Constant.debugMode)
-            if (widget.simulcast)
+              if (widget.simulcast)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      widget.changeLayer();
+                    },
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          "packages/hms_room_kit/lib/assets/icons/layers.svg",
+                          colorFilter:
+                              ColorFilter.mode(iconColor, BlendMode.srcIn),
+                        ),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        Text(
+                          "Streaming Quality",
+                          style: GoogleFonts.inter(color: iconColor),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+            if (Constant.debugMode)
               Padding(
                 padding: const EdgeInsets.only(bottom: 20.0),
                 child: GestureDetector(
                   onTap: () {
-                    widget.changeLayer();
+                    widget.changePinTileStatus();
                   },
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/layers.svg",
+                        "packages/hms_room_kit/lib/assets/icons/pin.svg",
                         colorFilter:
                             ColorFilter.mode(iconColor, BlendMode.srcIn),
                       ),
@@ -202,37 +227,13 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                         width: 16,
                       ),
                       Text(
-                        "Streaming Quality",
+                        widget.pinTile ? "Unpin Tile" : "Pin Tile",
                         style: GoogleFonts.inter(color: iconColor),
                       )
                     ],
                   ),
                 ),
               ),
-            if (Constant.debugMode)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  widget.changePinTileStatus();
-                },
-                child: Row(
-                  children: [
-                    SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/pin.svg",
-                      colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Text(
-                      widget.pinTile ? "Unpin Tile" : "Pin Tile",
-                      style: GoogleFonts.inter(color: iconColor),
-                    )
-                  ],
-                ),
-              ),
-            ),
             if (Constant.debugMode)
               GestureDetector(
                 onTap: () {

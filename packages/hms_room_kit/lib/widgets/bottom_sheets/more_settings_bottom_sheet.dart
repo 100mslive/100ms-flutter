@@ -203,37 +203,37 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                     height: 10,
                   ),
                   if (Constant.debugMode)
-                  ListTile(
-                    horizontalTitleGap: 2,
-                    onTap: () async {
-                      Navigator.pop(context);
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        backgroundColor: surfaceDim,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        context: context,
-                        builder: (ctx) => ChangeNotifierProvider.value(
-                            value: meetingStore,
-                            child: const MeetingModeBottomSheet()),
-                      );
-                    },
-                    contentPadding: EdgeInsets.zero,
-                    leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/participants.svg",
-                      height: 20,
-                      width: 20,
-                      colorFilter: ColorFilter.mode(
-                          onSurfaceHighEmphasis, BlendMode.srcIn),
+                    ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        Navigator.pop(context);
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: surfaceDim,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          context: context,
+                          builder: (ctx) => ChangeNotifierProvider.value(
+                              value: meetingStore,
+                              child: const MeetingModeBottomSheet()),
+                        );
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/assets/icons/participants.svg",
+                        height: 20,
+                        width: 20,
+                        colorFilter: ColorFilter.mode(
+                            onSurfaceHighEmphasis, BlendMode.srcIn),
+                      ),
+                      title: SubheadingText(
+                        text: "Meeting mode",
+                        textColor: onSurfaceHighEmphasis,
+                        letterSpacing: 0.15,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    title: SubheadingText(
-                      text: "Meeting mode",
-                      textColor: onSurfaceHighEmphasis,
-                      letterSpacing: 0.15,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
                   if (meetingStore.localPeer?.role.publishSettings?.allowed
                           .contains("screen") ??
                       false)
@@ -401,211 +401,215 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       ),
                     ),
                   if (Constant.debugMode)
-                  if ((meetingStore.localPeer?.role.permissions.mute ??
-                          false) &&
-                      (meetingStore.localPeer?.role.permissions.unMute ??
-                          false))
-                    ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        Navigator.pop(context);
-                        List<HMSRole> roles = await meetingStore.getRoles();
-                        _showRoleList(roles: roles, meetingStore: meetingStore);
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/mic_state_off.svg",
-                        height: 20,
-                        width: 20,
-                        colorFilter: ColorFilter.mode(
-                            onSurfaceHighEmphasis, BlendMode.srcIn),
+                    if ((meetingStore.localPeer?.role.permissions.mute ??
+                            false) &&
+                        (meetingStore.localPeer?.role.permissions.unMute ??
+                            false))
+                      ListTile(
+                        horizontalTitleGap: 2,
+                        onTap: () async {
+                          Navigator.pop(context);
+                          List<HMSRole> roles = await meetingStore.getRoles();
+                          _showRoleList(
+                              roles: roles, meetingStore: meetingStore);
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        leading: SvgPicture.asset(
+                          "packages/hms_room_kit/lib/assets/icons/mic_state_off.svg",
+                          height: 20,
+                          width: 20,
+                          colorFilter: ColorFilter.mode(
+                              onSurfaceHighEmphasis, BlendMode.srcIn),
+                        ),
+                        title: SubheadingText(
+                          text: "Mute Role",
+                          textColor: onSurfaceHighEmphasis,
+                          letterSpacing: 0.15,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                      title: SubheadingText(
-                        text: "Mute Role",
-                        textColor: onSurfaceHighEmphasis,
-                        letterSpacing: 0.15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
                   if (Constant.debugMode)
-                  if (meetingStore.localPeer?.role.permissions.changeRole ??
-                      false)
-                    ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        Navigator.pop(context);
-                        List<HMSRole> roles = await meetingStore.getRoles();
-                        _showDialogForBulkRoleChange(
-                            roles: roles, meetingStore: meetingStore);
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/role_change.svg",
-                        height: 20,
-                        width: 20,
-                        colorFilter: ColorFilter.mode(
-                            onSurfaceHighEmphasis, BlendMode.srcIn),
+                    if (meetingStore.localPeer?.role.permissions.changeRole ??
+                        false)
+                      ListTile(
+                        horizontalTitleGap: 2,
+                        onTap: () async {
+                          Navigator.pop(context);
+                          List<HMSRole> roles = await meetingStore.getRoles();
+                          _showDialogForBulkRoleChange(
+                              roles: roles, meetingStore: meetingStore);
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        leading: SvgPicture.asset(
+                          "packages/hms_room_kit/lib/assets/icons/role_change.svg",
+                          height: 20,
+                          width: 20,
+                          colorFilter: ColorFilter.mode(
+                              onSurfaceHighEmphasis, BlendMode.srcIn),
+                        ),
+                        title: SubheadingText(
+                          text: "Bulk Role Change",
+                          textColor: onSurfaceHighEmphasis,
+                          letterSpacing: 0.15,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                      title: SubheadingText(
-                        text: "Bulk Role Change",
-                        textColor: onSurfaceHighEmphasis,
-                        letterSpacing: 0.15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
                   if (Constant.debugMode)
-                  if (meetingStore.localPeer?.role.permissions.rtmpStreaming ??
-                      false)
-                    Selector<MeetingStore, bool>(
-                        selector: (_, meetingStore) =>
-                            meetingStore.streamingType["rtmp"] ?? false,
-                        builder: (_, isRTMPRunning, __) {
-                          return ListTile(
-                            horizontalTitleGap: 2,
-                            onTap: () async {
-                              if (isRTMPRunning) {
-                                meetingStore.stopRtmpAndRecording();
-                                Navigator.pop(context);
-                              } else {
-                                Navigator.pop(context);
-                                Map<String, dynamic> data =
-                                    await UtilityComponents.showRTMPInputDialog(
-                                        context: context,
-                                        placeholder:
-                                            "Enter Comma separated RTMP Urls",
-                                        isRecordingEnabled: meetingStore
-                                                .recordingType["browser"] ==
-                                            true);
-                                List<String>? urls;
-                                if (data["url"]!.isNotEmpty) {
-                                  urls = data["url"]!.split(",");
+                    if (meetingStore
+                            .localPeer?.role.permissions.rtmpStreaming ??
+                        false)
+                      Selector<MeetingStore, bool>(
+                          selector: (_, meetingStore) =>
+                              meetingStore.streamingType["rtmp"] ?? false,
+                          builder: (_, isRTMPRunning, __) {
+                            return ListTile(
+                              horizontalTitleGap: 2,
+                              onTap: () async {
+                                if (isRTMPRunning) {
+                                  meetingStore.stopRtmpAndRecording();
+                                  Navigator.pop(context);
+                                } else {
+                                  Navigator.pop(context);
+                                  Map<String, dynamic> data =
+                                      await UtilityComponents.showRTMPInputDialog(
+                                          context: context,
+                                          placeholder:
+                                              "Enter Comma separated RTMP Urls",
+                                          isRecordingEnabled: meetingStore
+                                                  .recordingType["browser"] ==
+                                              true);
+                                  List<String>? urls;
+                                  if (data["url"]!.isNotEmpty) {
+                                    urls = data["url"]!.split(",");
+                                  }
+                                  if (urls != null) {
+                                    meetingStore.startRtmpOrRecording(
+                                        meetingUrl: Constant.streamingUrl,
+                                        toRecord: data["toRecord"] ?? false,
+                                        rtmpUrls: urls);
+                                  } else if (data["toRecord"] ?? false) {
+                                    meetingStore.startRtmpOrRecording(
+                                        meetingUrl: Constant.streamingUrl,
+                                        toRecord: data["toRecord"] ?? false,
+                                        rtmpUrls: null);
+                                  }
                                 }
-                                if (urls != null) {
-                                  meetingStore.startRtmpOrRecording(
-                                      meetingUrl: Constant.streamingUrl,
-                                      toRecord: data["toRecord"] ?? false,
-                                      rtmpUrls: urls);
-                                } else if (data["toRecord"] ?? false) {
-                                  meetingStore.startRtmpOrRecording(
-                                      meetingUrl: Constant.streamingUrl,
-                                      toRecord: data["toRecord"] ?? false,
-                                      rtmpUrls: null);
-                                }
-                              }
-                            },
-                            contentPadding: EdgeInsets.zero,
-                            leading: SvgPicture.asset(
-                              "packages/hms_room_kit/lib/assets/icons/stream.svg",
-                              height: 20,
-                              width: 20,
-                              colorFilter: ColorFilter.mode(
-                                  isRTMPRunning
-                                      ? alertErrorDefault
-                                      : onSurfaceHighEmphasis,
-                                  BlendMode.srcIn),
-                            ),
-                            title: SubheadingText(
-                              text: isRTMPRunning ? "Stop RTMP" : "Start RTMP",
-                              textColor: isRTMPRunning
-                                  ? alertErrorDefault
-                                  : onSurfaceHighEmphasis,
-                              letterSpacing: 0.15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          );
-                        }),
-                  if (Constant.debugMode)
-                  if (meetingStore
-                          .localPeer?.role.permissions.browserRecording ??
-                      false)
-                    Selector<MeetingStore, bool>(
-                        selector: (_, meetingStore) =>
-                            meetingStore.recordingType["browser"] ?? false,
-                        builder: (_, isBrowserRecording, __) {
-                          return ListTile(
-                            horizontalTitleGap: 2,
-                            onTap: () async {
-                              if (isBrowserRecording) {
-                                meetingStore.stopRtmpAndRecording();
-                              } else {
-                                meetingStore.startRtmpOrRecording(
-                                    meetingUrl: Constant.streamingUrl,
-                                    toRecord: true,
-                                    rtmpUrls: []);
-                              }
-                              Navigator.pop(context);
-                            },
-                            contentPadding: EdgeInsets.zero,
-                            leading: SvgPicture.asset(
-                              "packages/hms_room_kit/lib/assets/icons/record.svg",
-                              height: 20,
-                              width: 20,
-                              colorFilter: ColorFilter.mode(
-                                  isBrowserRecording
-                                      ? alertErrorDefault
-                                      : onSurfaceHighEmphasis,
-                                  BlendMode.srcIn),
-                            ),
-                            title: SubheadingText(
-                              text: isBrowserRecording
-                                  ? "Stop Recording"
-                                  : "Start Recording",
-                              textColor: isBrowserRecording
-                                  ? alertErrorDefault
-                                  : onSurfaceHighEmphasis,
-                              letterSpacing: 0.15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          );
-                        }),
-                  if (Constant.debugMode)
-                  if (meetingStore.localPeer?.role.permissions.hlsStreaming ??
-                      false)
-                    Selector<MeetingStore, bool>(
-                        selector: ((_, meetingStore) =>
-                            meetingStore.hasHlsStarted),
-                        builder: (_, hasHLSStarted, __) {
-                          return ListTile(
-                            horizontalTitleGap: 2,
-                            onTap: () async {
-                              if (hasHLSStarted) {
-                                meetingStore.stopHLSStreaming();
-                                Navigator.pop(context);
-                                return;
-                              }
-                              Navigator.pop(context);
-                              showModalBottomSheet(
-                                isScrollControlled: true,
-                                backgroundColor: themeBottomSheetColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                context: context,
-                                builder: (ctx) => ChangeNotifierProvider.value(
-                                    value: meetingStore,
-                                    child: const StartHLSBottomSheet()),
-                              );
-                            },
-                            contentPadding: EdgeInsets.zero,
-                            leading: SvgPicture.asset(
-                                "packages/hms_room_kit/lib/assets/icons/hls.svg",
+                              },
+                              contentPadding: EdgeInsets.zero,
+                              leading: SvgPicture.asset(
+                                "packages/hms_room_kit/lib/assets/icons/stream.svg",
                                 height: 20,
                                 width: 20,
                                 colorFilter: ColorFilter.mode(
-                                    hasHLSStarted
+                                    isRTMPRunning
                                         ? alertErrorDefault
                                         : onSurfaceHighEmphasis,
-                                    BlendMode.srcIn)),
-                            title: SubheadingText(
-                              text: hasHLSStarted ? "Stop HLS" : "Start HLS",
-                              textColor: hasHLSStarted
-                                  ? alertErrorDefault
-                                  : onSurfaceHighEmphasis,
-                              letterSpacing: 0.15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          );
-                        }),
+                                    BlendMode.srcIn),
+                              ),
+                              title: SubheadingText(
+                                text:
+                                    isRTMPRunning ? "Stop RTMP" : "Start RTMP",
+                                textColor: isRTMPRunning
+                                    ? alertErrorDefault
+                                    : onSurfaceHighEmphasis,
+                                letterSpacing: 0.15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            );
+                          }),
+                  if (Constant.debugMode)
+                    if (meetingStore
+                            .localPeer?.role.permissions.browserRecording ??
+                        false)
+                      Selector<MeetingStore, bool>(
+                          selector: (_, meetingStore) =>
+                              meetingStore.recordingType["browser"] ?? false,
+                          builder: (_, isBrowserRecording, __) {
+                            return ListTile(
+                              horizontalTitleGap: 2,
+                              onTap: () async {
+                                if (isBrowserRecording) {
+                                  meetingStore.stopRtmpAndRecording();
+                                } else {
+                                  meetingStore.startRtmpOrRecording(
+                                      meetingUrl: Constant.streamingUrl,
+                                      toRecord: true,
+                                      rtmpUrls: []);
+                                }
+                                Navigator.pop(context);
+                              },
+                              contentPadding: EdgeInsets.zero,
+                              leading: SvgPicture.asset(
+                                "packages/hms_room_kit/lib/assets/icons/record.svg",
+                                height: 20,
+                                width: 20,
+                                colorFilter: ColorFilter.mode(
+                                    isBrowserRecording
+                                        ? alertErrorDefault
+                                        : onSurfaceHighEmphasis,
+                                    BlendMode.srcIn),
+                              ),
+                              title: SubheadingText(
+                                text: isBrowserRecording
+                                    ? "Stop Recording"
+                                    : "Start Recording",
+                                textColor: isBrowserRecording
+                                    ? alertErrorDefault
+                                    : onSurfaceHighEmphasis,
+                                letterSpacing: 0.15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            );
+                          }),
+                  if (Constant.debugMode)
+                    if (meetingStore.localPeer?.role.permissions.hlsStreaming ??
+                        false)
+                      Selector<MeetingStore, bool>(
+                          selector: ((_, meetingStore) =>
+                              meetingStore.hasHlsStarted),
+                          builder: (_, hasHLSStarted, __) {
+                            return ListTile(
+                              horizontalTitleGap: 2,
+                              onTap: () async {
+                                if (hasHLSStarted) {
+                                  meetingStore.stopHLSStreaming();
+                                  Navigator.pop(context);
+                                  return;
+                                }
+                                Navigator.pop(context);
+                                showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  backgroundColor: themeBottomSheetColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  context: context,
+                                  builder: (ctx) =>
+                                      ChangeNotifierProvider.value(
+                                          value: meetingStore,
+                                          child: const StartHLSBottomSheet()),
+                                );
+                              },
+                              contentPadding: EdgeInsets.zero,
+                              leading: SvgPicture.asset(
+                                  "packages/hms_room_kit/lib/assets/icons/hls.svg",
+                                  height: 20,
+                                  width: 20,
+                                  colorFilter: ColorFilter.mode(
+                                      hasHLSStarted
+                                          ? alertErrorDefault
+                                          : onSurfaceHighEmphasis,
+                                      BlendMode.srcIn)),
+                              title: SubheadingText(
+                                text: hasHLSStarted ? "Stop HLS" : "Start HLS",
+                                textColor: hasHLSStarted
+                                    ? alertErrorDefault
+                                    : onSurfaceHighEmphasis,
+                                letterSpacing: 0.15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            );
+                          }),
                   if (Platform.isAndroid)
                     ListTile(
                       horizontalTitleGap: 2,
@@ -628,31 +632,31 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                  if(Constant.debugMode)
-                  ListTile(
-                    horizontalTitleGap: 2,
-                    onTap: () async {
-                      showDialog(
-                          context: context,
-                          builder: (_) => ShareLinkOptionDialog(
-                              roles: meetingStore.roles,
-                              roomID: meetingStore.hmsRoom!.id));
-                    },
-                    contentPadding: EdgeInsets.zero,
-                    leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/share.svg",
-                      height: 20,
-                      width: 20,
-                      colorFilter: ColorFilter.mode(
-                          onSurfaceHighEmphasis, BlendMode.srcIn),
+                  if (Constant.debugMode)
+                    ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        showDialog(
+                            context: context,
+                            builder: (_) => ShareLinkOptionDialog(
+                                roles: meetingStore.roles,
+                                roomID: meetingStore.hmsRoom!.id));
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/assets/icons/share.svg",
+                        height: 20,
+                        width: 20,
+                        colorFilter: ColorFilter.mode(
+                            onSurfaceHighEmphasis, BlendMode.srcIn),
+                      ),
+                      title: SubheadingText(
+                        text: "Share Link",
+                        textColor: onSurfaceHighEmphasis,
+                        letterSpacing: 0.15,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    title: SubheadingText(
-                      text: "Share Link",
-                      textColor: onSurfaceHighEmphasis,
-                      letterSpacing: 0.15,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
                   /**
                    * This has been turned OFF by default for now 
                    * Needs some discussion around the toasts
