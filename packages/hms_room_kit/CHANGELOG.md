@@ -1,3 +1,7 @@
-## 0.0.1
+## 0.0.2 - 2023-07-19
 
-- TODO: Describe initial release.
+- Updated Package's public headers
+
+## 0.0.1 - 2023-07-19
+
+- Presenting 100ms Room Kit which provides simple & easy to use widgets to create immersive Live Streaming & Video Conferencing experiences in your apps. Take it for a spin!

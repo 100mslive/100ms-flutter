@@ -1,6 +1,6 @@
 name: hms_room_kit
-description: A powerful prebuilt UI library for audio/video conferencing, live streaming, and one-to-one calls. This package provides developers with a comprehensive set of tools and components to quickly integrate high-quality audio and video communication features into their Flutter applications.
-version: 0.0.1
+description: 100ms Room Kit provides simple & easy to use UI components to build Live Streaming & Video Conferencing experiences in your apps.
+version: 0.0.2
 homepage: https://www.100ms.live/
 repository: https://github.com/100mslive/100ms-flutter
 issue_tracker: https://github.com/100mslive/100ms-flutter/issues
