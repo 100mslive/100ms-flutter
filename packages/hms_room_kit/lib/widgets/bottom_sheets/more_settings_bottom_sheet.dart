@@ -202,6 +202,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                   const SizedBox(
                     height: 10,
                   ),
+                  if (Constant.debugMode)
                   ListTile(
                     horizontalTitleGap: 2,
                     onTap: () async {
@@ -399,6 +400,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+                  if (Constant.debugMode)
                   if ((meetingStore.localPeer?.role.permissions.mute ??
                           false) &&
                       (meetingStore.localPeer?.role.permissions.unMute ??
@@ -425,6 +427,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+                  if (Constant.debugMode)
                   if (meetingStore.localPeer?.role.permissions.changeRole ??
                       false)
                     ListTile(
@@ -450,6 +453,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+                  if (Constant.debugMode)
                   if (meetingStore.localPeer?.role.permissions.rtmpStreaming ??
                       false)
                     Selector<MeetingStore, bool>(
@@ -510,6 +514,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             ),
                           );
                         }),
+                  if (Constant.debugMode)
                   if (meetingStore
                           .localPeer?.role.permissions.browserRecording ??
                       false)
@@ -553,6 +558,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             ),
                           );
                         }),
+                  if (Constant.debugMode)
                   if (meetingStore.localPeer?.role.permissions.hlsStreaming ??
                       false)
                     Selector<MeetingStore, bool>(

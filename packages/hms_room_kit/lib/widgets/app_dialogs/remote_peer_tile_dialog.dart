@@ -183,6 +183,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                   ),
                 ),
               ),
+            if (Constant.debugMode)
             if (widget.simulcast)
               Padding(
                 padding: const EdgeInsets.only(bottom: 20.0),
@@ -208,6 +209,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                   ),
                 ),
               ),
+            if (Constant.debugMode)
             Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
               child: GestureDetector(

@@ -109,10 +109,10 @@ packages:
     dependency: transitive
     description:
       name: dropdown_button2
-      sha256: "107444581478342c6511040c2eb52850748400df4f3295df3da8be75693180a5"
+      sha256: "83c54a5022f898d63e3abe21240b64b937e676103207287e6705d3f9bb04d654"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "2.3.6"
   fake_async:
     dependency: transitive
     description:
@@ -142,6 +142,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_foreground_task:
+    dependency: transitive
+    description:
+      name: flutter_foreground_task
+      sha256: "9d71e28c0f9657b7366d5c769a25b4c6efe1bb4080ee4c74764295e419036000"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.0+1"
   flutter_linkify:
     dependency: transitive
     description:
