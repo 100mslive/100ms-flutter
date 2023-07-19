@@ -537,54 +537,6 @@ class HMSSDK {
   ///
   /// **hmsActionResultListener** - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call [HMSActionResultListener.onException] with the error received from the server.
   ///
-  /// Refer [changeRole guide here](https://www.100ms.live/docs/flutter/v2/features/change-role#single-peer-role-change).
-  @Deprecated('Use [changeRoleOfPeer]')
-  Future<void> changeRole(
-      {required HMSPeer forPeer,
-      required HMSRole toRole,
-      bool force = false,
-      HMSActionResultListener? hmsActionResultListener}) async {
-    var arguments = {
-      'peer_id': forPeer.peerId,
-      'role_name': toRole.name,
-      'force_change': force
-    };
-    var result = await PlatformService.invokeMethod(PlatformMethod.changeRole,
-        arguments: arguments);
-
-    if (hmsActionResultListener != null) {
-      if (result == null)
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.changeRole,
-            arguments: {
-              'peer': forPeer,
-              'role_name': toRole,
-              'force_change': force
-            });
-      else
-        hmsActionResultListener.onException(
-            arguments: {
-              'peer': forPeer,
-              'role_name': toRole,
-              'force_change': force
-            },
-            methodType: HMSActionResultListenerMethod.changeRole,
-            hmsException: HMSException.fromMap(result["error"]));
-    }
-  }
-
-  /// Requests a change of HMSRole to a new role.
-  ///
-  /// **Parameters**:
-  ///
-  /// **forPeer** - HMSPeer whose role should be requested to be changed.
-  ///
-  /// **toRole** - new role the HMSPeer would have if they accept or are forced to change to.
-  ///
-  /// **force** - Set [force] to false if the peer should be requested to accept the new role (they can choose to deny). Set [force] to true if their role should be changed without asking them.
-  ///
-  /// **hmsActionResultListener** - Listener that will return HMSActionResultListener.onSuccess if the role change request is successful else will call [HMSActionResultListener.onException] with the error received from the server.
-  ///
   /// Refer [changeRoleOfPeer guide here](https://www.100ms.live/docs/flutter/v2/features/change-role#single-peer-role-change).
   Future<void> changeRoleOfPeer(
       {required HMSPeer forPeer,
