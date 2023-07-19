@@ -6,14 +6,21 @@ import 'package:hms_room_kit/common/utility_functions.dart';
 
 class HMSCircularAvatar extends StatelessWidget {
   final String name;
-
-  const HMSCircularAvatar({super.key, required this.name});
+  final double? avatarRadius;
+  final double? avatarTitleFontSize;
+  final Color? avatarTitleTextColor;
+  const HMSCircularAvatar(
+      {super.key,
+      required this.name,
+      this.avatarRadius = 40,
+      this.avatarTitleFontSize = 40,
+      this.avatarTitleTextColor});
 
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
         backgroundColor: Utilities.getBackgroundColour(name),
-        radius: 40,
+        radius: avatarRadius,
         child: name.isEmpty
             ? SvgPicture.asset(
                 'packages/hms_room_kit/lib/assets/icons/user.svg',
@@ -23,8 +30,8 @@ class HMSCircularAvatar extends StatelessWidget {
             : Text(
                 Utilities.getAvatarTitle(name),
                 style: GoogleFonts.inter(
-                  fontSize: 40,
-                  color: onSurfaceHighEmphasis,
+                  fontSize: avatarTitleFontSize,
+                  color: avatarTitleTextColor ?? onSurfaceHighEmphasis,
                 ),
               ));
   }
