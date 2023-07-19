@@ -77,11 +77,29 @@ class _PreviewPageState extends State<PreviewPage> {
                                 })),
                     Padding(
                       padding: EdgeInsets.only(
+                          top: (previewStore.peer?.role.name.contains("hls-") ??
+                                  true)
+                              ? MediaQuery.of(context).size.height * 0.2
+                              : Platform.isIOS
+                                  ? 50
+                                  : 35,
+                          bottom: 20),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: SvgPicture.asset(
+                          'packages/hms_room_kit/lib/assets/icons/generic.svg',
+                          fit: BoxFit.contain,
+                          semanticsLabel: "fl_user_icon_label",
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
                           top:
                               ((previewStore.peer?.role.name.contains("hls-") ??
                                       true)
                                   ? MediaQuery.of(context).size.height * 0.3
-                                  : 80.0)),
+                                  : 100.0)),
                       child: Column(
                         children: [
                           TitleText(
@@ -260,8 +278,7 @@ class _PreviewPageState extends State<PreviewPage> {
                             height: 20,
                           ),
                           Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom: 15.0, left: 8, right: 8),
+                              padding: const EdgeInsets.only(left: 8, right: 8),
                               child: (previewStore.peer != null)
                                   ? Column(
                                       children: [
@@ -345,25 +362,34 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   const SizedBox(
                                                     width: 16,
                                                   ),
-                                                  HMSEmbeddedButton(
-                                                    height: 40,
-                                                    width: 40,
-                                                    onTap: () async =>
-                                                        previewStore
-                                                            .switchCamera(),
-                                                    isActive: true,
-                                                    child: SvgPicture.asset(
-                                                      "assets/icons/camera.svg",
-                                                      colorFilter: ColorFilter.mode(
-                                                          previewStore.isVideoOn
-                                                              ? onSurfaceHighEmphasis
-                                                              : onSurfaceLowEmphasis,
-                                                          BlendMode.srcIn),
-                                                      fit: BoxFit.scaleDown,
-                                                      semanticsLabel:
-                                                          "switch_camera_button",
+                                                  if (previewStore.peer !=
+                                                          null &&
+                                                      previewStore
+                                                          .peer!
+                                                          .role
+                                                          .publishSettings!
+                                                          .allowed
+                                                          .contains("video"))
+                                                    HMSEmbeddedButton(
+                                                      height: 40,
+                                                      width: 40,
+                                                      onTap: () async =>
+                                                          previewStore
+                                                              .switchCamera(),
+                                                      isActive: true,
+                                                      child: SvgPicture.asset(
+                                                        "assets/icons/camera.svg",
+                                                        colorFilter: ColorFilter.mode(
+                                                            previewStore
+                                                                    .isVideoOn
+                                                                ? onSurfaceHighEmphasis
+                                                                : onSurfaceLowEmphasis,
+                                                            BlendMode.srcIn),
+                                                        fit: BoxFit.scaleDown,
+                                                        semanticsLabel:
+                                                            "switch_camera_button",
+                                                      ),
                                                     ),
-                                                  ),
                                                 ],
                                               ),
                                               Row(
