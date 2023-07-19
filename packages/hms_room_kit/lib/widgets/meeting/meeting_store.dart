@@ -107,8 +107,6 @@ class MeetingStore extends ChangeNotifier
 
   bool isStatsVisible = false;
 
-  bool isMirror = false;
-
   bool isAutoSimulcast = true;
 
   bool isNewMessageReceived = false;
@@ -483,7 +481,6 @@ class MeetingStore extends ChangeNotifier
   }
 
   void setSettings() async {
-    isMirror = await Utilities.getBoolData(key: 'mirror-camera') ?? false;
     isStatsVisible = await Utilities.getBoolData(key: 'show-stats') ?? false;
     isAutoSimulcast =
         await Utilities.getBoolData(key: 'is-auto-simulcast') ?? true;
