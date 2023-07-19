@@ -595,43 +595,51 @@ class _MeetingPageState extends State<MeetingPage> {
                                               ),
                                               Row(
                                                 children: [
-                                                  Selector<MeetingStore, bool>(
-                                                      selector: (_,
-                                                              meetingStore) =>
-                                                          meetingStore
-                                                              .isVideoOn,
-                                                      builder:
-                                                          (_, isVideoOn, __) {
-                                                        return HMSEmbeddedButton(
-                                                          onTap: () => {
-                                                            if (isVideoOn)
-                                                              {
-                                                                context
-                                                                    .read<
-                                                                        MeetingStore>()
-                                                                    .switchCamera()
-                                                              }
-                                                          },
-                                                          width: 40,
-                                                          height: 40,
-                                                          isActive: true,
-                                                          child:
-                                                              SvgPicture.asset(
-                                                            "packages/hms_room_kit/lib/assets/icons/camera.svg",
-                                                            colorFilter:
-                                                                ColorFilter.mode(
-                                                                    isVideoOn
-                                                                        ? onSurfaceHighEmphasis
-                                                                        : onSurfaceLowEmphasis,
-                                                                    BlendMode
-                                                                        .srcIn),
-                                                            fit: BoxFit
-                                                                .scaleDown,
-                                                            semanticsLabel:
-                                                                "fl_switch_camera",
-                                                          ),
-                                                        );
-                                                      }),
+                                                  if (Provider.of<MeetingStore>(
+                                                              context)
+                                                          .localPeer
+                                                          ?.role
+                                                          .publishSettings
+                                                          ?.allowed
+                                                          .contains("video") ??
+                                                      false)
+                                                    Selector<MeetingStore,
+                                                            bool>(
+                                                        selector:
+                                                            (_, meetingStore) =>
+                                                                meetingStore
+                                                                    .isVideoOn,
+                                                        builder:
+                                                            (_, isVideoOn, __) {
+                                                          return HMSEmbeddedButton(
+                                                            onTap: () => {
+                                                              if (isVideoOn)
+                                                                {
+                                                                  context
+                                                                      .read<
+                                                                          MeetingStore>()
+                                                                      .switchCamera()
+                                                                }
+                                                            },
+                                                            width: 40,
+                                                            height: 40,
+                                                            isActive: true,
+                                                            child: SvgPicture
+                                                                .asset(
+                                                              "packages/hms_room_kit/lib/assets/icons/camera.svg",
+                                                              colorFilter: ColorFilter.mode(
+                                                                  isVideoOn
+                                                                      ? onSurfaceHighEmphasis
+                                                                      : onSurfaceLowEmphasis,
+                                                                  BlendMode
+                                                                      .srcIn),
+                                                              fit: BoxFit
+                                                                  .scaleDown,
+                                                              semanticsLabel:
+                                                                  "fl_switch_camera",
+                                                            ),
+                                                          );
+                                                        }),
                                                 ],
                                               )
                                             ],
