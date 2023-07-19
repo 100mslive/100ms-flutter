@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:draggable_widget/draggable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/model/peer_track_node.dart';
@@ -59,7 +61,9 @@ class _OneToOneModeState extends State<OneToOneMode> {
                     children: [
                       insetGridView(
                           peerTracks: widget.peerTracks
-                              .where((element) => !element.peer.isLocal)
+                              .where((element) =>
+                                  !element.peer.isLocal ||
+                                  element.track?.source == "SCREEN")
                               .toList(),
                           itemCount: widget.peerTracks.length - 1,
                           screenShareCount: widget.screenShareCount,
@@ -68,7 +72,9 @@ class _OneToOneModeState extends State<OneToOneMode> {
                           size: widget.size),
                       DraggableWidget(
                         topMargin: 10,
-                        bottomMargin: widget.bottomMargin,
+                        bottomMargin: Platform.isIOS
+                            ? widget.bottomMargin + 10
+                            : widget.bottomMargin,
                         horizontalSpace: 10,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16.0),

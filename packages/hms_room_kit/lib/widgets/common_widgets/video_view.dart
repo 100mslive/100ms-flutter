@@ -52,7 +52,7 @@ class _VideoViewState extends State<VideoView> {
                         key: Key(data.item1!.trackId),
                         scaleType: widget.scaleType,
                         track: data.item1!,
-                        setMirror: false,
+                        setMirror: context.read<PeerTrackNode>().peer.isLocal,
                         disableAutoSimulcastLayerSelect:
                             !(context.read<MeetingStore>().isAutoSimulcast),
                       ),

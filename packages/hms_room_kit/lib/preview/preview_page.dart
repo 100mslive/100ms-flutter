@@ -99,7 +99,9 @@ class _PreviewPageState extends State<PreviewPage> {
                               ((previewStore.peer?.role.name.contains("hls-") ??
                                       true)
                                   ? MediaQuery.of(context).size.height * 0.3
-                                  : 100.0)),
+                                  : Platform.isIOS
+                                      ? 120
+                                      : 100.0)),
                       child: Column(
                         children: [
                           TitleText(

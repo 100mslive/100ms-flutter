@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/common/app_color.dart';
+import 'package:hms_room_kit/common/constants.dart';
 
 class RemotePeerTileDialog extends StatefulWidget {
   final String peerName;
@@ -230,32 +231,34 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                 ),
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-                widget.setOnSpotlight();
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                child: Row(
-                  children: [
-                    SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/spotlight.svg",
-                      colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Text(
-                      widget.isSpotlightedPeer
-                          ? "Remove From Spotlight"
-                          : "Spotlight Tile",
-                      style: GoogleFonts.inter(color: iconColor),
-                    )
-                  ],
+            if (Constant.debugMode)
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                  widget.setOnSpotlight();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        "packages/hms_room_kit/lib/assets/icons/spotlight.svg",
+                        colorFilter:
+                            ColorFilter.mode(iconColor, BlendMode.srcIn),
+                      ),
+                      const SizedBox(
+                        width: 16,
+                      ),
+                      Text(
+                        widget.isSpotlightedPeer
+                            ? "Remove From Spotlight"
+                            : "Spotlight Tile",
+                        style: GoogleFonts.inter(color: iconColor),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),

@@ -2,6 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/widgets/common_widgets/hms_circular_avatar.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/common/app_color.dart';
 import 'package:hms_room_kit/common/utility_functions.dart';
@@ -475,23 +476,29 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                         horizontalTitleGap: 5,
                                         contentPadding: EdgeInsets.zero,
                                         leading: CircleAvatar(
-                                          backgroundColor:
-                                              Utilities.getBackgroundColour(
-                                                  peer.item1),
-                                          radius: 16,
-                                          child: Text(
-                                              Utilities.getAvatarTitle(
-                                                  peer.item1),
-                                              style: GoogleFonts.inter(
-                                                  fontSize: 12,
-                                                  color: themeDefaultColor,
-                                                  fontWeight: FontWeight.w600)),
-                                        ),
+                                            backgroundColor:
+                                                Utilities.getBackgroundColour(
+                                                    peer.item1),
+                                            radius: 16,
+                                            child: peer.item1.isEmpty
+                                                ? SvgPicture.asset(
+                                                    'packages/hms_room_kit/lib/assets/icons/user.svg',
+                                                    height: 16,
+                                                    width: 16,
+                                                    semanticsLabel:
+                                                        "fl_user_icon_label",
+                                                  )
+                                                : Text(
+                                                    Utilities.getAvatarTitle(
+                                                        peer.item1),
+                                                    style: GoogleFonts.inter(
+                                                      fontSize: 12,
+                                                      color:
+                                                          onSurfaceHighEmphasis,
+                                                    ),
+                                                  )),
                                         title: Text(
-                                          peer.item1 +
-                                              (peer.item2.isLocal
-                                                  ? " (You)"
-                                                  : ""),
+                                          peer.item1,
                                           maxLines: 1,
                                           style: GoogleFonts.inter(
                                               fontSize: 16,

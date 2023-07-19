@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/common/app_color.dart';
+import 'package:hms_room_kit/common/constants.dart';
 
 class LocalPeerTileDialog extends StatefulWidget {
   final String peerName;
@@ -47,32 +48,6 @@ class LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (!widget.isAudioMode && widget.isVideoOn)
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                  widget.toggleCamera();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/camera.svg",
-                        colorFilter:
-                            ColorFilter.mode(iconColor, BlendMode.srcIn),
-                      ),
-                      const SizedBox(
-                        width: 16,
-                      ),
-                      Text(
-                        "Toggle Camera",
-                        style: GoogleFonts.inter(color: iconColor),
-                      )
-                    ],
-                  ),
-                ),
-              ),
             GestureDetector(
               onTap: () {
                 Navigator.pop(context);
@@ -122,7 +97,7 @@ class LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                   ),
                 ),
               ),
-            if (widget.isVideoOn)
+            if (widget.isVideoOn && Constant.debugMode)
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
@@ -144,32 +119,34 @@ class LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                   ),
                 ),
               ),
-            GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-                widget.setOnSpotlight();
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                child: Row(
-                  children: [
-                    SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/spotlight.svg",
-                      colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Text(
-                      widget.isSpotlightedPeer
-                          ? "Remove From Spotlight"
-                          : "Spotlight Tile",
-                      style: GoogleFonts.inter(color: iconColor),
-                    )
-                  ],
+            if (Constant.debugMode)
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                  widget.setOnSpotlight();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        "packages/hms_room_kit/lib/assets/icons/spotlight.svg",
+                        colorFilter:
+                            ColorFilter.mode(iconColor, BlendMode.srcIn),
+                      ),
+                      const SizedBox(
+                        width: 16,
+                      ),
+                      Text(
+                        widget.isSpotlightedPeer
+                            ? "Remove From Spotlight"
+                            : "Spotlight Tile",
+                        style: GoogleFonts.inter(color: iconColor),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),
