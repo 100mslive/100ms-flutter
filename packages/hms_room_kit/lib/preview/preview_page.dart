@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/preview/preview_get_participants_text.dart';
 import 'package:hms_room_kit/widgets/common_widgets/error_dialog.dart';
 import 'package:hms_room_kit/widgets/common_widgets/hms_circular_avatar.dart';
-import 'package:hms_room_kit/widgets/hms_buttons.dart/hms_back_button.dart';
+import 'package:hms_room_kit/widgets/hms_buttons/hms_back_button.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/common/app_color.dart';
 import 'package:hms_room_kit/meeting_screen_controller.dart';
@@ -139,7 +139,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               SvgPicture.asset(
-                                                "assets/icons/participants.svg",
+                                                "packages/hms_room_kit/lib/assets/icons/participants.svg",
                                                 colorFilter: ColorFilter.mode(
                                                     onSurfaceHighEmphasis,
                                                     BlendMode.srcIn),
@@ -312,8 +312,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                           .isAudioOn,
                                                       child: SvgPicture.asset(
                                                         previewStore.isAudioOn
-                                                            ? "assets/icons/mic_state_on.svg"
-                                                            : "assets/icons/mic_state_off.svg",
+                                                            ? "packages/hms_room_kit/lib/assets/icons/mic_state_on.svg"
+                                                            : "packages/hms_room_kit/lib/assets/icons/mic_state_off.svg",
                                                         colorFilter:
                                                             ColorFilter.mode(
                                                                 onSurfaceHighEmphasis,
@@ -349,8 +349,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                           .isVideoOn,
                                                       child: SvgPicture.asset(
                                                         previewStore.isVideoOn
-                                                            ? "assets/icons/cam_state_on.svg"
-                                                            : "assets/icons/cam_state_off.svg",
+                                                            ? "packages/hms_room_kit/lib/assets/icons/cam_state_on.svg"
+                                                            : "packages/hms_room_kit/lib/assets/icons/cam_state_off.svg",
                                                         colorFilter:
                                                             ColorFilter.mode(
                                                                 onSurfaceHighEmphasis,
@@ -380,7 +380,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                               .switchCamera(),
                                                       isActive: true,
                                                       child: SvgPicture.asset(
-                                                        "assets/icons/camera.svg",
+                                                        "packages/hms_room_kit/lib/assets/icons/camera.svg",
                                                         colorFilter: ColorFilter.mode(
                                                             previewStore
                                                                     .isVideoOn
@@ -422,7 +422,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                       },
                                                       isActive: true,
                                                       child: SvgPicture.asset(
-                                                        'assets/icons/settings.svg',
+                                                        'packages/hms_room_kit/lib/assets/icons/settings.svg',
                                                         fit: BoxFit.scaleDown,
                                                         semanticsLabel:
                                                             "settings_button",

@@ -196,7 +196,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hmssdk_uikit/lib/assets/icons/bug.svg",
+                      "packages/hms_room_kit/lib/assets/icons/bug.svg",
                       fit: BoxFit.scaleDown,
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
@@ -226,7 +226,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hmssdk_uikit/lib/assets/icons/mic_state_off.svg",
+                      "packages/hms_room_kit/lib/assets/icons/mic_state_off.svg",
                       fit: BoxFit.scaleDown,
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),

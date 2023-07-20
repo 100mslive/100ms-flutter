@@ -70,7 +70,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                       ),
                       IconButton(
                         icon: SvgPicture.asset(
-                          "assets/icons/close_button.svg",
+                          "packages/hms_room_kit/lib/assets/icons/close_button.svg",
                           width: 40,
                         ),
                         onPressed: () {
@@ -104,7 +104,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                           },
                           contentPadding: EdgeInsets.zero,
                           leading: SvgPicture.asset(
-                            "assets/icons/music_wave.svg",
+                            "packages/hms_room_kit/lib/assets/icons/music_wave.svg",
                             fit: BoxFit.scaleDown,
                             colorFilter: ColorFilter.mode(
                                 onSurfaceHighEmphasis, BlendMode.srcIn),
@@ -135,7 +135,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                           child: Row(
                                             children: [
                                               SvgPicture.asset(
-                                                "assets/icons/music_wave.svg",
+                                                "packages/hms_room_kit/lib/assets/icons/music_wave.svg",
                                                 colorFilter: ColorFilter.mode(
                                                     themeDefaultColor,
                                                     BlendMode.srcIn),

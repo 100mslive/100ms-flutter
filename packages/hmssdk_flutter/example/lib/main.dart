@@ -461,7 +461,7 @@ class _HomePageState extends State<HomePage> {
                                   padding: const EdgeInsets.only(
                                       left: 8.0, right: 8),
                                   child: SvgPicture.asset(
-                                    "assets/icons/more.svg",
+                                    "packages/hms_room_kit/lib/assets/icons/more.svg",
                                     colorFilter: ColorFilter.mode(
                                         meetingLinkController.text.isEmpty
                                             ? themeDisabledTextColor
