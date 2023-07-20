@@ -14,7 +14,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  hmssdk_flutter: ^1.7.2
+  hmssdk_flutter:
+    path: ../hmssdk_flutter
   intl: ^0.18.1
   permission_handler: ^10.4.3
   provider: ^6.0.5

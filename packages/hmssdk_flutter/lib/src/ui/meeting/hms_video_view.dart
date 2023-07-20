@@ -11,6 +11,7 @@ import 'package:flutter/services.dart'
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/ui/meeting/hms_video_view_controller.dart';
 
 ///100ms HMSVideoView
 ///
@@ -113,7 +114,7 @@ class _PlatformView extends StatelessWidget {
   final bool matchParent;
   final ScaleType scaleType;
   final bool disableAutoSimulcastLayerSelect;
-
+  late HMSVideoViewController hmsVideoViewController;
   _PlatformView(
       {Key? key,
       required this.track,
@@ -121,7 +122,9 @@ class _PlatformView extends StatelessWidget {
       this.matchParent = true,
       required this.scaleType,
       this.disableAutoSimulcastLayerSelect = false})
-      : super(key: key);
+      : super(key: key){
+          hmsVideoViewController = HMSVideoViewController(track.trackId);
+      }
 
   void onPlatformViewCreated(int id) {}
 
