@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/preview/preview_get_participants_text.dart';
 import 'package:hms_room_kit/widgets/common_widgets/error_dialog.dart';
 import 'package:hms_room_kit/widgets/common_widgets/hms_circular_avatar.dart';
-import 'package:hms_room_kit/widgets/hms_buttons.dart/hms_back_button.dart';
+import 'package:hms_room_kit/widgets/hms_buttons/hms_back_button.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/common/app_color.dart';
 import 'package:hms_room_kit/meeting_screen_controller.dart';
