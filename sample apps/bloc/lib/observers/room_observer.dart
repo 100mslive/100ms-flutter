@@ -167,7 +167,7 @@ class RoomObserver implements HMSUpdateListener, HMSActionResultListener {
       List<HMSAudioDevice>? availableAudioDevice}) {
     // TODO: implement onAudioDeviceChanged
   }
-  
+
   @override
   void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
     // TODO: implement onSessionStoreAvailable
