@@ -24,9 +24,9 @@ class PreviewStore extends ChangeNotifier
   bool isHLSLink = false;
   HMSRoom? room;
 
-  bool isVideoOn = true;
+  bool isVideoOn = false;
 
-  bool isAudioOn = true;
+  bool isAudioOn = false;
 
   bool isRecordingStarted = false;
 
