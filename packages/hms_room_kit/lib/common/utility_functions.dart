@@ -114,9 +114,6 @@ class Utilities {
     await Permission.bluetoothConnect.request();
     await Permission.phone.request();
 
-    // storage permission is required to save Snapshot to device gallery.
-    await Permission.storage.request();
-
     while ((await Permission.camera.isDenied)) {
       await Permission.camera.request();
     }
@@ -128,6 +125,25 @@ class Utilities {
     }
 
     return true;
+  }
+
+  ///This method is used to get names for the audio devices
+  ///It is used to set the icon based on the audio device
+  static String getAudioDeviceIconName(HMSAudioDevice hmsAudioDevice) {
+    switch (hmsAudioDevice) {
+      case HMSAudioDevice.SPEAKER_PHONE:
+        return "speaker_state_on";
+      case HMSAudioDevice.WIRED_HEADSET:
+        return "wired_headset";
+      case HMSAudioDevice.EARPIECE:
+        return "earpiece";
+      case HMSAudioDevice.BLUETOOTH:
+        return "bluetooth";
+      case HMSAudioDevice.AUTOMATIC:
+        return "music_wave";
+      case HMSAudioDevice.UNKNOWN:
+        return "music_wave";
+    }
   }
 
   static Future<bool> getCameraPermissions() async {

@@ -49,7 +49,7 @@ class HMSEmbeddedButton extends StatelessWidget {
                * If the iconColor is not set, we use the default color which is onSurfaceHighEmphasis
                */
               color: isActive
-                  ? (onColor ?? (Colors.black))
+                  ? (onColor ?? (backgroundDefault))
                   : (offColor ?? secondaryDim)),
           child: child),
     );
