@@ -100,8 +100,7 @@ class _ScreenControllerState extends State<ScreenController> {
               : PreviewPermissions(
                   roomCode: widget.roomCode,
                   options: widget.options,
-                  callback: _isPermissionGrantedCallback,
-                ),
+                  callback: _isPermissionGrantedCallback),
     );
   }
 }

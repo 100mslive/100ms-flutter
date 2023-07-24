@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/common/utility_functions.dart';
 import 'package:hms_room_kit/preview/preview_join_button.dart';
 import 'package:hms_room_kit/preview/preview_participant_chip.dart';
 import 'package:hms_room_kit/widgets/common_widgets/error_dialog.dart';
@@ -405,7 +406,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         },
                                                         isActive: true,
                                                         child: SvgPicture.asset(
-                                                          'packages/hms_room_kit/lib/assets/icons/speaker_state_on.svg',
+                                                          'packages/hms_room_kit/lib/assets/icons/${Utilities.getAudioDeviceIconName(previewStore.currentAudioDeviceMode)}.svg',
                                                           fit: BoxFit.scaleDown,
                                                           semanticsLabel:
                                                               "settings_button",

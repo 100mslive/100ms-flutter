@@ -14,6 +14,7 @@ import 'package:hms_room_kit/enums/session_store_keys.dart';
 import 'package:hms_room_kit/hmssdk_interactor.dart';
 import 'package:hms_room_kit/model/peer_track_node.dart';
 import 'package:hms_room_kit/model/rtc_stats.dart';
+import 'package:hms_room_kit/service/app_debug_config.dart';
 import 'package:hms_room_kit/service/app_secrets.dart';
 import 'package:hms_room_kit/service/room_service.dart';
 import 'package:intl/intl.dart';
@@ -513,6 +514,10 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onJoin({required HMSRoom room}) async {
+    if (AppDebugConfig.isStreamingFlow &&
+        room.hmshlsStreamingState?.running == false) {
+      startHLSStreaming(false, false);
+    }
     log("onJoin-> room: ${room.toString()}");
     isMeetingStarted = true;
     hmsRoom = room;
