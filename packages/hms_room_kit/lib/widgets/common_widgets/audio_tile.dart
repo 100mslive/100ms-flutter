@@ -47,13 +47,13 @@ class AudioTile extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: const Color.fromRGBO(0, 0, 0, 0.9),
                     borderRadius: BorderRadius.circular(8)),
-                child: const Center(
+                child: Center(
                   child: Padding(
-                    padding: EdgeInsets.all(4),
+                    padding: const EdgeInsets.all(4),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: const [
                         NetworkIconWidget(),
                         PeerName(),
                       ],
