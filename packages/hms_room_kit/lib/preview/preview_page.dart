@@ -50,7 +50,7 @@ class _PreviewPageState extends State<PreviewPage> {
     final double height = size.height;
     final double width = size.width;
     final previewStore = context.watch<PreviewStore>();
-    bool _isJoiningRoom = false;
+    bool isJoiningRoom = false;
 
     return WillPopScope(
       onWillPop: () async {
@@ -233,7 +233,7 @@ class _PreviewPageState extends State<PreviewPage> {
                           ),
 
                           ///This renders the back button at top left
-                          if (!_isJoiningRoom)
+                          if (!isJoiningRoom)
                             Positioned(
                                 top: Platform.isIOS ? 50 : 35,
                                 left: 10,
@@ -247,8 +247,7 @@ class _PreviewPageState extends State<PreviewPage> {
                           ///This also contains text field for entering the name
                           Positioned(
                             bottom: 0,
-                            child: (previewStore.peer != null ||
-                                    !_isJoiningRoom)
+                            child: (previewStore.peer != null || !isJoiningRoom)
                                 ? Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(16),
@@ -489,14 +488,14 @@ class _PreviewPageState extends State<PreviewPage> {
                                                       .text.isNotEmpty)
                                                     {
                                                       setState(() {
-                                                        _isJoiningRoom = true;
+                                                        isJoiningRoom = true;
                                                       }),
                                                       context
                                                           .read<PreviewStore>()
                                                           .removePreviewListener(),
                                                       setMeetingStore(
                                                           previewStore),
-                                                      _isJoiningRoom = false,
+                                                      isJoiningRoom = false,
                                                       Navigator.of(context)
                                                           .pushReplacement(
                                                               MaterialPageRoute(
@@ -532,7 +531,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                   )
                                 : const SizedBox(),
                           ),
-                          if (_isJoiningRoom)
+                          if (isJoiningRoom)
                             Container(
                               height: height,
                               width: width,

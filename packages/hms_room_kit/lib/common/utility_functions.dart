@@ -127,6 +127,18 @@ class Utilities {
     return true;
   }
 
+  ///This method checks for the permissions for the camera,microphone and bluetooth
+  ///Based on this we route the screens.
+  static Future<bool> checkPermissions() async {
+    if (Platform.isIOS) return true;
+    if (await Permission.camera.isGranted &&
+        await Permission.microphone.isGranted &&
+        await Permission.bluetoothConnect.isGranted) {
+      return true;
+    }
+    return false;
+  }
+
   ///This method is used to get names for the audio devices
   ///It is used to set the icon based on the audio device
   static String getAudioDeviceIconName(HMSAudioDevice hmsAudioDevice) {
