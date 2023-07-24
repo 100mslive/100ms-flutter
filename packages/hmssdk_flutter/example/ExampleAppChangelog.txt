@@ -12,8 +12,10 @@ https://github.com/100mslive/100ms-flutter/issues/1373
 - Added support to Not mute local peer when incoming phone call is ringing
 https://github.com/100mslive/100ms-flutter/pull/1403
 
-- Updated Android SDK version from 2.6.8 to 2.7.1
+- Added Permissions screens in preview
+
+- Updated Android SDK version to 2.7.2 and iOS SDK version to 0.9.6
 
 Flutter SDK: 1.8.0
-Android SDK: 2.7.1
-iOS SDK: 0.9.5
+Android SDK: 2.7.2
+iOS SDK: 0.9.6
