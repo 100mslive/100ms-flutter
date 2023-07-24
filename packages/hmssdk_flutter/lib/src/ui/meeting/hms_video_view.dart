@@ -87,8 +87,9 @@ class HMSVideoView extends StatelessWidget {
       {Key? key,
       required this.track,
       this.setMirror = false,
-      @Deprecated("matchParent is not longer necessary and will be removed in future version")
-          this.matchParent = true,
+      @Deprecated(
+          "matchParent is not longer necessary and will be removed in future version")
+      this.matchParent = true,
       this.scaleType = ScaleType.SCALE_ASPECT_FIT,
       this.disableAutoSimulcastLayerSelect = false})
       : super(key: key);
@@ -132,8 +133,8 @@ class _PlatformView extends StatelessWidget {
           surfaceFactory: (context, controller) {
             return AndroidViewSurface(
               controller: controller as AndroidViewController,
-              gestureRecognizers: const <
-                  Factory<OneSequenceGestureRecognizer>>{},
+              gestureRecognizers: const <Factory<
+                  OneSequenceGestureRecognizer>>{},
               hitTestBehavior: PlatformViewHitTestBehavior.opaque,
             );
           },
