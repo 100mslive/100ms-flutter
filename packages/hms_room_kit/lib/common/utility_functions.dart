@@ -111,13 +111,12 @@ class Utilities {
     await Permission.camera.request();
     await Permission.microphone.request();
 
-    if(Platform.isIOS){
+    if (Platform.isIOS) {
       await Permission.bluetooth.request();
       while ((await Permission.bluetooth.isDenied)) {
         await Permission.bluetooth.request();
       }
-    }
-    else if(Platform.isAndroid){
+    } else if (Platform.isAndroid) {
       await Permission.bluetoothConnect.request();
       while ((await Permission.bluetoothConnect.isDenied)) {
         await Permission.bluetoothConnect.request();
@@ -141,7 +140,8 @@ class Utilities {
   static Future<bool> checkPermissions() async {
     if (await Permission.camera.isGranted &&
         await Permission.microphone.isGranted &&
-        (await Permission.bluetoothConnect.isGranted || await Permission.bluetooth.isGranted)) {
+        (await Permission.bluetoothConnect.isGranted ||
+            await Permission.bluetooth.isGranted)) {
       return true;
     }
     return false;
