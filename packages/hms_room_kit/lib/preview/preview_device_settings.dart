@@ -26,7 +26,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: 0.4,
+      heightFactor: 0.5,
       child: Padding(
         padding: const EdgeInsets.only(top: 24.0, left: 24, right: 24),
         child: Selector<PreviewStore,
@@ -68,8 +68,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                       height: 5,
                     ),
                   ),
-                  SizedBox(
-                    height: 150,
+                  Expanded(
                     child: ListView.builder(
                         itemCount: data.item2,
                         itemBuilder: (context, index) {

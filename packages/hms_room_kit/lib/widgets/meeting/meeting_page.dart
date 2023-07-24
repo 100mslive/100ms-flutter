@@ -129,7 +129,7 @@ class _MeetingPageState extends State<MeetingPage> {
                 value: 1,
                 child: Row(children: [
                   SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/leave_hls.svg",
+                      "packages/hms_room_kit/lib/assets/icons/exit_room.svg",
                       width: 17,
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn)),
