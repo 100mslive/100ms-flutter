@@ -108,10 +108,22 @@ class Utilities {
   }
 
   static Future<bool> getPermissions() async {
-    if (Platform.isIOS) return true;
     await Permission.camera.request();
     await Permission.microphone.request();
-    await Permission.bluetoothConnect.request();
+
+    if(Platform.isIOS){
+      await Permission.bluetooth.request();
+      while ((await Permission.bluetooth.isDenied)) {
+        await Permission.bluetooth.request();
+      }
+    }
+    else if(Platform.isAndroid){
+      await Permission.bluetoothConnect.request();
+      while ((await Permission.bluetoothConnect.isDenied)) {
+        await Permission.bluetoothConnect.request();
+      }
+    }
+
     await Permission.phone.request();
 
     while ((await Permission.camera.isDenied)) {
@@ -120,11 +132,19 @@ class Utilities {
     while ((await Permission.microphone.isDenied)) {
       await Permission.microphone.request();
     }
-    while ((await Permission.bluetoothConnect.isDenied)) {
-      await Permission.bluetoothConnect.request();
-    }
 
     return true;
+  }
+
+  ///This method checks for the permissions for the camera,microphone and bluetooth
+  ///Based on this we route the screens.
+  static Future<bool> checkPermissions() async {
+    if (await Permission.camera.isGranted &&
+        await Permission.microphone.isGranted &&
+        (await Permission.bluetoothConnect.isGranted || await Permission.bluetooth.isGranted)) {
+      return true;
+    }
+    return false;
   }
 
   ///This method is used to get names for the audio devices
