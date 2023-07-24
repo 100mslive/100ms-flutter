@@ -44,7 +44,7 @@ class PreviewParticipantChip extends StatelessWidget {
                           height: 16,
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 4.0),
+                          padding: const EdgeInsets.only(left: 4.0, right: 6),
                           child: SubtitleText(
                               text: "LIVE",
                               fontWeight: FontWeight.w600,

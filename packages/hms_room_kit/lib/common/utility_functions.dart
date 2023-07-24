@@ -108,31 +108,54 @@ class Utilities {
   }
 
   static Future<bool> getPermissions() async {
+    ///We open the app settings if the user has permanently denied the permissions
+    ///This is done because the user can't grant the permissions from the app now
+    bool cameraPermissions = await Permission.camera.isPermanentlyDenied;
+    bool microphonePermissions =
+        await Permission.microphone.isPermanentlyDenied;
+    bool bluetoothPermissions = false;
+    if (Platform.isIOS) {
+      bluetoothPermissions = await Permission.bluetooth.isPermanentlyDenied;
+    } else if (Platform.isAndroid) {
+      bluetoothPermissions =
+          await Permission.bluetoothConnect.isPermanentlyDenied;
+    }
+
+    ///We open the app settings if the user has permanently denied the permissions
+    ///based on the platform
+    if (cameraPermissions || microphonePermissions || bluetoothPermissions) {
+      await openAppSettings();
+    }
+
+    ///We request the permissions for the camera,microphone and bluetooth
     await Permission.camera.request();
     await Permission.microphone.request();
-
     if (Platform.isIOS) {
       await Permission.bluetooth.request();
-      while ((await Permission.bluetooth.isDenied)) {
-        await Permission.bluetooth.request();
-      }
     } else if (Platform.isAndroid) {
       await Permission.bluetoothConnect.request();
-      while ((await Permission.bluetoothConnect.isDenied)) {
-        await Permission.bluetoothConnect.request();
-      }
     }
 
     await Permission.phone.request();
 
-    while ((await Permission.camera.isDenied)) {
-      await Permission.camera.request();
+    ///We check if the permissions are granted
+    ///If they are granted we return true
+    ///Else we return false
+    if (Platform.isIOS) {
+      if (await Permission.camera.isGranted &&
+          await Permission.microphone.isGranted &&
+          await Permission.bluetooth.isGranted) {
+        return true;
+      }
+    } else if (Platform.isAndroid) {
+      if (await Permission.camera.isGranted &&
+          await Permission.microphone.isGranted &&
+          await Permission.phone.isGranted &&
+          await Permission.bluetoothConnect.isGranted) {
+        return true;
+      }
     }
-    while ((await Permission.microphone.isDenied)) {
-      await Permission.microphone.request();
-    }
-
-    return true;
+    return false;
   }
 
   ///This method checks for the permissions for the camera,microphone and bluetooth
