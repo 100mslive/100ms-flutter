@@ -33,6 +33,7 @@ class PreviewPage extends StatefulWidget {
 class _PreviewPageState extends State<PreviewPage> {
   late MeetingStore _meetingStore;
   TextEditingController nameController = TextEditingController();
+  bool isJoiningRoom = false;
 
   @override
   void initState() {
@@ -45,13 +46,33 @@ class _PreviewPageState extends State<PreviewPage> {
     );
   }
 
+  void _joinMeeting(PreviewStore previewStore) {
+    if (nameController.text.isNotEmpty) {
+      setState(() {
+        isJoiningRoom = true;
+      });
+      context.read<PreviewStore>().removePreviewListener();
+      setMeetingStore(previewStore);
+      isJoiningRoom = false;
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (_) => ListenableProvider.value(
+                value: _meetingStore,
+                child: MeetingScreenController(
+                  role: previewStore.peer?.role,
+                  meetingLink: widget.meetingLink,
+                  localPeerNetworkQuality: null,
+                  user: nameController.text,
+                ),
+              )));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     final double height = size.height;
     final double width = size.width;
     final previewStore = context.watch<PreviewStore>();
-    bool isJoiningRoom = false;
 
     return WillPopScope(
       onWillPop: () async {
@@ -428,7 +449,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 child: TextField(
                                                   textInputAction:
                                                       TextInputAction.done,
-                                                  onSubmitted: (value) {},
                                                   textCapitalization:
                                                       TextCapitalization.words,
                                                   style: GoogleFonts.inter(),
@@ -484,42 +504,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 errorMessage:
                                                     "Please enter you name",
                                                 width: width * 0.38,
-                                                onPressed: () async => {
-                                                  if (nameController
-                                                      .text.isNotEmpty)
-                                                    {
-                                                      setState(() {
-                                                        isJoiningRoom = true;
-                                                      }),
-                                                      context
-                                                          .read<PreviewStore>()
-                                                          .removePreviewListener(),
-                                                      setMeetingStore(
-                                                          previewStore),
-                                                      isJoiningRoom = false,
-                                                      Navigator.of(context)
-                                                          .pushReplacement(
-                                                              MaterialPageRoute(
-                                                                  builder: (_) =>
-                                                                      ListenableProvider
-                                                                          .value(
-                                                                        value:
-                                                                            _meetingStore,
-                                                                        child:
-                                                                            MeetingScreenController(
-                                                                          role: previewStore
-                                                                              .peer
-                                                                              ?.role,
-                                                                          meetingLink:
-                                                                              widget.meetingLink,
-                                                                          localPeerNetworkQuality:
-                                                                              null,
-                                                                          user:
-                                                                              nameController.text,
-                                                                        ),
-                                                                      )))
-                                                    }
-                                                },
+                                                onPressed: () =>
+                                                    _joinMeeting(previewStore),
                                                 childWidget: PreviewJoinButton(
                                                   previewStore: previewStore,
                                                 ),
