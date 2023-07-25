@@ -16,6 +16,7 @@ https://github.com/100mslive/100ms-flutter/pull/1403
 
 - Updated Android SDK version to 2.7.2 and iOS SDK version to 0.9.6
 
-Flutter SDK: 1.8.0
+Main SDK: 1.8.0
+Room Kit: 0.0.4
 Android SDK: 2.7.2
 iOS SDK: 0.9.6
