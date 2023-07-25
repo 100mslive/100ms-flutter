@@ -20,9 +20,9 @@ perform_pub_actions() {
 release_android() {
 	cd ./android
 
-	# bundle install --verbose
+	bundle install --verbose
 
-	# bundle exec fastlane release_on_firebase
+	bundle exec fastlane release_on_firebase
 }
 
 release_iOS() {
