@@ -389,17 +389,20 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                       Text(
                                         valueChoose,
                                         style: GoogleFonts.inter(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 12,
-                                          letterSpacing: 0.4,
-                                        ),
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 12,
+                                            letterSpacing: 0.4,
+                                            color: onSurfaceHighEmphasis),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                       ),
                                       const SizedBox(
                                         width: 5,
                                       ),
-                                      const Icon(Icons.keyboard_arrow_down),
+                                      Icon(
+                                        Icons.keyboard_arrow_down,
+                                        color: onSurfaceHighEmphasis,
+                                      ),
                                     ],
                                   ),
                                 ),
