@@ -37,6 +37,7 @@ Widget heroMode(
                 ? Container(
                     margin: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
+                        color: surfaceDim,
                         border: Border.all(color: Colors.grey, width: 1.0),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10))),

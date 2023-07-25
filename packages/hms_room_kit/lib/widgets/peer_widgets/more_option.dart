@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/common/app_color.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/common/utility_components.dart';
 import 'package:hms_room_kit/common/utility_functions.dart';
@@ -229,9 +230,12 @@ class _MoreOptionState extends State<MoreOption> {
               borderRadius: BorderRadius.circular(8),
               color: const Color.fromRGBO(0, 0, 0, 0.6),
             ),
-            child: const Padding(
-              padding: EdgeInsets.fromLTRB(6, 4, 6, 4),
-              child: Icon(Icons.more_horiz),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(6, 4, 6, 4),
+              child: Icon(
+                Icons.more_horiz,
+                color: onSurfaceHighEmphasis,
+              ),
             ),
           ),
         ),

@@ -321,10 +321,10 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                         Text(
                                           "Everyone",
                                           style: GoogleFonts.inter(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 12,
-                                            letterSpacing: 0.4,
-                                          ),
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 12,
+                                              letterSpacing: 0.4,
+                                              color: onSurfaceHighEmphasis),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                         ),
@@ -349,10 +349,10 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                         Text(
                                           "Raised Hand",
                                           style: GoogleFonts.inter(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 12,
-                                            letterSpacing: 0.4,
-                                          ),
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 12,
+                                              letterSpacing: 0.4,
+                                              color: onSurfaceHighEmphasis),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                         ),
