@@ -202,7 +202,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                   //   semanticsLabel: "fl_user_icon_label",
                                   // ),
                                   const SizedBox(
-                                    height: 20,
+                                    height: 30,
                                   ),
                                   TitleText(
                                       text: "Get Started",

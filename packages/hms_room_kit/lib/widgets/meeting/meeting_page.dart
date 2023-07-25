@@ -100,7 +100,7 @@ class _MeetingPageState extends State<MeetingPage> {
         offset: const Offset(0, 45),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         icon: SvgPicture.asset(
-          "packages/hms_room_kit/lib/assets/icons/leave_hls.svg",
+          "packages/hms_room_kit/lib/assets/icons/exit_room.svg",
           colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
           fit: BoxFit.scaleDown,
         ),
@@ -129,7 +129,7 @@ class _MeetingPageState extends State<MeetingPage> {
                 value: 1,
                 child: Row(children: [
                   SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/leave_hls.svg",
+                      "packages/hms_room_kit/lib/assets/icons/exit_room.svg",
                       width: 17,
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn)),
@@ -416,7 +416,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                 child:
                                                                     SvgPicture
                                                                         .asset(
-                                                                  "packages/hms_room_kit/lib/assets/icons/leave_hls.svg",
+                                                                  "packages/hms_room_kit/lib/assets/icons/exit_room.svg",
                                                                   colorFilter: const ColorFilter
                                                                           .mode(
                                                                       Colors
