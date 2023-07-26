@@ -134,7 +134,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                   children: [
                     IconButton(
                       icon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/close_button.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/close_button.svg",
                         width: 40,
                         // color: defaultColor,
                       ),
@@ -162,8 +162,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                   //   contentPadding: EdgeInsets.zero,
                   //   leading: SvgPicture.asset(
                   //     isDarkMode
-                  //         ? "packages/hms_room_kit/lib/assets/icons/dark_mode.svg"
-                  //         : 'packages/hms_room_kit/lib/assets/icons/light_mode.svg',
+                  //         ? "packages/hms_room_kit/lib/src/assets/icons/dark_mode.svg"
+                  //         : 'packages/hms_room_kit/lib/src/assets/icons/light_mode.svg',
                   //     fit: BoxFit.scaleDown,
                   //     colorFilter:  ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                   //   ),
@@ -197,7 +197,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/live.svg",
+                      "packages/hms_room_kit/lib/src/assets/icons/live.svg",
                       width: 24,
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
@@ -227,7 +227,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/bug.svg",
+                      "packages/hms_room_kit/lib/src/assets/icons/bug.svg",
                       fit: BoxFit.scaleDown,
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
@@ -257,7 +257,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/mic_state_off.svg",
+                      "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
                       fit: BoxFit.scaleDown,
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
@@ -287,7 +287,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/cam_state_off.svg",
+                      "packages/hms_room_kit/lib/src/assets/icons/cam_state_off.svg",
                       fit: BoxFit.scaleDown,
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
@@ -317,7 +317,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                   //   enabled: false,
                   //   contentPadding: EdgeInsets.zero,
                   //   leading: SvgPicture.asset(
-                  //     "packages/hms_room_kit/lib/assets/icons/preview_state_on.svg",
+                  //     "packages/hms_room_kit/lib/src/assets/icons/preview_state_on.svg",
                   //     fit: BoxFit.scaleDown,
                   //     colorFilter:  ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                   //   ),
@@ -373,7 +373,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      'packages/hms_room_kit/lib/assets/icons/stats.svg',
+                      'packages/hms_room_kit/lib/src/assets/icons/stats.svg',
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
@@ -403,7 +403,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       enabled: false,
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        'packages/hms_room_kit/lib/assets/icons/decoder.svg',
+                        'packages/hms_room_kit/lib/src/assets/icons/decoder.svg',
                         colorFilter: ColorFilter.mode(
                             themeDefaultColor, BlendMode.srcIn),
                       ),
@@ -435,7 +435,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       enabled: true,
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        'packages/hms_room_kit/lib/assets/icons/settings.svg',
+                        'packages/hms_room_kit/lib/src/assets/icons/settings.svg',
                         colorFilter: ColorFilter.mode(
                             themeDefaultColor, BlendMode.srcIn),
                       ),
@@ -464,7 +464,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     enabled: true,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      'packages/hms_room_kit/lib/assets/icons/simulcast.svg',
+                      'packages/hms_room_kit/lib/src/assets/icons/simulcast.svg',
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
@@ -505,7 +505,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       enabled: false,
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/audio_mode.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/audio_mode.svg",
                         fit: BoxFit.scaleDown,
                         colorFilter: ColorFilter.mode(
                             themeDefaultColor, BlendMode.srcIn),
@@ -541,7 +541,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                   //     },
                   //     contentPadding: EdgeInsets.zero,
                   //     leading: SvgPicture.asset(
-                  //       "packages/hms_room_kit/lib/assets/icons/notification.svg",
+                  //       "packages/hms_room_kit/lib/src/assets/icons/notification.svg",
                   //       fit: BoxFit.scaleDown,
                   //       colorFilter: ColorFilter.mode(
                   //           themeDefaultColor, BlendMode.srcIn),
@@ -561,7 +561,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     onTap: _launchUrl,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      'packages/hms_room_kit/lib/assets/icons/bug.svg',
+                      'packages/hms_room_kit/lib/src/assets/icons/bug.svg',
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
