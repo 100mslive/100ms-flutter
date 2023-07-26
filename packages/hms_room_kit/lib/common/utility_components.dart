@@ -1262,6 +1262,7 @@ class UtilityComponents {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
+                    style: TextStyle(color: onSurfaceHighEmphasis),
                     textCapitalization: TextCapitalization.words,
                     textInputAction: TextInputAction.done,
                     onSubmitted: (value) => (textController.text == "")

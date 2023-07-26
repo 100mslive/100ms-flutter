@@ -185,7 +185,10 @@ class MessageContainer extends StatelessWidget {
                   itemBuilder: (context) {
                     return List.generate(1, (index) {
                       return PopupMenuItem(
-                        child: const Text('Pin Message'),
+                        child: Text(
+                          'Pin Message',
+                          style: TextStyle(color: onSurfaceHighEmphasis),
+                        ),
                         onTap: () => context
                             .read<MeetingStore>()
                             .setSessionMetadataForKey(

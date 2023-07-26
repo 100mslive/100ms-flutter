@@ -116,28 +116,24 @@ class _PreviewPageState extends State<PreviewPage> {
                                 )
                               : Stack(
                                   children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(16),
-                                      child: Container(
-                                        height: height,
-                                        width: width,
-                                        decoration:
-                                            BoxDecoration(color: backgroundDim),
-                                        child: (previewStore.isVideoOn)
-                                            ? Center(
-                                                child: HMSVideoView(
-                                                  scaleType: ScaleType
-                                                      .SCALE_ASPECT_FILL,
-                                                  track: previewStore
-                                                      .localTracks[0],
-                                                  setMirror: true,
-                                                ),
-                                              )
-                                            : Center(
-                                                child: HMSCircularAvatar(
-                                                    name: nameController.text),
+                                    Container(
+                                      height: height,
+                                      width: width,
+                                      color: backgroundDim,
+                                      child: (previewStore.isVideoOn)
+                                          ? Center(
+                                              child: HMSVideoView(
+                                                scaleType:
+                                                    ScaleType.SCALE_ASPECT_FILL,
+                                                track:
+                                                    previewStore.localTracks[0],
+                                                setMirror: true,
                                               ),
-                                      ),
+                                            )
+                                          : Center(
+                                              child: HMSCircularAvatar(
+                                                  name: nameController.text),
+                                            ),
                                     ),
 
                                     ///This shows the network quality strength of the peer
@@ -272,7 +268,9 @@ class _PreviewPageState extends State<PreviewPage> {
                             child: (previewStore.peer != null || !isJoiningRoom)
                                 ? Container(
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(16),
+                                      borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(16),
+                                          topRight: Radius.circular(16)),
                                       color: backgroundDefault,
                                     ),
                                     width: width,
@@ -451,7 +449,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                                       TextInputAction.done,
                                                   textCapitalization:
                                                       TextCapitalization.words,
-                                                  style: GoogleFonts.inter(),
+                                                  style: GoogleFonts.inter(
+                                                      color:
+                                                          onSurfaceHighEmphasis),
                                                   controller: nameController,
                                                   keyboardType:
                                                       TextInputType.name,

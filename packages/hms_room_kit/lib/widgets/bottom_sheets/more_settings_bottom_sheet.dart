@@ -120,11 +120,15 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               badge.Badge(
                                 badgeStyle: badge.BadgeStyle(
                                     badgeColor: hmsdefaultColor),
-                                badgeContent: Text(context
-                                    .read<MeetingStore>()
-                                    .peers
-                                    .length
-                                    .toString()),
+                                badgeContent: Text(
+                                  context
+                                      .read<MeetingStore>()
+                                      .peers
+                                      .length
+                                      .toString(),
+                                  style:
+                                      TextStyle(color: onSurfaceHighEmphasis),
+                                ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: SvgPicture.asset(

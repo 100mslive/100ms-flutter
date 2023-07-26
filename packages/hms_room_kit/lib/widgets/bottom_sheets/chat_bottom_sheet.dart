@@ -178,11 +178,12 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                   child: Text(
                                                     "Everyone",
                                                     style: GoogleFonts.inter(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 12,
-                                                      letterSpacing: 0.4,
-                                                    ),
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontSize: 12,
+                                                        letterSpacing: 0.4,
+                                                        color:
+                                                            onSurfaceHighEmphasis),
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     maxLines: 1,
