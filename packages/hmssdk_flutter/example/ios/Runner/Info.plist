@@ -48,7 +48,11 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
+<<<<<<< HEAD
 	<string>286</string>
+=======
+	<string>285</string>
+>>>>>>> 7aa128f8 (released sample app version 1.4.150 (285) 🍀)
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationCategoryType</key>
