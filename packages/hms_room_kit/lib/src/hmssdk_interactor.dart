@@ -361,7 +361,6 @@ class HMSSDKInteractor {
   }
 
   void toggleAlwaysScreenOn() {
-    //This will be added in the future version of HMSSDK
-    // hmsSDK.toggleAlwaysScreenOn();
+    hmsSDK.toggleAlwaysScreenOn();
   }
 }
