@@ -5,13 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hms_room_kit/common/app_color.dart';
-import 'package:hms_room_kit/common/utility_functions.dart';
-import 'package:hms_room_kit/service/app_debug_config.dart';
-import 'package:hms_room_kit/widgets/app_dialogs/audio_mode_select_dialog.dart';
-import 'package:hms_room_kit/widgets/bottom_sheets/notification_settings_bottom_sheet.dart';
-import 'package:hms_room_kit/widgets/common_widgets/title_text.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -528,36 +522,39 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       trailing: Text(currentAudioMode.name),
                     ),
                   ),
-                  ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        Navigator.pop(context);
-                        showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: themeBottomSheetColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            context: context,
-                            builder: (ctx) =>
-                                const NotificationSettingsBottomSheet());
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/notification.svg",
-                        fit: BoxFit.scaleDown,
-                        colorFilter: ColorFilter.mode(
-                            themeDefaultColor, BlendMode.srcIn),
-                      ),
-                      title: Text(
-                        "Modify Notifications",
-                        semanticsLabel: "fl_notification_setting",
-                        style: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: themeDefaultColor,
-                            letterSpacing: 0.25,
-                            fontWeight: FontWeight.w600),
-                      )),
+
+                  ///Since we are not supporting toasts commenting this out for now
+                  ///
+                  // ListTile(
+                  //     horizontalTitleGap: 2,
+                  //     onTap: () async {
+                  //       Navigator.pop(context);
+                  //       showModalBottomSheet(
+                  //           isScrollControlled: true,
+                  //           backgroundColor: themeBottomSheetColor,
+                  //           shape: RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(20),
+                  //           ),
+                  //           context: context,
+                  //           builder: (ctx) =>
+                  //               const NotificationSettingsBottomSheet());
+                  //     },
+                  //     contentPadding: EdgeInsets.zero,
+                  //     leading: SvgPicture.asset(
+                  //       "packages/hms_room_kit/lib/assets/icons/notification.svg",
+                  //       fit: BoxFit.scaleDown,
+                  //       colorFilter: ColorFilter.mode(
+                  //           themeDefaultColor, BlendMode.srcIn),
+                  //     ),
+                  //     title: Text(
+                  //       "Modify Notifications",
+                  //       semanticsLabel: "fl_notification_setting",
+                  //       style: GoogleFonts.inter(
+                  //           fontSize: 14,
+                  //           color: themeDefaultColor,
+                  //           letterSpacing: 0.25,
+                  //           fontWeight: FontWeight.w600),
+                  //     )),
                   ListTile(
                     horizontalTitleGap: 2,
                     enabled: true,
@@ -668,7 +665,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
             Padding(
               padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 15),
               child: Center(
-                  child: TitleText(
+                  child: HMSTitleText(
                       text: "Made with ❤️ by 100ms",
                       textColor: themeDefaultColor)),
             )
