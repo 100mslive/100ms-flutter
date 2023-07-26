@@ -21,5 +21,5 @@ export 'package:hmssdk_flutter/src/enum/hms_audio_mode.dart';
 export 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 export 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 
-// UI dialog exports
+// UI Dialog exports
 export 'package:hms_room_kit/src/widgets/app_dialogs/audio_mode_select_dialog.dart';
