@@ -23,7 +23,7 @@ class PreviewJoinButton extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SvgPicture.asset(
-                  "packages/hms_room_kit/lib/assets/icons/live.svg",
+                  "packages/hms_room_kit/lib/src/assets/icons/live.svg",
                   height: 20,
                   colorFilter:
                       ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),

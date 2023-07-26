@@ -73,13 +73,13 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                     children: [
                       if (widget.isVideoMuted)
                         SvgPicture.asset(
-                          "packages/hms_room_kit/lib/assets/icons/cam_state_on.svg",
+                          "packages/hms_room_kit/lib/src/assets/icons/cam_state_on.svg",
                           colorFilter:
                               ColorFilter.mode(iconColor, BlendMode.srcIn),
                         )
                       else
                         SvgPicture.asset(
-                          "packages/hms_room_kit/lib/assets/icons/cam_state_off.svg",
+                          "packages/hms_room_kit/lib/src/assets/icons/cam_state_off.svg",
                           colorFilter:
                               ColorFilter.mode(iconColor, BlendMode.srcIn),
                         ),
@@ -109,13 +109,13 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                     children: [
                       if (widget.isAudioMuted)
                         SvgPicture.asset(
-                          "packages/hms_room_kit/lib/assets/icons/mic_state_on.svg",
+                          "packages/hms_room_kit/lib/src/assets/icons/mic_state_on.svg",
                           colorFilter:
                               ColorFilter.mode(iconColor, BlendMode.srcIn),
                         )
                       else
                         SvgPicture.asset(
-                          "packages/hms_room_kit/lib/assets/icons/mic_state_off.svg",
+                          "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
                           colorFilter:
                               ColorFilter.mode(iconColor, BlendMode.srcIn),
                         ),
@@ -143,7 +143,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/peer_remove.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/peer_remove.svg",
                         colorFilter:
                             ColorFilter.mode(iconColor, BlendMode.srcIn),
                       ),
@@ -168,7 +168,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/role_change.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/role_change.svg",
                         colorFilter:
                             ColorFilter.mode(iconColor, BlendMode.srcIn),
                       ),
@@ -194,7 +194,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                     child: Row(
                       children: [
                         SvgPicture.asset(
-                          "packages/hms_room_kit/lib/assets/icons/layers.svg",
+                          "packages/hms_room_kit/lib/src/assets/icons/layers.svg",
                           colorFilter:
                               ColorFilter.mode(iconColor, BlendMode.srcIn),
                         ),
@@ -219,7 +219,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/pin.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/pin.svg",
                         colorFilter:
                             ColorFilter.mode(iconColor, BlendMode.srcIn),
                       ),
@@ -245,7 +245,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/spotlight.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/spotlight.svg",
                         colorFilter:
                             ColorFilter.mode(iconColor, BlendMode.srcIn),
                       ),

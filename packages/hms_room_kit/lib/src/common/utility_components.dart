@@ -36,7 +36,7 @@ class UtilityComponents {
             mainAxisSize: MainAxisSize.min,
             children: [
               SvgPicture.asset(
-                "packages/hms_room_kit/lib/assets/icons/end.svg",
+                "packages/hms_room_kit/lib/src/assets/icons/end.svg",
                 width: 24,
               ),
               const SizedBox(
@@ -144,7 +144,7 @@ class UtilityComponents {
             mainAxisSize: MainAxisSize.min,
             children: [
               SvgPicture.asset(
-                "packages/hms_room_kit/lib/assets/icons/leave_hls.svg",
+                "packages/hms_room_kit/lib/src/assets/icons/leave_hls.svg",
                 height: 24,
               ),
               const SizedBox(
@@ -871,7 +871,7 @@ class UtilityComponents {
             mainAxisSize: MainAxisSize.min,
             children: [
               SvgPicture.asset(
-                "packages/hms_room_kit/lib/assets/icons/end_warning.svg",
+                "packages/hms_room_kit/lib/src/assets/icons/end_warning.svg",
                 width: 24,
               ),
               const SizedBox(
@@ -980,7 +980,7 @@ class UtilityComponents {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SvgPicture.asset(
-            "packages/hms_room_kit/lib/assets/icons/rotate.svg",
+            "packages/hms_room_kit/lib/src/assets/icons/rotate.svg",
             colorFilter: ColorFilter.mode(
                 meetingStore.isLandscapeLocked ? Colors.blue : iconColor,
                 BlendMode.srcIn)),
@@ -1139,7 +1139,7 @@ class UtilityComponents {
             mainAxisSize: MainAxisSize.min,
             children: [
               SvgPicture.asset(
-                "packages/hms_room_kit/lib/assets/icons/end_warning.svg",
+                "packages/hms_room_kit/lib/src/assets/icons/end_warning.svg",
                 width: 24,
               ),
               const SizedBox(

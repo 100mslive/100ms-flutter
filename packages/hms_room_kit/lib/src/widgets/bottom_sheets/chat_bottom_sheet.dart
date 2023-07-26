@@ -250,7 +250,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                       ),
                       IconButton(
                         icon: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/assets/icons/close_button.svg",
+                          "packages/hms_room_kit/lib/src/assets/icons/close_button.svg",
                           width: 40,
                         ),
                         onPressed: () {
@@ -288,7 +288,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                     Row(
                                       children: [
                                         SvgPicture.asset(
-                                            "packages/hms_room_kit/lib/assets/icons/info.svg"),
+                                            "packages/hms_room_kit/lib/src/assets/icons/info.svg"),
                                         const SizedBox(width: 18.5),
                                         SizedBox(
                                           width: MediaQuery.of(context)
@@ -314,7 +314,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                               .setMessageInfoFalse();
                                         },
                                         child: SvgPicture.asset(
-                                            "packages/hms_room_kit/lib/assets/icons/close.svg"))
+                                            "packages/hms_room_kit/lib/src/assets/icons/close.svg"))
                                   ],
                                 ),
                               ),
@@ -343,7 +343,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                 Row(
                                   children: [
                                     SvgPicture.asset(
-                                        "packages/hms_room_kit/lib/assets/icons/pin.svg"),
+                                        "packages/hms_room_kit/lib/src/assets/icons/pin.svg"),
                                     const SizedBox(width: 18.5),
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width *
@@ -387,7 +387,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                               metadata: null);
                                     },
                                     child: SvgPicture.asset(
-                                        "packages/hms_room_kit/lib/assets/icons/close.svg"))
+                                        "packages/hms_room_kit/lib/src/assets/icons/close.svg"))
                               ],
                             ),
                           );
@@ -499,7 +499,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                               width: 40,
                               height: 40,
                               child: SvgPicture.asset(
-                                "packages/hms_room_kit/lib/assets/icons/send_message.svg",
+                                "packages/hms_room_kit/lib/src/assets/icons/send_message.svg",
                                 colorFilter: ColorFilter.mode(
                                     themeDefaultColor, BlendMode.srcIn),
                                 fit: BoxFit.scaleDown,

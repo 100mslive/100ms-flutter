@@ -58,7 +58,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                     children: [
                       IconButton(
                         icon: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/assets/icons/close_button.svg",
+                          "packages/hms_room_kit/lib/src/assets/icons/close_button.svg",
                           width: 40,
                         ),
                         onPressed: () {
@@ -123,7 +123,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                                       ? 5
                                       : 10)),
                               child: SvgPicture.asset(
-                                "packages/hms_room_kit/lib/assets/icons/participants.svg",
+                                "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
                                 colorFilter: ColorFilter.mode(
                                     themeDefaultColor, BlendMode.srcIn),
                               ),
@@ -172,7 +172,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SvgPicture.asset(
-                            "packages/hms_room_kit/lib/assets/icons/aspect_ratio.svg",
+                            "packages/hms_room_kit/lib/src/assets/icons/aspect_ratio.svg",
                             colorFilter: ColorFilter.mode(
                                 themeDefaultColor, BlendMode.srcIn),
                           ),
@@ -216,7 +216,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                 },
                 contentPadding: EdgeInsets.zero,
                 leading: SvgPicture.asset(
-                  "packages/hms_room_kit/lib/assets/icons/pencil.svg",
+                  "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
                   fit: BoxFit.scaleDown,
                 ),
                 title: Text(
@@ -236,7 +236,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                   },
                   contentPadding: EdgeInsets.zero,
                   leading: SvgPicture.asset(
-                    "packages/hms_room_kit/lib/assets/icons/hand_outline.svg",
+                    "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
                     fit: BoxFit.scaleDown,
                     colorFilter: ColorFilter.mode(
                         context.read<MeetingStore>().isRaisedHand
@@ -271,7 +271,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                   },
                   contentPadding: EdgeInsets.zero,
                   leading: SvgPicture.asset(
-                    "packages/hms_room_kit/lib/assets/icons/notification.svg",
+                    "packages/hms_room_kit/lib/src/assets/icons/notification.svg",
                     fit: BoxFit.scaleDown,
                     colorFilter:
                         ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
@@ -294,7 +294,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                     },
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/screen_share.svg",
+                      "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
                       fit: BoxFit.scaleDown,
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),

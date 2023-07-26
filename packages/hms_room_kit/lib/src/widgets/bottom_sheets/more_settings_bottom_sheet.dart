@@ -69,7 +69,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                   children: [
                     IconButton(
                       icon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/close_button.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/close_button.svg",
                         width: 40,
                       ),
                       onPressed: () {
@@ -132,7 +132,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: SvgPicture.asset(
-                                    "packages/hms_room_kit/lib/assets/icons/participants.svg",
+                                    "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
                                     colorFilter: ColorFilter.mode(
                                         themeDefaultColor, BlendMode.srcIn),
                                   ),
@@ -181,7 +181,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SvgPicture.asset(
-                                "packages/hms_room_kit/lib/assets/icons/settings.svg",
+                                "packages/hms_room_kit/lib/src/assets/icons/settings.svg",
                                 colorFilter: ColorFilter.mode(
                                     themeDefaultColor, BlendMode.srcIn),
                               ),
@@ -225,7 +225,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/participants.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
@@ -257,7 +257,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             },
                             contentPadding: EdgeInsets.zero,
                             leading: SvgPicture.asset(
-                              "packages/hms_room_kit/lib/assets/icons/screen_share.svg",
+                              "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
                               height: 20,
                               width: 20,
                               colorFilter: ColorFilter.mode(
@@ -293,7 +293,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                     },
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/pencil.svg",
+                      "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
                       height: 20,
                       width: 20,
                       colorFilter: ColorFilter.mode(
@@ -315,8 +315,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
                       meetingStore.isSpeakerOn
-                          ? "packages/hms_room_kit/lib/assets/icons/speaker_state_on.svg"
-                          : "packages/hms_room_kit/lib/assets/icons/speaker_state_off.svg",
+                          ? "packages/hms_room_kit/lib/src/assets/icons/speaker_state_on.svg"
+                          : "packages/hms_room_kit/lib/src/assets/icons/speaker_state_off.svg",
                       height: 20,
                       width: 20,
                       colorFilter: ColorFilter.mode(
@@ -339,7 +339,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/hand_outline.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
@@ -360,7 +360,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                     },
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/brb.svg",
+                      "packages/hms_room_kit/lib/src/assets/icons/brb.svg",
                       height: 20,
                       width: 20,
                       colorFilter: ColorFilter.mode(
@@ -391,7 +391,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/stats.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/stats.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
@@ -419,7 +419,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/assets/icons/mic_state_off.svg",
+                          "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
                           height: 20,
                           width: 20,
                           colorFilter: ColorFilter.mode(
@@ -445,7 +445,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/assets/icons/role_change.svg",
+                          "packages/hms_room_kit/lib/src/assets/icons/role_change.svg",
                           height: 20,
                           width: 20,
                           colorFilter: ColorFilter.mode(
@@ -501,7 +501,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               },
                               contentPadding: EdgeInsets.zero,
                               leading: SvgPicture.asset(
-                                "packages/hms_room_kit/lib/assets/icons/stream.svg",
+                                "packages/hms_room_kit/lib/src/assets/icons/stream.svg",
                                 height: 20,
                                 width: 20,
                                 colorFilter: ColorFilter.mode(
@@ -544,7 +544,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               },
                               contentPadding: EdgeInsets.zero,
                               leading: SvgPicture.asset(
-                                "packages/hms_room_kit/lib/assets/icons/record.svg",
+                                "packages/hms_room_kit/lib/src/assets/icons/record.svg",
                                 height: 20,
                                 width: 20,
                                 colorFilter: ColorFilter.mode(
@@ -596,7 +596,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               },
                               contentPadding: EdgeInsets.zero,
                               leading: SvgPicture.asset(
-                                  "packages/hms_room_kit/lib/assets/icons/hls.svg",
+                                  "packages/hms_room_kit/lib/src/assets/icons/hls.svg",
                                   height: 20,
                                   width: 20,
                                   colorFilter: ColorFilter.mode(
@@ -623,7 +623,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/screen_share.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
@@ -648,7 +648,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/share.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/share.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
@@ -681,7 +681,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                   //     },
                   //     contentPadding: EdgeInsets.zero,
                   //     leading: SvgPicture.asset(
-                  //       "packages/hms_room_kit/lib/assets/icons/notification.svg",
+                  //       "packages/hms_room_kit/lib/src/assets/icons/notification.svg",
                   //       height: 20,
                   //       width: 20,
                   //       color: onSurfaceHighEmphasis,
@@ -703,7 +703,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/end_room.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/end_room.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(

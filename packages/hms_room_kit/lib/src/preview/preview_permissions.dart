@@ -53,7 +53,7 @@ class _PreviewPermissionsState extends State<PreviewPermissions> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/permission_lock.svg",
+                      "packages/hms_room_kit/lib/src/assets/icons/permission_lock.svg",
                       fit: BoxFit.scaleDown,
                       semanticsLabel: "audio_mute_button",
                     ),

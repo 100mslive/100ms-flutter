@@ -87,7 +87,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                   enabled: false,
                                   contentPadding: EdgeInsets.zero,
                                   leading: SvgPicture.asset(
-                                    "packages/hms_room_kit/lib/assets/icons/${Utilities.getAudioDeviceIconName(data.item1[index])}.svg",
+                                    "packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(data.item1[index])}.svg",
                                     fit: BoxFit.scaleDown,
                                     colorFilter: ColorFilter.mode(
                                         onSurfaceHighEmphasis, BlendMode.srcIn),

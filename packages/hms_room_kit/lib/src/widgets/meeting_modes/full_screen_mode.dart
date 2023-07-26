@@ -45,7 +45,7 @@ Widget fullScreenMode(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SvgPicture.asset(
-                          "packages/hms_room_kit/lib/assets/icons/screen_share.svg",
+                          "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
                           colorFilter: const ColorFilter.mode(
                               Colors.white, BlendMode.srcIn),
                           height: 55.2,
@@ -68,7 +68,7 @@ Widget fullScreenMode(
                             childWidget: Row(
                               children: [
                                 SvgPicture.asset(
-                                    "packages/hms_room_kit/lib/assets/icons/close.svg"),
+                                    "packages/hms_room_kit/lib/src/assets/icons/close.svg"),
                                 const SizedBox(
                                   width: 10,
                                 ),

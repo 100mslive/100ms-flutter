@@ -71,7 +71,7 @@ class _NotificationSettingsBottomSheetState
                   children: [
                     IconButton(
                       icon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/close_button.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/close_button.svg",
                         width: 40,
                         // color: defaultColor,
                       ),
@@ -98,7 +98,7 @@ class _NotificationSettingsBottomSheetState
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/person.svg",
+                      "packages/hms_room_kit/lib/src/assets/icons/person.svg",
                       fit: BoxFit.scaleDown,
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
@@ -127,7 +127,7 @@ class _NotificationSettingsBottomSheetState
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/end_room.svg",
+                      "packages/hms_room_kit/lib/src/assets/icons/end_room.svg",
                       fit: BoxFit.scaleDown,
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
@@ -156,7 +156,7 @@ class _NotificationSettingsBottomSheetState
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/message_badge_off.svg",
+                      "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
                       fit: BoxFit.scaleDown,
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
@@ -185,7 +185,7 @@ class _NotificationSettingsBottomSheetState
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      'packages/hms_room_kit/lib/assets/icons/hand_outline.svg',
+                      'packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg',
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
@@ -213,7 +213,7 @@ class _NotificationSettingsBottomSheetState
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      'packages/hms_room_kit/lib/assets/icons/warning.svg',
+                      'packages/hms_room_kit/lib/src/assets/icons/warning.svg',
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),

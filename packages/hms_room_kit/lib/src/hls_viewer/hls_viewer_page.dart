@@ -127,7 +127,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                             child: Row(
                                               children: [
                                                 SvgPicture.asset(
-                                                  "packages/hms_room_kit/lib/assets/icons/generic.svg",
+                                                  "packages/hms_room_kit/lib/src/assets/icons/generic.svg",
                                                   width: 45,
                                                   height: 40,
                                                 ),
@@ -296,7 +296,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                       children: [
                                                                         SvgPicture
                                                                             .asset(
-                                                                          "packages/hms_room_kit/lib/assets/icons/red_dot.svg",
+                                                                          "packages/hms_room_kit/lib/src/assets/icons/red_dot.svg",
                                                                           width:
                                                                               4,
                                                                           height:
@@ -322,7 +322,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                         ),
                                                                         SvgPicture
                                                                             .asset(
-                                                                          "packages/hms_room_kit/lib/assets/icons/settings.svg",
+                                                                          "packages/hms_room_kit/lib/src/assets/icons/settings.svg",
                                                                           width:
                                                                               20,
                                                                           height:
@@ -340,7 +340,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                               .toggleFullScreen(context),
                                                                           child:
                                                                               SvgPicture.asset(
-                                                                            "packages/hms_room_kit/lib/assets/icons/${isFullScreen ? "minimize" : "maximize"}.svg",
+                                                                            "packages/hms_room_kit/lib/src/assets/icons/${isFullScreen ? "minimize" : "maximize"}.svg",
                                                                             width:
                                                                                 20,
                                                                             height:
@@ -424,7 +424,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                               isActive: false,
                                                               child: SvgPicture
                                                                   .asset(
-                                                                "packages/hms_room_kit/lib/assets/icons/phone_hangup.svg",
+                                                                "packages/hms_room_kit/lib/src/assets/icons/phone_hangup.svg",
                                                                 colorFilter: ColorFilter.mode(
                                                                     onSurfaceHighEmphasis,
                                                                     BlendMode
@@ -476,8 +476,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                       child: SvgPicture
                                                                           .asset(
                                                                         isMicOn
-                                                                            ? "packages/hms_room_kit/lib/assets/icons/mic_state_on.svg"
-                                                                            : "packages/hms_room_kit/lib/assets/icons/mic_state_off.svg",
+                                                                            ? "packages/hms_room_kit/lib/src/assets/icons/mic_state_on.svg"
+                                                                            : "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
                                                                         colorFilter: ColorFilter.mode(
                                                                             (context.read<MeetingStore>().localPeer?.role.publishSettings?.allowed.contains("audio") ?? false)
                                                                                 ? onSurfaceHighEmphasis
@@ -497,7 +497,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                               onTap: () => {},
                                                               child: SvgPicture
                                                                   .asset(
-                                                                "packages/hms_room_kit/lib/assets/icons/message_badge_off.svg",
+                                                                "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
                                                                 fit: BoxFit
                                                                     .scaleDown,
                                                                 semanticsLabel:
@@ -515,7 +515,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                               isActive: true,
                                                               child: SvgPicture
                                                                   .asset(
-                                                                "packages/hms_room_kit/lib/assets/icons/emoji.svg",
+                                                                "packages/hms_room_kit/lib/src/assets/icons/emoji.svg",
                                                                 colorFilter: ColorFilter.mode(
                                                                     onSurfaceHighEmphasis,
                                                                     BlendMode
@@ -553,7 +553,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                         true,
                                                                     child: SvgPicture
                                                                         .asset(
-                                                                      "packages/hms_room_kit/lib/assets/icons/hand_outline.svg",
+                                                                      "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
                                                                       colorFilter: ColorFilter.mode(
                                                                           handRaised
                                                                               ? const Color.fromRGBO(250, 201, 25,

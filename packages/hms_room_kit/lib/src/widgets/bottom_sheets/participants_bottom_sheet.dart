@@ -58,7 +58,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                   borderRadius: BorderRadius.circular(8)),
               color: themeSurfaceColor,
               icon: SvgPicture.asset(
-                "packages/hms_room_kit/lib/assets/icons/more.svg",
+                "packages/hms_room_kit/lib/src/assets/icons/more.svg",
                 colorFilter:
                     ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                 fit: BoxFit.scaleDown,
@@ -90,7 +90,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                       value: 1,
                       child: Row(children: [
                         SvgPicture.asset(
-                            "packages/hms_room_kit/lib/assets/icons/role_change.svg",
+                            "packages/hms_room_kit/lib/src/assets/icons/role_change.svg",
                             width: 15,
                             colorFilter: ColorFilter.mode(
                                 themeDefaultColor, BlendMode.srcIn)),
@@ -161,7 +161,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
               }
             },
             icon: SvgPicture.asset(
-              "packages/hms_room_kit/lib/assets/icons/more.svg",
+              "packages/hms_room_kit/lib/src/assets/icons/more.svg",
               colorFilter: ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
               fit: BoxFit.scaleDown,
             ),
@@ -171,7 +171,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                       value: 1,
                       child: Row(children: [
                         SvgPicture.asset(
-                            "packages/hms_room_kit/lib/assets/icons/role_change.svg",
+                            "packages/hms_room_kit/lib/src/assets/icons/role_change.svg",
                             width: 15,
                             colorFilter: ColorFilter.mode(
                                 themeDefaultColor, BlendMode.srcIn)),
@@ -193,8 +193,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                       child: Row(children: [
                         SvgPicture.asset(
                           peerTrackNode.track?.isMute ?? false
-                              ? "packages/hms_room_kit/lib/assets/icons/cam_state_on.svg"
-                              : "packages/hms_room_kit/lib/assets/icons/cam_state_off.svg",
+                              ? "packages/hms_room_kit/lib/src/assets/icons/cam_state_on.svg"
+                              : "packages/hms_room_kit/lib/src/assets/icons/cam_state_off.svg",
                           colorFilter: ColorFilter.mode(
                               themeDefaultColor, BlendMode.srcIn),
                           width: 15,
@@ -218,8 +218,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                       child: Row(children: [
                         SvgPicture.asset(
                           peerTrackNode.audioTrack?.isMute ?? false
-                              ? "packages/hms_room_kit/lib/assets/icons/mic_state_on.svg"
-                              : "packages/hms_room_kit/lib/assets/icons/mic_state_off.svg",
+                              ? "packages/hms_room_kit/lib/src/assets/icons/mic_state_on.svg"
+                              : "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
                           colorFilter: ColorFilter.mode(
                               themeDefaultColor, BlendMode.srcIn),
                           width: 15,
@@ -242,7 +242,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                       value: 4,
                       child: Row(children: [
                         SvgPicture.asset(
-                            "packages/hms_room_kit/lib/assets/icons/peer_remove.svg",
+                            "packages/hms_room_kit/lib/src/assets/icons/peer_remove.svg",
                             width: 15,
                             colorFilter: ColorFilter.mode(
                                 themeDefaultColor, BlendMode.srcIn)),
@@ -308,7 +308,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                     child: Row(
                                       children: [
                                         SvgPicture.asset(
-                                          "packages/hms_room_kit/lib/assets/icons/participants.svg",
+                                          "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
                                           fit: BoxFit.scaleDown,
                                           colorFilter: ColorFilter.mode(
                                               themeDefaultColor,
@@ -336,7 +336,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                     child: Row(
                                       children: [
                                         SvgPicture.asset(
-                                          "packages/hms_room_kit/lib/assets/icons/hand_outline.svg",
+                                          "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
                                           fit: BoxFit.scaleDown,
                                           colorFilter: ColorFilter.mode(
                                               themeDefaultColor,
@@ -429,7 +429,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                         children: [
                           IconButton(
                             icon: SvgPicture.asset(
-                              "packages/hms_room_kit/lib/assets/icons/close_button.svg",
+                              "packages/hms_room_kit/lib/src/assets/icons/close_button.svg",
                               width: 40,
                             ),
                             onPressed: () {
@@ -484,7 +484,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                             radius: 16,
                                             child: peer.item1.isEmpty
                                                 ? SvgPicture.asset(
-                                                    'packages/hms_room_kit/lib/assets/icons/user.svg',
+                                                    'packages/hms_room_kit/lib/src/assets/icons/user.svg',
                                                     height: 16,
                                                     width: 16,
                                                     semanticsLabel:
@@ -522,7 +522,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                             peer.item4.contains(
                                                     "\"isHandRaised\":true")
                                                 ? SvgPicture.asset(
-                                                    "packages/hms_room_kit/lib/assets/icons/hand.svg",
+                                                    "packages/hms_room_kit/lib/src/assets/icons/hand.svg",
                                                     colorFilter:
                                                         const ColorFilter.mode(
                                                             Color.fromRGBO(250,

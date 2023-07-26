@@ -14,7 +14,7 @@ class HLSWaitingUI extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SvgPicture.asset(
-          "packages/hms_room_kit/lib/assets/icons/time.svg",
+          "packages/hms_room_kit/lib/src/assets/icons/time.svg",
           height: 80,
           width: 80,
         ),

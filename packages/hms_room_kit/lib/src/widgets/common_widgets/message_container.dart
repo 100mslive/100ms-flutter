@@ -199,7 +199,7 @@ class MessageContainer extends StatelessWidget {
                     });
                   },
                   child: SvgPicture.asset(
-                    "packages/hms_room_kit/lib/assets/icons/more.svg",
+                    "packages/hms_room_kit/lib/src/assets/icons/more.svg",
                     fit: BoxFit.scaleDown,
                   ),
                 ),

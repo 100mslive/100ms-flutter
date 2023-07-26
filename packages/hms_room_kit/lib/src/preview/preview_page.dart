@@ -164,7 +164,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             .networkQuality !=
                                                         -1)
                                                   SvgPicture.asset(
-                                                    'packages/hms_room_kit/lib/assets/icons/network_${previewStore.networkQuality}.svg',
+                                                    'packages/hms_room_kit/lib/src/assets/icons/network_${previewStore.networkQuality}.svg',
                                                     fit: BoxFit.contain,
                                                     semanticsLabel:
                                                         "fl_network_icon_label",
@@ -214,12 +214,12 @@ class _PreviewPageState extends State<PreviewPage> {
                                   ///We render a generic logo which can be replaced
                                   ///with the company logo from dashboard
                                   // SvgPicture.asset(
-                                  //   'packages/hms_room_kit/lib/assets/icons/generic.svg',
+                                  //   'packages/hms_room_kit/lib/src/assets/icons/generic.svg',
                                   //   fit: BoxFit.contain,
                                   //   semanticsLabel: "fl_user_icon_label",
                                   // ),
                                   const SizedBox(
-                                    height: 30,
+                                    height: 32,
                                   ),
                                   HMSTitleText(
                                       text: "Get Started",
@@ -307,8 +307,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             .isAudioOn,
                                                         child: SvgPicture.asset(
                                                           previewStore.isAudioOn
-                                                              ? "packages/hms_room_kit/lib/assets/icons/mic_state_on.svg"
-                                                              : "packages/hms_room_kit/lib/assets/icons/mic_state_off.svg",
+                                                              ? "packages/hms_room_kit/lib/src/assets/icons/mic_state_on.svg"
+                                                              : "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
                                                           colorFilter:
                                                               ColorFilter.mode(
                                                                   onSurfaceHighEmphasis,
@@ -344,8 +344,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             .isVideoOn,
                                                         child: SvgPicture.asset(
                                                           previewStore.isVideoOn
-                                                              ? "packages/hms_room_kit/lib/assets/icons/cam_state_on.svg"
-                                                              : "packages/hms_room_kit/lib/assets/icons/cam_state_off.svg",
+                                                              ? "packages/hms_room_kit/lib/src/assets/icons/cam_state_on.svg"
+                                                              : "packages/hms_room_kit/lib/src/assets/icons/cam_state_off.svg",
                                                           colorFilter:
                                                               ColorFilter.mode(
                                                                   onSurfaceHighEmphasis,
@@ -375,7 +375,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                 .switchCamera(),
                                                         isActive: true,
                                                         child: SvgPicture.asset(
-                                                          "packages/hms_room_kit/lib/assets/icons/camera.svg",
+                                                          "packages/hms_room_kit/lib/src/assets/icons/camera.svg",
                                                           colorFilter: ColorFilter.mode(
                                                               previewStore
                                                                       .isVideoOn
@@ -425,7 +425,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         },
                                                         isActive: true,
                                                         child: SvgPicture.asset(
-                                                          'packages/hms_room_kit/lib/assets/icons/${Utilities.getAudioDeviceIconName(previewStore.currentAudioDeviceMode)}.svg',
+                                                          'packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(previewStore.currentAudioDeviceMode)}.svg',
                                                           fit: BoxFit.scaleDown,
                                                           semanticsLabel:
                                                               "settings_button",

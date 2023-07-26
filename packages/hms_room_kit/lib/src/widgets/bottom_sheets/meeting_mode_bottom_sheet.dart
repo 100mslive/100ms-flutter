@@ -62,7 +62,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                   ),
                   IconButton(
                     icon: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/close_button.svg",
+                      "packages/hms_room_kit/lib/src/assets/icons/close_button.svg",
                       width: 40,
                     ),
                     onPressed: () {
@@ -94,7 +94,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/role_change.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/role_change.svg",
                         semanticsLabel: "fl_normal_mode",
                         colorFilter: ColorFilter.mode(
                             (meetingStore.meetingMode == MeetingMode.grid)
@@ -129,7 +129,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/participants.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
                         semanticsLabel: "fl_active_speaker_mode",
                         colorFilter: ColorFilter.mode(
                             (meetingStore.meetingMode ==
@@ -164,7 +164,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/participants.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
                         semanticsLabel: "fl_one_to_one_mode",
                         colorFilter: ColorFilter.mode(
                             (meetingStore.meetingMode == MeetingMode.oneToOne)
@@ -198,7 +198,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        'packages/hms_room_kit/lib/assets/icons/mic_state_on.svg',
+                        'packages/hms_room_kit/lib/src/assets/icons/mic_state_on.svg',
                         colorFilter: ColorFilter.mode(
                             meetingStore.meetingMode == MeetingMode.audio
                                 ? errorColor
@@ -232,7 +232,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/participants.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
                         semanticsLabel: "fl_hero_mode",
                         colorFilter: ColorFilter.mode(
                             meetingStore.meetingMode == MeetingMode.hero
@@ -265,7 +265,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/single_tile.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/single_tile.svg",
                         semanticsLabel: "fl_single_mode",
                         colorFilter: ColorFilter.mode(
                             meetingStore.meetingMode == MeetingMode.single

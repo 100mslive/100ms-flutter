@@ -17,7 +17,7 @@ class NetworkIconWidget extends StatelessWidget {
               ? Row(
                   children: [
                     SvgPicture.asset(
-                      'packages/hms_room_kit/lib/assets/icons/network_$networkQuality.svg',
+                      'packages/hms_room_kit/lib/src/assets/icons/network_$networkQuality.svg',
                       height: 20,
                       semanticsLabel: "fl_network_icon_label",
                     ),

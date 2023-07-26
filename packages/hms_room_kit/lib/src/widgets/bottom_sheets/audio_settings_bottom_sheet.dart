@@ -88,7 +88,7 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
                       ),
                       IconButton(
                         icon: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/assets/icons/close_button.svg",
+                          "packages/hms_room_kit/lib/src/assets/icons/close_button.svg",
                           width: 40,
                         ),
                         onPressed: () {
@@ -144,7 +144,7 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
                                         child: Row(
                                           children: [
                                             SvgPicture.asset(
-                                              "packages/hms_room_kit/lib/assets/icons/music_wave.svg",
+                                              "packages/hms_room_kit/lib/src/assets/icons/music_wave.svg",
                                               colorFilter: ColorFilter.mode(
                                                   themeDefaultColor,
                                                   BlendMode.srcIn),
