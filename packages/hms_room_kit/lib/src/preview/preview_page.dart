@@ -425,7 +425,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         },
                                                         isActive: true,
                                                         child: SvgPicture.asset(
-                                                          'packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(previewStore.currentAudioDeviceMode)}.svg',
+                                                          'packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(previewStore.currentAudioOutputDevice!)}.svg',
                                                           fit: BoxFit.scaleDown,
                                                           semanticsLabel:
                                                               "settings_button",

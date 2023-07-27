@@ -284,7 +284,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                   child:
                                                                       Padding(
                                                                     padding: const EdgeInsets
-                                                                        .only(
+                                                                            .only(
                                                                         right:
                                                                             10.0,
                                                                         bottom:
@@ -396,7 +396,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                       Padding(
                                                         padding:
                                                             const EdgeInsets
-                                                                .only(
+                                                                    .only(
                                                                 bottom: 20.0),
                                                         child: Row(
                                                           mainAxisAlignment:
