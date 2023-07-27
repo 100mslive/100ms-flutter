@@ -43,7 +43,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Speaker Settings",
+                        "Audio Output",
                         style: GoogleFonts.inter(
                             fontSize: 16,
                             color: themeDefaultColor,
