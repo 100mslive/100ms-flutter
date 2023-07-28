@@ -592,8 +592,10 @@ class MeetingStore extends ChangeNotifier
     } else if (Platform.isAndroid) {
       HMSAndroidPIPController.setup();
     }
+  }
 
-    FlutterForegroundTask.startService(
+  void initForegroundTask(){
+        FlutterForegroundTask.startService(
         notificationTitle: "100ms foreground service running",
         notificationText: "Tap to return to the app");
   }

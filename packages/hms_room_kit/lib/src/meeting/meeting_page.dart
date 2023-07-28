@@ -61,6 +61,7 @@ class _MeetingPageState extends State<MeetingPage> {
 
   void _enableAlwaysScreenOn() {
     context.read<MeetingStore>().toggleAlwaysScreenOn();
+    context.read<MeetingStore>().initForegroundTask();
   }
 
   String recordingState() {

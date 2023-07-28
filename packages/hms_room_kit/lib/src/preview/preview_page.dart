@@ -3,21 +3,19 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hms_room_kit/src/common/utility_functions.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/preview/preview_join_button.dart';
 import 'package:hms_room_kit/src/preview/preview_participant_chip.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/error_dialog.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
 import 'package:hms_room_kit/src/widgets/hms_buttons/hms_back_button.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/meeting_screen_controller.dart';
 import 'package:hms_room_kit/src/preview/preview_device_settings.dart';
 import 'package:hms_room_kit/src/preview/preview_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_listenable_button.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +32,7 @@ class _PreviewPageState extends State<PreviewPage> {
   late MeetingStore _meetingStore;
   TextEditingController nameController = TextEditingController();
   bool isJoiningRoom = false;
-
+  bool isHLSStarting = false;
   @override
   void initState() {
     super.initState();
@@ -46,14 +44,34 @@ class _PreviewPageState extends State<PreviewPage> {
     );
   }
 
-  void _joinMeeting(PreviewStore previewStore) {
+  void _joinMeeting(PreviewStore previewStore) async {
     if (nameController.text.isNotEmpty) {
       setState(() {
         isJoiningRoom = true;
       });
       context.read<PreviewStore>().removePreviewListener();
       setMeetingStore(previewStore);
-      isJoiningRoom = false;
+
+      HMSException? ans =
+          await _meetingStore.join(nameController.text, widget.meetingLink);
+      if (ans != null && mounted) {
+        UtilityComponents.showErrorDialog(
+            context: context,
+            errorMessage:
+                "ACTION: ${ans.action} DESCRIPTION: ${ans.description}",
+            errorTitle: ans.message ?? "Join Error",
+            actionMessage: "OK",
+            action: () {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            });
+      }
+      setState(() {
+        isJoiningRoom = false;
+        if(AppDebugConfig.isStreamingFlow){
+          isHLSStarting = true;
+        }
+      });
+
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (_) => ListenableProvider.value(
                 value: _meetingStore,
@@ -182,42 +200,39 @@ class _PreviewPageState extends State<PreviewPage> {
                           ///and the video is ON
                           Container(
                             width: width,
+                            height: 216,
                             decoration: BoxDecoration(
-                                //border corner radius
-                                borderRadius: const BorderRadius.only(
-                                    bottomRight: Radius.circular(20),
-                                    bottomLeft: Radius.circular(20)),
                                 gradient: previewStore.isVideoOn
-                                    ? LinearGradient(
+                                    ? const LinearGradient(
                                         begin: Alignment.topCenter,
                                         end: Alignment.bottomCenter,
-                                        stops: const [0.3, 0.6, 1],
+                                        stops: [0.5, 1],
                                         colors: [
-                                          Colors.black,
-                                          transparentBackgroundColor,
-                                          Colors.transparent
+                                          Color.fromRGBO(0, 0, 0, 1),
+                                          Color.fromRGBO(0, 0, 0, 0)
                                         ],
                                       )
                                     : null),
                             child: Padding(
                               padding: EdgeInsets.only(
-                                  top: (!(previewStore.peer?.role
-                                              .publishSettings!.allowed
-                                              .contains("video") ??
-                                          false)
-                                      ? MediaQuery.of(context).size.height * 0.3
-                                      : Platform.isIOS
-                                          ? 50
-                                          : 35)),
+                                top: (!(previewStore
+                                            .peer?.role.publishSettings!.allowed
+                                            .contains("video") ??
+                                        false)
+                                    ? MediaQuery.of(context).size.height * 0.4
+                                    : Platform.isIOS
+                                        ? 50
+                                        : 35),
+                              ),
                               child: Column(
                                 children: [
                                   ///We render a generic logo which can be replaced
                                   ///with the company logo from dashboard
-                                  // SvgPicture.asset(
-                                  //   'packages/hms_room_kit/lib/src/assets/icons/generic.svg',
-                                  //   fit: BoxFit.contain,
-                                  //   semanticsLabel: "fl_user_icon_label",
-                                  // ),
+                                  SvgPicture.asset(
+                                    'packages/hms_room_kit/lib/src/assets/icons/generic.svg',
+                                    fit: BoxFit.contain,
+                                    semanticsLabel: "fl_user_icon_label",
+                                  ),
                                   const SizedBox(
                                     height: 32,
                                   ),
@@ -251,7 +266,7 @@ class _PreviewPageState extends State<PreviewPage> {
                           ),
 
                           ///This renders the back button at top left
-                          if (!isJoiningRoom)
+                          if (!isHLSStarting)
                             Positioned(
                                 top: Platform.isIOS ? 50 : 35,
                                 left: 10,
@@ -265,7 +280,7 @@ class _PreviewPageState extends State<PreviewPage> {
                           ///This also contains text field for entering the name
                           Positioned(
                             bottom: 0,
-                            child: (previewStore.peer != null || !isJoiningRoom)
+                            child: (previewStore.peer != null || !isHLSStarting)
                                 ? Container(
                                     decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.only(
@@ -276,7 +291,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                     width: width,
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 16.0, vertical: 16),
+                                          horizontal: 16.0, vertical: 20),
                                       child: Column(
                                         children: [
                                           if (previewStore.peer != null)
@@ -391,45 +406,57 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 ),
                                                 Row(
                                                   children: [
-                                                    HMSEmbeddedButton(
-                                                        height: 40,
-                                                        width: 40,
-                                                        onTap: () {
-                                                          if (Platform.isIOS) {
-                                                            context
-                                                                .read<
-                                                                    PreviewStore>()
-                                                                .switchAudioOutputUsingiOSUI();
-                                                          } else {
-                                                            showModalBottomSheet(
-                                                                isScrollControlled:
-                                                                    true,
-                                                                backgroundColor:
-                                                                    backgroundDefault,
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              20),
-                                                                ),
-                                                                context:
-                                                                    context,
-                                                                builder: (ctx) =>
-                                                                    ChangeNotifierProvider.value(
-                                                                        value:
-                                                                            previewStore,
-                                                                        child:
-                                                                            const PreviewDeviceSettings()));
-                                                          }
-                                                        },
-                                                        isActive: true,
-                                                        child: SvgPicture.asset(
-                                                          'packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(previewStore.currentAudioOutputDevice!)}.svg',
-                                                          fit: BoxFit.scaleDown,
-                                                          semanticsLabel:
-                                                              "settings_button",
-                                                        )),
+                                                    if (previewStore.peer !=
+                                                            null &&
+                                                        context
+                                                            .read<
+                                                                PreviewStore>()
+                                                            .peer!
+                                                            .role
+                                                            .publishSettings!
+                                                            .allowed
+                                                            .contains("audio"))
+                                                      HMSEmbeddedButton(
+                                                          height: 40,
+                                                          width: 40,
+                                                          onTap: () {
+                                                            if (Platform
+                                                                .isIOS) {
+                                                              context
+                                                                  .read<
+                                                                      PreviewStore>()
+                                                                  .switchAudioOutputUsingiOSUI();
+                                                            } else {
+                                                              showModalBottomSheet(
+                                                                  isScrollControlled:
+                                                                      true,
+                                                                  backgroundColor:
+                                                                      backgroundDefault,
+                                                                  shape:
+                                                                      RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            20),
+                                                                  ),
+                                                                  context:
+                                                                      context,
+                                                                  builder: (ctx) =>
+                                                                      ChangeNotifierProvider.value(
+                                                                          value:
+                                                                              previewStore,
+                                                                          child:
+                                                                              const PreviewDeviceSettings()));
+                                                            }
+                                                          },
+                                                          isActive: true,
+                                                          child:
+                                                              SvgPicture.asset(
+                                                            'packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(previewStore.currentAudioOutputDevice)}.svg',
+                                                            fit: BoxFit
+                                                                .scaleDown,
+                                                            semanticsLabel:
+                                                                "settings_button",
+                                                          )),
                                                   ],
                                                 )
                                               ],
@@ -488,6 +515,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                                               FontWeight.w400),
                                                       enabledBorder:
                                                           const OutlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide
+                                                                      .none,
                                                               borderRadius:
                                                                   BorderRadius.all(
                                                                       Radius.circular(
@@ -495,8 +525,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                       border: const OutlineInputBorder(
                                                           borderRadius:
                                                               BorderRadius.all(
-                                                                  Radius.circular(
-                                                                      8)))),
+                                                                  Radius.circular(8)))),
                                                 ),
                                               ),
                                               HMSListenableButton(
@@ -507,7 +536,10 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 onPressed: () =>
                                                     _joinMeeting(previewStore),
                                                 childWidget: PreviewJoinButton(
+                                                  isEmpty: nameController
+                                                      .text.isEmpty,
                                                   previewStore: previewStore,
+                                                  isJoining: isJoiningRoom,
                                                 ),
                                               ),
                                             ],
@@ -518,18 +550,18 @@ class _PreviewPageState extends State<PreviewPage> {
                                   )
                                 : const SizedBox(),
                           ),
-                          if (isJoiningRoom)
+                          if (isHLSStarting)
                             Container(
                               height: height,
                               width: width,
                               decoration: BoxDecoration(
-                                  gradient: LinearGradient(colors: [
-                                backgroundDefault,
-                                Colors.transparent
-                              ], stops: const [
-                                0.2,
-                                1
-                              ])),
+                                  gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                    Color.fromRGBO(0, 0, 0, 1),
+                                    Color.fromRGBO(0, 0, 0, 0)
+                                  ])),
                               child: const Center(
                                   child: CircularProgressIndicator(
                                 strokeWidth: 2,

@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
@@ -7,7 +7,11 @@ import 'package:hms_room_kit/src/service/app_debug_config.dart';
 
 class PreviewJoinButton extends StatelessWidget {
   final PreviewStore previewStore;
-  const PreviewJoinButton({super.key, required this.previewStore});
+  final bool isEmpty;
+  final bool isJoining;
+
+  const PreviewJoinButton(
+      {super.key, required this.previewStore, required this.isEmpty,required this.isJoining});
 
   @override
   Widget build(BuildContext context) {
@@ -19,21 +23,36 @@ class PreviewJoinButton extends StatelessWidget {
       child: AppDebugConfig.isStreamingFlow &&
               (previewStore.peer?.role.permissions.hlsStreaming ?? false) &&
               !previewStore.isHLSStreamingStarted
-          ? Row(
+          ? 
+          isJoining?
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 48,
+                      width: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2,color: onSurfaceHighEmphasis,)),
+                  ],
+                )
+                :
+          Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SvgPicture.asset(
                   "packages/hms_room_kit/lib/src/assets/icons/live.svg",
                   height: 20,
-                  colorFilter:
-                      ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
+                  colorFilter: ColorFilter.mode(
+                      isEmpty ? onPrimaryLowEmphasis : onPrimaryHighEmphasis,
+                      BlendMode.srcIn),
                 ),
                 const SizedBox(
                   width: 8,
                 ),
                 Text('Go Live',
                     style: GoogleFonts.inter(
-                        color: onPrimaryHighEmphasis,
+                        color: isEmpty
+                            ? onPrimaryLowEmphasis
+                            : onPrimaryHighEmphasis,
                         height: 1,
                         fontSize: 16,
                         fontWeight: FontWeight.w600)),
@@ -41,7 +60,7 @@ class PreviewJoinButton extends StatelessWidget {
             )
           : Text('Join Now',
               style: GoogleFonts.inter(
-                  color: onPrimaryHighEmphasis,
+                  color: isEmpty ? onPrimaryLowEmphasis : onPrimaryHighEmphasis,
                   height: 1,
                   fontSize: 16,
                   fontWeight: FontWeight.w600)),
