@@ -65,23 +65,30 @@ class _PreviewPageState extends State<PreviewPage> {
               Navigator.of(context).popUntil((route) => route.isFirst);
             });
       }
+
       setState(() {
         isJoiningRoom = false;
-        if(AppDebugConfig.isStreamingFlow){
+        if (AppDebugConfig.isStreamingFlow) {
           isHLSStarting = true;
         }
       });
+      bool? isStreamSuccessful =
+          await _meetingStore.startHLSStreaming(false, false);
 
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (_) => ListenableProvider.value(
-                value: _meetingStore,
-                child: MeetingScreenController(
-                  role: previewStore.peer?.role,
-                  roomCode: widget.meetingLink,
-                  localPeerNetworkQuality: null,
-                  user: nameController.text,
-                ),
-              )));
+      if (isStreamSuccessful == true) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (_) => ListenableProvider.value(
+                  value: _meetingStore,
+                  child: MeetingScreenController(
+                    role: previewStore.peer?.role,
+                    roomCode: widget.meetingLink,
+                    localPeerNetworkQuality: null,
+                    user: nameController.text,
+                  ),
+                )));
+      } else {
+        ///To Show dialog
+      }
     }
   }
 
@@ -280,7 +287,7 @@ class _PreviewPageState extends State<PreviewPage> {
                           ///This also contains text field for entering the name
                           Positioned(
                             bottom: 0,
-                            child: (previewStore.peer != null || !isHLSStarting)
+                            child: (previewStore.peer != null && !isHLSStarting)
                                 ? Container(
                                     decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.only(
@@ -554,14 +561,16 @@ class _PreviewPageState extends State<PreviewPage> {
                             Container(
                               height: height,
                               width: width,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                   gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                    Color.fromRGBO(0, 0, 0, 1),
-                                    Color.fromRGBO(0, 0, 0, 0)
-                                  ])),
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                stops: [0.5, 1],
+                                colors: [
+                                  Color.fromRGBO(0, 0, 0, 1),
+                                  Color.fromRGBO(0, 0, 0, 0)
+                                ],
+                              )),
                               child: const Center(
                                   child: CircularProgressIndicator(
                                 strokeWidth: 2,

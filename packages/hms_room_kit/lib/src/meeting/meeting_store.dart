@@ -460,12 +460,12 @@ class MeetingStore extends ChangeNotifier
   }
 
   HMSHLSRecordingConfig? hmshlsRecordingConfig;
-  void startHLSStreaming(bool singleFile, bool videoOnDemand) {
+  Future<bool?> startHLSStreaming(bool singleFile, bool videoOnDemand) {
     hmshlsRecordingConfig = HMSHLSRecordingConfig(
         singleFilePerLayer: singleFile, videoOnDemand: videoOnDemand);
+    return
     _hmsSDKInteractor.startHLSStreaming(this,
         hmshlsRecordingConfig: hmshlsRecordingConfig!);
-    retryHLS = true;
   }
 
   void stopHLSStreaming() {
@@ -594,8 +594,8 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  void initForegroundTask(){
-        FlutterForegroundTask.startService(
+  void initForegroundTask() {
+    FlutterForegroundTask.startService(
         notificationTitle: "100ms foreground service running",
         notificationText: "Tap to return to the app");
   }

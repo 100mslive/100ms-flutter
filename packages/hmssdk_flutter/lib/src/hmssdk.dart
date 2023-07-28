@@ -860,21 +860,25 @@ class HMSSDK {
   /// [hmsActionResultListener] is a callback whose [HMSActionResultListener.onSuccess] will be called when the action completes successfully.
   ///
   /// Refer [HLS Streaming guide here](https://www.100ms.live/docs/flutter/v2/features/hls)
-  Future<void> startHlsStreaming(
+  Future<bool?> startHlsStreaming(
       {HMSHLSConfig? hmshlsConfig,
       HMSActionResultListener? hmsActionResultListener}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.startHlsStreaming,
         arguments: hmshlsConfig?.toMap());
     if (hmsActionResultListener != null) {
-      if (result == null)
+      if (result == null) {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.hlsStreamingStarted);
-      else
+        return true;
+      } else {
         hmsActionResultListener.onException(
             hmsException: HMSException.fromMap(result["error"]),
             methodType: HMSActionResultListenerMethod.hlsStreamingStarted);
+        return null;
+      }
     }
+    return null;
   }
 
   /// Stops ongoing HLS streaming in the room
