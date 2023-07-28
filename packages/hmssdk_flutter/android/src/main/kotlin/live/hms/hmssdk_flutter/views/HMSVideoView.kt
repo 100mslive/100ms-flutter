@@ -53,6 +53,18 @@ class HMSVideoView(
             if ((scaleType ?: 0) <= RendererCommon.ScalingType.values().size) {
                 hmsVideoView?.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
             }
+
+            hmsVideoView?.addVideoViewStateChangeListener(object : VideoViewStateChangeListener {
+                override fun onFirstFrameRendered() {
+                    super.onFirstFrameRendered()
+                    Log.i("HMSVideoView", "onFirstFrameRendered for trackID: ${track.trackId}")
+                }
+
+                override fun onResolutionChange(newWidth: Int, newHeight: Int) {
+                    super.onResolutionChange(newWidth, newHeight)
+                    Log.i("HMSVideoView", "onResolutionChange for trackID: ${track.trackId} width: $newWidth height: $height")
+                }
+            })
         } else {
             Log.e("HMSVideoView Error", "HMSVideoView init error view is null")
         }
