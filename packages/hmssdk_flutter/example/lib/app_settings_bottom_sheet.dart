@@ -5,13 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hms_room_kit/common/app_color.dart';
-import 'package:hms_room_kit/common/utility_functions.dart';
-import 'package:hms_room_kit/service/app_debug_config.dart';
-import 'package:hms_room_kit/widgets/app_dialogs/audio_mode_select_dialog.dart';
-import 'package:hms_room_kit/widgets/bottom_sheets/notification_settings_bottom_sheet.dart';
-import 'package:hms_room_kit/widgets/common_widgets/title_text.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -34,6 +28,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
   bool isAutoSimulcast = true;
   bool isDebugMode = false;
   HMSAudioMode currentAudioMode = HMSAudioMode.VOICE;
+  bool isStreamingFlow = true;
+
   var versions = {};
 
   @override
@@ -73,6 +69,10 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
 
     isDebugMode =
         await Utilities.getBoolData(key: 'enable-debug-mode') ?? false;
+
+    isStreamingFlow =
+        await Utilities.getBoolData(key: 'is_streaming_flow') ?? true;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
     });
@@ -90,6 +90,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     AppDebugConfig.showStats = showStats;
     AppDebugConfig.skipPreview = skipPreview;
     AppDebugConfig.isDebugMode = isDebugMode;
+    AppDebugConfig.isStreamingFlow = isStreamingFlow;
   }
 
   Future<void> _launchUrl() async {
@@ -133,7 +134,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                   children: [
                     IconButton(
                       icon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/close_button.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/close_button.svg",
                         width: 40,
                         // color: defaultColor,
                       ),
@@ -161,8 +162,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                   //   contentPadding: EdgeInsets.zero,
                   //   leading: SvgPicture.asset(
                   //     isDarkMode
-                  //         ? "packages/hms_room_kit/lib/assets/icons/dark_mode.svg"
-                  //         : 'packages/hms_room_kit/lib/assets/icons/light_mode.svg',
+                  //         ? "packages/hms_room_kit/lib/src/assets/icons/dark_mode.svg"
+                  //         : 'packages/hms_room_kit/lib/src/assets/icons/light_mode.svg',
                   //     fit: BoxFit.scaleDown,
                   //     colorFilter:  ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                   //   ),
@@ -196,7 +197,37 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hmssdk_uikit/lib/assets/icons/bug.svg",
+                      "packages/hms_room_kit/lib/src/assets/icons/live.svg",
+                      width: 24,
+                      colorFilter:
+                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
+                    ),
+                    title: Text(
+                      "Enable Streaming Flow",
+                      semanticsLabel: "fl_enable_streaming_flow",
+                      style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: themeDefaultColor,
+                          letterSpacing: 0.25,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    trailing: CupertinoSwitch(
+                        activeColor: hmsdefaultColor,
+                        value: isStreamingFlow,
+                        onChanged: (value) => {
+                              isStreamingFlow = value,
+                              Utilities.saveBoolData(
+                                  key: 'is_streaming_flow', value: value),
+                              AppDebugConfig.isStreamingFlow = value,
+                              setState(() {})
+                            }),
+                  ),
+                  ListTile(
+                    horizontalTitleGap: 2,
+                    enabled: false,
+                    contentPadding: EdgeInsets.zero,
+                    leading: SvgPicture.asset(
+                      "packages/hms_room_kit/lib/src/assets/icons/bug.svg",
                       fit: BoxFit.scaleDown,
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
@@ -226,7 +257,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hmssdk_uikit/lib/assets/icons/mic_state_off.svg",
+                      "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
                       fit: BoxFit.scaleDown,
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
@@ -256,7 +287,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/assets/icons/cam_state_off.svg",
+                      "packages/hms_room_kit/lib/src/assets/icons/cam_state_off.svg",
                       fit: BoxFit.scaleDown,
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
@@ -286,7 +317,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                   //   enabled: false,
                   //   contentPadding: EdgeInsets.zero,
                   //   leading: SvgPicture.asset(
-                  //     "packages/hms_room_kit/lib/assets/icons/preview_state_on.svg",
+                  //     "packages/hms_room_kit/lib/src/assets/icons/preview_state_on.svg",
                   //     fit: BoxFit.scaleDown,
                   //     colorFilter:  ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                   //   ),
@@ -342,7 +373,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      'packages/hms_room_kit/lib/assets/icons/stats.svg',
+                      'packages/hms_room_kit/lib/src/assets/icons/stats.svg',
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
@@ -372,7 +403,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       enabled: false,
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        'packages/hms_room_kit/lib/assets/icons/decoder.svg',
+                        'packages/hms_room_kit/lib/src/assets/icons/decoder.svg',
                         colorFilter: ColorFilter.mode(
                             themeDefaultColor, BlendMode.srcIn),
                       ),
@@ -404,7 +435,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       enabled: true,
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        'packages/hms_room_kit/lib/assets/icons/settings.svg',
+                        'packages/hms_room_kit/lib/src/assets/icons/settings.svg',
                         colorFilter: ColorFilter.mode(
                             themeDefaultColor, BlendMode.srcIn),
                       ),
@@ -433,7 +464,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     enabled: true,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      'packages/hms_room_kit/lib/assets/icons/simulcast.svg',
+                      'packages/hms_room_kit/lib/src/assets/icons/simulcast.svg',
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
@@ -474,7 +505,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       enabled: false,
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/audio_mode.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/audio_mode.svg",
                         fit: BoxFit.scaleDown,
                         colorFilter: ColorFilter.mode(
                             themeDefaultColor, BlendMode.srcIn),
@@ -491,43 +522,46 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       trailing: Text(currentAudioMode.name),
                     ),
                   ),
-                  ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        Navigator.pop(context);
-                        showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: themeBottomSheetColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            context: context,
-                            builder: (ctx) =>
-                                const NotificationSettingsBottomSheet());
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/assets/icons/notification.svg",
-                        fit: BoxFit.scaleDown,
-                        colorFilter: ColorFilter.mode(
-                            themeDefaultColor, BlendMode.srcIn),
-                      ),
-                      title: Text(
-                        "Modify Notifications",
-                        semanticsLabel: "fl_notification_setting",
-                        style: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: themeDefaultColor,
-                            letterSpacing: 0.25,
-                            fontWeight: FontWeight.w600),
-                      )),
+
+                  ///Since we are not supporting toasts commenting this out for now
+                  ///
+                  // ListTile(
+                  //     horizontalTitleGap: 2,
+                  //     onTap: () async {
+                  //       Navigator.pop(context);
+                  //       showModalBottomSheet(
+                  //           isScrollControlled: true,
+                  //           backgroundColor: themeBottomSheetColor,
+                  //           shape: RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(20),
+                  //           ),
+                  //           context: context,
+                  //           builder: (ctx) =>
+                  //               const NotificationSettingsBottomSheet());
+                  //     },
+                  //     contentPadding: EdgeInsets.zero,
+                  //     leading: SvgPicture.asset(
+                  //       "packages/hms_room_kit/lib/src/assets/icons/notification.svg",
+                  //       fit: BoxFit.scaleDown,
+                  //       colorFilter: ColorFilter.mode(
+                  //           themeDefaultColor, BlendMode.srcIn),
+                  //     ),
+                  //     title: Text(
+                  //       "Modify Notifications",
+                  //       semanticsLabel: "fl_notification_setting",
+                  //       style: GoogleFonts.inter(
+                  //           fontSize: 14,
+                  //           color: themeDefaultColor,
+                  //           letterSpacing: 0.25,
+                  //           fontWeight: FontWeight.w600),
+                  //     )),
                   ListTile(
                     horizontalTitleGap: 2,
                     enabled: true,
                     onTap: _launchUrl,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      'packages/hms_room_kit/lib/assets/icons/bug.svg',
+                      'packages/hms_room_kit/lib/src/assets/icons/bug.svg',
                       colorFilter:
                           ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                     ),
@@ -631,7 +665,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
             Padding(
               padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 15),
               child: Center(
-                  child: TitleText(
+                  child: HMSTitleText(
                       text: "Made with ❤️ by 100ms",
                       textColor: themeDefaultColor)),
             )

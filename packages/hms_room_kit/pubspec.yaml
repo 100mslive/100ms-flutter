@@ -1,6 +1,6 @@
 name: hms_room_kit
 description: 100ms Room Kit provides simple & easy to use UI components to build Live Streaming & Video Conferencing experiences in your apps.
-version: 0.0.2
+version: 0.0.3
 homepage: https://www.100ms.live/
 repository: https://github.com/100mslive/100ms-flutter
 issue_tracker: https://github.com/100mslive/100ms-flutter/issues
@@ -15,27 +15,30 @@ dependencies:
     sdk: flutter
 
   hmssdk_flutter:
-    path: ../hmssdk_flutter
+    git:
+      url: https://github.com/100mslive/100ms-flutter.git
+      ref: feature/prebuilt
+      path: packages/hmssdk_flutter
   intl: ^0.18.1
   permission_handler: ^10.4.3
   provider: ^6.0.5
   flutter_staggered_grid_view: ^0.6.2
-  google_fonts: ^5.1.0
+  google_fonts: ^4.0.4
   bot_toast: ^4.0.4
   draggable_widget: ^2.0.0
   badges: ^3.1.1
   shared_preferences: ^2.2.0
   avatar_glow: ^2.0.2
-  flutter_svg: ^2.0.7
+  flutter_svg: ^2.0.5
   path_provider: ^2.0.15
   dropdown_button2: ^2.1.4
   focus_detector: ^2.0.1
   flutter_linkify: ^6.0.0
   tuple: ^2.0.2
-  url_launcher: ^6.1.12
+  url_launcher: ^6.1.11
   share_plus: ^7.0.2
   flutter_foreground_task: ^6.0.0+1
-  collection: ^1.17.1
+  collection: ^1.17.0
 
 dev_dependencies:
   flutter_test:
@@ -49,8 +52,8 @@ dev_dependencies:
 flutter:
   # To add assets to your package, add an assets section, like this:
   assets:
-    - lib/assets/
-    - lib/assets/icons/
+    - lib/src/assets/
+    - lib/src/assets/icons/
   #
   # For details regarding assets in packages, see
   # https://flutter.dev/assets-and-images/#from-packages

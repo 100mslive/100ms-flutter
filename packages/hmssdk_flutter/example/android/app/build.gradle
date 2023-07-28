@@ -32,8 +32,8 @@ android {
         applicationId "live.hms.flutter"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 276
-        versionName "1.4.141"
+        versionCode 287
+        versionName "1.4.152"
     }
 
     signingConfigs {
@@ -61,6 +61,10 @@ android {
         checkDependencies true
     }
     android.buildTypes.release.ndk.debugSymbolLevel "FULL"
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 flutter {

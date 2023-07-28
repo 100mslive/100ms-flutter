@@ -1,10 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/common/app_color.dart';
-import 'package:hms_room_kit/hms_prebuilt_options.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/widgets/common_widgets/title_text.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRCodeScreen extends StatefulWidget {
@@ -83,7 +80,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TitleText(
+                          HMSTitleText(
                             text: "Scan QR Code",
                             textColor: themeSubHeadingColor,
                             letterSpacing: 0.15,
@@ -148,7 +145,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                           SizedBox(
                             width: 8,
                           ),
-                          TitleText(
+                          HMSTitleText(
                               text: 'Join with Link Instead',
                               textColor: enabledTextColor),
                         ],

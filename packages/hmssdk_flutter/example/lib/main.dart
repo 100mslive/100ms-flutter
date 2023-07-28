@@ -10,11 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hms_room_kit/common/app_color.dart';
-import 'package:hms_room_kit/common/utility_functions.dart';
-import 'package:hms_room_kit/hms_prebuilt_options.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/widgets/common_widgets/title_text.dart';
 import 'package:hmssdk_flutter_example/app_settings_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:provider/provider.dart';
@@ -269,13 +265,17 @@ class _HomePageState extends State<HomePage> {
       return;
     }
     FocusManager.instance.primaryFocus?.unfocus();
+
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (_) => HMSPrebuilt(
-                  roomCode: meetingLinkController.text.trim(),
-                  options: HMSPrebuiltOptions(userName: ""),
-                )));
+                roomCode: meetingLinkController.text.trim(),
+                options: HMSPrebuiltOptions(
+                    iOSScreenshareConfig: HMSIOSScreenshareConfig(
+                        appGroup: "group.flutterhms",
+                        preferredExtension:
+                            "live.100ms.flutter.FlutterBroadcastUploadExtension")))));
   }
 
   @override
@@ -289,10 +289,6 @@ class _HomePageState extends State<HomePage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                /**
-                 * On long pressing the welcome image we 
-                 * toggle the debug mode which we use to show/hide the settings in the application
-                 */
                 SvgPicture.asset(
                   'assets/welcome.svg',
                   width: width * 0.95,
@@ -434,7 +430,7 @@ class _HomePageState extends State<HomePage> {
                                     mainAxisSize: MainAxisSize.min,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      TitleText(
+                                      HMSTitleText(
                                         key: Key('join_now'),
                                         text: 'Join Now',
                                         textColor:
@@ -461,7 +457,7 @@ class _HomePageState extends State<HomePage> {
                                   padding: const EdgeInsets.only(
                                       left: 8.0, right: 8),
                                   child: SvgPicture.asset(
-                                    "assets/icons/more.svg",
+                                    "packages/hms_room_kit/lib/src/assets/icons/more.svg",
                                     colorFilter: ColorFilter.mode(
                                         meetingLinkController.text.isEmpty
                                             ? themeDisabledTextColor
@@ -520,7 +516,7 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                             width: 5,
                           ),
-                          TitleText(
+                          HMSTitleText(
                               key: Key("scan_qr_code"),
                               text: 'Scan QR Code',
                               textColor: enabledTextColor)

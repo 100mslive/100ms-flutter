@@ -122,9 +122,9 @@ class _PlatformView extends StatelessWidget {
       this.matchParent = true,
       required this.scaleType,
       this.disableAutoSimulcastLayerSelect = false})
-      : super(key: key){
-          hmsVideoViewController = HMSVideoViewController(track.trackId);
-      }
+      : super(key: key) {
+    hmsVideoViewController = HMSVideoViewController(track.trackId);
+  }
 
   void onPlatformViewCreated(int id) {}
 

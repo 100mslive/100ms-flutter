@@ -6,14 +6,14 @@ PODS:
   - HMSBroadcastExtensionSDK (0.0.9)
   - HMSHLSPlayerSDK (0.0.2):
     - HMSAnalyticsSDK (= 0.0.2)
-  - HMSSDK (0.9.5):
+  - HMSSDK (0.9.6):
     - HMSAnalyticsSDK (= 0.0.2)
     - HMSWebRTC (= 1.0.5116)
-  - hmssdk_flutter (1.7.2):
+  - hmssdk_flutter (1.8.0):
     - Flutter
     - HMSBroadcastExtensionSDK (= 0.0.9)
     - HMSHLSPlayerSDK (= 0.0.2)
-    - HMSSDK (= 0.9.5)
+    - HMSSDK (= 0.9.6)
   - HMSWebRTC (1.0.5116)
   - path_provider_foundation (0.0.1):
     - Flutter
@@ -32,10 +32,10 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_foreground_task (from `.symlinks/plugins/flutter_foreground_task/ios`)
   - hmssdk_flutter (from `.symlinks/plugins/hmssdk_flutter/ios`)
-  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
-  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
@@ -54,13 +54,13 @@ EXTERNAL SOURCES:
   hmssdk_flutter:
     :path: ".symlinks/plugins/hmssdk_flutter/ios"
   path_provider_foundation:
-    :path: ".symlinks/plugins/path_provider_foundation/darwin"
+    :path: ".symlinks/plugins/path_provider_foundation/ios"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
   shared_preferences_foundation:
-    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+    :path: ".symlinks/plugins/shared_preferences_foundation/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
@@ -70,8 +70,8 @@ SPEC CHECKSUMS:
   HMSAnalyticsSDK: 4d2a88a729b1eb42f3d25f217c28937ec318a5b7
   HMSBroadcastExtensionSDK: d80fe325f6c928bd8e5176290b5a4b7ae15d6fbb
   HMSHLSPlayerSDK: 6a54ad4d12f3dc2270d1ecd24019d71282a4f6a3
-  HMSSDK: 81804295a3c5ec6016c0966f2053d7f5f51ccc26
-  hmssdk_flutter: f73b3eb0f4bf568043a4425d851f52ffdbaa49e7
+  HMSSDK: 90d299460a53df3903388c9c4e62e30a5a8c50a8
+  hmssdk_flutter: 9b0b0b13a3b46ce158af06538757c0b49eac9de0
   HMSWebRTC: ae54e9dd91b869051b283b43b14f57d43b7bf8e1
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
