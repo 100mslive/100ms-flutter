@@ -115,6 +115,7 @@ class _ScreenControllerState extends State<ScreenController> {
                   child: PreviewPage(
                     meetingLink: widget.roomCode,
                     name: "",
+                    options: widget.options,
                   ))
               : PreviewPermissions(
                   roomCode: widget.roomCode,

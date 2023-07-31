@@ -18,8 +18,8 @@ class AppSettingsBottomSheet extends StatefulWidget {
 }
 
 class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
-  bool joinWithMutedAudio = true;
-  bool joinWithMutedVideo = true;
+  bool joinWithMutedAudio = false;
+  bool joinWithMutedVideo = false;
   bool skipPreview = false;
   bool mirrorCamera = true;
   bool showStats = false;
@@ -52,9 +52,9 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
       throw const FormatException("android version not found");
     }
     joinWithMutedAudio =
-        await Utilities.getBoolData(key: 'join-with-muted-audio') ?? true;
+        await Utilities.getBoolData(key: 'join-with-muted-audio') ?? false;
     joinWithMutedVideo =
-        await Utilities.getBoolData(key: 'join-with-muted-video') ?? true;
+        await Utilities.getBoolData(key: 'join-with-muted-video') ?? false;
     skipPreview = await Utilities.getBoolData(key: 'skip-preview') ?? false;
     mirrorCamera = await Utilities.getBoolData(key: 'mirror-camera') ?? true;
     showStats = await Utilities.getBoolData(key: 'show-stats') ?? false;

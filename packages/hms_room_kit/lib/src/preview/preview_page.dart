@@ -7,6 +7,7 @@ import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/preview/preview_join_button.dart';
 import 'package:hms_room_kit/src/preview/preview_participant_chip.dart';
+import 'package:hms_room_kit/src/screen_controller.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/error_dialog.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
 import 'package:hms_room_kit/src/widgets/hms_buttons/hms_back_button.dart';
@@ -22,8 +23,13 @@ import 'package:provider/provider.dart';
 class PreviewPage extends StatefulWidget {
   final String name;
   final String meetingLink;
+  final HMSPrebuiltOptions? options;
 
-  const PreviewPage({super.key, required this.name, required this.meetingLink});
+  const PreviewPage(
+      {super.key,
+      required this.name,
+      required this.meetingLink,
+      required this.options});
   @override
   State<PreviewPage> createState() => _PreviewPageState();
 }
@@ -46,10 +52,10 @@ class _PreviewPageState extends State<PreviewPage> {
 
   void _joinMeeting(PreviewStore previewStore) async {
     if (nameController.text.isNotEmpty) {
+      FocusManager.instance.primaryFocus?.unfocus();
       setState(() {
         isJoiningRoom = true;
       });
-      context.read<PreviewStore>().removePreviewListener();
       setMeetingStore(previewStore);
 
       HMSException? ans =
@@ -66,16 +72,10 @@ class _PreviewPageState extends State<PreviewPage> {
             });
       }
 
-      setState(() {
-        isJoiningRoom = false;
-        if (AppDebugConfig.isStreamingFlow) {
-          isHLSStarting = true;
-        }
-      });
-      bool? isStreamSuccessful =
-          await _meetingStore.startHLSStreaming(false, false);
-
-      if (isStreamSuccessful == true) {
+      previewStore.removePreviewListener();
+      if (!AppDebugConfig.isStreamingFlow ||
+          previewStore.isHLSStreamingStarted ||
+          !(previewStore.peer?.role.permissions.hlsStreaming ?? false)) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (_) => ListenableProvider.value(
                   value: _meetingStore,
@@ -86,10 +86,54 @@ class _PreviewPageState extends State<PreviewPage> {
                     user: nameController.text,
                   ),
                 )));
-      } else {
-        ///To Show dialog
+        return;
       }
+
+      setState(() {
+        isJoiningRoom = false;
+        if (AppDebugConfig.isStreamingFlow) {
+          isHLSStarting = true;
+        }
+      });
+
+      startStreaming(previewStore, _meetingStore);
     }
+  }
+
+  void startStreaming(
+      PreviewStore previewStore, MeetingStore meetingStore) async {
+    HMSException? isStreamSuccessful;
+    Future.delayed(const Duration(milliseconds: 200)).then((value) async => {
+          isStreamSuccessful =
+              await _meetingStore.startHLSStreaming(false, false),
+          if (isStreamSuccessful == null)
+            {
+              isHLSStarting = false,
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => ListenableProvider.value(
+                        value: _meetingStore,
+                        child: MeetingScreenController(
+                          role: previewStore.peer?.role,
+                          roomCode: widget.meetingLink,
+                          localPeerNetworkQuality: null,
+                          user: nameController.text,
+                        ),
+                      ))),
+            }
+          else
+            {
+              setState(() {
+                isHLSStarting = false;
+              }),
+              meetingStore.leave(),
+              meetingStore.clearRoomState(),
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => ScreenController(
+                        roomCode: widget.meetingLink,
+                        options: widget.options,
+                      ))),
+            }
+        });
   }
 
   @override
@@ -155,17 +199,22 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 setMirror: true,
                                               ),
                                             )
-                                          : Center(
-                                              child: HMSCircularAvatar(
-                                                  name: nameController.text),
-                                            ),
+                                          : isHLSStarting
+                                              ? Container()
+                                              : Center(
+                                                  child: HMSCircularAvatar(
+                                                      name:
+                                                          nameController.text),
+                                                ),
                                     ),
 
                                     ///This shows the network quality strength of the peer
                                     ///It will be shown only if the network quality is not null
                                     ///and not -1
                                     if ((previewStore.networkQuality != null &&
-                                        previewStore.networkQuality != -1))
+                                            previewStore.networkQuality !=
+                                                -1) &&
+                                        !isHLSStarting)
                                       Positioned(
                                         bottom: 160,
                                         left: 8,
@@ -207,13 +256,12 @@ class _PreviewPageState extends State<PreviewPage> {
                           ///and the video is ON
                           Container(
                             width: width,
-                            height: 216,
                             decoration: BoxDecoration(
                                 gradient: previewStore.isVideoOn
                                     ? const LinearGradient(
                                         begin: Alignment.topCenter,
                                         end: Alignment.bottomCenter,
-                                        stops: [0.5, 1],
+                                        stops: [0.45, 1],
                                         colors: [
                                           Color.fromRGBO(0, 0, 0, 1),
                                           Color.fromRGBO(0, 0, 0, 0)
@@ -231,44 +279,56 @@ class _PreviewPageState extends State<PreviewPage> {
                                         ? 50
                                         : 35),
                               ),
-                              child: Column(
-                                children: [
-                                  ///We render a generic logo which can be replaced
-                                  ///with the company logo from dashboard
-                                  SvgPicture.asset(
-                                    'packages/hms_room_kit/lib/src/assets/icons/generic.svg',
-                                    fit: BoxFit.contain,
-                                    semanticsLabel: "fl_user_icon_label",
-                                  ),
-                                  const SizedBox(
-                                    height: 32,
-                                  ),
-                                  HMSTitleText(
-                                      text: "Get Started",
-                                      fontSize: 24,
-                                      lineHeight: 32 / 24,
-                                      textColor: onSurfaceHighEmphasis),
-                                  const SizedBox(
-                                    height: 8,
-                                  ),
-                                  HMSSubtitleText(
-                                      text:
-                                          "Setup your audio and video before joining",
-                                      textColor: onSurfaceLowEmphasis),
+                              child: isHLSStarting
+                                  ? Container()
+                                  : Column(
+                                      children: [
+                                        ///We render a generic logo which can be replaced
+                                        ///with the company logo from dashboard
+                                        SvgPicture.asset(
+                                          'packages/hms_room_kit/lib/src/assets/icons/generic.svg',
+                                          fit: BoxFit.contain,
+                                          semanticsLabel: "fl_user_icon_label",
+                                        ),
+                                        const SizedBox(
+                                          height: 32,
+                                        ),
+                                        HMSTitleText(
+                                            text: "Get Started",
+                                            fontSize: 24,
+                                            lineHeight: 32 / 24,
+                                            textColor: onSurfaceHighEmphasis),
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+                                        HMSSubtitleText(
+                                            text: !(previewStore
+                                                        .peer
+                                                        ?.role
+                                                        .publishSettings!
+                                                        .allowed
+                                                        .contains("video") ??
+                                                    false)
+                                                ? "Enter your name before joining"
+                                                : "Setup your audio and video before joining",
+                                            textColor: onSurfaceLowEmphasis),
 
-                                  ///Here we use SizedBox to keep the UI consistent
-                                  ///until we have received peer list or the room-state is
-                                  ///not enabled
-                                  SizedBox(
-                                    height: ((previewStore.peers == null &&
-                                            !previewStore.isHLSStreamingStarted)
-                                        ? 60
-                                        : 20),
-                                  ),
-                                  PreviewParticipantChip(
-                                      previewStore: previewStore, width: width)
-                                ],
-                              ),
+                                        ///Here we use SizedBox to keep the UI consistent
+                                        ///until we have received peer list or the room-state is
+                                        ///not enabled
+                                        SizedBox(
+                                          height: ((previewStore.peers ==
+                                                      null &&
+                                                  !previewStore
+                                                      .isHLSStreamingStarted)
+                                              ? 60
+                                              : 20),
+                                        ),
+                                        PreviewParticipantChip(
+                                            previewStore: previewStore,
+                                            width: width)
+                                      ],
+                                    ),
                             ),
                           ),
 
@@ -565,16 +625,29 @@ class _PreviewPageState extends State<PreviewPage> {
                                   gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
-                                stops: [0.5, 1],
                                 colors: [
                                   Color.fromRGBO(0, 0, 0, 1),
                                   Color.fromRGBO(0, 0, 0, 0)
                                 ],
                               )),
-                              child: const Center(
-                                  child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                              )),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                  const SizedBox(
+                                    height: 29,
+                                  ),
+                                  HMSSubtitleText(
+                                    text: "Starting live stream...",
+                                    textColor: onSurfaceHighEmphasis,
+                                    fontSize: 16,
+                                    lineHeight: 24,
+                                    letterSpacing: 0.50,
+                                  )
+                                ],
+                              ),
                             )
                         ],
                       ),

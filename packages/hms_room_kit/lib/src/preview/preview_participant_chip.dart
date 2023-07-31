@@ -70,13 +70,16 @@ class PreviewParticipantChip extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20)),
                 child: Center(
                   child: Padding(
-                    padding: const EdgeInsets.only(top:8.0,bottom: 8,left: 20,right: 16),
+                    padding: const EdgeInsets.only(
+                        top: 8.0, bottom: 8, left: 20, right: 16),
                     child: previewStore.peers!.isEmpty
                         ? HMSSubtitleText(
                             text: "You are the first to join",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
                             textColor: onSurfaceHighEmphasis)
                         : PreviewParticipantsText(
-                            peers: previewStore.peers! ,
+                            peers: previewStore.peers!,
                           ),
                   ),
                 ),

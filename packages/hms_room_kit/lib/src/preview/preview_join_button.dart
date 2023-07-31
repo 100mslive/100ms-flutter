@@ -11,7 +11,10 @@ class PreviewJoinButton extends StatelessWidget {
   final bool isJoining;
 
   const PreviewJoinButton(
-      {super.key, required this.previewStore, required this.isEmpty,required this.isJoining});
+      {super.key,
+      required this.previewStore,
+      required this.isEmpty,
+      required this.isJoining});
 
   @override
   Widget build(BuildContext context) {
@@ -23,41 +26,44 @@ class PreviewJoinButton extends StatelessWidget {
       child: AppDebugConfig.isStreamingFlow &&
               (previewStore.peer?.role.permissions.hlsStreaming ?? false) &&
               !previewStore.isHLSStreamingStarted
-          ? 
-          isJoining?
-                Row(
+          ? isJoining
+              ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                      height: 48,
-                      width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2,color: onSurfaceHighEmphasis,)),
+                        height: 48,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: onSurfaceHighEmphasis,
+                        )),
                   ],
                 )
-                :
-          Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  "packages/hms_room_kit/lib/src/assets/icons/live.svg",
-                  height: 20,
-                  colorFilter: ColorFilter.mode(
-                      isEmpty ? onPrimaryLowEmphasis : onPrimaryHighEmphasis,
-                      BlendMode.srcIn),
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                Text('Go Live',
-                    style: GoogleFonts.inter(
-                        color: isEmpty
-                            ? onPrimaryLowEmphasis
-                            : onPrimaryHighEmphasis,
-                        height: 1,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600)),
-              ],
-            )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      "packages/hms_room_kit/lib/src/assets/icons/live.svg",
+                      height: 20,
+                      colorFilter: ColorFilter.mode(
+                          isEmpty
+                              ? onPrimaryLowEmphasis
+                              : onPrimaryHighEmphasis,
+                          BlendMode.srcIn),
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Text('Go Live',
+                        style: GoogleFonts.inter(
+                            color: isEmpty
+                                ? onPrimaryLowEmphasis
+                                : onPrimaryHighEmphasis,
+                            height: 1,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600)),
+                  ],
+                )
           : Text('Join Now',
               style: GoogleFonts.inter(
                   color: isEmpty ? onPrimaryLowEmphasis : onPrimaryHighEmphasis,
