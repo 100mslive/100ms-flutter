@@ -115,9 +115,9 @@ class _PeerTileState extends State<PeerTile> {
                             decoration: BoxDecoration(
                                 color: transparentBackgroundColor,
                                 borderRadius: BorderRadius.circular(8)),
-                            child:  Center(
+                            child: Center(
                               child: Padding(
-                                padding:const EdgeInsets.only(
+                                padding: const EdgeInsets.only(
                                     left: 8.0, right: 4, top: 4, bottom: 4),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
