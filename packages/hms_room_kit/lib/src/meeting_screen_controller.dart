@@ -59,7 +59,6 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
   @override
   void initState() {
     super.initState();
-    initMeeting();
     setInitValues();
     Utilities.initForegroundTask();
   }

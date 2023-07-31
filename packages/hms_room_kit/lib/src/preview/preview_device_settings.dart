@@ -82,21 +82,88 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                           audioDevice: data.item1[index]);
                                   Navigator.pop(context);
                                 },
-                                child: ListTile(
-                                  horizontalTitleGap: 2,
-                                  enabled: false,
-                                  contentPadding: EdgeInsets.zero,
-                                  leading: SvgPicture.asset(
-                                    "packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(data.item1[index])}.svg",
-                                    fit: BoxFit.scaleDown,
-                                    colorFilter: ColorFilter.mode(
-                                        onSurfaceHighEmphasis, BlendMode.srcIn),
-                                  ),
-                                  title: HMSSubtitleText(
-                                    text: data.item1[index].name,
-                                    textColor: themeDefaultColor,
-                                  ),
-                                ),
+                                child: data.item1[index] ==
+                                        HMSAudioDevice.AUTOMATIC
+                                    ? ListTile(
+                                        horizontalTitleGap: 2,
+                                        enabled: false,
+                                        contentPadding: EdgeInsets.zero,
+                                        leading: SvgPicture.asset(
+                                          "packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(data.item3)}.svg",
+                                          fit: BoxFit.scaleDown,
+                                          colorFilter: ColorFilter.mode(
+                                              onSurfaceHighEmphasis,
+                                              BlendMode.srcIn),
+                                        ),
+                                        title: HMSSubtitleText(
+                                          fontSize: 14,
+                                          lineHeight: 20,
+                                          letterSpacing: 0.10,
+                                          fontWeight: FontWeight.w600,
+                                          text:
+                                              "${Utilities.getAudioDeviceName(data.item1[index])} (${Utilities.getAudioDeviceName(data.item3)})",
+                                          textColor: themeDefaultColor,
+                                        ),
+                                        trailing: context
+                                                    .read<PreviewStore>()
+                                                    .currentAudioDeviceMode ==
+                                                HMSAudioDevice.AUTOMATIC
+                                            ? SizedBox(
+                                                height: 24,
+                                                width: 24,
+                                                child: SvgPicture.asset(
+                                                  "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
+                                                  fit: BoxFit.scaleDown,
+                                                  colorFilter: ColorFilter.mode(
+                                                      onSurfaceHighEmphasis,
+                                                      BlendMode.srcIn),
+                                                ),
+                                              )
+                                            : Container(
+                                                height: 24,
+                                                width: 24,
+                                              ),
+                                      )
+                                    : ListTile(
+                                        horizontalTitleGap: 2,
+                                        enabled: false,
+                                        contentPadding: EdgeInsets.zero,
+                                        leading: SvgPicture.asset(
+                                          "packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(data.item1[index])}.svg",
+                                          fit: BoxFit.scaleDown,
+                                          colorFilter: ColorFilter.mode(
+                                              onSurfaceHighEmphasis,
+                                              BlendMode.srcIn),
+                                        ),
+                                        title: HMSSubtitleText(
+                                          text: Utilities.getAudioDeviceName(
+                                              data.item1[index]),
+                                          fontSize: 14,
+                                          lineHeight: 20,
+                                          letterSpacing: 0.10,
+                                          fontWeight: FontWeight.w600,
+                                          textColor: themeDefaultColor,
+                                        ),
+                                        trailing: data.item1[index] ==
+                                                context
+                                                    .read<PreviewStore>()
+                                                    .currentAudioDeviceMode
+                                            ? SizedBox(
+                                                height: 24,
+                                                width: 24,
+                                                child: SvgPicture.asset(
+                                                  "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
+                                                  fit: BoxFit.scaleDown,
+                                                  colorFilter: ColorFilter.mode(
+                                                      onSurfaceHighEmphasis,
+                                                      BlendMode.srcIn),
+                                                ),
+                                              )
+                                            : const SizedBox(
+                                                height: 24,
+                                                width: 24,
+                                              ),
+                                      ),
                               ),
                               Padding(
                                   padding:

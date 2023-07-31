@@ -120,7 +120,7 @@ class MeetingStore extends ChangeNotifier
 
   ScrollController controller = ScrollController();
 
-  MeetingMode meetingMode = MeetingMode.oneToOne;
+  MeetingMode meetingMode = MeetingMode.grid;
 
   bool isLandscapeLocked = false;
 
@@ -460,12 +460,12 @@ class MeetingStore extends ChangeNotifier
   }
 
   HMSHLSRecordingConfig? hmshlsRecordingConfig;
-  void startHLSStreaming(bool singleFile, bool videoOnDemand) {
+  Future<HMSException?> startHLSStreaming(
+      bool singleFile, bool videoOnDemand) async {
     hmshlsRecordingConfig = HMSHLSRecordingConfig(
         singleFilePerLayer: singleFile, videoOnDemand: videoOnDemand);
-    _hmsSDKInteractor.startHLSStreaming(this,
+    return await _hmsSDKInteractor.startHLSStreaming(this,
         hmshlsRecordingConfig: hmshlsRecordingConfig!);
-    retryHLS = true;
   }
 
   void stopHLSStreaming() {
@@ -514,10 +514,6 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onJoin({required HMSRoom room}) async {
-    if (AppDebugConfig.isStreamingFlow &&
-        room.hmshlsStreamingState?.running == false) {
-      startHLSStreaming(false, false);
-    }
     log("onJoin-> room: ${room.toString()}");
     isMeetingStarted = true;
     hmsRoom = room;
@@ -592,7 +588,9 @@ class MeetingStore extends ChangeNotifier
     } else if (Platform.isAndroid) {
       HMSAndroidPIPController.setup();
     }
+  }
 
+  void initForegroundTask() {
     FlutterForegroundTask.startService(
         notificationTitle: "100ms foreground service running",
         notificationText: "Tap to return to the app");
@@ -1814,13 +1812,6 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.sendDirectMessage:
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
-        if (retryHLS) {
-          _hmsSDKInteractor.startHLSStreaming(this,
-              meetingUrl: Constant.streamingUrl,
-              hmshlsRecordingConfig: hmshlsRecordingConfig!);
-          retryHLS = false;
-        }
-
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         break;
