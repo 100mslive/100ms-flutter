@@ -27,9 +27,13 @@ class PreviewJoinButton extends StatelessWidget {
               !previewStore.isHLSStreamingStarted
           ? isJoining
               ? Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 3,
-                    color: onSurfaceHighEmphasis,
+                  child: SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 3,
+                      color: onSurfaceHighEmphasis,
+                    ),
                   ),
                 )
               : Row(

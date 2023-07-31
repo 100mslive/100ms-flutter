@@ -532,77 +532,80 @@ class _PreviewPageState extends State<PreviewPage> {
                                           const SizedBox(
                                             height: 16,
                                           ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              SizedBox(
-                                                height: 48,
-                                                width: width * 0.50,
-                                                child: TextField(
-                                                  onTapOutside: (event) =>
-                                                      FocusManager
-                                                          .instance.primaryFocus
-                                                          ?.unfocus(),
-                                                  textInputAction:
-                                                      TextInputAction.done,
-                                                  textCapitalization:
-                                                      TextCapitalization.words,
-                                                  style: GoogleFonts.inter(
-                                                      color:
-                                                          onSurfaceHighEmphasis),
-                                                  controller: nameController,
-                                                  keyboardType:
-                                                      TextInputType.name,
-                                                  onChanged: (value) {
-                                                    setState(() {});
-                                                  },
-                                                  decoration: InputDecoration(
-                                                      contentPadding:
-                                                          const EdgeInsets.symmetric(
-                                                              vertical: 14,
-                                                              horizontal: 16),
-                                                      fillColor: surfaceDefault,
-                                                      filled: true,
-                                                      hintText: 'Name',
-                                                      hintStyle: GoogleFonts.inter(
-                                                          color:
-                                                              onSurfaceLowEmphasis,
-                                                          height: 1.5,
-                                                          fontSize: 16,
-                                                          letterSpacing: 0.5,
-                                                          fontWeight:
-                                                              FontWeight.w400),
-                                                      enabledBorder:
-                                                          const OutlineInputBorder(
-                                                              borderSide:
-                                                                  BorderSide
-                                                                      .none,
-                                                              borderRadius:
-                                                                  BorderRadius.all(
-                                                                      Radius.circular(
-                                                                          8))),
-                                                      border: const OutlineInputBorder(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius.circular(8)))),
+                                          Padding(
+                                            padding: const EdgeInsets.only(bottom:24.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                SizedBox(
+                                                  height: 48,
+                                                  width: width * 0.50,
+                                                  child: TextField(
+                                                    onTapOutside: (event) =>
+                                                        FocusManager
+                                                            .instance.primaryFocus
+                                                            ?.unfocus(),
+                                                    textInputAction:
+                                                        TextInputAction.done,
+                                                    textCapitalization:
+                                                        TextCapitalization.words,
+                                                    style: GoogleFonts.inter(
+                                                        color:
+                                                            onSurfaceHighEmphasis),
+                                                    controller: nameController,
+                                                    keyboardType:
+                                                        TextInputType.name,
+                                                    onChanged: (value) {
+                                                      setState(() {});
+                                                    },
+                                                    decoration: InputDecoration(
+                                                        contentPadding:
+                                                            const EdgeInsets.symmetric(
+                                                                vertical: 14,
+                                                                horizontal: 16),
+                                                        fillColor: surfaceDefault,
+                                                        filled: true,
+                                                        hintText: 'Name',
+                                                        hintStyle: GoogleFonts.inter(
+                                                            color:
+                                                                onSurfaceLowEmphasis,
+                                                            height: 1.5,
+                                                            fontSize: 16,
+                                                            letterSpacing: 0.5,
+                                                            fontWeight:
+                                                                FontWeight.w400),
+                                                        enabledBorder:
+                                                            const OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide
+                                                                        .none,
+                                                                borderRadius:
+                                                                    BorderRadius.all(
+                                                                        Radius.circular(
+                                                                            8))),
+                                                        border: const OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius.all(
+                                                                    Radius.circular(8)))),
+                                                  ),
                                                 ),
-                                              ),
-                                              HMSListenableButton(
-                                                textController: nameController,
-                                                errorMessage:
-                                                    "Please enter you name",
-                                                width: width * 0.38,
-                                                onPressed: () =>
-                                                    _joinMeeting(previewStore),
-                                                childWidget: PreviewJoinButton(
-                                                  isEmpty: nameController
-                                                      .text.isEmpty,
-                                                  previewStore: previewStore,
-                                                  isJoining: isJoiningRoom,
+                                                HMSListenableButton(
+                                                  textController: nameController,
+                                                  errorMessage:
+                                                      "Please enter you name",
+                                                  width: width * 0.38,
+                                                  onPressed: () =>
+                                                      _joinMeeting(previewStore),
+                                                  childWidget: PreviewJoinButton(
+                                                    isEmpty: nameController
+                                                        .text.isEmpty,
+                                                    previewStore: previewStore,
+                                                    isJoining: isJoiningRoom,
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
