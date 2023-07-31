@@ -115,14 +115,14 @@ class _PeerTileState extends State<PeerTile> {
                             decoration: BoxDecoration(
                                 color: transparentBackgroundColor,
                                 borderRadius: BorderRadius.circular(8)),
-                            child: const Center(
+                            child:  Center(
                               child: Padding(
-                                padding: EdgeInsets.only(
+                                padding:const EdgeInsets.only(
                                     left: 8.0, right: 4, top: 4, bottom: 4),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
+                                  children: const [
                                     NetworkIconWidget(),
                                     PeerName(),
                                     DegradeText()
