@@ -1,5 +1,6 @@
 //Package imports
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class Utilities {
     }
     List<String>? parts = name.trim().split(" ");
     if (parts.length == 1) {
-      name = parts[0][0];
+      name = parts[0].substring(0, math.min(2, parts[0].length));
     } else if (parts.length >= 2) {
       name = parts[0][0];
       if (parts[1] == "" || parts[1] == " ") {
