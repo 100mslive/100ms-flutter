@@ -125,3 +125,16 @@ Color baseBlack = Color(_getColorFromHex("#000000"));
 Color baseWhite = Color(_getColorFromHex("#FFFFFF"));
 
 Color transparentBackgroundColor = const Color.fromRGBO(0, 0, 0, 1);
+
+///This list contains colors for the avatar
+///A random color gets picked based on the first alphabet of the name
+List<Color> colors = [
+  Color(_getColorFromHex("#9C27B0")),
+  Color(_getColorFromHex("#E56E00")),
+  Color(_getColorFromHex("#009688")),
+  Color(_getColorFromHex("#FF4081")),
+  Color(_getColorFromHex("#2196F3")),
+  Color(_getColorFromHex("#607D8B")),
+  Color(_getColorFromHex("#795548")),
+  Color(_getColorFromHex("#3F51B5")),
+];

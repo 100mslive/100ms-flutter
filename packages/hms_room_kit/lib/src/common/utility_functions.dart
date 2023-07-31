@@ -43,25 +43,16 @@ class Utilities {
 
   static Color getBackgroundColour(String name) {
     if (name.isEmpty) {
-      return const Color.fromRGBO(126, 71, 235, 1);
+      return colors[0];
     }
     if (name.contains(regexEmoji)) {
       name = name.replaceAll(regexEmoji, '');
       if (name.trim().isEmpty) {
-        return const Color(0xFF6554C0);
+        return colors[0];
       }
     }
-    return Utilities
-        .colors[name.toUpperCase().codeUnitAt(0) % Utilities.colors.length];
+    return colors[name.toUpperCase().codeUnitAt(0) % colors.length];
   }
-
-  static List<Color> colors = [
-    Colors.amber,
-    hmsdefaultColor,
-    Colors.purple,
-    Colors.lightGreen,
-    Colors.redAccent
-  ];
 
   /// List of alignments for timed metadata toasts
   static List<Alignment> timedMetadataAlignment = [
