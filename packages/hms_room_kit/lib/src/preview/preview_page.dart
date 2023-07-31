@@ -10,6 +10,7 @@ import 'package:hms_room_kit/src/preview/preview_participant_chip.dart';
 import 'package:hms_room_kit/src/screen_controller.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/error_dialog.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/hms_buttons/hms_back_button.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/meeting_screen_controller.dart';
@@ -216,7 +217,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 -1) &&
                                         !isHLSStarting)
                                       Positioned(
-                                        bottom: 160,
+                                        bottom: 144,
                                         left: 8,
                                         child: Container(
                                           decoration: BoxDecoration(
@@ -291,17 +292,17 @@ class _PreviewPageState extends State<PreviewPage> {
                                           semanticsLabel: "fl_user_icon_label",
                                         ),
                                         const SizedBox(
-                                          height: 32,
+                                          height: 16,
                                         ),
                                         HMSTitleText(
                                             text: "Get Started",
                                             fontSize: 24,
-                                            lineHeight: 32 / 24,
+                                            lineHeight: 32,
                                             textColor: onSurfaceHighEmphasis),
                                         const SizedBox(
-                                          height: 8,
+                                          height: 4,
                                         ),
-                                        HMSSubtitleText(
+                                        HMSSubheadingText(
                                             text: !(previewStore
                                                         .peer
                                                         ?.role
@@ -311,7 +312,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                     false)
                                                 ? "Enter your name before joining"
                                                 : "Setup your audio and video before joining",
-                                            textColor: onSurfaceLowEmphasis),
+                                            textColor: onSurfaceMediumEmphasis),
 
                                         ///Here we use SizedBox to keep the UI consistent
                                         ///until we have received peer list or the room-state is
@@ -322,7 +323,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   !previewStore
                                                       .isHLSStreamingStarted)
                                               ? 60
-                                              : 20),
+                                              : 16),
                                         ),
                                         PreviewParticipantChip(
                                             previewStore: previewStore,
@@ -358,7 +359,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                     width: width,
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 16.0, vertical: 20),
+                                          horizontal: 16.0, vertical: 16),
                                       child: Column(
                                         children: [
                                           if (previewStore.peer != null)
@@ -529,7 +530,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                               ],
                                             ),
                                           const SizedBox(
-                                            height: 20,
+                                            height: 16,
                                           ),
                                           Row(
                                             mainAxisAlignment:
@@ -539,6 +540,10 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 height: 48,
                                                 width: width * 0.50,
                                                 child: TextField(
+                                                  onTapOutside: (event) =>
+                                                      FocusManager
+                                                          .instance.primaryFocus
+                                                          ?.unfocus(),
                                                   textInputAction:
                                                       TextInputAction.done,
                                                   textCapitalization:
@@ -553,18 +558,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                     setState(() {});
                                                   },
                                                   decoration: InputDecoration(
-                                                      suffixIcon: nameController
-                                                              .text.isEmpty
-                                                          ? null
-                                                          : IconButton(
-                                                              onPressed: () {
-                                                                nameController
-                                                                    .text = "";
-                                                                setState(() {});
-                                                              },
-                                                              icon: const Icon(
-                                                                  Icons.clear),
-                                                            ),
                                                       contentPadding:
                                                           const EdgeInsets.symmetric(
                                                               vertical: 14,

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SubheadingText extends StatelessWidget {
+class HMSSubheadingText extends StatelessWidget {
   final String text;
   final Color textColor;
   final double? letterSpacing;
@@ -10,7 +10,7 @@ class SubheadingText extends StatelessWidget {
   final FontWeight? fontWeight;
   final TextOverflow? textOverflow;
 
-  const SubheadingText(
+  const HMSSubheadingText(
       {Key? key,
       required this.text,
       required this.textColor,
