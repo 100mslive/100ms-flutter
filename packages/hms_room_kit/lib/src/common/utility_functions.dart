@@ -185,7 +185,7 @@ class Utilities {
 
   ///This method is used to get names for the audio devices
   ///It is used to set the icon based on the audio device
-  static String getAudioDeviceIconName(HMSAudioDevice hmsAudioDevice) {
+  static String getAudioDeviceIconName(HMSAudioDevice? hmsAudioDevice) {
     switch (hmsAudioDevice) {
       case HMSAudioDevice.SPEAKER_PHONE:
         return "speaker_state_on";
@@ -199,6 +199,27 @@ class Utilities {
         return "music_wave";
       case HMSAudioDevice.UNKNOWN:
         return "music_wave";
+      default:
+        return "music_wave";
+    }
+  }
+
+  static String getAudioDeviceName(HMSAudioDevice? hmsAudioDevice) {
+    switch (hmsAudioDevice) {
+      case HMSAudioDevice.SPEAKER_PHONE:
+        return "Speaker";
+      case HMSAudioDevice.WIRED_HEADSET:
+        return "Earphone";
+      case HMSAudioDevice.EARPIECE:
+        return "Phone";
+      case HMSAudioDevice.BLUETOOTH:
+        return "Bluetooth Device";
+      case HMSAudioDevice.AUTOMATIC:
+        return "Auto";
+      case HMSAudioDevice.UNKNOWN:
+        return "Auto";
+      default:
+        return "Auto";
     }
   }
 

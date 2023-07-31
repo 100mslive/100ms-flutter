@@ -19,6 +19,8 @@ class PreviewParticipantsText extends StatelessWidget {
     return HMSSubtitleText(
         text:
             "${peers.length} ${peers.length > 1 ? "others" : "other"} in session",
+        fontWeight: FontWeight.w600,
+        fontSize: 14,
         textColor: onSurfaceHighEmphasis);
   }
 }

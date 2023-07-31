@@ -61,7 +61,7 @@ class _PreviewPermissionsState extends State<PreviewPermissions> {
                       height: 20,
                     ),
                     HMSTitleText(
-                      text: "Camera & Mic permissions",
+                      text: "Enable permissions",
                       textColor: onSurfaceHighEmphasis,
                       fontSize: 24,
                       lineHeight: 32,
