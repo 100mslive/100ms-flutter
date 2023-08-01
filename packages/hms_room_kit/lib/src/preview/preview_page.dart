@@ -217,7 +217,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 -1) &&
                                         !isHLSStarting)
                                       Positioned(
-                                        bottom: 144,
+                                        bottom: 168,
                                         left: 8,
                                         child: Container(
                                           decoration: BoxDecoration(
@@ -566,7 +566,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                 horizontal: 16),
                                                         fillColor: surfaceDefault,
                                                         filled: true,
-                                                        hintText: 'Name',
+                                                        hintText: 'Enter Name...',
                                                         hintStyle: GoogleFonts.inter(
                                                             color:
                                                                 onSurfaceLowEmphasis,

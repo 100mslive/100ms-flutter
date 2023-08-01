@@ -187,12 +187,8 @@ class Utilities {
         return "earpiece";
       case HMSAudioDevice.BLUETOOTH:
         return "bluetooth";
-      case HMSAudioDevice.AUTOMATIC:
-        return "music_wave";
-      case HMSAudioDevice.UNKNOWN:
-        return "music_wave";
       default:
-        return "music_wave";
+        return "speaker_state_on";
     }
   }
 
@@ -206,10 +202,6 @@ class Utilities {
         return "Phone";
       case HMSAudioDevice.BLUETOOTH:
         return "Bluetooth Device";
-      case HMSAudioDevice.AUTOMATIC:
-        return "Auto";
-      case HMSAudioDevice.UNKNOWN:
-        return "Auto";
       default:
         return "Auto";
     }
