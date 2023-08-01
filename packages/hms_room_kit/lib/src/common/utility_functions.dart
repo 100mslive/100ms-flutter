@@ -188,11 +188,11 @@ class Utilities {
       case HMSAudioDevice.BLUETOOTH:
         return "bluetooth";
       case HMSAudioDevice.AUTOMATIC:
-        return "music_wave";
+        return "speaker_state_on";
       case HMSAudioDevice.UNKNOWN:
-        return "music_wave";
+        return "speaker_state_on";
       default:
-        return "music_wave";
+        return "speaker_state_on";
     }
   }
 
