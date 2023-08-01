@@ -96,17 +96,17 @@ class _PreviewPageState extends State<PreviewPage> {
     }
   }
 
-  void _navigateToMeeting(PreviewStore previewStore){
-      Navigator.of(context).pushReplacement(CupertinoPageRoute(
-      builder: (_) => ListenableProvider.value(
-            value: _meetingStore,
-            child: MeetingScreenController(
-              role: previewStore.peer?.role,
-              roomCode: widget.meetingLink,
-              localPeerNetworkQuality: null,
-              user: nameController.text,
-            ),
-          )));
+  void _navigateToMeeting(PreviewStore previewStore) {
+    Navigator.of(context).pushReplacement(CupertinoPageRoute(
+        builder: (_) => ListenableProvider.value(
+              value: _meetingStore,
+              child: MeetingScreenController(
+                role: previewStore.peer?.role,
+                roomCode: widget.meetingLink,
+                localPeerNetworkQuality: null,
+                user: nameController.text,
+              ),
+            )));
   }
 
   void _startStreaming(
@@ -532,23 +532,26 @@ class _PreviewPageState extends State<PreviewPage> {
                                             height: 16,
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.only(bottom:24.0),
+                                            padding: const EdgeInsets.only(
+                                                bottom: 24.0),
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 SizedBox(
                                                   height: 48,
                                                   width: width * 0.50,
                                                   child: TextField(
                                                     onTapOutside: (event) =>
-                                                        FocusManager
-                                                            .instance.primaryFocus
+                                                        FocusManager.instance
+                                                            .primaryFocus
                                                             ?.unfocus(),
                                                     textInputAction:
                                                         TextInputAction.done,
                                                     textCapitalization:
-                                                        TextCapitalization.words,
+                                                        TextCapitalization
+                                                            .words,
                                                     style: GoogleFonts.inter(
                                                         color:
                                                             onSurfaceHighEmphasis),
@@ -563,9 +566,11 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             const EdgeInsets.symmetric(
                                                                 vertical: 14,
                                                                 horizontal: 16),
-                                                        fillColor: surfaceDefault,
+                                                        fillColor:
+                                                            surfaceDefault,
                                                         filled: true,
-                                                        hintText: 'Enter Name...',
+                                                        hintText:
+                                                            'Enter Name...',
                                                         hintStyle: GoogleFonts.inter(
                                                             color:
                                                                 onSurfaceLowEmphasis,
@@ -573,7 +578,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             fontSize: 16,
                                                             letterSpacing: 0.5,
                                                             fontWeight:
-                                                                FontWeight.w400),
+                                                                FontWeight
+                                                                    .w400),
                                                         enabledBorder:
                                                             const OutlineInputBorder(
                                                                 borderSide:
@@ -590,13 +596,15 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   ),
                                                 ),
                                                 HMSListenableButton(
-                                                  textController: nameController,
+                                                  textController:
+                                                      nameController,
                                                   errorMessage:
                                                       "Please enter you name",
                                                   width: width * 0.38,
-                                                  onPressed: () =>
-                                                      _joinMeeting(previewStore),
-                                                  childWidget: PreviewJoinButton(
+                                                  onPressed: () => _joinMeeting(
+                                                      previewStore),
+                                                  childWidget:
+                                                      PreviewJoinButton(
                                                     isEmpty: nameController
                                                         .text.isEmpty,
                                                     previewStore: previewStore,
