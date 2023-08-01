@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/subheading_text.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 
 class HLSWaitingUI extends StatelessWidget {
@@ -31,7 +31,7 @@ class HLSWaitingUI extends StatelessWidget {
         const SizedBox(
           height: 5,
         ),
-        SubheadingText(
+        HMSSubheadingText(
             text: "Please wait for the teacher to start the class.",
             textColor: onSurfaceMediumEmphasis)
       ],

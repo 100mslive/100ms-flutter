@@ -14,7 +14,7 @@ import 'package:hms_room_kit/src/widgets/bottom_sheets/meeting_mode_bottom_sheet
 import 'package:hms_room_kit/src/widgets/bottom_sheets/participants_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/start_hls_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/share_link_option.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/subheading_text.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
@@ -231,7 +231,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         colorFilter: ColorFilter.mode(
                             onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
-                      title: SubheadingText(
+                      title: HMSSubheadingText(
                         text: "Meeting mode",
                         textColor: onSurfaceHighEmphasis,
                         letterSpacing: 0.15,
@@ -263,7 +263,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               colorFilter: ColorFilter.mode(
                                   onSurfaceHighEmphasis, BlendMode.srcIn),
                             ),
-                            title: SubheadingText(
+                            title: HMSSubheadingText(
                               text: isScreenShareOn
                                   ? "Stop Screen Share"
                                   : "Share Screen",
@@ -299,7 +299,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       colorFilter: ColorFilter.mode(
                           onSurfaceHighEmphasis, BlendMode.srcIn),
                     ),
-                    title: SubheadingText(
+                    title: HMSSubheadingText(
                       text: "Change Name",
                       textColor: onSurfaceHighEmphasis,
                       letterSpacing: 0.15,
@@ -322,7 +322,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       colorFilter: ColorFilter.mode(
                           onSurfaceHighEmphasis, BlendMode.srcIn),
                     ),
-                    title: SubheadingText(
+                    title: HMSSubheadingText(
                       text: meetingStore.isSpeakerOn
                           ? "Mute Room"
                           : "Unmute Room",
@@ -345,7 +345,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         colorFilter: ColorFilter.mode(
                             onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
-                      title: SubheadingText(
+                      title: HMSSubheadingText(
                         text: meetingStore.isRaisedHand
                             ? "Lower Hand"
                             : "Raise Hand",
@@ -366,7 +366,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       colorFilter: ColorFilter.mode(
                           onSurfaceHighEmphasis, BlendMode.srcIn),
                     ),
-                    title: SubheadingText(
+                    title: HMSSubheadingText(
                       text: "BRB",
                       textColor: meetingStore.isBRB
                           ? alertErrorDefault
@@ -397,7 +397,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         colorFilter: ColorFilter.mode(
                             onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
-                      title: SubheadingText(
+                      title: HMSSubheadingText(
                         text: "Stats for nerds",
                         textColor: onSurfaceHighEmphasis,
                         letterSpacing: 0.15,
@@ -425,7 +425,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                           colorFilter: ColorFilter.mode(
                               onSurfaceHighEmphasis, BlendMode.srcIn),
                         ),
-                        title: SubheadingText(
+                        title: HMSSubheadingText(
                           text: "Mute Role",
                           textColor: onSurfaceHighEmphasis,
                           letterSpacing: 0.15,
@@ -451,7 +451,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                           colorFilter: ColorFilter.mode(
                               onSurfaceHighEmphasis, BlendMode.srcIn),
                         ),
-                        title: SubheadingText(
+                        title: HMSSubheadingText(
                           text: "Bulk Role Change",
                           textColor: onSurfaceHighEmphasis,
                           letterSpacing: 0.15,
@@ -510,7 +510,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                         : onSurfaceHighEmphasis,
                                     BlendMode.srcIn),
                               ),
-                              title: SubheadingText(
+                              title: HMSSubheadingText(
                                 text:
                                     isRTMPRunning ? "Stop RTMP" : "Start RTMP",
                                 textColor: isRTMPRunning
@@ -553,7 +553,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                         : onSurfaceHighEmphasis,
                                     BlendMode.srcIn),
                               ),
-                              title: SubheadingText(
+                              title: HMSSubheadingText(
                                 text: isBrowserRecording
                                     ? "Stop Recording"
                                     : "Start Recording",
@@ -604,7 +604,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                           ? alertErrorDefault
                                           : onSurfaceHighEmphasis,
                                       BlendMode.srcIn)),
-                              title: SubheadingText(
+                              title: HMSSubheadingText(
                                 text: hasHLSStarted ? "Stop HLS" : "Start HLS",
                                 textColor: hasHLSStarted
                                     ? alertErrorDefault
@@ -629,7 +629,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         colorFilter: ColorFilter.mode(
                             onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
-                      title: SubheadingText(
+                      title: HMSSubheadingText(
                         text: "Enter Pip Mode",
                         textColor: onSurfaceHighEmphasis,
                         letterSpacing: 0.15,
@@ -654,7 +654,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         colorFilter: ColorFilter.mode(
                             onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
-                      title: SubheadingText(
+                      title: HMSSubheadingText(
                         text: "Share Link",
                         textColor: onSurfaceHighEmphasis,
                         letterSpacing: 0.15,
@@ -709,7 +709,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         colorFilter: ColorFilter.mode(
                             onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
-                      title: SubheadingText(
+                      title: HMSSubheadingText(
                         text: "End Room",
                         textColor: onSurfaceHighEmphasis,
                         letterSpacing: 0.15,

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,6 +11,7 @@ import 'package:hms_room_kit/src/preview/preview_participant_chip.dart';
 import 'package:hms_room_kit/src/screen_controller.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/error_dialog.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/hms_buttons/hms_back_button.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/meeting_screen_controller.dart';
@@ -44,7 +46,7 @@ class _PreviewPageState extends State<PreviewPage> {
     super.initState();
   }
 
-  void setMeetingStore(PreviewStore previewStore) {
+  void _setMeetingStore(PreviewStore previewStore) {
     _meetingStore = MeetingStore(
       hmsSDKInteractor: previewStore.hmsSDKInteractor,
     );
@@ -56,7 +58,7 @@ class _PreviewPageState extends State<PreviewPage> {
       setState(() {
         isJoiningRoom = true;
       });
-      setMeetingStore(previewStore);
+      _setMeetingStore(previewStore);
 
       HMSException? ans =
           await _meetingStore.join(nameController.text, widget.meetingLink);
@@ -73,19 +75,13 @@ class _PreviewPageState extends State<PreviewPage> {
       }
 
       previewStore.removePreviewListener();
+
+      ///When the user does not have permission to stream, or the stream is already started, or the flow is webRTC flow, then we directly navigate to the meeting screen.
+      ///Without starting the HLS stream.
       if (!AppDebugConfig.isStreamingFlow ||
           previewStore.isHLSStreamingStarted ||
           !(previewStore.peer?.role.permissions.hlsStreaming ?? false)) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => ListenableProvider.value(
-                  value: _meetingStore,
-                  child: MeetingScreenController(
-                    role: previewStore.peer?.role,
-                    roomCode: widget.meetingLink,
-                    localPeerNetworkQuality: null,
-                    user: nameController.text,
-                  ),
-                )));
+        _navigateToMeeting(previewStore);
         return;
       }
 
@@ -96,11 +92,24 @@ class _PreviewPageState extends State<PreviewPage> {
         }
       });
 
-      startStreaming(previewStore, _meetingStore);
+      _startStreaming(previewStore, _meetingStore);
     }
   }
 
-  void startStreaming(
+  void _navigateToMeeting(PreviewStore previewStore) {
+    Navigator.of(context).pushReplacement(CupertinoPageRoute(
+        builder: (_) => ListenableProvider.value(
+              value: _meetingStore,
+              child: MeetingScreenController(
+                role: previewStore.peer?.role,
+                roomCode: widget.meetingLink,
+                localPeerNetworkQuality: null,
+                user: nameController.text,
+              ),
+            )));
+  }
+
+  void _startStreaming(
       PreviewStore previewStore, MeetingStore meetingStore) async {
     HMSException? isStreamSuccessful;
     Future.delayed(const Duration(milliseconds: 200)).then((value) async => {
@@ -109,16 +118,7 @@ class _PreviewPageState extends State<PreviewPage> {
           if (isStreamSuccessful == null)
             {
               isHLSStarting = false,
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (_) => ListenableProvider.value(
-                        value: _meetingStore,
-                        child: MeetingScreenController(
-                          role: previewStore.peer?.role,
-                          roomCode: widget.meetingLink,
-                          localPeerNetworkQuality: null,
-                          user: nameController.text,
-                        ),
-                      ))),
+              _navigateToMeeting(previewStore),
             }
           else
             {
@@ -127,7 +127,7 @@ class _PreviewPageState extends State<PreviewPage> {
               }),
               meetingStore.leave(),
               meetingStore.clearRoomState(),
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
+              Navigator.of(context).pushReplacement(CupertinoPageRoute(
                   builder: (_) => ScreenController(
                         roomCode: widget.meetingLink,
                         options: widget.options,
@@ -216,7 +216,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                 -1) &&
                                         !isHLSStarting)
                                       Positioned(
-                                        bottom: 160,
+                                        bottom: 168,
                                         left: 8,
                                         child: Container(
                                           decoration: BoxDecoration(
@@ -291,17 +291,17 @@ class _PreviewPageState extends State<PreviewPage> {
                                           semanticsLabel: "fl_user_icon_label",
                                         ),
                                         const SizedBox(
-                                          height: 32,
+                                          height: 16,
                                         ),
                                         HMSTitleText(
                                             text: "Get Started",
                                             fontSize: 24,
-                                            lineHeight: 32 / 24,
+                                            lineHeight: 32,
                                             textColor: onSurfaceHighEmphasis),
                                         const SizedBox(
-                                          height: 8,
+                                          height: 4,
                                         ),
-                                        HMSSubtitleText(
+                                        HMSSubheadingText(
                                             text: !(previewStore
                                                         .peer
                                                         ?.role
@@ -311,7 +311,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                     false)
                                                 ? "Enter your name before joining"
                                                 : "Setup your audio and video before joining",
-                                            textColor: onSurfaceLowEmphasis),
+                                            textColor: onSurfaceMediumEmphasis),
 
                                         ///Here we use SizedBox to keep the UI consistent
                                         ///until we have received peer list or the room-state is
@@ -322,7 +322,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   !previewStore
                                                       .isHLSStreamingStarted)
                                               ? 60
-                                              : 20),
+                                              : 16),
                                         ),
                                         PreviewParticipantChip(
                                             previewStore: previewStore,
@@ -358,7 +358,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                     width: width,
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 16.0, vertical: 20),
+                                          horizontal: 16.0, vertical: 16),
                                       child: Column(
                                         children: [
                                           if (previewStore.peer != null)
@@ -529,87 +529,90 @@ class _PreviewPageState extends State<PreviewPage> {
                                               ],
                                             ),
                                           const SizedBox(
-                                            height: 20,
+                                            height: 16,
                                           ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              SizedBox(
-                                                height: 48,
-                                                width: width * 0.50,
-                                                child: TextField(
-                                                  textInputAction:
-                                                      TextInputAction.done,
-                                                  textCapitalization:
-                                                      TextCapitalization.words,
-                                                  style: GoogleFonts.inter(
-                                                      color:
-                                                          onSurfaceHighEmphasis),
-                                                  controller: nameController,
-                                                  keyboardType:
-                                                      TextInputType.name,
-                                                  onChanged: (value) {
-                                                    setState(() {});
-                                                  },
-                                                  decoration: InputDecoration(
-                                                      suffixIcon: nameController
-                                                              .text.isEmpty
-                                                          ? null
-                                                          : IconButton(
-                                                              onPressed: () {
-                                                                nameController
-                                                                    .text = "";
-                                                                setState(() {});
-                                                              },
-                                                              icon: const Icon(
-                                                                  Icons.clear),
-                                                            ),
-                                                      contentPadding:
-                                                          const EdgeInsets.symmetric(
-                                                              vertical: 14,
-                                                              horizontal: 16),
-                                                      fillColor: surfaceDefault,
-                                                      filled: true,
-                                                      hintText: 'Name',
-                                                      hintStyle: GoogleFonts.inter(
-                                                          color:
-                                                              onSurfaceLowEmphasis,
-                                                          height: 1.5,
-                                                          fontSize: 16,
-                                                          letterSpacing: 0.5,
-                                                          fontWeight:
-                                                              FontWeight.w400),
-                                                      enabledBorder:
-                                                          const OutlineInputBorder(
-                                                              borderSide:
-                                                                  BorderSide
-                                                                      .none,
-                                                              borderRadius:
-                                                                  BorderRadius.all(
-                                                                      Radius.circular(
-                                                                          8))),
-                                                      border: const OutlineInputBorder(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius.circular(8)))),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 24.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                SizedBox(
+                                                  height: 48,
+                                                  width: width * 0.50,
+                                                  child: TextField(
+                                                    onTapOutside: (event) =>
+                                                        FocusManager.instance
+                                                            .primaryFocus
+                                                            ?.unfocus(),
+                                                    textInputAction:
+                                                        TextInputAction.done,
+                                                    textCapitalization:
+                                                        TextCapitalization
+                                                            .words,
+                                                    style: GoogleFonts.inter(
+                                                        color:
+                                                            onSurfaceHighEmphasis),
+                                                    controller: nameController,
+                                                    keyboardType:
+                                                        TextInputType.name,
+                                                    onChanged: (value) {
+                                                      setState(() {});
+                                                    },
+                                                    decoration: InputDecoration(
+                                                        contentPadding:
+                                                            const EdgeInsets.symmetric(
+                                                                vertical: 14,
+                                                                horizontal: 16),
+                                                        fillColor:
+                                                            surfaceDefault,
+                                                        filled: true,
+                                                        hintText:
+                                                            'Enter Name...',
+                                                        hintStyle: GoogleFonts.inter(
+                                                            color:
+                                                                onSurfaceLowEmphasis,
+                                                            height: 1.5,
+                                                            fontSize: 16,
+                                                            letterSpacing: 0.5,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w400),
+                                                        enabledBorder:
+                                                            const OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide
+                                                                        .none,
+                                                                borderRadius:
+                                                                    BorderRadius.all(
+                                                                        Radius.circular(
+                                                                            8))),
+                                                        border: const OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius.all(
+                                                                    Radius.circular(8)))),
+                                                  ),
                                                 ),
-                                              ),
-                                              HMSListenableButton(
-                                                textController: nameController,
-                                                errorMessage:
-                                                    "Please enter you name",
-                                                width: width * 0.38,
-                                                onPressed: () =>
-                                                    _joinMeeting(previewStore),
-                                                childWidget: PreviewJoinButton(
-                                                  isEmpty: nameController
-                                                      .text.isEmpty,
-                                                  previewStore: previewStore,
-                                                  isJoining: isJoiningRoom,
+                                                HMSListenableButton(
+                                                  textController:
+                                                      nameController,
+                                                  errorMessage:
+                                                      "Please enter you name",
+                                                  width: width * 0.38,
+                                                  onPressed: () => _joinMeeting(
+                                                      previewStore),
+                                                  childWidget:
+                                                      PreviewJoinButton(
+                                                    isEmpty: nameController
+                                                        .text.isEmpty,
+                                                    previewStore: previewStore,
+                                                    isJoining: isJoiningRoom,
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
