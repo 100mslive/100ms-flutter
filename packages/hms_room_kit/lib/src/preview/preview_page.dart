@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -45,7 +46,7 @@ class _PreviewPageState extends State<PreviewPage> {
     super.initState();
   }
 
-  void setMeetingStore(PreviewStore previewStore) {
+  void _setMeetingStore(PreviewStore previewStore) {
     _meetingStore = MeetingStore(
       hmsSDKInteractor: previewStore.hmsSDKInteractor,
     );
@@ -57,7 +58,7 @@ class _PreviewPageState extends State<PreviewPage> {
       setState(() {
         isJoiningRoom = true;
       });
-      setMeetingStore(previewStore);
+      _setMeetingStore(previewStore);
 
       HMSException? ans =
           await _meetingStore.join(nameController.text, widget.meetingLink);
@@ -74,19 +75,13 @@ class _PreviewPageState extends State<PreviewPage> {
       }
 
       previewStore.removePreviewListener();
+
+      ///When the user does not have permission to stream, or the stream is already started, or the flow is webRTC flow, then we directly navigate to the meeting screen.
+      ///Without starting the HLS stream.
       if (!AppDebugConfig.isStreamingFlow ||
           previewStore.isHLSStreamingStarted ||
           !(previewStore.peer?.role.permissions.hlsStreaming ?? false)) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => ListenableProvider.value(
-                  value: _meetingStore,
-                  child: MeetingScreenController(
-                    role: previewStore.peer?.role,
-                    roomCode: widget.meetingLink,
-                    localPeerNetworkQuality: null,
-                    user: nameController.text,
-                  ),
-                )));
+        _navigateToMeeting(previewStore);
         return;
       }
 
@@ -97,11 +92,24 @@ class _PreviewPageState extends State<PreviewPage> {
         }
       });
 
-      startStreaming(previewStore, _meetingStore);
+      _startStreaming(previewStore, _meetingStore);
     }
   }
 
-  void startStreaming(
+  void _navigateToMeeting(PreviewStore previewStore) {
+    Navigator.of(context).pushReplacement(CupertinoPageRoute(
+        builder: (_) => ListenableProvider.value(
+              value: _meetingStore,
+              child: MeetingScreenController(
+                role: previewStore.peer?.role,
+                roomCode: widget.meetingLink,
+                localPeerNetworkQuality: null,
+                user: nameController.text,
+              ),
+            )));
+  }
+
+  void _startStreaming(
       PreviewStore previewStore, MeetingStore meetingStore) async {
     HMSException? isStreamSuccessful;
     Future.delayed(const Duration(milliseconds: 200)).then((value) async => {
@@ -110,16 +118,7 @@ class _PreviewPageState extends State<PreviewPage> {
           if (isStreamSuccessful == null)
             {
               isHLSStarting = false,
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (_) => ListenableProvider.value(
-                        value: _meetingStore,
-                        child: MeetingScreenController(
-                          role: previewStore.peer?.role,
-                          roomCode: widget.meetingLink,
-                          localPeerNetworkQuality: null,
-                          user: nameController.text,
-                        ),
-                      ))),
+              _navigateToMeeting(previewStore),
             }
           else
             {
@@ -128,7 +127,7 @@ class _PreviewPageState extends State<PreviewPage> {
               }),
               meetingStore.leave(),
               meetingStore.clearRoomState(),
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
+              Navigator.of(context).pushReplacement(CupertinoPageRoute(
                   builder: (_) => ScreenController(
                         roomCode: widget.meetingLink,
                         options: widget.options,
@@ -533,23 +532,26 @@ class _PreviewPageState extends State<PreviewPage> {
                                             height: 16,
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.only(bottom:24.0),
+                                            padding: const EdgeInsets.only(
+                                                bottom: 24.0),
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 SizedBox(
                                                   height: 48,
                                                   width: width * 0.50,
                                                   child: TextField(
                                                     onTapOutside: (event) =>
-                                                        FocusManager
-                                                            .instance.primaryFocus
+                                                        FocusManager.instance
+                                                            .primaryFocus
                                                             ?.unfocus(),
                                                     textInputAction:
                                                         TextInputAction.done,
                                                     textCapitalization:
-                                                        TextCapitalization.words,
+                                                        TextCapitalization
+                                                            .words,
                                                     style: GoogleFonts.inter(
                                                         color:
                                                             onSurfaceHighEmphasis),
@@ -564,9 +566,11 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             const EdgeInsets.symmetric(
                                                                 vertical: 14,
                                                                 horizontal: 16),
-                                                        fillColor: surfaceDefault,
+                                                        fillColor:
+                                                            surfaceDefault,
                                                         filled: true,
-                                                        hintText: 'Enter Name...',
+                                                        hintText:
+                                                            'Enter Name...',
                                                         hintStyle: GoogleFonts.inter(
                                                             color:
                                                                 onSurfaceLowEmphasis,
@@ -574,7 +578,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             fontSize: 16,
                                                             letterSpacing: 0.5,
                                                             fontWeight:
-                                                                FontWeight.w400),
+                                                                FontWeight
+                                                                    .w400),
                                                         enabledBorder:
                                                             const OutlineInputBorder(
                                                                 borderSide:
@@ -591,13 +596,15 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   ),
                                                 ),
                                                 HMSListenableButton(
-                                                  textController: nameController,
+                                                  textController:
+                                                      nameController,
                                                   errorMessage:
                                                       "Please enter you name",
                                                   width: width * 0.38,
-                                                  onPressed: () =>
-                                                      _joinMeeting(previewStore),
-                                                  childWidget: PreviewJoinButton(
+                                                  onPressed: () => _joinMeeting(
+                                                      previewStore),
+                                                  childWidget:
+                                                      PreviewJoinButton(
                                                     isEmpty: nameController
                                                         .text.isEmpty,
                                                     previewStore: previewStore,
