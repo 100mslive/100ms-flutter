@@ -119,7 +119,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                                       BlendMode.srcIn),
                                                 ),
                                               )
-                                            : Container(
+                                            : const SizedBox(
                                                 height: 24,
                                                 width: 24,
                                               ),
