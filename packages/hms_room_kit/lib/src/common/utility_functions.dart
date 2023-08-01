@@ -202,10 +202,6 @@ class Utilities {
         return "Phone";
       case HMSAudioDevice.BLUETOOTH:
         return "Bluetooth Device";
-      case HMSAudioDevice.AUTOMATIC:
-        return "Auto";
-      case HMSAudioDevice.UNKNOWN:
-        return "Auto";
       default:
         return "Auto";
     }
