@@ -187,10 +187,6 @@ class Utilities {
         return "earpiece";
       case HMSAudioDevice.BLUETOOTH:
         return "bluetooth";
-      case HMSAudioDevice.AUTOMATIC:
-        return "speaker_state_on";
-      case HMSAudioDevice.UNKNOWN:
-        return "speaker_state_on";
       default:
         return "speaker_state_on";
     }
