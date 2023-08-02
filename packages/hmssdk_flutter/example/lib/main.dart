@@ -375,6 +375,10 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 icon: Icon(Icons.clear),
                               ),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: primaryDefault),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(8))),
                         enabledBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: borderColor, width: 1),
