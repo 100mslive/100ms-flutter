@@ -21,6 +21,8 @@ class PreviewParticipantChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var peerCount =
+        previewStore.peerCount + (previewStore.peer == null ? 0 : 1);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -59,9 +61,8 @@ class PreviewParticipantChip extends StatelessWidget {
               )
             : Container(),
 
-        ///This will only be rendered if room state is enabled for the role with peer-list
-        ///and peers is not null
-        previewStore.peers == null
+        ///This will only be rendered if room state is enabled for the role
+        peerCount == 0
             ? Container()
             : Container(
                 height: 40,
@@ -72,14 +73,14 @@ class PreviewParticipantChip extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(
                         top: 8.0, bottom: 8, left: 20, right: 16),
-                    child: previewStore.peers!.isEmpty
+                    child: peerCount == 1
                         ? HMSSubtitleText(
                             text: "You are the first to join",
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
                             textColor: onSurfaceHighEmphasis)
                         : PreviewParticipantsText(
-                            peers: previewStore.peers!,
+                            peerCount: previewStore.peerCount,
                           ),
                   ),
                 ),
