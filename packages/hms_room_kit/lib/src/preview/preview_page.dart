@@ -326,13 +326,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                               ///Here we use SizedBox to keep the UI consistent
                                               ///until we have received peer list or the room-state is
                                               ///not enabled
-                                              SizedBox(
-                                                height: ((previewStore.peers ==
-                                                            null &&
-                                                        !previewStore
-                                                            .isHLSStreamingStarted)
-                                                    ? 60
-                                                    : 16),
+                                              const SizedBox(
+                                                height: 16,
                                               ),
                                               PreviewParticipantChip(
                                                   previewStore: previewStore,
