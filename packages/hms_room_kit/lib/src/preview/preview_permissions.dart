@@ -81,7 +81,7 @@ class _PreviewPermissionsState extends State<PreviewPermissions> {
                 alignment: Alignment.bottomCenter,
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+                      const EdgeInsets.fromLTRB(8,8,8,24),
                   child: SizedBox(
                     width: size.width - 40,
                     height: 48,
