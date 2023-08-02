@@ -1,8 +1,9 @@
 Board: https://github.com/100mslive/100ms-flutter/projects/19
 
-- Removed unnecessary dependencies for `HMSHLSPlayer`
-https://100ms.atlassian.net/browse/LIVE-1588
+- Added `wakelock` api's in HMSSDK
 
-Flutter SDK: 1.7.2
-Android SDK: 2.7.1
-iOS SDK: 0.9.5
+- Added `initialising` property in `HMSBrowserRecordingState` class
+
+Flutter SDK: 1.7.3
+Android SDK: 2.7.2
+iOS SDK: 0.9.6
