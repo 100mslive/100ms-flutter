@@ -10,7 +10,7 @@ import 'package:hms_room_kit/src/service/app_secrets.dart';
 import 'package:hms_room_kit/src/service/room_service.dart';
 
 class PreviewStore extends ChangeNotifier
-    implements HMSPreviewListener, HMSLogListener {
+    implements HMSPreviewListener, HMSLogListener, HMSUpdateListener {
   late HMSSDKInteractor hmsSDKInteractor;
 
   PreviewStore({required this.hmsSDKInteractor});
@@ -31,6 +31,10 @@ class PreviewStore extends ChangeNotifier
   bool isRecordingStarted = false;
 
   bool isHLSStreamingStarted = false;
+
+  bool isRoomJoinedAndHLSStarted = false;
+
+  bool isRoomJoined = false;
 
   bool isRTMPStreamingStarted = false;
 
@@ -202,6 +206,8 @@ class PreviewStore extends ChangeNotifier
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         isHLSStreamingStarted = room.hmshlsStreamingState?.running ?? false;
+        isRoomJoinedAndHLSStarted =
+            (room.hmshlsStreamingState?.running ?? false) && isRoomJoined;
         break;
       case HMSRoomUpdate.roomPeerCountUpdated:
         peerCount = room.peerCount;
@@ -309,4 +315,44 @@ class PreviewStore extends ChangeNotifier
     }
     notifyListeners();
   }
+
+  void toggleIsRoomJoinedAndHLSStarted() {
+    isRoomJoinedAndHLSStarted = (!isRoomJoinedAndHLSStarted && isRoomJoined);
+    notifyListeners();
+  }
+
+  @override
+  void onChangeTrackStateRequest(
+      {required HMSTrackChangeRequest hmsTrackChangeRequest}) {}
+
+  @override
+  void onJoin({required HMSRoom room}) {}
+
+  @override
+  void onMessage({required HMSMessage message}) {}
+
+  @override
+  void onReconnected() {}
+
+  @override
+  void onReconnecting() {}
+
+  @override
+  void onRemovedFromRoom(
+      {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {}
+
+  @override
+  void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {}
+
+  @override
+  void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {}
+
+  @override
+  void onTrackUpdate(
+      {required HMSTrack track,
+      required HMSTrackUpdate trackUpdate,
+      required HMSPeer peer}) {}
+
+  @override
+  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {}
 }

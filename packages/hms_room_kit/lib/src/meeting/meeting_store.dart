@@ -1028,11 +1028,7 @@ class MeetingStore extends ChangeNotifier
     } else if (Platform.isIOS) {
       HMSIOSPIPController.destroy();
     }
-    _hmsSDKInteractor.removeUpdateListener(this);
-    _hmsSDKInteractor.removeLogsListener(this);
-    _hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeListener: this);
-    _hmsSDKInteractor.removeHMSLogger();
-    HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(this);
+    removeListeners();
     toggleAlwaysScreenOn();
     _hmsSDKInteractor.destroy();
     _hmsSessionStore = null;
@@ -1041,6 +1037,14 @@ class MeetingStore extends ChangeNotifier
     setLandscapeLock(false);
     FlutterForegroundTask.stopService();
     notifyListeners();
+  }
+
+  void removeListeners() {
+    _hmsSDKInteractor.removeUpdateListener(this);
+    _hmsSDKInteractor.removeLogsListener(this);
+    _hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeListener: this);
+    _hmsSDKInteractor.removeHMSLogger();
+    HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(this);
   }
 
   void toggleScreenShare() {
