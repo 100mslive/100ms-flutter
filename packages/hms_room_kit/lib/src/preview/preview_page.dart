@@ -162,9 +162,10 @@ class _PreviewPageState extends State<PreviewPage> {
                       child: (previewStore.peer == null)
                           ? SizedBox(
                               height: height,
-                              child: const Center(
+                              child: Center(
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
+                                  color: primaryDefault,
                                 ),
                               ),
                             )
@@ -612,18 +613,21 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400),
+                                                              focusedBorder: OutlineInputBorder(
+                                                                  borderSide:
+                                                                      BorderSide(
+                                                                          color:
+                                                                              primaryDefault),
+                                                                  borderRadius: const BorderRadius.all(
+                                                                      Radius.circular(
+                                                                          8))),
                                                               enabledBorder: const OutlineInputBorder(
                                                                   borderSide:
                                                                       BorderSide
                                                                           .none,
                                                                   borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              8))),
-                                                              border: const OutlineInputBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(8)))),
+                                                                      BorderRadius.all(Radius.circular(8))),
+                                                              border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(8)))),
                                                         ),
                                                       ),
                                                       HMSListenableButton(
@@ -672,8 +676,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        const CircularProgressIndicator(
+                                        CircularProgressIndicator(
                                           strokeWidth: 2,
+                                          color: primaryDefault,
                                         ),
                                         const SizedBox(
                                           height: 29,

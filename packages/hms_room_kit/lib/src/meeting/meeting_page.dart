@@ -264,8 +264,9 @@ class _MeetingPageState extends State<MeetingPage> {
                                                   child: Column(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
-                                                  const CircularProgressIndicator(
+                                                  CircularProgressIndicator(
                                                     strokeWidth: 2,
+                                                    color: primaryDefault,
                                                   ),
                                                   const SizedBox(
                                                     height: 10,
