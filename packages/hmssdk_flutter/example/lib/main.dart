@@ -374,10 +374,14 @@ class _HomePageState extends State<HomePage> {
                                   meetingLinkController.text = "";
                                   setState(() {});
                                 },
-                                icon: Icon(Icons.clear,color: primaryDefault,),
+                                icon: Icon(
+                                  Icons.clear,
+                                  color: primaryDefault,
+                                ),
                               ),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: primaryDefault,width: 2),
+                            borderSide:
+                                BorderSide(color: primaryDefault, width: 2),
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(8))),
                         enabledBorder: OutlineInputBorder(
