@@ -80,8 +80,7 @@ class _PreviewPermissionsState extends State<PreviewPermissions> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding:
-                      const EdgeInsets.fromLTRB(8,8,8,24),
+                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 24),
                   child: SizedBox(
                     width: size.width - 40,
                     height: 48,

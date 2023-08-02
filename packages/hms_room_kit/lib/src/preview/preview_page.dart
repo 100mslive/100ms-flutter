@@ -526,12 +526,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                         isScrollControlled:
                                                                             true,
                                                                         backgroundColor:
-                                                                            backgroundDefault,
-                                                                        shape:
-                                                                            RoundedRectangleBorder(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(20),
-                                                                        ),
+                                                                            Colors
+                                                                                .transparent,
                                                                         context:
                                                                             context,
                                                                         builder: (ctx) => ChangeNotifierProvider.value(
