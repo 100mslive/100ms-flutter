@@ -571,6 +571,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         height: 48,
                                                         width: width * 0.50,
                                                         child: TextField(
+                                                          cursorColor:
+                                                              primaryDefault,
                                                           onTapOutside: (event) =>
                                                               FocusManager
                                                                   .instance
@@ -616,10 +618,10 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                       FontWeight
                                                                           .w400),
                                                               focusedBorder: OutlineInputBorder(
-                                                                  borderSide:
-                                                                      BorderSide(
-                                                                          color:
-                                                                              primaryDefault),
+                                                                  borderSide: BorderSide(
+                                                                      width: 2,
+                                                                      color:
+                                                                          primaryDefault),
                                                                   borderRadius: const BorderRadius.all(
                                                                       Radius.circular(
                                                                           8))),
