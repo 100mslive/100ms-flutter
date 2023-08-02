@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.util.Log
+import android.view.WindowManager
 import androidx.annotation.NonNull
 import com.google.gson.JsonElement
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -228,6 +229,9 @@ class HmssdkFlutterPlugin :
             }
             "start_hls_player", "stop_hls_player", "pause_hls_player", "resume_hls_player", "seek_to_live_position", "seek_forward", "seek_backward", "set_hls_player_volume", "add_hls_stats_listener", "remove_hls_stats_listener" -> {
                 HMSHLSPlayerAction.hlsPlayerAction(call, result, activity)
+            }
+            "toggle_always_screen_on" -> {
+                toggleAlwaysScreenOn(result)
             }
             else -> {
                 result.notImplemented()
@@ -497,6 +501,24 @@ class HmssdkFlutterPlugin :
 
     private fun destroy(result: Result) {
         hmssdk = null
+        result.success(null)
+    }
+
+    /**
+     *   [toggleAlwaysScreenOn] provides a way to keep the screen always ON
+     *   when enabled.
+     */
+    private fun toggleAlwaysScreenOn(result: Result){
+
+        activity.window?.let{
+            if((activity.window.attributes.flags and WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) != 0){
+                activity.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
+            else{
+                activity.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
+        }
+        result.success(null)
     }
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
