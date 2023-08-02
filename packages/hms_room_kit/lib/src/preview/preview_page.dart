@@ -112,6 +112,8 @@ class _PreviewPageState extends State<PreviewPage> {
               previewStore.hmsSDKInteractor.removeUpdateListener(previewStore),
               meetingStore.removeListeners(),
               meetingStore.peerTracks.clear(),
+              meetingStore.resetForegroundTaskAndOrientation(),
+              meetingStore.clearPIPState(),
               meetingStore.isRoomEnded = true,
               previewStore.hmsSDKInteractor.leave(),
               Navigator.pushReplacement(
@@ -569,6 +571,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         height: 48,
                                                         width: width * 0.50,
                                                         child: TextField(
+                                                          cursorColor:
+                                                              primaryDefault,
                                                           onTapOutside: (event) =>
                                                               FocusManager
                                                                   .instance
@@ -614,10 +618,10 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                       FontWeight
                                                                           .w400),
                                                               focusedBorder: OutlineInputBorder(
-                                                                  borderSide:
-                                                                      BorderSide(
-                                                                          color:
-                                                                              primaryDefault),
+                                                                  borderSide: BorderSide(
+                                                                      width: 2,
+                                                                      color:
+                                                                          primaryDefault),
                                                                   borderRadius: const BorderRadius.all(
                                                                       Radius.circular(
                                                                           8))),
