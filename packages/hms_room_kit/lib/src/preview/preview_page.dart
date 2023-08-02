@@ -112,6 +112,8 @@ class _PreviewPageState extends State<PreviewPage> {
               previewStore.hmsSDKInteractor.removeUpdateListener(previewStore),
               meetingStore.removeListeners(),
               meetingStore.peerTracks.clear(),
+              meetingStore.resetForegroundTaskAndOrientation(),
+              meetingStore.clearPIPState(),
               meetingStore.isRoomEnded = true,
               previewStore.hmsSDKInteractor.leave(),
               Navigator.pushReplacement(

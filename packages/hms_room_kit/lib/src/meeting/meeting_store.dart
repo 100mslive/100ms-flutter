@@ -1023,20 +1023,28 @@ class MeetingStore extends ChangeNotifier
 // Helper Methods
 
   void clearRoomState() async {
-    if (Platform.isAndroid) {
-      HMSAndroidPIPController.destroy();
-    } else if (Platform.isIOS) {
-      HMSIOSPIPController.destroy();
-    }
+    clearPIPState();
     removeListeners();
     toggleAlwaysScreenOn();
     _hmsSDKInteractor.destroy();
     _hmsSessionStore = null;
     peerTracks.clear();
     isRoomEnded = true;
+    resetForegroundTaskAndOrientation();
+    notifyListeners();
+  }
+
+  void resetForegroundTaskAndOrientation() {
     setLandscapeLock(false);
     FlutterForegroundTask.stopService();
-    notifyListeners();
+  }
+
+  void clearPIPState() {
+    if (Platform.isAndroid) {
+      HMSAndroidPIPController.destroy();
+    } else if (Platform.isIOS) {
+      HMSIOSPIPController.destroy();
+    }
   }
 
   void removeListeners() {
