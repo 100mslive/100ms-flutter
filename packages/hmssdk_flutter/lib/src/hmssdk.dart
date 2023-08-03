@@ -35,8 +35,6 @@ import '../hmssdk_flutter.dart';
 /// Refer [HMSSDK quick start guide available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart)
 
 class HMSSDK {
-  final bool isPrebuilt;
-
   /// The public interface of 100ms SDK. Create an instance of HMSSDK to start using the SDK.
   ///
   /// Parameters:
@@ -1327,4 +1325,6 @@ class HMSSDK {
   HMSLogSettings? hmsLogSettings;
 
   bool previewState = false;
+
+  final bool isPrebuilt;
 }
