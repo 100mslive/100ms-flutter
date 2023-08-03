@@ -1,4 +1,4 @@
-## 0.0.4 - 2023-08-01
+## 0.0.4 - 2023-08-03
 
 - Fixed theming issues
 - Fixed issues for flutter versions below 3.10.x

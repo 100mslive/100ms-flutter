@@ -14,11 +14,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  hmssdk_flutter:
-    git:
-      url: https://github.com/100mslive/100ms-flutter.git
-      ref: feature/prebuilt
-      path: packages/hmssdk_flutter
+  hmssdk_flutter: ^1.7.3
   intl: ^0.18.1
   permission_handler: ^10.4.3
   provider: ^6.0.5

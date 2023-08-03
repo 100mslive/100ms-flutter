@@ -253,10 +253,9 @@ class HMSSDKInteractor {
         name: name, hmsActionResultListener: hmsActionResultListener);
   }
 
-  Future<HMSException?> startHLSStreaming(
-      HMSActionResultListener hmsActionResultListener,
+  void startHLSStreaming(HMSActionResultListener hmsActionResultListener,
       {String? meetingUrl,
-      required HMSHLSRecordingConfig hmshlsRecordingConfig}) async {
+      required HMSHLSRecordingConfig hmshlsRecordingConfig}) {
     List<HMSHLSMeetingURLVariant>? hmsHlsMeetingUrls;
     if (meetingUrl != null) {
       hmsHlsMeetingUrls = [];
@@ -267,7 +266,7 @@ class HMSSDKInteractor {
         meetingURLVariant: hmsHlsMeetingUrls,
         hmsHLSRecordingConfig: hmshlsRecordingConfig);
 
-    return await hmsSDK.startHlsStreaming(
+    hmsSDK.startHlsStreaming(
         hmshlsConfig: hmshlsConfig,
         hmsActionResultListener: hmsActionResultListener);
   }

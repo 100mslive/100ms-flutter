@@ -459,11 +459,10 @@ class MeetingStore extends ChangeNotifier
   }
 
   HMSHLSRecordingConfig? hmshlsRecordingConfig;
-  Future<HMSException?> startHLSStreaming(
-      bool singleFile, bool videoOnDemand) async {
+  void startHLSStreaming(bool singleFile, bool videoOnDemand) {
     hmshlsRecordingConfig = HMSHLSRecordingConfig(
         singleFilePerLayer: singleFile, videoOnDemand: videoOnDemand);
-    return await _hmsSDKInteractor.startHLSStreaming(this,
+    _hmsSDKInteractor.startHLSStreaming(this,
         hmshlsRecordingConfig: hmshlsRecordingConfig!);
   }
 
