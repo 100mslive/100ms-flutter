@@ -61,7 +61,7 @@ class _PreviewPermissionsState extends State<PreviewPermissions> {
                       height: 20,
                     ),
                     HMSTitleText(
-                      text: "Camera & Mic permissions",
+                      text: "Enable permissions",
                       textColor: onSurfaceHighEmphasis,
                       fontSize: 24,
                       lineHeight: 32,
@@ -80,8 +80,7 @@ class _PreviewPermissionsState extends State<PreviewPermissions> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 24),
                   child: SizedBox(
                     width: size.width - 40,
                     height: 48,

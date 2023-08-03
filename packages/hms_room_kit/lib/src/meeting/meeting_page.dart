@@ -61,6 +61,7 @@ class _MeetingPageState extends State<MeetingPage> {
 
   void _enableAlwaysScreenOn() {
     context.read<MeetingStore>().toggleAlwaysScreenOn();
+    context.read<MeetingStore>().initForegroundTask();
   }
 
   String recordingState() {
@@ -263,8 +264,9 @@ class _MeetingPageState extends State<MeetingPage> {
                                                   child: Column(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
-                                                  const CircularProgressIndicator(
+                                                  CircularProgressIndicator(
                                                     strokeWidth: 2,
+                                                    color: primaryDefault,
                                                   ),
                                                   const SizedBox(
                                                     height: 10,
@@ -427,7 +429,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                           .asset(
                                                                     "packages/hms_room_kit/lib/src/assets/icons/exit_room.svg",
                                                                     colorFilter: const ColorFilter
-                                                                        .mode(
+                                                                            .mode(
                                                                         Colors
                                                                             .white,
                                                                         BlendMode
@@ -487,7 +489,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                   children: [
                                                                     Padding(
                                                                       padding: const EdgeInsets
-                                                                          .only(
+                                                                              .only(
                                                                           right:
                                                                               5.0),
                                                                       child: SvgPicture

@@ -21,6 +21,8 @@ class PreviewParticipantChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var peerCount =
+        previewStore.peerCount + (previewStore.peer == null ? 0 : 1);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -40,13 +42,14 @@ class PreviewParticipantChip extends StatelessWidget {
                       children: [
                         SvgPicture.asset(
                           "packages/hms_room_kit/lib/src/assets/icons/white_dot.svg",
-                          width: 16,
-                          height: 16,
+                          width: 20,
+                          height: 20,
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 4.0, right: 6),
                           child: HMSSubtitleText(
                               text: "LIVE",
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.25,
                               textColor: onSurfaceHighEmphasis),
@@ -58,25 +61,28 @@ class PreviewParticipantChip extends StatelessWidget {
               )
             : Container(),
 
-        ///This will only be rendered if room state is enabled for the role with peer-list
-        ///and peers is not null
-        previewStore.peers == null
+        ///This will only be rendered if room state is enabled for the role
+        peerCount == 0
             ? Container()
             : Container(
-                constraints: BoxConstraints(
-                    minWidth: width * 0.4, maxWidth: width * 0.5),
                 height: 40,
                 decoration: BoxDecoration(
                     color: surfaceDefault,
                     borderRadius: BorderRadius.circular(20)),
                 child: Center(
-                  child: previewStore.peers!.isEmpty
-                      ? HMSSubtitleText(
-                          text: "You are the first to join",
-                          textColor: onSurfaceHighEmphasis)
-                      : PreviewParticipantsText(
-                          peers: previewStore.peers!,
-                        ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 8.0, bottom: 8, left: 20, right: 16),
+                    child: peerCount == 1
+                        ? HMSSubtitleText(
+                            text: "You are the first to join",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            textColor: onSurfaceHighEmphasis)
+                        : PreviewParticipantsText(
+                            peerCount: previewStore.peerCount,
+                          ),
+                  ),
                 ),
               ),
       ],

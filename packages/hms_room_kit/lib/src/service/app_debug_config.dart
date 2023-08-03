@@ -5,8 +5,8 @@ class AppDebugConfig {
   Setting these values to defaults and can be toggled from the application
   This will not be shipped with the ui_kit package and only used for internal testing
   */
-  static bool joinWithMutedAudio = true;
-  static bool joinWithMutedVideo = true;
+  static bool joinWithMutedAudio = false;
+  static bool joinWithMutedVideo = false;
   static bool skipPreview = false;
   static bool mirrorCamera = true;
   static bool showStats = false;

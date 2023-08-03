@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/common/constants.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
@@ -104,9 +105,10 @@ class _ScreenControllerState extends State<ScreenController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: isLoading
-          ? const Center(
+          ? Center(
               child: CircularProgressIndicator(
                 strokeWidth: 2,
+                color: primaryDefault,
               ),
             )
           : isPermissionGranted
@@ -115,6 +117,7 @@ class _ScreenControllerState extends State<ScreenController> {
                   child: PreviewPage(
                     meetingLink: widget.roomCode,
                     name: "",
+                    options: widget.options,
                   ))
               : PreviewPermissions(
                   roomCode: widget.roomCode,

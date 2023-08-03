@@ -347,6 +347,7 @@ class _HomePageState extends State<HomePage> {
                   child: TextField(
                     key: Key('room_code_field'),
                     textInputAction: TextInputAction.done,
+                    cursorColor: primaryDefault,
                     onSubmitted: (value) {
                       joinMeeting();
                     },
@@ -373,8 +374,12 @@ class _HomePageState extends State<HomePage> {
                                   meetingLinkController.text = "";
                                   setState(() {});
                                 },
-                                icon: Icon(Icons.clear),
+                                icon: Icon(Icons.clear,color: primaryDefault,),
                               ),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: primaryDefault,width: 2),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(8))),
                         enabledBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: borderColor, width: 1),

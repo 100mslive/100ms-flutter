@@ -10,7 +10,7 @@ import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_waiting_ui.dart';
 import 'package:hms_room_kit/src/widgets/app_dialogs/audio_device_change_dialog.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/subheading_text.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
@@ -141,7 +141,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    SubheadingText(
+                                                    HMSSubheadingText(
                                                       text: "100ms HLS Player",
                                                       textColor:
                                                           onSurfaceHighEmphasis,
@@ -284,7 +284,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                   child:
                                                                       Padding(
                                                                     padding: const EdgeInsets
-                                                                        .only(
+                                                                            .only(
                                                                         right:
                                                                             10.0,
                                                                         bottom:
@@ -396,7 +396,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                       Padding(
                                                         padding:
                                                             const EdgeInsets
-                                                                .only(
+                                                                    .only(
                                                                 bottom: 20.0),
                                                         child: Row(
                                                           mainAxisAlignment:

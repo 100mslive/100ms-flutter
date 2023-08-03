@@ -10,15 +10,16 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 ///Please note that this will only be rendered if the room state is enabled for the role with peer-list
 ///Checkout the docs for room-state here: https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/preview#get-onpeerupdate-and-onroomupdate-while-in-preview-mode
 class PreviewParticipantsText extends StatelessWidget {
-  final List<HMSPeer> peers;
+  final int peerCount;
 
-  const PreviewParticipantsText({super.key, required this.peers});
+  const PreviewParticipantsText({super.key, required this.peerCount});
 
   @override
   Widget build(BuildContext context) {
     return HMSSubtitleText(
-        text:
-            "${peers.length} ${peers.length > 1 ? "others" : "other"} in session",
+        text: "$peerCount ${peerCount > 1 ? "others" : "other"} in session",
+        fontWeight: FontWeight.w600,
+        fontSize: 14,
         textColor: onSurfaceHighEmphasis);
   }
 }

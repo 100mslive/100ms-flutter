@@ -1,3 +1,9 @@
+## 0.0.4 - 2023-08-01
+
+- Fixed theming issues
+- Fixed issues for flutter versions below 3.10.x
+- Updated preview flow
+
 ## 0.0.3 - 2023-07-20
 
 - Updated asset path in prebuilt UI

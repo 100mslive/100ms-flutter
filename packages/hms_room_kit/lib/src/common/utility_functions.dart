@@ -1,5 +1,6 @@
 //Package imports
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class Utilities {
     }
     List<String>? parts = name.trim().split(" ");
     if (parts.length == 1) {
-      name = parts[0][0];
+      name = parts[0].substring(0, math.min(2, parts[0].length));
     } else if (parts.length >= 2) {
       name = parts[0][0];
       if (parts[1] == "" || parts[1] == " ") {
@@ -42,25 +43,16 @@ class Utilities {
 
   static Color getBackgroundColour(String name) {
     if (name.isEmpty) {
-      return const Color.fromRGBO(126, 71, 235, 1);
+      return colors[0];
     }
     if (name.contains(regexEmoji)) {
       name = name.replaceAll(regexEmoji, '');
       if (name.trim().isEmpty) {
-        return const Color(0xFF6554C0);
+        return colors[0];
       }
     }
-    return Utilities
-        .colors[name.toUpperCase().codeUnitAt(0) % Utilities.colors.length];
+    return colors[name.toUpperCase().codeUnitAt(0) % colors.length];
   }
-
-  static List<Color> colors = [
-    Colors.amber,
-    hmsdefaultColor,
-    Colors.purple,
-    Colors.lightGreen,
-    Colors.redAccent
-  ];
 
   /// List of alignments for timed metadata toasts
   static List<Alignment> timedMetadataAlignment = [
@@ -185,7 +177,7 @@ class Utilities {
 
   ///This method is used to get names for the audio devices
   ///It is used to set the icon based on the audio device
-  static String getAudioDeviceIconName(HMSAudioDevice hmsAudioDevice) {
+  static String getAudioDeviceIconName(HMSAudioDevice? hmsAudioDevice) {
     switch (hmsAudioDevice) {
       case HMSAudioDevice.SPEAKER_PHONE:
         return "speaker_state_on";
@@ -195,10 +187,23 @@ class Utilities {
         return "earpiece";
       case HMSAudioDevice.BLUETOOTH:
         return "bluetooth";
-      case HMSAudioDevice.AUTOMATIC:
-        return "music_wave";
-      case HMSAudioDevice.UNKNOWN:
-        return "music_wave";
+      default:
+        return "speaker_state_on";
+    }
+  }
+
+  static String getAudioDeviceName(HMSAudioDevice? hmsAudioDevice) {
+    switch (hmsAudioDevice) {
+      case HMSAudioDevice.SPEAKER_PHONE:
+        return "Speaker";
+      case HMSAudioDevice.WIRED_HEADSET:
+        return "Earphone";
+      case HMSAudioDevice.EARPIECE:
+        return "Phone";
+      case HMSAudioDevice.BLUETOOTH:
+        return "Bluetooth Device";
+      default:
+        return "Auto";
     }
   }
 
