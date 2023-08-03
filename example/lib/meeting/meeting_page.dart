@@ -51,7 +51,6 @@ class _MeetingPageState extends State<MeetingPage> {
   void initState() {
     super.initState();
     checkAudioState();
-    _enableAlwaysScreenOn();
   }
 
   void checkAudioState() async {
@@ -60,10 +59,6 @@ class _MeetingPageState extends State<MeetingPage> {
         context.read<MeetingStore>().toggleSpeaker();
       });
     }
-  }
-
-  void _enableAlwaysScreenOn() {
-    context.read<MeetingStore>().toggleAlwaysScreenOn();
   }
 
   String recordingState() {
