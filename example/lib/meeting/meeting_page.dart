@@ -51,7 +51,6 @@ class _MeetingPageState extends State<MeetingPage> {
   void initState() {
     super.initState();
     checkAudioState();
-    _enableAlwaysScreenOn();
   }
 
   void checkAudioState() async {
@@ -60,10 +59,6 @@ class _MeetingPageState extends State<MeetingPage> {
         context.read<MeetingStore>().toggleSpeaker();
       });
     }
-  }
-
-  void _enableAlwaysScreenOn() {
-    context.read<MeetingStore>().toggleAlwaysScreenOn();
   }
 
   String recordingState() {
@@ -473,7 +468,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                 children: [
                                                                   Padding(
                                                                     padding: const EdgeInsets
-                                                                            .only(
+                                                                        .only(
                                                                         right:
                                                                             5.0),
                                                                     child: SvgPicture

@@ -62,6 +62,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         audioMode: audioMode);
     //build call should be a blocking call
     await _hmsSDKInteractor.build();
+    _hmsSDKInteractor.toggleAlwaysScreenOn();
   }
 
   void loadData() async {
