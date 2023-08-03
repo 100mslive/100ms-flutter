@@ -67,22 +67,22 @@ This section contains instructions to create a simple Flutter video conferencing
 
 To complete this implementation for the Android platform, you must have the following:
 
--   A [100ms account](https://dashboard.100ms.live/register) if you don't have one already.
--   [Flutter](https://docs.flutter.dev/get-started/install) `3.3.0` or higher
--   Dart `2.12.0` or above
--   Use [VS code](https://code.visualstudio.com/), [Android Studio](https://developer.android.com/studio), or any other IDE that supports Flutter. For more information on setting up an IDE, check [Flutter's official guide](https://docs.flutter.dev/get-started/editor).
+- A [100ms account](https://dashboard.100ms.live/register) if you don't have one already.
+- [Flutter](https://docs.flutter.dev/get-started/install) `3.3.0` or higher
+- Dart `2.12.0` or above
+- Use [VS code](https://code.visualstudio.com/), [Android Studio](https://developer.android.com/studio), or any other IDE that supports Flutter. For more information on setting up an IDE, check [Flutter's official guide](https://docs.flutter.dev/get-started/editor).
 
 ### Create a Flutter app
 
 Once you have the prerequisites, follow the steps below to create a Flutter app. This guide will use VS code, but you can use any IDE that supports Flutter.
 
--   Create a Flutter app using the terminal; you can get the [Flutter SDK](https://docs.flutter.dev/get-started/install/macos#get-sdk) and use the below command:
+- Create a Flutter app using the terminal; you can get the [Flutter SDK](https://docs.flutter.dev/get-started/install/macos#get-sdk) and use the below command:
 
-    ```bash section=createFlutterApp
-    flutter create my_app
-    ```
+  ```bash section=createFlutterApp
+  flutter create my_app
+  ```
 
--   Once the app is created, open it in VS code.
+- Once the app is created, open it in VS code.
 
 ### Add 100ms room kit to your project
 
@@ -96,7 +96,7 @@ In project's `pubspec.yaml` file, under dependencies section add the following:
 hms_room_kit:
 ```
 
--   Run `flutter pub get` to download these dependencies to your app.
+- Run `flutter pub get` to download these dependencies to your app.
 
 ### Application Setup
 
@@ -174,10 +174,10 @@ platform :ios, '12.0'
 
 2. To add PIP support in your iOS app:
 
--   Minimum Requirements:
-    -   Minimum iOS version required to support PiP is iOS 15
-    -   Minimum `hmssdk_flutter` SDK version required is 1.3.0
-    -   Your app should have [com.apple.developer.avfoundation.multitasking-camera-access](https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_avfoundation_multitasking-camera-access) Entitlement to use PiP Mode.
+- Minimum Requirements:
+  - Minimum iOS version required to support PiP is iOS 15
+  - Minimum `hmssdk_flutter` SDK version required is 1.3.0
+  - Your app should have [com.apple.developer.avfoundation.multitasking-camera-access](https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_avfoundation_multitasking-camera-access) Entitlement to use PiP Mode.
 
 Your app needs to run on iOS 13.5 or later to use the entitlement. Without the entitlement, the system disables the camera access for your app. When your app enters PIP mode, it needs this entitlement to continue using the camera.
 
@@ -244,8 +244,6 @@ Scaffold(
     ),
 }
 ```
-
-
 
 That's it. You can now use the amazing prebuilt ui in your application.
 
