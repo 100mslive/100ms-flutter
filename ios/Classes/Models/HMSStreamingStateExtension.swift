@@ -42,6 +42,8 @@ class HMSStreamingStateExtension {
 
         var dict = [String: Any]()
 
+        dict["initialising"] = browser.initialising
+
         dict["running"] = browser.running
         if let startedAt = browser.startedAt {
             dict["started_at"] = "\(startedAt)"

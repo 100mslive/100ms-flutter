@@ -358,4 +358,8 @@ class HMSSDKInteractor {
     hmsSDK.sendHLSTimedMetadata(
         metadata: metadata, hmsActionResultListener: hmsActionResultListener);
   }
+
+  void toggleAlwaysScreenOn() {
+    hmsSDK.toggleAlwaysScreenOn();
+  }
 }
