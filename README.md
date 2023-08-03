@@ -78,6 +78,8 @@ The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/e
 - iOS 16 or above
 - Xcode 14 or above
 
+> Users of iOS devices running Flutter versions 3.10.xx or earlier might experience crashes due to a known issue reported on GitHub [here](https://github.com/flutter/flutter/issues/127489).
+
 ## 📱 Supported Devices
 
 - The Android SDK supports Android API level 21 and above. It is built for armeabi-v7a, arm64-v8a, x86, and x86_64 architectures. Devices running Android OS 12 or above is recommended.

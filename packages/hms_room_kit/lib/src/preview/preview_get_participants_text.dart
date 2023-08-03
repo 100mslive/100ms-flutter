@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///This renders the text based on the number of participants who are already in the room
 ///If there is only a single peer in room then we render "1 other in session"

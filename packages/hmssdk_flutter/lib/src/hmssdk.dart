@@ -1242,6 +1242,8 @@ class HMSSDK {
   }
 
   ///Method to toggle the always screen on capabilities(similar to wakelock)
+  ///
+  ///Refer [always screen on guide here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/always-screen-on)
   void toggleAlwaysScreenOn() {
     PlatformService.invokeMethod(PlatformMethod.toggleAlwaysScreenOn);
   }
