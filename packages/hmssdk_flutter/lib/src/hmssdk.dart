@@ -35,8 +35,6 @@ import '../hmssdk_flutter.dart';
 /// Refer [HMSSDK quick start guide available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart)
 
 class HMSSDK {
-  final bool isPrebuilt;
-
   /// The public interface of 100ms SDK. Create an instance of HMSSDK to start using the SDK.
   ///
   /// Parameters:
@@ -1268,6 +1266,8 @@ class HMSSDK {
   }
 
   ///Method to toggle the always screen on capabilities(similar to wakelock)
+  ///
+  ///Refer [always screen on guide here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/always-screen-on)
   void toggleAlwaysScreenOn() {
     PlatformService.invokeMethod(PlatformMethod.toggleAlwaysScreenOn);
   }
@@ -1351,4 +1351,6 @@ class HMSSDK {
   HMSLogSettings? hmsLogSettings;
 
   bool previewState = false;
+
+  final bool isPrebuilt;
 }

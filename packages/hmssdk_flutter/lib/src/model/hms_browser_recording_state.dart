@@ -11,7 +11,10 @@ class HMSBrowserRecordingState {
   DateTime? startedAt;
   final bool initialising;
   HMSBrowserRecordingState(
-      {required this.error, required this.running, this.startedAt, required this.initialising});
+      {required this.error,
+      required this.running,
+      this.startedAt,
+      required this.initialising});
 
   factory HMSBrowserRecordingState.fromMap(Map map) {
     return HMSBrowserRecordingState(
