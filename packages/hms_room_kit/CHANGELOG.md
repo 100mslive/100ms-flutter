@@ -1,3 +1,7 @@
+## 0.0.5 - 2023-08-04
+
+- Fixed background theme issues
+
 ## 0.0.4 - 2023-08-03
 
 - Fixed theming issues
