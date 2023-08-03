@@ -103,7 +103,7 @@ hms_room_kit:
 
 Please follow the below instructions to test the app for the Android Platform:
 
-1. Add minimum SDK version (`minSdkVersion 21`) in "android/app/build.gradle" file (inside "defaultConfig").
+1. Add minimum SDK version (`minSdkVersion 21`) in `android/app/build.gradle` file (inside `defaultConfig`).
 
 ```json
 ...
@@ -161,7 +161,7 @@ super.onActivityResult(requestCode, resultCode, data)
 
 Please follow the below instructions to test the app for iOS Platform
 
-1. Add the target platform version as (`platform :ios, '12.0'`) in "ios/Podfile"
+1. Add the target platform version as (`platform :ios, '12.0'`) in `ios/Podfile`
 
 ```json
 platform :ios, '12.0'
@@ -172,13 +172,13 @@ platform :ios, '12.0'
 - Minimum Requirements:
   - Minimum iOS version required to support PiP is iOS 15
   - Minimum `hmssdk_flutter` SDK version required is 1.3.0
-  - Your app should have [com.apple.developer.avfoundation.multitasking-camera-access](https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_avfoundation_multitasking-camera-access) Entitlement to use PiP Mode.
+  - Your app should have [com.apple.developer.avfoundation.multitasking-camera-access)(https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_avfoundation_multitasking-camera-access) Entitlement to use PiP Mode.
 
 Your app needs to run on iOS 13.5 or later to use the entitlement. Without the entitlement, the system disables the camera access for your app. When your app enters PIP mode, it needs this entitlement to continue using the camera.
 
 After you receive permission from Apple, add the Entitlement to your app by opening the Entitlements file in Xcode. Add the key and set the corresponding value to YES.
 
-![Entitlements](/docs/v2/flutter-multitasking-camera-entitlement.png)
+![Entitlements](https://www.100ms.live/docs/docs/v2/flutter-multitasking-camera-entitlement.png)
 
 3. To add screen share support in iOS app, checkout the docs [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/screen-share#ios-setup)
 
