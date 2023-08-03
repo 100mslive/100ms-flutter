@@ -468,7 +468,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                 children: [
                                                                   Padding(
                                                                     padding: const EdgeInsets
-                                                                            .only(
+                                                                        .only(
                                                                         right:
                                                                             5.0),
                                                                     child: SvgPicture

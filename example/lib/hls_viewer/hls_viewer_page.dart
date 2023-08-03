@@ -224,7 +224,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                   children: [
                                                                     Padding(
                                                                       padding: const EdgeInsets
-                                                                              .only(
+                                                                          .only(
                                                                           right:
                                                                               5.0),
                                                                       child: SvgPicture

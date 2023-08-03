@@ -508,13 +508,11 @@ class HmssdkFlutterPlugin :
      *   [toggleAlwaysScreenOn] provides a way to keep the screen always ON
      *   when enabled.
      */
-    private fun toggleAlwaysScreenOn(result: Result){
-
-        activity.window?.let{
-            if((activity.window.attributes.flags and WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) != 0){
+    private fun toggleAlwaysScreenOn(result: Result) {
+        activity.window?.let {
+            if ((activity.window.attributes.flags and WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) != 0) {
                 activity.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            }
-            else{
+            } else {
                 activity.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             }
         }
