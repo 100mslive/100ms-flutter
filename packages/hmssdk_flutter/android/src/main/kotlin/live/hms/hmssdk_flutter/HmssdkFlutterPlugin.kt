@@ -772,7 +772,7 @@ class HmssdkFlutterPlugin :
     fun build(activity: Activity, call: MethodCall, result: Result) {
         val dartSDKVersion = call.argument<String>("dart_sdk_version")
         val hmsSDKVersion = call.argument<String>("hmssdk_version")
-        val isPrebuilt = call.argument<Boolean>("is_prebuilt")?:false
+        val isPrebuilt = call.argument<Boolean>("is_prebuilt") ?: false
         val framework = FrameworkInfo(framework = AgentType.FLUTTER, frameworkVersion = dartSDKVersion, frameworkSdkVersion = hmsSDKVersion, isPrebuilt = isPrebuilt)
         val builder = HMSSDK.Builder(activity).setFrameworkInfo(framework)
 
