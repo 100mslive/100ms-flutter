@@ -35,6 +35,8 @@ import '../hmssdk_flutter.dart';
 /// Refer [HMSSDK quick start guide available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart)
 
 class HMSSDK {
+  final bool isPrebuilt;
+
   /// The public interface of 100ms SDK. Create an instance of HMSSDK to start using the SDK.
   ///
   /// Parameters:
@@ -69,14 +71,15 @@ class HMSSDK {
       this.iOSScreenshareConfig,
       this.hmsLogSettings,
       @Deprecated("Use iOSScreenshareConfig") this.appGroup,
-      @Deprecated("Use iOSScreenshareConfig") this.preferredExtension});
+      @Deprecated("Use iOSScreenshareConfig") this.preferredExtension,
+      this.isPrebuilt = false});
 
   /// The build function should be called after creating an instance of the [HMSSDK].
   ///
   /// Await the result & if true then create [HMSConfig] object to join or preview a room.
   Future<void> build() async {
     await HmsSdkManager().createHMSSdk(hmsTrackSetting, iOSScreenshareConfig,
-        appGroup, preferredExtension, hmsLogSettings);
+        appGroup, preferredExtension, hmsLogSettings, isPrebuilt);
   }
 
   ///[getAuthTokenByRoomCode] is used to get the authentication token to join the room
