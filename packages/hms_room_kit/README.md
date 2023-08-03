@@ -176,7 +176,7 @@ platform :ios, '12.0'
 
 Your app needs to run on iOS 13.5 or later to use the entitlement. Without the entitlement, the system disables the camera access for your app. When your app enters PIP mode, it needs this entitlement to continue using the camera.
 
-After you receive permission from Apple, add the Entitlement to your app by opening the Entitlements file in Xcode. Add the key and set the corresponding value to YES.
+After you receive permission from Apple, add the Entitlement to your app by opening the Entitlements file in Xcode. Add the key and set the corresponding value to `YES`.
 
 ![Entitlements](https://www.100ms.live/docs/docs/v2/flutter-multitasking-camera-entitlement.png)
 
