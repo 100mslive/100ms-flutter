@@ -1,6 +1,7 @@
 [![100ms-svg](https://user-images.githubusercontent.com/93931528/205858417-8c0a0d1b-2d46-4710-9316-7418092fd3d6.svg)](https://100ms.live/)
 
-[![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)
+[![HMSLive](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)
+[![HMSLive Room Kit](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)
 [![License](https://img.shields.io/github/license/100mslive/100ms-flutter)](https://www.100ms.live/)
 [![Documentation](https://img.shields.io/badge/Read-Documentation-blue)](https://docs.100ms.live/flutter/v2/foundation/basics)
 [![Discord](https://img.shields.io/discord/843749923060711464?label=Join%20on%20Discord)](https://100ms.live/discord)
@@ -50,9 +51,9 @@ import 'package:hms_room_kit/hmssdk_uikit.dart';
 
 ```dart
 HMSPrebuilt(
-         roomCode: meetingLinkController.text.trim(),
-         hmsConfig: HMSPrebuiltOptions(userName: ""),
-      );
+    roomCode: "abc-lmno-xyz",
+    hmsConfig: HMSPrebuiltOptions(userName: "John Appleseed"),
+);
 ```
 
 ## Overview
@@ -78,15 +79,13 @@ Once you have the prerequisites, follow the steps below to create a Flutter app.
 
 - Create a Flutter app using the terminal; you can get the [Flutter SDK](https://docs.flutter.dev/get-started/install/macos#get-sdk) and use the below command:
 
-  ```bash section=createFlutterApp
-  flutter create my_app
-  ```
+    ```bash section=createFlutterApp
+    flutter create my_app
+    ```
 
 - Once the app is created, open it in VS code.
 
 ### Add 100ms room kit to your project
-
-[![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)
 
 Once you have created a Flutter app, you must add the `hms_room_kit` package to your project.
 
@@ -100,11 +99,9 @@ hms_room_kit:
 
 ### Application Setup
 
-<Tabs id="sample-app" items={['Android', 'iOS']} />
+#### For Android
 
-<Tab id="sample-app-0">
-
-Please follow the below instructions to test the app for the android target platform:
+Please follow the below instructions to test the app for the Android Platform:
 
 1. Add minimum SDK version (`minSdkVersion 21`) in "android/app/build.gradle" file (inside "defaultConfig").
 
@@ -118,7 +115,7 @@ defaultConfig {
 ...
 ```
 
-2. To add PIP support in your app manifest files add:
+2. To add PIP support in your app manifest files, add:
 
 ```xml
 <activity
@@ -160,11 +157,9 @@ super.onActivityResult(requestCode, resultCode, data)
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 ```
 
-</Tab>
+#### For iOS
 
-<Tab id="sample-app-1">
-
-Please follow the below instructions to test the app for iOS target platform
+Please follow the below instructions to test the app for iOS Platform
 
 1. Add the target platform version as (`platform :ios, '12.0'`) in "ios/Podfile"
 
@@ -200,9 +195,8 @@ HMSPrebuilt(
 )));
 ```
 
-</Tab>
 
-### Add the 100ms room kit to your app
+### Add the 100ms Room Kit to your App
 
 We will be adding a join button to the app, on the button click we will route the user to the 100ms room kit. To do this, follow the steps below:
 
@@ -235,17 +229,17 @@ Scaffold(
 2. Update the code in the `onPressed` method of the `Join` button by following code:
 
 ```dart
- onPressed: () async => {
+onPressed: () async => {
         await Navigator.push(
             context,
             MaterialPageRoute(
-            builder: (context) => const HMSPrebuilt(roomCode: "xno-jwn-phi")
+            builder: (context) => const HMSPrebuilt(roomCode: "abc-lmno-xyz")
         ),
     ),
 }
 ```
 
-That's it. You can now use the amazing prebuilt ui in your application.
+That's it. You can now use the amazing Prebuilt UI in your application.
 
 📖 Do refer the Complete Documentation Guide [available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart).
 
