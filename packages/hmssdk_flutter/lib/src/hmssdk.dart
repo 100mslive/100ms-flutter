@@ -110,6 +110,32 @@ class HMSSDK {
     }
   }
 
+  ///[getRoomLayout] is used to get the layout themes for the room
+  /// set in the dashboard.
+  ///
+  ///This returns an object of Future<dynamic> which can be either
+  ///of HMSException type or a Json String type based on whether
+  ///method execution is completed successfully or not.
+  Future<dynamic> getRoomLayout(
+      {required String authToken,String? endPoint}) async {
+    var arguments = {
+      "auth_token": authToken,
+      "endpoint": endPoint
+    };
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.getRoomLayout,
+        arguments: arguments);
+
+    //If the method is executed successfully we get the "success":"true"
+    //Hence we pass the String directly
+    //Else we parse it with HMSException
+    if (result["success"]) {
+      return result["data"];
+    } else {
+      return HMSException.fromMap(result["data"]["error"]);
+    }
+  }
+
   ///add UpdateListener it will add all the listeners.
   ///
   ///HMSSDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing HMSUpdateListener.

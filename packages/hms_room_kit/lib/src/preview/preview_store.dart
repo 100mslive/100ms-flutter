@@ -143,6 +143,9 @@ class PreviewStore extends ChangeNotifier
           //This is only for 100ms internal testing, endPoint can be safely removed from
           //the HMSConfig for external usage
           endPoint: initEndPoint);
+      dynamic value = await hmsSDKInteractor.getRoomLayout(
+          authToken: tokenData, endPoint: layoutAPIEndPoint);
+      log(value.toString());
       hmsSDKInteractor.startHMSLogger(
           Constant.webRTCLogLevel, Constant.sdkLogLevel);
       hmsSDKInteractor.addPreviewListener(this);
