@@ -1,6 +1,6 @@
-//Enum to store the session metadata keys
-// PINNED_MESSAGE_SESSION_KEY: for pinning messages
-// SPOTLIGHT: for adding spotlight feature in application
+///Enum to store the session metadata keys
+/// PINNED_MESSAGE_SESSION_KEY: for pinning messages
+/// SPOTLIGHT: for adding spotlight feature in application
 enum SessionStoreKey { pinnedMessageSessionKey, spotlight, unknown }
 
 extension SessionStoreKeyValues on SessionStoreKey {

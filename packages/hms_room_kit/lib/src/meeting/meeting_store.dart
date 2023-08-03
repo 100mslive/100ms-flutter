@@ -22,6 +22,12 @@ import 'package:collection/collection.dart';
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///Add comments in this class for better understanding
+///This class is responsible for storing the data related to the meeting
+///This class is also responsible for handling the events from the SDK
+///
+///This class extends ChangeNotifier so that it can notify the UI when the data changes
+///This class has WidgetsBindingObserver mixin so that it can listen to the app lifecycle events
 class MeetingStore extends ChangeNotifier
     with WidgetsBindingObserver
     implements

@@ -16,6 +16,7 @@ import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+///[HLSChat] is a widget that displays the chat messages while in HLS Viewer mode
 class HLSChat extends StatefulWidget {
   const HLSChat({super.key});
 

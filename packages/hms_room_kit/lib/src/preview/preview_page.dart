@@ -23,7 +23,6 @@ import 'package:provider/provider.dart';
 ///[PreviewPage] is the screen where the user can preview it's camera, mic and audio outputs
 ///It also provides information about the room and the participants in the room
 class PreviewPage extends StatefulWidget {
-
   ///[name] is the name of the user joining the room
   final String name;
 
@@ -132,6 +131,7 @@ class _PreviewPageState extends State<PreviewPage> {
                   context: context, error: error);
             }
             return Scaffold(
+              backgroundColor: backgroundDefault,
               resizeToAvoidBottomInset: false,
               body: previewStore.isRoomJoinedAndHLSStarted
                   ? ListenableProvider.value(

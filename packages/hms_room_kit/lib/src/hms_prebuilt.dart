@@ -2,6 +2,10 @@ import 'package:flutter/widgets.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/screen_controller.dart';
 
+/// [HMSPrebuilt] is a widget that contains the prebuilt
+/// - [roomCode] is the room code of the room to join
+/// - [options] is the options for the prebuilt
+/// For more details checkout the [HMSPrebuiltOptions] class
 class HMSPrebuilt extends StatelessWidget {
   ///The room code of the room to join
   final String roomCode;

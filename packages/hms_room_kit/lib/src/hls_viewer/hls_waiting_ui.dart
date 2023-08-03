@@ -4,6 +4,7 @@ import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 
+///This widget is shown when the HLS Stream hasn't started yet
 class HLSWaitingUI extends StatelessWidget {
   const HLSWaitingUI({super.key});
 

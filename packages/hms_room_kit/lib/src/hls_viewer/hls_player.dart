@@ -1,11 +1,15 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_stats_view.dart';
-import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
+import 'package:hms_room_kit/src/hls_viewer/hls_stats_view.dart';
+import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 
+///This widget is used to show the HLS Player
+///It uses the [HMSHLSPlayer] widget from the [hmssdk_flutter] package
+///It also uses the [HLSStatsView] widget to show the stats of the HLS Player
 class HLSPlayer extends StatelessWidget {
   final double? ratio;
   const HLSPlayer({Key? key, this.ratio}) : super(key: key);

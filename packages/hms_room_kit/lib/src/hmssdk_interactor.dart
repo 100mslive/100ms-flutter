@@ -6,6 +6,8 @@ import 'dart:io';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 
+/// [HMSSDKInteractor] is a class that contains the methods to interact with the SDK.
+/// It is used to interact with the SDK.
 class HMSSDKInteractor {
   /// [hmsSDK] is the instance of the HMSSDK class which is used to interact with the SDK.
   late HMSSDK hmsSDK;

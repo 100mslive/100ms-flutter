@@ -40,7 +40,8 @@ class _PreviewPermissionsState extends State<PreviewPermissions> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return SizedBox(
+    return Container(
+      color: backgroundDefault,
       width: size.width,
       height: size.height,
       child: Stack(

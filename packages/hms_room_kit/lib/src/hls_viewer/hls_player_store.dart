@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+/// HLSPayerStore is a [ChangeNotifier] class which stores the state of the HLSPlayer
+/// and notifies the listeners when the state changes
+///
+/// This class is used to control the state of the HLSPlayer
 class HLSPlayerStore extends ChangeNotifier {
   ///This variable stores whether the application is in full screen or not
   bool isFullScreen = false;

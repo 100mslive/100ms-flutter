@@ -18,6 +18,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
+/// This is the page that is shown when the user is viewing the HLS stream
+/// It contains the HLS player and the chat
 class HLSViewerPage extends StatefulWidget {
   const HLSViewerPage({
     Key? key,

@@ -4,6 +4,10 @@ import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
+///This widget shows the HLS stats of the HLS Stream
+///It uses the [MeetingStore] to get the stats
+///
+///It is used in the [HLSPlayer] widget to show the stats when the user enables the HLS Stats
 class HLSStatsView extends StatelessWidget {
   const HLSStatsView({super.key});
 

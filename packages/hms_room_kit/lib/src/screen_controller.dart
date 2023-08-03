@@ -100,6 +100,7 @@ class _ScreenControllerState extends State<ScreenController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundDefault,
       body: isLoading
           ? Center(
               child: CircularProgressIndicator(

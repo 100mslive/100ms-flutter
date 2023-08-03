@@ -6,6 +6,7 @@ import 'package:hms_room_kit/src/widgets/peer_widgets/audio_level_avatar.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
+/// [PipView] is the widget to display the pip view of the meeting
 class PipView extends StatefulWidget {
   const PipView({super.key});
 

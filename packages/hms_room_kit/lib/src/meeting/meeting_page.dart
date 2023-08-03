@@ -30,6 +30,14 @@ import 'package:hms_room_kit/src/meeting/pip_view.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
+/// This is the main meeting page which is shown when the user joins a meeting
+/// It contains the main meeting UI and the meeting controls
+///
+/// The meeting UI is divided into 4 modes:
+/// 1. [FullScreenMode] - This is the default mode when the user joins the meeting
+/// 2. [HeroMode] - This mode is shown when the user taps on a participant's video
+/// 3. [OneToOneMode] - This mode is shown when the user taps on a participant's video in [HeroMode]
+/// 4. [AudioMode] - This mode is shown when the user taps on the audio button
 class MeetingPage extends StatefulWidget {
   final String meetingLink;
   final bool isRoomMute;
