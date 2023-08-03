@@ -9,6 +9,13 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
+///[PreviewDeviceSettings] is a widget that shows the list of available audio output devices
+///and allows the user to select one of them
+///
+///By default Automatic is selected which means the audio output device will be the same as the
+///system's audio output device
+///
+///Please note that this is only for android
 class PreviewDeviceSettings extends StatefulWidget {
   const PreviewDeviceSettings({
     Key? key,

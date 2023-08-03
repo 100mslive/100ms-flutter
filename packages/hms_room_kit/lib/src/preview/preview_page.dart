@@ -20,9 +20,18 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_listenable_button.da
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
+///[PreviewPage] is the screen where the user can preview it's camera, mic and audio outputs
+///It also provides information about the room and the participants in the room
 class PreviewPage extends StatefulWidget {
+
+  ///[name] is the name of the user joining the room
   final String name;
+
+  ///[meetingLink] is the link/room-code of the room to join
   final String meetingLink;
+
+  ///The options for the prebuilt
+  ///For more details checkout the [HMSPrebuiltOptions] class
   final HMSPrebuiltOptions? options;
 
   const PreviewPage(

@@ -9,6 +9,10 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/widgets/hms_buttons/hms_back_button.dart';
 
+///This renders the permission screen when the permissions for mic, camera, bluetooth is not granted
+///
+///If the permissions are already granted then this does not get rendered and user is directly taken to the preview
+///In case, if the user has permanently denied the permissions then we open the application settings page.
 class PreviewPermissions extends StatefulWidget {
   final String roomCode;
   final HMSPrebuiltOptions? options;

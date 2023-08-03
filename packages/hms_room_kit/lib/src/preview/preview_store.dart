@@ -9,6 +9,12 @@ import 'package:hms_room_kit/src/hmssdk_interactor.dart';
 import 'package:hms_room_kit/src/service/app_secrets.dart';
 import 'package:hms_room_kit/src/service/room_service.dart';
 
+///[PreviewStore] is the central data store for preview
+///
+///It extends [ChangeNotifier] to notify the UI when the data changes.
+///It implements [HMSPreviewListener] to listen to the preview events,
+///[HMSLogListener] to listen to the log events,
+///[HMSUpdateListener] to listen to the update events
 class PreviewStore extends ChangeNotifier
     implements HMSPreviewListener, HMSLogListener, HMSUpdateListener {
   late HMSSDKInteractor hmsSDKInteractor;

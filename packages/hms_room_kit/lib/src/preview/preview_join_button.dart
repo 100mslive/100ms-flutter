@@ -5,6 +5,12 @@ import 'package:hms_room_kit/src/preview/preview_store.dart';
 import 'package:hms_room_kit/src/service/app_debug_config.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 
+///[PreviewJoinButton] renders a button depending on the room state and 
+///user role
+///If the user has permission to start the HLS Stream and stream is not already started
+///then it renders a button with a live icon and text "Go Live" and on tap it calls join and startHLSStreaming methods
+///
+///In all other cases it renders a button with text "Join" and on tap it calls join method
 class PreviewJoinButton extends StatelessWidget {
   final PreviewStore previewStore;
   final bool isEmpty;
