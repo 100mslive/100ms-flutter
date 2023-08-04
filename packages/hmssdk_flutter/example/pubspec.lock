@@ -364,7 +364,7 @@ packages:
     description:
       path: "packages/hmssdk_flutter"
       ref: "feature/prebuilt"
-      resolved-ref: "9e4a843c77794c1b37d233bc8e9d19978d9e754e"
+      resolved-ref: "86abb228c0c6d495453171ffcd64a11670bddf30"
       url: "https://github.com/100mslive/100ms-flutter.git"
     source: git
     version: "1.8.0"
