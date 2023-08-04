@@ -258,6 +258,7 @@ class PreviewStore extends ChangeNotifier
 
   void leave() {
     hmsSDKInteractor.leave();
+    hmsSDKInteractor.toggleAlwaysScreenOn();
     destroy();
   }
 

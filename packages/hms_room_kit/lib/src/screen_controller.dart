@@ -79,6 +79,7 @@ class _ScreenControllerState extends State<ScreenController> {
             Navigator.popUntil(context, (route) => route.isFirst);
           });
     } else {
+      _hmsSDKInteractor.toggleAlwaysScreenOn();
       setState(() {
         isLoading = false;
       });
