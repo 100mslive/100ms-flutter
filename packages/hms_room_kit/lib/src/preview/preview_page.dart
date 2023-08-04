@@ -232,7 +232,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         transparentBackgroundColor),
                                                 child: Padding(
                                                   padding: const EdgeInsets
-                                                          .symmetric(
+                                                      .symmetric(
                                                       horizontal: 8,
                                                       vertical: 4),
                                                   child: Row(
