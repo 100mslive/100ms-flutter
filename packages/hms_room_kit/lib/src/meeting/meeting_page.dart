@@ -48,7 +48,7 @@ class _MeetingPageState extends State<MeetingPage> {
   void initState() {
     super.initState();
     checkAudioState();
-    _enableAlwaysScreenOn();
+    _enableForegroundService();
   }
 
   void checkAudioState() async {
@@ -59,8 +59,7 @@ class _MeetingPageState extends State<MeetingPage> {
     }
   }
 
-  void _enableAlwaysScreenOn() {
-    context.read<MeetingStore>().toggleAlwaysScreenOn();
+  void _enableForegroundService() {
     context.read<MeetingStore>().initForegroundTask();
   }
 
@@ -429,7 +428,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                           .asset(
                                                                     "packages/hms_room_kit/lib/src/assets/icons/exit_room.svg",
                                                                     colorFilter: const ColorFilter
-                                                                        .mode(
+                                                                            .mode(
                                                                         Colors
                                                                             .white,
                                                                         BlendMode
@@ -489,7 +488,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                   children: [
                                                                     Padding(
                                                                       padding: const EdgeInsets
-                                                                          .only(
+                                                                              .only(
                                                                           right:
                                                                               5.0),
                                                                       child: SvgPicture
