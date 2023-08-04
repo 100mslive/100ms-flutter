@@ -79,9 +79,9 @@ Once you have the prerequisites, follow the steps below to create a Flutter app.
 
 - Create a Flutter app using the terminal; you can get the [Flutter SDK](https://docs.flutter.dev/get-started/install/macos#get-sdk) and use the below command:
 
-    ```bash section=createFlutterApp
-    flutter create my_app
-    ```
+  ```bash section=createFlutterApp
+  flutter create my_app
+  ```
 
 - Once the app is created, open it in VS code.
 
@@ -194,7 +194,6 @@ HMSPrebuilt(
     preferredExtension: "preferredExtension" // Name of the Broadcast Upload Extension Target created in Xcode
 )));
 ```
-
 
 ### Add the 100ms Room Kit to your App
 
