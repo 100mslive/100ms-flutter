@@ -32,6 +32,4 @@ runtimes:
 actions:
   enabled:
     - trunk-announce
-    - trunk-check-pre-push
-    - trunk-fmt-pre-commit
     - trunk-upgrade-available
