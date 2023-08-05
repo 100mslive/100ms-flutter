@@ -1,0 +1,16 @@
+orbs:
+  flutter: circleci/flutter@2.0.2
+jobs:
+  example-job:
+    docker:
+      # replace with your preferred image
+      - image: cimg/base:stable
+    steps:
+      - flutter/install_sdk_and_pub:
+          app-dir: ./packages/hmssdk_flutter/pubspec.yaml
+          version: "3.7.12"
+
+workflows:
+  example-workflow:
+    jobs:
+      - example-job
