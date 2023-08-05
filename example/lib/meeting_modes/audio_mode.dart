@@ -43,7 +43,7 @@ List<StairedGridTile> portraitPattern(
 
   List<StairedGridTile> tiles = [];
   int pinTileCount = 0;
-  while (peerTrack[pinTileCount].pinTile) {
+  while ((pinTileCount < peerTrack.length) && peerTrack[pinTileCount].pinTile) {
     tiles.add(StairedGridTile(1, ratio));
     pinTileCount++;
   }

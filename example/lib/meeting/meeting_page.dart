@@ -23,7 +23,6 @@ import 'package:hmssdk_flutter_example/enum/meeting_mode.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/start_hls_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/chat_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/common/bottom_sheets/more_settings_bottom_sheet.dart';
-import 'package:hmssdk_flutter_example/hls_viewer/hls_player.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting_modes/basic_grid_view.dart';
 import 'package:hmssdk_flutter_example/common/widgets/pip_view.dart';
@@ -52,26 +51,6 @@ class _MeetingPageState extends State<MeetingPage> {
   void initState() {
     super.initState();
     checkAudioState();
-    _initForegroundTask();
-  }
-
-  void _initForegroundTask() {
-    FlutterForegroundTask.init(
-        androidNotificationOptions: AndroidNotificationOptions(
-            channelId: '100ms_flutter_notification',
-            channelName: '100ms Flutter Notification',
-            channelDescription:
-                'This notification appears when the foreground service is running.',
-            channelImportance: NotificationChannelImportance.LOW,
-            priority: NotificationPriority.LOW,
-            iconData: const NotificationIconData(
-              resType: ResourceType.mipmap,
-              resPrefix: ResourcePrefix.ic,
-              name: 'launcher',
-            )),
-        iosNotificationOptions:
-            const IOSNotificationOptions(showNotification: false),
-        foregroundTaskOptions: const ForegroundTaskOptions());
   }
 
   void checkAudioState() async {
@@ -265,64 +244,6 @@ class _MeetingPageState extends State<MeetingPage> {
                                                         .screenShareCount]
                                                 : null),
                                         builder: (_, data, __) {
-                                          if (data.item2) {
-                                            return Selector<MeetingStore, bool>(
-                                                selector: (_, meetingStore) =>
-                                                    meetingStore.hasHlsStarted,
-                                                builder:
-                                                    (_, hasHlsStarted, __) {
-                                                  return hasHlsStarted
-                                                      ? Container(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height *
-                                                              0.735,
-                                                          child: Center(
-                                                            child: HLSPlayer(
-                                                              ratio: Utilities
-                                                                  .getHLSPlayerDefaultRatio(
-                                                                      MediaQuery.of(
-                                                                              context)
-                                                                          .size),
-                                                            ),
-                                                          ),
-                                                        )
-                                                      : Container(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height *
-                                                              0.735,
-                                                          child: Center(
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .only(
-                                                                      bottom:
-                                                                          8.0),
-                                                                  child: Text(
-                                                                    "Waiting for HLS to start...",
-                                                                    style: GoogleFonts.inter(
-                                                                        color:
-                                                                            iconColor,
-                                                                        fontSize:
-                                                                            20),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        );
-                                                });
-                                          }
                                           if (data.item3 == 0) {
                                             return Center(
                                                 child: Column(
@@ -547,7 +468,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                 children: [
                                                                   Padding(
                                                                     padding: const EdgeInsets
-                                                                            .only(
+                                                                        .only(
                                                                         right:
                                                                             5.0),
                                                                     child: SvgPicture

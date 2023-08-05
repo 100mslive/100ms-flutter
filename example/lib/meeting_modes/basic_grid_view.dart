@@ -118,7 +118,8 @@ List<StairedGridTile> portraitPattern(List<PeerTrackNode> peerTrack,
     tiles.add(StairedGridTile(1, ratio));
   }
   int pinTileCount = 0;
-  while (peerTrack[pinTileCount + screenShareCount].pinTile) {
+  while ((pinTileCount + screenShareCount < peerTrack.length) &&
+      peerTrack[pinTileCount + screenShareCount].pinTile) {
     tiles.add(StairedGridTile(1, ratio));
     pinTileCount++;
   }

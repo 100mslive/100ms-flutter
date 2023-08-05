@@ -329,17 +329,6 @@ class HMSSDKInteractor {
     hmsSDK.destroy();
   }
 
-  void setSessionMetadata(
-      {required String? metadata,
-      HMSActionResultListener? hmsActionResultListener}) {
-    hmsSDK.setSessionMetadata(
-        metadata: metadata, hmsActionResultListener: hmsActionResultListener);
-  }
-
-  Future<String?> getSessionMetadata() {
-    return hmsSDK.getSessionMetadata();
-  }
-
   void changeRoleOfPeersWithRoles(
       {required HMSRole toRole,
       required List<HMSRole> ofRoles,
@@ -358,5 +347,19 @@ class HMSSDKInteractor {
       {required String roomCode, String? userId, String? endPoint}) async {
     return await hmsSDK.getAuthTokenByRoomCode(
         roomCode: roomCode, userId: userId, endPoint: endPoint);
+  }
+
+  void switchAudioOutputUsingiOSUI() {
+    return hmsSDK.switchAudioOutputUsingiOSUI();
+  }
+
+  void sendHLSTimedMetadata(List<HMSHLSTimedMetadata> metadata,
+      HMSActionResultListener? hmsActionResultListener) {
+    hmsSDK.sendHLSTimedMetadata(
+        metadata: metadata, hmsActionResultListener: hmsActionResultListener);
+  }
+
+  void toggleAlwaysScreenOn() {
+    hmsSDK.toggleAlwaysScreenOn();
   }
 }

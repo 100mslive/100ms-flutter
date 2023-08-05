@@ -146,8 +146,6 @@ enum PlatformMethod {
   audioShareDuration,
   getTrackSettings,
   destroy,
-  setSessionMetadata,
-  getSessionMetadata,
   setPlaybackAllowedForTrack,
   enterPipMode,
   isPipActive,
@@ -173,7 +171,20 @@ enum PlatformMethod {
   getSessionMetadataForKey,
   setSessionMetadataForKey,
   addKeyChangeListener,
-  removeKeyChangeListener
+  removeKeyChangeListener,
+  start,
+  stop,
+  pause,
+  resume,
+  seekToLivePosition,
+  seekForward,
+  seekBackward,
+  setHLSPlayerVolume,
+  addHLSStatsListener,
+  removeHLSStatsListener,
+  switchAudioOutputUsingiOSUI,
+  sendHLSTimedMetadata,
+  toggleAlwaysScreenOn
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -365,10 +376,6 @@ extension PlatformMethodValues on PlatformMethod {
         return "get_track_settings";
       case PlatformMethod.destroy:
         return "destroy";
-      case PlatformMethod.setSessionMetadata:
-        return "set_session_metadata";
-      case PlatformMethod.getSessionMetadata:
-        return "get_session_metadata";
       case PlatformMethod.setPlaybackAllowedForTrack:
         return "set_playback_allowed_for_track";
       case PlatformMethod.enterPipMode:
@@ -421,6 +428,32 @@ extension PlatformMethodValues on PlatformMethod {
         return "add_key_change_listener";
       case PlatformMethod.removeKeyChangeListener:
         return "remove_key_change_listener";
+      case PlatformMethod.start:
+        return "start_hls_player";
+      case PlatformMethod.stop:
+        return "stop_hls_player";
+      case PlatformMethod.pause:
+        return "pause_hls_player";
+      case PlatformMethod.resume:
+        return "resume_hls_player";
+      case PlatformMethod.seekToLivePosition:
+        return "seek_to_live_position";
+      case PlatformMethod.seekForward:
+        return "seek_forward";
+      case PlatformMethod.seekBackward:
+        return "seek_backward";
+      case PlatformMethod.setHLSPlayerVolume:
+        return "set_hls_player_volume";
+      case PlatformMethod.addHLSStatsListener:
+        return "add_hls_stats_listener";
+      case PlatformMethod.removeHLSStatsListener:
+        return "remove_hls_stats_listener";
+      case PlatformMethod.switchAudioOutputUsingiOSUI:
+        return "switch_audio_output_using_ios_ui";
+      case PlatformMethod.sendHLSTimedMetadata:
+        return "send_hls_timed_metadata";
+      case PlatformMethod.toggleAlwaysScreenOn:
+        return "toggle_always_screen_on";
       default:
         return 'unknown';
     }
@@ -618,10 +651,6 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.getTrackSettings;
       case "destroy":
         return PlatformMethod.destroy;
-      case "set_session_metadata":
-        return PlatformMethod.setSessionMetadata;
-      case "get_session_metadata":
-        return PlatformMethod.getSessionMetadata;
       case "set_playback_allowed_for_track":
         return PlatformMethod.setPlaybackAllowedForTrack;
       case "enter_pip_mode":
@@ -670,6 +699,32 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.addKeyChangeListener;
       case "remove_key_change_listener":
         return PlatformMethod.removeKeyChangeListener;
+      case "start_hls_player":
+        return PlatformMethod.start;
+      case "stop_hls_player":
+        return PlatformMethod.stop;
+      case "pause_hls_player":
+        return PlatformMethod.pause;
+      case "resume_hls_player":
+        return PlatformMethod.resume;
+      case "seek_to_live_position":
+        return PlatformMethod.seekToLivePosition;
+      case "seek_forward":
+        return PlatformMethod.seekForward;
+      case "seek_backward":
+        return PlatformMethod.seekBackward;
+      case "set_hls_player_volume":
+        return PlatformMethod.setHLSPlayerVolume;
+      case "add_hls_stats_listener":
+        return PlatformMethod.addHLSStatsListener;
+      case "remove_hls_stats_listener":
+        return PlatformMethod.removeHLSStatsListener;
+      case "switch_audio_output_using_ios_ui":
+        return PlatformMethod.switchAudioOutputUsingiOSUI;
+      case "send_hls_timed_metadata":
+        return PlatformMethod.sendHLSTimedMetadata;
+      case "toggle_always_screen_on":
+        return PlatformMethod.toggleAlwaysScreenOn;
       default:
         return PlatformMethod.unknown;
     }

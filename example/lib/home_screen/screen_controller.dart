@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter_example/common/util/utility_components.dart';
+import 'package:hmssdk_flutter_example/common/util/utility_function.dart';
 import 'package:hmssdk_flutter_example/hls_viewer/hls_viewer_page.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter_example/meeting/meeting_page.dart';
@@ -14,7 +15,6 @@ class ScreenController extends StatefulWidget {
   final bool isRoomMute;
   final bool showStats;
   final bool mirrorCamera;
-  final String? streamUrl;
   final HMSRole? role;
   final HMSConfig? config;
   const ScreenController(
@@ -26,7 +26,6 @@ class ScreenController extends StatefulWidget {
       this.isRoomMute = false,
       this.showStats = false,
       this.mirrorCamera = true,
-      this.streamUrl,
       this.role,
       this.config})
       : super(key: key);
@@ -41,6 +40,7 @@ class _ScreenControllerState extends State<ScreenController> {
     super.initState();
     initMeeting();
     setInitValues();
+    Utilities.initForegroundTask();
   }
 
   void initMeeting() async {
@@ -65,23 +65,17 @@ class _ScreenControllerState extends State<ScreenController> {
 
   @override
   Widget build(BuildContext context) {
-    if ((Provider.of<MeetingStore>(context).localPeer != null &&
-            Provider.of<MeetingStore>(context)
-                .localPeer!
-                .role
-                .name
-                .contains("hls-")) ||
-        ((widget.role?.name.contains("hls-") ?? false) &&
-            widget.streamUrl != null)) {
-      return HLSViewerPage(
-        streamUrl: widget.streamUrl,
-      );
-    } else {
-      return MeetingPage(
-        isStreamingLink: widget.isStreamingLink,
-        meetingLink: widget.meetingLink,
-        isRoomMute: widget.isRoomMute,
-      );
-    }
+    return Selector<MeetingStore, String?>(
+        builder: (_, data, __) {
+          if (data?.contains("hls-") ?? false) {
+            return HLSViewerPage();
+          }
+          return MeetingPage(
+            isStreamingLink: widget.isStreamingLink,
+            meetingLink: widget.meetingLink,
+            isRoomMute: widget.isRoomMute,
+          );
+        },
+        selector: (_, meetingStore) => meetingStore.localPeer?.role.name);
   }
 }

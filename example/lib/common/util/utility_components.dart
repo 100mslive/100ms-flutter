@@ -566,7 +566,6 @@ class UtilityComponents {
 
   static showDialogForBulkRoleChange(BuildContext context, List<HMSRole> roles,
       MeetingStore _meetingStore) async {
-    double width = MediaQuery.of(context).size.width;
     List<HMSRole> _selectedRoles = [];
     HMSRole toRole = roles[0];
 
@@ -1363,7 +1362,6 @@ class UtilityComponents {
 
   static void showChangeAudioMixingModeDialog(BuildContext context) {
     HMSAudioMixingMode valueChoose = HMSAudioMixingMode.TALK_AND_MUSIC;
-    double width = MediaQuery.of(context).size.width;
     MeetingStore _meetingStore = context.read<MeetingStore>();
 
     void _updateDropDownValue(dynamic newValue) {

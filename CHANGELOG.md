@@ -1,3 +1,89 @@
+## 1.7.3 - 2023-08-03
+
+### Added
+
+- Added `toggleAlwaysScreenOn` method to enable the wakelock functionalities
+
+  This method allows you to toggle `always screen on` mode which prevents the screen from turning off automatically.
+
+  Read more about the `toggleAlwaysScreenOn` method [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/always-screen-on)
+
+- Added `initialising` property in `HMSBrowserRecordingState` class
+
+  The `initialising` property provides information whether the recording in the room is intialising
+
+  Read more about the `HMSBrowserRecordingState` class [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/recording#current-room-status)
+
+Updated to Android SDK 2.7.2 & iOS SDK 0.9.6
+
+**Full Changelog**: [1.7.2...1.7.3](https://github.com/100mslive/100ms-flutter/compare/1.7.2...1.7.3)
+
+## 1.7.2 - 2023-07-14
+
+### Changed
+
+- Reduced SDK & App binary size on Android by removing redundant package imports
+
+Updated to Android SDK 2.7.1 & iOS SDK 0.9.5
+
+**Full Changelog**: [1.7.1...1.7.2](https://github.com/100mslive/100ms-flutter/compare/1.7.1...1.7.2)
+
+## 1.7.1 - 2023-06-30
+
+### Added
+
+- Added phoneCallState property in `HMSAudioTrackSetting`
+
+  The `phoneCallState` property can be used to set the microphone state when you receive a phone call.
+
+  Read more about the `phoneCallState` property [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/track/set-track-settings#phonecallstate-android-only).
+
+Updated to Android SDK 2.6.8 & iOS SDK 0.9.5
+
+**Full Changelog**: [1.7.0...1.7.1](https://github.com/100mslive/100ms-flutter/compare/1.7.0...1.7.1)
+
+## 1.7.0 - 2023-06-20
+
+### Breaking
+
+- Removed Session Metadata methods
+
+  The `setSessionMetadata` and `getSessionMetadata` methods which were deprecated in previous versions have been removed now.
+
+  Utilize the Session Store functionality which is more convenient to implement features like Spotlight a Peer in Room, Keep a Message Pinned, etc. Read more about Session Store [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store).
+
+### Added
+
+- Added HLS Player
+
+  Introducing the 100ms HLS Player named `HMSHLSPlayer` a comprehensive end-to-end solution for playing Live Streaming content with inbuilt support for [Timed Metadata](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player#how-to-get-hls-callbacks), [HLS Diagnostic Stats](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player#how-to-know-the-stats-related-to-hls-playback) & [Custom Player Controls](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player#hls-player-controls).
+
+  Learn more about `HMSHLSPlayer` [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player).
+
+- Switch Audio Output using Native iOS UI
+
+  On iOS devices, you can now show the Native Airplay UI provided by iOS. Users can control the connected device which can be Airpods, any Bluetooth earphones, Wired Headsets, etc through which the Room's audio should be routed.
+
+  Learn more about it [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/configure-your-device/speaker/audio-output-routing#switch-audio-output-device-ui-ios-only).
+
+  - Added `messageId` to `HMSMessage`
+
+  You can now uniquely identify a message using the `messageId` property of `HMSMessage` class.
+
+  Checkout more about Messaging [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/chat#receiving-chat-messages).
+
+### Changed
+
+- RTMP Streaming can now be started without the `meetingUrl`. It is now an optional parameter. Learn more about RTMP Streaming [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/recording#startstop-streaming-recording).
+
+- [Software Audio Echo Cancellation](https://www.100ms.live/docs/flutter/v2/how-to-guides/configure-your-device/microphone/echo-cancellation) is now enabled by default. To further customize Audio & Video Track Settings, refer the docs [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/track/set-track-settings).
+
+- On Android, Screen share from a remote peer will now appear correctly occupy the space provided by the enclosing widget. Read more about Screen Share [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/screen-share).
+
+Updated to Android SDK 2.6.7 & iOS SDK 0.9.5
+
+**Full Changelog**: [1.6.0...1.7.0](https://github.com/100mslive/100ms-flutter/compare/1.6.0...1.7.0)
+
 ## 1.6.0 - 2023-05-04
 
 ### New Features
