@@ -4,9 +4,9 @@ name: Android Release
 on:
   # 2
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
 
   # 3
   workflow_dispatch:
@@ -31,7 +31,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           # 11
-          flutter-version: "3.0.0"
+          flutter-version: "3.7.12"
           channel: 'stable'
       # 12
       - name: Get dependencies
