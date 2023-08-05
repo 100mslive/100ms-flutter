@@ -36,12 +36,13 @@ jobs:
       # 12
       - name: Go to HMSLive Folder
         run: |
-          cd ./packages/hmssdk_flutter
+         chmod +x ./release-apps.sh
+         ./release-apps.sh
         shell: bash
 
-      - name: Get dependencies
-        run: flutter pub get
+      # - name: Get dependencies
+      #   run: flutter pub get
 
-      # Runs a set of commands using the runners shell
-      - name: Start release build
-        run: flutter build appbundle
+      # # Runs a set of commands using the runners shell
+      # - name: Start release build
+      #   run: flutter build appbundle
