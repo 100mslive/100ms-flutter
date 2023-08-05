@@ -4,12 +4,12 @@ name: Android Release
 on:
   # 2
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
-  # 3
-  workflow_dispatch:
+  # # 3
+  # workflow_dispatch:
 
 # 4
 jobs:
@@ -25,15 +25,20 @@ jobs:
       # 9
       - uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
-          java-version: "12.x"
-      # 10   
+          distribution: zulu
+          java-version: 12.x
+      # 10
       - uses: subosito/flutter-action@v2
         with:
           # 11
-          flutter-version: "3.7.12"
-          channel: 'stable'
+          flutter-version: 3.7.12
+          channel: stable
       # 12
+      - name: Go to HMSLive Folder
+        run: |
+          cd ./packages/hmssdk_flutter
+        shell: bash
+
       - name: Get dependencies
         run: flutter pub get
 
