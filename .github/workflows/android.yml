@@ -28,8 +28,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           # 11
-          flutter-version: 3.7.12
-          channel: stable
+          channel: master
       - name: Install the Apple certificate and provisioning profile
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
