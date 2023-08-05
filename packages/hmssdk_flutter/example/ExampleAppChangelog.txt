@@ -1,0 +1,22 @@
+Board: https://github.com/100mslive/100ms-flutter/projects/20
+
+- App built using the Prebuilt UI Kit
+https://github.com/100mslive/100ms-flutter/issues/1359
+
+- Added Hybrid composition videoview on Android to improve performance
+https://github.com/100mslive/100ms-flutter/pull/1330
+
+- Replaced Wakelock dependency with Android Activity Flags
+https://github.com/100mslive/100ms-flutter/issues/1373
+
+- Added support to Not mute local peer when incoming phone call is ringing
+https://github.com/100mslive/100ms-flutter/pull/1403
+
+- Added Permissions screens in preview
+
+- Updated Android SDK version to 2.7.2 and iOS SDK version to 0.9.6
+
+Main SDK: 1.8.0
+Room Kit: 0.0.4
+Android SDK: 2.7.2
+iOS SDK: 0.9.6

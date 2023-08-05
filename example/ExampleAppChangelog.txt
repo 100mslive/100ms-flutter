@@ -1,9 +1,0 @@
-Board: https://github.com/100mslive/100ms-flutter/projects/19
-
-- Added `wakelock` api's in HMSSDK
-
-- Added `initialising` property in `HMSBrowserRecordingState` class
-
-Flutter SDK: 1.7.3
-Android SDK: 2.7.2
-iOS SDK: 0.9.6
