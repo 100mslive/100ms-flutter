@@ -36,14 +36,14 @@ platform :android do
       app: "1:19544678223:android:a33d9b410e9a290db32f3a",
       groups: "internal, External",
       # android_artifact_path: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
-      service_credentials_file: "flutter-hms-4aea6d38fd2a.json",
+      service_credentials_file: ENV['FLUTTER_HMS_JSON'],
       android_artifact_path: "../build/app/outputs/apk/release/app-release.apk", #"../build/app/outputs/apk/hmsInternal/release/app-hmsInternal-release.apk",
       release_notes_file: "../ExampleAppChangelog.txt"
     )
 
     slack(
       message: ":flutter: 🎉 Flutter Android App released! 🎊 :flutter:",
-      slack_url: "test",
+      slack_url: ENV['SLACK_URL'],
       payload: {
         "📲 Download from Firebase 🤖" => "https://appdistribution.firebase.dev/i/b623e5310929ab70",  
         "📝 Changelog" => File.read("../../ExampleAppChangelog.txt")

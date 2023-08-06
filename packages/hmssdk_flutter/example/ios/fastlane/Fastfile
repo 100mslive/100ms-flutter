@@ -73,7 +73,7 @@ platform :ios do
     firebase_app_distribution(
       app: "1:19544678223:ios:a7bb21cc95bb495ab32f3a",
       groups: "internal, External",
-      service_credentials_file: "flutter-hms-4aea6d38fd2a.json",
+      service_credentials_file: ENV['FLUTTER_HMS_JSON'],
       ipa_path: "./Runner.ipa",
       release_notes_file: "../ExampleAppChangelog.txt"
     )
@@ -124,7 +124,7 @@ platform :ios do
     
     slack(
       message: ":flutter: 🎉 Flutter iOS App released! 🎊 :flutter:",
-      slack_url: "test",
+      slack_url: ENV['SLACK_URL'],
       payload: {
         "📲 Download from Firebase 🔥" => "https://appdistribution.firebase.dev/i/051800400061502d", 
         "📲 Download from TestFlight 🍎" => "https://testflight.apple.com/join/Uhzebmut",

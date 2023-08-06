@@ -38,6 +38,8 @@ jobs:
           FLUTTERAPPSTORE: ${{ secrets.FLUTTERAPPSTORE }}
           FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION: ${{ secrets.FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          SLACK_URL: ${{ secrets.SLACK_URL }}
+          FLUTTER_HMS_JSON: ${{ secrets.FLUTTER_HMS_JSON }}
         run: |
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
