@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 
 class HMSCircularAvatar extends StatelessWidget {
   final String name;
@@ -31,7 +31,8 @@ class HMSCircularAvatar extends StatelessWidget {
                 Utilities.getAvatarTitle(name),
                 style: GoogleFonts.inter(
                   fontSize: avatarTitleFontSize,
-                  color: avatarTitleTextColor ?? onSurfaceHighEmphasis,
+                  color: avatarTitleTextColor ??
+                      HMSThemeColors.onSurfaceHighEmphasis,
                 ),
               ));
   }

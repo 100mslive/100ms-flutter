@@ -7,8 +7,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:hms_room_kit/src/common/constants.dart';
-import 'package:hms_room_kit/src/common/utility_functions.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/hmssdk_interactor.dart';
@@ -1030,6 +1029,7 @@ class MeetingStore extends ChangeNotifier
     _hmsSessionStore = null;
     peerTracks.clear();
     isRoomEnded = true;
+    HMSThemeColors.resetLayoutColors();
     resetForegroundTaskAndOrientation();
     notifyListeners();
   }

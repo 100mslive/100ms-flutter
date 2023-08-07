@@ -1,6 +1,6 @@
 //package imports
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/audio_level_avatar.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +38,7 @@ class _DegradeTileState extends State<DegradeTile> {
                 height: widget.itemHeight + 110,
                 width: widget.itemWidth - 4,
                 decoration: BoxDecoration(
-                    color: surfaceDim,
+                    color: HMSThemeColors.surfaceDim,
                     borderRadius: const BorderRadius.all(Radius.circular(10))),
                 child: Stack(
                   children: [

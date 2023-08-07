@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/message_container.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:intl/intl.dart';
@@ -96,7 +97,7 @@ class _HLSChatState extends State<HLSChat> {
         child: Padding(
           padding: MediaQuery.of(context).viewInsets,
           child: Container(
-            color: surfaceDefault,
+            color: HMSThemeColors.surfaceDefault,
             child: Padding(
               padding: const EdgeInsets.only(
                   top: 20.0, left: 10, right: 10, bottom: 10),

@@ -2,6 +2,8 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/constants.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
@@ -143,9 +145,8 @@ class PreviewStore extends ChangeNotifier
           //This is only for 100ms internal testing, endPoint can be safely removed from
           //the HMSConfig for external usage
           endPoint: initEndPoint);
-      dynamic value = await hmsSDKInteractor.getRoomLayout(
-          authToken: tokenData, endPoint: getLayoutAPIEndpoint());
-      log(value.toString());
+      await HMSRoomLayout.getRoomLayout(
+          hmsSDKInteractor: hmsSDKInteractor, authToken: tokenData);
       hmsSDKInteractor.startHMSLogger(
           Constant.webRTCLogLevel, Constant.sdkLogLevel);
       hmsSDKInteractor.addPreviewListener(this);
@@ -261,6 +262,7 @@ class PreviewStore extends ChangeNotifier
 
   void leave() {
     hmsSDKInteractor.leave();
+    HMSThemeColors.resetLayoutColors();
     destroy();
   }
 

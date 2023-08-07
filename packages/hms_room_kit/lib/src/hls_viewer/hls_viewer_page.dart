@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
@@ -143,8 +144,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                   children: [
                                                     HMSSubheadingText(
                                                       text: "100ms HLS Player",
-                                                      textColor:
-                                                          onSurfaceHighEmphasis,
+                                                      textColor: HMSThemeColors
+                                                          .onSurfaceHighEmphasis,
                                                       fontWeight:
                                                           FontWeight.w500,
                                                       letterSpacing: 0.1,
@@ -152,8 +153,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                     HMSSubtitleText(
                                                         text:
                                                             "Session ${DateFormat("dd/MM/yyyy").format(DateTime.now())}",
-                                                        textColor:
-                                                            onSurfaceLowEmphasis)
+                                                        textColor: HMSThemeColors
+                                                            .onSurfaceLowEmphasis)
                                                   ],
                                                 )
                                               ],
@@ -242,7 +243,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                           },
                                                                           style: ButtonStyle(
                                                                               enableFeedback: false,
-                                                                              backgroundColor: isPlaying ? MaterialStatePropertyAll(primaryDefault) : MaterialStatePropertyAll(surfaceDefault),
+                                                                              backgroundColor: isPlaying ? MaterialStatePropertyAll(HMSThemeColors.primaryDefault) : MaterialStatePropertyAll(HMSThemeColors.surfaceDefault),
                                                                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                                                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.9)),
                                                                               ),
@@ -253,7 +254,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                                 ? Icons.pause
                                                                                 : Icons.play_arrow_rounded,
                                                                             color:
-                                                                                onSurfaceHighEmphasis,
+                                                                                HMSThemeColors.onSurfaceHighEmphasis,
                                                                           ),
                                                                         );
                                                                       }),
@@ -284,7 +285,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                   child:
                                                                       Padding(
                                                                     padding: const EdgeInsets
-                                                                        .only(
+                                                                            .only(
                                                                         right:
                                                                             10.0,
                                                                         bottom:
@@ -311,7 +312,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                                 HMSHLSPlayerController.seekToLivePosition(),
                                                                             child: HMSTitleText(
                                                                               text: "LIVE",
-                                                                              textColor: onSurfaceHighEmphasis,
+                                                                              textColor: HMSThemeColors.onSurfaceHighEmphasis,
                                                                               fontSize: 12,
                                                                               lineHeight: 16,
                                                                               letterSpacing: 0.4,
@@ -396,7 +397,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                       Padding(
                                                         padding:
                                                             const EdgeInsets
-                                                                .only(
+                                                                    .only(
                                                                 bottom: 20.0),
                                                         child: Row(
                                                           mainAxisAlignment:
@@ -426,7 +427,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                   .asset(
                                                                 "packages/hms_room_kit/lib/src/assets/icons/phone_hangup.svg",
                                                                 colorFilter: ColorFilter.mode(
-                                                                    onSurfaceHighEmphasis,
+                                                                    HMSThemeColors
+                                                                        .onSurfaceHighEmphasis,
                                                                     BlendMode
                                                                         .srcIn),
                                                                 fit: BoxFit
@@ -480,8 +482,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                             : "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
                                                                         colorFilter: ColorFilter.mode(
                                                                             (context.read<MeetingStore>().localPeer?.role.publishSettings?.allowed.contains("audio") ?? false)
-                                                                                ? onSurfaceHighEmphasis
-                                                                                : onSurfaceLowEmphasis,
+                                                                                ? HMSThemeColors.onSurfaceHighEmphasis
+                                                                                : HMSThemeColors.onSurfaceLowEmphasis,
                                                                             BlendMode.srcIn),
                                                                         fit: BoxFit
                                                                             .scaleDown,
@@ -517,7 +519,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                   .asset(
                                                                 "packages/hms_room_kit/lib/src/assets/icons/emoji.svg",
                                                                 colorFilter: ColorFilter.mode(
-                                                                    onSurfaceHighEmphasis,
+                                                                    HMSThemeColors
+                                                                        .onSurfaceHighEmphasis,
                                                                     BlendMode
                                                                         .srcIn),
                                                                 fit: BoxFit
@@ -556,11 +559,9 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                       "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
                                                                       colorFilter: ColorFilter.mode(
                                                                           handRaised
-                                                                              ? const Color.fromRGBO(250, 201, 25,
-                                                                                  1)
-                                                                              : onSurfaceHighEmphasis,
-                                                                          BlendMode
-                                                                              .srcIn),
+                                                                              ? const Color.fromRGBO(250, 201, 25, 1)
+                                                                              : HMSThemeColors.onSurfaceHighEmphasis,
+                                                                          BlendMode.srcIn),
                                                                       fit: BoxFit
                                                                           .scaleDown,
                                                                       semanticsLabel:

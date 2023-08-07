@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
@@ -228,13 +229,14 @@ class _MeetingPageState extends State<MeetingPage> {
                       return isPipActive && Platform.isAndroid
                           ? const PipView()
                           : Scaffold(
-                              backgroundColor: backgroundDim,
+                              backgroundColor: HMSThemeColors.backgroundDim,
                               resizeToAvoidBottomInset: false,
                               body: SafeArea(
                                 child: Theme(
                                   data: ThemeData(
                                       brightness: Brightness.dark,
-                                      primaryColor: primaryDefault,
+                                      primaryColor:
+                                          HMSThemeColors.primaryDefault,
                                       scaffoldBackgroundColor: Colors.black),
                                   child: Stack(
                                     children: [
@@ -266,7 +268,8 @@ class _MeetingPageState extends State<MeetingPage> {
                                                 children: [
                                                   CircularProgressIndicator(
                                                     strokeWidth: 2,
-                                                    color: primaryDefault,
+                                                    color: HMSThemeColors
+                                                        .primaryDefault,
                                                   ),
                                                   const SizedBox(
                                                     height: 10,
@@ -429,7 +432,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                           .asset(
                                                                     "packages/hms_room_kit/lib/src/assets/icons/exit_room.svg",
                                                                     colorFilter: const ColorFilter
-                                                                        .mode(
+                                                                            .mode(
                                                                         Colors
                                                                             .white,
                                                                         BlendMode
@@ -489,7 +492,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                   children: [
                                                                     Padding(
                                                                       padding: const EdgeInsets
-                                                                          .only(
+                                                                              .only(
                                                                           right:
                                                                               5.0),
                                                                       child: SvgPicture
@@ -636,8 +639,10 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                 "packages/hms_room_kit/lib/src/assets/icons/camera.svg",
                                                                 colorFilter: ColorFilter.mode(
                                                                     isVideoOn
-                                                                        ? onSurfaceHighEmphasis
-                                                                        : onSurfaceLowEmphasis,
+                                                                        ? HMSThemeColors
+                                                                            .onSurfaceHighEmphasis
+                                                                        : HMSThemeColors
+                                                                            .onSurfaceLowEmphasis,
                                                                     BlendMode
                                                                         .srcIn),
                                                                 fit: BoxFit

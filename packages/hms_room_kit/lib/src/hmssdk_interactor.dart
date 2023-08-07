@@ -367,7 +367,7 @@ class HMSSDKInteractor {
     hmsSDK.toggleAlwaysScreenOn();
   }
 
-  dynamic getRoomLayout({required String authToken, String? endPoint}) async{
+  dynamic getRoomLayout({required String authToken, String? endPoint}) async {
     return await hmsSDK.getRoomLayout(authToken: authToken, endPoint: endPoint);
   }
 }

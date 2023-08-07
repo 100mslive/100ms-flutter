@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/hms_prebuilt_options.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/widgets/hms_buttons/hms_back_button.dart';
@@ -62,7 +62,7 @@ class _PreviewPermissionsState extends State<PreviewPermissions> {
                     ),
                     HMSTitleText(
                       text: "Enable permissions",
-                      textColor: onSurfaceHighEmphasis,
+                      textColor: HMSThemeColors.onSurfaceHighEmphasis,
                       fontSize: 24,
                       lineHeight: 32,
                     ),
@@ -73,7 +73,7 @@ class _PreviewPermissionsState extends State<PreviewPermissions> {
                         text: "Just a few things before you join",
                         fontSize: 14,
                         lineHeight: 20,
-                        textColor: onSurfaceLowEmphasis),
+                        textColor: HMSThemeColors.onSurfaceLowEmphasis),
                   ],
                 ),
               ),
@@ -89,8 +89,8 @@ class _PreviewPermissionsState extends State<PreviewPermissions> {
                         _getPermissions();
                       },
                       style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(primaryDefault),
+                          backgroundColor: MaterialStatePropertyAll(
+                              HMSThemeColors.primaryDefault),
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -99,7 +99,7 @@ class _PreviewPermissionsState extends State<PreviewPermissions> {
                         padding: const EdgeInsets.all(8.0),
                         child: HMSTitleText(
                             text: "Grant Permissions",
-                            textColor: onSurfaceHighEmphasis),
+                            textColor: HMSThemeColors.onSurfaceHighEmphasis),
                       ),
                     ),
                   ),

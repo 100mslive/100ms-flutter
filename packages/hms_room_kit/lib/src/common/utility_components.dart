@@ -8,6 +8,7 @@ import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/constants.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/app_dialogs/role_change_request_dialog.dart';
 import 'package:hms_room_kit/src/widgets/app_dialogs/track_change_request_dialog.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_dropdown.dart';
@@ -1262,7 +1263,8 @@ class UtilityComponents {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
-                    style: TextStyle(color: onSurfaceHighEmphasis),
+                    style:
+                        TextStyle(color: HMSThemeColors.onSurfaceHighEmphasis),
                     textCapitalization: TextCapitalization.words,
                     textInputAction: TextInputAction.done,
                     onSubmitted: (value) => (textController.text == "")

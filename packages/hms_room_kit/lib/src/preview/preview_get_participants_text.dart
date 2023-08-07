@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 
 ///This renders the text based on the number of participants who are already in the room
@@ -19,6 +19,6 @@ class PreviewParticipantsText extends StatelessWidget {
         text: "$peerCount ${peerCount > 1 ? "others" : "other"} in session",
         fontWeight: FontWeight.w600,
         fontSize: 14,
-        textColor: onSurfaceHighEmphasis);
+        textColor: HMSThemeColors.onSurfaceHighEmphasis);
   }
 }

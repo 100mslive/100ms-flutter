@@ -105,7 +105,7 @@ class _ScreenControllerState extends State<ScreenController> {
           ? Center(
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                color: primaryDefault,
+                color: HMSThemeColors.primaryDefault,
               ),
             )
           : isPermissionGranted

@@ -1,7 +1,7 @@
 //Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +26,8 @@ class BRBTag extends StatelessWidget {
                       child: SvgPicture.asset(
                         "packages/hms_room_kit/lib/src/assets/icons/brb.svg",
                         colorFilter: ColorFilter.mode(
-                            onSurfaceHighEmphasis, BlendMode.srcIn),
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
                         width: 26,
                         semanticsLabel: "brb_label",
                       ),

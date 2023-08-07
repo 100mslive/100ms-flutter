@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
@@ -187,7 +188,8 @@ class MessageContainer extends StatelessWidget {
                       return PopupMenuItem(
                         child: Text(
                           'Pin Message',
-                          style: TextStyle(color: onSurfaceHighEmphasis),
+                          style: TextStyle(
+                              color: HMSThemeColors.onSurfaceHighEmphasis),
                         ),
                         onTap: () => context
                             .read<MeetingStore>()

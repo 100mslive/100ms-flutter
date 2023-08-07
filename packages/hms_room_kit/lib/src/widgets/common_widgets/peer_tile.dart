@@ -1,6 +1,7 @@
 // Package imports
 import 'package:flutter/material.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
@@ -77,7 +78,7 @@ class _PeerTileState extends State<PeerTile> {
                 width: widget.itemWidth - 5.0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: surfaceDim,
+                  color: HMSThemeColors.surfaceDim,
                 ),
                 child: Semantics(
                   label:
@@ -113,9 +114,10 @@ class _PeerTileState extends State<PeerTile> {
                           left: 5,
                           child: Container(
                             decoration: BoxDecoration(
-                                color: transparentBackgroundColor,
+                                color:
+                                    HMSThemeColors.transparentBackgroundColor,
                                 borderRadius: BorderRadius.circular(8)),
-                            child:  Center(
+                            child: Center(
                               child: Padding(
                                 padding: const EdgeInsets.only(
                                     left: 8.0, right: 4, top: 4, bottom: 4),

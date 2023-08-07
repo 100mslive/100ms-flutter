@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/preview/preview_join_button.dart';
 import 'package:hms_room_kit/src/preview/preview_participant_chip.dart';
 import 'package:hms_room_kit/src/screen_controller.dart';
@@ -116,6 +117,7 @@ class _PreviewPageState extends State<PreviewPage> {
               meetingStore.clearPIPState(),
               meetingStore.isRoomEnded = true,
               previewStore.hmsSDKInteractor.leave(),
+              HMSThemeColors.resetLayoutColors(),
               Navigator.pushReplacement(
                   context,
                   CupertinoPageRoute(
@@ -167,7 +169,7 @@ class _PreviewPageState extends State<PreviewPage> {
                               child: Center(
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: primaryDefault,
+                                  color: HMSThemeColors.primaryDefault,
                                 ),
                               ),
                             )
@@ -191,7 +193,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                           Container(
                                             height: height,
                                             width: width,
-                                            color: backgroundDim,
+                                            color: HMSThemeColors.backgroundDim,
                                             child: (previewStore.isVideoOn)
                                                 ? Center(
                                                     child: HMSVideoView(
@@ -227,11 +229,11 @@ class _PreviewPageState extends State<PreviewPage> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             8),
-                                                    color:
-                                                        transparentBackgroundColor),
+                                                    color: HMSThemeColors
+                                                        .transparentBackgroundColor),
                                                 child: Padding(
                                                   padding: const EdgeInsets
-                                                      .symmetric(
+                                                          .symmetric(
                                                       horizontal: 8,
                                                       vertical: 4),
                                                   child: Row(
@@ -294,37 +296,44 @@ class _PreviewPageState extends State<PreviewPage> {
                                             children: [
                                               ///We render a generic logo which can be replaced
                                               ///with the company logo from dashboard
-                                              SvgPicture.asset(
-                                                'packages/hms_room_kit/lib/src/assets/icons/generic.svg',
-                                                fit: BoxFit.contain,
-                                                semanticsLabel:
-                                                    "fl_user_icon_label",
-                                              ),
+                                              HMSRoomLayout
+                                                          .data?[0].logo?.url ==
+                                                      null
+                                                  ? Container()
+                                                  : Image.network(
+                                                      HMSRoomLayout
+                                                          .data![0].logo!.url!,
+                                                      height: 30,
+                                                      width: 30,
+                                                    ),
                                               const SizedBox(
                                                 height: 16,
                                               ),
                                               HMSTitleText(
-                                                  text: "Get Started",
+                                                  text: HMSRoomLayout
+                                                          .data?[0]
+                                                          .screens
+                                                          ?.preview
+                                                          ?.previewHeader
+                                                          ?.title ??
+                                                      "Get Started",
                                                   fontSize: 24,
                                                   lineHeight: 32,
-                                                  textColor:
-                                                      onSurfaceHighEmphasis),
+                                                  textColor: HMSThemeColors
+                                                      .onSurfaceHighEmphasis),
                                               const SizedBox(
                                                 height: 4,
                                               ),
                                               HMSSubheadingText(
-                                                  text: !(previewStore
-                                                              .peer
-                                                              ?.role
-                                                              .publishSettings!
-                                                              .allowed
-                                                              .contains(
-                                                                  "video") ??
-                                                          false)
-                                                      ? "Enter your name before joining"
-                                                      : "Setup your audio and video before joining",
-                                                  textColor:
-                                                      onSurfaceMediumEmphasis),
+                                                  text: HMSRoomLayout
+                                                          .data?[0]
+                                                          .screens
+                                                          ?.preview
+                                                          ?.previewHeader
+                                                          ?.subTitle ??
+                                                      "Setup your audio and video before joining",
+                                                  textColor: HMSThemeColors
+                                                      .onSurfaceMediumEmphasis),
 
                                               ///Here we use SizedBox to keep the UI consistent
                                               ///until we have received peer list or the room-state is
@@ -365,7 +374,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         Radius.circular(16),
                                                     topRight:
                                                         Radius.circular(16)),
-                                            color: backgroundDefault,
+                                            color: HMSThemeColors
+                                                .backgroundDefault,
                                           ),
                                           width: width,
                                           child: Padding(
@@ -409,7 +419,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                     ? "packages/hms_room_kit/lib/src/assets/icons/mic_state_on.svg"
                                                                     : "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
                                                                 colorFilter: ColorFilter.mode(
-                                                                    onSurfaceHighEmphasis,
+                                                                    HMSThemeColors
+                                                                        .onSurfaceHighEmphasis,
                                                                     BlendMode
                                                                         .srcIn),
                                                                 fit: BoxFit
@@ -450,7 +461,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                     ? "packages/hms_room_kit/lib/src/assets/icons/cam_state_on.svg"
                                                                     : "packages/hms_room_kit/lib/src/assets/icons/cam_state_off.svg",
                                                                 colorFilter: ColorFilter.mode(
-                                                                    onSurfaceHighEmphasis,
+                                                                    HMSThemeColors
+                                                                        .onSurfaceHighEmphasis,
                                                                     BlendMode
                                                                         .srcIn),
                                                                 fit: BoxFit
@@ -483,10 +495,11 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                   .asset(
                                                                 "packages/hms_room_kit/lib/src/assets/icons/camera.svg",
                                                                 colorFilter: ColorFilter.mode(
-                                                                    previewStore
-                                                                            .isVideoOn
-                                                                        ? onSurfaceHighEmphasis
-                                                                        : onSurfaceLowEmphasis,
+                                                                    previewStore.isVideoOn
+                                                                        ? HMSThemeColors
+                                                                            .onSurfaceHighEmphasis
+                                                                        : HMSThemeColors
+                                                                            .onSurfaceLowEmphasis,
                                                                     BlendMode
                                                                         .srcIn),
                                                                 fit: BoxFit
@@ -542,6 +555,11 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                     SvgPicture
                                                                         .asset(
                                                                   'packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(previewStore.currentAudioOutputDevice)}.svg',
+                                                                  colorFilter: ColorFilter.mode(
+                                                                      HMSThemeColors
+                                                                          .onSurfaceHighEmphasis,
+                                                                      BlendMode
+                                                                          .srcIn),
                                                                   fit: BoxFit
                                                                       .scaleDown,
                                                                   semanticsLabel:
@@ -568,7 +586,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         width: width * 0.50,
                                                         child: TextField(
                                                           cursorColor:
-                                                              primaryDefault,
+                                                              HMSThemeColors
+                                                                  .primaryDefault,
                                                           onTapOutside: (event) =>
                                                               FocusManager
                                                                   .instance
@@ -581,8 +600,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                               TextCapitalization
                                                                   .words,
                                                           style: GoogleFonts.inter(
-                                                              color:
-                                                                  onSurfaceHighEmphasis),
+                                                              color: HMSThemeColors
+                                                                  .onSurfaceHighEmphasis),
                                                           controller:
                                                               nameController,
                                                           keyboardType:
@@ -592,20 +611,18 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             setState(() {});
                                                           },
                                                           decoration: InputDecoration(
-                                                              contentPadding:
-                                                                  const EdgeInsets.symmetric(
-                                                                      vertical:
-                                                                          14,
-                                                                      horizontal:
-                                                                          16),
-                                                              fillColor:
-                                                                  surfaceDefault,
+                                                              contentPadding: const EdgeInsets.symmetric(
+                                                                  vertical: 14,
+                                                                  horizontal:
+                                                                      16),
+                                                              fillColor: HMSThemeColors
+                                                                  .surfaceDefault,
                                                               filled: true,
                                                               hintText:
                                                                   'Enter Name...',
                                                               hintStyle: GoogleFonts.inter(
-                                                                  color:
-                                                                      onSurfaceLowEmphasis,
+                                                                  color: HMSThemeColors
+                                                                      .onSurfaceLowEmphasis,
                                                                   height: 1.5,
                                                                   fontSize: 16,
                                                                   letterSpacing:
@@ -616,8 +633,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                               focusedBorder: OutlineInputBorder(
                                                                   borderSide: BorderSide(
                                                                       width: 2,
-                                                                      color:
-                                                                          primaryDefault),
+                                                                      color: HMSThemeColors
+                                                                          .primaryDefault),
                                                                   borderRadius: const BorderRadius.all(
                                                                       Radius.circular(
                                                                           8))),
@@ -625,8 +642,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                   borderSide:
                                                                       BorderSide
                                                                           .none,
-                                                                  borderRadius:
-                                                                      BorderRadius.all(Radius.circular(8))),
+                                                                  borderRadius: BorderRadius.all(Radius.circular(8))),
                                                               border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(8)))),
                                                         ),
                                                       ),
@@ -678,14 +694,15 @@ class _PreviewPageState extends State<PreviewPage> {
                                       children: [
                                         CircularProgressIndicator(
                                           strokeWidth: 2,
-                                          color: primaryDefault,
+                                          color: HMSThemeColors.primaryDefault,
                                         ),
                                         const SizedBox(
                                           height: 29,
                                         ),
                                         HMSSubtitleText(
                                           text: "Starting live stream...",
-                                          textColor: onSurfaceHighEmphasis,
+                                          textColor: HMSThemeColors
+                                              .onSurfaceHighEmphasis,
                                           fontSize: 16,
                                           lineHeight: 24,
                                           letterSpacing: 0.50,
