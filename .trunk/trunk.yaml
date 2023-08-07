@@ -9,7 +9,7 @@ plugins:
 lint:
   enabled:
     - actionlint@1.6.25
-    - checkov@2.3.356
+    - checkov@2.3.359
     - osv-scanner@1.3.6
     - trivy@0.44.0
     - trufflehog@3.46.3
