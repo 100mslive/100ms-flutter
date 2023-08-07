@@ -263,6 +263,7 @@ class PreviewStore extends ChangeNotifier
   void leave() {
     hmsSDKInteractor.leave();
     HMSThemeColors.resetLayoutColors();
+    hmsSDKInteractor.toggleAlwaysScreenOn();
     destroy();
   }
 

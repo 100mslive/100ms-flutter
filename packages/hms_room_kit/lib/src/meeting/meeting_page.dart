@@ -49,7 +49,7 @@ class _MeetingPageState extends State<MeetingPage> {
   void initState() {
     super.initState();
     checkAudioState();
-    _enableAlwaysScreenOn();
+    _enableForegroundService();
   }
 
   void checkAudioState() async {
@@ -60,8 +60,7 @@ class _MeetingPageState extends State<MeetingPage> {
     }
   }
 
-  void _enableAlwaysScreenOn() {
-    context.read<MeetingStore>().toggleAlwaysScreenOn();
+  void _enableForegroundService() {
     context.read<MeetingStore>().initForegroundTask();
   }
 

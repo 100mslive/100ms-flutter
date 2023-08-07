@@ -107,6 +107,7 @@ class _PreviewPageState extends State<PreviewPage> {
               await _meetingStore.startHLSStreaming(false, false),
           if (isStreamSuccessful != null)
             {
+              previewStore.hmsSDKInteractor.toggleAlwaysScreenOn(),
               setState(() {
                 isHLSStarting = false;
               }),
