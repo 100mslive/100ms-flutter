@@ -158,7 +158,7 @@ GEM
     jwt (2.7.1)
     memoist (0.16.2)
     mini_magick (4.12.0)
-    mini_mime (1.1.2)
+    mini_mime (1.1.5)
     multi_json (1.15.0)
     multipart-post (2.3.0)
     nanaimo (0.3.0)

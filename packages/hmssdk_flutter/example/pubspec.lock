@@ -358,13 +358,13 @@ packages:
       path: "../../hms_room_kit"
       relative: true
     source: path
-    version: "0.0.4"
+    version: "0.1.0"
   hmssdk_flutter:
     dependency: transitive
     description:
       path: "packages/hmssdk_flutter"
       ref: "feature/prebuilt"
-      resolved-ref: ea96f393c28b1902adb5818591910e94a48382ef
+      resolved-ref: "429c0c89097e0522ca3e26e8b4711a1dd360c90e"
       url: "https://github.com/100mslive/100ms-flutter.git"
     source: git
     version: "1.8.0"
