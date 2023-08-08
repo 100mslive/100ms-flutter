@@ -671,7 +671,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let dartSDKVersion = arguments?["dart_sdk_version"] as! String
         let hmsSDKVersion = arguments?["hmssdk_version"] as! String
         let isPrebuilt = arguments?["is_prebuilt"] as? Bool ?? false
-        
+
         let framework = HMSFrameworkInfo(type: .flutter, version: dartSDKVersion, sdkVersion: hmsSDKVersion, isPrebuilt: isPrebuilt)
         audioMixerSourceMap = [:]
 

@@ -115,11 +115,8 @@ class HMSSDK {
   ///of HMSException type or a Json String type based on whether
   ///method execution is completed successfully or not.
   Future<dynamic> getRoomLayout(
-      {required String authToken,String? endPoint}) async {
-    var arguments = {
-      "auth_token": authToken,
-      "endpoint": endPoint
-    };
+      {required String authToken, String? endPoint}) async {
+    var arguments = {"auth_token": authToken, "endpoint": endPoint};
     var result = await PlatformService.invokeMethod(
         PlatformMethod.getRoomLayout,
         arguments: arguments);

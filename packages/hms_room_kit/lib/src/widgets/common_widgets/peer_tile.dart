@@ -72,10 +72,10 @@ class _PeerTileState extends State<PeerTile> {
         child: context.read<PeerTrackNode>().uid.contains("mainVideo")
             ? Container(
                 key: key,
-                padding: const EdgeInsets.all(2),
-                margin: const EdgeInsets.all(2),
+                padding: const EdgeInsets.all(0),
+                margin: const EdgeInsets.all(0),
                 height: widget.itemHeight + 110,
-                width: widget.itemWidth - 5.0,
+                width: widget.itemWidth,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: HMSThemeColors.surfaceDim,
@@ -117,14 +117,14 @@ class _PeerTileState extends State<PeerTile> {
                                 color:
                                     HMSThemeColors.transparentBackgroundColor,
                                 borderRadius: BorderRadius.circular(8)),
-                            child: Center(
+                            child: const Center(
                               child: Padding(
-                                padding: const EdgeInsets.only(
+                                padding: EdgeInsets.only(
                                     left: 8.0, right: 4, top: 4, bottom: 4),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
+                                  children: [
                                     NetworkIconWidget(),
                                     PeerName(),
                                     DegradeText()
@@ -159,10 +159,10 @@ class _PeerTileState extends State<PeerTile> {
                       borderRadius:
                           const BorderRadius.all(Radius.circular(10))),
                   key: key,
-                  padding: const EdgeInsets.all(2),
-                  margin: const EdgeInsets.all(2),
+                  padding: const EdgeInsets.all(0),
+                  margin: const EdgeInsets.all(0),
                   height: widget.itemHeight + 110,
-                  width: widget.itemWidth - 5.0,
+                  width: widget.itemWidth,
                   child: Stack(
                     children: [
                       VideoView(
