@@ -212,7 +212,7 @@ class PreviewStore extends ChangeNotifier
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         isHLSStreamingStarted = room.hmshlsStreamingState?.running ?? false;
-        if (!isMeetingJoined) {
+        if (!isMeetingJoined && isRoomJoined) {
           isRoomJoinedAndHLSStarted =
               (room.hmshlsStreamingState?.running ?? false) && isRoomJoined;
           isMeetingJoined = true;
