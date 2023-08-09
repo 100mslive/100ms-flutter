@@ -180,7 +180,9 @@ class HMSRoomLayout {
       {required HMSSDKInteractor hmsSDKInteractor,
       required String authToken}) async {
     dynamic value = await hmsSDKInteractor.getRoomLayout(
-        authToken: authToken, endPoint: getLayoutAPIEndpoint());
+        authToken: authToken, 
+        endPoint: getLayoutAPIEndpoint()
+        );
     if (value != null && value.runtimeType != HMSException) {
       _setLayout(layoutJson: jsonDecode(value));
       log(value);

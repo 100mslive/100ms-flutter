@@ -832,30 +832,35 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         private func getRoomLayout(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
         let arguments = call.arguments as! [AnyHashable: Any]
         
-        guard let authToken = arguments["auth_token"] as? String?,
-              let endPoint = arguments["endpoint"] as? String?
+        guard let authToken = arguments["auth_token"] as? String?
+                
         else{
             result(HMSErrorExtension.getError("Invalid parameters for getRoomLayout in \(#function)"))
             return
         }
+            
+        let endPoint = arguments["endpoint"] as? String
+            
+        // This is to make the mock API links work
+        if endPoint != nil && (endPoint!.contains("mockable") || endPoint!.contains("nonprod")) {
+            UserDefaults.standard.set(endPoint, forKey: "HMSRoomLayoutEndpointOverride")
+        }
+        // This is to make the QA API work
+        else {
+            UserDefaults.standard.removeObject(forKey: "HMSRoomLayoutEndpointOverride")
+        }
         
         hmsSDK?.getRoomLayout(using: authToken!) { layout, error in
-                        
-                        if let rawData = layout?.rawData {
-                            let jsonString = String(decoding: rawData, as: UTF8.self)
-                            result(HMSResultExtension.toDictionary(true, jsonString))
-                            return
-                        }
-                        
-                        let errorMessage = "\(#function) Could not parse Room Layout for Token: \(authToken)"
-            HMSErrorLogger.returnHMSException(#function, errorMessage, "PARSE ERROR", result)
-                    }
-        
-        // This is to make the mock API links work
-        if endPoint != nil && endPoint!.contains("mockable") {
-                UserDefaults.standard.set(endPoint, forKey: "HMSRoomLayoutEndpointOverride")
-        } else {
-            UserDefaults.standard.removeObject(forKey: "HMSRoomLayoutEndpointOverride")
+            if let error = error {
+                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.toDictionary(error)))
+            }
+            else{
+                if let rawData = layout?.rawData {
+                    let jsonString = String(decoding: rawData, as: UTF8.self)
+                    result(HMSResultExtension.toDictionary(true, jsonString))
+                    return
+                }
+            }
         }
         
     }
