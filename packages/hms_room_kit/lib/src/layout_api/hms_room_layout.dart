@@ -5,6 +5,7 @@ import 'dart:developer';
 ///Package imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/hmssdk_interactor.dart';
+import 'package:hms_room_kit/src/service/app_secrets.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class Theme {
