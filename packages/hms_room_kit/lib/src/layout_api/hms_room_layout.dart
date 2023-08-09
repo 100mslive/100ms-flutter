@@ -200,7 +200,6 @@ class HMSRoomLayout {
         authToken: authToken, endPoint: getLayoutAPIEndpoint());
     if (value != null && value.runtimeType != HMSException) {
       _setLayout(layoutJson: jsonDecode(value));
-      log(value);
       HMSThemeColors.applyLayoutColors(data?[0].themes?[0].palette);
     }
   }
