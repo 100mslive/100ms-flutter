@@ -75,6 +75,7 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B0623F8FBD08D7EF79FF5844 /* Pods-FlutterBroadcastUploadExtension.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlutterBroadcastUploadExtension.profile.xcconfig"; path = "Target Support Files/Pods-FlutterBroadcastUploadExtension/Pods-FlutterBroadcastUploadExtension.profile.xcconfig"; sourceTree = "<group>"; };
+		B44CF4C02A83BCF0003B3D5E /* RunnerRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RunnerRelease.entitlements; sourceTree = "<group>"; };
 		CD3C8BA7497CF5A349499EE7 /* Pods-FlutterBroadcastUploadExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlutterBroadcastUploadExtension.release.xcconfig"; path = "Target Support Files/Pods-FlutterBroadcastUploadExtension/Pods-FlutterBroadcastUploadExtension.release.xcconfig"; sourceTree = "<group>"; };
 		EC1052B02858A77D005EAB9E /* FlutterBroadcastUploadExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FlutterBroadcastUploadExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC1052B12858A77D005EAB9E /* ReplayKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReplayKit.framework; path = System/Library/Frameworks/ReplayKit.framework; sourceTree = SDKROOT; };
@@ -152,6 +153,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				B44CF4C02A83BCF0003B3D5E /* RunnerRelease.entitlements */,
 				EC9BCD2A26B1CFDB00D378A0 /* GoogleService-Info.plist */,
 				EC3386D4296EBF6B00F565A8 /* Runner.entitlements */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
@@ -696,7 +698,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Runner/RunnerRelease.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 185;
