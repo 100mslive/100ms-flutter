@@ -70,7 +70,6 @@ class HMSThemeColors {
       switch (key) {
         case "primary_default":
           primaryDefault = Color(_getColorFromHex(value));
-          log("VKohli applied color");
           break;
         case "primary_bright":
           primaryBright = Color(_getColorFromHex(value));
