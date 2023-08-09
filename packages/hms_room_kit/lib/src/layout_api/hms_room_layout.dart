@@ -65,8 +65,23 @@ class Preview {
   }
 }
 
+enum JoinButtonType { JOIN_BTN_TYPE_JOIN_ONLY, JOIN_BTN_TYPE_JOIN_AND_GO_LIVE }
+
+extension JoinButtonTypeValues on JoinButtonType {
+  static JoinButtonType getButtonTypeFromName(String joinType) {
+    switch (joinType) {
+      case 'JOIN_BTN_TYPE_JOIN_ONLY':
+        return JoinButtonType.JOIN_BTN_TYPE_JOIN_ONLY;
+      case 'JOIN_BTN_TYPE_JOIN_AND_GO_LIVE':
+        return JoinButtonType.JOIN_BTN_TYPE_JOIN_AND_GO_LIVE;
+      default:
+        return JoinButtonType.JOIN_BTN_TYPE_JOIN_ONLY;
+    }
+  }
+}
+
 class JoinForm {
-  final String? joinBtnType;
+  final JoinButtonType? joinBtnType;
   final String? joinBtnLabel;
   final String? goLiveBtnLabel;
 
@@ -77,7 +92,8 @@ class JoinForm {
       return JoinForm();
     } else {
       return JoinForm(
-          joinBtnType: json['join_btn_type'],
+          joinBtnType:
+              JoinButtonTypeValues.getButtonTypeFromName(json['join_btn_type']),
           joinBtnLabel: json['join_btn_label'],
           goLiveBtnLabel: json['go_live_btn_label']);
     }
@@ -181,9 +197,7 @@ class HMSRoomLayout {
       {required HMSSDKInteractor hmsSDKInteractor,
       required String authToken}) async {
     dynamic value = await hmsSDKInteractor.getRoomLayout(
-        authToken: authToken, 
-        endPoint: getLayoutAPIEndpoint()
-        );
+        authToken: authToken, endPoint: getLayoutAPIEndpoint());
     if (value != null && value.runtimeType != HMSException) {
       _setLayout(layoutJson: jsonDecode(value));
       log(value);

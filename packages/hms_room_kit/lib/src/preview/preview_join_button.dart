@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/preview/preview_store.dart';
-import 'package:hms_room_kit/src/service/app_debug_config.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 
 class PreviewJoinButton extends StatelessWidget {
@@ -23,8 +22,8 @@ class PreviewJoinButton extends StatelessWidget {
       height: 48,
       decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8))),
-      child: AppDebugConfig.isStreamingFlow &&
-              (previewStore.peer?.role.permissions.hlsStreaming ?? false) &&
+      child: HMSRoomLayout.data?[0].screens?.preview?.joinForm?.joinBtnType ==
+                  JoinButtonType.JOIN_BTN_TYPE_JOIN_AND_GO_LIVE &&
               !previewStore.isHLSStreamingStarted
           ? isJoining
               ? Center(

@@ -81,16 +81,17 @@ class _PreviewPageState extends State<PreviewPage> {
 
       ///When the user does not have permission to stream, or the stream is already started, or the flow is webRTC flow, then we directly navigate to the meeting screen.
       ///Without starting the HLS stream.
-      if (!AppDebugConfig.isStreamingFlow ||
-          previewStore.isHLSStreamingStarted ||
-          !(previewStore.peer?.role.permissions.hlsStreaming ?? false)) {
+      if (HMSRoomLayout.data?[0].screens?.preview?.joinForm?.joinBtnType ==
+              JoinButtonType.JOIN_BTN_TYPE_JOIN_ONLY ||
+          previewStore.isHLSStreamingStarted) {
         previewStore.toggleIsRoomJoinedAndHLSStarted();
         return;
       }
 
       setState(() {
         isJoiningRoom = false;
-        if (AppDebugConfig.isStreamingFlow) {
+        if (HMSRoomLayout.data?[0].screens?.preview?.joinForm?.joinBtnType ==
+            JoinButtonType.JOIN_BTN_TYPE_JOIN_AND_GO_LIVE) {
           isHLSStarting = true;
         }
       });
@@ -234,7 +235,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         .transparentBackgroundColor),
                                                 child: Padding(
                                                   padding: const EdgeInsets
-                                                      .symmetric(
+                                                          .symmetric(
                                                       horizontal: 8,
                                                       vertical: 4),
                                                   child: Row(
@@ -612,12 +613,10 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             setState(() {});
                                                           },
                                                           decoration: InputDecoration(
-                                                              contentPadding:
-                                                                  const EdgeInsets.symmetric(
-                                                                      vertical:
-                                                                          14,
-                                                                      horizontal:
-                                                                          16),
+                                                              contentPadding: const EdgeInsets.symmetric(
+                                                                  vertical: 14,
+                                                                  horizontal:
+                                                                      16),
                                                               fillColor: HMSThemeColors
                                                                   .surfaceDefault,
                                                               filled: true,
@@ -643,7 +642,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                           8))),
                                                               enabledBorder: const OutlineInputBorder(
                                                                   borderSide:
-                                                                      BorderSide.none,
+                                                                      BorderSide
+                                                                          .none,
                                                                   borderRadius: BorderRadius.all(Radius.circular(8))),
                                                               border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(8)))),
                                                         ),

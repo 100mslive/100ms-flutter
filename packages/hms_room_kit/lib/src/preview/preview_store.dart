@@ -38,6 +38,8 @@ class PreviewStore extends ChangeNotifier
 
   bool isRoomJoined = false;
 
+  bool isMeetingJoined = false;
+
   bool isRTMPStreamingStarted = false;
 
   List<HMSPeer>? peers;
@@ -210,8 +212,11 @@ class PreviewStore extends ChangeNotifier
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         isHLSStreamingStarted = room.hmshlsStreamingState?.running ?? false;
-        isRoomJoinedAndHLSStarted =
-            (room.hmshlsStreamingState?.running ?? false) && isRoomJoined;
+        if (!isMeetingJoined) {
+          isRoomJoinedAndHLSStarted =
+              (room.hmshlsStreamingState?.running ?? false) && isRoomJoined;
+          isMeetingJoined = true;
+        }
         break;
       case HMSRoomUpdate.roomPeerCountUpdated:
         peerCount = room.peerCount;

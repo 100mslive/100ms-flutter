@@ -94,7 +94,6 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     AppDebugConfig.showStats = showStats;
     AppDebugConfig.skipPreview = skipPreview;
     AppDebugConfig.isDebugMode = isDebugMode;
-    AppDebugConfig.isStreamingFlow = isStreamingFlow;
     AppDebugConfig.isMockLayoutAPIEnabled = isMockLayoutAPIEnabled;
   }
 
@@ -197,36 +196,6 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                   //             setState(() {})
                   //           })),
                   // ),
-                  ListTile(
-                    horizontalTitleGap: 2,
-                    enabled: false,
-                    contentPadding: EdgeInsets.zero,
-                    leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/src/assets/icons/live.svg",
-                      width: 24,
-                      colorFilter:
-                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
-                    ),
-                    title: Text(
-                      "Enable Streaming Flow",
-                      semanticsLabel: "fl_enable_streaming_flow",
-                      style: GoogleFonts.inter(
-                          fontSize: 14,
-                          color: themeDefaultColor,
-                          letterSpacing: 0.25,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    trailing: CupertinoSwitch(
-                        activeColor: hmsdefaultColor,
-                        value: isStreamingFlow,
-                        onChanged: (value) => {
-                              isStreamingFlow = value,
-                              Utilities.saveBoolData(
-                                  key: 'is_streaming_flow', value: value),
-                              AppDebugConfig.isStreamingFlow = value,
-                              setState(() {})
-                            }),
-                  ),
                   ListTile(
                     horizontalTitleGap: 2,
                     enabled: false,

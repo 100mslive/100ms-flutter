@@ -376,7 +376,7 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 icon: Icon(
                                   Icons.clear,
-                                  color: HMSThemeColors.primaryDefault,
+                                  color: Colors.white,
                                 ),
                               ),
                         focusedBorder: OutlineInputBorder(
