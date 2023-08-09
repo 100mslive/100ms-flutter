@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
@@ -234,7 +234,7 @@ class _MoreOptionState extends State<MoreOption> {
               padding: const EdgeInsets.fromLTRB(6, 4, 6, 4),
               child: Icon(
                 Icons.more_horiz,
-                color: onSurfaceHighEmphasis,
+                color: HMSThemeColors.onSurfaceHighEmphasis,
               ),
             ),
           ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 
 class HMSEmbeddedButton extends StatelessWidget {
   final Function() onTap;
@@ -40,17 +40,19 @@ class HMSEmbeddedButton extends StatelessWidget {
                */
               border: isActive
                   ? Border.all(
-                      color: enabledBorderColor ?? borderBright, width: 1)
+                      color: enabledBorderColor ?? HMSThemeColors.borderBright,
+                      width: 1)
                   : Border.all(
-                      color: disabledBorderColor ?? secondaryDim, width: 1),
+                      color: disabledBorderColor ?? HMSThemeColors.secondaryDim,
+                      width: 1),
               borderRadius: const BorderRadius.all(Radius.circular(8)),
               /**
                * The color of icon is set using the iconColor property
                * If the iconColor is not set, we use the default color which is onSurfaceHighEmphasis
                */
               color: isActive
-                  ? (onColor ?? (backgroundDefault))
-                  : (offColor ?? secondaryDim)),
+                  ? (onColor ?? (HMSThemeColors.backgroundDefault))
+                  : (offColor ?? HMSThemeColors.secondaryDim)),
           child: child),
     );
   }

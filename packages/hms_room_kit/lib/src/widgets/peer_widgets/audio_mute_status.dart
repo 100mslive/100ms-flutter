@@ -1,6 +1,6 @@
 //Package imports
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +31,7 @@ class _AudioMuteStatusState extends State<AudioMuteStatus> {
                     child: Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
-                          color: alertErrorDefault),
+                          color: HMSThemeColors.alertErrorDefault),
                       child: Padding(
                           padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
                           child: SvgPicture.asset(

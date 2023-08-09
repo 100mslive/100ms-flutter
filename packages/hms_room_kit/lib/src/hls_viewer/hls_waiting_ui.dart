@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 
@@ -23,7 +23,7 @@ class HLSWaitingUI extends StatelessWidget {
         ),
         HMSTitleText(
           text: "Class hasn’t started yet",
-          textColor: onSurfaceHighEmphasis,
+          textColor: HMSThemeColors.onSurfaceHighEmphasis,
           fontSize: 28,
           lineHeight: 32,
           letterSpacing: 0.25,
@@ -33,7 +33,7 @@ class HLSWaitingUI extends StatelessWidget {
         ),
         HMSSubheadingText(
             text: "Please wait for the teacher to start the class.",
-            textColor: onSurfaceMediumEmphasis)
+            textColor: HMSThemeColors.onSurfaceMediumEmphasis)
       ],
     );
   }

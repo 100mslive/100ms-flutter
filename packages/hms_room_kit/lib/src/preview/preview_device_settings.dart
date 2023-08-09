@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/preview/preview_store.dart';
@@ -33,7 +34,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
           return Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: backgroundDefault,
+              color: HMSThemeColors.backgroundDefault,
             ),
             child: Padding(
               padding: const EdgeInsets.only(top: 24.0, left: 24, right: 24),
@@ -61,7 +62,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                             IconButton(
                               icon: Icon(
                                 Icons.close,
-                                color: onSurfaceHighEmphasis,
+                                color: HMSThemeColors.onSurfaceHighEmphasis,
                               ),
                               onPressed: () {
                                 Navigator.pop(context);
@@ -72,7 +73,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                         Padding(
                           padding: const EdgeInsets.only(top: 10, bottom: 10),
                           child: Divider(
-                            color: borderDefault,
+                            color: HMSThemeColors.borderDefault,
                             height: 5,
                           ),
                         ),
@@ -101,7 +102,8 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                                 "packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(data.item3)}.svg",
                                                 fit: BoxFit.scaleDown,
                                                 colorFilter: ColorFilter.mode(
-                                                    onSurfaceHighEmphasis,
+                                                    HMSThemeColors
+                                                        .onSurfaceHighEmphasis,
                                                     BlendMode.srcIn),
                                               ),
                                               title: HMSSubtitleText(
@@ -125,7 +127,8 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                                         fit: BoxFit.scaleDown,
                                                         colorFilter:
                                                             ColorFilter.mode(
-                                                                onSurfaceHighEmphasis,
+                                                                HMSThemeColors
+                                                                    .onSurfaceHighEmphasis,
                                                                 BlendMode
                                                                     .srcIn),
                                                       ),
@@ -143,7 +146,8 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                                 "packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(data.item1[index])}.svg",
                                                 fit: BoxFit.scaleDown,
                                                 colorFilter: ColorFilter.mode(
-                                                    onSurfaceHighEmphasis,
+                                                    HMSThemeColors
+                                                        .onSurfaceHighEmphasis,
                                                     BlendMode.srcIn),
                                               ),
                                               title: HMSSubtitleText(
@@ -168,7 +172,8 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                                         fit: BoxFit.scaleDown,
                                                         colorFilter:
                                                             ColorFilter.mode(
-                                                                onSurfaceHighEmphasis,
+                                                                HMSThemeColors
+                                                                    .onSurfaceHighEmphasis,
                                                                 BlendMode
                                                                     .srcIn),
                                                       ),
@@ -183,7 +188,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 5),
                                         child: Divider(
-                                          color: borderDefault,
+                                          color: HMSThemeColors.borderDefault,
                                           height: 5,
                                         )),
                                   ],

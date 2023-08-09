@@ -347,7 +347,7 @@ class _HomePageState extends State<HomePage> {
                   child: TextField(
                     key: Key('room_code_field'),
                     textInputAction: TextInputAction.done,
-                    cursorColor: primaryDefault,
+                    cursorColor: HMSThemeColors.primaryDefault,
                     onSubmitted: (value) {
                       joinMeeting();
                     },
@@ -376,12 +376,12 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 icon: Icon(
                                   Icons.clear,
-                                  color: primaryDefault,
+                                  color: Colors.white,
                                 ),
                               ),
                         focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: primaryDefault, width: 2),
+                            borderSide: BorderSide(
+                                color: HMSThemeColors.primaryDefault, width: 2),
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(8))),
                         enabledBorder: OutlineInputBorder(

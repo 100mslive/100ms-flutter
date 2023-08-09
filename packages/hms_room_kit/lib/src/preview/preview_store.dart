@@ -2,6 +2,8 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/constants.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
@@ -35,6 +37,8 @@ class PreviewStore extends ChangeNotifier
   bool isRoomJoinedAndHLSStarted = false;
 
   bool isRoomJoined = false;
+
+  bool isMeetingJoined = false;
 
   bool isRTMPStreamingStarted = false;
 
@@ -143,6 +147,8 @@ class PreviewStore extends ChangeNotifier
           //This is only for 100ms internal testing, endPoint can be safely removed from
           //the HMSConfig for external usage
           endPoint: initEndPoint);
+      await HMSRoomLayout.getRoomLayout(
+          hmsSDKInteractor: hmsSDKInteractor, authToken: tokenData);
       hmsSDKInteractor.startHMSLogger(
           Constant.webRTCLogLevel, Constant.sdkLogLevel);
       hmsSDKInteractor.addPreviewListener(this);
@@ -206,8 +212,11 @@ class PreviewStore extends ChangeNotifier
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         isHLSStreamingStarted = room.hmshlsStreamingState?.running ?? false;
-        isRoomJoinedAndHLSStarted =
-            (room.hmshlsStreamingState?.running ?? false) && isRoomJoined;
+        if (!isMeetingJoined) {
+          isRoomJoinedAndHLSStarted =
+              (room.hmshlsStreamingState?.running ?? false) && isRoomJoined;
+          isMeetingJoined = true;
+        }
         break;
       case HMSRoomUpdate.roomPeerCountUpdated:
         peerCount = room.peerCount;
@@ -258,6 +267,7 @@ class PreviewStore extends ChangeNotifier
 
   void leave() {
     hmsSDKInteractor.leave();
+    HMSThemeColors.resetLayoutColors();
     hmsSDKInteractor.toggleAlwaysScreenOn();
     destroy();
   }

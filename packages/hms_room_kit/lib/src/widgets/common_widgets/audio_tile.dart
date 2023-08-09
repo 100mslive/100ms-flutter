@@ -47,7 +47,7 @@ class AudioTile extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: const Color.fromRGBO(0, 0, 0, 0.9),
                     borderRadius: BorderRadius.circular(8)),
-                child: const Center(
+                child: Center(
                   child: Padding(
                     padding: EdgeInsets.all(4),
                     child: Row(

@@ -285,6 +285,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "toggle_always_screen_on":
             toggleAlwaysScreenOn(result)
 
+        case "get_room_layout":
+            getRoomLayout(call,result)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -670,7 +673,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
         let dartSDKVersion = arguments?["dart_sdk_version"] as! String
         let hmsSDKVersion = arguments?["hmssdk_version"] as! String
-        let framework = HMSFrameworkInfo(type: .flutter, version: dartSDKVersion, sdkVersion: hmsSDKVersion)
+        let isPrebuilt = arguments?["is_prebuilt"] as? Bool ?? false
+
+        let framework = HMSFrameworkInfo(type: .flutter, version: dartSDKVersion, sdkVersion: hmsSDKVersion, isPrebuilt: isPrebuilt)
         audioMixerSourceMap = [:]
 
         hmsSDK = HMSSDK.build { [weak self] sdk in
@@ -824,6 +829,42 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         })
     }
 
+        private func getRoomLayout(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        guard let authToken = arguments["auth_token"] as? String?
+                
+        else{
+            result(HMSErrorExtension.getError("Invalid parameters for getRoomLayout in \(#function)"))
+            return
+        }
+            
+        let endPoint = arguments["endpoint"] as? String
+            
+        // This is to make the mock API links work
+        if endPoint != nil && (endPoint!.contains("mockable") || endPoint!.contains("nonprod")) {
+            UserDefaults.standard.set(endPoint, forKey: "HMSRoomLayoutEndpointOverride")
+        }
+        // This is to make the QA API work
+        else {
+            UserDefaults.standard.removeObject(forKey: "HMSRoomLayoutEndpointOverride")
+        }
+        
+        hmsSDK?.getRoomLayout(using: authToken!) { layout, error in
+            if let error = error {
+                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.toDictionary(error)))
+            }
+            else{
+                if let rawData = layout?.rawData {
+                    let jsonString = String(decoding: rawData, as: UTF8.self)
+                    result(HMSResultExtension.toDictionary(true, jsonString))
+                    return
+                }
+            }
+        }
+        
+    }
+    
     private func changeRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
         let arguments = call.arguments as! [AnyHashable: Any]

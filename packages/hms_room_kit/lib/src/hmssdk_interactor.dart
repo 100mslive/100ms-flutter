@@ -20,7 +20,8 @@ class HMSSDKInteractor {
       bool joinWithMutedVideo = false,
       bool isSoftwareDecoderDisabled = true,
       bool isAudioMixerDisabled = true,
-      HMSAudioMode audioMode = HMSAudioMode.VOICE}) {
+      HMSAudioMode audioMode = HMSAudioMode.VOICE,
+      bool isPrebuilt = false}) {
     HMSLogSettings hmsLogSettings = HMSLogSettings(
         maxDirSizeInBytes: 1000000,
         isLogStorageEnabled: true,
@@ -36,7 +37,8 @@ class HMSSDKInteractor {
     hmsSDK = HMSSDK(
         iOSScreenshareConfig: iOSScreenshareConfig,
         hmsLogSettings: hmsLogSettings,
-        hmsTrackSetting: trackSetting);
+        hmsTrackSetting: trackSetting,
+        isPrebuilt: isPrebuilt);
   }
 
   Future<void> build() async {
@@ -363,5 +365,9 @@ class HMSSDKInteractor {
 
   void toggleAlwaysScreenOn() {
     hmsSDK.toggleAlwaysScreenOn();
+  }
+
+  dynamic getRoomLayout({required String authToken, String? endPoint}) async {
+    return await hmsSDK.getRoomLayout(authToken: authToken, endPoint: endPoint);
   }
 }

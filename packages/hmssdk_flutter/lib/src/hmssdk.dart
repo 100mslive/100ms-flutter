@@ -69,14 +69,15 @@ class HMSSDK {
       this.iOSScreenshareConfig,
       this.hmsLogSettings,
       @Deprecated("Use iOSScreenshareConfig") this.appGroup,
-      @Deprecated("Use iOSScreenshareConfig") this.preferredExtension});
+      @Deprecated("Use iOSScreenshareConfig") this.preferredExtension,
+      this.isPrebuilt = false});
 
   /// The build function should be called after creating an instance of the [HMSSDK].
   ///
   /// Await the result & if true then create [HMSConfig] object to join or preview a room.
   Future<void> build() async {
     await HmsSdkManager().createHMSSdk(hmsTrackSetting, iOSScreenshareConfig,
-        appGroup, preferredExtension, hmsLogSettings);
+        appGroup, preferredExtension, hmsLogSettings, isPrebuilt);
   }
 
   ///[getAuthTokenByRoomCode] is used to get the authentication token to join the room
@@ -95,6 +96,29 @@ class HMSSDK {
     };
     var result = await PlatformService.invokeMethod(
         PlatformMethod.getAuthTokenByRoomCode,
+        arguments: arguments);
+
+    //If the method is executed successfully we get the "success":"true"
+    //Hence we pass the String directly
+    //Else we parse it with HMSException
+    if (result["success"]) {
+      return result["data"];
+    } else {
+      return HMSException.fromMap(result["data"]["error"]);
+    }
+  }
+
+  ///[getRoomLayout] is used to get the layout themes for the room
+  /// set in the dashboard.
+  ///
+  ///This returns an object of Future<dynamic> which can be either
+  ///of HMSException type or a Json String type based on whether
+  ///method execution is completed successfully or not.
+  Future<dynamic> getRoomLayout(
+      {required String authToken, String? endPoint}) async {
+    var arguments = {"auth_token": authToken, "endpoint": endPoint};
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.getRoomLayout,
         arguments: arguments);
 
     //If the method is executed successfully we get the "success":"true"
@@ -1324,4 +1348,6 @@ class HMSSDK {
   HMSLogSettings? hmsLogSettings;
 
   bool previewState = false;
+
+  final bool isPrebuilt;
 }

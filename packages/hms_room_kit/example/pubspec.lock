@@ -218,12 +218,10 @@ packages:
   hmssdk_flutter:
     dependency: transitive
     description:
-      path: "packages/hmssdk_flutter"
-      ref: "feature/prebuilt"
-      resolved-ref: "429c0c89097e0522ca3e26e8b4711a1dd360c90e"
-      url: "https://github.com/100mslive/100ms-flutter.git"
-    source: git
-    version: "1.8.0"
+      path: "../../hmssdk_flutter"
+      relative: true
+    source: path
+    version: "1.7.4"
   http:
     dependency: transitive
     description:
