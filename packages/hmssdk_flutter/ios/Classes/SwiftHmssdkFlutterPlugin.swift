@@ -285,6 +285,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "toggle_always_screen_on":
             toggleAlwaysScreenOn(result)
 
+        case "get_room_layout":
+            getRoomLayout(call,result)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -826,6 +829,37 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         })
     }
 
+        private func getRoomLayout(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+        let arguments = call.arguments as! [AnyHashable: Any]
+        
+        guard let authToken = arguments["auth_token"] as? String?,
+              let endPoint = arguments["endpoint"] as? String?
+        else{
+            result(HMSErrorExtension.getError("Invalid parameters for getRoomLayout in \(#function)"))
+            return
+        }
+        
+        hmsSDK?.getRoomLayout(using: authToken!) { layout, error in
+                        
+                        if let rawData = layout?.rawData {
+                            let jsonString = String(decoding: rawData, as: UTF8.self)
+                            result(HMSResultExtension.toDictionary(true, jsonString))
+                            return
+                        }
+                        
+                        let errorMessage = "\(#function) Could not parse Room Layout for Token: \(authToken)"
+            HMSErrorLogger.returnHMSException(#function, errorMessage, "PARSE ERROR", result)
+                    }
+        
+        // This is to make the mock API links work
+        if endPoint != nil && endPoint!.contains("mockable") {
+                UserDefaults.standard.set(endPoint, forKey: "HMSRoomLayoutEndpointOverride")
+        } else {
+            UserDefaults.standard.removeObject(forKey: "HMSRoomLayoutEndpointOverride")
+        }
+        
+    }
+    
     private func changeRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
         let arguments = call.arguments as! [AnyHashable: Any]
