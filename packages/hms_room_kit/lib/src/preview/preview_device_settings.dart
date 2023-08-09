@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:hms_room_kit/src/common/utility_functions.dart';
-import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/preview/preview_store.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -27,51 +23,68 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-        maxChildSize: 0.8,
-        minChildSize: 0.3,
-        initialChildSize: 0.3,
+        maxChildSize:
+            (context.read<PreviewStore>().availableAudioOutputDevices.length +
+                    2) *
+                0.1,
+        minChildSize:
+            (context.read<PreviewStore>().availableAudioOutputDevices.length +
+                    1) *
+                0.1,
+        initialChildSize:
+            (context.read<PreviewStore>().availableAudioOutputDevices.length +
+                    1) *
+                0.1,
         builder: (context, ScrollController scrollController) {
           return Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16), topRight: Radius.circular(16)),
               color: HMSThemeColors.backgroundDefault,
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 24.0, left: 24, right: 24),
-              child: Selector<PreviewStore,
-                      Tuple3<List<HMSAudioDevice>, int, HMSAudioDevice?>>(
-                  selector: (_, previewStore) => Tuple3(
-                      previewStore.availableAudioOutputDevices,
-                      previewStore.availableAudioOutputDevices.length,
-                      previewStore.currentAudioOutputDevice),
-                  builder: (context, data, _) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+            child: Selector<PreviewStore,
+                    Tuple3<List<HMSAudioDevice>, int, HMSAudioDevice?>>(
+                selector: (_, previewStore) => Tuple3(
+                    previewStore.availableAudioOutputDevices,
+                    previewStore.availableAudioOutputDevices.length,
+                    previewStore.currentAudioOutputDevice),
+                builder: (context, data, _) {
+                  return Padding(
+                    padding:
+                        const EdgeInsets.only(top: 24.0, left: 24, right: 24),
+                    child: Column(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "Audio Output",
-                              style: GoogleFonts.inter(
-                                  fontSize: 16,
-                                  color: themeDefaultColor,
+                            Row(
+                              children: [
+                                HMSTitleText(
+                                  text: "Audio Output",
+                                  textColor:
+                                      HMSThemeColors.onSurfaceHighEmphasis,
                                   letterSpacing: 0.15,
-                                  fontWeight: FontWeight.w600),
+                                ),
+                              ],
                             ),
-                            IconButton(
-                              icon: Icon(
-                                Icons.close,
-                                color: HMSThemeColors.onSurfaceHighEmphasis,
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.close,
+                                    color: HMSThemeColors.onSurfaceHighEmphasis,
+                                    size: 24,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
                             ),
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 10),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                           child: Divider(
                             color: HMSThemeColors.borderDefault,
                             height: 5,
@@ -196,9 +209,9 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                               }),
                         )
                       ],
-                    );
-                  }),
-            ),
+                    ),
+                  );
+                }),
           );
         });
   }
