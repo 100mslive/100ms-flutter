@@ -85,6 +85,7 @@ class _PreviewPageState extends State<PreviewPage> {
               JoinButtonType.JOIN_BTN_TYPE_JOIN_ONLY ||
           previewStore.isHLSStreamingStarted) {
         previewStore.toggleIsRoomJoinedAndHLSStarted();
+        previewStore.isMeetingJoined = true;
         return;
       }
 
@@ -118,6 +119,7 @@ class _PreviewPageState extends State<PreviewPage> {
               meetingStore.resetForegroundTaskAndOrientation(),
               meetingStore.clearPIPState(),
               meetingStore.isRoomEnded = true,
+              previewStore.isMeetingJoined = false,
               previewStore.hmsSDKInteractor.leave(),
               HMSThemeColors.resetLayoutColors(),
               Navigator.pushReplacement(
