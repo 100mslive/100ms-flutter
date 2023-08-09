@@ -72,10 +72,10 @@ class _PeerTileState extends State<PeerTile> {
         child: context.read<PeerTrackNode>().uid.contains("mainVideo")
             ? Container(
                 key: key,
-                padding: const EdgeInsets.all(0),
-                margin: const EdgeInsets.all(0),
+                padding: const EdgeInsets.all(2),
+                margin: const EdgeInsets.all(2),
                 height: widget.itemHeight + 110,
-                width: widget.itemWidth,
+                width: widget.itemWidth - 5,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: HMSThemeColors.surfaceDim,
@@ -159,10 +159,10 @@ class _PeerTileState extends State<PeerTile> {
                       borderRadius:
                           const BorderRadius.all(Radius.circular(10))),
                   key: key,
-                  padding: const EdgeInsets.all(0),
-                  margin: const EdgeInsets.all(0),
+                  padding: const EdgeInsets.all(2),
+                  margin: const EdgeInsets.all(2),
                   height: widget.itemHeight + 110,
-                  width: widget.itemWidth,
+                  width: widget.itemWidth - 5,
                   child: Stack(
                     children: [
                       VideoView(
