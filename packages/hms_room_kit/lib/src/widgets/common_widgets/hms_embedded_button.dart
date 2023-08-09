@@ -11,6 +11,7 @@ class HMSEmbeddedButton extends StatelessWidget {
   final double? width;
   final Color? enabledBorderColor;
   final Color? disabledBorderColor;
+  final double borderRadius;
 
   const HMSEmbeddedButton(
       {super.key,
@@ -22,7 +23,8 @@ class HMSEmbeddedButton extends StatelessWidget {
       this.height = 48,
       this.width = 48,
       this.enabledBorderColor,
-      this.disabledBorderColor});
+      this.disabledBorderColor,
+      this.borderRadius = 8});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -45,7 +47,7 @@ class HMSEmbeddedButton extends StatelessWidget {
                   : Border.all(
                       color: disabledBorderColor ?? HMSThemeColors.secondaryDim,
                       width: 1),
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
+              borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
               /**
                * The color of icon is set using the iconColor property
                * If the iconColor is not set, we use the default color which is onSurfaceHighEmphasis
