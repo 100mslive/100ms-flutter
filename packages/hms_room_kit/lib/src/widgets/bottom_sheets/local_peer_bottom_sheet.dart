@@ -9,9 +9,13 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart
 class LocalPeerBottomSheet extends StatefulWidget {
   final MeetingStore meetingStore;
   final PeerTrackNode peerTrackNode;
+  final Function()? callbackFunction;
 
   const LocalPeerBottomSheet(
-      {Key? key, required this.meetingStore, required this.peerTrackNode})
+      {Key? key,
+      required this.meetingStore,
+      required this.peerTrackNode,
+      this.callbackFunction})
       : super(key: key);
   @override
   State<LocalPeerBottomSheet> createState() => _LocalPeerBottomSheetState();
@@ -129,7 +133,10 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
-                          ///TODO: Add implementation
+                          Navigator.pop(context);
+                          if (widget.callbackFunction != null) {
+                            widget.callbackFunction!();
+                          }
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(

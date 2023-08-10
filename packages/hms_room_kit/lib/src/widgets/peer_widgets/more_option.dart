@@ -12,7 +12,8 @@ import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
 class MoreOption extends StatefulWidget {
-  const MoreOption({Key? key}) : super(key: key);
+  final Function()? callbackFunction;
+  const MoreOption({Key? key,this.callbackFunction}) : super(key: key);
 
   @override
   State<MoreOption> createState() => _MoreOptionState();
@@ -47,7 +48,7 @@ class _MoreOptionState extends State<MoreOption> {
 
     return Positioned(
       bottom: 5,
-      right: 1,
+      right: 5,
       child: GestureDetector(
         onTap: () {
           var peerTrackNode = context.read<PeerTrackNode>();
@@ -164,6 +165,7 @@ class _MoreOptionState extends State<MoreOption> {
                   child: LocalPeerBottomSheet(
                     meetingStore: meetingStore,
                     peerTrackNode: peerTrackNode,
+                    callbackFunction: widget.callbackFunction,
                   )),
             );
           }

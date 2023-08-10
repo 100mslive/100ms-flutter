@@ -7,7 +7,9 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart
 import 'package:provider/provider.dart';
 
 class InsetCollapsedView extends StatefulWidget {
-  const InsetCollapsedView({super.key});
+  final Function()? callbackFunction;
+
+  const InsetCollapsedView({super.key, this.callbackFunction});
 
   @override
   State<InsetCollapsedView> createState() => _InsetCollapsedViewState();
@@ -107,13 +109,20 @@ class _InsetCollapsedViewState extends State<InsetCollapsedView> {
             ),
             Row(
               children: [
-                SvgPicture.asset(
-                  "packages/hms_room_kit/lib/src/assets/icons/maximize.svg",
-                  height: 20,
-                  width: 20,
-                  colorFilter: ColorFilter.mode(
-                      HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
-                  semanticsLabel: "maximize_button",
+                GestureDetector(
+                  onTap: () {
+                    if (widget.callbackFunction != null) {
+                      widget.callbackFunction!();
+                    }
+                  },
+                  child: SvgPicture.asset(
+                    "packages/hms_room_kit/lib/src/assets/icons/maximize.svg",
+                    height: 20,
+                    width: 20,
+                    colorFilter: ColorFilter.mode(
+                        HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
+                    semanticsLabel: "maximize_button",
+                  ),
                 ),
               ],
             )
