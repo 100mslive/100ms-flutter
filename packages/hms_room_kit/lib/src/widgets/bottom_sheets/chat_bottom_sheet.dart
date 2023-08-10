@@ -65,7 +65,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
   void sendMessage() async {
     MeetingStore meetingStore = context.read<MeetingStore>();
     List<HMSRole> hmsRoles = meetingStore.roles;
-    String message = messageTextController.text;
+    String message = messageTextController.text.trim();
     if (message.isEmpty) return;
 
     List<String> rolesName = <String>[];

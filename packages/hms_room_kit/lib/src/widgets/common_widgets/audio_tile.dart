@@ -55,7 +55,7 @@ class AudioTile extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           PeerName(
-                            width: constraints.maxWidth,
+                            maxWidth: constraints.maxWidth,
                           ),
                           const SizedBox(
                             width: 4,

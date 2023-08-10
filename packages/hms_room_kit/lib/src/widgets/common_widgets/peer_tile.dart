@@ -24,7 +24,6 @@ class PeerTile extends StatefulWidget {
   final double itemWidth;
   final ScaleType scaleType;
   final bool islongPressEnabled;
-  final bool isOneToOne;
   final double avatarRadius;
   final double avatarTitleFontSize;
   const PeerTile({
@@ -33,7 +32,6 @@ class PeerTile extends StatefulWidget {
     this.itemWidth = 200.0,
     this.scaleType = ScaleType.SCALE_ASPECT_FILL,
     this.islongPressEnabled = true,
-    this.isOneToOne = false,
     this.avatarRadius = 36,
     this.avatarTitleFontSize = 36,
   }) : super(key: key);
@@ -97,60 +95,54 @@ class _PeerTileState extends State<PeerTile> {
                             label:
                                 "fl_${context.read<PeerTrackNode>().peer.name}_degraded_tile",
                             child: DegradeTile(
-                              isOneToOne: widget.isOneToOne,
                               itemHeight: widget.itemHeight,
                               itemWidth: widget.itemWidth,
                               avatarRadius: widget.avatarRadius,
                               avatarTitleFontSize: widget.avatarTitleFontSize,
                             ),
                           ),
-                          if (!widget.isOneToOne)
-                            Positioned(
-                              //Bottom left
-                              bottom: 5,
-                              left: 5,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: HMSThemeColors.backgroundDim
-                                        .withOpacity(0.64),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 8.0, right: 4, top: 4, bottom: 4),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        PeerName(
-                                          width: constraints.maxWidth,
-                                        ),
-                                        const SizedBox(
-                                          width: 4,
-                                        ),
-                                        const NetworkIconWidget(),
-                                      ],
-                                    ),
+                          Positioned(
+                            //Bottom left
+                            bottom: 5,
+                            left: 5,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: HMSThemeColors.backgroundDim
+                                      .withOpacity(0.64),
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0, right: 4, top: 4, bottom: 4),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      PeerName(
+                                        maxWidth: constraints.maxWidth,
+                                      ),
+                                      const SizedBox(
+                                        width: 4,
+                                      ),
+                                      const NetworkIconWidget(),
+                                    ],
                                   ),
                                 ),
                               ),
                             ),
+                          ),
                           const HandRaise(), //top left
                           const BRBTag(), //top left
                           const AudioMuteStatus(), //top right
                           const MoreOption(), //bottom right
-                          if (!widget.isOneToOne)
-                            Semantics(
-                              label: "fl_stats_on_tile",
-                              child: RTCStatsView(
-                                  isLocal: context
-                                      .read<PeerTrackNode>()
-                                      .peer
-                                      .isLocal),
-                            )
+                          Semantics(
+                            label: "fl_stats_on_tile",
+                            child: RTCStatsView(
+                                isLocal:
+                                    context.read<PeerTrackNode>().peer.isLocal),
+                          )
                         ],
                       ),
                     ),
@@ -189,7 +181,7 @@ class _PeerTileState extends State<PeerTile> {
                                   padding: const EdgeInsets.only(
                                       left: 8.0, right: 4, top: 4, bottom: 4),
                                   child: PeerName(
-                                    width: constraints.maxWidth,
+                                    maxWidth: constraints.maxWidth,
                                   ),
                                 ),
                               ),

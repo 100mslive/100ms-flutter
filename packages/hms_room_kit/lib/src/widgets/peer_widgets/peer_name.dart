@@ -9,8 +9,8 @@ import 'package:tuple/tuple.dart';
 //Project imports
 
 class PeerName extends StatefulWidget {
-  final double width;
-  const PeerName({super.key, required this.width});
+  final double maxWidth;
+  const PeerName({super.key, required this.maxWidth});
 
   @override
   State<PeerName> createState() => _PeerNameState();
@@ -24,10 +24,9 @@ class _PeerNameState extends State<PeerName> {
             Tuple2(peerTrackNode.peer.name, peerTrackNode.peer.isLocal),
         builder: (_, data, __) {
           return Container(
-              constraints: BoxConstraints(maxWidth: widget.width - 80),
+              constraints: BoxConstraints(maxWidth: widget.maxWidth - 80),
               child: HMSSubheadingText(
-                text:
-                    "${data.item2 ? "You (" : ""}${data.item1.trim()}${data.item2 ? ")" : ""}",
+                text: "${data.item1.trim()}${data.item2 ? " (You)" : ""}",
                 textColor: HMSThemeColors.onSurfaceHighEmphasis,
               ));
         });
