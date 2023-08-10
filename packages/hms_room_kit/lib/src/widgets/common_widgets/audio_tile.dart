@@ -1,6 +1,7 @@
 // Package imports
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/audio_level_avatar.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/audio_mute_status.dart';
@@ -24,57 +25,62 @@ class AudioTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      key: key,
-      padding: const EdgeInsets.all(2),
-      margin: const EdgeInsets.all(2),
-      height: itemHeight + 110,
-      width: itemWidth - 5.0,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: themeBottomSheetColor,
-      ),
-      child: Semantics(
-        label: "${context.read<PeerTrackNode>().peer.name}_audio",
-        child: Stack(
-          children: [
-            const Center(child: AudioLevelAvatar()),
-            Positioned(
-              //Bottom left
-              bottom: 5,
-              left: 5,
-              child: Container(
-                decoration: BoxDecoration(
-                    color: const Color.fromRGBO(0, 0, 0, 0.9),
-                    borderRadius: BorderRadius.circular(8)),
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(4),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        NetworkIconWidget(),
-                        PeerName(),
-                      ],
+    return LayoutBuilder(builder: (context, BoxConstraints constraints) {
+      return Container(
+        key: key,
+        height: itemHeight + 110,
+        width: itemWidth,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: themeBottomSheetColor,
+        ),
+        child: Semantics(
+          label: "${context.read<PeerTrackNode>().peer.name}_audio",
+          child: Stack(
+            children: [
+              const Center(child: AudioLevelAvatar()),
+              Positioned(
+                //Bottom left
+                bottom: 5,
+                left: 5,
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: HMSThemeColors.backgroundDim.withOpacity(0.64),
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          PeerName(
+                            width: constraints.maxWidth,
+                          ),
+                          const SizedBox(
+                            width: 4,
+                          ),
+                          const NetworkIconWidget(),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            const HandRaise(), //bottom left
-            const BRBTag(), //top right
-            const AudioMuteStatus(),
-            TileBorder(
-                name: context.read<PeerTrackNode>().peer.name,
-                itemHeight: itemHeight,
-                itemWidth: itemWidth,
-                uid: context.read<PeerTrackNode>().uid),
-            RTCStatsView(isLocal: context.read<PeerTrackNode>().peer.isLocal),
-            const MoreOption(), //bottom center
-          ],
+              const HandRaise(), //bottom left
+              const BRBTag(), //top right
+              const AudioMuteStatus(),
+              TileBorder(
+                  name: context.read<PeerTrackNode>().peer.name,
+                  itemHeight: itemHeight,
+                  itemWidth: itemWidth,
+                  uid: context.read<PeerTrackNode>().uid),
+              RTCStatsView(isLocal: context.read<PeerTrackNode>().peer.isLocal),
+              const MoreOption(), //bottom center
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/degrade_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/degrade_tile.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/video_view.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/audio_mute_status.dart';
@@ -53,149 +51,162 @@ class _PeerTileState extends State<PeerTile> {
     return Semantics(
       label: "fl_${context.read<PeerTrackNode>().peer.name}_video_tile",
       child: FocusDetector(
-        onFocusLost: () {
-          if (mounted) {
+          onFocusLost: () {
+            if (mounted) {
+              Provider.of<PeerTrackNode>(context, listen: false)
+                  .setOffScreenStatus(true);
+            }
+          },
+          onFocusGained: () {
             Provider.of<PeerTrackNode>(context, listen: false)
-                .setOffScreenStatus(true);
-          }
-        },
-        onFocusGained: () {
-          Provider.of<PeerTrackNode>(context, listen: false)
-              .setOffScreenStatus(false);
-        },
-        key: Key(context.read<PeerTrackNode>().uid),
-        //Here we check whether the video track is a regular
-        //video track or a screen share track
-        //We check this by checking the uid of the track
-        //If it contains `mainVideo` then it is a regular video track
-        //else it is a screen share track
-        child: context.read<PeerTrackNode>().uid.contains("mainVideo")
-            ? Container(
-                key: key,
-                height: widget.itemHeight + 110,
-                width: widget.itemWidth,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: HMSThemeColors.surfaceDim,
-                ),
-                child: Semantics(
-                  label:
-                      "fl_${context.read<PeerTrackNode>().peer.name}_video_on",
-                  child: Stack(
-                    children: [
-                      VideoView(
-                        uid: context.read<PeerTrackNode>().uid,
-                        scaleType: widget.scaleType,
-                        itemHeight: widget.itemHeight,
-                        itemWidth: widget.itemWidth,
+                .setOffScreenStatus(false);
+          },
+          key: Key(context.read<PeerTrackNode>().uid),
+          //Here we check whether the video track is a regular
+          //video track or a screen share track
+          //We check this by checking the uid of the track
+          //If it contains `mainVideo` then it is a regular video track
+          //else it is a screen share track
+          child: LayoutBuilder(builder: (context, BoxConstraints constraints) {
+            return context.read<PeerTrackNode>().uid.contains("mainVideo")
+                ? Container(
+                    key: key,
+                    height: widget.itemHeight + 110,
+                    width: widget.itemWidth,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: HMSThemeColors.surfaceDim,
+                    ),
+                    child: Semantics(
+                      label:
+                          "fl_${context.read<PeerTrackNode>().peer.name}_video_on",
+                      child: Stack(
+                        children: [
+                          VideoView(
+                            uid: context.read<PeerTrackNode>().uid,
+                            scaleType: widget.scaleType,
+                            itemHeight: widget.itemHeight,
+                            itemWidth: widget.itemWidth,
+                          ),
+                          TileBorder(
+                              itemHeight: widget.itemHeight,
+                              itemWidth: widget.itemWidth,
+                              name: context.read<PeerTrackNode>().peer.name,
+                              uid: context.read<PeerTrackNode>().uid),
+                          Semantics(
+                            label:
+                                "fl_${context.read<PeerTrackNode>().peer.name}_degraded_tile",
+                            child: DegradeTile(
+                              isOneToOne: widget.isOneToOne,
+                              itemHeight: widget.itemHeight,
+                              itemWidth: widget.itemWidth,
+                              avatarRadius: widget.avatarRadius,
+                              avatarTitleFontSize: widget.avatarTitleFontSize,
+                            ),
+                          ),
+                          if (!widget.isOneToOne)
+                            Positioned(
+                              //Bottom left
+                              bottom: 5,
+                              left: 5,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: HMSThemeColors.backgroundDim
+                                        .withOpacity(0.64),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8.0, right: 4, top: 4, bottom: 4),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        PeerName(
+                                          width: constraints.maxWidth,
+                                        ),
+                                        const SizedBox(
+                                          width: 4,
+                                        ),
+                                        const NetworkIconWidget(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          const HandRaise(), //top left
+                          const BRBTag(), //top left
+                          const AudioMuteStatus(), //top right
+                          const MoreOption(), //bottom right
+                          if (!widget.isOneToOne)
+                            Semantics(
+                              label: "fl_stats_on_tile",
+                              child: RTCStatsView(
+                                  isLocal: context
+                                      .read<PeerTrackNode>()
+                                      .peer
+                                      .isLocal),
+                            )
+                        ],
                       ),
-                      TileBorder(
-                          itemHeight: widget.itemHeight,
-                          itemWidth: widget.itemWidth,
-                          name: context.read<PeerTrackNode>().peer.name,
-                          uid: context.read<PeerTrackNode>().uid),
-                      Semantics(
-                        label:
-                            "fl_${context.read<PeerTrackNode>().peer.name}_degraded_tile",
-                        child: DegradeTile(
-                          isOneToOne: widget.isOneToOne,
-                          itemHeight: widget.itemHeight,
-                          itemWidth: widget.itemWidth,
-                          avatarRadius: widget.avatarRadius,
-                          avatarTitleFontSize: widget.avatarTitleFontSize,
-                        ),
-                      ),
-                      if (!widget.isOneToOne)
-                        Positioned(
-                          //Bottom left
-                          bottom: 5,
-                          left: 5,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color:
-                                    HMSThemeColors.transparentBackgroundColor,
-                                borderRadius: BorderRadius.circular(8)),
-                            child: Center(
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                    left: 8.0, right: 4, top: 4, bottom: 4),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    NetworkIconWidget(),
-                                    PeerName(),
-                                    DegradeText()
-                                  ],
+                    ),
+                  )
+                : Semantics(
+                    label:
+                        "fl_${context.read<PeerTrackNode>().peer.name}_screen_share_tile",
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 1.0),
+                          color: Colors.transparent,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10))),
+                      key: key,
+                      height: widget.itemHeight + 110,
+                      width: widget.itemWidth,
+                      child: Stack(
+                        children: [
+                          VideoView(
+                            uid: context.read<PeerTrackNode>().uid,
+                            scaleType: widget.scaleType,
+                          ),
+                          Positioned(
+                            //Bottom left
+                            bottom: 5,
+                            left: 5,
+                            child: Container(
+                              key: Key(
+                                  "fl_${context.read<PeerTrackNode>().peer.name}_name"),
+                              decoration: BoxDecoration(
+                                  color: HMSThemeColors.backgroundDim
+                                      .withOpacity(0.64),
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0, right: 4, top: 4, bottom: 4),
+                                  child: PeerName(
+                                    width: constraints.maxWidth,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      const HandRaise(), //top left
-                      const BRBTag(), //top left
-                      const AudioMuteStatus(), //top right
-                      const MoreOption(), //bottom right
-                      if (!widget.isOneToOne)
-                        Semantics(
-                          label: "fl_stats_on_tile",
-                          child: RTCStatsView(
-                              isLocal:
-                                  context.read<PeerTrackNode>().peer.isLocal),
-                        )
-                    ],
-                  ),
-                ),
-              )
-            : Semantics(
-                label:
-                    "fl_${context.read<PeerTrackNode>().peer.name}_screen_share_tile",
-                child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1.0),
-                      color: Colors.transparent,
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10))),
-                  key: key,
-                  height: widget.itemHeight + 110,
-                  width: widget.itemWidth,
-                  child: Stack(
-                    children: [
-                      VideoView(
-                        uid: context.read<PeerTrackNode>().uid,
-                        scaleType: widget.scaleType,
+                          const RTCStatsView(isLocal: false),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: widget.islongPressEnabled
+                                ? UtilityComponents.rotateScreen(context)
+                                : const SizedBox(),
+                          )
+                        ],
                       ),
-                      Positioned(
-                        //Bottom left
-                        bottom: 5,
-                        left: 5,
-                        child: Container(
-                          key: Key(
-                              "fl_${context.read<PeerTrackNode>().peer.name}_name"),
-                          decoration: BoxDecoration(
-                              color: themeTileNameColor,
-                              borderRadius: BorderRadius.circular(8)),
-                          child: const Center(
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  left: 8.0, right: 4, top: 4, bottom: 4),
-                              child: PeerName(),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const RTCStatsView(isLocal: false),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: widget.islongPressEnabled
-                            ? UtilityComponents.rotateScreen(context)
-                            : const SizedBox(),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-      ),
+                    ),
+                  );
+          })),
     );
   }
 }

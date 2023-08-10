@@ -177,7 +177,7 @@ class _MoreOptionState extends State<MoreOption> {
             width: 28,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: const Color.fromRGBO(0, 0, 0, 0.64),
+              color: HMSThemeColors.backgroundDim.withOpacity(0.64),
             ),
             child: Center(
               child: Icon(
