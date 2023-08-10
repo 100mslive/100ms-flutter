@@ -6,17 +6,14 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
+import 'package:hms_room_kit/src/meeting/meeting_bottom_navigation_bar.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
-import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
-import 'package:hms_room_kit/src/service/app_debug_config.dart';
 import 'package:hms_room_kit/src/widgets/app_dialogs/audio_device_change_dialog.dart';
-import 'package:hms_room_kit/src/widgets/bottom_sheets/chat_bottom_sheet.dart';
-import 'package:hms_room_kit/src/widgets/bottom_sheets/more_settings_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/stream_timer.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
@@ -43,8 +40,6 @@ class MeetingPage extends StatefulWidget {
 }
 
 class _MeetingPageState extends State<MeetingPage> {
-  bool isAudioMixerDisabled = true;
-
   @override
   void initState() {
     super.initState();
@@ -389,8 +384,6 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                   onTap:
                                                                       () async =>
                                                                           {},
-                                                                  width: 40,
-                                                                  height: 40,
                                                                   offColor:
                                                                       const Color(
                                                                           0xffCC525F),
@@ -413,8 +406,6 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                         .onBackPressed(
                                                                             context)
                                                                   },
-                                                                  width: 40,
-                                                                  height: 40,
                                                                   offColor:
                                                                       const Color(
                                                                           0xffCC525F),
@@ -431,7 +422,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                           .asset(
                                                                     "packages/hms_room_kit/lib/src/assets/icons/exit_room.svg",
                                                                     colorFilter: const ColorFilter
-                                                                        .mode(
+                                                                            .mode(
                                                                         Colors
                                                                             .white,
                                                                         BlendMode
@@ -491,7 +482,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                   children: [
                                                                     Padding(
                                                                       padding: const EdgeInsets
-                                                                          .only(
+                                                                              .only(
                                                                           right:
                                                                               5.0),
                                                                       child: SvgPicture
@@ -630,8 +621,6 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                         .switchCamera()
                                                                   }
                                                               },
-                                                              width: 40,
-                                                              height: 40,
                                                               isActive: true,
                                                               child: SvgPicture
                                                                   .asset(
@@ -657,324 +646,21 @@ class _MeetingPageState extends State<MeetingPage> {
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 8.0),
-                                            child: Column(
-                                              children: [
-                                                if (Provider.of<MeetingStore>(
-                                                                context)
-                                                            .localPeer !=
-                                                        null &&
-                                                    !Provider.of<MeetingStore>(
-                                                            context)
-                                                        .localPeer!
-                                                        .role
-                                                        .name
-                                                        .contains("hls-"))
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: [
-                                                      if (Provider.of<MeetingStore>(context)
-                                                              .localPeer !=
-                                                          null)
-                                                        (Provider.of<MeetingStore>(context)
-                                                                    .localPeer
-                                                                    ?.role
-                                                                    .publishSettings
-                                                                    ?.allowed
-                                                                    .contains(
-                                                                        "audio") ??
-                                                                false)
-                                                            ? Selector<
-                                                                    MeetingStore,
-                                                                    bool>(
-                                                                selector: (_, meetingStore) =>
-                                                                    meetingStore
-                                                                        .isMicOn,
-                                                                builder: (_, isMicOn, __) {
-                                                                  return HMSEmbeddedButton(
-                                                                    onTap: () =>
-                                                                        {
-                                                                      context
-                                                                          .read<
-                                                                              MeetingStore>()
-                                                                          .toggleMicMuteState()
-                                                                    },
-                                                                    width: 40,
-                                                                    height: 40,
-                                                                    disabledBorderColor:
-                                                                        borderColor,
-                                                                    offColor:
-                                                                        themeHMSBorderColor,
-                                                                    onColor:
-                                                                        themeScreenBackgroundColor,
-                                                                    isActive:
-                                                                        isMicOn,
-                                                                    child: SvgPicture
-                                                                        .asset(
-                                                                      isMicOn
-                                                                          ? "packages/hms_room_kit/lib/src/assets/icons/mic_state_on.svg"
-                                                                          : "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
-                                                                      colorFilter: ColorFilter.mode(
-                                                                          themeDefaultColor,
-                                                                          BlendMode
-                                                                              .srcIn),
-                                                                      fit: BoxFit
-                                                                          .scaleDown,
-                                                                      semanticsLabel:
-                                                                          "audio_mute_button",
-                                                                    ),
-                                                                  );
-                                                                })
-                                                            : Selector<
-                                                                    MeetingStore,
-                                                                    bool>(
-                                                                selector: (_, meetingStore) =>
-                                                                    meetingStore
-                                                                        .isSpeakerOn,
-                                                                builder: (_,
-                                                                    isSpeakerOn,
-                                                                    __) {
-                                                                  return HMSEmbeddedButton(
-                                                                    onTap: () =>
-                                                                        {
-                                                                      context
-                                                                          .read<
-                                                                              MeetingStore>()
-                                                                          .toggleSpeaker(),
-                                                                    },
-                                                                    width: 40,
-                                                                    height: 40,
-                                                                    disabledBorderColor:
-                                                                        borderColor,
-                                                                    offColor:
-                                                                        themeHMSBorderColor,
-                                                                    onColor:
-                                                                        themeScreenBackgroundColor,
-                                                                    isActive:
-                                                                        isSpeakerOn,
-                                                                    child: SvgPicture.asset(
-                                                                        isSpeakerOn
-                                                                            ? "packages/hms_room_kit/lib/src/assets/icons/speaker_state_on.svg"
-                                                                            : "packages/hms_room_kit/lib/src/assets/icons/speaker_state_off.svg",
-                                                                        colorFilter: ColorFilter.mode(
-                                                                            themeDefaultColor,
-                                                                            BlendMode
-                                                                                .srcIn),
-                                                                        fit: BoxFit
-                                                                            .scaleDown,
-                                                                        semanticsLabel:
-                                                                            "speaker_mute_button"),
-                                                                  );
-                                                                }),
-                                                      if (Provider.of<MeetingStore>(context)
-                                                              .localPeer !=
-                                                          null)
-                                                        (Provider.of<MeetingStore>(context)
-                                                                    .localPeer
-                                                                    ?.role
-                                                                    .publishSettings
-                                                                    ?.allowed
-                                                                    .contains(
-                                                                        "video") ??
-                                                                false)
-                                                            ? Selector<
-                                                                    MeetingStore,
-                                                                    Tuple2<bool,
-                                                                        bool>>(
-                                                                selector: (_, meetingStore) => Tuple2(
-                                                                    meetingStore
-                                                                        .isVideoOn,
-                                                                    meetingStore.meetingMode ==
-                                                                        MeetingMode
-                                                                            .audio),
-                                                                builder: (_, data, __) {
-                                                                  return HMSEmbeddedButton(
-                                                                    onTap: () =>
-                                                                        {
-                                                                      (data.item2)
-                                                                          ? null
-                                                                          : context
-                                                                              .read<MeetingStore>()
-                                                                              .toggleCameraMuteState(),
-                                                                    },
-                                                                    width: 40,
-                                                                    height: 40,
-                                                                    disabledBorderColor:
-                                                                        borderColor,
-                                                                    offColor:
-                                                                        themeHMSBorderColor,
-                                                                    onColor:
-                                                                        themeScreenBackgroundColor,
-                                                                    isActive: data
-                                                                        .item1,
-                                                                    child: SvgPicture.asset(
-                                                                        data.item1
-                                                                            ? "packages/hms_room_kit/lib/src/assets/icons/cam_state_on.svg"
-                                                                            : "packages/hms_room_kit/lib/src/assets/icons/cam_state_off.svg",
-                                                                        colorFilter: ColorFilter.mode(
-                                                                            themeDefaultColor,
-                                                                            BlendMode
-                                                                                .srcIn),
-                                                                        fit: BoxFit
-                                                                            .scaleDown,
-                                                                        semanticsLabel:
-                                                                            "video_mute_button"),
-                                                                  );
-                                                                })
-                                                            : Selector<
-                                                                    MeetingStore,
-                                                                    bool>(
-                                                                selector: (_, meetingStore) =>
-                                                                    meetingStore.isStatsVisible,
-                                                                builder: (_, isStatsVisible, __) {
-                                                                  return HMSEmbeddedButton(
-                                                                    width: 40,
-                                                                    height: 40,
-                                                                    onTap: () => context
-                                                                        .read<
-                                                                            MeetingStore>()
-                                                                        .changeStatsVisible(),
-                                                                    disabledBorderColor:
-                                                                        borderColor,
-                                                                    offColor:
-                                                                        themeScreenBackgroundColor,
-                                                                    onColor:
-                                                                        themeHMSBorderColor,
-                                                                    isActive:
-                                                                        isStatsVisible,
-                                                                    child: SvgPicture.asset(
-                                                                        "packages/hms_room_kit/lib/src/assets/icons/stats.svg",
-                                                                        fit: BoxFit
-                                                                            .scaleDown,
-                                                                        semanticsLabel:
-                                                                            "stats_button"),
-                                                                  );
-                                                                }),
-                                                      Selector<MeetingStore,
-                                                              bool>(
-                                                          selector: (_,
-                                                                  meetingStore) =>
-                                                              meetingStore
-                                                                  .isNewMessageReceived,
-                                                          builder: (_,
-                                                              isNewMessageReceived,
-                                                              __) {
-                                                            return HMSEmbeddedButton(
-                                                              onTap: () => {
-                                                                context
-                                                                    .read<
-                                                                        MeetingStore>()
-                                                                    .getSessionMetadata(
-                                                                        SessionStoreKeyValues.getNameFromMethod(
-                                                                            SessionStoreKey.pinnedMessageSessionKey)),
-                                                                context
-                                                                    .read<
-                                                                        MeetingStore>()
-                                                                    .setNewMessageFalse(),
-                                                                showModalBottomSheet(
-                                                                  isScrollControlled:
-                                                                      true,
-                                                                  backgroundColor:
-                                                                      themeBottomSheetColor,
-                                                                  shape:
-                                                                      RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            20),
-                                                                  ),
-                                                                  context:
-                                                                      context,
-                                                                  builder: (ctx) => ChangeNotifierProvider.value(
-                                                                      value: context
-                                                                          .read<
-                                                                              MeetingStore>(),
-                                                                      child:
-                                                                          const ChatBottomSheet()),
-                                                                )
-                                                              },
-                                                              width: 40,
-                                                              height: 40,
-                                                              offColor:
-                                                                  themeHintColor,
-                                                              onColor:
-                                                                  themeScreenBackgroundColor,
-                                                              isActive: true,
-                                                              child: SvgPicture
-                                                                  .asset(
-                                                                isNewMessageReceived
-                                                                    ? "packages/hms_room_kit/lib/src/assets/icons/message_badge_on.svg"
-                                                                    : "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
-                                                                fit: BoxFit
-                                                                    .scaleDown,
-                                                                semanticsLabel:
-                                                                    "chat_button",
-                                                              ),
-                                                            );
-                                                          }),
-                                                      if (Provider.of<MeetingStore>(
-                                                                  context)
-                                                              .localPeer !=
-                                                          null)
-                                                        HMSEmbeddedButton(
-                                                          onTap: () async => {
-                                                            isAudioMixerDisabled =
-                                                                await Utilities
-                                                                        .getBoolData(
-                                                                            key:
-                                                                                "audio-mixer-disabled") ??
-                                                                    true,
-                                                            showModalBottomSheet(
-                                                              isScrollControlled:
-                                                                  true,
-                                                              backgroundColor:
-                                                                  themeBottomSheetColor,
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            20),
-                                                              ),
-                                                              context: context,
-                                                              builder: (ctx) =>
-                                                                  ChangeNotifierProvider
-                                                                      .value(
-                                                                          value: context.read<
-                                                                              MeetingStore>(),
-                                                                          child:
-                                                                              MoreSettingsBottomSheet(
-                                                                            isAudioMixerDisabled:
-                                                                                AppDebugConfig.isAudioMixerDisabled,
-                                                                          )),
-                                                            )
-                                                          },
-                                                          width: 40,
-                                                          height: 40,
-                                                          offColor:
-                                                              themeHintColor,
-                                                          onColor:
-                                                              themeScreenBackgroundColor,
-                                                          isActive: true,
-                                                          child: SvgPicture.asset(
-                                                              "packages/hms_room_kit/lib/src/assets/icons/more.svg",
-                                                              colorFilter:
-                                                                  ColorFilter.mode(
-                                                                      themeDefaultColor,
-                                                                      BlendMode
-                                                                          .srcIn),
-                                                              fit: BoxFit
-                                                                  .scaleDown,
-                                                              semanticsLabel:
-                                                                  "more_button"),
-                                                        ),
-                                                    ],
-                                                  ),
-                                              ],
-                                            ),
-                                          )
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 8.0),
+                                              child: Selector<MeetingStore,
+                                                      String?>(
+                                                  selector: (_, meetingStore) =>
+                                                      meetingStore
+                                                          .localPeer?.role.name,
+                                                  builder: (_, roleName, __) {
+                                                    return (!(roleName
+                                                                ?.contains(
+                                                                    "hls-") ??
+                                                            true))
+                                                        ? const MeetingBottomNavigationBar()
+                                                        : Container();
+                                                  }))
                                         ],
                                       ),
                                       Selector<MeetingStore,

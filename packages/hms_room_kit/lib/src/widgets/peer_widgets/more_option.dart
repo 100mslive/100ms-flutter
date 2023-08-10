@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 
 class MoreOption extends StatefulWidget {
   final Function()? callbackFunction;
-  const MoreOption({Key? key,this.callbackFunction}) : super(key: key);
+  const MoreOption({Key? key, this.callbackFunction}) : super(key: key);
 
   @override
   State<MoreOption> createState() => _MoreOptionState();

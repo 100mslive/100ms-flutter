@@ -237,7 +237,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         .transparentBackgroundColor),
                                                 child: Padding(
                                                   padding: const EdgeInsets
-                                                      .symmetric(
+                                                          .symmetric(
                                                       horizontal: 8,
                                                       vertical: 4),
                                                   child: Row(
@@ -408,8 +408,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                   .contains(
                                                                       "audio"))
                                                             HMSEmbeddedButton(
-                                                              height: 40,
-                                                              width: 40,
                                                               onTap: () async =>
                                                                   previewStore
                                                                       .toggleMicMuteState(),
@@ -447,8 +445,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                   .contains(
                                                                       "video"))
                                                             HMSEmbeddedButton(
-                                                              height: 40,
-                                                              width: 40,
                                                               onTap: () async => (previewStore
                                                                       .localTracks
                                                                       .isEmpty)
@@ -489,8 +485,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                   .contains(
                                                                       "video"))
                                                             HMSEmbeddedButton(
-                                                              height: 40,
-                                                              width: 40,
                                                               onTap: () async =>
                                                                   previewStore
                                                                       .switchCamera(),
@@ -529,8 +523,6 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                   .contains(
                                                                       "audio"))
                                                             HMSEmbeddedButton(
-                                                                height: 40,
-                                                                width: 40,
                                                                 onTap: () {
                                                                   if (Platform
                                                                       .isIOS) {
@@ -615,12 +607,10 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             setState(() {});
                                                           },
                                                           decoration: InputDecoration(
-                                                              contentPadding:
-                                                                  const EdgeInsets.symmetric(
-                                                                      vertical:
-                                                                          14,
-                                                                      horizontal:
-                                                                          16),
+                                                              contentPadding: const EdgeInsets.symmetric(
+                                                                  vertical: 14,
+                                                                  horizontal:
+                                                                      16),
                                                               fillColor: HMSThemeColors
                                                                   .surfaceDefault,
                                                               filled: true,
@@ -646,7 +636,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                           8))),
                                                               enabledBorder: const OutlineInputBorder(
                                                                   borderSide:
-                                                                      BorderSide.none,
+                                                                      BorderSide
+                                                                          .none,
                                                                   borderRadius: BorderRadius.all(Radius.circular(8))),
                                                               border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(8)))),
                                                         ),

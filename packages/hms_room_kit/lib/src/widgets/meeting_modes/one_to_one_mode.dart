@@ -85,7 +85,9 @@ class _OneToOneModeState extends State<OneToOneMode> {
                               : widget.bottomMargin,
                           horizontalSpace: 8,
                           child: isMinimized
-                              ? InsetCollapsedView( callbackFunction: toggleMinimizedView,)
+                              ? InsetCollapsedView(
+                                  callbackFunction: toggleMinimizedView,
+                                )
                               : ClipRRect(
                                   borderRadius: BorderRadius.circular(16.0),
                                   child: ChangeNotifierProvider.value(
