@@ -160,10 +160,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                           if (Platform.isAndroid) {
                             showModalBottomSheet(
                               isScrollControlled: true,
-                              backgroundColor: themeBottomSheetColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
+                              backgroundColor: Colors.transparent,
                               context: context,
                               builder: (ctx) => ChangeNotifierProvider.value(
                                   value: meetingStore,

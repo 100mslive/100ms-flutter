@@ -1,18 +1,22 @@
-Board: https://github.com/100mslive/100ms-flutter/projects/29
+Board: https://github.com/100mslive/100ms-flutter/projects/20
 
 - App built using the Prebuilt UI Kit
 https://github.com/100mslive/100ms-flutter/issues/1359
 
-- Added Hybrid composition videoview on Android to improve performance
-https://github.com/100mslive/100ms-flutter/pull/1330
+- Added Permissions screens in preview
 
-- Implement `isPrebuilt` parameter for tracking Prebuilt SDK usage
-https://github.com/100mslive/100ms-flutter/projects/29#card-90122553
+- Added Prebuilt Screen Header
+https://github.com/100mslive/100ms-flutter/issues/1482
 
-- Implement Layout API which configures Room Appearance
-https://github.com/100mslive/100ms-flutter/projects/29#card-90122556
+- Added Prebuilt Screen Footer
+https://github.com/100mslive/100ms-flutter/issues/1481
 
-Core SDK: 1.7.4
+- Added Inset Mode
+https://github.com/100mslive/100ms-flutter/issues/1477
+
+- Updated Android SDK version to 2.7.2 and iOS SDK version to 0.9.8
+
+Main SDK: 1.7.4
 Room Kit: 0.1.0
 Android SDK: 2.7.2
 iOS SDK: 0.9.8
