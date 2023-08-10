@@ -237,7 +237,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         .transparentBackgroundColor),
                                                 child: Padding(
                                                   padding: const EdgeInsets
-                                                          .symmetric(
+                                                      .symmetric(
                                                       horizontal: 8,
                                                       vertical: 4),
                                                   child: Row(
@@ -607,10 +607,12 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             setState(() {});
                                                           },
                                                           decoration: InputDecoration(
-                                                              contentPadding: const EdgeInsets.symmetric(
-                                                                  vertical: 14,
-                                                                  horizontal:
-                                                                      16),
+                                                              contentPadding:
+                                                                  const EdgeInsets.symmetric(
+                                                                      vertical:
+                                                                          14,
+                                                                      horizontal:
+                                                                          16),
                                                               fillColor: HMSThemeColors
                                                                   .surfaceDefault,
                                                               filled: true,
@@ -636,8 +638,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                           8))),
                                                               enabledBorder: const OutlineInputBorder(
                                                                   borderSide:
-                                                                      BorderSide
-                                                                          .none,
+                                                                      BorderSide.none,
                                                                   borderRadius: BorderRadius.all(Radius.circular(8))),
                                                               border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(8)))),
                                                         ),
