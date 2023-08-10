@@ -1,6 +1,7 @@
 //Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:provider/provider.dart';
 
@@ -20,14 +21,20 @@ class HandRaise extends StatelessWidget {
                   child: Semantics(
                     label:
                         "fl_${context.read<PeerTrackNode>().peer.name}_hand_raise",
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                      child: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/hand.svg",
-                        colorFilter: const ColorFilter.mode(
-                            Color.fromRGBO(250, 201, 25, 1), BlendMode.srcIn),
-                        height: 30,
-                        semanticsLabel: "hand_raise_label",
+                    child: Container(
+                      height: 32,
+                      width: 32,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: HMSThemeColors.secondaryDim),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
+                          height: 25,
+                          width: 25,
+                          semanticsLabel: "hand_raise_label",
+                        ),
                       ),
                     ),
                   ),
