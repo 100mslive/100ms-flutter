@@ -72,8 +72,6 @@ class _PeerTileState extends State<PeerTile> {
         child: context.read<PeerTrackNode>().uid.contains("mainVideo")
             ? Container(
                 key: key,
-                padding: const EdgeInsets.all(0),
-                margin: const EdgeInsets.all(0),
                 height: widget.itemHeight + 110,
                 width: widget.itemWidth,
                 decoration: BoxDecoration(
@@ -159,8 +157,6 @@ class _PeerTileState extends State<PeerTile> {
                       borderRadius:
                           const BorderRadius.all(Radius.circular(10))),
                   key: key,
-                  padding: const EdgeInsets.all(0),
-                  margin: const EdgeInsets.all(0),
                   height: widget.itemHeight + 110,
                   width: widget.itemWidth,
                   child: Stack(

@@ -33,9 +33,9 @@ class _AudioMuteStatusState extends State<AudioMuteStatus> {
                       width: 32,
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: HMSThemeColors.surfaceDim),
+                          color: HMSThemeColors.secondaryDim),
                       child: Padding(
-                          padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                          padding: const EdgeInsets.all(8),
                           child: SvgPicture.asset(
                             'packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg',
                             width: 16,

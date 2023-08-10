@@ -226,15 +226,17 @@ class _MoreOptionState extends State<MoreOption> {
         child: Semantics(
           label: "fl_${context.read<PeerTrackNode>().peer.name}more_option",
           child: Container(
+            height: 28,
+            width: 28,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: const Color.fromRGBO(0, 0, 0, 0.6),
+              color: const Color.fromRGBO(0, 0, 0, 0.64),
             ),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(6, 4, 6, 4),
+            child: Center(
               child: Icon(
-                Icons.more_horiz,
+                Icons.more_vert,
                 color: HMSThemeColors.onSurfaceHighEmphasis,
+                size: 20,
               ),
             ),
           ),

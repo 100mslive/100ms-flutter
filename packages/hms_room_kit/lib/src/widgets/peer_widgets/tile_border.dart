@@ -26,7 +26,7 @@ class TileBorder extends StatelessWidget {
         builder: (_, audioLevel, __) {
           return Container(
             height: itemHeight + 110,
-            width: itemWidth - 4,
+            width: itemWidth,
             decoration: BoxDecoration(
               border: Border.all(
                   color: (audioLevel != -1)
