@@ -24,15 +24,15 @@ class InsetTile extends StatefulWidget {
   final double avatarRadius;
   final double avatarTitleFontSize;
   final Function()? callbackFunction;
-  const InsetTile({
-    Key? key,
-    this.itemHeight = 186,
-    this.itemWidth = 104,
-    this.scaleType = ScaleType.SCALE_ASPECT_FILL,
-    this.avatarRadius = 36,
-    this.avatarTitleFontSize = 36,
-    this.callbackFunction
-  }) : super(key: key);
+  const InsetTile(
+      {Key? key,
+      this.itemHeight = 186,
+      this.itemWidth = 104,
+      this.scaleType = ScaleType.SCALE_ASPECT_FILL,
+      this.avatarRadius = 36,
+      this.avatarTitleFontSize = 36,
+      this.callbackFunction})
+      : super(key: key);
 
   @override
   State<InsetTile> createState() => _InsetTileState();
@@ -118,7 +118,10 @@ class _InsetTileState extends State<InsetTile> {
                     const HandRaise(), //top left
                     const BRBTag(), //top left
                     const AudioMuteStatus(), //top right
-                    if (isButtonVisible) MoreOption(callbackFunction: widget.callbackFunction,), //bottom right
+                    if (isButtonVisible)
+                      MoreOption(
+                        callbackFunction: widget.callbackFunction,
+                      ), //bottom right
                   ],
                 ),
               ),

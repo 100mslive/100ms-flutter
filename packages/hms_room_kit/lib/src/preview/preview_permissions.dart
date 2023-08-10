@@ -52,10 +52,17 @@ class _PreviewPermissionsState extends State<PreviewPermissions> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset(
-                      "packages/hms_room_kit/lib/src/assets/icons/permission_lock.svg",
-                      fit: BoxFit.scaleDown,
-                      semanticsLabel: "audio_mute_button",
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundColor: HMSThemeColors.surfaceDefault,
+                      child: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/src/assets/icons/permission_lock.svg",
+                        height: 56,
+                        width: 56,
+                        colorFilter: ColorFilter.mode(
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
+                      ),
                     ),
                     const SizedBox(
                       height: 20,

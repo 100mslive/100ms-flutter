@@ -285,7 +285,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                   child:
                                                                       Padding(
                                                                     padding: const EdgeInsets
-                                                                        .only(
+                                                                            .only(
                                                                         right:
                                                                             10.0,
                                                                         bottom:
@@ -397,7 +397,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                       Padding(
                                                         padding:
                                                             const EdgeInsets
-                                                                .only(
+                                                                    .only(
                                                                 bottom: 20.0),
                                                         child: Row(
                                                           mainAxisAlignment:
@@ -411,8 +411,6 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                     .onBackPressed(
                                                                         context)
                                                               },
-                                                              width: 40,
-                                                              height: 40,
                                                               offColor:
                                                                   const Color(
                                                                       0xffCC525F),
@@ -464,9 +462,6 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                             context.read<MeetingStore>().toggleMicMuteState()
                                                                           }
                                                                       },
-                                                                      width: 40,
-                                                                      height:
-                                                                          40,
                                                                       disabledBorderColor:
                                                                           borderColor,
                                                                       offColor:
@@ -510,8 +505,6 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                               width: 15,
                                                             ),
                                                             HMSEmbeddedButton(
-                                                              height: 40,
-                                                              width: 40,
                                                               onTap: () async =>
                                                                   {},
                                                               isActive: true,
@@ -543,8 +536,6 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                     handRaised,
                                                                     __) {
                                                                   return HMSEmbeddedButton(
-                                                                    height: 40,
-                                                                    width: 40,
                                                                     onTap: () =>
                                                                         {
                                                                       context

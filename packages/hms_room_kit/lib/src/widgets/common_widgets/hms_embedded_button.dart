@@ -20,8 +20,8 @@ class HMSEmbeddedButton extends StatelessWidget {
       this.onColor,
       required this.isActive,
       required this.child,
-      this.height = 48,
-      this.width = 48,
+      this.height = 40,
+      this.width = 40,
       this.enabledBorderColor,
       this.disabledBorderColor,
       this.borderRadius = 8});
