@@ -42,7 +42,7 @@ class _DegradeTileState extends State<DegradeTile> {
                   height: widget.itemHeight + 110,
                   width: widget.itemWidth,
                   decoration: BoxDecoration(
-                      color: HMSThemeColors.surfaceDim.withOpacity(0.9),
+                      color: HMSThemeColors.backgroundDefault,
                       borderRadius:
                           const BorderRadius.all(Radius.circular(10))),
                   child: Stack(
