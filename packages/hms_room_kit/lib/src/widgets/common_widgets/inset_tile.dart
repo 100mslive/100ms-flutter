@@ -53,7 +53,7 @@ class _InsetTileState extends State<InsetTile> {
 
   void _autoHideOption() {
     Timer(const Duration(seconds: 3), () {
-      if (isButtonVisible) {
+      if (isButtonVisible && mounted) {
         setState(() {
           isButtonVisible = !isButtonVisible;
         });
