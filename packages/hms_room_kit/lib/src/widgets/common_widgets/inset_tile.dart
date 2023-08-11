@@ -114,12 +114,6 @@ class _InsetTileState extends State<InsetTile> {
                         itemWidth: widget.itemWidth,
                         name: context.read<PeerTrackNode>().peer.name,
                         uid: context.read<PeerTrackNode>().uid),
-                    const Positioned(
-                      //Bottom left
-                      bottom: 5,
-                      left: 5,
-                      child: NetworkIconWidget(),
-                    ),
                     const HandRaise(), //top left
                     const BRBTag(), //top left
                     const AudioMuteStatus(), //top right
