@@ -14,14 +14,10 @@ class NetworkIconWidget extends StatelessWidget {
     return Selector<PeerTrackNode, int?>(
         builder: (_, networkQuality, __) {
           return (networkQuality != null && networkQuality != -1)
-              ? Row(
-                  children: [
-                    SvgPicture.asset(
-                      'packages/hms_room_kit/lib/src/assets/icons/network_$networkQuality.svg',
-                      height: 20,
-                      semanticsLabel: "fl_network_icon_label",
-                    ),
-                  ],
+              ? SvgPicture.asset(
+                  'packages/hms_room_kit/lib/src/assets/icons/network_$networkQuality.svg',
+                  height: 20,
+                  semanticsLabel: "fl_network_icon_label",
                 )
               : Container();
         },

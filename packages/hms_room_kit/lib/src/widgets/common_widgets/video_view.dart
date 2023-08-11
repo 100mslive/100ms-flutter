@@ -18,6 +18,9 @@ class VideoView extends StatefulWidget {
   final ScaleType scaleType;
   final double itemWidth;
   final String uid;
+  final double avatarRadius;
+  final double avatarTitleFontSize;
+  final double avatarTitleTextLineHeight;
   const VideoView(
       {Key? key,
       this.viewSize,
@@ -26,7 +29,10 @@ class VideoView extends StatefulWidget {
       this.itemHeight = 200,
       this.itemWidth = 200,
       required this.uid,
-      this.scaleType = ScaleType.SCALE_ASPECT_FILL})
+      this.scaleType = ScaleType.SCALE_ASPECT_FILL,
+      this.avatarRadius = 34,
+      this.avatarTitleFontSize = 34,
+      this.avatarTitleTextLineHeight = 32})
       : super(key: key);
 
   @override
@@ -40,7 +46,12 @@ class _VideoViewState extends State<VideoView> {
         builder: (_, data, __) {
           if ((data.item1 == null) || data.item2 || data.item3) {
             return Semantics(
-                label: "fl_video_off", child: const AudioLevelAvatar());
+                label: "fl_video_off",
+                child: AudioLevelAvatar(
+                  avatarRadius: widget.avatarRadius,
+                  avatarTitleFontSize: widget.avatarTitleFontSize,
+                  avatarTitleTextLineHeight: widget.avatarTitleTextLineHeight,
+                ));
           } else {
             return (data.item1?.source != "REGULAR")
                 ? ClipRRect(
