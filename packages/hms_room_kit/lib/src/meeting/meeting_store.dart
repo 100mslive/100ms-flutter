@@ -118,7 +118,7 @@ class MeetingStore extends ChangeNotifier
 
   ScrollController controller = ScrollController();
 
-  MeetingMode meetingMode = MeetingMode.oneToOne;
+  MeetingMode meetingMode = MeetingMode.activeSpeaker;
 
   bool isLandscapeLocked = false;
 
@@ -186,6 +186,8 @@ class MeetingStore extends ChangeNotifier
   bool isHLSStatsEnabled = false;
 
   bool isDefaultAspectRatioSelected = true;
+
+  List<PeerTrackNode> activeSpeakers = [];
 
   Future<HMSException?> join(String userName, String roomUrl,
       {HMSConfig? roomConfig}) async {
@@ -760,38 +762,23 @@ class MeetingStore extends ChangeNotifier
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     //To handle the active speaker mode scenario
     if (meetingMode == MeetingMode.activeSpeaker) {
-      //Picking up the first four peers from the peerTracks list
-      List<PeerTrackNode> activeSpeakerList = peerTracks.sublist(
-          screenShareCount + (spotLightPeer != null ? 1 : 0),
-          math.min(peerTracks.length, 4));
-
-      /* Here we iterate through the updateSpeakers list
-       * and do the following:
-       *  - Whether the peer is already present on screen
-       *  - if not we find the peer's index from peerTracks list
-       *  - if peer is present in the peerTracks list(this is done just to make sure that peer is still in the room)
-       *  - Insert the peer after screenShare tracks and remove the peer from it's previous position
-      */
       for (var speaker in updateSpeakers) {
-        int index = activeSpeakerList.indexWhere((previousSpeaker) =>
+        if (speaker.peer.isLocal) {
+          continue;
+        }
+        int index = activeSpeakers.indexWhere((previousSpeaker) =>
             previousSpeaker.uid == "${speaker.peer.peerId}mainVideo");
         if (index == -1) {
           int peerIndex = peerTracks.indexWhere(
               (node) => node.uid == "${speaker.peer.peerId}mainVideo");
           if (peerIndex != -1) {
-            if (peerTracks[peerIndex].uid != spotLightPeer?.uid) {
-              PeerTrackNode activeSpeaker = peerTracks[peerIndex];
-              peerTracks.removeAt(peerIndex);
-              peerTracks.insert(
-                  screenShareCount + (spotLightPeer != null ? 1 : 0),
-                  activeSpeaker);
-              peerTracks[screenShareCount + (spotLightPeer != null ? 1 : 0)]
-                  .setOffScreenStatus(false);
+            activeSpeakers.insert(0, peerTracks[peerIndex]);
+            if (activeSpeakers.length > 6) {
+              activeSpeakers.removeAt(6);
             }
           }
         }
       }
-      activeSpeakerList.clear();
       notifyListeners();
     }
 
@@ -1029,6 +1016,7 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.destroy();
     _hmsSessionStore = null;
     peerTracks.clear();
+    activeSpeakers.clear();
     isRoomEnded = true;
     HMSThemeColors.resetLayoutColors();
     resetForegroundTaskAndOrientation();

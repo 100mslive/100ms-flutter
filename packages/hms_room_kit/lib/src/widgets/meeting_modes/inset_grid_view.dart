@@ -147,21 +147,42 @@ List<StairedGridTile> portraitPattern(List<PeerTrackNode> peerTrack,
   ///Checking the number of tiles left after adding screen share and pinned tiles
   int normalTile = peerTrack.length - screenShareCount - pinTileCount;
 
-  ///Checking the remainder when divided by 3
-  int tileLeft = normalTile % 3;
+  ///Checking the remainder when divided by 6
+  int tileLeft = normalTile % 6;
 
   ///Here we add the tiles with 1/3 of the screen height
   for (int i = 0; i < (normalTile - tileLeft); i++) {
-    tiles.add(StairedGridTile(0.33, ratio / 3));
+    tiles.add(StairedGridTile(1 / 3, ratio / 1.5));
   }
 
   ///Here if the remainder is 1 we add a tile with full screen height
-  if (tileLeft == 1) {
-    tiles.add(StairedGridTile(1, ratio));
-  } else {
-    ///Here if the remainder is 2 we add a tile with half screen height
-    tiles.add(StairedGridTile(0.5, ratio / 2));
-    tiles.add(StairedGridTile(0.5, ratio / 2));
+  switch (tileLeft) {
+    case 1:
+      tiles.add(StairedGridTile(1, ratio));
+      break;
+    case 2:
+      tiles.add(StairedGridTile(0.5, ratio / 2));
+      tiles.add(StairedGridTile(0.5, ratio / 2));
+      break;
+    case 3:
+      tiles.add(StairedGridTile(0.33, ratio / 3));
+      tiles.add(StairedGridTile(0.33, ratio / 3));
+      tiles.add(StairedGridTile(0.33, ratio / 3));
+      break;
+    case 4:
+      tiles.add(StairedGridTile(0.5, ratio));
+      tiles.add(StairedGridTile(0.5, ratio));
+      tiles.add(StairedGridTile(0.5, ratio));
+      tiles.add(StairedGridTile(0.5, ratio));
+      break;
+    case 5:
+      tiles.add(StairedGridTile(1 / 3, ratio / 1.5));
+      tiles.add(StairedGridTile(1 / 3, ratio / 1.5));
+      tiles.add(StairedGridTile(1 / 3, ratio / 1.5));
+      tiles.add(StairedGridTile(1 / 3, ratio / 1.5));
+      tiles.add(StairedGridTile(1 / 3, ratio / 1.5));
+
+      break;
   }
   return tiles;
 }

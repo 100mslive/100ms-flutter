@@ -6,6 +6,7 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_bottom_navigation_bar.dart';
 import 'package:hms_room_kit/src/meeting/meeting_header.dart';
+import 'package:hms_room_kit/src/widgets/meeting_modes/active_speaker_mode.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
@@ -117,14 +118,15 @@ class _MeetingPageState extends State<MeetingPage> {
                                     children: [
                                       Selector<
                                               MeetingStore,
-                                              Tuple6<
+                                              Tuple7<
                                                   List<PeerTrackNode>,
                                                   bool,
                                                   int,
                                                   int,
                                                   MeetingMode,
-                                                  PeerTrackNode?>>(
-                                          selector: (_, meetingStore) => Tuple6(
+                                                  PeerTrackNode?,
+                                                  List<PeerTrackNode>>>(
+                                          selector: (_, meetingStore) => Tuple7(
                                               meetingStore.peerTracks,
                                               meetingStore.isHLSLink,
                                               meetingStore.peerTracks.length,
@@ -134,7 +136,8 @@ class _MeetingPageState extends State<MeetingPage> {
                                                   ? meetingStore.peerTracks[
                                                       meetingStore
                                                           .screenShareCount]
-                                                  : null),
+                                                  : null,
+                                                  meetingStore.activeSpeakers),
                                           builder: (_, data, __) {
                                             if (data.item3 == 0) {
                                               return Center(
@@ -214,17 +217,12 @@ class _MeetingPageState extends State<MeetingPage> {
                                                           : (modeData.item1 ==
                                                                   MeetingMode
                                                                       .activeSpeaker)
-                                                              ? basicGridView(
+                                                              ? ActiveSpeakerMode(
                                                                   peerTracks: data
-                                                                      .item1
-                                                                      .sublist(
-                                                                          0,
-                                                                          min(data.item1.length,
-                                                                              data.item4 + 4)),
-                                                                  itemCount: min(data.item3, data.item4 + 4),
+                                                                      .item1,
+                                                                  activeSpeakers: data.item7,
                                                                   screenShareCount: data.item4,
                                                                   context: context,
-                                                                  isPortrait: true,
                                                                   size: size)
                                                               : (modeData.item1 == MeetingMode.hero)
                                                                   ? heroMode(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: isPortraitMode, size: size)
