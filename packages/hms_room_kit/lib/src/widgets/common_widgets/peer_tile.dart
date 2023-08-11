@@ -26,15 +26,17 @@ class PeerTile extends StatefulWidget {
   final bool islongPressEnabled;
   final double avatarRadius;
   final double avatarTitleFontSize;
-  const PeerTile({
-    Key? key,
-    this.itemHeight = 200.0,
-    this.itemWidth = 200.0,
-    this.scaleType = ScaleType.SCALE_ASPECT_FILL,
-    this.islongPressEnabled = true,
-    this.avatarRadius = 36,
-    this.avatarTitleFontSize = 36,
-  }) : super(key: key);
+  final double avatarTitleTextLineHeight;
+  const PeerTile(
+      {Key? key,
+      this.itemHeight = 200.0,
+      this.itemWidth = 200.0,
+      this.scaleType = ScaleType.SCALE_ASPECT_FILL,
+      this.islongPressEnabled = true,
+      this.avatarRadius = 34,
+      this.avatarTitleFontSize = 34,
+      this.avatarTitleTextLineHeight = 40})
+      : super(key: key);
 
   @override
   State<PeerTile> createState() => _PeerTileState();
@@ -85,6 +87,10 @@ class _PeerTileState extends State<PeerTile> {
                             scaleType: widget.scaleType,
                             itemHeight: widget.itemHeight,
                             itemWidth: widget.itemWidth,
+                            avatarTitleFontSize: widget.avatarTitleFontSize,
+                            avatarRadius: widget.avatarRadius,
+                            avatarTitleTextLineHeight:
+                                widget.avatarTitleTextLineHeight,
                           ),
                           TileBorder(
                               itemHeight: widget.itemHeight,
@@ -97,8 +103,6 @@ class _PeerTileState extends State<PeerTile> {
                             child: DegradeTile(
                               itemHeight: widget.itemHeight,
                               itemWidth: widget.itemWidth,
-                              avatarRadius: widget.avatarRadius,
-                              avatarTitleFontSize: widget.avatarTitleFontSize,
                             ),
                           ),
                           Positioned(

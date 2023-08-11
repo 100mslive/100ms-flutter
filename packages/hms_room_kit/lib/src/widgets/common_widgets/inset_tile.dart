@@ -23,14 +23,16 @@ class InsetTile extends StatefulWidget {
   final ScaleType scaleType;
   final double avatarRadius;
   final double avatarTitleFontSize;
+  final double avatarTitleTextLineHeight;
   final Function()? callbackFunction;
   const InsetTile(
       {Key? key,
       this.itemHeight = 186,
       this.itemWidth = 104,
       this.scaleType = ScaleType.SCALE_ASPECT_FILL,
-      this.avatarRadius = 36,
-      this.avatarTitleFontSize = 36,
+      this.avatarRadius = 30,
+      this.avatarTitleFontSize = 24,
+      this.avatarTitleTextLineHeight = 32,
       this.callbackFunction})
       : super(key: key);
 
@@ -99,11 +101,14 @@ class _InsetTileState extends State<InsetTile> {
                 child: Stack(
                   children: [
                     VideoView(
-                      uid: context.read<PeerTrackNode>().uid,
-                      scaleType: widget.scaleType,
-                      itemHeight: widget.itemHeight,
-                      itemWidth: widget.itemWidth,
-                    ),
+                        uid: context.read<PeerTrackNode>().uid,
+                        scaleType: widget.scaleType,
+                        itemHeight: widget.itemHeight,
+                        itemWidth: widget.itemWidth,
+                        avatarRadius: widget.avatarRadius,
+                        avatarTitleFontSize: widget.avatarTitleFontSize,
+                        avatarTitleTextLineHeight:
+                            widget.avatarTitleTextLineHeight),
                     TileBorder(
                         itemHeight: widget.itemHeight,
                         itemWidth: widget.itemWidth,

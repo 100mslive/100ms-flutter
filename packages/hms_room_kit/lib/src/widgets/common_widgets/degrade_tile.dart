@@ -12,17 +12,8 @@ import 'package:provider/provider.dart';
 class DegradeTile extends StatefulWidget {
   final double itemHeight;
   final double itemWidth;
-  final bool isOneToOne;
-  final double avatarRadius;
-  final double avatarTitleFontSize;
 
-  const DegradeTile(
-      {Key? key,
-      this.itemHeight = 200,
-      this.itemWidth = 200,
-      this.isOneToOne = false,
-      this.avatarRadius = 36,
-      this.avatarTitleFontSize = 36})
+  const DegradeTile({Key? key, this.itemHeight = 200, this.itemWidth = 200})
       : super(key: key);
 
   @override
