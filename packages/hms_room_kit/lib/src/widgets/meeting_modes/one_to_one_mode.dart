@@ -79,6 +79,7 @@ class _OneToOneModeState extends State<OneToOneMode> {
                           isPortrait: true,
                           size: widget.size),
                       DraggableWidget(
+                          dragAnimationScale: 1,
                           topMargin: 10,
                           bottomMargin: Platform.isIOS
                               ? widget.bottomMargin + 20
