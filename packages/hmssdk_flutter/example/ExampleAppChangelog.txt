@@ -16,7 +16,7 @@ https://github.com/100mslive/100ms-flutter/issues/1477
 
 - Updated Android SDK version to 2.7.2 and iOS SDK version to 0.9.8
 
-Main SDK: 1.7.4
+Core SDK: 1.7.4
 Room Kit: 0.1.0
-Android SDK: 2.7.2
+Android SDK: 2.7.3
 iOS SDK: 0.9.8
