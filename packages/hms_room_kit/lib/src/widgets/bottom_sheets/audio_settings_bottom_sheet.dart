@@ -26,15 +26,15 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
     return DraggableScrollableSheet(
         maxChildSize:
             (context.read<MeetingStore>().availableAudioOutputDevices.length +
-                    2) *
+                    3) *
                 0.1,
         minChildSize:
             (context.read<MeetingStore>().availableAudioOutputDevices.length +
-                    1) *
+                    2) *
                 0.1,
         initialChildSize:
             (context.read<MeetingStore>().availableAudioOutputDevices.length +
-                    1) *
+                    2) *
                 0.1,
         builder: (context, ScrollController scrollController) {
           return Container(
@@ -128,7 +128,7 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
                                                 text:
                                                     "${Utilities.getAudioDeviceName(data.item1[index])} (${Utilities.getAudioDeviceName(data.item3)})",
                                                 textColor: HMSThemeColors
-                                                        .onSurfaceHighEmphasis,
+                                                    .onSurfaceHighEmphasis,
                                               ),
                                               trailing: context
                                                           .read<MeetingStore>()
@@ -174,7 +174,7 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
                                                 letterSpacing: 0.10,
                                                 fontWeight: FontWeight.w600,
                                                 textColor: HMSThemeColors
-                                                        .onSurfaceHighEmphasis,
+                                                    .onSurfaceHighEmphasis,
                                               ),
                                               trailing: data.item1[index] ==
                                                       context

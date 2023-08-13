@@ -237,7 +237,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         .transparentBackgroundColor),
                                                 child: Padding(
                                                   padding: const EdgeInsets
-                                                      .symmetric(
+                                                          .symmetric(
                                                       horizontal: 8,
                                                       vertical: 4),
                                                   child: Row(
@@ -272,13 +272,15 @@ class _PreviewPageState extends State<PreviewPage> {
                                   width: width,
                                   decoration: BoxDecoration(
                                       gradient: previewStore.isVideoOn
-                                          ? const LinearGradient(
+                                          ? LinearGradient(
                                               begin: Alignment.topCenter,
                                               end: Alignment.bottomCenter,
-                                              stops: [0.45, 1],
+                                              stops: const [0.45, 1],
                                               colors: [
-                                                Color.fromRGBO(0, 0, 0, 1),
-                                                Color.fromRGBO(0, 0, 0, 0)
+                                                HMSThemeColors.backgroundDim
+                                                    .withOpacity(1),
+                                                HMSThemeColors.backgroundDim
+                                                    .withOpacity(0)
                                               ],
                                             )
                                           : null),
@@ -304,12 +306,18 @@ class _PreviewPageState extends State<PreviewPage> {
                                                           .data?[0].logo?.url ==
                                                       null
                                                   ? Container()
-                                                  : Image.network(
-                                                      HMSRoomLayout
-                                                          .data![0].logo!.url!,
-                                                      height: 30,
-                                                      width: 30,
-                                                    ),
+                                                  : HMSRoomLayout
+                                                          .data![0].logo!.url!
+                                                          .contains("svg")
+                                                      ? SvgPicture.network(
+                                                          HMSRoomLayout.data![0]
+                                                              .logo!.url!)
+                                                      : Image.network(
+                                                          HMSRoomLayout.data![0]
+                                                              .logo!.url!,
+                                                          height: 30,
+                                                          width: 30,
+                                                        ),
                                               const SizedBox(
                                                 height: 16,
                                               ),
@@ -607,12 +615,10 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             setState(() {});
                                                           },
                                                           decoration: InputDecoration(
-                                                              contentPadding:
-                                                                  const EdgeInsets.symmetric(
-                                                                      vertical:
-                                                                          14,
-                                                                      horizontal:
-                                                                          16),
+                                                              contentPadding: const EdgeInsets.symmetric(
+                                                                  vertical: 14,
+                                                                  horizontal:
+                                                                      16),
                                                               fillColor: HMSThemeColors
                                                                   .surfaceDefault,
                                                               filled: true,
@@ -638,7 +644,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                           8))),
                                                               enabledBorder: const OutlineInputBorder(
                                                                   borderSide:
-                                                                      BorderSide.none,
+                                                                      BorderSide
+                                                                          .none,
                                                                   borderRadius: BorderRadius.all(Radius.circular(8))),
                                                               border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(8)))),
                                                         ),
@@ -676,13 +683,15 @@ class _PreviewPageState extends State<PreviewPage> {
                                   Container(
                                     height: height,
                                     width: width,
-                                    decoration:  BoxDecoration(
+                                    decoration: BoxDecoration(
                                         gradient: LinearGradient(
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
                                       colors: [
-                                        HMSThemeColors.backgroundDim.withOpacity(1),
-                                        HMSThemeColors.backgroundDim.withOpacity(0)
+                                        HMSThemeColors.backgroundDim
+                                            .withOpacity(1),
+                                        HMSThemeColors.backgroundDim
+                                            .withOpacity(0)
                                       ],
                                     )),
                                     child: Column(

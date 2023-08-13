@@ -39,7 +39,9 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 100),
+                            constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.of(context).size.width - 100),
                             child: HMSTitleText(
                               text:
                                   "${widget.meetingStore.localPeer?.name} (You)",
@@ -96,6 +98,9 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                           semanticsLabel: "fl_local_pin_tile",
                           height: 20,
                           width: 20,
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
                         ),
                         title: HMSSubheadingText(
                             text: "Pin Tile for Myself",
@@ -129,6 +134,9 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                           semanticsLabel: "fl_spotlight_local_tile",
                           height: 20,
                           width: 20,
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
                         ),
                         title: HMSSubheadingText(
                             text: "Spotlight Tile for Everyone",
@@ -147,6 +155,9 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                           semanticsLabel: "fl_minimize_local_tile",
                           height: 20,
                           width: 20,
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
                         ),
                         title: HMSSubheadingText(
                             text: "Minimize Your Video",

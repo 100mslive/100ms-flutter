@@ -366,8 +366,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                     leading: SvgPicture.asset(
                       "packages/hms_room_kit/lib/src/assets/icons/brb.svg",
                       colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
+                          HMSThemeColors.onSurfaceHighEmphasis,
+                          BlendMode.srcIn),
                     ),
                     title: HMSSubheadingText(
                       text: "BRB",

@@ -25,15 +25,15 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
     return DraggableScrollableSheet(
         maxChildSize:
             (context.read<PreviewStore>().availableAudioOutputDevices.length +
-                    2) *
+                    3) *
                 0.1,
         minChildSize:
             (context.read<PreviewStore>().availableAudioOutputDevices.length +
-                    1) *
+                    2) *
                 0.1,
         initialChildSize:
             (context.read<PreviewStore>().availableAudioOutputDevices.length +
-                    1) *
+                    2) *
                 0.1,
         builder: (context, ScrollController scrollController) {
           return Container(
@@ -126,8 +126,8 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                                 fontWeight: FontWeight.w600,
                                                 text:
                                                     "${Utilities.getAudioDeviceName(data.item1[index])} (${Utilities.getAudioDeviceName(data.item3)})",
-                                                textColor:  HMSThemeColors
-                                                        .onSurfaceHighEmphasis,
+                                                textColor: HMSThemeColors
+                                                    .onSurfaceHighEmphasis,
                                               ),
                                               trailing: context
                                                           .read<PreviewStore>()
@@ -172,8 +172,8 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                                 lineHeight: 20,
                                                 letterSpacing: 0.10,
                                                 fontWeight: FontWeight.w600,
-                                                textColor:  HMSThemeColors
-                                                        .onSurfaceHighEmphasis,
+                                                textColor: HMSThemeColors
+                                                    .onSurfaceHighEmphasis,
                                               ),
                                               trailing: data.item1[index] ==
                                                       context
