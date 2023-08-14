@@ -6,6 +6,7 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_bottom_navigation_bar.dart';
 import 'package:hms_room_kit/src/meeting/meeting_header.dart';
+import 'package:hms_room_kit/src/widgets/meeting_modes/active_speaker_mode.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
@@ -194,15 +195,9 @@ class _MeetingPageState extends State<MeetingPage> {
                                                        * - As the peer count increases the mode is switched back to active speaker view in case of default mode
                                                        * - Remaining as the mode from bottom sheet is selected corresponding grid layout is rendered
                                                       */
-                                                      child: (((modeData.item1 ==
+                                                      child: ((modeData.item1 ==
                                                                       MeetingMode
-                                                                          .oneToOne) ||
-                                                                  ((data.item3 ==
-                                                                          2) &&
-                                                                      context.read<MeetingStore>().peers.length ==
-                                                                          2)) &&
-                                                              (modeData.item2 !=
-                                                                  null))
+                                                                          .oneToOne) )
                                                           ? OneToOneMode(
                                                               bottomMargin: 225,
                                                               peerTracks:
@@ -214,14 +209,11 @@ class _MeetingPageState extends State<MeetingPage> {
                                                           : (modeData.item1 ==
                                                                   MeetingMode
                                                                       .activeSpeaker)
-                                                              ? basicGridView(
+                                                              ? activeSpeakerView(
                                                                   peerTracks: data
                                                                       .item1
-                                                                      .sublist(
-                                                                          0,
-                                                                          min(data.item1.length,
-                                                                              data.item4 + 4)),
-                                                                  itemCount: min(data.item3, data.item4 + 4),
+                                                                     ,
+                                                                  itemCount:data.item3,
                                                                   screenShareCount: data.item4,
                                                                   context: context,
                                                                   isPortrait: true,
