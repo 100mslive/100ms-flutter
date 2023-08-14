@@ -44,8 +44,7 @@ class _InsetCollapsedViewState extends State<InsetCollapsedView> {
                         return HMSEmbeddedButton(
                           height: 20,
                           width: 20,
-                          onTap: () =>
-                              context.read<MeetingStore>().toggleMicMuteState(),
+                          onTap: () => {},
                           isActive: false,
                           borderRadius: 4,
                           offColor: HMSThemeColors.surfaceBright,
@@ -79,9 +78,7 @@ class _InsetCollapsedViewState extends State<InsetCollapsedView> {
                         return HMSEmbeddedButton(
                           height: 20,
                           width: 20,
-                          onTap: () => context
-                              .read<MeetingStore>()
-                              .toggleCameraMuteState(),
+                          onTap: () => {},
                           isActive: false,
                           borderRadius: 4,
                           offColor: HMSThemeColors.surfaceBright,
