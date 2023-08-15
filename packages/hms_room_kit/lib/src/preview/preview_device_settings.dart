@@ -25,15 +25,15 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
     return DraggableScrollableSheet(
         maxChildSize:
             (context.read<PreviewStore>().availableAudioOutputDevices.length +
-                    3) *
+                    1.2) *
                 0.1,
         minChildSize:
             (context.read<PreviewStore>().availableAudioOutputDevices.length +
-                    2) *
+                    1) *
                 0.1,
         initialChildSize:
             (context.read<PreviewStore>().availableAudioOutputDevices.length +
-                    2) *
+                    1) *
                 0.1,
         builder: (context, ScrollController scrollController) {
           return Container(
