@@ -94,8 +94,8 @@ Widget basicGridView(
                     islongPressEnabled: false,
                     key: Key("${peerTracks[index].uid}video_tile"),
                     scaleType: ScaleType.SCALE_ASPECT_FIT,
-                    itemHeight: size.height,
-                    itemWidth: size.width,
+                    // itemHeight: size.height,
+                    // itemWidth: size.width,
                   ),
           );
         }
@@ -104,8 +104,8 @@ Widget basicGridView(
             value: peerTracks[index],
             child: PeerTile(
               key: ValueKey("${peerTracks[index].uid}audio_view"),
-              itemHeight: size.height,
-              itemWidth: size.width,
+              // itemHeight: size.height,
+              // itemWidth: size.width,
             ));
       },
       gridDelegate: SliverStairedGridDelegate(

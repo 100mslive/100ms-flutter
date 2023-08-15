@@ -103,15 +103,11 @@ class _InsetTileState extends State<InsetTile> {
                     VideoView(
                         uid: context.read<PeerTrackNode>().uid,
                         scaleType: widget.scaleType,
-                        itemHeight: widget.itemHeight,
-                        itemWidth: widget.itemWidth,
                         avatarRadius: widget.avatarRadius,
                         avatarTitleFontSize: widget.avatarTitleFontSize,
                         avatarTitleTextLineHeight:
                             widget.avatarTitleTextLineHeight),
                     TileBorder(
-                        itemHeight: widget.itemHeight,
-                        itemWidth: widget.itemWidth,
                         name: context.read<PeerTrackNode>().peer.name,
                         uid: context.read<PeerTrackNode>().uid),
                     const HandRaise(), //top left

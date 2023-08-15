@@ -93,8 +93,8 @@ Widget heroMode(
                 : PeerTile(
                     key: Key(peerTracks[index].uid),
                     scaleType: ScaleType.SCALE_ASPECT_FIT,
-                    itemHeight: size.height,
-                    itemWidth: size.width,
+                    // itemHeight: size.height,
+                    // itemWidth: size.width,
                   ),
           );
         }
@@ -103,8 +103,8 @@ Widget heroMode(
             value: peerTracks[index],
             child: PeerTile(
               key: ValueKey(peerTracks[index].uid),
-              itemHeight: size.height,
-              itemWidth: size.width,
+              // itemHeight: size.height,
+              // itemWidth: size.width,
             ));
       },
       gridDelegate: SliverStairedGridDelegate(

@@ -118,7 +118,7 @@ class MeetingStore extends ChangeNotifier
 
   ScrollController controller = ScrollController();
 
-  MeetingMode meetingMode = MeetingMode.oneToOne;
+  MeetingMode meetingMode = MeetingMode.activeSpeaker;
 
   bool isLandscapeLocked = false;
 
