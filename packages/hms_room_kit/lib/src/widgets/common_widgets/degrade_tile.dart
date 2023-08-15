@@ -13,8 +13,7 @@ import 'package:provider/provider.dart';
 class DegradeTile extends StatelessWidget {
   final double maxWidth;
 
-  const DegradeTile({Key? key,required this.maxWidth})
-      : super(key: key);
+  const DegradeTile({Key? key, required this.maxWidth}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,6 @@ class DegradeTile extends StatelessWidget {
               child:
                   LayoutBuilder(builder: (context, BoxConstraints constraints) {
                 return Container(
-                 
                   decoration: BoxDecoration(
                       color: HMSThemeColors.backgroundDefault,
                       borderRadius:
@@ -55,7 +53,7 @@ class DegradeTile extends StatelessWidget {
                         ),
                       ),
                       NameAndNetwork(maxWidth: maxWidth)
-                      ],
+                    ],
                   ),
                 );
               }));

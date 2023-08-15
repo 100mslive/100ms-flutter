@@ -1,4 +1,6 @@
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/peer_tile.dart';
@@ -14,27 +16,43 @@ class CustomGridView extends StatefulWidget {
 
 class _CustomGridViewState extends State<CustomGridView> {
   PageController controller = PageController();
-  int _curr = 0;
   int tileNumber = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Selector<MeetingStore, Tuple2<List<PeerTrackNode>, int>>(
-        selector: (_, meetingStore) =>
-            Tuple2(meetingStore.peerTracks, meetingStore.peerTracks.length),
+    return Selector<MeetingStore, Tuple3<List<PeerTrackNode>, int, int>>(
+        selector: (_, meetingStore) => Tuple3(meetingStore.peerTracks,
+            meetingStore.peerTracks.length, meetingStore.currentPage),
         builder: (_, data, __) {
-          return PageView.builder(
-              clipBehavior: Clip.none,
-              physics: const PageScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              controller: controller,
-              allowImplicitScrolling: true,
-              itemCount: (data.item2 ~/ 6) + (data.item2%6==0?0:1),
-              onPageChanged: (num) {
-                
-              },
-              itemBuilder: (context, index) =>
-                  _generateGrid(data.item2, index, data.item1));
+          return Column(
+            children: [
+              Expanded(
+                child: PageView.builder(
+                    clipBehavior: Clip.none,
+                    physics: const PageScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    controller: controller,
+                    allowImplicitScrolling: true,
+                    itemCount:
+                        (data.item2 ~/ 6) + (data.item2 % 6 == 0 ? 0 : 1),
+                    onPageChanged: (num) {
+                      context.read<MeetingStore>().setCurrentPage(num);
+                    },
+                    itemBuilder: (context, index) =>
+                        _generateGrid(data.item2, index, data.item1)),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: DotsIndicator(
+                  dotsCount: (data.item2 ~/ 6) + (data.item2 % 6 == 0 ? 0 : 1),
+                  position: data.item3,
+                  decorator: DotsDecorator(
+                      activeColor: HMSThemeColors.onSurfaceHighEmphasis,
+                      color: HMSThemeColors.onSurfaceLowEmphasis),
+                ),
+              )
+            ],
+          );
         });
   }
 

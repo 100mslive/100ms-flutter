@@ -6,7 +6,7 @@ import 'package:hms_room_kit/src/widgets/peer_widgets/peer_name.dart';
 class NameAndNetwork extends StatelessWidget {
   final double maxWidth;
 
-  const NameAndNetwork({Key? key,required this.maxWidth}):super(key: key);
+  const NameAndNetwork({Key? key, required this.maxWidth}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Positioned(

@@ -10,10 +10,7 @@ class TileBorder extends StatelessWidget {
   final String uid;
   final String name;
 
-  const TileBorder(
-      {super.key,
-      required this.uid,
-      required this.name});
+  const TileBorder({super.key, required this.uid, required this.name});
 
   @override
   Widget build(BuildContext context) {

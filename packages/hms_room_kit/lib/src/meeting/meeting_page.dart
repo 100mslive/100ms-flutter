@@ -196,8 +196,8 @@ class _MeetingPageState extends State<MeetingPage> {
                                                        * - Remaining as the mode from bottom sheet is selected corresponding grid layout is rendered
                                                       */
                                                       child: (modeData.item1 ==
-                                                                      MeetingMode
-                                                                          .oneToOne)
+                                                              MeetingMode
+                                                                  .oneToOne)
                                                           ? OneToOneMode(
                                                               bottomMargin: 225,
                                                               peerTracks:
@@ -222,11 +222,41 @@ class _MeetingPageState extends State<MeetingPage> {
                                                               //     context: context,
                                                               //     isPortrait: true,
                                                               //     size: size)
-                                                              : (modeData.item1 == MeetingMode.hero)
-                                                                  ? heroMode(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: isPortraitMode, size: size)
-                                                                  : (modeData.item1 == MeetingMode.audio)
-                                                                      ? audioMode(peerTracks: data.item1.sublist(data.item4), itemCount: data.item1.sublist(data.item4).length, context: context, isPortrait: isPortraitMode, size: size)
-                                                                      : (data.item5 == MeetingMode.single)
+                                                              : (modeData.item1 ==
+                                                                      MeetingMode
+                                                                          .hero)
+                                                                  ? heroMode(
+                                                                      peerTracks: data
+                                                                          .item1,
+                                                                      itemCount: data
+                                                                          .item3,
+                                                                      screenShareCount: data
+                                                                          .item4,
+                                                                      context:
+                                                                          context,
+                                                                      isPortrait:
+                                                                          isPortraitMode,
+                                                                      size:
+                                                                          size)
+                                                                  : (modeData.item1 ==
+                                                                          MeetingMode
+                                                                              .audio)
+                                                                      ? audioMode(
+                                                                          peerTracks: data.item1.sublist(data
+                                                                              .item4),
+                                                                          itemCount: data
+                                                                              .item1
+                                                                              .sublist(data
+                                                                                  .item4)
+                                                                              .length,
+                                                                          context:
+                                                                              context,
+                                                                          isPortrait:
+                                                                              isPortraitMode,
+                                                                          size:
+                                                                              size)
+                                                                      : (data.item5 ==
+                                                                              MeetingMode.single)
                                                                           ? fullScreenMode(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: isPortraitMode, size: size)
                                                                           : basicGridView(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: true, size: size));
                                                 });

@@ -111,9 +111,9 @@ Widget insetGridView(
                 key: ValueKey("${peerTracks[index].uid}video_view"),
                 value: peerTracks[index],
                 child: PeerTile(
-                  // itemHeight: size.height,
-                  // itemWidth: size.width,
-                ))
+                    // itemHeight: size.height,
+                    // itemWidth: size.width,
+                    ))
             : Container();
       },
       gridDelegate: SliverStairedGridDelegate(
