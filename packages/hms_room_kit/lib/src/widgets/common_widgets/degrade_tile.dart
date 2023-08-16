@@ -1,10 +1,9 @@
 //package imports
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/peer_name.dart';
+import 'package:hms_room_kit/src/widgets/peer_widgets/name_and_network.dart';
 import 'package:provider/provider.dart';
 
 //Package imports
@@ -60,41 +59,7 @@ class _DegradeTileState extends State<DegradeTile> {
                           ],
                         ),
                       ),
-                      Positioned(
-                        //Bottom left
-                        bottom: 5,
-                        left: 5,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: HMSThemeColors.backgroundDim
-                                  .withOpacity(0.64),
-                              borderRadius: BorderRadius.circular(8)),
-                          child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8.0, right: 4, top: 4, bottom: 4),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  PeerName(
-                                    maxWidth: constraints.maxWidth,
-                                  ),
-                                  const SizedBox(
-                                    width: 4,
-                                  ),
-                                  SvgPicture.asset(
-                                    'packages/hms_room_kit/lib/src/assets/icons/degraded_network.svg',
-                                    height: 20,
-                                    semanticsLabel: "fl_network_icon_label",
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      NameAndNetwork(maxWidth: constraints.maxWidth),
                     ],
                   ),
                 );
