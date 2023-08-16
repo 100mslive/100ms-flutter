@@ -28,11 +28,34 @@ class _MeetingHeaderState extends State<MeetingHeader> {
           children: [
             HMSRoomLayout.data?[0].logo?.url == null
                 ? Container()
-                : Image.network(
-                    HMSRoomLayout.data![0].logo!.url!,
-                    height: 30,
-                    width: 30,
-                  ),
+                : HMSRoomLayout.data![0].logo!.url!.contains("svg")
+                    ? SvgPicture.network(HMSRoomLayout.data![0].logo!.url!)
+                    : Image.network(
+                        HMSRoomLayout.data![0].logo!.url!,
+                        height: 30,
+                        width: 30,
+                      ),
+            const SizedBox(
+              width: 12,
+            ),
+            Selector<MeetingStore, Tuple3<bool, bool, bool>>(
+                selector: (_, meetingStore) => Tuple3(
+                      meetingStore.recordingType["browser"] ?? false,
+                      meetingStore.recordingType["server"] ?? false,
+                      meetingStore.recordingType["hls"] ?? false,
+                    ),
+                builder: (_, data, __) {
+                  return (data.item1 || data.item2 || data.item3)
+                      ? SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/record.svg",
+                          height: 24,
+                          width: 24,
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.alertErrorDefault,
+                              BlendMode.srcIn),
+                        )
+                      : Container();
+                })
           ],
         ),
         Row(

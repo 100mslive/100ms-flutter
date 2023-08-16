@@ -25,7 +25,7 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: 0.4,
+      heightFactor: 0.35,
       child: Padding(
           padding: const EdgeInsets.only(top: 16.0, left: 24, right: 24),
           child: Column(
@@ -38,11 +38,16 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          HMSTitleText(
-                            text:
-                                "${widget.meetingStore.localPeer?.name} (You)",
-                            textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                            letterSpacing: 0.15,
+                          Container(
+                            constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.of(context).size.width - 100),
+                            child: HMSTitleText(
+                              text:
+                                  "${widget.meetingStore.localPeer?.name} (You)",
+                              textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                              letterSpacing: 0.15,
+                            ),
                           ),
                           const SizedBox(
                             height: 5,
@@ -93,6 +98,9 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                           semanticsLabel: "fl_local_pin_tile",
                           height: 20,
                           width: 20,
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
                         ),
                         title: HMSSubheadingText(
                             text: "Pin Tile for Myself",
@@ -126,6 +134,9 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                           semanticsLabel: "fl_spotlight_local_tile",
                           height: 20,
                           width: 20,
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
                         ),
                         title: HMSSubheadingText(
                             text: "Spotlight Tile for Everyone",
@@ -144,6 +155,9 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                           semanticsLabel: "fl_minimize_local_tile",
                           height: 20,
                           width: 20,
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
                         ),
                         title: HMSSubheadingText(
                             text: "Minimize Your Video",
