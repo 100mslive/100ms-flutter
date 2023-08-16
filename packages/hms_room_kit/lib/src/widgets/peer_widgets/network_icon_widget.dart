@@ -1,11 +1,11 @@
-//Package imports
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
-//Project imports
+///Project imports
+import 'package:hms_room_kit/src/model/peer_track_node.dart';
 
 class NetworkIconWidget extends StatelessWidget {
   const NetworkIconWidget({super.key});

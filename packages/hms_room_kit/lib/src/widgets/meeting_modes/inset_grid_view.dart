@@ -110,7 +110,7 @@ Widget insetGridView(
             ? ChangeNotifierProvider.value(
                 key: ValueKey("${peerTracks[index].uid}video_view"),
                 value: peerTracks[index],
-                child: PeerTile(
+                child: const PeerTile(
                     // itemHeight: size.height,
                     // itemWidth: size.width,
                     ))

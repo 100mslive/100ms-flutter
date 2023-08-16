@@ -1,20 +1,25 @@
 //package imports
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/name_and_network.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/peer_name.dart';
+import 'package:hms_room_kit/src/widgets/peer_widgets/name_and_network.dart';
 import 'package:provider/provider.dart';
 
 //Package imports
 
-class DegradeTile extends StatelessWidget {
-  final double maxWidth;
+class DegradeTile extends StatefulWidget {
+  final double itemHeight;
+  final double itemWidth;
 
-  const DegradeTile({Key? key, required this.maxWidth}) : super(key: key);
+  const DegradeTile({Key? key, this.itemHeight = 200, this.itemWidth = 200})
+      : super(key: key);
 
+  @override
+  State<DegradeTile> createState() => _DegradeTileState();
+}
+
+class _DegradeTileState extends State<DegradeTile> {
   @override
   Widget build(BuildContext context) {
     return Selector<PeerTrackNode, bool>(
@@ -24,6 +29,8 @@ class DegradeTile extends StatelessWidget {
               child:
                   LayoutBuilder(builder: (context, BoxConstraints constraints) {
                 return Container(
+                  height: widget.itemHeight + 110,
+                  width: widget.itemWidth,
                   decoration: BoxDecoration(
                       color: HMSThemeColors.backgroundDefault,
                       borderRadius:
@@ -52,7 +59,7 @@ class DegradeTile extends StatelessWidget {
                           ],
                         ),
                       ),
-                      NameAndNetwork(maxWidth: maxWidth)
+                      NameAndNetwork(maxWidth: constraints.maxWidth),
                     ],
                   ),
                 );

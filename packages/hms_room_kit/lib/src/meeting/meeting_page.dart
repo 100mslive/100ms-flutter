@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
@@ -209,7 +208,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                           : (modeData.item1 ==
                                                                   MeetingMode
                                                                       .activeSpeakerWithoutInset)
-                                                              ? CustomGridView()
+                                                              ? const CustomGridView()
                                                               // basicGridView(
                                                               //     peerTracks: data
                                                               //         .item1
