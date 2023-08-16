@@ -8,6 +8,7 @@
 ///
 ///[hmssdk_flutter] will send updates to all the listeners when there is any change in anything.
 import 'dart:async';
+import 'dart:developer';
 
 // Flutter imports:
 import 'package:flutter/services.dart';
@@ -64,6 +65,7 @@ class PlatformService {
   ///add meetingListener
   static void addUpdateListener(HMSUpdateListener newListener) {
     updateListeners.add(newListener);
+    log("Length of add updateListeners ${updateListeners.length}");
   }
 
   ///remove meetingListener just pass the listener instance you want to remove.
@@ -71,16 +73,20 @@ class PlatformService {
     if (updateListeners.contains(listener)) {
       updateListeners.remove(listener);
     }
+    log("Length of remove updateListeners ${updateListeners.length}");
   }
-
+ 
   ///add previewListener
   static void addPreviewListener(HMSPreviewListener newListener) {
     previewListeners.add(newListener);
+    log("Length of add previewListeners ${previewListeners.length}");
+
   }
 
   ///remove previewListener just pass the listener instance you want to remove.
   static void removePreviewListener(HMSPreviewListener listener) {
     if (previewListeners.contains(listener)) previewListeners.remove(listener);
+    log("Length of remove previewListeners ${previewListeners.length}");
   }
 
   ///add RTCStats Listener

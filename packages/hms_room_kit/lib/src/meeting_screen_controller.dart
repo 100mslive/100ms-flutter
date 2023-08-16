@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/preview/preview_store.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
@@ -38,6 +39,10 @@ class MeetingScreenController extends StatefulWidget {
   ///For more details checkout the [HMSConfig] class
   final HMSConfig? config;
 
+  ///[previewStore] is the store for preview
+  ///We are passing it to remove the preview listener once we are in the room
+  final PreviewStore previewStore;
+
   const MeetingScreenController(
       {Key? key,
       required this.roomCode,
@@ -47,7 +52,8 @@ class MeetingScreenController extends StatefulWidget {
       this.showStats = false,
       this.mirrorCamera = true,
       this.role,
-      this.config})
+      this.config,
+      required this.previewStore})
       : super(key: key);
 
   @override
@@ -63,24 +69,11 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
     Utilities.initForegroundTask();
   }
 
-  void initMeeting() async {
-    HMSException? ans = await context
-        .read<MeetingStore>()
-        .join(widget.user, widget.roomCode, roomConfig: widget.config);
-    if (ans != null && mounted) {
-      UtilityComponents.showErrorDialog(
-          context: context,
-          errorMessage: "ACTION: ${ans.action} DESCRIPTION: ${ans.description}",
-          errorTitle: ans.message ?? "Join Error",
-          actionMessage: "OK",
-          action: () {
-            Navigator.of(context).popUntil((route) => route.isFirst);
-          });
-    }
-  }
-
   void setInitValues() async {
     context.read<MeetingStore>().setSettings();
+    widget.previewStore.hmsSDKInteractor
+        .removeUpdateListener(widget.previewStore);
+    widget.previewStore.isMeetingJoined = false;
   }
 
   @override

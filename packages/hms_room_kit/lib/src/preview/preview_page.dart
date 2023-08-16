@@ -77,7 +77,6 @@ class _PreviewPageState extends State<PreviewPage> {
 
       previewStore.isRoomJoined = true;
       previewStore.removePreviewListener();
-      previewStore.hmsSDKInteractor.addUpdateListener(previewStore);
 
       ///When the user does not have permission to stream, or the stream is already started, or the flow is webRTC flow, then we directly navigate to the meeting screen.
       ///Without starting the HLS stream.
@@ -88,6 +87,8 @@ class _PreviewPageState extends State<PreviewPage> {
         previewStore.isMeetingJoined = true;
         return;
       }
+
+      previewStore.hmsSDKInteractor.addUpdateListener(previewStore);
 
       setState(() {
         isJoiningRoom = false;
@@ -158,6 +159,7 @@ class _PreviewPageState extends State<PreviewPage> {
                   ? ListenableProvider.value(
                       value: _meetingStore,
                       child: MeetingScreenController(
+                        previewStore: previewStore,
                         role: previewStore.peer?.role,
                         roomCode: widget.meetingLink,
                         localPeerNetworkQuality: null,
