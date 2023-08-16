@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:developer';
 import 'dart:io' show Platform;
 
 // Flutter imports:
@@ -87,9 +88,8 @@ class HMSVideoView extends StatelessWidget {
       {Key? key,
       required this.track,
       this.setMirror = false,
-      @Deprecated(
-          "matchParent is not longer necessary and will be removed in future version")
-      this.matchParent = true,
+      @Deprecated("matchParent is not longer necessary and will be removed in future version")
+          this.matchParent = true,
       this.scaleType = ScaleType.SCALE_ASPECT_FIT,
       this.disableAutoSimulcastLayerSelect = false})
       : super(key: key);
@@ -129,12 +129,13 @@ class _PlatformView extends StatelessWidget {
   Widget build(BuildContext context) {
     ///AndroidView for android it uses surfaceRenderer provided internally by webrtc.
     if (Platform.isAndroid) {
+      log("Created plaformView");
       return PlatformViewLink(
           surfaceFactory: (context, controller) {
             return AndroidViewSurface(
               controller: controller as AndroidViewController,
-              gestureRecognizers: const <Factory<
-                  OneSequenceGestureRecognizer>>{},
+              gestureRecognizers: const <
+                  Factory<OneSequenceGestureRecognizer>>{},
               hitTestBehavior: PlatformViewHitTestBehavior.opaque,
             );
           },

@@ -93,7 +93,7 @@ class _InsetTileState extends State<InsetTile> {
               width: widget.itemWidth,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: HMSThemeColors.surfaceDim,
+                color: HMSThemeColors.surfaceDefault,
               ),
               child: Semantics(
                 label: "fl_${context.read<PeerTrackNode>().peer.name}_video_on",

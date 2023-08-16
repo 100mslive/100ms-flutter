@@ -75,7 +75,7 @@ class _PeerTileState extends State<PeerTile> {
                     width: widget.itemWidth,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: HMSThemeColors.surfaceDim,
+                      color: HMSThemeColors.backgroundDefault,
                     ),
                     child: Semantics(
                       label:
@@ -85,16 +85,12 @@ class _PeerTileState extends State<PeerTile> {
                           VideoView(
                             uid: context.read<PeerTrackNode>().uid,
                             scaleType: widget.scaleType,
-                            itemHeight: widget.itemHeight,
-                            itemWidth: widget.itemWidth,
                             avatarTitleFontSize: widget.avatarTitleFontSize,
                             avatarRadius: widget.avatarRadius,
                             avatarTitleTextLineHeight:
                                 widget.avatarTitleTextLineHeight,
                           ),
                           TileBorder(
-                              itemHeight: widget.itemHeight,
-                              itemWidth: widget.itemWidth,
                               name: context.read<PeerTrackNode>().peer.name,
                               uid: context.read<PeerTrackNode>().uid),
                           Semantics(
@@ -123,52 +119,29 @@ class _PeerTileState extends State<PeerTile> {
                 : Semantics(
                     label:
                         "fl_${context.read<PeerTrackNode>().peer.name}_screen_share_tile",
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey, width: 1.0),
-                          color: Colors.transparent,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10))),
-                      key: key,
-                      height: widget.itemHeight + 110,
-                      width: widget.itemWidth,
-                      child: Stack(
-                        children: [
-                          VideoView(
-                            uid: context.read<PeerTrackNode>().uid,
-                            scaleType: widget.scaleType,
-                          ),
-                          Positioned(
-                            //Bottom left
-                            bottom: 5,
-                            left: 5,
-                            child: Container(
-                              key: Key(
-                                  "fl_${context.read<PeerTrackNode>().peer.name}_name"),
-                              decoration: BoxDecoration(
-                                  color: HMSThemeColors.backgroundDim
-                                      .withOpacity(0.64),
-                                  borderRadius: BorderRadius.circular(8)),
-                              child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 8.0, right: 4, top: 4, bottom: 4),
-                                  child: PeerName(
-                                    maxWidth: constraints.maxWidth,
-                                  ),
-                                ),
+                    child: LayoutBuilder(
+                      builder: (context,BoxConstraints constraints) {
+                        return Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey, width: 1.0),
+                              color: Colors.transparent,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10))),
+                          key: key,
+                          height: widget.itemHeight + 110,
+                          width: widget.itemWidth,
+                          child: Stack(
+                            children: [
+                              VideoView(
+                                uid: context.read<PeerTrackNode>().uid,
+                                scaleType: widget.scaleType,
                               ),
-                            ),
+                              NameAndNetwork(maxWidth: constraints.maxWidth),
+                              const RTCStatsView(isLocal: false),
+                            ],
                           ),
-                          const RTCStatsView(isLocal: false),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: widget.islongPressEnabled
-                                ? UtilityComponents.rotateScreen(context)
-                                : const SizedBox(),
-                          )
-                        ],
-                      ),
+                        );
+                      }
                     ),
                   );
           })),
