@@ -197,7 +197,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                       */
                                                       child: (modeData.item1 ==
                                                               MeetingMode
-                                                                  .oneToOne)
+                                                                  .activeSpeakerWithInset)
                                                           ? OneToOneMode(
                                                               bottomMargin: 225,
                                                               peerTracks:
@@ -208,7 +208,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                               size: size)
                                                           : (modeData.item1 ==
                                                                   MeetingMode
-                                                                      .activeSpeaker)
+                                                                      .activeSpeakerWithoutInset)
                                                               ? CustomGridView()
                                                               // basicGridView(
                                                               //     peerTracks: data

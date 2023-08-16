@@ -7,24 +7,30 @@ import 'package:hms_room_kit/src/widgets/common_widgets/peer_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
-class CustomGridView extends StatefulWidget {
-  const CustomGridView({super.key});
+class CustomOneToOneGrid extends StatefulWidget {
+  const CustomOneToOneGrid({super.key});
 
   @override
-  State<CustomGridView> createState() => _CustomGridViewState();
+  State<CustomOneToOneGrid> createState() => _CustomOneToOneGridState();
 }
 
-class _CustomGridViewState extends State<CustomGridView> {
+class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
   PageController controller = PageController();
   int tileNumber = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Selector<MeetingStore, Tuple3<List<PeerTrackNode>, int, int>>(
-        selector: (_, meetingStore) => Tuple3(meetingStore.peerTracks,
-            meetingStore.peerTracks.length, meetingStore.currentPage),
+    return Selector<MeetingStore,
+            Tuple4<List<PeerTrackNode>, int, int, PeerTrackNode>>(
+        selector: (_, meetingStore) => Tuple4(
+            meetingStore.peerTracks,
+            meetingStore.peerTracks.length,
+            meetingStore.currentPage,
+            meetingStore.peerTracks[0]),
         builder: (_, data, __) {
-          int pageCount = (data.item2 ~/ 6) + (data.item2 % 6 == 0 ? 0 : 1);
+          int numberOfPeers = data.item2 - 1;
+          int pageCount =
+              (numberOfPeers ~/ 6) + (numberOfPeers % 6 == 0 ? 0 : 1);
           return Column(
             children: [
               Expanded(
@@ -38,8 +44,14 @@ class _CustomGridViewState extends State<CustomGridView> {
                     onPageChanged: (num) {
                       context.read<MeetingStore>().setCurrentPage(num);
                     },
-                    itemBuilder: (context, index) =>
-                        _generateGrid(data.item2, index, data.item1)),
+                    itemBuilder: (context, index) => _generateGrid(
+                        numberOfPeers,
+                        index,
+                        data.item1
+                            .where((element) =>
+                                !element.peer.isLocal ||
+                                element.track?.source == "SCREEN")
+                            .toList())),
               ),
               if (pageCount > 1)
                 Padding(

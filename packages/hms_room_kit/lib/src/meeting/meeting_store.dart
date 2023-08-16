@@ -118,7 +118,7 @@ class MeetingStore extends ChangeNotifier
 
   ScrollController controller = ScrollController();
 
-  MeetingMode meetingMode = MeetingMode.activeSpeaker;
+  MeetingMode meetingMode = MeetingMode.activeSpeakerWithInset;
 
   bool isLandscapeLocked = false;
 
@@ -766,10 +766,10 @@ class MeetingStore extends ChangeNotifier
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     //To handle the active speaker mode scenario
-    if ((isFlashOn == 0) &&
-        meetingMode == MeetingMode.activeSpeaker &&
+    if ((currentPage == 0) &&
+        (meetingMode == MeetingMode.activeSpeakerWithInset ||
+            meetingMode == MeetingMode.activeSpeakerWithoutInset) &&
         peerTracks.length > 6) {
-      ;
       /* Here we iterate through the updateSpeakers list
        * and do the following:
        * Find the index of the peer
