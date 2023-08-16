@@ -17,7 +17,13 @@ https://github.com/100mslive/100ms-flutter/issues/1477
 - Added Marquee and Network Icon
 https://github.com/100mslive/100ms-flutter/issues/1479
 
-- Updated Android SDK version to 2.7.2 and iOS SDK version to 0.9.8
+- Added Equal Prominence layout
+https://github.com/100mslive/100ms-flutter/issues/1478
+
+- Added Active Speaker Sorting
+https://github.com/100mslive/100ms-flutter/issues/1480
+
+- Updated Android SDK version to 2.7.3 and iOS SDK version to 0.9.8
 
 Core SDK: 1.7.4
 Room Kit: 0.1.0
