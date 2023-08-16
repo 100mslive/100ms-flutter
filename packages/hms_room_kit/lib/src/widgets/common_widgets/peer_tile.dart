@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
+import 'package:hms_room_kit/src/widgets/peer_widgets/name_and_network.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
@@ -11,7 +12,6 @@ import 'package:hms_room_kit/src/widgets/peer_widgets/audio_mute_status.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/brb_tag.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/hand_raise.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/more_option.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/network_icon_widget.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/peer_name.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/rtc_stats_view.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/tile_border.dart';
@@ -105,38 +105,7 @@ class _PeerTileState extends State<PeerTile> {
                               itemWidth: widget.itemWidth,
                             ),
                           ),
-                          Positioned(
-                            //Bottom left
-                            bottom: 5,
-                            left: 5,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: HMSThemeColors.backgroundDim
-                                      .withOpacity(0.64),
-                                  borderRadius: BorderRadius.circular(8)),
-                              child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 8.0, right: 4, top: 4, bottom: 4),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      PeerName(
-                                        maxWidth: constraints.maxWidth,
-                                      ),
-                                      const SizedBox(
-                                        width: 4,
-                                      ),
-                                      const NetworkIconWidget(),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                          NameAndNetwork(maxWidth: constraints.maxWidth),
                           const HandRaise(), //top left
                           const BRBTag(), //top left
                           const AudioMuteStatus(), //top right
