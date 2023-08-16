@@ -11,7 +11,6 @@ import 'package:hms_room_kit/src/widgets/peer_widgets/audio_mute_status.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/brb_tag.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/hand_raise.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/more_option.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/network_icon_widget.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/tile_border.dart';
 import 'package:provider/provider.dart';
 
