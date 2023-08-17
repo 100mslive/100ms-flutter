@@ -4,13 +4,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
+import 'package:hms_room_kit/src/widgets/peer_widgets/inset_tile_more_option.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/video_view.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/audio_mute_status.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/brb_tag.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/hand_raise.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/more_option.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/tile_border.dart';
 import 'package:provider/provider.dart';
 
@@ -113,7 +113,7 @@ class _InsetTileState extends State<InsetTile> {
                     const BRBTag(), //top left
                     const AudioMuteStatus(), //top right
                     if (isButtonVisible)
-                      MoreOption(
+                      InsetTileMoreOption(
                         callbackFunction: widget.callbackFunction,
                       ), //bottom right
                   ],
