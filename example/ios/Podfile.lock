@@ -186,14 +186,14 @@ PODS:
   - HMSBroadcastExtensionSDK (0.0.9)
   - HMSHLSPlayerSDK (0.0.2):
     - HMSAnalyticsSDK (= 0.0.2)
-  - HMSSDK (0.9.8):
+  - HMSSDK (0.9.9):
     - HMSAnalyticsSDK (= 0.0.2)
     - HMSWebRTC (= 1.0.5116)
   - hmssdk_flutter (1.7.4):
     - Flutter
     - HMSBroadcastExtensionSDK (= 0.0.9)
     - HMSHLSPlayerSDK (= 0.0.2)
-    - HMSSDK (= 0.9.8)
+    - HMSSDK (= 0.9.9)
   - HMSWebRTC (1.0.5116)
   - image_gallery_saver (2.0.2):
     - Flutter
@@ -349,8 +349,8 @@ SPEC CHECKSUMS:
   HMSAnalyticsSDK: 4d2a88a729b1eb42f3d25f217c28937ec318a5b7
   HMSBroadcastExtensionSDK: d80fe325f6c928bd8e5176290b5a4b7ae15d6fbb
   HMSHLSPlayerSDK: 6a54ad4d12f3dc2270d1ecd24019d71282a4f6a3
-  HMSSDK: 19df8bd7bb2ef517b3364983d96941996fdc65a0
-  hmssdk_flutter: c22b108b34b5cfe000f6625fc670da6bf36de8cb
+  HMSSDK: 4cf2a0a390a96f024b09c60dbb786d7a60800f6d
+  hmssdk_flutter: 53263baea9a0595180a41c0b51460e77e0104124
   HMSWebRTC: ae54e9dd91b869051b283b43b14f57d43b7bf8e1
   image_gallery_saver: cb43cc43141711190510e92c460eb1655cd343cb
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
