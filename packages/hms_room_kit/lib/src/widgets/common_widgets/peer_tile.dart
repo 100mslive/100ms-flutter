@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
+import 'package:hms_room_kit/src/widgets/peer_widgets/inset_tile_more_option.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/name_and_network.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/degrade_tile.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/video_view.dart';
@@ -12,7 +12,6 @@ import 'package:hms_room_kit/src/widgets/peer_widgets/audio_mute_status.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/brb_tag.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/hand_raise.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/more_option.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/peer_name.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/rtc_stats_view.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/tile_border.dart';
 import 'package:provider/provider.dart';
@@ -96,7 +95,7 @@ class _PeerTileState extends State<PeerTile> {
                           const HandRaise(), //top left
                           const BRBTag(), //top left
                           const AudioMuteStatus(), //top right
-                          const MoreOption(), //bottom right
+                          context.read<PeerTrackNode>().peer.isLocal?const InsetTileMoreOption():const MoreOption(), //bottom right
                           Semantics(
                             label: "fl_stats_on_tile",
                             child: RTCStatsView(
