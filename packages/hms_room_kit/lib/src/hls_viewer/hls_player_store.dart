@@ -25,38 +25,11 @@ class HLSPlayerStore extends ChangeNotifier {
   ///In other case we hide th buttons after 5 seconds
   void startTimerToHideButtons() {
     _isTimerActive = true;
-    Timer(const Duration(seconds: 5), () {
-      if (isStreamPlaying) {
+    Timer(const Duration(seconds: 3), () {
         areStreamControlsVisible = false;
         _isTimerActive = false;
         notifyListeners();
-      }
     });
-  }
-
-  ///This method toggles the fullscreen mode of the app
-  ///
-  ///[isFullScreen] is used to check if the app is in fullscreen mode or not
-  ///The application is in full screen if it's in landscape mode
-  ///
-  ///If the app is in fullscreen mode we set the orientation to portraitUp
-  ///and set the system UI mode to manual and set the overlays to bottom and top i.e. the status bar and the navigation bar
-  ///
-  ///Similarly if the app is not in fullscreen mode we set the orientation to landscapeRight and landscapeLeft
-  ///and set the system UI mode to immersive i.e. the status bar and the navigation bar are hidden
-  void toggleFullScreen(BuildContext context) {
-    isFullScreen = MediaQuery.of(context).orientation == Orientation.landscape;
-    if (isFullScreen) {
-      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-          overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]);
-    } else {
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-      SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
-    }
-    isFullScreen = !isFullScreen;
-    notifyListeners();
   }
 
   ///This method toggles the visibility of the buttons
@@ -77,23 +50,5 @@ class HLSPlayerStore extends ChangeNotifier {
       areStreamControlsVisible = false;
       notifyListeners();
     }
-  }
-
-  ///This method toggles the play/pause of the video
-  ///
-  ///If [isStreamPlaying] is true we pause the video and set [areStreamControlsVisible] to true
-  ///This is done to keep showing the controls until the user plays the video again
-  ///The controls get hidden if you touch the screen again.
-  ///
-  void togglePlayPause() {
-    if (isStreamPlaying) {
-      HMSHLSPlayerController.pause();
-      areStreamControlsVisible = true;
-    } else {
-      HMSHLSPlayerController.resume();
-      startTimerToHideButtons();
-    }
-    isStreamPlaying = !isStreamPlaying;
-    notifyListeners();
   }
 }

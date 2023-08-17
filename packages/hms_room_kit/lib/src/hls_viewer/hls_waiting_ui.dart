@@ -19,20 +19,23 @@ class HLSWaitingUI extends StatelessWidget {
           width: 80,
         ),
         const SizedBox(
-          height: 16,
+          height: 24,
         ),
         HMSTitleText(
-          text: "Class hasn’t started yet",
+          text: "Stream yet to start",
           textColor: HMSThemeColors.onSurfaceHighEmphasis,
-          fontSize: 28,
+          fontSize: 24,
           lineHeight: 32,
           letterSpacing: 0.25,
         ),
         const SizedBox(
-          height: 5,
+          height: 8,
         ),
         HMSSubheadingText(
-            text: "Please wait for the teacher to start the class.",
+            text: "Sit back and relax",
+            fontSize: 16,
+            lineHeight: 24,
+            letterSpacing: 0.5,
             textColor: HMSThemeColors.onSurfaceMediumEmphasis)
       ],
     );
