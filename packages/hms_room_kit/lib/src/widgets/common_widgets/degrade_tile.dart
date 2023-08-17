@@ -9,11 +9,7 @@ import 'package:provider/provider.dart';
 //Package imports
 
 class DegradeTile extends StatefulWidget {
-  final double itemHeight;
-  final double itemWidth;
-
-  const DegradeTile({Key? key, this.itemHeight = 200, this.itemWidth = 200})
-      : super(key: key);
+  const DegradeTile({Key? key}) : super(key: key);
 
   @override
   State<DegradeTile> createState() => _DegradeTileState();
@@ -29,8 +25,6 @@ class _DegradeTileState extends State<DegradeTile> {
               child:
                   LayoutBuilder(builder: (context, BoxConstraints constraints) {
                 return Container(
-                  height: widget.itemHeight + 110,
-                  width: widget.itemWidth,
                   decoration: BoxDecoration(
                       color: HMSThemeColors.backgroundDefault,
                       borderRadius:

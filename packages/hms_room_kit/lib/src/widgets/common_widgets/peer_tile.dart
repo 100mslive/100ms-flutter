@@ -20,8 +20,6 @@ import 'package:provider/provider.dart';
 // Project imports
 
 class PeerTile extends StatefulWidget {
-  final double itemHeight;
-  final double itemWidth;
   final ScaleType scaleType;
   final bool islongPressEnabled;
   final double avatarRadius;
@@ -29,8 +27,6 @@ class PeerTile extends StatefulWidget {
   final double avatarTitleTextLineHeight;
   const PeerTile(
       {Key? key,
-      this.itemHeight = 200.0,
-      this.itemWidth = 200.0,
       this.scaleType = ScaleType.SCALE_ASPECT_FILL,
       this.islongPressEnabled = true,
       this.avatarRadius = 34,
@@ -71,8 +67,6 @@ class _PeerTileState extends State<PeerTile> {
             return context.read<PeerTrackNode>().uid.contains("mainVideo")
                 ? Container(
                     key: key,
-                    height: widget.itemHeight + 110,
-                    width: widget.itemWidth,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: HMSThemeColors.backgroundDefault,
@@ -96,10 +90,7 @@ class _PeerTileState extends State<PeerTile> {
                           Semantics(
                             label:
                                 "fl_${context.read<PeerTrackNode>().peer.name}_degraded_tile",
-                            child: DegradeTile(
-                              itemHeight: widget.itemHeight,
-                              itemWidth: widget.itemWidth,
-                            ),
+                            child: const DegradeTile(),
                           ),
                           NameAndNetwork(maxWidth: constraints.maxWidth),
                           const HandRaise(), //top left
@@ -128,8 +119,6 @@ class _PeerTileState extends State<PeerTile> {
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(10))),
                           key: key,
-                          height: widget.itemHeight + 110,
-                          width: widget.itemWidth,
                           child: Stack(
                             children: [
                               VideoView(
