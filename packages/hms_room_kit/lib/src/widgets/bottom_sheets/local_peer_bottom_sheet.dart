@@ -156,12 +156,16 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                           height: 20,
                           width: 20,
                           colorFilter: ColorFilter.mode(
-                             widget.meetingStore.peerTracks.length > 1?HMSThemeColors.onSurfaceHighEmphasis:HMSThemeColors.onSurfaceLowEmphasis,
+                              widget.meetingStore.peerTracks.length > 1
+                                  ? HMSThemeColors.onSurfaceHighEmphasis
+                                  : HMSThemeColors.onSurfaceLowEmphasis,
                               BlendMode.srcIn),
                         ),
                         title: HMSSubheadingText(
                             text: "Minimize Your Video",
-                            textColor:  widget.meetingStore.peerTracks.length > 1?HMSThemeColors.onSurfaceHighEmphasis:HMSThemeColors.onSurfaceLowEmphasis)),
+                            textColor: widget.meetingStore.peerTracks.length > 1
+                                ? HMSThemeColors.onSurfaceHighEmphasis
+                                : HMSThemeColors.onSurfaceLowEmphasis)),
                   ],
                 ),
               ),

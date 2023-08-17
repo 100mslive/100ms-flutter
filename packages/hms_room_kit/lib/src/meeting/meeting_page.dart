@@ -112,7 +112,8 @@ class _MeetingPageState extends State<MeetingPage> {
                                       brightness: Brightness.dark,
                                       primaryColor:
                                           HMSThemeColors.primaryDefault,
-                                      scaffoldBackgroundColor: HMSThemeColors.backgroundDefault),
+                                      scaffoldBackgroundColor:
+                                          HMSThemeColors.backgroundDefault),
                                   child: Stack(
                                     children: [
                                       Selector<

@@ -15,7 +15,8 @@ class HLSViewerHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:  EdgeInsets.only(left: 15, right: 15, top: Platform.isIOS?55:45),
+      padding:
+          EdgeInsets.only(left: 15, right: 15, top: Platform.isIOS ? 55 : 45),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

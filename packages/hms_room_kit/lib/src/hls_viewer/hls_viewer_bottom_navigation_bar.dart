@@ -12,20 +12,19 @@ import 'package:hms_room_kit/src/widgets/bottom_sheets/more_settings_bottom_shee
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
 import 'package:provider/provider.dart';
 
-class HLSViewerBottomNavigationBar extends StatelessWidget{
+class HLSViewerBottomNavigationBar extends StatelessWidget {
   const HLSViewerBottomNavigationBar({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: Platform.isIOS?32.0:0),
+      padding: EdgeInsets.only(bottom: Platform.isIOS ? 32.0 : 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ///Leave Button
           HMSEmbeddedButton(
-            onTap: () async =>
-                {await UtilityComponents.onBackPressed(context)},
+            onTap: () async => {await UtilityComponents.onBackPressed(context)},
             offColor: HMSThemeColors.alertErrorDefault,
             disabledBorderColor: HMSThemeColors.alertErrorDefault,
             isActive: false,
@@ -39,9 +38,9 @@ class HLSViewerBottomNavigationBar extends StatelessWidget{
               ),
             ),
           ),
-    
+
           ///Hand Raise Button
-                  HMSEmbeddedButton(
+          HMSEmbeddedButton(
             onTap: () => {
               context.read<MeetingStore>().getSessionMetadata(
                   SessionStoreKeyValues.getNameFromMethod(
@@ -72,7 +71,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget{
               ),
             ),
           ),
-    
+
           ///Chat Button
           HMSEmbeddedButton(
             onTap: () => {
@@ -105,7 +104,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget{
               ),
             ),
           ),
-    
+
           ///Menu Button
           HMSEmbeddedButton(
             onTap: () async => {
@@ -119,8 +118,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget{
                 builder: (ctx) => ChangeNotifierProvider.value(
                     value: context.read<MeetingStore>(),
                     child: MoreSettingsBottomSheet(
-                      isAudioMixerDisabled:
-                          AppDebugConfig.isAudioMixerDisabled,
+                      isAudioMixerDisabled: AppDebugConfig.isAudioMixerDisabled,
                     )),
               )
             },
@@ -139,7 +137,5 @@ class HLSViewerBottomNavigationBar extends StatelessWidget{
         ],
       ),
     );
-  
   }
-
 }

@@ -11,7 +11,9 @@ import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
 class MoreOption extends StatefulWidget {
-  const MoreOption({Key? key,}) : super(key: key);
+  const MoreOption({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<MoreOption> createState() => _MoreOptionState();

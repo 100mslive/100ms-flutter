@@ -26,9 +26,9 @@ class HLSPlayerStore extends ChangeNotifier {
   void startTimerToHideButtons() {
     _isTimerActive = true;
     Timer(const Duration(seconds: 3), () {
-        areStreamControlsVisible = false;
-        _isTimerActive = false;
-        notifyListeners();
+      areStreamControlsVisible = false;
+      _isTimerActive = false;
+      notifyListeners();
     });
   }
 

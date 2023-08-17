@@ -16,13 +16,15 @@ class FiveTileLayout extends StatelessWidget {
         Expanded(
           child: Row(children: [
             Expanded(
-              child: ListenablePeerWidget(index:startIndex,peerTracks: peerTracks),
+              child: ListenablePeerWidget(
+                  index: startIndex, peerTracks: peerTracks),
             ),
             const SizedBox(
               width: 8,
             ),
             Expanded(
-              child: ListenablePeerWidget(index:startIndex + 1,peerTracks: peerTracks),
+              child: ListenablePeerWidget(
+                  index: startIndex + 1, peerTracks: peerTracks),
             ),
           ]),
         ),
@@ -32,13 +34,15 @@ class FiveTileLayout extends StatelessWidget {
         Expanded(
           child: Row(children: [
             Expanded(
-              child: ListenablePeerWidget(index:startIndex + 2,peerTracks: peerTracks),
+              child: ListenablePeerWidget(
+                  index: startIndex + 2, peerTracks: peerTracks),
             ),
             const SizedBox(
               width: 8,
             ),
             Expanded(
-              child: ListenablePeerWidget(index:startIndex + 3,peerTracks: peerTracks),
+              child: ListenablePeerWidget(
+                  index: startIndex + 3, peerTracks: peerTracks),
             ),
           ]),
         ),
@@ -49,7 +53,8 @@ class FiveTileLayout extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width / 4),
-            child: ListenablePeerWidget(index:startIndex + 4,peerTracks: peerTracks),
+            child: ListenablePeerWidget(
+                index: startIndex + 4, peerTracks: peerTracks),
           ),
         ),
       ],

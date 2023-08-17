@@ -86,37 +86,40 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                       return (hasHlsStarted)
                                           ? Selector<HLSPlayerStore, bool>(
                                               selector: (_, hlsPlayerStore) =>
-                                                  hlsPlayerStore.areStreamControlsVisible,
-                                              builder: (_, areStreamControlsVisible, __) {
+                                                  hlsPlayerStore
+                                                      .areStreamControlsVisible,
+                                              builder: (_,
+                                                  areStreamControlsVisible,
+                                                  __) {
                                                 return Positioned(
-                                                  bottom: areStreamControlsVisible ? 68 : 0,
+                                                  bottom:
+                                                      areStreamControlsVisible
+                                                          ? 68
+                                                          : 0,
                                                   child: SizedBox(
                                                     width:
                                                         MediaQuery.of(context)
                                                             .size
                                                             .width,
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height -
-                                                            (areStreamControlsVisible
-                                                                ? 68
-                                                                : 0),
-                                                    child: GestureDetector(
-                                                      onTap: () => context.read<HLSPlayerStore>().toggleButtonsVisibility(),
-                                                      child: HLSPlayer(
-                                                        key: Key(context
-                                                                .read<
-                                                                    MeetingStore>()
-                                                                .localPeer
-                                                                ?.peerId ??
-                                                            "HLS_PLAYER"),
-                                                        ratio: Utilities
-                                                            .getHLSPlayerDefaultRatio(
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size),
-                                                      ),
+                                                    height: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .height -
+                                                        (areStreamControlsVisible
+                                                            ? 68
+                                                            : 0),
+                                                    child: HLSPlayer(
+                                                      key: Key(context
+                                                              .read<
+                                                                  MeetingStore>()
+                                                              .localPeer
+                                                              ?.peerId ??
+                                                          "HLS_PLAYER"),
+                                                      ratio: Utilities
+                                                          .getHLSPlayerDefaultRatio(
+                                                              MediaQuery.of(
+                                                                      context)
+                                                                  .size),
                                                     ),
                                                   ),
                                                 );
@@ -138,8 +141,10 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                 HLSViewerHeader(),
                                                 HLSViewerBottomNavigationBar()
                                               ],
-                                            ):Container();
+                                            )
+                                          : Container();
                                     }),
+
                                 // Selector<HLSPlayerStore, bool>(
                                 //     selector: (_, hlsPlayerStore) =>
                                 //         hlsPlayerStore.isFullScreen,

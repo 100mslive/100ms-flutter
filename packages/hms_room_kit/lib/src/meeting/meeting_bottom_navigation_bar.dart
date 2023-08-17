@@ -28,8 +28,7 @@ class _MeetingBottomNavigationBarState
       children: [
         ///Leave Button
         HMSEmbeddedButton(
-          onTap: () async =>
-              {await UtilityComponents.onBackPressed(context)},
+          onTap: () async => {await UtilityComponents.onBackPressed(context)},
           offColor: HMSThemeColors.alertErrorDefault,
           disabledBorderColor: HMSThemeColors.alertErrorDefault,
           isActive: false,
@@ -94,9 +93,7 @@ class _MeetingBottomNavigationBarState
                   onTap: () => {
                     (data.item2)
                         ? null
-                        : context
-                            .read<MeetingStore>()
-                            .toggleCameraMuteState(),
+                        : context.read<MeetingStore>().toggleCameraMuteState(),
                   },
                   disabledBorderColor: HMSThemeColors.surfaceBrighter,
                   enabledBorderColor: HMSThemeColors.borderBright,
@@ -163,8 +160,7 @@ class _MeetingBottomNavigationBarState
               builder: (ctx) => ChangeNotifierProvider.value(
                   value: context.read<MeetingStore>(),
                   child: MoreSettingsBottomSheet(
-                    isAudioMixerDisabled:
-                        AppDebugConfig.isAudioMixerDisabled,
+                    isAudioMixerDisabled: AppDebugConfig.isAudioMixerDisabled,
                   )),
             )
           },
