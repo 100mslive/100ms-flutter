@@ -91,33 +91,27 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                               builder: (_,
                                                   areStreamControlsVisible,
                                                   __) {
-                                                return Positioned(
-                                                  bottom:
-                                                      areStreamControlsVisible
-                                                          ? 68
-                                                          : 0,
-                                                  child: SizedBox(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    height: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .height,
-                                                    child: HLSPlayer(
-                                                      key: Key(context
-                                                              .read<
-                                                                  MeetingStore>()
-                                                              .localPeer
-                                                              ?.peerId ??
-                                                          "HLS_PLAYER"),
-                                                      ratio: Utilities
-                                                          .getHLSPlayerDefaultRatio(
-                                                              MediaQuery.of(
-                                                                      context)
-                                                                  .size),
-                                                    ),
+                                                return SizedBox(
+                                                  width:
+                                                      MediaQuery.of(context)
+                                                          .size
+                                                          .width,
+                                                  height: MediaQuery.of(
+                                                              context)
+                                                          .size
+                                                          .height,
+                                                  child: HLSPlayer(
+                                                    key: Key(context
+                                                            .read<
+                                                                MeetingStore>()
+                                                            .localPeer
+                                                            ?.peerId ??
+                                                        "HLS_PLAYER"),
+                                                    ratio: Utilities
+                                                        .getHLSPlayerDefaultRatio(
+                                                            MediaQuery.of(
+                                                                    context)
+                                                                .size),
                                                   ),
                                                 );
                                               })

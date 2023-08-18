@@ -40,36 +40,25 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
           ),
 
           ///Hand Raise Button
-          HMSEmbeddedButton(
-            onTap: () => {
-              context.read<MeetingStore>().getSessionMetadata(
-                  SessionStoreKeyValues.getNameFromMethod(
-                      SessionStoreKey.pinnedMessageSessionKey)),
-              context.read<MeetingStore>().setNewMessageFalse(),
-              showModalBottomSheet(
-                isScrollControlled: true,
-                backgroundColor: HMSThemeColors.backgroundDefault,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+          Selector<MeetingStore,bool>(
+            selector: (_,meetingStore) => meetingStore.isRaisedHand,
+            builder: (_,isRaisedHand,__) {
+              return HMSEmbeddedButton(
+                onTap: () => {context.read<MeetingStore>().changeMetadata()},
+                enabledBorderColor: HMSThemeColors.borderBright,
+                onColor: HMSThemeColors.backgroundDim.withAlpha(64),
+                isActive: !isRaisedHand,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SvgPicture.asset(
+                    "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
+                    colorFilter: ColorFilter.mode(
+                        HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
+                    semanticsLabel: "chat_button",
+                  ),
                 ),
-                context: context,
-                builder: (ctx) => ChangeNotifierProvider.value(
-                    value: context.read<MeetingStore>(),
-                    child: const ChatBottomSheet()),
-              )
-            },
-            enabledBorderColor: HMSThemeColors.borderBright,
-            onColor: HMSThemeColors.backgroundDim.withAlpha(64),
-            isActive: true,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SvgPicture.asset(
-                "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
-                colorFilter: ColorFilter.mode(
-                    HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
-                semanticsLabel: "chat_button",
-              ),
-            ),
+              );
+            }
           ),
 
           ///Chat Button
