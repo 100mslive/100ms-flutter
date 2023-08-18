@@ -1,3 +1,11 @@
+## 1.7.4 - 2023-08-18
+
+Bug fixes and performance improvements
+
+Updated to Android SDK 2.7.3 & iOS SDK 0.9.9
+
+**Full Changelog**: [1.7.3...1.7.4](https://github.com/100mslive/100ms-flutter/compare/1.7.3...1.7.4)
+
 ## 1.7.3 - 2023-08-03
 
 ### Added
