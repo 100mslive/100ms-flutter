@@ -266,7 +266,7 @@ class _HomePageState extends State<HomePage> {
     }
     FocusManager.instance.primaryFocus?.unfocus();
     AppDebugConfig.isMockLayoutAPIEnabled =
-        await Utilities.getBoolData(key: 'is_mock_layout_api_enabled') ?? true;
+        await Utilities.getBoolData(key: 'is_mock_layout_api_enabled') ?? false;
     Navigator.push(
         context,
         MaterialPageRoute(

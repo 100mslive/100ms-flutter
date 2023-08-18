@@ -7,6 +7,7 @@ import 'package:hms_room_kit/src/widgets/grid_layouts/six_tile_layout.dart';
 import 'package:hms_room_kit/src/widgets/grid_layouts/three_tile_layout.dart';
 import 'package:hms_room_kit/src/widgets/grid_layouts/two_tile_layout.dart';
 
+///This renders the tile layout for different peers based on the number of peers in the room
 class GridLayout extends StatefulWidget {
   final int numberOfTiles;
   final int index;
@@ -28,6 +29,9 @@ class _GridLayoutState extends State<GridLayout> {
 
   @override
   Widget build(BuildContext context) {
+
+    ///Here we check how many tiles we need to render
+    ///So if basically difference between total number of tile and tiles rendered till now
     if ((6 * (widget.index + 1) > widget.numberOfTiles)) {
       tilesToBeRendered = widget.numberOfTiles - 6 * (widget.index);
     } else {
@@ -35,6 +39,8 @@ class _GridLayoutState extends State<GridLayout> {
     }
 
     tileStartingIndex = 6 * widget.index;
+
+    ///Here we render the tile layout based on how many tiles we need to render
     if (tilesToBeRendered == 6) {
       return SixTileLayout(
         peerTracks: widget.peerTracks,
