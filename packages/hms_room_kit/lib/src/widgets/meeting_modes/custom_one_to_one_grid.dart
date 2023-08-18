@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/peer_tile.dart';
 import 'package:hms_room_kit/src/widgets/grid_layouts/grid_layout.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';

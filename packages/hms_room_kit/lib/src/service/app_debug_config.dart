@@ -15,7 +15,7 @@ class AppDebugConfig {
   static bool isAutoSimulcast = true;
 
   static bool isDebugMode = false;
-  static bool isMockLayoutAPIEnabled = true;
+  static bool isMockLayoutAPIEnabled = false;
 
   static HMSIOSScreenshareConfig? iOSScreenshareConfig;
 
@@ -28,6 +28,6 @@ class AppDebugConfig {
     isSoftwareDecoderDisabled = true;
     isAudioMixerDisabled = true;
     isAutoSimulcast = true;
-    isMockLayoutAPIEnabled = true;
+    isMockLayoutAPIEnabled = false;
   }
 }

@@ -75,7 +75,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
         await Utilities.getBoolData(key: 'is_streaming_flow') ?? true;
 
     isMockLayoutAPIEnabled =
-        await Utilities.getBoolData(key: 'is_mock_layout_api_enabled') ?? true;
+        await Utilities.getBoolData(key: 'is_mock_layout_api_enabled') ?? false;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
