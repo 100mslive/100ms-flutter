@@ -29,7 +29,6 @@ class _GridLayoutState extends State<GridLayout> {
 
   @override
   Widget build(BuildContext context) {
-
     ///Here we check how many tiles we need to render
     ///So if basically difference between total number of tile and tiles rendered till now
     if ((6 * (widget.index + 1) > widget.numberOfTiles)) {
