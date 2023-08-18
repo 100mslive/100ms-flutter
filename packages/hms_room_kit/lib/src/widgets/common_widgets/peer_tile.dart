@@ -95,7 +95,9 @@ class _PeerTileState extends State<PeerTile> {
                           const HandRaise(), //top left
                           const BRBTag(), //top left
                           const AudioMuteStatus(), //top right
-                          context.read<PeerTrackNode>().peer.isLocal?const InsetTileMoreOption():const MoreOption(), //bottom right
+                          context.read<PeerTrackNode>().peer.isLocal
+                              ? const InsetTileMoreOption()
+                              : const MoreOption(), //bottom right
                           Semantics(
                             label: "fl_stats_on_tile",
                             child: RTCStatsView(
@@ -110,27 +112,26 @@ class _PeerTileState extends State<PeerTile> {
                     label:
                         "fl_${context.read<PeerTrackNode>().peer.name}_screen_share_tile",
                     child: LayoutBuilder(
-                      builder: (context,BoxConstraints constraints) {
-                        return Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey, width: 1.0),
-                              color: Colors.transparent,
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10))),
-                          key: key,
-                          child: Stack(
-                            children: [
-                              VideoView(
-                                uid: context.read<PeerTrackNode>().uid,
-                                scaleType: widget.scaleType,
-                              ),
-                              NameAndNetwork(maxWidth: constraints.maxWidth),
-                              const RTCStatsView(isLocal: false),
-                            ],
-                          ),
-                        );
-                      }
-                    ),
+                        builder: (context, BoxConstraints constraints) {
+                      return Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: 1.0),
+                            color: Colors.transparent,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10))),
+                        key: key,
+                        child: Stack(
+                          children: [
+                            VideoView(
+                              uid: context.read<PeerTrackNode>().uid,
+                              scaleType: widget.scaleType,
+                            ),
+                            NameAndNetwork(maxWidth: constraints.maxWidth),
+                            const RTCStatsView(isLocal: false),
+                          ],
+                        ),
+                      );
+                    }),
                   );
           })),
     );

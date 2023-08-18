@@ -23,7 +23,6 @@ class GridLayout extends StatefulWidget {
 }
 
 class _GridLayoutState extends State<GridLayout> {
-  
   int tilesToBeRendered = 0;
   int tileStartingIndex = 0;
 
@@ -62,11 +61,14 @@ class _GridLayoutState extends State<GridLayout> {
         );
 
       case 4:
-        return FourTileLayout(peerTracks: widget.peerTracks, startIndex: tileStartingIndex);
+        return FourTileLayout(
+            peerTracks: widget.peerTracks, startIndex: tileStartingIndex);
 
       case 5:
-        return FiveTileLayout(peerTracks: widget.peerTracks, startIndex: tileStartingIndex);
+        return FiveTileLayout(
+            peerTracks: widget.peerTracks, startIndex: tileStartingIndex);
     }
-    return SixTileLayout(peerTracks: widget.peerTracks, startIndex: tileStartingIndex);
+    return SixTileLayout(
+        peerTracks: widget.peerTracks, startIndex: tileStartingIndex);
   }
 }
