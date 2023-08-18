@@ -14,7 +14,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  hmssdk_flutter: 1.7.5
+  hmssdk_flutter: ^1.7.5
   intl: ^0.18.1
   permission_handler: ^10.4.3
   provider: ^6.0.5
@@ -35,7 +35,7 @@ dependencies:
   share_plus: ^7.0.2
   flutter_foreground_task: ^6.0.0+1
   collection: ^1.17.0
-  dots_indicator: 3.0.0
+  dots_indicator: ^3.0.0
 
 dev_dependencies:
   flutter_test:
