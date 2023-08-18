@@ -59,7 +59,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
               )
             },
             enabledBorderColor: HMSThemeColors.borderBright,
-            onColor: HMSThemeColors.backgroundDim,
+            onColor: HMSThemeColors.backgroundDim.withAlpha(64),
             isActive: true,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -92,7 +92,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
               )
             },
             enabledBorderColor: HMSThemeColors.borderBright,
-            onColor: HMSThemeColors.backgroundDim,
+            onColor: HMSThemeColors.backgroundDim.withAlpha(64),
             isActive: true,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -123,7 +123,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
               )
             },
             enabledBorderColor: HMSThemeColors.borderBright,
-            onColor: HMSThemeColors.backgroundDim,
+            onColor: HMSThemeColors.backgroundDim.withAlpha(64),
             isActive: true,
             child: Padding(
               padding: const EdgeInsets.all(8.0),

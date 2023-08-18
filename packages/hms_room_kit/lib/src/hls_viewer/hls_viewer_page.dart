@@ -104,10 +104,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                     height: MediaQuery.of(
                                                                 context)
                                                             .size
-                                                            .height -
-                                                        (areStreamControlsVisible
-                                                            ? 68
-                                                            : 0),
+                                                            .height,
                                                     child: HLSPlayer(
                                                       key: Key(context
                                                               .read<
