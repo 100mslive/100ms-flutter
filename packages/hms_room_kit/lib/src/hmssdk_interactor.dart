@@ -269,9 +269,10 @@ class HMSSDKInteractor {
         meetingURLVariant: hmsHlsMeetingUrls,
         hmsHLSRecordingConfig: hmshlsRecordingConfig);
 
-    return await hmsSDK.startHlsStreaming(
+    await hmsSDK.startHlsStreaming(
         hmshlsConfig: hmshlsConfig,
         hmsActionResultListener: hmsActionResultListener);
+    return null;
   }
 
   void stopHLSStreaming(

@@ -35,8 +35,8 @@ class _CustomGridViewState extends State<CustomGridView> {
                     controller: controller,
                     allowImplicitScrolling: true,
                     itemCount: pageCount,
-                    onPageChanged: (num) {
-                      context.read<MeetingStore>().setCurrentPage(num);
+                    onPageChanged: (pageNumber) {
+                      context.read<MeetingStore>().setCurrentPage(pageNumber);
                     },
                     itemBuilder: (context, index) =>
                         _generateGrid(data.item2, index, data.item1)),

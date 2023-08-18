@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,7 +8,6 @@ import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/preview/preview_join_button.dart';
 import 'package:hms_room_kit/src/preview/preview_participant_chip.dart';
-import 'package:hms_room_kit/src/screen_controller.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/error_dialog.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
@@ -103,33 +101,31 @@ class _PreviewPageState extends State<PreviewPage> {
 
   void _startStreaming(
       PreviewStore previewStore, MeetingStore meetingStore) async {
-    HMSException? isStreamSuccessful;
     Future.delayed(const Duration(milliseconds: 100)).then((value) async => {
-          isStreamSuccessful =
-              await _meetingStore.startHLSStreaming(false, false),
-          if (isStreamSuccessful != null)
-            {
-              previewStore.hmsSDKInteractor.toggleAlwaysScreenOn(),
-              setState(() {
-                isHLSStarting = false;
-              }),
-              previewStore.hmsSDKInteractor.removeUpdateListener(previewStore),
-              meetingStore.removeListeners(),
-              meetingStore.peerTracks.clear(),
-              meetingStore.resetForegroundTaskAndOrientation(),
-              meetingStore.clearPIPState(),
-              meetingStore.isRoomEnded = true,
-              previewStore.isMeetingJoined = false,
-              previewStore.hmsSDKInteractor.leave(),
-              HMSThemeColors.resetLayoutColors(),
-              Navigator.pushReplacement(
-                  context,
-                  CupertinoPageRoute(
-                      builder: (_) => ScreenController(
-                            roomCode: widget.meetingLink,
-                            options: widget.options,
-                          ))),
-            }
+          await _meetingStore.startHLSStreaming(false, false),
+          // if (isStreamSuccessful != null)
+          //   {
+          //     previewStore.hmsSDKInteractor.toggleAlwaysScreenOn(),
+          //     setState(() {
+          //       isHLSStarting = false;
+          //     }),
+          //     previewStore.hmsSDKInteractor.removeUpdateListener(previewStore),
+          //     meetingStore.removeListeners(),
+          //     meetingStore.peerTracks.clear(),
+          //     meetingStore.resetForegroundTaskAndOrientation(),
+          //     meetingStore.clearPIPState(),
+          //     meetingStore.isRoomEnded = true,
+          //     previewStore.isMeetingJoined = false,
+          //     previewStore.hmsSDKInteractor.leave(),
+          //     HMSThemeColors.resetLayoutColors(),
+          //     Navigator.pushReplacement(
+          //         context,
+          //         CupertinoPageRoute(
+          //             builder: (_) => ScreenController(
+          //                   roomCode: widget.meetingLink,
+          //                   options: widget.options,
+          //                 ))),
+          //   }
         });
   }
 
@@ -237,7 +233,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         .transparentBackgroundColor),
                                                 child: Padding(
                                                   padding: const EdgeInsets
-                                                      .symmetric(
+                                                          .symmetric(
                                                       horizontal: 8,
                                                       vertical: 4),
                                                   child: Row(
@@ -615,12 +611,10 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             setState(() {});
                                                           },
                                                           decoration: InputDecoration(
-                                                              contentPadding:
-                                                                  const EdgeInsets.symmetric(
-                                                                      vertical:
-                                                                          14,
-                                                                      horizontal:
-                                                                          16),
+                                                              contentPadding: const EdgeInsets.symmetric(
+                                                                  vertical: 14,
+                                                                  horizontal:
+                                                                      16),
                                                               fillColor: HMSThemeColors
                                                                   .surfaceDefault,
                                                               filled: true,
@@ -646,7 +640,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                           8))),
                                                               enabledBorder: const OutlineInputBorder(
                                                                   borderSide:
-                                                                      BorderSide.none,
+                                                                      BorderSide
+                                                                          .none,
                                                                   borderRadius: BorderRadius.all(Radius.circular(8))),
                                                               border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(8)))),
                                                         ),

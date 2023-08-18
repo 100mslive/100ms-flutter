@@ -39,8 +39,8 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
                     controller: controller,
                     allowImplicitScrolling: true,
                     itemCount: pageCount,
-                    onPageChanged: (num) {
-                      context.read<MeetingStore>().setCurrentPage(num);
+                    onPageChanged: (pageNumber) {
+                      context.read<MeetingStore>().setCurrentPage(pageNumber);
                     },
                     itemBuilder: (context, index) => GridLayout(
                         numberOfTiles: numberOfPeers,
