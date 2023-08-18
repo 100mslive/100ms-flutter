@@ -84,12 +84,14 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                        if (meetingStore.meetingMode == MeetingMode.grid) {
+                        if (meetingStore.meetingMode ==
+                            MeetingMode.equalProminenceWithInset) {
                           Utilities.showToast(
                               "Meeting mode is already set to Grid View");
                           return;
                         }
-                        meetingStore.setMode(MeetingMode.grid);
+                        meetingStore
+                            .setMode(MeetingMode.equalProminenceWithInset);
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
@@ -97,7 +99,8 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         "packages/hms_room_kit/lib/src/assets/icons/role_change.svg",
                         semanticsLabel: "fl_normal_mode",
                         colorFilter: ColorFilter.mode(
-                            (meetingStore.meetingMode == MeetingMode.grid)
+                            (meetingStore.meetingMode ==
+                                    MeetingMode.equalProminenceWithInset)
                                 ? errorColor
                                 : themeDefaultColor,
                             BlendMode.srcIn),
@@ -107,10 +110,10 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         "Normal Mode",
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color:
-                                (meetingStore.meetingMode == MeetingMode.grid)
-                                    ? errorColor
-                                    : themeDefaultColor,
+                            color: (meetingStore.meetingMode ==
+                                    MeetingMode.equalProminenceWithInset)
+                                ? errorColor
+                                : themeDefaultColor,
                             letterSpacing: 0.25,
                             fontWeight: FontWeight.w600),
                       ),
@@ -119,12 +122,13 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       horizontalTitleGap: 2,
                       onTap: () async {
                         if (meetingStore.meetingMode ==
-                            MeetingMode.activeSpeaker) {
+                            MeetingMode.activeSpeakerWithInset) {
                           Utilities.showToast(
                               "Meeting mode is already set to Active Speaker");
                           return;
                         }
-                        meetingStore.setMode(MeetingMode.activeSpeaker);
+                        meetingStore
+                            .setMode(MeetingMode.activeSpeakerWithInset);
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
@@ -133,7 +137,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         semanticsLabel: "fl_active_speaker_mode",
                         colorFilter: ColorFilter.mode(
                             (meetingStore.meetingMode ==
-                                    MeetingMode.activeSpeaker)
+                                    MeetingMode.activeSpeakerWithInset)
                                 ? errorColor
                                 : themeDefaultColor,
                             BlendMode.srcIn),
@@ -144,41 +148,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                         style: GoogleFonts.inter(
                             fontSize: 14,
                             color: (meetingStore.meetingMode ==
-                                    MeetingMode.activeSpeaker)
-                                ? errorColor
-                                : themeDefaultColor,
-                            letterSpacing: 0.25,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        if (meetingStore.meetingMode == MeetingMode.oneToOne) {
-                          Utilities.showToast(
-                              "Meeting mode is already set to One to one Mode");
-                          return;
-                        }
-                        meetingStore.setMode(MeetingMode.oneToOne);
-                        Navigator.pop(context);
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
-                        semanticsLabel: "fl_one_to_one_mode",
-                        colorFilter: ColorFilter.mode(
-                            (meetingStore.meetingMode == MeetingMode.oneToOne)
-                                ? errorColor
-                                : themeDefaultColor,
-                            BlendMode.srcIn),
-                        fit: BoxFit.scaleDown,
-                      ),
-                      title: Text(
-                        "One to One Mode",
-                        style: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: (meetingStore.meetingMode ==
-                                    MeetingMode.oneToOne)
+                                    MeetingMode.activeSpeakerWithInset)
                                 ? errorColor
                                 : themeDefaultColor,
                             letterSpacing: 0.25,

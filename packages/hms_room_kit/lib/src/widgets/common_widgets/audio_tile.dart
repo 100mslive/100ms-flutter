@@ -72,8 +72,6 @@ class AudioTile extends StatelessWidget {
               const AudioMuteStatus(),
               TileBorder(
                   name: context.read<PeerTrackNode>().peer.name,
-                  itemHeight: itemHeight,
-                  itemWidth: itemWidth,
                   uid: context.read<PeerTrackNode>().uid),
               RTCStatsView(isLocal: context.read<PeerTrackNode>().peer.isLocal),
               const MoreOption(), //bottom center

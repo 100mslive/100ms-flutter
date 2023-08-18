@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/inset_tile.dart';
 import 'package:hms_room_kit/src/widgets/meeting_modes/basic_grid_view.dart';
-import 'package:hms_room_kit/src/widgets/meeting_modes/inset_grid_view.dart';
+import 'package:hms_room_kit/src/widgets/meeting_modes/custom_one_to_one_grid.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/inset_collapsed_view.dart';
 import 'package:provider/provider.dart';
 
@@ -67,17 +67,7 @@ class _OneToOneModeState extends State<OneToOneMode> {
                     size: widget.size)
                 : Stack(
                     children: [
-                      insetGridView(
-                          peerTracks: widget.peerTracks
-                              .where((element) =>
-                                  !element.peer.isLocal ||
-                                  element.track?.source == "SCREEN")
-                              .toList(),
-                          itemCount: widget.peerTracks.length - 1,
-                          screenShareCount: widget.screenShareCount,
-                          context: context,
-                          isPortrait: true,
-                          size: widget.size),
+                      const CustomOneToOneGrid(),
                       DraggableWidget(
                           dragAnimationScale: 1,
                           topMargin: 10,

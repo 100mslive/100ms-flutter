@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
-import 'package:hms_room_kit/src/widgets/bottom_sheets/local_peer_bottom_sheet.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
@@ -12,8 +11,9 @@ import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
 class MoreOption extends StatefulWidget {
-  final Function()? callbackFunction;
-  const MoreOption({Key? key, this.callbackFunction}) : super(key: key);
+  const MoreOption({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<MoreOption> createState() => _MoreOptionState();
@@ -150,24 +150,6 @@ class _MoreOptionState extends State<MoreOption> {
                         Navigator.pop(context);
                       },
                     ));
-          } else {
-            showModalBottomSheet(
-              isScrollControlled: true,
-              backgroundColor: HMSThemeColors.surfaceDim,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(16),
-                    topRight: Radius.circular(16)),
-              ),
-              context: context,
-              builder: (ctx) => ChangeNotifierProvider.value(
-                  value: context.read<MeetingStore>(),
-                  child: LocalPeerBottomSheet(
-                    meetingStore: meetingStore,
-                    peerTrackNode: peerTrackNode,
-                    callbackFunction: widget.callbackFunction,
-                  )),
-            );
           }
         },
         child: Semantics(

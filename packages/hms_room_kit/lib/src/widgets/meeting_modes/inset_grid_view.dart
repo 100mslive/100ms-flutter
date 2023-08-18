@@ -101,8 +101,8 @@ Widget insetGridView(
                     islongPressEnabled: false,
                     key: Key("${peerTracks[index].uid}video_tile"),
                     scaleType: ScaleType.SCALE_ASPECT_FIT,
-                    itemHeight: size.height,
-                    itemWidth: size.width,
+                    // itemHeight: size.height,
+                    // itemWidth: size.width,
                   ),
           );
         }
@@ -110,10 +110,10 @@ Widget insetGridView(
             ? ChangeNotifierProvider.value(
                 key: ValueKey("${peerTracks[index].uid}video_view"),
                 value: peerTracks[index],
-                child: PeerTile(
-                  itemHeight: size.height,
-                  itemWidth: size.width,
-                ))
+                child: const PeerTile(
+                    // itemHeight: size.height,
+                    // itemWidth: size.width,
+                    ))
             : Container();
       },
       gridDelegate: SliverStairedGridDelegate(

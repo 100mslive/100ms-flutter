@@ -14,9 +14,7 @@ class VideoView extends StatefulWidget {
 
   final Size? viewSize;
   final bool setMirror;
-  final double itemHeight;
   final ScaleType scaleType;
-  final double itemWidth;
   final String uid;
   final double avatarRadius;
   final double avatarTitleFontSize;
@@ -26,8 +24,6 @@ class VideoView extends StatefulWidget {
       this.viewSize,
       this.setMirror = false,
       this.matchParent = true,
-      this.itemHeight = 200,
-      this.itemWidth = 200,
       required this.uid,
       this.scaleType = ScaleType.SCALE_ASPECT_FILL,
       this.avatarRadius = 34,
@@ -74,8 +70,6 @@ class _VideoViewState extends State<VideoView> {
                       Radius.circular(10),
                     ),
                     child: SizedBox(
-                      height: widget.itemHeight,
-                      width: widget.itemWidth,
                       // [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
                       // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
                       child: HMSVideoView(
