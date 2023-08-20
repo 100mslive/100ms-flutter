@@ -42,8 +42,7 @@ import live.hms.video.sdk.models.role.HMSRole
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
 import live.hms.video.sessionstore.HMSKeyChangeListener
 import live.hms.video.sessionstore.HmsSessionStore
-import live.hms.video.signal.init.TokenRequest
-import live.hms.video.signal.init.TokenRequestOptions
+import live.hms.video.signal.init.*
 import live.hms.video.utils.HMSLogger
 import live.hms.video.utils.HmsUtilities
 
@@ -232,6 +231,9 @@ class HmssdkFlutterPlugin :
             }
             "toggle_always_screen_on" -> {
                 toggleAlwaysScreenOn(result)
+            }
+            "get_room_layout" -> {
+                getRoomLayout(call, result)
             }
             else -> {
                 result.notImplemented()
@@ -586,6 +588,35 @@ class HmssdkFlutterPlugin :
         }
     }
 
+    /**
+     * [getRoomLayout]  is used to get the layout themes for the room set in the dashboard.
+     */
+    private fun getRoomLayout(call: MethodCall, result: Result) {
+        val authToken = call.argument<String>("auth_token")
+        val endpoint = call.argument<String?>("endpoint")
+
+        val layoutRequestOptions = endpoint?.let {
+            LayoutRequestOptions(endpoint = endpoint)
+        }
+
+        authToken?.let {
+            hmssdk!!.getRoomLayout(
+                authToken, layoutRequestOptions,
+                object : HMSLayoutListener {
+                    override fun onError(error: HMSException) {
+                        result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)))
+                    }
+
+                    override fun onLayoutSuccess(layout: HMSRoomLayout) {
+                        result.success(HMSResultExtension.toDictionary(true, layout.toString()))
+                    }
+                },
+            )
+        } ?: run {
+            HMSErrorLogger.returnArgumentsError("authToken parameter is null")
+        }
+    }
+
     fun getLocalPeer(): HMSLocalPeer? {
         return hmssdk!!.getLocalPeer()
     }
@@ -772,7 +803,8 @@ class HmssdkFlutterPlugin :
     fun build(activity: Activity, call: MethodCall, result: Result) {
         val dartSDKVersion = call.argument<String>("dart_sdk_version")
         val hmsSDKVersion = call.argument<String>("hmssdk_version")
-        val framework = FrameworkInfo(framework = AgentType.FLUTTER, frameworkVersion = dartSDKVersion, frameworkSdkVersion = hmsSDKVersion)
+        val isPrebuilt = call.argument<Boolean>("is_prebuilt") ?: false
+        val framework = FrameworkInfo(framework = AgentType.FLUTTER, frameworkVersion = dartSDKVersion, frameworkSdkVersion = hmsSDKVersion, isPrebuilt = isPrebuilt)
         val builder = HMSSDK.Builder(activity).setFrameworkInfo(framework)
 
         val hmsTrackSettingMap =
@@ -810,6 +842,35 @@ class HmssdkFlutterPlugin :
             metadata!!,
             hmsActionResultListener = HMSCommonAction.getActionListener(result),
         )
+    }
+
+    /**
+     * [getRoomLayout]  is used to get the layout themes for the room set in the dashboard.
+     */
+    private fun getRoomLayout(call: MethodCall, result: Result) {
+        val authToken = call.argument<String>("auth_token")
+        val endpoint = call.argument<String?>("endpoint")
+
+        val layoutRequestOptions = endpoint?.let {
+            LayoutRequestOptions(endpoint = endpoint)
+        }
+
+        authToken?.let {
+            hmssdk!!.getRoomLayout(
+                authToken, layoutRequestOptions,
+                object : HMSLayoutListener {
+                    override fun onError(error: HMSException) {
+                        result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)))
+                    }
+
+                    override fun onLayoutSuccess(layout: HMSRoomLayout) {
+                        result.success(HMSResultExtension.toDictionary(true, layout.toString()))
+                    }
+                },
+            )
+        } ?: run {
+            HMSErrorLogger.returnArgumentsError("authToken parameter is null")
+        }
     }
 
     private val hmsUpdateListener = object : HMSUpdateListener {

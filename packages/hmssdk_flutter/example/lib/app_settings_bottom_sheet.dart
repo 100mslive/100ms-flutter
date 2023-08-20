@@ -29,6 +29,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
   bool isDebugMode = false;
   HMSAudioMode currentAudioMode = HMSAudioMode.VOICE;
   bool isStreamingFlow = true;
+  bool isMockLayoutAPIEnabled = true;
 
   var versions = {};
 
@@ -73,6 +74,9 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     isStreamingFlow =
         await Utilities.getBoolData(key: 'is_streaming_flow') ?? true;
 
+    isMockLayoutAPIEnabled =
+        await Utilities.getBoolData(key: 'is_mock_layout_api_enabled') ?? false;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
     });
@@ -90,7 +94,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     AppDebugConfig.showStats = showStats;
     AppDebugConfig.skipPreview = skipPreview;
     AppDebugConfig.isDebugMode = isDebugMode;
-    AppDebugConfig.isStreamingFlow = isStreamingFlow;
+    AppDebugConfig.isMockLayoutAPIEnabled = isMockLayoutAPIEnabled;
   }
 
   Future<void> _launchUrl() async {
@@ -197,36 +201,6 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/src/assets/icons/live.svg",
-                      width: 24,
-                      colorFilter:
-                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
-                    ),
-                    title: Text(
-                      "Enable Streaming Flow",
-                      semanticsLabel: "fl_enable_streaming_flow",
-                      style: GoogleFonts.inter(
-                          fontSize: 14,
-                          color: themeDefaultColor,
-                          letterSpacing: 0.25,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    trailing: CupertinoSwitch(
-                        activeColor: hmsdefaultColor,
-                        value: isStreamingFlow,
-                        onChanged: (value) => {
-                              isStreamingFlow = value,
-                              Utilities.saveBoolData(
-                                  key: 'is_streaming_flow', value: value),
-                              AppDebugConfig.isStreamingFlow = value,
-                              setState(() {})
-                            }),
-                  ),
-                  ListTile(
-                    horizontalTitleGap: 2,
-                    enabled: false,
-                    contentPadding: EdgeInsets.zero,
-                    leading: SvgPicture.asset(
                       "packages/hms_room_kit/lib/src/assets/icons/bug.svg",
                       fit: BoxFit.scaleDown,
                       colorFilter:
@@ -249,6 +223,37 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               Utilities.saveBoolData(
                                   key: 'enable-debug-mode', value: value),
                               AppDebugConfig.isDebugMode = value,
+                              setState(() {})
+                            }),
+                  ),
+                  ListTile(
+                    horizontalTitleGap: 2,
+                    enabled: false,
+                    contentPadding: EdgeInsets.zero,
+                    leading: SvgPicture.asset(
+                      "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
+                      fit: BoxFit.scaleDown,
+                      colorFilter:
+                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
+                    ),
+                    title: Text(
+                      "Enable Mock Layout API",
+                      semanticsLabel: "fl_enable_mock_layout_api",
+                      style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: themeDefaultColor,
+                          letterSpacing: 0.25,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    trailing: CupertinoSwitch(
+                        activeColor: hmsdefaultColor,
+                        value: isMockLayoutAPIEnabled,
+                        onChanged: (value) => {
+                              isMockLayoutAPIEnabled = value,
+                              Utilities.saveBoolData(
+                                  key: 'is_mock_layout_api_enabled',
+                                  value: value),
+                              AppDebugConfig.isMockLayoutAPIEnabled = value,
                               setState(() {})
                             }),
                   ),

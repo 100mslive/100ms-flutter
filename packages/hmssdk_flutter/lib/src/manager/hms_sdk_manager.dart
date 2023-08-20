@@ -14,7 +14,8 @@ class HmsSdkManager {
       HMSIOSScreenshareConfig? iOSScreenshareConfig,
       String? appGroup,
       String? preferredExtension,
-      HMSLogSettings? hmsLogSettings) async {
+      HMSLogSettings? hmsLogSettings,
+      bool isPrebuilt) async {
     final String sdkVersions = await rootBundle
         .loadString('packages/hmssdk_flutter/lib/assets/sdk-versions.json');
     var versions = json.decode(sdkVersions);
@@ -30,7 +31,8 @@ class HmsSdkManager {
         "hms_log_settings": hmsLogSettings?.toMap(),
         "dart_sdk_version":
             dartSDKVersion.length > 0 ? dartSDKVersion[0] : "null",
-        "hmssdk_version": versions['flutter']
+        "hmssdk_version": versions['flutter'],
+        "is_prebuilt": isPrebuilt
       };
       return await PlatformService.invokeMethod(PlatformMethod.build,
           arguments: arguments);

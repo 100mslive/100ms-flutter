@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 
 class HMSEmbeddedButton extends StatelessWidget {
   final Function() onTap;
@@ -11,6 +11,7 @@ class HMSEmbeddedButton extends StatelessWidget {
   final double? width;
   final Color? enabledBorderColor;
   final Color? disabledBorderColor;
+  final double borderRadius;
 
   const HMSEmbeddedButton(
       {super.key,
@@ -19,10 +20,11 @@ class HMSEmbeddedButton extends StatelessWidget {
       this.onColor,
       required this.isActive,
       required this.child,
-      this.height = 48,
-      this.width = 48,
+      this.height = 40,
+      this.width = 40,
       this.enabledBorderColor,
-      this.disabledBorderColor});
+      this.disabledBorderColor,
+      this.borderRadius = 8});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -40,17 +42,19 @@ class HMSEmbeddedButton extends StatelessWidget {
                */
               border: isActive
                   ? Border.all(
-                      color: enabledBorderColor ?? borderBright, width: 1)
+                      color: enabledBorderColor ?? HMSThemeColors.borderBright,
+                      width: 1)
                   : Border.all(
-                      color: disabledBorderColor ?? secondaryDim, width: 1),
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      color: disabledBorderColor ?? HMSThemeColors.secondaryDim,
+                      width: 1),
+              borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
               /**
                * The color of icon is set using the iconColor property
                * If the iconColor is not set, we use the default color which is onSurfaceHighEmphasis
                */
               color: isActive
-                  ? (onColor ?? (backgroundDefault))
-                  : (offColor ?? secondaryDim)),
+                  ? (onColor ?? (HMSThemeColors.backgroundDefault))
+                  : (offColor ?? HMSThemeColors.secondaryDim)),
           child: child),
     );
   }

@@ -260,12 +260,13 @@ class _HomePageState extends State<HomePage> {
     super.didUpdateWidget(oldWidget);
   }
 
-  void joinMeeting() {
+  void joinMeeting() async {
     if (meetingLinkController.text.trim().isEmpty) {
       return;
     }
     FocusManager.instance.primaryFocus?.unfocus();
-
+    AppDebugConfig.isMockLayoutAPIEnabled =
+        await Utilities.getBoolData(key: 'is_mock_layout_api_enabled') ?? false;
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -347,6 +348,7 @@ class _HomePageState extends State<HomePage> {
                   child: TextField(
                     key: Key('room_code_field'),
                     textInputAction: TextInputAction.done,
+                    cursorColor: HMSThemeColors.primaryDefault,
                     onSubmitted: (value) {
                       joinMeeting();
                     },
@@ -373,10 +375,14 @@ class _HomePageState extends State<HomePage> {
                                   meetingLinkController.text = "";
                                   setState(() {});
                                 },
-                                icon: Icon(Icons.clear),
+                                icon: Icon(
+                                  Icons.clear,
+                                  color: Colors.white,
+                                ),
                               ),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: primaryDefault),
+                            borderSide: BorderSide(
+                                color: HMSThemeColors.primaryDefault, width: 2),
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(8))),
                         enabledBorder: OutlineInputBorder(

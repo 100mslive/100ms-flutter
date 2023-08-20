@@ -9,8 +9,13 @@ import 'package:tuple/tuple.dart';
 class AudioLevelAvatar extends StatefulWidget {
   final double avatarRadius;
   final double avatarTitleFontSize;
+  final double avatarTitleTextLineHeight;
+
   const AudioLevelAvatar(
-      {Key? key, this.avatarRadius = 36, this.avatarTitleFontSize = 36})
+      {Key? key,
+      this.avatarRadius = 34,
+      this.avatarTitleFontSize = 34,
+      this.avatarTitleTextLineHeight = 32})
       : super(key: key);
 
   @override
@@ -30,6 +35,7 @@ class _AudioLevelAvatarState extends State<AudioLevelAvatar> {
                     name: data.item2,
                     avatarRadius: widget.avatarRadius,
                     avatarTitleFontSize: widget.avatarTitleFontSize,
+                    avatarTitleTextLineHeight: widget.avatarTitleTextLineHeight,
                   )
                 : AvatarGlow(
                     repeat: true,

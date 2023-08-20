@@ -1,3 +1,39 @@
+## 1.7.5 - 2023-08-18
+
+Bug fixes and performance improvements
+
+Updated to Android SDK 2.7.3 & iOS SDK 0.9.9
+
+**Full Changelog**: [1.7.4...1.7.5](https://github.com/100mslive/100ms-flutter/compare/1.7.4...1.7.5)
+
+## 1.7.4 - 2023-08-18
+
+Bug fixes and performance improvements
+
+Updated to Android SDK 2.7.3 & iOS SDK 0.9.9
+
+**Full Changelog**: [1.7.3...1.7.4](https://github.com/100mslive/100ms-flutter/compare/1.7.3...1.7.4)
+
+## 1.7.3 - 2023-08-03
+
+### Added
+
+- Added `toggleAlwaysScreenOn` method to enable the wakelock functionalities
+
+  This method allows you to toggle `always screen on` mode which prevents the screen from turning off automatically.
+
+  Read more about the `toggleAlwaysScreenOn` method [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/always-screen-on)
+
+- Added `initialising` property in `HMSBrowserRecordingState` class
+
+  The `initialising` property provides information whether the recording in the room is intialising
+
+  Read more about the `HMSBrowserRecordingState` class [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/recording#current-room-status)
+
+Updated to Android SDK 2.7.2 & iOS SDK 0.9.6
+
+**Full Changelog**: [1.7.2...1.7.3](https://github.com/100mslive/100ms-flutter/compare/1.7.2...1.7.3)
+
 ## 1.7.2 - 2023-07-14
 
 ### Changed

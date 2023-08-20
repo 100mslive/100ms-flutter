@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 
 class HMSListenableButton extends StatelessWidget {
   final double width;
@@ -30,8 +31,10 @@ class HMSListenableButton extends StatelessWidget {
                     shadowColor: MaterialStateProperty.all(
                         shadowColor ?? themeSurfaceColor),
                     backgroundColor: textController.text.isEmpty
-                        ? MaterialStateProperty.all(primaryDisabled)
-                        : MaterialStateProperty.all(primaryDefault),
+                        ? MaterialStateProperty.all(
+                            HMSThemeColors.primaryDisabled)
+                        : MaterialStateProperty.all(
+                            HMSThemeColors.primaryDefault),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),

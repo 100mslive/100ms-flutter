@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/preview/preview_get_participants_text.dart';
 import 'package:hms_room_kit/src/preview/preview_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
@@ -33,7 +33,7 @@ class PreviewParticipantChip extends StatelessWidget {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                      color: alertErrorDefault,
+                      color: HMSThemeColors.alertErrorDefault,
                       borderRadius: BorderRadius.circular(20)),
                   child: Center(
                       child: Padding(
@@ -52,7 +52,7 @@ class PreviewParticipantChip extends StatelessWidget {
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.25,
-                              textColor: onSurfaceHighEmphasis),
+                              textColor: HMSThemeColors.onSurfaceHighEmphasis),
                         ),
                       ],
                     ),
@@ -67,7 +67,7 @@ class PreviewParticipantChip extends StatelessWidget {
             : Container(
                 height: 40,
                 decoration: BoxDecoration(
-                    color: surfaceDefault,
+                    color: HMSThemeColors.surfaceDefault,
                     borderRadius: BorderRadius.circular(20)),
                 child: Center(
                   child: Padding(
@@ -78,7 +78,7 @@ class PreviewParticipantChip extends StatelessWidget {
                             text: "You are the first to join",
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
-                            textColor: onSurfaceHighEmphasis)
+                            textColor: HMSThemeColors.onSurfaceHighEmphasis)
                         : PreviewParticipantsText(
                             peerCount: previewStore.peerCount,
                           ),

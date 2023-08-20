@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_dropdown.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/message_container.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
@@ -64,7 +65,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
   void sendMessage() async {
     MeetingStore meetingStore = context.read<MeetingStore>();
     List<HMSRole> hmsRoles = meetingStore.roles;
-    String message = messageTextController.text;
+    String message = messageTextController.text.trim();
     if (message.isEmpty) return;
 
     List<String> rolesName = <String>[];
@@ -182,8 +183,8 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                             FontWeight.w400,
                                                         fontSize: 12,
                                                         letterSpacing: 0.4,
-                                                        color:
-                                                            onSurfaceHighEmphasis),
+                                                        color: HMSThemeColors
+                                                            .onSurfaceHighEmphasis),
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     maxLines: 1,

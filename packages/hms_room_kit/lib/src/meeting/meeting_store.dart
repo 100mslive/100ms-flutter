@@ -7,8 +7,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:hms_room_kit/src/common/constants.dart';
-import 'package:hms_room_kit/src/common/utility_functions.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/hmssdk_interactor.dart';
@@ -119,7 +118,7 @@ class MeetingStore extends ChangeNotifier
 
   ScrollController controller = ScrollController();
 
-  MeetingMode meetingMode = MeetingMode.grid;
+  MeetingMode meetingMode = MeetingMode.activeSpeakerWithInset;
 
   bool isLandscapeLocked = false;
 
@@ -187,6 +186,8 @@ class MeetingStore extends ChangeNotifier
   bool isHLSStatsEnabled = false;
 
   bool isDefaultAspectRatioSelected = true;
+
+  int currentPage = 0;
 
   Future<HMSException?> join(String userName, String roomUrl,
       {HMSConfig? roomConfig}) async {
@@ -507,6 +508,7 @@ class MeetingStore extends ChangeNotifier
     selfChangeAudioDevice = true;
     currentAudioDeviceMode = audioDevice;
     _hmsSDKInteractor.switchAudioOutput(audioDevice: audioDevice);
+    notifyListeners();
   }
 
 // Override Methods
@@ -756,42 +758,34 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
+  void setCurrentPage(int newPage) {
+    currentPage = newPage;
+    notifyListeners();
+  }
+
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     //To handle the active speaker mode scenario
-    if (meetingMode == MeetingMode.activeSpeaker) {
-      //Picking up the first four peers from the peerTracks list
-      List<PeerTrackNode> activeSpeakerList = peerTracks.sublist(
-          screenShareCount + (spotLightPeer != null ? 1 : 0),
-          math.min(peerTracks.length, 4));
-
+    if ((currentPage == 0) &&
+        (meetingMode == MeetingMode.activeSpeakerWithInset ||
+            meetingMode == MeetingMode.activeSpeakerWithoutInset) &&
+        peerTracks.length > 6) {
       /* Here we iterate through the updateSpeakers list
        * and do the following:
-       *  - Whether the peer is already present on screen
-       *  - if not we find the peer's index from peerTracks list
-       *  - if peer is present in the peerTracks list(this is done just to make sure that peer is still in the room)
-       *  - Insert the peer after screenShare tracks and remove the peer from it's previous position
+       * Find the index of the peer
+       * If the peer is out of the screen when you are on first page
+       * we remove the peer from that index and insert it on the first index
       */
       for (var speaker in updateSpeakers) {
-        int index = activeSpeakerList.indexWhere((previousSpeaker) =>
+        int index = peerTracks.indexWhere((previousSpeaker) =>
             previousSpeaker.uid == "${speaker.peer.peerId}mainVideo");
-        if (index == -1) {
-          int peerIndex = peerTracks.indexWhere(
-              (node) => node.uid == "${speaker.peer.peerId}mainVideo");
-          if (peerIndex != -1) {
-            if (peerTracks[peerIndex].uid != spotLightPeer?.uid) {
-              PeerTrackNode activeSpeaker = peerTracks[peerIndex];
-              peerTracks.removeAt(peerIndex);
-              peerTracks.insert(
-                  screenShareCount + (spotLightPeer != null ? 1 : 0),
-                  activeSpeaker);
-              peerTracks[screenShareCount + (spotLightPeer != null ? 1 : 0)]
-                  .setOffScreenStatus(false);
-            }
-          }
+        if (index > 5) {
+          PeerTrackNode activeSpeaker = peerTracks[index];
+          peerTracks.removeAt(index);
+          peerTracks.insert(screenShareCount, activeSpeaker);
+          peerTracks[screenShareCount].setOffScreenStatus(false);
         }
       }
-      activeSpeakerList.clear();
       notifyListeners();
     }
 
@@ -833,44 +827,6 @@ class MeetingStore extends ChangeNotifier
         changePIPWindowOnAndroid("${updateSpeakers[0].peer.peerId}mainVideo");
       }
     }
-
-    // if (updateSpeakers.isNotEmpty) {
-    //   highestSpeaker = updateSpeakers[0].peer.name;
-    // } else {
-    //   highestSpeaker = null;
-    // }
-    // activeSpeakerIds.clear();
-    // updateSpeakers.forEach((element) {
-    //   activeSpeakerIds[element.peer.peerId + "mainVideo"] = element.audioLevel;
-    // });
-    // int firstScreenPeersCount = (meetingMode == MeetingMode.Audio) ? 6 : 4;
-    // if ((isActiveSpeakerMode && peerTracks.length > firstScreenPeersCount) ||
-    //     meetingMode == MeetingMode.Hero) {
-    //   List<HMSSpeaker> activeSpeaker = [];
-    //   if (updateSpeakers.length > firstScreenPeersCount) {
-    //     activeSpeaker.addAll(updateSpeakers.sublist(0, firstScreenPeersCount));
-    //   } else {
-    //     activeSpeaker.addAll(updateSpeakers);
-    //   }
-    //   for (int i = activeSpeaker.length - 1; i > -1; i--) {
-    //     if (isActiveSpeakerMode) {
-    //       List<PeerTrackNode> tempTracks = peerTracks.sublist(
-    //           screenShareCount, screenShareCount + firstScreenPeersCount);
-    //       int indexTrack = tempTracks.indexWhere(
-    //           (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
-    //       if (indexTrack != -1) {
-    //         continue;
-    //       }
-    //     }
-    //     int index = peerTracks.indexWhere(
-    //         (peer) => activeSpeaker[i].peer.peerId + "mainVideo" == peer.uid);
-    //     if (index != -1) {
-    //       PeerTrackNode peerTrackNode = peerTracks.removeAt(index);
-    //       peerTracks.insert(screenShareCount, peerTrackNode);
-    //     }
-    //   }
-    // }
-    // notifyListeners();
   }
 
   @override
@@ -1023,20 +979,29 @@ class MeetingStore extends ChangeNotifier
 // Helper Methods
 
   void clearRoomState() async {
-    if (Platform.isAndroid) {
-      HMSAndroidPIPController.destroy();
-    } else if (Platform.isIOS) {
-      HMSIOSPIPController.destroy();
-    }
+    clearPIPState();
     removeListeners();
     toggleAlwaysScreenOn();
     _hmsSDKInteractor.destroy();
     _hmsSessionStore = null;
     peerTracks.clear();
     isRoomEnded = true;
+    HMSThemeColors.resetLayoutColors();
+    resetForegroundTaskAndOrientation();
+    notifyListeners();
+  }
+
+  void resetForegroundTaskAndOrientation() {
     setLandscapeLock(false);
     FlutterForegroundTask.stopService();
-    notifyListeners();
+  }
+
+  void clearPIPState() {
+    if (Platform.isAndroid) {
+      HMSAndroidPIPController.destroy();
+    } else if (Platform.isIOS) {
+      HMSIOSPIPController.destroy();
+    }
   }
 
   void removeListeners() {

@@ -90,7 +90,8 @@ class TrackChangeRequestDialogState extends State<TrackChangeRequestDialog> {
                 if (widget.trackChangeRequest.track.kind ==
                         HMSTrackKind.kHMSTrackKindVideo &&
                     widget.isAudioModeOn) {
-                  widget.meetingStore.setMode(MeetingMode.activeSpeaker);
+                  widget.meetingStore
+                      .setMode(MeetingMode.activeSpeakerWithInset);
                 }
                 widget.meetingStore.changeTracks(widget.trackChangeRequest);
                 Navigator.pop(context);

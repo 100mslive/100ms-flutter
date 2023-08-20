@@ -5,8 +5,8 @@ class AppDebugConfig {
   Setting these values to defaults and can be toggled from the application
   This will not be shipped with the ui_kit package and only used for internal testing
   */
-  static bool joinWithMutedAudio = true;
-  static bool joinWithMutedVideo = true;
+  static bool joinWithMutedAudio = false;
+  static bool joinWithMutedVideo = false;
   static bool skipPreview = false;
   static bool mirrorCamera = true;
   static bool showStats = false;
@@ -15,7 +15,7 @@ class AppDebugConfig {
   static bool isAutoSimulcast = true;
 
   static bool isDebugMode = false;
-  static bool isStreamingFlow = true;
+  static bool isMockLayoutAPIEnabled = false;
 
   static HMSIOSScreenshareConfig? iOSScreenshareConfig;
 
@@ -28,6 +28,6 @@ class AppDebugConfig {
     isSoftwareDecoderDisabled = true;
     isAudioMixerDisabled = true;
     isAutoSimulcast = true;
-    isStreamingFlow = true;
+    isMockLayoutAPIEnabled = false;
   }
 }

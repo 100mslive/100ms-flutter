@@ -12,6 +12,7 @@ export 'package:hms_room_kit/src/common/app_color.dart';
 export 'package:hms_room_kit/src/common/constants.dart';
 export 'package:hms_room_kit/src/common/utility_functions.dart';
 export 'package:hms_room_kit/src/service/app_debug_config.dart';
+export 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 
 /// HMSSDK exports
 export 'package:hmssdk_flutter/src/model/hms_ios_screenshare_config.dart';

@@ -4,6 +4,7 @@ import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/constants.dart';
@@ -57,7 +58,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                   children: [
                     HMSTitleText(
                       text: "Settings",
-                      textColor: onSurfaceHighEmphasis,
+                      textColor: HMSThemeColors.onSurfaceHighEmphasis,
                       fontSize: 20,
                       lineHeight: 24 / 20,
                       letterSpacing: 0.15,
@@ -83,7 +84,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
             Padding(
               padding: const EdgeInsets.only(top: 15, bottom: 10),
               child: Divider(
-                color: borderDefault,
+                color: HMSThemeColors.borderDefault,
                 height: 5,
               ),
             ),
@@ -126,8 +127,9 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                       .peers
                                       .length
                                       .toString(),
-                                  style:
-                                      TextStyle(color: onSurfaceHighEmphasis),
+                                  style: TextStyle(
+                                      color:
+                                          HMSThemeColors.onSurfaceHighEmphasis),
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -158,10 +160,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                           if (Platform.isAndroid) {
                             showModalBottomSheet(
                               isScrollControlled: true,
-                              backgroundColor: themeBottomSheetColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
+                              backgroundColor: Colors.transparent,
                               context: context,
                               builder: (ctx) => ChangeNotifierProvider.value(
                                   value: meetingStore,
@@ -213,7 +212,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         Navigator.pop(context);
                         showModalBottomSheet(
                           isScrollControlled: true,
-                          backgroundColor: surfaceDim,
+                          backgroundColor: HMSThemeColors.surfaceDim,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -229,11 +228,12 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
-                            onSurfaceHighEmphasis, BlendMode.srcIn),
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
                       ),
                       title: HMSSubheadingText(
                         text: "Meeting mode",
-                        textColor: onSurfaceHighEmphasis,
+                        textColor: HMSThemeColors.onSurfaceHighEmphasis,
                         letterSpacing: 0.15,
                         fontWeight: FontWeight.w600,
                       ),
@@ -261,13 +261,14 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               height: 20,
                               width: 20,
                               colorFilter: ColorFilter.mode(
-                                  onSurfaceHighEmphasis, BlendMode.srcIn),
+                                  HMSThemeColors.onSurfaceHighEmphasis,
+                                  BlendMode.srcIn),
                             ),
                             title: HMSSubheadingText(
                               text: isScreenShareOn
                                   ? "Stop Screen Share"
                                   : "Share Screen",
-                              textColor: onSurfaceHighEmphasis,
+                              textColor: HMSThemeColors.onSurfaceHighEmphasis,
                               letterSpacing: 0.15,
                               fontWeight: FontWeight.w600,
                             ),
@@ -297,11 +298,12 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       height: 20,
                       width: 20,
                       colorFilter: ColorFilter.mode(
-                          onSurfaceHighEmphasis, BlendMode.srcIn),
+                          HMSThemeColors.onSurfaceHighEmphasis,
+                          BlendMode.srcIn),
                     ),
                     title: HMSSubheadingText(
                       text: "Change Name",
-                      textColor: onSurfaceHighEmphasis,
+                      textColor: HMSThemeColors.onSurfaceHighEmphasis,
                       letterSpacing: 0.15,
                       fontWeight: FontWeight.w600,
                     ),
@@ -320,13 +322,14 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       height: 20,
                       width: 20,
                       colorFilter: ColorFilter.mode(
-                          onSurfaceHighEmphasis, BlendMode.srcIn),
+                          HMSThemeColors.onSurfaceHighEmphasis,
+                          BlendMode.srcIn),
                     ),
                     title: HMSSubheadingText(
                       text: meetingStore.isSpeakerOn
                           ? "Mute Room"
                           : "Unmute Room",
-                      textColor: onSurfaceHighEmphasis,
+                      textColor: HMSThemeColors.onSurfaceHighEmphasis,
                       letterSpacing: 0.15,
                       fontWeight: FontWeight.w600,
                     ),
@@ -343,13 +346,14 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
-                            onSurfaceHighEmphasis, BlendMode.srcIn),
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
                       ),
                       title: HMSSubheadingText(
                         text: meetingStore.isRaisedHand
                             ? "Lower Hand"
                             : "Raise Hand",
-                        textColor: onSurfaceHighEmphasis,
+                        textColor: HMSThemeColors.onSurfaceHighEmphasis,
                         fontWeight: FontWeight.w600,
                       )),
                   ListTile(
@@ -361,16 +365,15 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
                       "packages/hms_room_kit/lib/src/assets/icons/brb.svg",
-                      height: 20,
-                      width: 20,
                       colorFilter: ColorFilter.mode(
-                          onSurfaceHighEmphasis, BlendMode.srcIn),
+                          HMSThemeColors.onSurfaceHighEmphasis,
+                          BlendMode.srcIn),
                     ),
                     title: HMSSubheadingText(
                       text: "BRB",
                       textColor: meetingStore.isBRB
-                          ? alertErrorDefault
-                          : onSurfaceHighEmphasis,
+                          ? HMSThemeColors.alertErrorDefault
+                          : HMSThemeColors.onSurfaceHighEmphasis,
                       letterSpacing: 0.15,
                       fontWeight: FontWeight.w600,
                     ),
@@ -395,11 +398,12 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
-                            onSurfaceHighEmphasis, BlendMode.srcIn),
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
                       ),
                       title: HMSSubheadingText(
                         text: "Stats for nerds",
-                        textColor: onSurfaceHighEmphasis,
+                        textColor: HMSThemeColors.onSurfaceHighEmphasis,
                         letterSpacing: 0.15,
                         fontWeight: FontWeight.w600,
                       ),
@@ -423,11 +427,12 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                           height: 20,
                           width: 20,
                           colorFilter: ColorFilter.mode(
-                              onSurfaceHighEmphasis, BlendMode.srcIn),
+                              HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
                         ),
                         title: HMSSubheadingText(
                           text: "Mute Role",
-                          textColor: onSurfaceHighEmphasis,
+                          textColor: HMSThemeColors.onSurfaceHighEmphasis,
                           letterSpacing: 0.15,
                           fontWeight: FontWeight.w600,
                         ),
@@ -449,11 +454,12 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                           height: 20,
                           width: 20,
                           colorFilter: ColorFilter.mode(
-                              onSurfaceHighEmphasis, BlendMode.srcIn),
+                              HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
                         ),
                         title: HMSSubheadingText(
                           text: "Bulk Role Change",
-                          textColor: onSurfaceHighEmphasis,
+                          textColor: HMSThemeColors.onSurfaceHighEmphasis,
                           letterSpacing: 0.15,
                           fontWeight: FontWeight.w600,
                         ),
@@ -506,16 +512,16 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 width: 20,
                                 colorFilter: ColorFilter.mode(
                                     isRTMPRunning
-                                        ? alertErrorDefault
-                                        : onSurfaceHighEmphasis,
+                                        ? HMSThemeColors.alertErrorDefault
+                                        : HMSThemeColors.onSurfaceHighEmphasis,
                                     BlendMode.srcIn),
                               ),
                               title: HMSSubheadingText(
                                 text:
                                     isRTMPRunning ? "Stop RTMP" : "Start RTMP",
                                 textColor: isRTMPRunning
-                                    ? alertErrorDefault
-                                    : onSurfaceHighEmphasis,
+                                    ? HMSThemeColors.alertErrorDefault
+                                    : HMSThemeColors.onSurfaceHighEmphasis,
                                 letterSpacing: 0.15,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -549,8 +555,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 width: 20,
                                 colorFilter: ColorFilter.mode(
                                     isBrowserRecording
-                                        ? alertErrorDefault
-                                        : onSurfaceHighEmphasis,
+                                        ? HMSThemeColors.alertErrorDefault
+                                        : HMSThemeColors.onSurfaceHighEmphasis,
                                     BlendMode.srcIn),
                               ),
                               title: HMSSubheadingText(
@@ -558,8 +564,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                     ? "Stop Recording"
                                     : "Start Recording",
                                 textColor: isBrowserRecording
-                                    ? alertErrorDefault
-                                    : onSurfaceHighEmphasis,
+                                    ? HMSThemeColors.alertErrorDefault
+                                    : HMSThemeColors.onSurfaceHighEmphasis,
                                 letterSpacing: 0.15,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -601,14 +607,15 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                   width: 20,
                                   colorFilter: ColorFilter.mode(
                                       hasHLSStarted
-                                          ? alertErrorDefault
-                                          : onSurfaceHighEmphasis,
+                                          ? HMSThemeColors.alertErrorDefault
+                                          : HMSThemeColors
+                                              .onSurfaceHighEmphasis,
                                       BlendMode.srcIn)),
                               title: HMSSubheadingText(
                                 text: hasHLSStarted ? "Stop HLS" : "Start HLS",
                                 textColor: hasHLSStarted
-                                    ? alertErrorDefault
-                                    : onSurfaceHighEmphasis,
+                                    ? HMSThemeColors.alertErrorDefault
+                                    : HMSThemeColors.onSurfaceHighEmphasis,
                                 letterSpacing: 0.15,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -627,11 +634,12 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
-                            onSurfaceHighEmphasis, BlendMode.srcIn),
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
                       ),
                       title: HMSSubheadingText(
                         text: "Enter Pip Mode",
-                        textColor: onSurfaceHighEmphasis,
+                        textColor: HMSThemeColors.onSurfaceHighEmphasis,
                         letterSpacing: 0.15,
                         fontWeight: FontWeight.w600,
                       ),
@@ -652,11 +660,12 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
-                            onSurfaceHighEmphasis, BlendMode.srcIn),
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
                       ),
                       title: HMSSubheadingText(
                         text: "Share Link",
-                        textColor: onSurfaceHighEmphasis,
+                        textColor: HMSThemeColors.onSurfaceHighEmphasis,
                         letterSpacing: 0.15,
                         fontWeight: FontWeight.w600,
                       ),
@@ -684,7 +693,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                   //       "packages/hms_room_kit/lib/src/assets/icons/notification.svg",
                   //       height: 20,
                   //       width: 20,
-                  //       color: onSurfaceHighEmphasis,
+                  //       color: HMSThemeColors.onSurfaceHighEmphasis,
                   //     ),
                   //     title: Text(
                   //       "Modify Notifications",
@@ -707,11 +716,12 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
-                            onSurfaceHighEmphasis, BlendMode.srcIn),
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
                       ),
                       title: HMSSubheadingText(
                         text: "End Room",
-                        textColor: onSurfaceHighEmphasis,
+                        textColor: HMSThemeColors.onSurfaceHighEmphasis,
                         letterSpacing: 0.15,
                         fontWeight: FontWeight.w600,
                       ),

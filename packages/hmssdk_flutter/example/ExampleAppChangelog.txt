@@ -1,22 +1,23 @@
-Board: https://github.com/100mslive/100ms-flutter/projects/20
+Board: https://github.com/100mslive/100ms-flutter/projects/26
 
-- App built using the Prebuilt UI Kit
-https://github.com/100mslive/100ms-flutter/issues/1359
+- Added Prebuilt Screen Header
+https://github.com/100mslive/100ms-flutter/issues/1482
 
-- Added Hybrid composition videoview on Android to improve performance
-https://github.com/100mslive/100ms-flutter/pull/1330
+- Added Prebuilt Screen Footer
+https://github.com/100mslive/100ms-flutter/issues/1481
 
-- Replaced Wakelock dependency with Android Activity Flags
-https://github.com/100mslive/100ms-flutter/issues/1373
+- Added Inset Mode
+https://github.com/100mslive/100ms-flutter/issues/1477
 
-- Added support to Not mute local peer when incoming phone call is ringing
-https://github.com/100mslive/100ms-flutter/pull/1403
+- Added Equal Prominence layout
+https://github.com/100mslive/100ms-flutter/issues/1478
 
-- Added Permissions screens in preview
+- Added Active Speaker Sorting
+https://github.com/100mslive/100ms-flutter/issues/1480
 
-- Updated Android SDK version to 2.7.2 and iOS SDK version to 0.9.6
+- Updated to Android SDK version to 2.7.3 and iOS SDK version to 0.9.9
 
-Main SDK: 1.8.0
-Room Kit: 0.0.4
-Android SDK: 2.7.2
-iOS SDK: 0.9.6
+Core SDK: 1.7.4
+Room Kit: 0.1.0
+Android SDK: 2.7.3
+iOS SDK: 0.9.9

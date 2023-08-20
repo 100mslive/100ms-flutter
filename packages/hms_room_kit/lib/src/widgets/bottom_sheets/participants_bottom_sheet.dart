@@ -2,6 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
@@ -324,7 +325,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                               fontWeight: FontWeight.w400,
                                               fontSize: 12,
                                               letterSpacing: 0.4,
-                                              color: onSurfaceHighEmphasis),
+                                              color: HMSThemeColors
+                                                  .onSurfaceHighEmphasis),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                         ),
@@ -352,7 +354,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                               fontWeight: FontWeight.w400,
                                               fontSize: 12,
                                               letterSpacing: 0.4,
-                                              color: onSurfaceHighEmphasis),
+                                              color: HMSThemeColors
+                                                  .onSurfaceHighEmphasis),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                         ),
@@ -392,7 +395,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                             fontWeight: FontWeight.w400,
                                             fontSize: 12,
                                             letterSpacing: 0.4,
-                                            color: onSurfaceHighEmphasis),
+                                            color: HMSThemeColors
+                                                .onSurfaceHighEmphasis),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                       ),
@@ -401,7 +405,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                       ),
                                       Icon(
                                         Icons.keyboard_arrow_down,
-                                        color: onSurfaceHighEmphasis,
+                                        color: HMSThemeColors
+                                            .onSurfaceHighEmphasis,
                                       ),
                                     ],
                                   ),
@@ -495,8 +500,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                         peer.item1),
                                                     style: GoogleFonts.inter(
                                                       fontSize: 12,
-                                                      color:
-                                                          onSurfaceHighEmphasis,
+                                                      color: HMSThemeColors
+                                                          .onSurfaceHighEmphasis,
                                                     ),
                                                   )),
                                         title: Text(

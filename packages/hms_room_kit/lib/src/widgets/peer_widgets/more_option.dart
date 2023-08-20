@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/app_dialogs/change_role_option_dialog.dart';
 import 'package:hms_room_kit/src/widgets/app_dialogs/change_simulcast_layer_option_dialog.dart';
-import 'package:hms_room_kit/src/widgets/app_dialogs/local_peer_tile_dialog.dart';
 import 'package:hms_room_kit/src/widgets/app_dialogs/remote_peer_tile_dialog.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
 class MoreOption extends StatefulWidget {
-  const MoreOption({Key? key}) : super(key: key);
+  const MoreOption({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<MoreOption> createState() => _MoreOptionState();
@@ -48,7 +48,7 @@ class _MoreOptionState extends State<MoreOption> {
 
     return Positioned(
       bottom: 5,
-      right: 1,
+      right: 5,
       child: GestureDetector(
         onTap: () {
           var peerTrackNode = context.read<PeerTrackNode>();
@@ -150,91 +150,22 @@ class _MoreOptionState extends State<MoreOption> {
                         Navigator.pop(context);
                       },
                     ));
-          } else {
-            showDialog(
-                context: context,
-                builder: (_) => LocalPeerTileDialog(
-                    isVideoOn:
-                        !(context.read<PeerTrackNode>().track?.isMute ?? true),
-                    isAudioMode: false,
-                    toggleCamera: () {
-                      if (meetingStore.isVideoOn) {
-                        meetingStore.switchCamera();
-                      }
-                    },
-                    peerName: peerTrackNode.peer.name,
-                    toggleFlash: () {
-                      context.read<MeetingStore>().toggleFlash();
-                    },
-                    isSpotlightedPeer:
-                        context.read<MeetingStore>().spotLightPeer?.uid ==
-                            peerTrackNode.uid,
-                    setOnSpotlight: () {
-                      if (context.read<MeetingStore>().spotLightPeer?.uid ==
-                          peerTrackNode.uid) {
-                        meetingStore.setSessionMetadataForKey(
-                            key: SessionStoreKeyValues.getNameFromMethod(
-                                SessionStoreKey.spotlight),
-                            metadata: null);
-                        return;
-                      }
-
-                      ///Setting the metadata as audio trackId if it's not present
-                      ///then setting it as video trackId
-                      String? metadata = (peerTrackNode.audioTrack == null)
-                          ? peerTrackNode.track?.trackId
-                          : peerTrackNode.audioTrack?.trackId;
-                      meetingStore.setSessionMetadataForKey(
-                          key: SessionStoreKeyValues.getNameFromMethod(
-                              SessionStoreKey.spotlight),
-                          metadata: metadata);
-                    },
-                    changeRole: () {
-                      Navigator.pop(context);
-                      showDialog(
-                          context: context,
-                          builder: (_) => ChangeRoleOptionDialog(
-                                peerName: peerTrackNode.peer.name,
-                                roles: meetingStore.roles,
-                                peer: peerTrackNode.peer,
-                                changeRole: (role, forceChange) {
-                                  meetingStore.changeRoleOfPeer(
-                                      peer: peerTrackNode.peer,
-                                      roleName: role,
-                                      forceChange: forceChange);
-                                },
-                              ));
-                    },
-                    roles: changeRolePermission,
-                    changeName: () async {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      String name =
-                          await UtilityComponents.showNameChangeDialog(
-                              context: context,
-                              placeholder: "Enter Name",
-                              prefilledValue: context
-                                      .read<MeetingStore>()
-                                      .localPeer
-                                      ?.name ??
-                                  "");
-                      if (name.isNotEmpty) {
-                        meetingStore.changeName(name: name);
-                      }
-                    }));
           }
         },
         child: Semantics(
           label: "fl_${context.read<PeerTrackNode>().peer.name}more_option",
           child: Container(
+            height: 28,
+            width: 28,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: const Color.fromRGBO(0, 0, 0, 0.6),
+              color: HMSThemeColors.backgroundDim.withOpacity(0.64),
             ),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(6, 4, 6, 4),
+            child: Center(
               child: Icon(
-                Icons.more_horiz,
-                color: onSurfaceHighEmphasis,
+                Icons.more_vert,
+                color: HMSThemeColors.onSurfaceHighEmphasis,
+                size: 20,
               ),
             ),
           ),

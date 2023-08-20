@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/peer_tile.dart';
@@ -37,7 +38,7 @@ Widget basicGridView(
                 ? Container(
                     margin: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
-                        color: surfaceDim,
+                        color: HMSThemeColors.surfaceDim,
                         border: Border.all(color: Colors.grey, width: 1.0),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10))),
@@ -93,8 +94,8 @@ Widget basicGridView(
                     islongPressEnabled: false,
                     key: Key("${peerTracks[index].uid}video_tile"),
                     scaleType: ScaleType.SCALE_ASPECT_FIT,
-                    itemHeight: size.height,
-                    itemWidth: size.width,
+                    // itemHeight: size.height,
+                    // itemWidth: size.width,
                   ),
           );
         }
@@ -103,8 +104,8 @@ Widget basicGridView(
             value: peerTracks[index],
             child: PeerTile(
               key: ValueKey("${peerTracks[index].uid}audio_view"),
-              itemHeight: size.height,
-              itemWidth: size.width,
+              // itemHeight: size.height,
+              // itemWidth: size.width,
             ));
       },
       gridDelegate: SliverStairedGridDelegate(

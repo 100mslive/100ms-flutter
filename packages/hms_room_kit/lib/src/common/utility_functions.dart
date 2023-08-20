@@ -43,15 +43,15 @@ class Utilities {
 
   static Color getBackgroundColour(String name) {
     if (name.isEmpty) {
-      return colors[0];
+      return avatarColors[0];
     }
     if (name.contains(regexEmoji)) {
       name = name.replaceAll(regexEmoji, '');
       if (name.trim().isEmpty) {
-        return colors[0];
+        return avatarColors[0];
       }
     }
-    return colors[name.toUpperCase().codeUnitAt(0) % colors.length];
+    return avatarColors[name.toUpperCase().codeUnitAt(0) % avatarColors.length];
   }
 
   /// List of alignments for timed metadata toasts

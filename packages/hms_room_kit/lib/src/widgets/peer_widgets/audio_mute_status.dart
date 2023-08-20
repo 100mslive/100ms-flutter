@@ -1,6 +1,6 @@
 //Package imports
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -29,15 +29,17 @@ class _AudioMuteStatusState extends State<AudioMuteStatus> {
                     label:
                         "fl_${context.read<PeerTrackNode>().peer.name}_audio_mute",
                     child: Container(
+                      height: 32,
+                      width: 32,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: alertErrorDefault),
+                          shape: BoxShape.circle,
+                          color: HMSThemeColors.secondaryDim),
                       child: Padding(
-                          padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                          padding: const EdgeInsets.all(8),
                           child: SvgPicture.asset(
                             'packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg',
-                            width: 24,
-                            height: 24,
+                            width: 16,
+                            height: 16,
                             semanticsLabel: "audio_mute_label",
                           )),
                     ),
