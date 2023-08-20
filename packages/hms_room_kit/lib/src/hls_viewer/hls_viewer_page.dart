@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_viewer_bottom_navigation_bar.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_viewer_header.dart';
@@ -91,27 +93,32 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                               builder: (_,
                                                   areStreamControlsVisible,
                                                   __) {
-                                                return SizedBox(
-                                                  width:
-                                                      MediaQuery.of(context)
-                                                          .size
-                                                          .width,
-                                                  height: MediaQuery.of(
-                                                              context)
-                                                          .size
-                                                          .height,
-                                                  child: HLSPlayer(
-                                                    key: Key(context
-                                                            .read<
-                                                                MeetingStore>()
-                                                            .localPeer
-                                                            ?.peerId ??
-                                                        "HLS_PLAYER"),
-                                                    ratio: Utilities
-                                                        .getHLSPlayerDefaultRatio(
-                                                            MediaQuery.of(
-                                                                    context)
-                                                                .size),
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    log("Hey there");
+                                                  },
+                                                  child: SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .height,
+                                                    child: HLSPlayer(
+                                                      key: Key(context
+                                                              .read<
+                                                                  MeetingStore>()
+                                                              .localPeer
+                                                              ?.peerId ??
+                                                          "HLS_PLAYER"),
+                                                      ratio: Utilities
+                                                          .getHLSPlayerDefaultRatio(
+                                                              MediaQuery.of(
+                                                                      context)
+                                                                  .size),
+                                                    ),
                                                   ),
                                                 );
                                               })
@@ -153,6 +160,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                 //                 child: const HLSChat())),
                                 //       );
                                 //     }),
+
                                 Selector<MeetingStore, HMSRoleChangeRequest?>(
                                     selector: (_, meetingStore) =>
                                         meetingStore.currentRoleChangeRequest,
