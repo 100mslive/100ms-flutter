@@ -71,12 +71,17 @@ class HMSVideoView(
             hmsVideoView?.addVideoViewStateChangeListener(object : VideoViewStateChangeListener {
                 override fun onFirstFrameRendered() {
                     super.onFirstFrameRendered()
-                    Log.i("HMSVideoView", "onFirstFrameRendered for trackID: ${track.trackId}")
+                    track?.let {
+                        Log.i("HMSVideoView", "onFirstFrameRendered for trackID: ${it.trackId}")
+                    }
+
                 }
 
                 override fun onResolutionChange(newWidth: Int, newHeight: Int) {
                     super.onResolutionChange(newWidth, newHeight)
-                    Log.i("HMSVideoView", "onResolutionChange for trackID: ${track.trackId} width: $newWidth height: $height")
+                    track?.let {
+                        Log.i("HMSVideoView", "onResolutionChange for trackID: ${it.trackId} width: $newWidth height: $height")
+                    }
                 }
             })
         } else {

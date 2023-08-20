@@ -71,6 +71,6 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin, private val f
         }
         val disableAutoSimulcastLayerSelect = args!!["disable_auto_simulcast_layer_select"] as? Boolean ?: false
 
-        return HMSVideoViewWidget(requireNotNull(context), viewId, creationParams, track, setMirror!!, scaleType, matchParent, disableAutoSimulcastLayerSelect, plugin)
+        return HMSVideoViewWidget(requireNotNull(context), viewId, creationParams, track, setMirror!!, scaleType, matchParent, disableAutoSimulcastLayerSelect, plugin, flutterPluginBinding)
     }
 }
