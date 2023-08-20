@@ -148,7 +148,7 @@ class HMSVideoView(
         val nameOfEventSink = (arguments as HashMap<String, Any>)["name"]
 
         track?.let {
-            if (nameOfEventSink!! == "hms_video_view_${it.trackId}") {
+            if (nameOfEventSink!! == "${it.trackId}") {
                 this.eventSink = events
             }
         }
