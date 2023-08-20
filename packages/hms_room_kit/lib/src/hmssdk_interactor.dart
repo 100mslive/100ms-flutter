@@ -25,7 +25,7 @@ class HMSSDKInteractor {
     HMSLogSettings hmsLogSettings = HMSLogSettings(
         maxDirSizeInBytes: 1000000,
         isLogStorageEnabled: true,
-        level: HMSLogLevel.OFF);
+        level: HMSLogLevel.VERBOSE);
 
     HMSTrackSetting trackSetting = Utilities.getTrackSetting(
         isAudioMixerDisabled: (Platform.isIOS && isAudioMixerDisabled),

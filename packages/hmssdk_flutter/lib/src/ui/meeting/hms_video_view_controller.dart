@@ -2,17 +2,39 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:hmssdk_flutter/src/enum/hms_video_view_events.dart';
 
 class HMSVideoViewController extends ValueNotifier<bool> {
   final String trackId;
-  late EventChannel view_channel;
+  final Function()? onFirstFrameRendered;
+  final Function()? onResolutionChanged;
 
-  HMSVideoViewController(this.trackId) : super(false) {
-    view_channel = EventChannel('hms_video_view_channel');
+  late EventChannel viewChannel;
 
-    view_channel.receiveBroadcastStream({"name": trackId}).map((event) {
-      log("Vkohli receiveBroadcastStream ${DateTime.
-      now()} ${trackId} ${event.toString()}}");
+  HMSVideoViewController(
+      this.trackId, this.onFirstFrameRendered, this.onResolutionChanged)
+      : super(false) {
+    viewChannel = EventChannel('hms_video_view_channel');
+
+    viewChannel.receiveBroadcastStream({"name": trackId}).map((event) {
+      switch (HMSVideoViewEventsValues.getHMSVideoViewEventFromString(
+          event["event_name"])) {
+        case HMSVideoViewEvents.onFirstFrameRendered:
+          log("Vkohli onFirstFrameRendered ${DateTime.now()} ${trackId} ${event.toString()}}");
+          if (onFirstFrameRendered != null) {
+            onFirstFrameRendered!();
+          }
+          break;
+        case HMSVideoViewEvents.onResolutionChanged:
+          log("Vkohli onResolutionChanged ${DateTime.now()} ${trackId} ${event.toString()}}");
+          if (onResolutionChanged != null) {
+            onResolutionChanged!();
+          }
+          break;
+        case HMSVideoViewEvents.unknown:
+          log("Unknown");
+          break;
+      }
     }).listen((event) {});
   }
 }

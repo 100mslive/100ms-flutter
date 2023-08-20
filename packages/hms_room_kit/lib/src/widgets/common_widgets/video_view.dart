@@ -1,4 +1,6 @@
 //Package imports
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
@@ -36,6 +38,15 @@ class VideoView extends StatefulWidget {
 }
 
 class _VideoViewState extends State<VideoView> {
+  void _onFirstFrameRendered() {
+    log("Vkohli onFirstFrameRendered called");
+    context.read<PeerTrackNode>().setIsFirstFrameRendered(true);
+  }
+
+  void _onResolutionChanged() {
+    log("Vkohli onResolutionChanged called");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Selector<PeerTrackNode, Tuple3<HMSVideoTrack?, bool, bool>>(
@@ -79,6 +90,8 @@ class _VideoViewState extends State<VideoView> {
                         setMirror: data.item1.runtimeType == HMSLocalVideoTrack,
                         disableAutoSimulcastLayerSelect:
                             !(context.read<MeetingStore>().isAutoSimulcast),
+                        onFirstFrameRendered: () => _onFirstFrameRendered(),
+                        onResolutionChanged: () => _onResolutionChanged(),
                       ),
                     ),
                   );

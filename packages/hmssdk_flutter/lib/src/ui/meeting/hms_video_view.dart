@@ -59,6 +59,11 @@ class HMSVideoView extends StatelessWidget {
   /// [disableAutoSimulcastLayerSelect] - To disable auto simulcast (Adaptive Bitrate)
   final bool disableAutoSimulcastLayerSelect;
 
+  ///[onFirstFrameRendered]
+  final Function()? onFirstFrameRendered;
+
+  final Function()? onResolutionChanged;
+
   ///100ms HMSVideoView
   ///
   ///HMSVideoView used to render video in ios and android devices
@@ -89,11 +94,12 @@ class HMSVideoView extends StatelessWidget {
       {Key? key,
       required this.track,
       this.setMirror = false,
-      @Deprecated(
-          "matchParent is not longer necessary and will be removed in future version")
-      this.matchParent = true,
+      @Deprecated("matchParent is not longer necessary and will be removed in future version")
+          this.matchParent = true,
       this.scaleType = ScaleType.SCALE_ASPECT_FIT,
-      this.disableAutoSimulcastLayerSelect = false})
+      this.disableAutoSimulcastLayerSelect = false,
+      this.onFirstFrameRendered,
+      this.onResolutionChanged})
       : super(key: key);
 
   @override
@@ -104,6 +110,8 @@ class HMSVideoView extends StatelessWidget {
       setMirror: setMirror,
       scaleType: this.scaleType,
       disableAutoSimulcastLayerSelect: disableAutoSimulcastLayerSelect,
+      onFirstFrameRendered: onFirstFrameRendered,
+      onResolutionChanged: onResolutionChanged,
     );
   }
 }
@@ -115,20 +123,25 @@ class _PlatformView extends StatelessWidget {
   final bool matchParent;
   final ScaleType scaleType;
   final bool disableAutoSimulcastLayerSelect;
+  final Function()? onFirstFrameRendered;
+  final Function()? onResolutionChanged;
   late HMSVideoViewController hmsVideoViewController;
+
   _PlatformView(
       {Key? key,
       required this.track,
       this.setMirror = false,
       this.matchParent = true,
       required this.scaleType,
-      this.disableAutoSimulcastLayerSelect = false})
+      this.disableAutoSimulcastLayerSelect = false,
+      this.onFirstFrameRendered,
+      this.onResolutionChanged})
       : super(key: key) {
-    hmsVideoViewController = HMSVideoViewController(track.trackId);
+    hmsVideoViewController = HMSVideoViewController(track.trackId,onFirstFrameRendered,onResolutionChanged);
   }
 
   void onPlatformViewCreated(int id) {
-      log("Vkohli onPlatformViewCreated ${DateTime.now()} $id}");
+    log("Vkohli onPlatformViewCreated ${DateTime.now()} $id}");
   }
 
   @override
@@ -139,8 +152,8 @@ class _PlatformView extends StatelessWidget {
           surfaceFactory: (context, controller) {
             return AndroidViewSurface(
               controller: controller as AndroidViewController,
-              gestureRecognizers: const <Factory<
-                  OneSequenceGestureRecognizer>>{},
+              gestureRecognizers: const <
+                  Factory<OneSequenceGestureRecognizer>>{},
               hitTestBehavior: PlatformViewHitTestBehavior.opaque,
             );
           },

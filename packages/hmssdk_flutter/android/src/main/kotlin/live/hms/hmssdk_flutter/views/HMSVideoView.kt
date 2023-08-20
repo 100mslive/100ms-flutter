@@ -18,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.Constants.Companion.METHOD_CALL
+import live.hms.hmssdk_flutter.HMSExceptionExtension
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.hmssdk_flutter.R
 import live.hms.video.media.tracks.HMSVideoTrack
@@ -36,14 +37,13 @@ class HMSVideoView(
     private val track: HMSVideoTrack?,
     private val disableAutoSimulcastLayerSelect: Boolean,
     private val hmssdkFlutterPlugin: HmssdkFlutterPlugin?,
-    private val videoViewChannel: EventChannel?,
+    videoViewChannel: EventChannel?,
 ) : FrameLayout(context, null),EventChannel.StreamHandler {
 
     private var hmsVideoView: HMSVideoView? = null
     private var view: View? = null
 
     var eventSink: EventChannel.EventSink? = null
-    var eventChannel: EventChannel? = null
 
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(contxt: Context?, intent: Intent?) {
@@ -65,8 +65,13 @@ class HMSVideoView(
             track?.let {
                 Log.i("VkohlionFirstFrame", " ${LocalDateTime.now()} trackID: ${it.trackId}")
                 Log.i("Vkohli eventSink","${eventSink==null}")
+
+                val args = HashMap<String, Any?>()
+                args["event_name"] = "on_first_frame_rendered"
+                args["data"] =  track.trackId
+
                 CoroutineScope(Dispatchers.Main).launch {
-                    eventSink?.success("First Frame Rendered")
+                    eventSink?.success(args)
                 }
             }
         }
@@ -75,6 +80,19 @@ class HMSVideoView(
             super.onResolutionChange(newWidth, newHeight)
             track?.let {
                 Log.i("Vkohli onResolut", " ${LocalDateTime.now()} trackID: ${it.trackId} width: $newWidth height: $height")
+
+                val args = HashMap<String, Any?>()
+                args["event_name"] = "on_resolution_changed"
+
+                val newResolution =  HashMap<String, Any?>()
+
+                newResolution["new_width"] = newWidth
+                newResolution["new_height"] = newHeight
+                args["data"]  = newResolution
+
+                CoroutineScope(Dispatchers.Main).launch {
+                    eventSink?.success(args)
+                }
             }
         }
     }
@@ -90,9 +108,7 @@ class HMSVideoView(
             if ((scaleType ?: 0) <= RendererCommon.ScalingType.values().size) {
                 hmsVideoView?.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
             }
-            this.eventChannel = videoViewChannel
-            this.eventChannel?.setStreamHandler(this)
-
+            videoViewChannel?.setStreamHandler(this)
             hmsVideoView?.addVideoViewStateChangeListener(videoViewStateChangeListener)
         } else {
             Log.e("HMSVideoView Error", "HMSVideoView init error view is null")
@@ -157,7 +173,6 @@ class HMSVideoView(
             hmsVideoView?.removeTrack()
             context.unregisterReceiver(broadcastReceiver)
             Log.i("Vkohli onDetached", "${LocalDateTime.now()}  ${track?.trackId}")
-            eventSink = null
         } else {
             Log.e("HMSVideoView error", "onDetachedFromWindow error hmsVideoView is null")
         }

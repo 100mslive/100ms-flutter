@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -51,6 +52,14 @@ class _PreviewPageState extends State<PreviewPage> {
     _meetingStore = MeetingStore(
       hmsSDKInteractor: previewStore.hmsSDKInteractor,
     );
+  }
+
+        void _onFirstFrameRendered() {
+        log("Vkohli onFirstFrameRendered called");
+  }
+
+  void _onResolutionChanged() {
+    log("Vkohli onResolutionChanged called");
   }
 
   void _joinMeeting(PreviewStore previewStore) async {
@@ -206,6 +215,8 @@ class _PreviewPageState extends State<PreviewPage> {
                                                       track: previewStore
                                                           .localTracks[0],
                                                       setMirror: true,
+                                                      onFirstFrameRendered: _onFirstFrameRendered,
+                                                      onResolutionChanged: _onResolutionChanged,
                                                     ),
                                                   )
                                                 : isHLSStarting

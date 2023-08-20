@@ -14,6 +14,7 @@ class PeerTrackNode extends ChangeNotifier {
   int? networkQuality;
   RTCStats? stats;
   int audioLevel;
+  bool isFirstFrameRendered;
   bool pinTile;
 
   PeerTrackNode(
@@ -25,7 +26,8 @@ class PeerTrackNode extends ChangeNotifier {
       this.networkQuality = -1,
       this.stats,
       this.audioLevel = -1,
-      this.pinTile = false});
+      this.pinTile = false,
+      this.isFirstFrameRendered = false});
 
   @override
   String toString() {
@@ -38,6 +40,11 @@ class PeerTrackNode extends ChangeNotifier {
 
   void setOffScreenStatus(bool currentState) {
     isOffscreen = currentState;
+    notify();
+  }
+
+  void setIsFirstFrameRendered(bool isFirstFrameRendered) {
+    isFirstFrameRendered = isFirstFrameRendered;
     notify();
   }
 
