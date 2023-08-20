@@ -63,7 +63,7 @@ class HMSVideoView(
         override fun onFirstFrameRendered() {
             super.onFirstFrameRendered()
             track?.let {
-                Log.i("VkohlionFirstFrame", " ${LocalDateTime.now()} trackID: ${it.trackId}")
+                Log.i("VkohlionFirstFrame", " ${LocalDateTime.now()} trackID: ${it.trackId} ${hmsVideoView?.hashCode()}")
                 Log.i("Vkohli eventSink","${eventSink==null}")
 
                 val args = HashMap<String, Any?>()
@@ -79,7 +79,7 @@ class HMSVideoView(
         override fun onResolutionChange(newWidth: Int, newHeight: Int) {
             super.onResolutionChange(newWidth, newHeight)
             track?.let {
-                Log.i("Vkohli onResolut", " ${LocalDateTime.now()} trackID: ${it.trackId} width: $newWidth height: $height")
+                Log.i("Vkohli onResolut", " ${LocalDateTime.now()} trackID: ${it.trackId} width: $newWidth height: $height ${hmsVideoView?.hashCode()}")
 
                 val args = HashMap<String, Any?>()
                 args["event_name"] = "on_resolution_changed"
@@ -167,31 +167,32 @@ class HMSVideoView(
         }
     }
 
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        if (hmsVideoView != null) {
-            hmsVideoView?.removeTrack()
-            context.unregisterReceiver(broadcastReceiver)
-            Log.i("Vkohli onDetached", "${LocalDateTime.now()}  ${track?.trackId}")
-        } else {
-            Log.e("HMSVideoView error", "onDetachedFromWindow error hmsVideoView is null")
-        }
-    }
+//    override fun onDetachedFromWindow() {
+//        super.onDetachedFromWindow()
+//        if (hmsVideoView != null) {
+//            hmsVideoView?.removeTrack()
+//            context.unregisterReceiver(broadcastReceiver)
+//            Log.i("Vkohli onDetached", "${LocalDateTime.now()}  ${track?.trackId} ${hmsVideoView?.hashCode()}")
+//        } else {
+//            Log.e("HMSVideoView error", "onDetachedFromWindow error hmsVideoView is null")
+//        }
+//    }
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
         val nameOfEventSink = (arguments as HashMap<String, Any>)["name"]
 
-        Log.i("Vkohli onListen", "${LocalDateTime.now()}  ${arguments.toString()}")
+        Log.i("Vkohli onListen", "${LocalDateTime.now()}  ${arguments.toString()} ${hmsVideoView?.hashCode()}")
         track?.let {
             Log.i("Vkohli onListen", "Current trackId:${it.trackId} ${LocalDateTime.now()}")
             if (nameOfEventSink!! == "${it.trackId}") {
-                Log.i("Vkohli onListen", "Assigning trackId:${it.trackId} ${LocalDateTime.now()}")
+                Log.i("Vkohli onListen", "Assigning trackId:${it.trackId} ${LocalDateTime.now()} ${eventSink==null}")
                 eventSink = events
             }
         }
     }
 
     override fun onCancel(arguments: Any?) {
+        Log.i("Vkohli onCancel", "${LocalDateTime.now()}  ${track?.trackId} ${hmsVideoView?.hashCode()}")
         eventSink = null
     }
 }
