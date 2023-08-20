@@ -176,5 +176,7 @@ class HMSVideoView(
         }
     }
 
-    override fun onCancel(arguments: Any?) {}
+    override fun onCancel(arguments: Any?) {
+        eventSink = null
+    }
 }
