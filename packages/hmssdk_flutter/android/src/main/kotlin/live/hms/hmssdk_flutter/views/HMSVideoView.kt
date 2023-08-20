@@ -64,6 +64,9 @@ class HMSVideoView(
 
             this.eventChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "videoViewEventChannel")
+            this.eventChannel?.let {
+                it.setStreamHandler(this)
+            }
 
             hmsVideoView?.addVideoViewStateChangeListener(object : VideoViewStateChangeListener {
                 override fun onFirstFrameRendered() {
