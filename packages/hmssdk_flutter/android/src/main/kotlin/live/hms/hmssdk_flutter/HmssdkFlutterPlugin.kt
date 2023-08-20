@@ -103,8 +103,10 @@ class HmssdkFlutterPlugin :
             this.rtcStatsChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "RTC Stats channel not found")
             this.sessionStoreChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Session Store channel not found")
             this.hlsPlayerChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "HLS Player channel not found")
-            this.hmsVideoFactory = HMSVideoViewFactory(this)
+
             this.hmsHLSPlayerFactory = HMSHLSPlayerFactory(this)
+            this.hmsVideoFactory = HMSVideoViewFactory(this, flutterPluginBinding)
+
 
             flutterPluginBinding.platformViewRegistry.registerViewFactory(
                 "HMSVideoView",

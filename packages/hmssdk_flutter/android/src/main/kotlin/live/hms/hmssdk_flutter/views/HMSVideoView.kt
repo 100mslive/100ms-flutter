@@ -10,11 +10,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.plugin.common.EventChannel
 import live.hms.hmssdk_flutter.Constants.Companion.METHOD_CALL
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.hmssdk_flutter.R
 import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.videoview.HMSVideoView
+import live.hms.videoview.VideoViewStateChangeListener
 import org.webrtc.RendererCommon
 import java.io.ByteArrayOutputStream
 
@@ -25,10 +28,15 @@ class HMSVideoView(
     private val track: HMSVideoTrack?,
     private val disableAutoSimulcastLayerSelect: Boolean,
     private val hmssdkFlutterPlugin: HmssdkFlutterPlugin?,
-) : FrameLayout(context, null) {
+    private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
+) : FrameLayout(context, null), EventChannel.StreamHandler {
 
     private var hmsVideoView: HMSVideoView? = null
     private var view: View? = null
+
+    var eventSink: EventChannel.EventSink? = null
+    var eventChannel: EventChannel? = null
+
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(contxt: Context?, intent: Intent?) {
             if (intent?.action == track?.trackId) {
@@ -53,6 +61,9 @@ class HMSVideoView(
             if ((scaleType ?: 0) <= RendererCommon.ScalingType.values().size) {
                 hmsVideoView?.setScalingType(RendererCommon.ScalingType.values()[scaleType ?: 0])
             }
+
+            this.eventChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger, "videoViewEventChannel")
 
             hmsVideoView?.addVideoViewStateChangeListener(object : VideoViewStateChangeListener {
                 override fun onFirstFrameRendered() {
@@ -131,5 +142,19 @@ class HMSVideoView(
         } else {
             Log.e("HMSVideoView error", "onDetachedFromWindow error hmsVideoView is null")
         }
+    }
+
+    override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+        val nameOfEventSink = (arguments as HashMap<String, Any>)["name"]
+
+        track?.let {
+            if (nameOfEventSink!! == "hms_video_view_${it.trackId}") {
+                this.eventSink = events
+            }
+        }
+    }
+
+    override fun onCancel(arguments: Any?) {
+        TODO("Not yet implemented")
     }
 }

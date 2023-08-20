@@ -3,6 +3,7 @@ package live.hms.hmssdk_flutter.views
 import android.content.Context
 import android.util.Log
 import android.view.View
+import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.platform.PlatformViewFactory
@@ -20,13 +21,14 @@ class HMSVideoViewWidget(
     private val matchParent: Boolean? = true,
     disableAutoSimulcastLayerSelect: Boolean,
     hmssdkFlutterPlugin: HmssdkFlutterPlugin?,
+    flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
 ) : PlatformView {
 
     private var hmsVideoView: HMSVideoView? = null
 
     init {
         if (hmsVideoView == null) {
-            hmsVideoView = HMSVideoView(context, setMirror, scaleType, track, disableAutoSimulcastLayerSelect, hmssdkFlutterPlugin)
+            hmsVideoView = HMSVideoView(context, setMirror, scaleType, track, disableAutoSimulcastLayerSelect, hmssdkFlutterPlugin, flutterPluginBinding)
         }
     }
 
@@ -44,7 +46,7 @@ class HMSVideoViewWidget(
     }
 }
 
-class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
+class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin, private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) :
 
     PlatformViewFactory(StandardMessageCodec.INSTANCE) {
     override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
