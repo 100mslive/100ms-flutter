@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:developer';
 import 'dart:io' show Platform;
 
 // Flutter imports:
@@ -126,7 +127,9 @@ class _PlatformView extends StatelessWidget {
     hmsVideoViewController = HMSVideoViewController(track.trackId);
   }
 
-  void onPlatformViewCreated(int id) {}
+  void onPlatformViewCreated(int id) {
+      log("Vkohli onPlatformViewCreated ${DateTime.now()} $id}");
+  }
 
   @override
   Widget build(BuildContext context) {

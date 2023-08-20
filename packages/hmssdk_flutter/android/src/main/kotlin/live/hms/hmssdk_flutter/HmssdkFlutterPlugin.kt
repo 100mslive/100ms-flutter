@@ -64,6 +64,7 @@ class HmssdkFlutterPlugin :
     private var previewSink: EventChannel.EventSink? = null
     private var logsSink: EventChannel.EventSink? = null
     private var rtcSink: EventChannel.EventSink? = null
+    private var hmsvideoViewChannel: EventChannel? = null
     private var sessionStoreSink: EventChannel.EventSink? = null
     var hlsPlayerSink: EventChannel.EventSink? = null
     private lateinit var activity: Activity
@@ -96,6 +97,8 @@ class HmssdkFlutterPlugin :
             this.hlsPlayerChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "hls_player_channel")
 
+            this.hmsvideoViewChannel =  EventChannel(flutterPluginBinding.binaryMessenger, "hms_video_view_channel")
+
             this.meetingEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Meeting event channel not found")
             this.channel?.setMethodCallHandler(this) ?: Log.e("Channel Error", "Event channel not found")
             this.previewChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Preview channel not found")
@@ -103,9 +106,9 @@ class HmssdkFlutterPlugin :
             this.rtcStatsChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "RTC Stats channel not found")
             this.sessionStoreChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Session Store channel not found")
             this.hlsPlayerChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "HLS Player channel not found")
-
+            this.hmsvideoViewChannel?.setStreamHandler(this)?: Log.e("Channel Error", "HMS Video channel not found")
             this.hmsHLSPlayerFactory = HMSHLSPlayerFactory(this)
-            this.hmsVideoFactory = HMSVideoViewFactory(this, flutterPluginBinding)
+            this.hmsVideoFactory = HMSVideoViewFactory(this, hmsvideoViewChannel)
 
 
             flutterPluginBinding.platformViewRegistry.registerViewFactory(
@@ -412,6 +415,7 @@ class HmssdkFlutterPlugin :
             rtcStatsChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "RTC Stats channel not found")
             sessionStoreChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Session Store channel not found")
             hlsPlayerChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "HLS Player channel not found")
+            hmsvideoViewChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "HMS video view channel not found")
             eventSink = null
             previewSink = null
             rtcSink = null
@@ -844,35 +848,6 @@ class HmssdkFlutterPlugin :
             metadata!!,
             hmsActionResultListener = HMSCommonAction.getActionListener(result),
         )
-    }
-
-    /**
-     * [getRoomLayout]  is used to get the layout themes for the room set in the dashboard.
-     */
-    private fun getRoomLayout(call: MethodCall, result: Result) {
-        val authToken = call.argument<String>("auth_token")
-        val endpoint = call.argument<String?>("endpoint")
-
-        val layoutRequestOptions = endpoint?.let {
-            LayoutRequestOptions(endpoint = endpoint)
-        }
-
-        authToken?.let {
-            hmssdk!!.getRoomLayout(
-                authToken, layoutRequestOptions,
-                object : HMSLayoutListener {
-                    override fun onError(error: HMSException) {
-                        result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)))
-                    }
-
-                    override fun onLayoutSuccess(layout: HMSRoomLayout) {
-                        result.success(HMSResultExtension.toDictionary(true, layout.toString()))
-                    }
-                },
-            )
-        } ?: run {
-            HMSErrorLogger.returnArgumentsError("authToken parameter is null")
-        }
     }
 
     private val hmsUpdateListener = object : HMSUpdateListener {

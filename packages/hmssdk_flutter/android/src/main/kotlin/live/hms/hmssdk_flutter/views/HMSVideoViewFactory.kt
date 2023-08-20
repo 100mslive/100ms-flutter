@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.view.View
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.platform.PlatformViewFactory
@@ -21,14 +22,14 @@ class HMSVideoViewWidget(
     private val matchParent: Boolean? = true,
     disableAutoSimulcastLayerSelect: Boolean,
     hmssdkFlutterPlugin: HmssdkFlutterPlugin?,
-    flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
+    videoViewChannel: EventChannel?,
 ) : PlatformView {
 
     private var hmsVideoView: HMSVideoView? = null
 
     init {
         if (hmsVideoView == null) {
-            hmsVideoView = HMSVideoView(context, setMirror, scaleType, track, disableAutoSimulcastLayerSelect, hmssdkFlutterPlugin, flutterPluginBinding)
+            hmsVideoView = HMSVideoView(context, setMirror, scaleType, track, disableAutoSimulcastLayerSelect, hmssdkFlutterPlugin, videoViewChannel)
         }
     }
 
@@ -46,7 +47,7 @@ class HMSVideoViewWidget(
     }
 }
 
-class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin, private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) :
+class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin, private val videoViewChannel: EventChannel?) :
 
     PlatformViewFactory(StandardMessageCodec.INSTANCE) {
     override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
@@ -71,6 +72,6 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin, private val f
         }
         val disableAutoSimulcastLayerSelect = args!!["disable_auto_simulcast_layer_select"] as? Boolean ?: false
 
-        return HMSVideoViewWidget(requireNotNull(context), viewId, creationParams, track, setMirror!!, scaleType, matchParent, disableAutoSimulcastLayerSelect, plugin, flutterPluginBinding)
+        return HMSVideoViewWidget(requireNotNull(context), viewId, creationParams, track, setMirror!!, scaleType, matchParent, disableAutoSimulcastLayerSelect, plugin, videoViewChannel)
     }
 }
