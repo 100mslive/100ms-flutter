@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
@@ -17,11 +18,18 @@ class HLSPlayer extends StatelessWidget {
           return GestureDetector(
             child: AspectRatio(
               aspectRatio: ratio,
-              child: HMSHLSPlayer(
-                key: key,
-                showPlayerControls: false,
-                isHLSStatsRequired:
-                    context.read<MeetingStore>().isHLSStatsEnabled,
+              child: InkWell(
+                onTap: () =>
+                    context.read<HLSPlayerStore>().toggleButtonsVisibility(),
+                splashFactory: NoSplash.splashFactory,
+                child: IgnorePointer(
+                  child: HMSHLSPlayer(
+                    key: key,
+                    showPlayerControls: false,
+                    isHLSStatsRequired:
+                        context.read<MeetingStore>().isHLSStatsEnabled,
+                  ),
+                ),
               ),
             ),
           );

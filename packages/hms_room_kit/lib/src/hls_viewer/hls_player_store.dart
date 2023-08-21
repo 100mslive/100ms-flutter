@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class HLSPlayerStore extends ChangeNotifier {
   ///This variable stores whether the application is in full screen or not
@@ -12,6 +10,8 @@ class HLSPlayerStore extends ChangeNotifier {
 
   ///This variable stores whether the buttons are visible or not
   bool areStreamControlsVisible = true;
+
+  bool isChatOpened = false;
 
   ///This variable stores whether the timer is active or not
   ///
@@ -30,6 +30,11 @@ class HLSPlayerStore extends ChangeNotifier {
       _isTimerActive = false;
       notifyListeners();
     });
+  }
+
+  void toggleIsChatOpened() {
+    isChatOpened = !isChatOpened;
+    notifyListeners();
   }
 
   ///This method toggles the visibility of the buttons
