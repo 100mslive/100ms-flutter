@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_chat_component.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/hls_more_options.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
-import 'package:hms_room_kit/src/service/app_debug_config.dart';
-import 'package:hms_room_kit/src/widgets/bottom_sheets/more_settings_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
 import 'package:provider/provider.dart';
 
@@ -142,19 +141,16 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                               onTap: () async => {
                                 showModalBottomSheet(
                                   isScrollControlled: true,
-                                  backgroundColor:
-                                      HMSThemeColors.backgroundDefault,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                                  backgroundColor: HMSThemeColors.surfaceDim,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(16),
+                                        topRight: Radius.circular(16)),
                                   ),
                                   context: context,
-                                  builder: (ctx) =>
-                                      ChangeNotifierProvider.value(
-                                          value: context.read<MeetingStore>(),
-                                          child: MoreSettingsBottomSheet(
-                                            isAudioMixerDisabled: AppDebugConfig
-                                                .isAudioMixerDisabled,
-                                          )),
+                                  builder: (ctx) => ChangeNotifierProvider.value(
+                                      value: context.read<MeetingStore>(),
+                                      child: const HLSMoreOptionsBottomSheet()),
                                 )
                               },
                               enabledBorderColor:
