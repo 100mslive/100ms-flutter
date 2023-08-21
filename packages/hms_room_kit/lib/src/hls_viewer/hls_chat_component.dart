@@ -101,30 +101,39 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
               width: MediaQuery.of(context).size.width - 16,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: HMSThemeColors.backgroundDim),
+                  color: HMSThemeColors.surfaceDim),
               child: TextField(
                 cursorColor: HMSThemeColors.primaryDefault,
                 onTapOutside: (event) =>
                     FocusManager.instance.primaryFocus?.unfocus(),
+                onSubmitted: (value) {
+                  if (messageTextController.text.isEmpty) {
+                    Utilities.showToast("Message can't be empty");
+                  }
+                  sendMessage();
+                },
                 textCapitalization: TextCapitalization.sentences,
                 textInputAction: TextInputAction.done,
                 style: GoogleFonts.inter(
                     color: HMSThemeColors.onSurfaceHighEmphasis),
                 controller: messageTextController,
                 decoration: InputDecoration(
-                    suffixIcon: InkWell(
-                        onTap: () {
+                    suffixIcon: IconButton(
+                        onPressed: () {
                           if (messageTextController.text.isEmpty) {
                             Utilities.showToast("Message can't be empty");
                           }
                           sendMessage();
                         },
-                        child: SvgPicture.asset(
+                        icon: SvgPicture.asset(
                           "packages/hms_room_kit/lib/src/assets/icons/send_message.svg",
+                          height: 24,
+                          width: 24,
                           colorFilter: ColorFilter.mode(
-                              HMSThemeColors.onSurfaceLowEmphasis,
+                              messageTextController.text.isEmpty
+                                  ? HMSThemeColors.onSurfaceLowEmphasis
+                                  : HMSThemeColors.onSurfaceHighEmphasis,
                               BlendMode.srcIn),
-                          fit: BoxFit.scaleDown,
                         )),
                     border: InputBorder.none,
                     focusedBorder: OutlineInputBorder(
@@ -135,7 +144,7 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
                     hintStyle: GoogleFonts.inter(
                         color: HMSThemeColors.onSurfaceLowEmphasis,
                         fontSize: 14,
-                        height: 0.8,
+                        height: 0.6,
                         letterSpacing: 0.25,
                         fontWeight: FontWeight.w400),
                     contentPadding:

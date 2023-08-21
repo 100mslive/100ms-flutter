@@ -16,11 +16,13 @@ class HLSViewerHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [HMSThemeColors.backgroundDim.withAlpha(64),HMSThemeColors.backgroundDim.withAlpha(0)])
-              ),
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+            HMSThemeColors.backgroundDim.withAlpha(64),
+            HMSThemeColors.backgroundDim.withAlpha(0)
+          ])),
       child: Padding(
         padding:
             EdgeInsets.only(left: 15, right: 15, top: Platform.isIOS ? 55 : 45),
@@ -79,7 +81,8 @@ class HLSViewerHeader extends StatelessWidget {
                                     fontSize: 10,
                                     lineHeight: 16,
                                     letterSpacing: 1.5,
-                                    textColor: HMSThemeColors.alertErrorBrighter),
+                                    textColor:
+                                        HMSThemeColors.alertErrorBrighter),
                               ),
                             )
                           : Container();
@@ -100,8 +103,8 @@ class HLSViewerHeader extends StatelessWidget {
                                   border: Border.all(
                                       color: HMSThemeColors.borderBright,
                                       width: 1),
-                                  borderRadius:
-                                      const BorderRadius.all(Radius.circular(4)),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(4)),
                                   color: HMSThemeColors.backgroundDim
                                       .withOpacity(0.64)),
                               child: Row(
