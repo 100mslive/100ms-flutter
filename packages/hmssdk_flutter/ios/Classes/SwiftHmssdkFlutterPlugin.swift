@@ -828,7 +828,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
         })
     }
-    
+
     /**
      * [getRoomLayout]  is used to get the layout themes for the room set in the dashboard.
      */

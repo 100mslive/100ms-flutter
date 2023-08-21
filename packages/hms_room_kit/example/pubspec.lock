@@ -229,7 +229,7 @@ packages:
       path: "../../hmssdk_flutter"
       relative: true
     source: path
-    version: "1.7.4"
+    version: "1.7.5"
   http:
     dependency: transitive
     description:
@@ -426,10 +426,10 @@ packages:
     dependency: transitive
     description:
       name: petitparser
-      sha256: "54e61005585962c9cb6f0df05a3ed82453e01deb1b1f83833b0b6cf7eab93da4"
+      sha256: eeb2d1428ee7f4170e2bd498827296a18d4e7fc462b71727d111c0ac7707cfa6
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.0"
+    version: "6.0.1"
   platform:
     dependency: transitive
     description:
@@ -735,10 +735,10 @@ packages:
     dependency: transitive
     description:
       name: xml
-      sha256: b477e76184eaf1ea0a11ebf4b3d937631693b8ea143c759146c4cd512438442d
+      sha256: af5e77e9b83f2f4adc5d3f0a4ece1c7f45a2467b695c2540381bac793e34e556
       url: "https://pub.dev"
     source: hosted
-    version: "6.4.0"
+    version: "6.4.2"
 sdks:
-  dart: ">=3.1.0 <4.0.0"
+  dart: ">=3.1.0-185.0.dev <4.0.0"
   flutter: ">=3.10.0"
