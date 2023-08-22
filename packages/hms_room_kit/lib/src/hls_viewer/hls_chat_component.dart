@@ -103,9 +103,13 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
                   borderRadius: BorderRadius.circular(8),
                   color: HMSThemeColors.surfaceDim),
               child: TextField(
+                keyboardType: TextInputType.text,
                 cursorColor: HMSThemeColors.primaryDefault,
                 onTapOutside: (event) =>
                     FocusManager.instance.primaryFocus?.unfocus(),
+                onChanged: (value) {
+                  setState(() {});
+                },
                 onSubmitted: (value) {
                   if (messageTextController.text.isEmpty) {
                     Utilities.showToast("Message can't be empty");
@@ -113,7 +117,7 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
                   sendMessage();
                 },
                 textCapitalization: TextCapitalization.sentences,
-                textInputAction: TextInputAction.done,
+                textInputAction: TextInputAction.send,
                 style: GoogleFonts.inter(
                     color: HMSThemeColors.onSurfaceHighEmphasis),
                 controller: messageTextController,

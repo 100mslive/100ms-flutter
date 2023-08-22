@@ -11,12 +11,15 @@ class HLSWaitingUI extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SvgPicture.asset(
-          "packages/hms_room_kit/lib/src/assets/icons/time.svg",
-          height: 80,
-          width: 80,
+        CircleAvatar(
+          radius: 50,
+          backgroundColor: HMSThemeColors.surfaceDefault,
+          child: SvgPicture.asset(
+            "packages/hms_room_kit/lib/src/assets/icons/live.svg",
+            height: 56,
+            width: 56,
+          ),
         ),
         const SizedBox(
           height: 24,

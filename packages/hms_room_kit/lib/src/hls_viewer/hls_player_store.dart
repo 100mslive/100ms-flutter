@@ -6,7 +6,7 @@ class HLSPlayerStore extends ChangeNotifier {
   bool isFullScreen = false;
 
   ///This variable stores whether the video is playing or not
-  bool isStreamPlaying = true;
+  bool isStreamPlaying = false;
 
   ///This variable stores whether the buttons are visible or not
   bool areStreamControlsVisible = true;
@@ -26,10 +26,26 @@ class HLSPlayerStore extends ChangeNotifier {
   void startTimerToHideButtons() {
     _isTimerActive = true;
     Timer(const Duration(seconds: 3), () {
-      areStreamControlsVisible = false;
+      if (isStreamPlaying) {
+        areStreamControlsVisible = false;
+        notifyListeners();
+      }
       _isTimerActive = false;
-      notifyListeners();
     });
+  }
+
+  void setStreamPlaying(bool isStreamPlaying) {
+    this.isStreamPlaying = isStreamPlaying;
+    if (isStreamPlaying) {
+      if (!_isTimerActive) {
+        startTimerToHideButtons();
+      }
+      return;
+    } else {
+      isChatOpened = false;
+      areStreamControlsVisible = true;
+    }
+    notifyListeners();
   }
 
   void toggleIsChatOpened() {
@@ -45,15 +61,17 @@ class HLSPlayerStore extends ChangeNotifier {
   ///If the buttons are visible we set the [areStreamControlsVisible] to false
   ///and notify the listeners
   void toggleButtonsVisibility() {
-    if (!areStreamControlsVisible) {
-      areStreamControlsVisible = true;
-      notifyListeners();
-      if (!_isTimerActive) {
-        startTimerToHideButtons();
+    if (isStreamPlaying) {
+      if (!areStreamControlsVisible) {
+        areStreamControlsVisible = true;
+        notifyListeners();
+        if (!_isTimerActive) {
+          startTimerToHideButtons();
+        }
+      } else {
+        areStreamControlsVisible = false;
+        notifyListeners();
       }
-    } else {
-      areStreamControlsVisible = false;
-      notifyListeners();
     }
   }
 }

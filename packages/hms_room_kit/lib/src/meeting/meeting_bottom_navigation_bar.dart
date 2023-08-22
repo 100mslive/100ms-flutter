@@ -5,8 +5,8 @@ import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/app_utilities_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/chat_bottom_sheet.dart';
-import 'package:hms_room_kit/src/widgets/bottom_sheets/more_settings_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -152,16 +152,16 @@ class _MeetingBottomNavigationBarState
           onTap: () async => {
             showModalBottomSheet(
               isScrollControlled: true,
-              backgroundColor: HMSThemeColors.backgroundDefault,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+              backgroundColor: HMSThemeColors.surfaceDim,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16)),
               ),
               context: context,
               builder: (ctx) => ChangeNotifierProvider.value(
                   value: context.read<MeetingStore>(),
-                  child: MoreSettingsBottomSheet(
-                    isAudioMixerDisabled: AppDebugConfig.isAudioMixerDisabled,
-                  )),
+                  child: const AppUtilitiesBottomSheet()),
             )
           },
           enabledBorderColor: HMSThemeColors.borderBright,
