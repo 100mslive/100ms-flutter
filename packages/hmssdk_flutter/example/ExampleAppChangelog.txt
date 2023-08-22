@@ -1,23 +1,24 @@
-Board: https://github.com/100mslive/100ms-flutter/projects/26
+Board: https://github.com/100mslive/100ms-flutter/projects/27
 
-- Added Prebuilt Screen Header
-https://github.com/100mslive/100ms-flutter/issues/1482
+- HLS Streaming Layout - Broadcaster
+https://github.com/100mslive/100ms-flutter/issues/1507
 
-- Added Prebuilt Screen Footer
-https://github.com/100mslive/100ms-flutter/issues/1481
+- HLS Streaming Layout - Viewer
+https://github.com/100mslive/100ms-flutter/issues/1506
 
-- Added Inset Mode
-https://github.com/100mslive/100ms-flutter/issues/1477
+- Degraded state blur over Video Tiles
+https://github.com/100mslive/100ms-flutter/issues/1508
 
-- Added Equal Prominence layout
-https://github.com/100mslive/100ms-flutter/issues/1478
+- Options on BottomSheet - BRB, handraise, recording, Change Name - UI
+https://github.com/100mslive/100ms-flutter/issues/1485
 
-- Added Active Speaker Sorting
-https://github.com/100mslive/100ms-flutter/issues/1480
+- Tap / Auto timer to dismiss footer and expand video tile area
+https://github.com/100mslive/100ms-flutter/issues/1486
+
 
 - Updated to Android SDK version to 2.7.3 and iOS SDK version to 0.9.9
 
-Core SDK: 1.7.4
+Core SDK: 1.7.5
 Room Kit: 0.1.0
 Android SDK: 2.7.3
 iOS SDK: 0.9.9
