@@ -1,9 +1,11 @@
 // Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/inset_tile_more_option.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/name_and_network.dart';
+import 'package:hms_room_kit/src/widgets/peer_widgets/screen_share_tile_name.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/degrade_tile.dart';
@@ -115,7 +117,8 @@ class _PeerTileState extends State<PeerTile> {
                         builder: (context, BoxConstraints constraints) {
                       return Container(
                         decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 1.0),
+                            border: Border.all(
+                                color: HMSThemeColors.surfaceDim, width: 1.0),
                             color: Colors.transparent,
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(10))),
@@ -126,7 +129,46 @@ class _PeerTileState extends State<PeerTile> {
                               uid: context.read<PeerTrackNode>().uid,
                               scaleType: widget.scaleType,
                             ),
-                            NameAndNetwork(maxWidth: constraints.maxWidth),
+                            Positioned(
+                              //Bottom left
+                              bottom: 5,
+                              left: 5,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: HMSThemeColors.backgroundDim
+                                        .withOpacity(0.64),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8.0, right: 4, top: 4, bottom: 4),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset(
+                                          "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
+                                          height: 20,
+                                          width: 20,
+                                          colorFilter: ColorFilter.mode(
+                                              HMSThemeColors
+                                                  .onSurfaceHighEmphasis,
+                                              BlendMode.srcIn),
+                                        ),
+                                        const SizedBox(
+                                          width: 6,
+                                        ),
+                                        ScreenshareTileName(
+                                            maxWidth: constraints.maxWidth)
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                             const RTCStatsView(isLocal: false),
                           ],
                         ),

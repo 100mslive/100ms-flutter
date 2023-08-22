@@ -60,10 +60,6 @@ class MeetingStore extends ChangeNotifier
 
   bool isScreenShareOn = false;
 
-  List<HMSTrack?> screenShareTrack = [];
-
-  HMSTrack? curentScreenShareTrack;
-
   bool reconnecting = false;
 
   bool reconnected = false;
@@ -188,6 +184,8 @@ class MeetingStore extends ChangeNotifier
   bool isDefaultAspectRatioSelected = true;
 
   int currentPage = 0;
+
+  int currentScreenSharePage = 0;
 
   Future<HMSException?> join(String userName, String roomUrl,
       {HMSConfig? roomConfig}) async {
@@ -763,6 +761,11 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
+  void setCurrentScreenSharePage(int newPage) {
+    currentScreenSharePage = newPage;
+    notifyListeners();
+  }
+
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     //To handle the active speaker mode scenario
@@ -1200,42 +1203,47 @@ class MeetingStore extends ChangeNotifier
     switch (update) {
       case HMSTrackUpdate.trackAdded:
         if (track.source != "REGULAR") {
-          int peerIndex = peerTracks.indexWhere(
-              (element) => element.uid == peer.peerId + track.trackId);
-          if (peerIndex == -1) {
-            screenShareCount++;
-            peerTracks.insert(
-                0,
-                PeerTrackNode(
-                    peer: peer,
-                    uid: peer.peerId + track.trackId,
-                    track: track as HMSVideoTrack,
-                    stats: RTCStats()));
+          if (!peer.isLocal) {
+            int peerIndex = peerTracks.indexWhere(
+                (element) => element.uid == peer.peerId + track.trackId);
+            if (peerIndex == -1) {
+              screenShareCount++;
+              peerTracks.insert(
+                  0,
+                  PeerTrackNode(
+                      peer: peer,
+                      uid: peer.peerId + track.trackId,
+                      track: track as HMSVideoTrack,
+                      stats: RTCStats()));
+              notifyListeners();
+              changePIPWindowTrackOnIOS(
+                  track: track,
+                  ratio: [9, 16],
+                  alternativeText: "${peer.name} Screen share");
+            }
+          } else {
             isScreenShareActive();
-            notifyListeners();
-            changePIPWindowTrackOnIOS(
-                track: track,
-                ratio: [9, 16],
-                alternativeText: "${peer.name} Screen share");
           }
         }
         break;
       case HMSTrackUpdate.trackRemoved:
         if (track.source != "REGULAR") {
-          int peerIndex = peerTracks.indexWhere(
-              (element) => element.uid == peer.peerId + track.trackId);
-          if (peerIndex != -1) {
-            screenShareCount--;
-            peerTracks.removeAt(peerIndex);
-            if (screenShareCount == 0) {
-              setLandscapeLock(false);
+          if (!peer.isLocal) {
+            int peerIndex = peerTracks.indexWhere(
+                (element) => element.uid == peer.peerId + track.trackId);
+            if (peerIndex != -1) {
+              screenShareCount--;
+              peerTracks.removeAt(peerIndex);
+              notifyListeners();
+              changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
             }
+
+            ///Need to check why we were doing this
+            // peerTracks.removeWhere(
+            //     (element) => element.track?.trackId == track.trackId);
+          } else {
             isScreenShareActive();
-            notifyListeners();
-            changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
           }
-          peerTracks.removeWhere(
-              (element) => element.track?.trackId == track.trackId);
           notifyListeners();
           return;
         } else {
