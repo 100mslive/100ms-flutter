@@ -662,6 +662,41 @@ class HMSSDK {
     }
   }
 
+  /// Preview for a specific Role before changing it.
+  ///
+  /// By previewing before doing a Role Change, users can see their expected Audio & Video tracks which will be visible to other Peers in Room post changing the Role.
+  /// **Parameters**:
+  ///
+  /// **role** - The new [role] into which the Peer is going to be changed into.
+  ///
+  /// Refer [previewForRole guide here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/peer/change-role)
+  Future<dynamic> previewForRole({required String role}) async {
+    var arguments = {
+      "role_name": role,
+    };
+    var result = await PlatformService.invokeMethod(PlatformMethod.previewForRole, arguments: arguments);
+
+    if (result["success"]) {
+      return result["data"];
+    } else {
+      return HMSException.fromMap(result["data"]["error"]);
+    }
+  }
+
+  /// Cancel the Previewing for Role invocation.
+  /// If a [previewForRole] call was performed previously then calling this method clears the tracks created anticipating a Change of Role
+  ///
+  /// Refer the [cancelPreview guide here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/peer/change-role)
+  Future<dynamic> cancelPreview() async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.previewForRole);
+
+    if (result["success"]) {
+      return null;
+    } else {
+      return HMSException.fromMap(result["data"]["error"]);
+    }
+  }
+
   /// To change the mute status of a single remote peer's track.
   ///
   /// **Parameters**:

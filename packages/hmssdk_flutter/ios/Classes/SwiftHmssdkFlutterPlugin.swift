@@ -194,7 +194,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - Role based Actions
 
-        case "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role", "change_role_of_peers_with_roles", "change_role_of_peer":
+        case "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role", "change_role_of_peers_with_roles", "change_role_of_peer", "preview_for_role", "cancel_preview":
             roleActions(call, result)
 
             // MARK: - Peer Action
@@ -348,6 +348,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "change_role_of_peer":
             changeRole(call, result)
+            
+        case "preview_for_role":
+            previewForRole(call, result)
+            
+        case "cancel_preview":
+            cancelPreview(result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -731,20 +737,42 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result(nil)
     }
 
-    /*
-     private func previewForRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-     let arguments = call.arguments as! [AnyHashable: Any]
-     
-     hmsSDK?.preview(role: ) { ,  in
-     
-     }
-     }
-     
-     private func cancelPreview(_ result: FlutterResult) {
-     hmsSDK?.cancelPreview()
-     result(nil)
-     }
-     */
+    
+    private func previewForRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        
+        guard let arguments = call.arguments as? [AnyHashable: Any],
+              let roleString = arguments["role_name"] as? String,
+              let role = HMSCommonAction.getRole(by: roleString, hmsSDK: hmsSDK)
+        else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("Invalid role parameters for role in \(#function)")))
+            return
+        }
+        
+        hmsSDK?.preview(role: role) { tracks, error in
+            
+            if let error = error {
+                print(#function, error)
+                result(HMSResultExtension.toDictionary(false, error))
+                return
+            }
+            
+            if let tracks = tracks {
+                
+                var dict = [[AnyHashable: Any]]()
+                
+                for track in tracks {
+                    dict.append(HMSTrackExtension.toDictionary(track))
+                }
+                
+                result(HMSResultExtension.toDictionary(true, dict))
+            }
+        }
+    }
+
+    private func cancelPreview(_ result: FlutterResult) {
+        hmsSDK?.cancelPreview()
+        result(HMSResultExtension.toDictionary(true))
+    }
 
     private func join(_ call: FlutterMethodCall, _ result: FlutterResult) {
 

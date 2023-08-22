@@ -9,7 +9,7 @@ import Foundation
 
 class HMSResultExtension {
 
-    static func toDictionary(_ success: Bool, _ data: Any?) -> [String: Any?] {
+    static func toDictionary(_ success: Bool, _ data: Any? = nil) -> [String: Any?] {
 
         /**
             We  add `data`  field in the map only when it is non null
