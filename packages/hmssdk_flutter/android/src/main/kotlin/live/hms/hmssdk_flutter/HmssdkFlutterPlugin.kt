@@ -844,35 +844,6 @@ class HmssdkFlutterPlugin :
         )
     }
 
-    /**
-     * [getRoomLayout]  is used to get the layout themes for the room set in the dashboard.
-     */
-    private fun getRoomLayout(call: MethodCall, result: Result) {
-        val authToken = call.argument<String>("auth_token")
-        val endpoint = call.argument<String?>("endpoint")
-
-        val layoutRequestOptions = endpoint?.let {
-            LayoutRequestOptions(endpoint = endpoint)
-        }
-
-        authToken?.let {
-            hmssdk!!.getRoomLayout(
-                authToken, layoutRequestOptions,
-                object : HMSLayoutListener {
-                    override fun onError(error: HMSException) {
-                        result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)))
-                    }
-
-                    override fun onLayoutSuccess(layout: HMSRoomLayout) {
-                        result.success(HMSResultExtension.toDictionary(true, layout.toString()))
-                    }
-                },
-            )
-        } ?: run {
-            HMSErrorLogger.returnArgumentsError("authToken parameter is null")
-        }
-    }
-
     private val hmsUpdateListener = object : HMSUpdateListener {
         override fun onChangeTrackStateRequest(details: HMSChangeTrackStateRequest) {
             val args = HashMap<String, Any?>()

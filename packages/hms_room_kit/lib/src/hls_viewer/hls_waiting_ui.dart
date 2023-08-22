@@ -11,28 +11,34 @@ class HLSWaitingUI extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SvgPicture.asset(
-          "packages/hms_room_kit/lib/src/assets/icons/time.svg",
-          height: 80,
-          width: 80,
+        CircleAvatar(
+          radius: 50,
+          backgroundColor: HMSThemeColors.surfaceDefault,
+          child: SvgPicture.asset(
+            "packages/hms_room_kit/lib/src/assets/icons/live.svg",
+            height: 56,
+            width: 56,
+          ),
         ),
         const SizedBox(
-          height: 16,
+          height: 24,
         ),
         HMSTitleText(
-          text: "Class hasn’t started yet",
+          text: "Stream yet to start",
           textColor: HMSThemeColors.onSurfaceHighEmphasis,
-          fontSize: 28,
+          fontSize: 24,
           lineHeight: 32,
           letterSpacing: 0.25,
         ),
         const SizedBox(
-          height: 5,
+          height: 8,
         ),
         HMSSubheadingText(
-            text: "Please wait for the teacher to start the class.",
+            text: "Sit back and relax",
+            fontSize: 16,
+            lineHeight: 24,
+            letterSpacing: 0.5,
             textColor: HMSThemeColors.onSurfaceMediumEmphasis)
       ],
     );

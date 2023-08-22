@@ -55,6 +55,76 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                               BlendMode.srcIn),
                         )
                       : Container();
+                }),
+            const SizedBox(
+              width: 8,
+            ),
+            Selector<MeetingStore, bool>(
+                selector: (_, meetingStore) =>
+                    meetingStore.streamingType['hls'] ?? false,
+                builder: (_, isHLSStrted, __) {
+                  return isHLSStrted
+                      ? Container(
+                          height: 24,
+                          width: 43,
+                          decoration: BoxDecoration(
+                              color: HMSThemeColors.alertErrorDefault,
+                              borderRadius: BorderRadius.circular(4)),
+                          child: Center(
+                            child: HMSTitleText(
+                                text: "LIVE",
+                                fontSize: 10,
+                                lineHeight: 16,
+                                letterSpacing: 1.5,
+                                textColor: HMSThemeColors.alertErrorBrighter),
+                          ),
+                        )
+                      : Container();
+                }),
+            const SizedBox(
+              width: 8,
+            ),
+            Selector<MeetingStore, Tuple2<bool, int>>(
+                selector: (_, meetingStore) => Tuple2(
+                    meetingStore.streamingType['hls'] ?? false,
+                    meetingStore.peers.length),
+                builder: (_, data, __) {
+                  return data.item1
+                      ? Container(
+                          width: 59,
+                          height: 24,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: HMSThemeColors.borderBright, width: 1),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(4)),
+                              color: HMSThemeColors.backgroundDim
+                                  .withOpacity(0.64)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                "packages/hms_room_kit/lib/src/assets/icons/watching.svg",
+                                width: 16,
+                                height: 16,
+                                colorFilter: ColorFilter.mode(
+                                    HMSThemeColors.onSurfaceHighEmphasis,
+                                    BlendMode.srcIn),
+                                semanticsLabel: "fl_watching",
+                              ),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              HMSTitleText(
+                                  text: data.item2.toString(),
+                                  fontSize: 10,
+                                  lineHeight: 10,
+                                  letterSpacing: 1.5,
+                                  textColor:
+                                      HMSThemeColors.onSurfaceHighEmphasis)
+                            ],
+                          ))
+                      : Container();
                 })
           ],
         ),

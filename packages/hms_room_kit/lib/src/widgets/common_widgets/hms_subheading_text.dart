@@ -9,7 +9,7 @@ class HMSSubheadingText extends StatelessWidget {
   final double? fontSize;
   final FontWeight? fontWeight;
   final TextOverflow? textOverflow;
-
+  final int maxLines;
   const HMSSubheadingText(
       {Key? key,
       required this.text,
@@ -17,6 +17,7 @@ class HMSSubheadingText extends StatelessWidget {
       this.letterSpacing = 0.25,
       this.lineHeight = 20 / 14,
       this.fontSize = 14,
+      this.maxLines = 1,
       this.fontWeight = FontWeight.w400,
       this.textOverflow = TextOverflow.ellipsis})
       : super(key: key);
@@ -26,7 +27,7 @@ class HMSSubheadingText extends StatelessWidget {
     return Text(text,
         overflow: textOverflow,
         softWrap: true,
-        maxLines: 1,
+        maxLines: maxLines,
         style: GoogleFonts.inter(
             fontSize: fontSize,
             letterSpacing: letterSpacing,

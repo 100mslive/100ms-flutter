@@ -856,7 +856,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
         })
     }
-    
+
     /**
      * [getRoomLayout]  is used to get the layout themes for the room set in the dashboard.
      */
@@ -894,7 +894,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
         }
     }
-
 
     private func changeRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
