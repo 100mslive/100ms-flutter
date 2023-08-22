@@ -4,7 +4,9 @@ import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/change_name_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
+import 'package:provider/provider.dart';
 
 class LocalPeerBottomSheet extends StatefulWidget {
   final MeetingStore meetingStore;
@@ -25,7 +27,7 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: 0.35,
+      heightFactor: 0.4,
       child: Padding(
           padding: const EdgeInsets.only(top: 16.0, left: 24, right: 24),
           child: Column(
@@ -145,6 +147,44 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                         horizontalTitleGap: 2,
                         onTap: () async {
                           Navigator.pop(context);
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: HMSThemeColors.surfaceDim,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  topRight: Radius.circular(16)),
+                            ),
+                            context: context,
+                            builder: (ctx) => ChangeNotifierProvider.value(
+                                value: widget.meetingStore,
+                                child: Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: MediaQuery.of(ctx)
+                                            .viewInsets
+                                            .bottom),
+                                    child: const ChangeNameBottomSheet(
+                                      showPrivacyInfo: false,
+                                    ))),
+                          );
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        leading: SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
+                          semanticsLabel: "fl_local_pin_tile",
+                          height: 20,
+                          width: 20,
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
+                        ),
+                        title: HMSSubheadingText(
+                            text: "Change Name",
+                            textColor: HMSThemeColors.onSurfaceHighEmphasis)),
+                    ListTile(
+                        horizontalTitleGap: 2,
+                        onTap: () async {
+                          Navigator.pop(context);
                           if (widget.callbackFunction != null) {
                             widget.callbackFunction!();
                           }
@@ -162,7 +202,7 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                               BlendMode.srcIn),
                         ),
                         title: HMSSubheadingText(
-                            text: "Minimize Your Video",
+                            text: "Minimize Your Tile",
                             textColor: widget.meetingStore.peerTracks.length > 1
                                 ? HMSThemeColors.onSurfaceHighEmphasis
                                 : HMSThemeColors.onSurfaceLowEmphasis)),

@@ -8,7 +8,8 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:provider/provider.dart';
 
 class ChangeNameBottomSheet extends StatefulWidget {
-  const ChangeNameBottomSheet({super.key});
+  final bool showPrivacyInfo;
+  const ChangeNameBottomSheet({super.key, this.showPrivacyInfo = true});
 
   @override
   State<ChangeNameBottomSheet> createState() => _ChangeNameBottomSheetState();
@@ -90,15 +91,17 @@ class _ChangeNameBottomSheetState extends State<ChangeNameBottomSheet> {
                 height: 5,
               ),
             ),
-            HMSSubheadingText(
-              text:
-                  "Your name will be visible to other participants in\n the session.",
-              maxLines: 2,
-              textColor: HMSThemeColors.onSurfaceMediumEmphasis,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
+            if (widget.showPrivacyInfo)
+              HMSSubheadingText(
+                text:
+                    "Your name will be visible to other participants in\n the session.",
+                maxLines: 2,
+                textColor: HMSThemeColors.onSurfaceMediumEmphasis,
+              ),
+            if (widget.showPrivacyInfo)
+              const SizedBox(
+                height: 16,
+              ),
             SizedBox(
               height: 48,
               child: TextField(

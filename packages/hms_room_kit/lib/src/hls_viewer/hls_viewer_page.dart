@@ -31,6 +31,12 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
     }
   }
 
+  void _setStreamStatus(bool hasHlsStarted) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<HLSPlayerStore>().setStreamPlaying(hasHlsStarted);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -83,6 +89,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                       selector: (_, meetingStore) =>
                                           meetingStore.hasHlsStarted,
                                       builder: (_, hasHlsStarted, __) {
+                                        _setStreamStatus(hasHlsStarted);
                                         return (hasHlsStarted)
                                             ? Selector<HLSPlayerStore, bool>(
                                                 selector: (_, hlsPlayerStore) =>
@@ -115,8 +122,14 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                     ),
                                                   );
                                                 })
-                                            : const Center(
-                                                child: HLSWaitingUI());
+                                            : SizedBox(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                height: MediaQuery.of(context)
+                                                    .size
+                                                    .height,
+                                                child: const HLSWaitingUI());
                                       }),
 
                                   ///Will only be displayed when the controls are visible

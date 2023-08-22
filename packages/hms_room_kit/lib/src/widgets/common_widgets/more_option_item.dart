@@ -6,11 +6,13 @@ class MoreOptionItem extends StatelessWidget {
   final Function onTap;
   final Widget optionIcon;
   final String optionText;
+  final bool isActive;
   const MoreOptionItem(
       {super.key,
       required this.onTap,
       required this.optionIcon,
-      required this.optionText});
+      required this.optionText,
+      this.isActive = false});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,9 @@ class MoreOptionItem extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-            color: HMSThemeColors.surfaceDim,
+            color: isActive
+                ? HMSThemeColors.surfaceBright
+                : HMSThemeColors.surfaceDim,
             borderRadius: BorderRadius.circular(4)),
         height: 60,
         width: 109,
