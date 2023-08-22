@@ -56,6 +56,7 @@ class MeetingScreenController extends StatefulWidget {
 }
 
 class _MeetingScreenControllerState extends State<MeetingScreenController> {
+  HLSPlayerStore? _hlsPlayerStore;
   @override
   void initState() {
     super.initState();
@@ -79,6 +80,10 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
     }
   }
 
+  void _setHLSPlayerStore() {
+    _hlsPlayerStore ??= HLSPlayerStore();
+  }
+
   void setInitValues() async {
     context.read<MeetingStore>().setSettings();
   }
@@ -88,9 +93,9 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
     return Selector<MeetingStore, String?>(
         builder: (_, data, __) {
           if (data?.contains("hls-") ?? false) {
-            HLSPlayerStore hlsPlayerStore = HLSPlayerStore();
+            _setHLSPlayerStore();
             return ListenableProvider.value(
-                value: hlsPlayerStore, child: const HLSViewerPage());
+                value: _hlsPlayerStore, child: const HLSViewerPage());
           }
           return MeetingPage(
             meetingLink: widget.roomCode,

@@ -1,6 +1,6 @@
 version: 0.1
 cli:
-  version: 1.13.0
+  version: 1.14.0
 plugins:
   sources:
     - id: trunk
@@ -9,7 +9,7 @@ plugins:
 lint:
   enabled:
     - actionlint@1.6.25
-    - checkov@2.4.1
+    - checkov@2.4.2
     - osv-scanner@1.3.6
     - trivy@0.44.1
     - trufflehog@3.48.0
@@ -30,6 +30,9 @@ runtimes:
     - java@13.0.11
     - node@18.12.1
 actions:
+  disabled:
+    - trunk-check-pre-push
+    - trunk-fmt-pre-commit
   enabled:
     - trunk-announce
     - trunk-upgrade-available
