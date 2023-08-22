@@ -341,7 +341,7 @@ extension PlatformMethodValues on PlatformMethod {
 
       case PlatformMethod.previewForRole:
         return "preview_for_role";
-      
+
       case PlatformMethod.cancelPreview:
         return "cancel_preview";
 
@@ -541,7 +541,7 @@ extension PlatformMethodValues on PlatformMethod {
       case 'preview_for_role':
         return PlatformMethod.previewForRole;
 
-      case  "cancel_preview":
+      case "cancel_preview":
         return PlatformMethod.cancelPreview;
 
       case 'accept_change_role':

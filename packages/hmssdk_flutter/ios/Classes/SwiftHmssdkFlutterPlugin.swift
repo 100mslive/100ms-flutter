@@ -348,10 +348,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "change_role_of_peer":
             changeRole(call, result)
-            
+
         case "preview_for_role":
             previewForRole(call, result)
-            
+
         case "cancel_preview":
             cancelPreview(result)
 
@@ -737,9 +737,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         result(nil)
     }
 
-    
     private func previewForRole(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        
+
         guard let arguments = call.arguments as? [AnyHashable: Any],
               let roleString = arguments["role_name"] as? String,
               let role = HMSCommonAction.getRole(by: roleString, hmsSDK: hmsSDK)
@@ -747,23 +746,23 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("Invalid role parameters for role in \(#function)")))
             return
         }
-        
+
         hmsSDK?.preview(role: role) { tracks, error in
-            
+
             if let error = error {
                 print(#function, error)
                 result(HMSResultExtension.toDictionary(false, error))
                 return
             }
-            
+
             if let tracks = tracks {
-                
+
                 var dict = [[AnyHashable: Any]]()
-                
+
                 for track in tracks {
                     dict.append(HMSTrackExtension.toDictionary(track))
                 }
-                
+
                 result(HMSResultExtension.toDictionary(true, dict))
             }
         }
