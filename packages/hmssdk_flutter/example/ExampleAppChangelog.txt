@@ -15,7 +15,6 @@ https://github.com/100mslive/100ms-flutter/issues/1485
 - Tap / Auto timer to dismiss footer and expand video tile area
 https://github.com/100mslive/100ms-flutter/issues/1486
 
-
 - Updated to Android SDK version to 2.7.3 and iOS SDK version to 0.9.9
 
 Core SDK: 1.7.5

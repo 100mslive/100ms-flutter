@@ -111,7 +111,7 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
                   setState(() {});
                 },
                 onSubmitted: (value) {
-                  if (messageTextController.text.isEmpty) {
+                  if (messageTextController.text.trim().isEmpty) {
                     Utilities.showToast("Message can't be empty");
                   }
                   sendMessage();
@@ -124,7 +124,7 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
                 decoration: InputDecoration(
                     suffixIcon: IconButton(
                         onPressed: () {
-                          if (messageTextController.text.isEmpty) {
+                          if (messageTextController.text.trim().isEmpty) {
                             Utilities.showToast("Message can't be empty");
                           }
                           sendMessage();
