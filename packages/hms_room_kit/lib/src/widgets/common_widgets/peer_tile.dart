@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
+import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/inset_tile_more_option.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/name_and_network.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/screen_share_tile_name.dart';
@@ -129,6 +130,180 @@ class _PeerTileState extends State<PeerTile> {
                               uid: context.read<PeerTrackNode>().uid,
                               scaleType: widget.scaleType,
                             ),
+                            Positioned(
+                                top: 5,
+                                right: 5,
+                                child: GestureDetector(
+                                  ///This is to show the screenshare in full screen
+                                  onTap: () {
+                                    showGeneralDialog(
+                                        context: context,
+                                        transitionBuilder: (ctx, animation,
+                                            secondaryAnimation, value) {
+                                          return Transform.scale(
+                                            scale: animation.value,
+                                            child: Opacity(
+                                                opacity: animation.value,
+                                                child: ListenableProvider.value(
+                                                  value: context
+                                                      .read<PeerTrackNode>(),
+                                                  child: Scaffold(
+                                                    body: SafeArea(
+                                                      child: Container(
+                                                        color: HMSThemeColors
+                                                            .backgroundDim,
+                                                        height: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .height,
+                                                        width: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .width,
+                                                        child: Stack(
+                                                          children: [
+                                                            InteractiveViewer(
+                                                              child:
+                                                                  ListenableProvider
+                                                                      .value(
+                                                                value: context.read<
+                                                                    MeetingStore>(),
+                                                                child:
+                                                                    VideoView(
+                                                                  uid: context
+                                                                      .read<
+                                                                          PeerTrackNode>()
+                                                                      .uid,
+                                                                  scaleType: widget
+                                                                      .scaleType,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Positioned(
+                                                                top: 5,
+                                                                right: 5,
+                                                                child:
+                                                                    GestureDetector(
+                                                                  onTap: () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    height: 40,
+                                                                    width: 40,
+                                                                    decoration: BoxDecoration(
+                                                                        color: HMSThemeColors
+                                                                            .backgroundDim
+                                                                            .withAlpha(
+                                                                                64),
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(8)),
+                                                                    child:
+                                                                        Center(
+                                                                      child: SvgPicture
+                                                                          .asset(
+                                                                        "packages/hms_room_kit/lib/src/assets/icons/minimize.svg",
+                                                                        height:
+                                                                            16,
+                                                                        width:
+                                                                            16,
+                                                                        semanticsLabel:
+                                                                            "maximize_label",
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                )),
+                                                            Positioned(
+                                                              //Bottom left
+                                                              bottom: 5,
+                                                              left: 5,
+                                                              child: Container(
+                                                                decoration: BoxDecoration(
+                                                                    color: HMSThemeColors
+                                                                        .backgroundDim
+                                                                        .withOpacity(
+                                                                            0.64),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            8)),
+                                                                child: Center(
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            8.0,
+                                                                        right:
+                                                                            4,
+                                                                        top: 4,
+                                                                        bottom:
+                                                                            4),
+                                                                    child: Row(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .min,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        SvgPicture
+                                                                            .asset(
+                                                                          "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
+                                                                          height:
+                                                                              20,
+                                                                          width:
+                                                                              20,
+                                                                          colorFilter: ColorFilter.mode(
+                                                                              HMSThemeColors.onSurfaceHighEmphasis,
+                                                                              BlendMode.srcIn),
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          width:
+                                                                              6,
+                                                                        ),
+                                                                        ScreenshareTileName(
+                                                                            maxWidth:
+                                                                                constraints.maxWidth)
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )),
+                                          );
+                                        },
+                                        pageBuilder: (ctx, animation,
+                                            secondaryAnimation) {
+                                          return Container();
+                                        });
+                                  },
+                                  child: Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                        color: HMSThemeColors.backgroundDim
+                                            .withAlpha(64),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: Center(
+                                      child: SvgPicture.asset(
+                                        "packages/hms_room_kit/lib/src/assets/icons/maximize.svg",
+                                        height: 16,
+                                        width: 16,
+                                        semanticsLabel: "maximize_label",
+                                      ),
+                                    ),
+                                  ),
+                                )),
                             Positioned(
                               //Bottom left
                               bottom: 5,
