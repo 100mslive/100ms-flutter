@@ -38,27 +38,6 @@ class _MeetingHeaderState extends State<MeetingHeader> {
             const SizedBox(
               width: 12,
             ),
-            Selector<MeetingStore, Tuple3<bool, bool, bool>>(
-                selector: (_, meetingStore) => Tuple3(
-                      meetingStore.recordingType["browser"] ?? false,
-                      meetingStore.recordingType["server"] ?? false,
-                      meetingStore.recordingType["hls"] ?? false,
-                    ),
-                builder: (_, data, __) {
-                  return (data.item1 || data.item2 || data.item3)
-                      ? SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/record.svg",
-                          height: 24,
-                          width: 24,
-                          colorFilter: ColorFilter.mode(
-                              HMSThemeColors.alertErrorDefault,
-                              BlendMode.srcIn),
-                        )
-                      : Container();
-                }),
-            const SizedBox(
-              width: 8,
-            ),
             Selector<MeetingStore, bool>(
                 selector: (_, meetingStore) =>
                     meetingStore.streamingType['hls'] ?? false,
@@ -78,6 +57,27 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                                 letterSpacing: 1.5,
                                 textColor: HMSThemeColors.alertErrorBrighter),
                           ),
+                        )
+                      : Container();
+                }),
+            const SizedBox(
+              width: 8,
+            ),
+            Selector<MeetingStore, Tuple3<bool, bool, bool>>(
+                selector: (_, meetingStore) => Tuple3(
+                      meetingStore.recordingType["browser"] ?? false,
+                      meetingStore.recordingType["server"] ?? false,
+                      meetingStore.recordingType["hls"] ?? false,
+                    ),
+                builder: (_, data, __) {
+                  return (data.item1 || data.item2 || data.item3)
+                      ? SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/record.svg",
+                          height: 24,
+                          width: 24,
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.alertErrorDefault,
+                              BlendMode.srcIn),
                         )
                       : Container();
                 }),
