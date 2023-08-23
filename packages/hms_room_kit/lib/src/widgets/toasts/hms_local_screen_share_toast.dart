@@ -4,11 +4,11 @@ import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toast.dart';
-import 'package:hms_room_kit/src/widgets/toasts/toast_button.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_toast_button.dart';
 
-class LocalScreenShareToast extends StatelessWidget {
+class HMSLocalScreenShareToast extends StatelessWidget {
   final MeetingStore meetingStore;
-  const LocalScreenShareToast({super.key, required this.meetingStore});
+  const HMSLocalScreenShareToast({super.key, required this.meetingStore});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class LocalScreenShareToast extends StatelessWidget {
         fontWeight: FontWeight.w600,
         letterSpacing: 0.1,
       ),
-      action: ToastButton(
+      action: HMSToastButton(
           buttonTitle: "Stop",
           action: () {
             meetingStore.stopScreenShare();

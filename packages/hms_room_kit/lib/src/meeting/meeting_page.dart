@@ -6,7 +6,7 @@ import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_bottom_navigation_bar.dart';
 import 'package:hms_room_kit/src/meeting/meeting_header.dart';
 import 'package:hms_room_kit/src/widgets/meeting_modes/custom_grid_view.dart';
-import 'package:hms_room_kit/src/widgets/toasts/local_screen_share_toast.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_local_screen_share_toast.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
@@ -394,7 +394,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                               meetingStore.isScreenShareOn,
                                           builder: (_, isScreenShareOn, __) {
                                             return isScreenShareOn
-                                                ? LocalScreenShareToast(
+                                                ? HMSLocalScreenShareToast(
                                                     meetingStore: context
                                                         .read<MeetingStore>(),
                                                   )

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 
-class ToastButton extends StatelessWidget {
+class HMSToastButton extends StatelessWidget {
   final String buttonTitle;
   final Function action;
   final double height;
   final double width;
-  const ToastButton(
+  const HMSToastButton(
       {super.key,
       required this.buttonTitle,
       required this.action,
