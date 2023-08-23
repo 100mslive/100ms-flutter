@@ -1,5 +1,8 @@
 Board: https://github.com/100mslive/100ms-flutter/projects/27
 
+- Prebuilt: Equal prominence - Local & Remote Screenshares
+https://github.com/100mslive/100ms-flutter/issues/1491
+
 - HLS Streaming Layout - Broadcaster
 https://github.com/100mslive/100ms-flutter/issues/1507
 
@@ -17,7 +20,7 @@ https://github.com/100mslive/100ms-flutter/issues/1486
 
 - Updated to Android SDK version to 2.7.3 and iOS SDK version to 0.9.9
 
-Core SDK: 1.7.5
-Room Kit: 0.1.0
+Core SDK: 1.7.6
+Room Kit: 0.2.0
 Android SDK: 2.7.3
 iOS SDK: 0.9.9
