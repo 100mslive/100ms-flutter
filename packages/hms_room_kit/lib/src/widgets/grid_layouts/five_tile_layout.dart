@@ -20,7 +20,7 @@ class FiveTileLayout extends StatelessWidget {
                   index: startIndex, peerTracks: peerTracks),
             ),
             const SizedBox(
-              width: 8,
+              width: 4,
             ),
             Expanded(
               child: ListenablePeerWidget(
@@ -29,7 +29,7 @@ class FiveTileLayout extends StatelessWidget {
           ]),
         ),
         const SizedBox(
-          height: 8,
+          height: 4,
         ),
         Expanded(
           child: Row(children: [
@@ -38,7 +38,7 @@ class FiveTileLayout extends StatelessWidget {
                   index: startIndex + 2, peerTracks: peerTracks),
             ),
             const SizedBox(
-              width: 8,
+              width: 4,
             ),
             Expanded(
               child: ListenablePeerWidget(
@@ -47,7 +47,7 @@ class FiveTileLayout extends StatelessWidget {
           ]),
         ),
         const SizedBox(
-          height: 8,
+          height: 4,
         ),
         Expanded(
           child: Padding(
