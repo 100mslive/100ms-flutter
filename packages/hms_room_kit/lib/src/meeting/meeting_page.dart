@@ -291,30 +291,30 @@ class _MeetingPageState extends State<MeetingPage> {
                                                   }))
                                         ],
                                       ),
-                                      Selector<MeetingStore,
-                                              HMSRoleChangeRequest?>(
-                                          selector: (_, meetingStore) =>
-                                              meetingStore
-                                                  .currentRoleChangeRequest,
-                                          builder: (_, roleChangeRequest, __) {
-                                            if (roleChangeRequest != null) {
-                                              HMSRoleChangeRequest
-                                                  currentRequest =
-                                                  roleChangeRequest;
-                                              context
-                                                      .read<MeetingStore>()
-                                                      .currentRoleChangeRequest =
-                                                  null;
-                                              WidgetsBinding.instance
-                                                  .addPostFrameCallback((_) {
-                                                UtilityComponents
-                                                    .showRoleChangeDialog(
-                                                        currentRequest,
-                                                        context);
-                                              });
-                                            }
-                                            return const SizedBox();
-                                          }),
+                                      // Selector<MeetingStore,
+                                      //         HMSRoleChangeRequest?>(
+                                      //     selector: (_, meetingStore) =>
+                                      //         meetingStore
+                                      //             .currentRoleChangeRequest,
+                                      //     builder: (_, roleChangeRequest, __) {
+                                      //       if (roleChangeRequest != null) {
+                                      //         HMSRoleChangeRequest
+                                      //             currentRequest =
+                                      //             roleChangeRequest;
+                                      //         context
+                                      //                 .read<MeetingStore>()
+                                      //                 .currentRoleChangeRequest =
+                                      //             null;
+                                      //         WidgetsBinding.instance
+                                      //             .addPostFrameCallback((_) {
+                                      //           UtilityComponents
+                                      //               .showRoleChangeDialog(
+                                      //                   currentRequest,
+                                      //                   context);
+                                      //         });
+                                      //       }
+                                      //       return const SizedBox();
+                                      //     }),
                                       Selector<MeetingStore,
                                               HMSTrackChangeRequest?>(
                                           selector: (_, meetingStore) =>

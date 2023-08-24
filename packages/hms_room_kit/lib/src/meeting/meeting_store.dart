@@ -409,6 +409,10 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.startRtmpOrRecording(hmsRecordingConfig, this);
   }
 
+  dynamic previewForRole(String role) {
+    _hmsSDKInteractor.previewForRole(role: role);
+  }
+
   void stopRtmpAndRecording() async {
     _hmsSDKInteractor.stopRtmpAndRecording(this);
   }
@@ -753,6 +757,8 @@ class MeetingStore extends ChangeNotifier
   void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
     log("onRoleChangeRequest-> sender: ${roleChangeRequest.suggestedBy} role: ${roleChangeRequest.suggestedRole}");
     currentRoleChangeRequest = roleChangeRequest;
+    _hmsSDKInteractor.previewForRole(
+        role: roleChangeRequest.suggestedRole.name);
     notifyListeners();
   }
 

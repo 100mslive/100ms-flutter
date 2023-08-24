@@ -679,7 +679,14 @@ class HMSSDK {
         arguments: arguments);
 
     if (result["success"]) {
-      return result["data"];
+      List<HMSTrack> tracks = [];
+      (result["data"] as List).forEach((track) {
+        tracks.add(track['instance_of']
+            ? HMSVideoTrack.fromMap(map: track, isLocal: true)
+            : HMSAudioTrack.fromMap(map: track, isLocal: true));
+      });
+
+      return tracks;
     } else {
       return HMSException.fromMap(result["data"]["error"]);
     }
