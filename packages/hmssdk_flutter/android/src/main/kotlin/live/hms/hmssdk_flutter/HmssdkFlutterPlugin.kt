@@ -153,7 +153,7 @@ class HmssdkFlutterPlugin :
             }
 
             // MARK: Role based Actions
-            "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role", "change_role_of_peers_with_roles", "change_role_of_peer" -> {
+            "get_roles", "change_role", "accept_change_role", "end_room", "remove_peer", "on_change_track_state_request", "change_track_state_for_role", "change_role_of_peers_with_roles", "change_role_of_peer", "preview_for_role", "cancel_preview" -> {
                 roleActions(call, result)
             }
 
@@ -297,6 +297,12 @@ class HmssdkFlutterPlugin :
             }
             "change_role_of_peer" -> {
                 changeRoleOfPeer(call, result)
+            }
+            "preview_for_role" -> {
+                previewForRole(call,result)
+            }
+            "cancel_preview" -> {
+                cancelPreview(result)
             }
             else -> {
                 result.notImplemented()
@@ -653,6 +659,35 @@ class HmssdkFlutterPlugin :
             forceChange ?: false,
             hmsActionResultListener = HMSCommonAction.getActionListener(result),
         )
+    }
+
+    private fun previewForRole(call: MethodCall, result: Result) {
+        val roleName = call.argument<String>("role_name")
+        val role = hmssdk?.getRoles()?.first {
+            it.name == roleName
+        } ?: null
+
+        role?.let { hmsRole ->
+            hmssdk?.preview(hmsRole, object : RolePreviewListener {
+                override fun onError(error: HMSException) {
+                    result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)))
+                }
+
+                override fun onTracks(localTracks: Array<HMSTrack>) {
+                    val tracks = ArrayList<Any>()
+                    localTracks.forEach {track ->
+                        HMSTrackExtension.toDictionary(track)?.let { tracks.add(it) }
+                    }
+                    result.success(HMSResultExtension.toDictionary(true,  tracks))
+                }
+            })
+        }
+
+    }
+
+    private fun cancelPreview(result: Result) {
+        hmssdk?.cancelPreview()
+        result.success(HMSResultExtension.toDictionary(true))
     }
 
     private fun getRoles(result: Result) {
