@@ -19,6 +19,8 @@ class HLSWaitingUI extends StatelessWidget {
             "packages/hms_room_kit/lib/src/assets/icons/live.svg",
             height: 56,
             width: 56,
+            colorFilter: ColorFilter.mode(
+                HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
           ),
         ),
         const SizedBox(
