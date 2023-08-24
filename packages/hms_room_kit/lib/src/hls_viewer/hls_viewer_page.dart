@@ -169,13 +169,6 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                 null &&
                                             previewForRoleTracks.item2 !=
                                                 null) {
-                                          HMSRoleChangeRequest? currentRequest =
-                                              context
-                                                  .read<MeetingStore>()
-                                                  .currentRoleChangeRequest;
-                                          context
-                                              .read<MeetingStore>()
-                                              .currentRoleChangeRequest = null;
                                           WidgetsBinding.instance
                                               .addPostFrameCallback(
                                                   (timeStamp) {
@@ -241,8 +234,10 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                 meetingStore:
                                                                     context.read<
                                                                         MeetingStore>(),
-                                                                roleChangeRequest:
-                                                                    currentRequest,
+                                                                roleChangeRequest: context
+                                                                    .read<
+                                                                        MeetingStore>()
+                                                                    .currentRoleChangeRequest,
                                                               )
                                                             ],
                                                           ),
