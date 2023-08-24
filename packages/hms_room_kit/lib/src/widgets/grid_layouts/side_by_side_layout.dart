@@ -32,7 +32,7 @@ class SideBySideLayout extends StatelessWidget {
                   index: tileStartingIndex, peerTracks: peerTracks),
             ),
             const SizedBox(
-              width: 8,
+              width: 4,
             ),
             Expanded(
               child: ListenablePeerWidget(
