@@ -73,12 +73,9 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                 builder: (_, isRaisedHand, __) {
                                   return HMSEmbeddedButton(
                                     onTap: () => {
-                                      // context
-                                      //     .read<MeetingStore>()
-                                      //     .changeMetadata(),
                                       context
                                           .read<MeetingStore>()
-                                          .previewForRole("host")
+                                          .changeMetadata(),
                                     },
                                     enabledBorderColor: HMSThemeColors
                                         .backgroundDim

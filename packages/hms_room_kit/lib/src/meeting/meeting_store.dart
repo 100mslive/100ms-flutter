@@ -52,6 +52,10 @@ class MeetingStore extends ChangeNotifier
 
   HMSRoleChangeRequest? currentRoleChangeRequest;
 
+  HMSLocalVideoTrack? previewForRoleVideoTrack;
+
+  HMSLocalAudioTrack? previewForRoleAudioTrack;
+
   bool isMeetingStarted = false;
 
   bool isVideoOn = true;
@@ -409,8 +413,42 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.startRtmpOrRecording(hmsRecordingConfig, this);
   }
 
-  dynamic previewForRole(String role) {
-    _hmsSDKInteractor.previewForRole(role: role);
+  void cancelPreview() async {
+    var result = await _hmsSDKInteractor.cancelPreview();
+    if (result != null) {
+      log(result.toString());
+      return;
+    }
+    previewForRoleAudioTrack = null;
+    previewForRoleVideoTrack = null;
+    notifyListeners();
+  }
+
+  dynamic previewForRole(String role) async {
+    var result = await _hmsSDKInteractor.previewForRole(role: role);
+
+    ///Handle the exception
+    if (result is HMSException) {
+      log(result.toString());
+    } else {
+      var indexForVideoTrack = (result as List<HMSTrack>).indexWhere(
+          (element) =>
+              element.kind == HMSTrackKind.kHMSTrackKindVideo &&
+              element.source == "REGULAR");
+      if (indexForVideoTrack != -1) {
+        previewForRoleVideoTrack =
+            result[indexForVideoTrack] as HMSLocalVideoTrack;
+        isVideoOn = true;
+      }
+      var indexForAudioTrack = result.indexWhere(
+          (element) => element.kind == HMSTrackKind.kHMSTrackKindAudio);
+      if (indexForAudioTrack != -1) {
+        previewForRoleAudioTrack =
+            result[indexForAudioTrack] as HMSLocalAudioTrack;
+        isMicOn = true;
+      }
+      notifyListeners();
+    }
   }
 
   void stopRtmpAndRecording() async {
@@ -454,6 +492,8 @@ class MeetingStore extends ChangeNotifier
   }
 
   void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest) {
+    previewForRoleAudioTrack = null;
+    previewForRoleVideoTrack = null;
     _hmsSDKInteractor.acceptChangeRole(hmsRoleChangeRequest, this);
   }
 
@@ -757,8 +797,7 @@ class MeetingStore extends ChangeNotifier
   void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
     log("onRoleChangeRequest-> sender: ${roleChangeRequest.suggestedBy} role: ${roleChangeRequest.suggestedRole}");
     currentRoleChangeRequest = roleChangeRequest;
-    _hmsSDKInteractor.previewForRole(
-        role: roleChangeRequest.suggestedRole.name);
+    previewForRole(roleChangeRequest.suggestedRole.name);
     notifyListeners();
   }
 

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_viewer_bottom_navigation_bar.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_viewer_header.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
+import 'package:hms_room_kit/src/preview_for_role/preview_for_role_bottom_sheet.dart';
+import 'package:hms_room_kit/src/preview_for_role/preview_for_role_header.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
@@ -153,25 +156,104 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                       ],
                                     ),
                                   ),
-
-                                  Selector<MeetingStore, HMSRoleChangeRequest?>(
-                                      selector: (_, meetingStore) =>
-                                          meetingStore.currentRoleChangeRequest,
-                                      builder: (_, roleChangeRequest, __) {
-                                        if (roleChangeRequest != null) {
-                                          HMSRoleChangeRequest currentRequest =
-                                              roleChangeRequest;
+                                  Selector<
+                                          MeetingStore,
+                                          Tuple2<HMSLocalVideoTrack?,
+                                              HMSLocalAudioTrack?>>(
+                                      selector: (_, meetingStore) => Tuple2(
+                                          meetingStore.previewForRoleVideoTrack,
+                                          meetingStore
+                                              .previewForRoleAudioTrack),
+                                      builder: (_, previewForRoleTracks, __) {
+                                        if (previewForRoleTracks.item1 !=
+                                                null &&
+                                            previewForRoleTracks.item2 !=
+                                                null) {
+                                          HMSRoleChangeRequest? currentRequest =
+                                              context
+                                                  .read<MeetingStore>()
+                                                  .currentRoleChangeRequest;
                                           context
                                               .read<MeetingStore>()
                                               .currentRoleChangeRequest = null;
                                           WidgetsBinding.instance
-                                              .addPostFrameCallback((_) {
-                                            UtilityComponents
-                                                .showRoleChangeDialog(
-                                                    currentRequest, context);
+                                              .addPostFrameCallback(
+                                                  (timeStamp) {
+                                            showGeneralDialog(
+                                                context: context,
+                                                pageBuilder: (ctx, _, __) {
+                                                  return ListenableProvider
+                                                      .value(
+                                                    value: context
+                                                        .read<MeetingStore>(),
+                                                    child: Scaffold(
+                                                      body: SafeArea(
+                                                        child: Container(
+                                                          color: HMSThemeColors
+                                                              .backgroundDim,
+                                                          height: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .height,
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
+                                                          child: Stack(
+                                                            children: [
+                                                              Selector<
+                                                                      MeetingStore,
+                                                                      bool>(
+                                                                  selector: (_,
+                                                                          meetingStore) =>
+                                                                      meetingStore
+                                                                          .isVideoOn,
+                                                                  builder: (_,
+                                                                      isVideoOn,
+                                                                      __) {
+                                                                    return Container(
+                                                                      height: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .height,
+                                                                      width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width,
+                                                                      color: HMSThemeColors
+                                                                          .backgroundDim,
+                                                                      child: (isVideoOn &&
+                                                                              previewForRoleTracks.item1 != null)
+                                                                          ? Center(
+                                                                              child: HMSVideoView(
+                                                                                scaleType: ScaleType.SCALE_ASPECT_FILL,
+                                                                                track: previewForRoleTracks.item1!,
+                                                                                setMirror: true,
+                                                                              ),
+                                                                            )
+                                                                          : Center(
+                                                                              child: HMSCircularAvatar(name: context.read<MeetingStore>().localPeer?.name ?? ""),
+                                                                            ),
+                                                                    );
+                                                                  }),
+                                                              const PreviewForRoleHeader(),
+                                                              PreviewForRoleBottomSheet(
+                                                                meetingStore:
+                                                                    context.read<
+                                                                        MeetingStore>(),
+                                                                roleChangeRequest:
+                                                                    currentRequest,
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                });
                                           });
                                         }
-                                        return const SizedBox();
+                                        return Container();
                                       }),
                                   Selector<MeetingStore, bool>(
                                       selector: (_, meetingStore) =>
