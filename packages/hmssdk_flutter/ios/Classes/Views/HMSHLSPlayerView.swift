@@ -62,7 +62,7 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
             return playerViewController.view
         }
         playerViewController.videoGravity = .resizeAspectFill
-        
+
         /**
          * Here we start the player
          * We first check whether the user has passed the streamUrl or not
