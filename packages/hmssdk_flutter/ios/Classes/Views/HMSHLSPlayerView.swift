@@ -61,6 +61,7 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
             HMSErrorLogger.logError(#function, "hmssdkFlutterPlugin is null", "NULL_ERROR")
             return playerViewController.view
         }
+        playerViewController.videoGravity = .resizeAspectFill
 
         /**
          * Here we start the player
