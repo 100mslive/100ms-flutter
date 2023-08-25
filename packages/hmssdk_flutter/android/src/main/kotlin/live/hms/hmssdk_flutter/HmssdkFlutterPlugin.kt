@@ -71,6 +71,8 @@ class HmssdkFlutterPlugin :
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
     private lateinit var hmsHLSPlayerFactory: HMSHLSPlayerFactory
     private var requestChange: HMSRoleChangeRequest? = null
+    var previewForRoleVideoTrack: HMSLocalVideoTrack? = null
+    var previewForRoleAudioTrack: HMSLocalAudioTrack? = null
     var hmssdkFlutterPlugin: HmssdkFlutterPlugin? = null
     private var hmsSessionStore: HmsSessionStore? = null
     private var hmsKeyChangeObserverList = ArrayList<HMSKeyChangeObserver>()
@@ -139,12 +141,12 @@ class HmssdkFlutterPlugin :
 
             // MARK: Audio Helpers
             "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume", "toggle_mic_mute_state" -> {
-                HMSAudioAction.audioActions(call, result, hmssdk!!)
+                HMSAudioAction.audioActions(call, result, hmssdk!!,hmssdkFlutterPlugin)
             }
 
             // MARK: Video Helpers
             "switch_video", "switch_camera", "is_video_mute", "mute_room_video_locally", "un_mute_room_video_locally", "toggle_camera_mute_state" -> {
-                HMSVideoAction.videoActions(call, result, hmssdk!!)
+                HMSVideoAction.videoActions(call, result, hmssdk!!,hmssdkFlutterPlugin)
             }
 
             // MARK: Messaging
@@ -665,12 +667,12 @@ class HmssdkFlutterPlugin :
         val roleName = call.argument<String>("role_name")
         val role = hmssdk?.getRoles()?.first {
             it.name == roleName
-        } ?: null
+        }
 
         role?.let { hmsRole ->
-            hmssdk?.preview(
-                hmsRole,
-                object : RolePreviewListener {
+            hmssdk?.
+            preview(
+                hmsRole,object : RolePreviewListener {
                     override fun onError(error: HMSException) {
                         result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)))
                     }
@@ -678,6 +680,14 @@ class HmssdkFlutterPlugin :
                     override fun onTracks(localTracks: Array<HMSTrack>) {
                         val tracks = ArrayList<Any>()
                         localTracks.forEach { track ->
+
+                            ///Assigning values to preview for role tracks
+                            if(track.type == HMSTrackType.AUDIO){
+                                previewForRoleAudioTrack = track as HMSLocalAudioTrack
+                            }
+                            else if(track.type == HMSTrackType.VIDEO && track.source == "regular"){
+                                previewForRoleVideoTrack = track as HMSLocalVideoTrack
+                            }
                             HMSTrackExtension.toDictionary(track)?.let { tracks.add(it) }
                         }
                         result.success(HMSResultExtension.toDictionary(true, tracks))
@@ -689,6 +699,8 @@ class HmssdkFlutterPlugin :
 
     private fun cancelPreview(result: Result) {
         hmssdk?.cancelPreview()
+        previewForRoleVideoTrack = null
+        previewForRoleAudioTrack = null
         result.success(HMSResultExtension.toDictionary(true))
     }
 
@@ -710,6 +722,8 @@ class HmssdkFlutterPlugin :
                 hmsActionResultListener = HMSCommonAction.getActionListener(result),
             )
             requestChange = null
+            previewForRoleVideoTrack = null
+            previewForRoleAudioTrack = null
         } else {
             val hmsException = HMSException(
                 action = "Resend Role Change Request",
