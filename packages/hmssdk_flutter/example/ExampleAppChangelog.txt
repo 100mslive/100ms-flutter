@@ -9,6 +9,12 @@ https://github.com/100mslive/100ms-flutter/issues/1507
 - HLS Streaming Layout - Viewer
 https://github.com/100mslive/100ms-flutter/issues/1506
 
+- HLS Viewer on stage
+https://github.com/100mslive/100ms-flutter/issues/1515
+
+- HLS Viewer to stage
+https://github.com/100mslive/100ms-flutter/issues/1516
+
 - Degraded state blur over Video Tiles
 https://github.com/100mslive/100ms-flutter/issues/1508
 
@@ -22,5 +28,5 @@ https://github.com/100mslive/100ms-flutter/issues/1486
 
 Core SDK: 1.7.6
 Room Kit: 0.2.0
-Android SDK: 2.7.3
+Android SDK: 2.7.4
 iOS SDK: 0.9.9
