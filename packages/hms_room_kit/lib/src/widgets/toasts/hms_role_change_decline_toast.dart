@@ -22,12 +22,16 @@ class HMSRoleChangeDeclineToast extends StatelessWidget {
         colorFilter: ColorFilter.mode(
             HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
       ),
-      subtitle: HMSSubheadingText(
-        text: "${peer.name} declined the request to join the\n stage",
-        textColor: HMSThemeColors.onSurfaceHighEmphasis,
-        fontWeight: FontWeight.w600,
-        maxLines: 2,
-        letterSpacing: 0.1,
+      subtitle: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.65,
+        child: HMSSubheadingText(
+          text:
+              "${peer.name.substring(0, 15)} declined the request to join the stage",
+          textColor: HMSThemeColors.onSurfaceHighEmphasis,
+          fontWeight: FontWeight.w600,
+          maxLines: 3,
+          letterSpacing: 0.1,
+        ),
       ),
       cancelToastButton: IconButton(
         icon: const Icon(

@@ -23,12 +23,15 @@ class HMSBringOnStageToast extends StatelessWidget {
         colorFilter: ColorFilter.mode(
             HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
       ),
-      subtitle: HMSSubheadingText(
-        text: "${peer.name} raised\n hand",
-        textColor: HMSThemeColors.onSurfaceHighEmphasis,
-        fontWeight: FontWeight.w600,
-        maxLines: 2,
-        letterSpacing: 0.1,
+      subtitle: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.32,
+        child: HMSSubheadingText(
+          text: "${peer.name.substring(0, 15)} raised hand",
+          textColor: HMSThemeColors.onSurfaceHighEmphasis,
+          fontWeight: FontWeight.w600,
+          maxLines: 3,
+          letterSpacing: 0.1,
+        ),
       ),
       action: HMSToastButton(
         buttonTitle: "Bring on Stage",
