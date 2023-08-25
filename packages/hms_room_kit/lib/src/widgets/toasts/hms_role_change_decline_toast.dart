@@ -1,3 +1,5 @@
+
+import "dart:math" as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
@@ -26,7 +28,7 @@ class HMSRoleChangeDeclineToast extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.65,
         child: HMSSubheadingText(
           text:
-              "${peer.name.substring(0, 15)} declined the request to join the stage",
+              "${peer.name.substring(0,math.min(15,peer.name.length))} declined the request to join the stage",
           textColor: HMSThemeColors.onSurfaceHighEmphasis,
           fontWeight: FontWeight.w600,
           maxLines: 3,
