@@ -832,12 +832,7 @@ class MeetingStore extends ChangeNotifier
   void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
     log("onRoleChangeRequest-> sender: ${roleChangeRequest.suggestedBy} role: ${roleChangeRequest.suggestedRole}");
     currentRoleChangeRequest = roleChangeRequest;
-<<<<<<< HEAD
-    _hmsSDKInteractor.previewForRole(
-        role: roleChangeRequest.suggestedRole.name);
-=======
     previewForRole(roleChangeRequest.suggestedRole.name);
->>>>>>> feature/prebuilt
     notifyListeners();
   }
 

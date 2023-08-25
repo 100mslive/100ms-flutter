@@ -90,12 +90,11 @@ class HMSFlutterPlatformViewFactory: NSObject, FlutterPlatformViewFactory {
 
         guard let videoTrack = HMSUtilities.getVideoTrack(for: trackID, in: room)
         else {
-            
-            if(plugin.previewForRoleVideoTrack?.trackId == trackID){
+
+            if plugin.previewForRoleVideoTrack?.trackId == trackID {
                 let videoTrack = plugin.previewForRoleVideoTrack
                 return videoTrack
-            }
-            else{
+            } else {
                 let errorMsg = "\(#function) Could not find video track in room with trackID: \(trackID)"
                 plugin.sendCustomError(HMSErrorExtension.getError(errorMsg))
                 print(errorMsg)

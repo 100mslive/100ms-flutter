@@ -27,7 +27,7 @@ class HMSVideoAction {
             toggleVideoMuteAll(false, result, hmsSDK)
 
         case "toggle_camera_mute_state":
-            toggleCameraMuteState(result, hmsSDK,swiftHmssdkFlutterPlugin)
+            toggleCameraMuteState(result, hmsSDK, swiftHmssdkFlutterPlugin)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -38,7 +38,7 @@ class HMSVideoAction {
         guard let peer = hmsSDK?.localPeer,
               let videoTrack = peer.videoTrack as? HMSLocalVideoTrack
         else {
-            if(swiftHmssdkFlutterPlugin.previewForRoleVideoTrack != nil){
+            if swiftHmssdkFlutterPlugin.previewForRoleVideoTrack != nil {
                 let videoTrack = swiftHmssdkFlutterPlugin.previewForRoleVideoTrack!
                 videoTrack.switchCamera()
                 result(nil)
@@ -73,7 +73,7 @@ class HMSVideoAction {
 
             guard let peer = hmsSDK?.localPeer,
               let video = peer.videoTrack as? HMSLocalVideoTrack else {
-                if(swiftHmssdkFlutterPlugin.previewForRoleVideoTrack != nil){
+                if swiftHmssdkFlutterPlugin.previewForRoleVideoTrack != nil {
                     let videoTrack = swiftHmssdkFlutterPlugin.previewForRoleVideoTrack!
                     videoTrack.setMute(!(videoTrack.isMute()))
                     result(true)

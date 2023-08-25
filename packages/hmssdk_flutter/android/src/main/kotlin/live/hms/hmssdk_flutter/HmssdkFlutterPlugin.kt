@@ -299,7 +299,7 @@ class HmssdkFlutterPlugin :
                 changeRoleOfPeer(call, result)
             }
             "preview_for_role" -> {
-                previewForRole(call,result)
+                previewForRole(call, result)
             }
             "cancel_preview" -> {
                 cancelPreview(result)
@@ -668,21 +668,23 @@ class HmssdkFlutterPlugin :
         } ?: null
 
         role?.let { hmsRole ->
-            hmssdk?.preview(hmsRole, object : RolePreviewListener {
-                override fun onError(error: HMSException) {
-                    result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)))
-                }
-
-                override fun onTracks(localTracks: Array<HMSTrack>) {
-                    val tracks = ArrayList<Any>()
-                    localTracks.forEach {track ->
-                        HMSTrackExtension.toDictionary(track)?.let { tracks.add(it) }
+            hmssdk?.preview(
+                hmsRole,
+                object : RolePreviewListener {
+                    override fun onError(error: HMSException) {
+                        result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)))
                     }
-                    result.success(HMSResultExtension.toDictionary(true,  tracks))
-                }
-            })
-        }
 
+                    override fun onTracks(localTracks: Array<HMSTrack>) {
+                        val tracks = ArrayList<Any>()
+                        localTracks.forEach { track ->
+                            HMSTrackExtension.toDictionary(track)?.let { tracks.add(it) }
+                        }
+                        result.success(HMSResultExtension.toDictionary(true, tracks))
+                    }
+                },
+            )
+        }
     }
 
     private fun cancelPreview(result: Result) {
