@@ -185,7 +185,9 @@ enum PlatformMethod {
   switchAudioOutputUsingiOSUI,
   sendHLSTimedMetadata,
   toggleAlwaysScreenOn,
-  getRoomLayout
+  getRoomLayout,
+  previewForRole,
+  cancelPreview
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -336,6 +338,12 @@ extension PlatformMethodValues on PlatformMethod {
 
       case PlatformMethod.stopScreenShare:
         return "stop_screen_share";
+
+      case PlatformMethod.previewForRole:
+        return "preview_for_role";
+
+      case PlatformMethod.cancelPreview:
+        return "cancel_preview";
 
       case PlatformMethod.isScreenShareActive:
         return 'is_screen_share_active';
@@ -529,6 +537,12 @@ extension PlatformMethodValues on PlatformMethod {
 
       case 'preview':
         return PlatformMethod.preview;
+
+      case 'preview_for_role':
+        return PlatformMethod.previewForRole;
+
+      case "cancel_preview":
+        return PlatformMethod.cancelPreview;
 
       case 'accept_change_role':
         return PlatformMethod.acceptChangeRole;

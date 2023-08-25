@@ -27,10 +27,13 @@ class HMSLocalScreenShareToast extends StatelessWidget {
         letterSpacing: 0.1,
       ),
       action: HMSToastButton(
-          buttonTitle: "Stop",
-          action: () {
-            meetingStore.stopScreenShare();
-          }),
+        buttonTitle: "Stop",
+        action: () {
+          meetingStore.stopScreenShare();
+        },
+        buttonColor: HMSThemeColors.alertErrorDefault,
+        textColor: HMSThemeColors.alertErrorBrighter,
+      ),
     );
   }
 }

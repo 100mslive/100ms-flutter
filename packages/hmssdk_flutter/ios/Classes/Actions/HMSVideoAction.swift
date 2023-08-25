@@ -9,13 +9,13 @@ import Foundation
 import HMSSDK
 
 class HMSVideoAction {
-    static func videoActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static func videoActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?, _ swiftHmssdkFlutterPlugin: SwiftHmssdkFlutterPlugin) {
         switch call.method {
         case "switch_video":
             switchVideo(call, result, hmsSDK)
 
         case "switch_camera":
-            switchCamera(result, hmsSDK)
+            switchCamera(result, hmsSDK, swiftHmssdkFlutterPlugin)
 
         case "is_video_mute":
             isVideoMute(call, result, hmsSDK)
@@ -27,17 +27,23 @@ class HMSVideoAction {
             toggleVideoMuteAll(false, result, hmsSDK)
 
         case "toggle_camera_mute_state":
-            toggleCameraMuteState(result, hmsSDK)
+            toggleCameraMuteState(result, hmsSDK,swiftHmssdkFlutterPlugin)
 
         default:
             result(FlutterMethodNotImplemented)
         }
     }
 
-    static private func switchCamera(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static private func switchCamera(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?, _ swiftHmssdkFlutterPlugin: SwiftHmssdkFlutterPlugin) {
         guard let peer = hmsSDK?.localPeer,
               let videoTrack = peer.videoTrack as? HMSLocalVideoTrack
         else {
+            if(swiftHmssdkFlutterPlugin.previewForRoleVideoTrack != nil){
+                let videoTrack = swiftHmssdkFlutterPlugin.previewForRoleVideoTrack!
+                videoTrack.switchCamera()
+                result(nil)
+                return
+            }
             result(HMSErrorExtension.getError("Local Peer not found in \(#function)"))
             return
         }
@@ -63,10 +69,16 @@ class HMSVideoAction {
         result(true)
     }
 
-    static private func toggleCameraMuteState(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?) {
+    static private func toggleCameraMuteState(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?, _ swiftHmssdkFlutterPlugin: SwiftHmssdkFlutterPlugin) {
 
             guard let peer = hmsSDK?.localPeer,
               let video = peer.videoTrack as? HMSLocalVideoTrack else {
+                if(swiftHmssdkFlutterPlugin.previewForRoleVideoTrack != nil){
+                    let videoTrack = swiftHmssdkFlutterPlugin.previewForRoleVideoTrack!
+                    videoTrack.setMute(!(videoTrack.isMute()))
+                    result(true)
+                    return
+                }
             result(false)
             return
         }

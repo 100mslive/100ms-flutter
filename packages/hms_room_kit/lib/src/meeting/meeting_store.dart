@@ -52,6 +52,16 @@ class MeetingStore extends ChangeNotifier
 
   HMSRoleChangeRequest? currentRoleChangeRequest;
 
+  HMSLocalVideoTrack? previewForRoleVideoTrack;
+
+  HMSLocalAudioTrack? previewForRoleAudioTrack;
+
+  HMSPeer? peerDeclinedRequest;
+
+  HMSPeer? peerToBringOnStage;
+
+  double toastPosition = 68;
+
   bool isMeetingStarted = false;
 
   bool isVideoOn = true;
@@ -391,6 +401,10 @@ class MeetingStore extends ChangeNotifier
     return await _hmsSDKInteractor.getRoles();
   }
 
+  HMSRole getOnStageRole() {
+    return roles.firstWhere((role) => role.name == "host");
+  }
+
   void changeTrackState(HMSTrack track, bool mute) {
     return _hmsSDKInteractor.changeTrackState(track, mute, this);
   }
@@ -407,6 +421,62 @@ class MeetingStore extends ChangeNotifier
         meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
 
     _hmsSDKInteractor.startRtmpOrRecording(hmsRecordingConfig, this);
+  }
+
+  void cancelPreview() async {
+    var result = await _hmsSDKInteractor.cancelPreview();
+    if (result != null) {
+      log(result.toString());
+      return;
+    }
+    if (isRaisedHand) {
+      changeMetadata();
+    }
+    if (currentRoleChangeRequest?.suggestedBy != null) {
+      _hmsSDKInteractor.sendDirectMessage(
+          "", currentRoleChangeRequest!.suggestedBy!, this,
+          type: "role_change_declined");
+    }
+    currentRoleChangeRequest = null;
+    previewForRoleAudioTrack = null;
+    previewForRoleVideoTrack = null;
+    notifyListeners();
+  }
+
+  void toggleRequestDeclined(HMSPeer? sender) {
+    if (peerDeclinedRequest != null) {
+      peerDeclinedRequest = null;
+    } else {
+      peerDeclinedRequest = sender;
+    }
+    notifyListeners();
+  }
+
+  dynamic previewForRole(String role) async {
+    var result = await _hmsSDKInteractor.previewForRole(role: role);
+
+    ///Handle the exception
+    if (result is HMSException) {
+      log(result.toString());
+    } else {
+      var indexForVideoTrack = (result as List<HMSTrack>).indexWhere(
+          (element) =>
+              element.kind == HMSTrackKind.kHMSTrackKindVideo &&
+              element.source == "REGULAR");
+      if (indexForVideoTrack != -1) {
+        previewForRoleVideoTrack =
+            result[indexForVideoTrack] as HMSLocalVideoTrack;
+        isVideoOn = true;
+      }
+      var indexForAudioTrack = result.indexWhere(
+          (element) => element.kind == HMSTrackKind.kHMSTrackKindAudio);
+      if (indexForAudioTrack != -1) {
+        previewForRoleAudioTrack =
+            result[indexForAudioTrack] as HMSLocalAudioTrack;
+        isMicOn = true;
+      }
+      notifyListeners();
+    }
   }
 
   void stopRtmpAndRecording() async {
@@ -450,7 +520,13 @@ class MeetingStore extends ChangeNotifier
   }
 
   void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest) {
+    previewForRoleAudioTrack = null;
+    previewForRoleVideoTrack = null;
     _hmsSDKInteractor.acceptChangeRole(hmsRoleChangeRequest, this);
+    if (isRaisedHand) {
+      changeMetadata();
+    }
+    currentRoleChangeRequest = null;
   }
 
   void changeName({required String name}) {
@@ -739,6 +815,9 @@ class MeetingStore extends ChangeNotifier
     switch (message.type) {
       case "metadata":
         break;
+      case "role_change_declined":
+        toggleRequestDeclined(message.sender);
+        break;
       default:
         addMessage(message);
         isNewMessageReceived = true;
@@ -753,6 +832,7 @@ class MeetingStore extends ChangeNotifier
   void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
     log("onRoleChangeRequest-> sender: ${roleChangeRequest.suggestedBy} role: ${roleChangeRequest.suggestedRole}");
     currentRoleChangeRequest = roleChangeRequest;
+    previewForRole(roleChangeRequest.suggestedRole.name);
     notifyListeners();
   }
 
@@ -1154,6 +1234,8 @@ class MeetingStore extends ChangeNotifier
                 "${peer.name} raised hand", "hand-raise");
           }
           peerTrackNode.notify();
+        } else {
+          toggleToastForRoleChange(peer: peer);
         }
         updatePeerAt(peer);
         updateFilteredList(update, peer);
@@ -1623,6 +1705,20 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
+  ///
+  /// Methods to toggle values
+  ///
+  void toggleToastForRoleChange({required HMSPeer peer}) {
+    if (peerToBringOnStage != null) {
+      peerToBringOnStage = null;
+    } else {
+      if (peer.role.name.contains("hls-") &&
+          (peer.metadata?.contains("\"isHandRaised\":true") ?? false)) {
+        peerToBringOnStage = peer;
+      }
+    }
+    notifyListeners();
+  }
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
 
   @override

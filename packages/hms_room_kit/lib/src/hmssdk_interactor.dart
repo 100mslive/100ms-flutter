@@ -370,4 +370,12 @@ class HMSSDKInteractor {
   dynamic getRoomLayout({required String authToken, String? endPoint}) async {
     return await hmsSDK.getRoomLayout(authToken: authToken, endPoint: endPoint);
   }
+
+  Future<dynamic> previewForRole({required String role}) async {
+    return await hmsSDK.previewForRole(role: role);
+  }
+
+  Future<dynamic> cancelPreview() async {
+    return await hmsSDK.cancelPreview();
+  }
 }
