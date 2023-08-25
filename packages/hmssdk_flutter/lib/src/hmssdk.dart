@@ -698,7 +698,7 @@ class HMSSDK {
   /// Refer the [cancelPreview guide here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/peer/change-role)
   Future<dynamic> cancelPreview() async {
     var result =
-        await PlatformService.invokeMethod(PlatformMethod.previewForRole);
+        await PlatformService.invokeMethod(PlatformMethod.cancelPreview);
 
     if (result["success"]) {
       return null;

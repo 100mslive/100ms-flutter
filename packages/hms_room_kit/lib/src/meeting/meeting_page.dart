@@ -6,7 +6,9 @@ import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_bottom_navigation_bar.dart';
 import 'package:hms_room_kit/src/meeting/meeting_header.dart';
 import 'package:hms_room_kit/src/widgets/meeting_modes/custom_grid_view.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_bring_on_stage_toast.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_local_screen_share_toast.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_role_change_decline_toast.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
@@ -399,7 +401,32 @@ class _MeetingPageState extends State<MeetingPage> {
                                                         .read<MeetingStore>(),
                                                   )
                                                 : Container();
-                                          })
+                                          }),
+                                      Selector<MeetingStore, HMSPeer?>(
+                                          selector: (_, meetingStore) =>
+                                              meetingStore.peerToBringOnStage,
+                                          builder: (_, peerToBringOnStage, __) {
+                                            return peerToBringOnStage != null
+                                                ? HMSBringOnStageToast(
+                                                    peer: peerToBringOnStage,
+                                                    meetingStore: context
+                                                        .read<MeetingStore>(),
+                                                  )
+                                                : Container();
+                                          }),
+                                      Selector<MeetingStore, HMSPeer?>(
+                                          selector: (_, meetingStore) =>
+                                              meetingStore.peerDeclinedRequest,
+                                          builder:
+                                              (_, peerDeclinedRequest, __) {
+                                            return peerDeclinedRequest != null
+                                                ? HMSRoleChangeDeclineToast(
+                                                    peer: peerDeclinedRequest,
+                                                    meetingStore: context
+                                                        .read<MeetingStore>(),
+                                                  )
+                                                : Container();
+                                          }),
                                     ],
                                   ),
                                 ),

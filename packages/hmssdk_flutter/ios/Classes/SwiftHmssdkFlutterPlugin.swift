@@ -25,6 +25,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var hlsPlayerSink: FlutterEventSink?
 
     var roleChangeRequest: HMSRoleChangeRequest?
+    
+    var previewForRoleVideoTrack: HMSLocalVideoTrack?
+    
+    var previewForRoleAudioTrack: HMSLocalAudioTrack?
 
     internal var hmsSDK: HMSSDK?
 
@@ -177,7 +181,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             // MARK: - Audio Helpers
 
         case "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume", "toggle_mic_mute_state":
-            HMSAudioAction.audioActions(call, result, hmsSDK)
+            HMSAudioAction.audioActions(call, result, hmsSDK,self)
 
         case "set_playback_allowed_for_track":
             setPlaybackAllowedForTrack(call, result)
@@ -185,7 +189,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             // MARK: - Video Helpers
 
         case "switch_video", "switch_camera", "is_video_mute", "mute_room_video_locally", "un_mute_room_video_locally", "toggle_camera_mute_state":
-            HMSVideoAction.videoActions(call, result, hmsSDK)
+            HMSVideoAction.videoActions(call, result, hmsSDK,self)
 
             // MARK: - Messaging
 
@@ -760,6 +764,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 var dict = [[AnyHashable: Any]]()
 
                 for track in tracks {
+                    if(track.kind == HMSTrackKind.video){
+                        previewForRoleVideoTrack = track as? HMSLocalVideoTrack
+                    }
+                    else if(track.kind == HMSTrackKind.audio){
+                        previewForRoleAudioTrack = track as? HMSLocalAudioTrack
+                    }
                     dict.append(HMSTrackExtension.toDictionary(track))
                 }
 
@@ -769,6 +779,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     private func cancelPreview(_ result: FlutterResult) {
+        self.previewForRoleAudioTrack = nil
+        self.previewForRoleVideoTrack = nil
         hmsSDK?.cancelPreview()
         result(HMSResultExtension.toDictionary(true))
     }
@@ -925,6 +937,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                     result(HMSErrorExtension.toDictionary(error))
                 } else {
                     self?.roleChangeRequest = nil
+                    self?.previewForRoleAudioTrack = nil
+                    self?.previewForRoleVideoTrack = nil
                     result(nil)
                 }
             }
