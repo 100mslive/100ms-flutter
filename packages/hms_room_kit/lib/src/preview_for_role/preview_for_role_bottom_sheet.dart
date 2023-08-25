@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
-import 'package:hms_room_kit/src/widgets/bottom_sheets/audio_settings_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
@@ -152,40 +149,6 @@ class _PreviewForRoleBottomSheetState extends State<PreviewForRoleBottomSheet> {
                               }),
                       ],
                     ),
-                    Selector<MeetingStore, HMSAudioDevice?>(
-                        selector: (_, meetingStore) =>
-                            meetingStore.currentAudioDeviceMode,
-                        builder: (_, audioDevice, __) {
-                          return HMSEmbeddedButton(
-                              onTap: () {
-                                if (Platform.isIOS) {
-                                  context
-                                      .read<MeetingStore>()
-                                      .switchAudioOutputUsingiOSUI();
-                                } else {
-                                  showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
-                                      context: context,
-                                      builder: (ctx) =>
-                                          ChangeNotifierProvider.value(
-                                              value:
-                                                  context.read<MeetingStore>(),
-                                              child:
-                                                  const AudioSettingsBottomSheet()));
-                                }
-                              },
-                              isActive: true,
-                              onColor: HMSThemeColors.surfaceDim,
-                              child: SvgPicture.asset(
-                                'packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(audioDevice)}.svg',
-                                colorFilter: ColorFilter.mode(
-                                    HMSThemeColors.onSurfaceHighEmphasis,
-                                    BlendMode.srcIn),
-                                fit: BoxFit.scaleDown,
-                                semanticsLabel: "settings_button",
-                              ));
-                        }),
                   ],
                 ),
                 const SizedBox(
