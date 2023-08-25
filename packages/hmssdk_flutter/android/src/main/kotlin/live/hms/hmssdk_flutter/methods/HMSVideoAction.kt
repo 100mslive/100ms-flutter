@@ -11,14 +11,14 @@ import live.hms.video.utils.HmsUtilities
 
 class HMSVideoAction {
     companion object {
-        fun videoActions(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        fun videoActions(call: MethodCall, result: Result, hmssdk: HMSSDK,hmssdkFlutterPlugin: HmssdkFlutterPlugin?) {
             when (call.method) {
                 "switch_video" -> {
                     switchVideo(call, result, hmssdk)
                 }
 
                 "switch_camera" -> {
-                    switchCamera(result, hmssdk)
+                    switchCamera(result, hmssdk,hmssdkFlutterPlugin)
                 }
 
                 "is_video_mute" -> {
@@ -34,7 +34,7 @@ class HMSVideoAction {
                 }
 
                 "toggle_camera_mute_state" -> {
-                    toggleCameraMuteState(result, hmssdk)
+                    toggleCameraMuteState(result, hmssdk,hmssdkFlutterPlugin)
                 }
 
                 else -> {
@@ -55,20 +55,37 @@ class HMSVideoAction {
             }
         }
 
-        private fun toggleCameraMuteState(result: Result, hmssdk: HMSSDK) {
+        private fun toggleCameraMuteState(result: Result, hmssdk: HMSSDK, hmssdkFlutterPlugin: HmssdkFlutterPlugin?) {
             val peer = hmssdk.getLocalPeer()
             val videoTrack = peer?.videoTrack
             if (videoTrack != null) {
                 videoTrack.setMute(!(videoTrack.isMute))
                 result.success(true)
             } else {
-                result.success(false)
+                ///Checking whether preview for role audio track exist or not
+                if(hmssdkFlutterPlugin?.previewForRoleVideoTrack != null){
+                    val previewTrack = hmssdkFlutterPlugin.previewForRoleVideoTrack
+                    previewTrack?.setMute(!(previewTrack.isMute))
+                    result.success(true)
+                }
+                else{
+                    result.success(false)
+                }
             }
         }
 
-        private fun switchCamera(result: Result, hmssdk: HMSSDK) {
+        private fun switchCamera(result: Result, hmssdk: HMSSDK, hmssdkFlutterPlugin: HmssdkFlutterPlugin?) {
             val peer = hmssdk.getLocalPeer()
-            val videoTrack = peer?.videoTrack
+            var videoTrack = peer?.videoTrack
+            if(videoTrack == null){
+                ///Checking whether preview for role audio track exist or not
+                if(hmssdkFlutterPlugin?.previewForRoleVideoTrack != null){
+                    videoTrack = hmssdkFlutterPlugin.previewForRoleVideoTrack
+                }
+                else{
+                    return
+                }
+            }
             CoroutineScope(Dispatchers.Default).launch {
                 videoTrack?.switchCamera(onAction = HMSCommonAction.getActionListener(result))
             }

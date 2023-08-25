@@ -4,8 +4,8 @@ import live.hms.video.sdk.models.role.SubscribeParams
 
 class SubscribeSettings {
     companion object {
-        fun toDictionary(subscribeSettings: SubscribeParams?): HashMap<String, Any>? {
-            val args = HashMap<String, Any>()
+        fun toDictionary(subscribeSettings: SubscribeParams?): HashMap<String, Any?>? {
+            val args = HashMap<String, Any?>()
             if (subscribeSettings == null)return null
             args["max_subs_bit_rate"] = subscribeSettings.maxSubsBitRate
             args["subscribe_to_roles"] = subscribeSettings.subscribeTo
