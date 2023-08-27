@@ -1,8 +1,14 @@
+///Package imports
 import 'package:flutter/cupertino.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/network_icon_widget.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/peer_name.dart';
 
+///[NameAndNetwork] is a widget that is used to render the name and network of the peer
+///The widget takes following parameters:
+///[maxWidth] - The maximum width of the widget, this is taken to calculate the maximum width for the name to be rendered such that it doesn't overflow
 class NameAndNetwork extends StatelessWidget {
   final double maxWidth;
 

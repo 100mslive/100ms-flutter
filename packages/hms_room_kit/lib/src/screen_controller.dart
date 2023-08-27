@@ -1,13 +1,21 @@
+///Package imports
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/hmssdk_interactor.dart';
 import 'package:hms_room_kit/src/preview/preview_page.dart';
 import 'package:hms_room_kit/src/preview/preview_permissions.dart';
 import 'package:hms_room_kit/src/preview/preview_store.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:provider/provider.dart';
 
+///[ScreenController] is the controller for the preview screen
+///It takes following parameters:
+///[roomCode] is the room code of the room to join
+///[options] is the options for the prebuilt
+///For more details checkout the [HMSPrebuiltOptions] class
 class ScreenController extends StatefulWidget {
   ///[roomCode] is the room code of the room to join
   final String roomCode;

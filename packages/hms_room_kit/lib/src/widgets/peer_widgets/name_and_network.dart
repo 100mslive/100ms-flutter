@@ -6,6 +6,8 @@ import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/network_icon_widget.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/peer_name.dart';
 
+///[NameAndNetwork] is a widget that is used to render the name and network icon
+///of the peer
 class NameAndNetwork extends StatelessWidget {
   final double maxWidth;
 
@@ -24,6 +26,8 @@ class NameAndNetwork extends StatelessWidget {
           child: Padding(
             padding:
                 const EdgeInsets.only(left: 8.0, right: 4, top: 4, bottom: 4),
+
+            ///We render name and network in a row
             child: Row(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,

@@ -1,6 +1,19 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 
+///[HMSEmbeddedButton] is a button that is used to render the buttons with embedded style
+///The button takes following parameters:
+///[onTap] - The function that is called when the button is pressed
+///[offColor] - The color of the button when it's not active, the default color is [HMSThemeColors.surfaceBrighter]
+///[onColor] - The color of the button when it's active, the default color is [HMSThemeColors.backgroundDefault]
+///[isActive] - The property that determines whether the button is active or not
+///[child] - The child widget of the button
+///[height] - The height of the button, the default height is 40
+///[width] - The width of the button, the default width is 40
+///[enabledBorderColor] - The border color of the button when it's active, the default color is [HMSThemeColors.borderBright]
+///[disabledBorderColor] - The border color of the button when it's not active, the default color is [HMSThemeColors.surfaceBrighter]
+///[borderRadius] - The border radius of the button, the default value is 8
 class HMSEmbeddedButton extends StatelessWidget {
   final Function() onTap;
   final Color? offColor;
@@ -45,7 +58,8 @@ class HMSEmbeddedButton extends StatelessWidget {
                       color: enabledBorderColor ?? HMSThemeColors.borderBright,
                       width: 1)
                   : Border.all(
-                      color: disabledBorderColor ?? HMSThemeColors.secondaryDim,
+                      color:
+                          disabledBorderColor ?? HMSThemeColors.surfaceBrighter,
                       width: 1),
               borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
               /**
@@ -54,7 +68,7 @@ class HMSEmbeddedButton extends StatelessWidget {
                */
               color: isActive
                   ? (onColor ?? (HMSThemeColors.backgroundDefault))
-                  : (offColor ?? HMSThemeColors.secondaryDim)),
+                  : (offColor ?? HMSThemeColors.surfaceBrighter)),
           child: child),
     );
   }

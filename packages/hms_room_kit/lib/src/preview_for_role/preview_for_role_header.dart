@@ -1,12 +1,16 @@
+///Package imports
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
-import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
-import 'package:hms_room_kit/src/meeting/meeting_store.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
+///Project imports
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
+import 'package:hms_room_kit/src/meeting/meeting_store.dart';
+
+///[PreviewForRoleHeader] is the header of the PreviewForRole screen
+///It shows the logo, the LIVE icon and the number of participants
 class PreviewForRoleHeader extends StatefulWidget {
   const PreviewForRoleHeader({super.key});
 
@@ -25,6 +29,7 @@ class _PreviewForRoleHeaderState extends State<PreviewForRoleHeader> {
         children: [
           Row(
             children: [
+              ///We render the logo as set in the dashboard
               HMSRoomLayout.data?[0].logo?.url == null
                   ? Container()
                   : HMSRoomLayout.data![0].logo!.url!.contains("svg")
@@ -37,6 +42,10 @@ class _PreviewForRoleHeaderState extends State<PreviewForRoleHeader> {
               const SizedBox(
                 width: 12,
               ),
+
+              ///We render the LIVE icon based on the HLS streaming status
+              ///If the HLS streaming is started we show the LIVE icon
+              ///If the HLS streaming is not started we show nothing
               Selector<MeetingStore, bool>(
                   selector: (_, meetingStore) =>
                       meetingStore.streamingType['hls'] ?? false,
@@ -62,6 +71,10 @@ class _PreviewForRoleHeaderState extends State<PreviewForRoleHeader> {
               const SizedBox(
                 width: 8,
               ),
+
+              ///We render the recording icon based on the recording status
+              ///If the recording is started we show the recording icon
+              ///If the recording is not started we show nothing
               Selector<MeetingStore, Tuple3<bool, bool, bool>>(
                   selector: (_, meetingStore) => Tuple3(
                         meetingStore.recordingType["browser"] ?? false,
@@ -83,6 +96,10 @@ class _PreviewForRoleHeaderState extends State<PreviewForRoleHeader> {
               const SizedBox(
                 width: 8,
               ),
+
+              ///This renders the number of peers
+              ///If the HLS streaming is started, we render the number of peers
+              ///else we render an empty Container
               Selector<MeetingStore, Tuple2<bool, int>>(
                   selector: (_, meetingStore) => Tuple2(
                       meetingStore.streamingType['hls'] ?? false,
@@ -116,7 +133,7 @@ class _PreviewForRoleHeaderState extends State<PreviewForRoleHeader> {
                                   width: 4,
                                 ),
                                 HMSTitleText(
-                                    text: data.item2.toString(),
+                                    text: Utilities.formatNumber(data.item2),
                                     fontSize: 10,
                                     lineHeight: 10,
                                     letterSpacing: 1.5,

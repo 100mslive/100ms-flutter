@@ -1,14 +1,28 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
+//Project imports
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/audio_level_avatar.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
-//Project imports
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-
+///[VideoView] is a widget that renders the video of a peer
+///It renders the video of the peer if the peer is not muted
+///If the peer is muted it renders the avatar
+///If the peer is offscreen it renders the avatar
+///
+///It takes following parameters
+///[matchParent] - If true, the video will take the size of the parent widget
+///[viewSize] - The size of the video
+///[setMirror] - If true, the video will be mirrored
+///[scaleType] - The scale type of the video
+///[uid] - The uid of the peer
+///[avatarRadius] - The radius of the avatar
+///[avatarTitleFontSize] - The font size of the avatar title
+///[avatarTitleTextLineHeight] - The line height of the avatar title
 class VideoView extends StatefulWidget {
   final bool matchParent;
 
@@ -38,8 +52,11 @@ class VideoView extends StatefulWidget {
 class _VideoViewState extends State<VideoView> {
   @override
   Widget build(BuildContext context) {
+    ///We use the [Selector] widget to rebuild the widget when the peer track node changes
     return Selector<PeerTrackNode, Tuple3<HMSVideoTrack?, bool, bool>>(
         builder: (_, data, __) {
+          ///If the peer track node is null or the peer is muted or the peer is offscreen
+          ///We render the avatar
           if ((data.item1 == null) || data.item2 || data.item3) {
             return Semantics(
                 label: "fl_video_off",
@@ -49,6 +66,14 @@ class _VideoViewState extends State<VideoView> {
                   avatarTitleTextLineHeight: widget.avatarTitleTextLineHeight,
                 ));
           } else {
+            ///If the peer is not muted and not offscreen
+            ///We render the video
+            ///
+            ///If we the video track source is not REGULAR i.e. it is a screen share or someother video track
+            ///we set the scaletype as FIT
+            ///
+            ///If the video track source is REGULAR i.e. it is a camera video track
+            ///we set the scaletype as FILL
             return (data.item1?.source != "REGULAR")
                 ? ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_bottom_navigation_bar.dart';
 import 'package:hms_room_kit/src/meeting/meeting_header.dart';
 import 'package:hms_room_kit/src/widgets/meeting_modes/custom_grid_view.dart';
@@ -11,7 +11,6 @@ import 'package:hms_room_kit/src/widgets/toasts/hms_local_screen_share_toast.dar
 import 'package:hms_room_kit/src/widgets/toasts/hms_role_change_decline_toast.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
-import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/app_dialogs/audio_device_change_dialog.dart';
@@ -157,8 +156,11 @@ class _MeetingPageState extends State<MeetingPage> {
                                                       .read<MeetingStore>()
                                                       .peers
                                                       .isNotEmpty)
-                                                    const Text(
-                                                        "Please wait for broadcaster to join")
+                                                    HMSTitleText(
+                                                        text:
+                                                            "Please wait for broadcaster to join",
+                                                        textColor: HMSThemeColors
+                                                            .onSurfaceHighEmphasis)
                                                 ],
                                               ));
                                             }

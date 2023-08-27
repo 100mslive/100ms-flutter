@@ -1,14 +1,18 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+///Project imports
+import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/meeting/meeting_store.dart';
+
+///[HLSChatComponent] is a component that is used to show the chat
 class HLSChatComponent extends StatefulWidget {
   const HLSChatComponent({super.key});
 
@@ -20,6 +24,14 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
   TextEditingController messageTextController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
+  @override
+  void dispose() {
+    messageTextController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  ///This function scrolls to the end of the list
   void _scrollToEnd() {
     WidgetsBinding.instance.addPostFrameCallback((_) =>
         _scrollController.animateTo(_scrollController.position.maxScrollExtent,
@@ -27,9 +39,10 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
             curve: Curves.easeInOut));
   }
 
-  void sendMessage() async {
+  ///This function sends the message
+  void _sendMessage() async {
     MeetingStore meetingStore = context.read<MeetingStore>();
-    String message = messageTextController.text;
+    String message = messageTextController.text.trim();
     if (message.isEmpty) return;
     meetingStore.sendBroadcastMessage(message);
     messageTextController.clear();
@@ -43,6 +56,7 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
         height: 192,
         child: Column(
           children: [
+            ///Chat Header
             Expanded(
               child: Selector<MeetingStore, Tuple2<List<HMSMessage>, int>>(
                   selector: (_, meetingStore) => Tuple2(
@@ -104,7 +118,7 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
                   color: HMSThemeColors.surfaceDim),
               child: TextField(
                 keyboardType: TextInputType.text,
-                cursorColor: HMSThemeColors.primaryDefault,
+                cursorColor: HMSThemeColors.onSurfaceHighEmphasis,
                 onTapOutside: (event) =>
                     FocusManager.instance.primaryFocus?.unfocus(),
                 onChanged: (value) {
@@ -113,8 +127,9 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
                 onSubmitted: (value) {
                   if (messageTextController.text.trim().isEmpty) {
                     Utilities.showToast("Message can't be empty");
+                    return;
                   }
-                  sendMessage();
+                  _sendMessage();
                 },
                 textCapitalization: TextCapitalization.sentences,
                 textInputAction: TextInputAction.send,
@@ -127,7 +142,7 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
                           if (messageTextController.text.trim().isEmpty) {
                             Utilities.showToast("Message can't be empty");
                           }
-                          sendMessage();
+                          _sendMessage();
                         },
                         icon: SvgPicture.asset(
                           "packages/hms_room_kit/lib/src/assets/icons/send_message.svg",

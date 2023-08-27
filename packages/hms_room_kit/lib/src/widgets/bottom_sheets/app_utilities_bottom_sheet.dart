@@ -1,6 +1,11 @@
+///Package imports
 import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/stop_recording_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/more_option_item.dart';
@@ -8,8 +13,10 @@ import 'package:hms_room_kit/src/common/constants.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/participants_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
-import 'package:provider/provider.dart';
 
+///This renders the app utilities bottom sheet for webRTC or broadcaster
+///It contains the participants, screen share, brb, raise hand and recording
+///options
 class AppUtilitiesBottomSheet extends StatefulWidget {
   const AppUtilitiesBottomSheet({Key? key}) : super(key: key);
   @override
@@ -29,6 +36,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              ///This renders the title and close button
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -43,17 +51,8 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.close,
-                          color: HMSThemeColors.onSurfaceHighEmphasis,
-                          size: 24,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
+                    children: const [
+                      HMSCrossButton(),
                     ],
                   )
                 ],
@@ -65,9 +64,12 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                   height: 5,
                 ),
               ),
+
+              ///This renders the participants, screen share, brb, raise hand and recording options
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  ///This renders the participants option
                   MoreOptionItem(
                       onTap: () async {
                         Navigator.pop(context);
@@ -122,6 +124,8 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                   const SizedBox(
                     width: 12,
                   ),
+
+                  ///This renders the screen share option
                   MoreOptionItem(
                     onTap: () async {
                       Navigator.pop(context);
@@ -147,6 +151,8 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                   const SizedBox(
                     width: 12,
                   ),
+
+                  ///This renders the brb option
                   MoreOptionItem(
                       onTap: () async {
                         meetingStore.changeMetadataBRB();
@@ -166,9 +172,12 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
               const SizedBox(
                 height: 16,
               ),
+
+              ///This renders the raise hand and recording options
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  ///This renders the raise hand option
                   MoreOptionItem(
                       onTap: () async {
                         context.read<MeetingStore>().changeMetadata();
@@ -189,6 +198,12 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                   const SizedBox(
                     width: 12,
                   ),
+
+                  ///This renders the recording option
+                  ///This option is only rendered if the local peer has the permission to
+                  ///start/stop browser recording
+                  ///
+                  ///The recording permission is checked using the role of the local peer
                   if (meetingStore
                           .localPeer?.role.permissions.browserRecording ??
                       false)

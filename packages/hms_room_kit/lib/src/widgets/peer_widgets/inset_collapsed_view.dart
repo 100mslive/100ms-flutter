@@ -1,11 +1,17 @@
+///Package imports
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
-import 'package:provider/provider.dart';
 
+///[InsetCollapsedView] is a widget that is used to render the collapsed view of the inset
+///It has following parameters:
+///[callbackFunction] is a function that is called when the maximize button is clicked
 class InsetCollapsedView extends StatefulWidget {
   final Function()? callbackFunction;
 
@@ -31,6 +37,7 @@ class _InsetCollapsedViewState extends State<InsetCollapsedView> {
           children: [
             Row(
               children: [
+                ///We only show the mic and video mute buttons if the local peer is allowed to publish audio or video
                 if (Provider.of<MeetingStore>(context)
                         .localPeer
                         ?.role

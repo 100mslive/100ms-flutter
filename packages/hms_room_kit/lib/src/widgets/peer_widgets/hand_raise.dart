@@ -1,12 +1,13 @@
 //Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
+import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/model/peer_track_node.dart';
 
+///[HandRaise] is a widget that is used to render the hand raise icon on peer tile
 class HandRaise extends StatelessWidget {
   const HandRaise({super.key});
 
@@ -33,6 +34,9 @@ class HandRaise extends StatelessWidget {
                           "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
                           height: 25,
                           width: 25,
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.onSecondaryHighEmphasis,
+                              BlendMode.srcIn),
                           semanticsLabel: "hand_raise_label",
                         ),
                       ),

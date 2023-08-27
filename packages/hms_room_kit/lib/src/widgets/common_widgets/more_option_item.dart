@@ -1,7 +1,11 @@
+///Package imports
 import 'package:flutter/material.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 
+///[MoreOptionItem] is a widget that is used to render the more option items
 class MoreOptionItem extends StatelessWidget {
   final Function onTap;
   final Widget optionIcon;

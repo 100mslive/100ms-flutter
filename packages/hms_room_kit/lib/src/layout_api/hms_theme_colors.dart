@@ -46,8 +46,6 @@ class HMSThemeColors {
   static Color baseBlack = const Color(0xFF000000);
   static Color baseWhite = const Color(0xFFFFFFFF);
 
-  static Color transparentBackgroundColor = const Color.fromRGBO(0, 0, 0, 1);
-
   static int _getColorFromHex(String hexColor) {
     hexColor = hexColor.toUpperCase().replaceAll("#", "");
     if (hexColor.length == 6) {
@@ -214,7 +212,5 @@ class HMSThemeColors {
 
     baseBlack = const Color(0xFF000000);
     baseWhite = const Color(0xFFFFFFFF);
-
-    transparentBackgroundColor = const Color.fromRGBO(0, 0, 0, 1);
   }
 }

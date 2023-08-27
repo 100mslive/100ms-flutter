@@ -1006,19 +1006,19 @@ class UtilityComponents {
                   borderRadius: BorderRadius.circular(12)),
               insetPadding:
                   const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              backgroundColor: themeBottomSheetColor,
+              backgroundColor: HMSThemeColors.backgroundDefault,
               title: Center(
                 child: Text(
                   errorTitle,
                   style: GoogleFonts.inter(
-                      color: Colors.red.shade300,
+                      color: HMSThemeColors.alertErrorDefault,
                       fontSize: 16,
                       fontWeight: FontWeight.w600),
                 ),
               ),
               content: Text(errorMessage,
                   style: GoogleFonts.inter(
-                      color: themeDefaultColor,
+                      color: HMSThemeColors.onSurfaceHighEmphasis,
                       fontSize: 14,
                       fontWeight: FontWeight.w400)),
               actions: [
@@ -1027,14 +1027,15 @@ class UtilityComponents {
                   children: [
                     ElevatedButton(
                         style: ButtonStyle(
-                            shadowColor:
-                                MaterialStateProperty.all(themeSurfaceColor),
-                            backgroundColor:
-                                MaterialStateProperty.all(hmsdefaultColor),
+                            shadowColor: MaterialStateProperty.all(
+                                HMSThemeColors.backgroundDefault),
+                            backgroundColor: MaterialStateProperty.all(
+                                HMSThemeColors.primaryDefault),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(RoundedRectangleBorder(
-                              side:
-                                  BorderSide(width: 1, color: hmsdefaultColor),
+                              side: BorderSide(
+                                  width: 1,
+                                  color: HMSThemeColors.primaryDefault),
                               borderRadius: BorderRadius.circular(8.0),
                             ))),
                         onPressed: action,
@@ -1055,18 +1056,18 @@ class UtilityComponents {
       {String alertMessage = "Leave Room"}) {
     return Container(
       height: MediaQuery.of(context).size.height,
-      color: Colors.black.withOpacity(0.5),
+      color: HMSThemeColors.backgroundDefault.withOpacity(0.5),
       child: Center(
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 10),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(12)),
-            color: themeBottomSheetColor,
-            boxShadow: const [
+            color: HMSThemeColors.backgroundDefault,
+            boxShadow: [
               BoxShadow(
-                color: Colors.black,
-                offset: Offset(0.0, 1.0),
+                color: HMSThemeColors.backgroundDefault,
+                offset: const Offset(0.0, 1.0),
                 blurRadius: 6.0,
               ),
             ],
@@ -1075,7 +1076,7 @@ class UtilityComponents {
             Text(
               "Reconnecting...",
               style: GoogleFonts.inter(
-                  color: Colors.red.shade300,
+                  color: HMSThemeColors.alertErrorDefault,
                   fontSize: 16,
                   fontWeight: FontWeight.w600),
             ),
@@ -1083,14 +1084,14 @@ class UtilityComponents {
               height: 15,
             ),
             LinearProgressIndicator(
-              color: hmsdefaultColor,
+              color: HMSThemeColors.primaryDefault,
             ),
             const SizedBox(
               height: 15,
             ),
             Text('Oops, No internet Connection.\nReconnecting...',
                 style: GoogleFonts.inter(
-                    color: themeDefaultColor,
+                    color: HMSThemeColors.onSurfaceHighEmphasis,
                     fontSize: 14,
                     fontWeight: FontWeight.w400)),
             const SizedBox(
@@ -1098,11 +1099,14 @@ class UtilityComponents {
             ),
             ElevatedButton(
                 style: ButtonStyle(
-                    shadowColor: MaterialStateProperty.all(themeSurfaceColor),
-                    backgroundColor: MaterialStateProperty.all(hmsdefaultColor),
+                    shadowColor: MaterialStateProperty.all(
+                        HMSThemeColors.backgroundDefault),
+                    backgroundColor: MaterialStateProperty.all(
+                        HMSThemeColors.backgroundDefault),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
-                      side: BorderSide(width: 1, color: hmsdefaultColor),
+                      side: BorderSide(
+                          width: 1, color: HMSThemeColors.backgroundDefault),
                       borderRadius: BorderRadius.circular(8.0),
                     ))),
                 child: Text(

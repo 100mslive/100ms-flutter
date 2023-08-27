@@ -1,11 +1,22 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/meeting/meeting_store.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
+///Project imports
+import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/meeting/meeting_store.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
+
+///[PreviewForRoleBottomSheet] is the bottom sheet that is shown when the user is invited to join the stage
+///This bottom sheet shows the audio, video and camera buttons and the join now and decline buttons
+///The user can join the stage by clicking on the join now button
+///The user can decline the invitation by clicking on the decline button
+///
+///This takes the following parameters:
+///[meetingStore] - The meeting store that is used to access the meeting related data
+///[roleChangeRequest] - The role change request that is used to accept the role change request
 class PreviewForRoleBottomSheet extends StatefulWidget {
   final MeetingStore meetingStore;
   final HMSRoleChangeRequest? roleChangeRequest;
@@ -33,6 +44,7 @@ class _PreviewForRoleBottomSheetState extends State<PreviewForRoleBottomSheet> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
             child: Column(
               children: [
+                ///We show the title and the description of the bottom sheet
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -67,6 +79,8 @@ class _PreviewForRoleBottomSheetState extends State<PreviewForRoleBottomSheet> {
                   children: [
                     Row(
                       children: [
+                        ///We show the audio, video and camera buttons
+                        ///The audio button is shown only if the local peer is not null and the preview for role audio track is not null
                         if (widget.meetingStore.localPeer != null &&
                             widget.meetingStore.previewForRoleAudioTrack !=
                                 null)
@@ -94,6 +108,8 @@ class _PreviewForRoleBottomSheetState extends State<PreviewForRoleBottomSheet> {
                         const SizedBox(
                           width: 16,
                         ),
+
+                        ///The video button is shown only if the local peer is not null and the preview for role video track is not null
                         if (widget.meetingStore.localPeer != null &&
                             widget.meetingStore.previewForRoleVideoTrack !=
                                 null)
@@ -121,6 +137,8 @@ class _PreviewForRoleBottomSheetState extends State<PreviewForRoleBottomSheet> {
                         const SizedBox(
                           width: 16,
                         ),
+
+                        ///The switch camera button is shown only if the local peer is not null and the preview for role video track is not null
                         if (widget.meetingStore.localPeer != null &&
                             widget.meetingStore.previewForRoleVideoTrack !=
                                 null)
@@ -154,6 +172,8 @@ class _PreviewForRoleBottomSheetState extends State<PreviewForRoleBottomSheet> {
                 const SizedBox(
                   height: 16,
                 ),
+
+                ///We show the join now and decline buttons
                 ElevatedButton(
                     style: ButtonStyle(
                         shadowColor: MaterialStateProperty.all(

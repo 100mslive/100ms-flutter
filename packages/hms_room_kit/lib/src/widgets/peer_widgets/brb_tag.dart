@@ -1,12 +1,14 @@
 //Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
-import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
+import 'package:hms_room_kit/src/model/peer_track_node.dart';
 
+///[BRBTag] is a widget that is used to render the BRB tag
+///BRB stands for Be Right Back
 class BRBTag extends StatelessWidget {
   const BRBTag({super.key});
 
