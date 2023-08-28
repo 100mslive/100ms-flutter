@@ -33,7 +33,7 @@ class TwoTileLayout extends StatelessWidget {
               ListenablePeerWidget(index: startIndex, peerTracks: peerTracks),
         ),
         const SizedBox(
-          height: 4,
+          height: 2,
         ),
         Expanded(
           child: ListenablePeerWidget(
