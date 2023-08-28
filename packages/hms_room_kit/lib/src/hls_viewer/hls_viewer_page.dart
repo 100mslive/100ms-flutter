@@ -1,20 +1,24 @@
+///Package imports
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/hls_viewer/hls_viewer_bottom_navigation_bar.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_viewer_header.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/preview_for_role/preview_for_role_bottom_sheet.dart';
 import 'package:hms_room_kit/src/preview_for_role/preview_for_role_header.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_waiting_ui.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
+///[HLSViewerPage] is the page that is used to render the HLS Viewer
 class HLSViewerPage extends StatefulWidget {
   const HLSViewerPage({
     Key? key,
@@ -28,12 +32,14 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
   void initState() {
     super.initState();
     if (mounted) {
+      ///We start the timer to hide the controls
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.read<HLSPlayerStore>().startTimerToHideButtons();
       });
     }
   }
 
+  ///This function is used to set the stream status
   void _setStreamStatus(bool hasHlsStarted) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<HLSPlayerStore>().setStreamPlaying(hasHlsStarted);
@@ -79,12 +85,13 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                   return isPipActive
                       ? HMSHLSPlayer()
                       : Scaffold(
+                          backgroundColor: HMSThemeColors.backgroundDim,
                           body: Theme(
                             data: ThemeData(
                                 brightness: Brightness.dark,
                                 primaryColor: HMSThemeColors.primaryDefault,
                                 scaffoldBackgroundColor:
-                                    HMSThemeColors.backgroundDefault),
+                                    HMSThemeColors.backgroundDim),
                             child: SingleChildScrollView(
                               child: Stack(
                                 children: [
@@ -156,6 +163,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                       ],
                                     ),
                                   ),
+
+                                  ///This renders the preview for role component
                                   Selector<
                                           MeetingStore,
                                           Tuple2<HMSLocalVideoTrack?,
@@ -165,13 +174,17 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                           meetingStore
                                               .previewForRoleAudioTrack),
                                       builder: (_, previewForRoleTracks, __) {
+                                        ///If the preview for role tracks are not null
+                                        ///we show the preview for role component
+                                        ///else we show and empty Container
                                         if (previewForRoleTracks.item1 !=
-                                                null &&
+                                                null ||
                                             previewForRoleTracks.item2 !=
                                                 null) {
                                           WidgetsBinding.instance
                                               .addPostFrameCallback(
                                                   (timeStamp) {
+                                            ///For preview for role component we use the [showGeneralDialog]
                                             showGeneralDialog(
                                                 context: context,
                                                 pageBuilder: (ctx, _, __) {
@@ -192,8 +205,14 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                   context)
                                                               .size
                                                               .width,
+
+                                                          ///We render the preview for role component
                                                           child: Stack(
                                                             children: [
+                                                              ///This renders the video component
+                                                              ///[HMSVideoView] is only rendered if video is ON
+                                                              ///
+                                                              ///else we render the [HMSCircularAvatar]
                                                               Selector<
                                                                       MeetingStore,
                                                                       bool>(
@@ -229,7 +248,11 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                             ),
                                                                     );
                                                                   }),
+
+                                                              ///This renders the preview for role header
                                                               const PreviewForRoleHeader(),
+
+                                                              ///This renders the preview for role bottom sheet
                                                               PreviewForRoleBottomSheet(
                                                                 meetingStore:
                                                                     context.read<

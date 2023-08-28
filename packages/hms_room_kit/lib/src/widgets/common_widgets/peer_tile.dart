@@ -2,12 +2,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:provider/provider.dart';
+
+// Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/inset_tile_more_option.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/name_and_network.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/screen_share_tile_name.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/degrade_tile.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/video_view.dart';
@@ -17,10 +20,15 @@ import 'package:hms_room_kit/src/widgets/peer_widgets/hand_raise.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/more_option.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/rtc_stats_view.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/tile_border.dart';
-import 'package:provider/provider.dart';
 
-// Project imports
-
+///This widget is used to render the peer tile
+///It contains following parameters
+///[scaleType] is used to set the scale type of the video view
+///[islongPressEnabled] is used to enable or disable the long press on the video view
+///[avatarRadius] is used to set the radius of the avatar
+///[avatarTitleFontSize] is used to set the font size of the avatar title
+///[avatarTitleTextLineHeight] is used to set the line height of the avatar title
+///[PeerTile] is a stateful widget because it uses [FocusDetector]
 class PeerTile extends StatefulWidget {
   final ScaleType scaleType;
   final bool islongPressEnabled;
@@ -231,7 +239,7 @@ class _PeerTileState extends State<PeerTile> {
                                                                   child:
                                                                       Padding(
                                                                     padding: const EdgeInsets
-                                                                        .only(
+                                                                            .only(
                                                                         left:
                                                                             8.0,
                                                                         right:

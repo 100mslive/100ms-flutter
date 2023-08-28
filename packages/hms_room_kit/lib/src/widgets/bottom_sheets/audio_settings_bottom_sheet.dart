@@ -1,11 +1,17 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
+///Project imports
+import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/meeting/meeting_store.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
+
+///This renders the audio device selection bottom sheet only on android
+///It contains the list of available audio devices
 class AudioSettingsBottomSheet extends StatefulWidget {
   const AudioSettingsBottomSheet({
     Key? key,
@@ -43,6 +49,9 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
                   topLeft: Radius.circular(16), topRight: Radius.circular(16)),
               color: HMSThemeColors.backgroundDefault,
             ),
+
+            ///We are using the selector to rebuild the widget only when the available audio devices list changes
+            ///or the current audio device changes
             child: Selector<MeetingStore,
                     Tuple3<List<HMSAudioDevice>, int, HMSAudioDevice?>>(
                 selector: (_, meetingStore) => Tuple3(
@@ -52,7 +61,7 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
                 builder: (context, data, _) {
                   return Padding(
                     padding:
-                        const EdgeInsets.only(top: 24.0, left: 24, right: 24),
+                        const EdgeInsets.only(top: 24.0, left: 16, right: 16),
                     child: Column(
                       children: [
                         Row(
@@ -69,18 +78,7 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
                               ],
                             ),
                             Row(
-                              children: [
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.close,
-                                    color: HMSThemeColors.onSurfaceHighEmphasis,
-                                    size: 24,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
+                              children: const [HMSCrossButton()],
                             ),
                           ],
                         ),
@@ -106,6 +104,13 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
                                                 audioDevice: data.item1[index]);
                                         Navigator.pop(context);
                                       },
+
+                                      ///Here we are checking if the current audio device is automatic or not
+                                      ///If it is automatic then we render the automatic icon
+                                      ///else we render the audio device icon
+                                      ///
+                                      ///If the current audio device is the selected audio device then we render the tick icon
+                                      ///else we render an empty container
                                       child: data.item1[index] ==
                                               HMSAudioDevice.AUTOMATIC
                                           ? ListTile(

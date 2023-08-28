@@ -1,10 +1,17 @@
+///Package imports
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/local_peer_bottom_sheet.dart';
-import 'package:provider/provider.dart';
 
+///[InsetTileMoreOption] is a widget that is used to render the more option button on a local peer(inset) tile
+///This is used in the [LocalPeerTile]
+///It has following parameters:
+///[callbackFunction] is a function that is called when the more option button is clicked
 class InsetTileMoreOption extends StatelessWidget {
   final Function()? callbackFunction;
   const InsetTileMoreOption({super.key, this.callbackFunction});
@@ -16,6 +23,8 @@ class InsetTileMoreOption extends StatelessWidget {
       right: 5,
       child: GestureDetector(
         onTap: () {
+          ///[peerTrackNode] is the peerTrackNode of the peer whose more option is clicked
+          ///We only show the modal bottom sheet if the peer is the local peer
           var peerTrackNode = context.read<PeerTrackNode>();
           showModalBottomSheet(
             isScrollControlled: true,

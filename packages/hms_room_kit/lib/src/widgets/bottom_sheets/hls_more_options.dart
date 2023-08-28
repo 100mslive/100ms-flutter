@@ -1,13 +1,18 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:badges/badges.dart' as badge;
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/change_name_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/participants_bottom_sheet.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/more_option_item.dart';
-import 'package:provider/provider.dart';
-import 'package:badges/badges.dart' as badge;
 
+///[HLSMoreOptionsBottomSheet] is a bottom sheet that is used to show more options in the meeting
 class HLSMoreOptionsBottomSheet extends StatefulWidget {
   const HLSMoreOptionsBottomSheet({super.key});
 
@@ -18,7 +23,6 @@ class HLSMoreOptionsBottomSheet extends StatefulWidget {
 
 class _HLSMoreOptionsBottomSheetBottomSheetState
     extends State<HLSMoreOptionsBottomSheet> {
-  bool isStatsEnabled = true;
   @override
   void initState() {
     super.initState();
@@ -48,18 +52,7 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.close,
-                          color: HMSThemeColors.onSurfaceHighEmphasis,
-                          size: 24,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
+                    children: const [HMSCrossButton()],
                   )
                 ],
               ),
@@ -70,6 +63,8 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                   height: 5,
                 ),
               ),
+
+              ///Here we render the participants button and the change name button
               Row(
                 children: [
                   MoreOptionItem(

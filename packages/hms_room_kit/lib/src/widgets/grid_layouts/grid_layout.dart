@@ -1,4 +1,7 @@
+///Package imports
 import 'package:flutter/cupertino.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/grid_layouts/five_tile_layout.dart';
 import 'package:hms_room_kit/src/widgets/grid_layouts/four_tile_layout.dart';
@@ -30,16 +33,26 @@ class _GridLayoutState extends State<GridLayout> {
   @override
   Widget build(BuildContext context) {
     ///Here we check how many tiles we need to render
-    ///So if basically difference between total number of tile and tiles rendered till now
+    ///So if still there are 6 or more tiles to be rendered then we render 6 tiles
+    ///else we render the remaining tiles
+    ///
+    ///This is done to decide which layout we need to render
     if ((6 * (widget.index + 1) > widget.numberOfTiles)) {
       tilesToBeRendered = widget.numberOfTiles - 6 * (widget.index);
     } else {
       tilesToBeRendered = 6;
     }
 
+    ///This contains the starting index of tile to be rendered
     tileStartingIndex = 6 * widget.index;
 
     ///Here we render the tile layout based on how many tiles we need to render
+    ///If we need to render 1 tile then we render the [ListenablePeerWidget]
+    ///If we need to render 2 tiles then we render the [TwoTileLayout]
+    ///If we need to render 3 tiles then we render the [ThreeTileLayout]
+    ///If we need to render 4 tiles then we render the [FourTileLayout]
+    ///If we need to render 5 tiles then we render the [FiveTileLayout]
+    ///If we need to render 6 tiles then we render the [SixTileLayout]
     if (tilesToBeRendered == 6) {
       return SixTileLayout(
         peerTracks: widget.peerTracks,

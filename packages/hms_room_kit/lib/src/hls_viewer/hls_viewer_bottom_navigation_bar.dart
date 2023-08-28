@@ -1,7 +1,12 @@
+///Dart imports
 import 'dart:io';
 
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_chat_component.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/hls_more_options.dart';
@@ -9,8 +14,8 @@ import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
-import 'package:provider/provider.dart';
 
+///[HLSViewerBottomNavigationBar] is the bottom navigation bar for the HLS Viewer
 class HLSViewerBottomNavigationBar extends StatelessWidget {
   const HLSViewerBottomNavigationBar({super.key});
 
@@ -21,19 +26,24 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
           gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [
-            HMSThemeColors.backgroundDim.withAlpha(0),
-            HMSThemeColors.backgroundDim.withAlpha(64)
-          ])),
+              colors: [Colors.black.withAlpha(0), Colors.black.withAlpha(64)])),
       child: Padding(
         padding: EdgeInsets.only(bottom: Platform.isIOS ? 32.0 : 8),
+
+        ///Here we render the chat component if the chat is opened
+        ///We also render the leave button, hand raise button, chat button and the menu button
         child: Column(
           children: [
+            ///Chat Component only visible when the chat is opened
             Selector<HLSPlayerStore, bool>(
                 selector: (_, hlsPlayerStore) => hlsPlayerStore.isChatOpened,
                 builder: (_, isChatOpened, __) {
                   return isChatOpened ? const HLSChatComponent() : Container();
                 }),
+
+            ///Bottom Navigation Bar
+            ///We render the leave button, hand raise button, chat button and the menu button
+            ///We only render the bottom navigation bar when the stream controls are visible
             Selector<HLSPlayerStore, bool>(
                 selector: (_, hlsPlayerStore) =>
                     hlsPlayerStore.areStreamControlsVisible,
@@ -115,8 +125,6 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                         .backgroundDim
                                         .withAlpha(64),
                                     onColor: HMSThemeColors.backgroundDim
-                                        .withAlpha(64),
-                                    offColor: HMSThemeColors.backgroundDim
                                         .withAlpha(64),
                                     isActive: !isChatOpened,
                                     child: Padding(

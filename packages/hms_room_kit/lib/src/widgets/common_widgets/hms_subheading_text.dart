@@ -1,6 +1,19 @@
+///Package imports
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+///[HMSSubheadingText] returns a text widget with the default theme
+///The paramters and their default values are as follows:
+///[text] - The text to be displayed, this is a required parameter
+///[textColor] - The color of the text, this is a required parameter
+///[letterSpacing] - The spacing between the letters, default value is 0.25
+///[lineHeight] - The height of the line, default value is 20
+///[fontSize] - The size of the font, default value is 14
+///[fontWeight] - The weight of the font, default value is FontWeight.w400
+///[textOverflow] - The overflow of the text, default value is TextOverflow.ellipsis
+///[maxLines] - The maximum number of lines, default value is 1
+///[textOverflow] - The overflow of the text, default value is TextOverflow.ellipsis
+///[maxLines] - The maximum number of lines, default value is 1
 class HMSSubheadingText extends StatelessWidget {
   final String text;
   final Color textColor;
@@ -15,7 +28,7 @@ class HMSSubheadingText extends StatelessWidget {
       required this.text,
       required this.textColor,
       this.letterSpacing = 0.25,
-      this.lineHeight = 20 / 14,
+      this.lineHeight = 20,
       this.fontSize = 14,
       this.maxLines = 1,
       this.fontWeight = FontWeight.w400,
@@ -29,6 +42,7 @@ class HMSSubheadingText extends StatelessWidget {
         softWrap: true,
         maxLines: maxLines,
         style: GoogleFonts.inter(
+            height: lineHeight! / fontSize!,
             fontSize: fontSize,
             letterSpacing: letterSpacing,
             color: textColor,

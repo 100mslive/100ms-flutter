@@ -1,12 +1,19 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_listenable_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
-import 'package:provider/provider.dart';
 
+///[ChangeNameBottomSheet] is a bottom sheet that is used to change the name of the local peer
+///It has following parameters:
+///[showPrivacyInfo] is a boolean that is used to show/hide the privacy info
 class ChangeNameBottomSheet extends StatefulWidget {
   final bool showPrivacyInfo;
   const ChangeNameBottomSheet({super.key, this.showPrivacyInfo = true});
@@ -24,11 +31,23 @@ class _ChangeNameBottomSheetState extends State<ChangeNameBottomSheet> {
     nameController.text = context.read<MeetingStore>().localPeer?.name ?? "";
   }
 
+  @override
+  void dispose() {
+    nameController.dispose();
+    super.dispose();
+  }
+
+  ///This function is called when the change name button is clicked
   void _changeName() {
-    if (nameController.text.isNotEmpty &&
+    ///We only change the name
+    ///if the name is not empty
+    ///and the name is not same as the previous name
+    ///
+    ///we also trim to remove the spaces from beginning or end
+    if (nameController.text.trim().isNotEmpty &&
         nameController.text.trim() !=
             context.read<MeetingStore>().localPeer?.name) {
-      context.read<MeetingStore>().changeName(name: nameController.text);
+      context.read<MeetingStore>().changeName(name: nameController.text.trim());
       Navigator.pop(context);
     }
   }
@@ -69,18 +88,7 @@ class _ChangeNameBottomSheetState extends State<ChangeNameBottomSheet> {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.close,
-                        color: HMSThemeColors.onSurfaceHighEmphasis,
-                        size: 24,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
+                  children: const [HMSCrossButton()],
                 )
               ],
             ),
@@ -91,6 +99,8 @@ class _ChangeNameBottomSheetState extends State<ChangeNameBottomSheet> {
                 height: 5,
               ),
             ),
+
+            ///We show the privacy info only if the [showPrivacyInfo] is true
             if (widget.showPrivacyInfo)
               HMSSubheadingText(
                 text:
@@ -105,7 +115,7 @@ class _ChangeNameBottomSheetState extends State<ChangeNameBottomSheet> {
             SizedBox(
               height: 48,
               child: TextField(
-                cursorColor: HMSThemeColors.primaryDefault,
+                cursorColor: HMSThemeColors.onSurfaceHighEmphasis,
                 onTapOutside: (event) =>
                     FocusManager.instance.primaryFocus?.unfocus(),
                 textInputAction: TextInputAction.done,
@@ -113,7 +123,7 @@ class _ChangeNameBottomSheetState extends State<ChangeNameBottomSheet> {
                 style: GoogleFonts.inter(
                     color: HMSThemeColors.onSurfaceHighEmphasis),
                 controller: nameController,
-                keyboardType: TextInputType.name,
+                keyboardType: TextInputType.text,
                 onChanged: (value) {
                   setState(() {});
                 },
@@ -122,7 +132,7 @@ class _ChangeNameBottomSheetState extends State<ChangeNameBottomSheet> {
                 },
                 decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(
-                        vertical: 14, horizontal: 16),
+                        vertical: 12, horizontal: 16),
                     fillColor: HMSThemeColors.surfaceDefault,
                     filled: true,
                     hintText: nameController.text.isEmpty
@@ -154,7 +164,6 @@ class _ChangeNameBottomSheetState extends State<ChangeNameBottomSheet> {
               child: HMSListenableButton(
                   width: MediaQuery.of(context).size.width - 48,
                   textController: nameController,
-                  errorMessage: "Please enter you name",
                   onPressed: () => {_changeName()},
                   childWidget: Container(
                     height: 48,
@@ -163,7 +172,7 @@ class _ChangeNameBottomSheetState extends State<ChangeNameBottomSheet> {
                     child: Center(
                       child: HMSTitleText(
                         text: "Change",
-                        textColor: (nameController.text.isEmpty ||
+                        textColor: (nameController.text.trim().isEmpty ||
                                 context.read<MeetingStore>().localPeer?.name ==
                                     nameController.text.trim())
                             ? HMSThemeColors.onPrimaryLowEmphasis
@@ -171,9 +180,6 @@ class _ChangeNameBottomSheetState extends State<ChangeNameBottomSheet> {
                       ),
                     ),
                   )),
-            ),
-            const SizedBox(
-              width: 12,
             ),
           ],
         ),

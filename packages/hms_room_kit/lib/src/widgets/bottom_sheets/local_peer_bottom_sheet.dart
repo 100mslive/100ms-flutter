@@ -1,13 +1,22 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/change_name_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
-import 'package:provider/provider.dart';
 
+///[LocalPeerBottomSheet] is a widget that is used to render the bottom sheet when the more option button is clicked on the local peer tile
+///It has following parameters:
+///[meetingStore] is the meetingStore of the meeting
+///[peerTrackNode] is the peerTrackNode of the local peer
+///[callbackFunction] is a function that is called when the more option button is clicked
 class LocalPeerBottomSheet extends StatefulWidget {
   final MeetingStore meetingStore;
   final PeerTrackNode peerTrackNode;
@@ -63,18 +72,7 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                     ],
                   ),
                   Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.close,
-                          color: HMSThemeColors.onSurfaceHighEmphasis,
-                          size: 24,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
+                    children: const [HMSCrossButton()],
                   ),
                 ],
               ),
@@ -86,6 +84,12 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                 ),
               ),
               Expanded(
+                ///Here we use a listview to render the options
+                ///The list contains following item
+                ///1. Pin Tile for Myself
+                ///2. Spotlight Tile for Everyone
+                ///3. Change Name
+                ///4. Minimize Your Tile
                 child: ListView(
                   children: [
                     ListTile(

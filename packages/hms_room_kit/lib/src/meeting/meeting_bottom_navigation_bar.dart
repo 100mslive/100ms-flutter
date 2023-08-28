@@ -1,5 +1,10 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
@@ -8,9 +13,11 @@ import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/app_utilities_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/chat_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
+///This renders the meeting bottom navigation bar
+///It contains the leave, mic, camera, chat and menu buttons
+///The mic and camera buttons are only rendered if the local peer has the
+///permission to publish audio and video respectively
 class MeetingBottomNavigationBar extends StatefulWidget {
   const MeetingBottomNavigationBar({super.key});
 
@@ -44,6 +51,8 @@ class _MeetingBottomNavigationBarState
         ),
 
         ///Microphone button
+        ///This button is only rendered if the local peer has the permission to
+        ///publish audio
         if (Provider.of<MeetingStore>(context)
                 .localPeer
                 ?.role
@@ -57,9 +66,6 @@ class _MeetingBottomNavigationBarState
                 return HMSEmbeddedButton(
                   onTap: () =>
                       {context.read<MeetingStore>().toggleMicMuteState()},
-                  disabledBorderColor: HMSThemeColors.surfaceBrighter,
-                  enabledBorderColor: HMSThemeColors.borderBright,
-                  offColor: HMSThemeColors.surfaceBrighter,
                   onColor: HMSThemeColors.backgroundDim,
                   isActive: isMicOn,
                   child: Padding(
@@ -78,6 +84,8 @@ class _MeetingBottomNavigationBarState
               }),
 
         ///Camera button
+        ///This button is only rendered if the local peer has the permission to
+        ///publish video
         if (Provider.of<MeetingStore>(context)
                 .localPeer
                 ?.role
@@ -95,9 +103,6 @@ class _MeetingBottomNavigationBarState
                         ? null
                         : context.read<MeetingStore>().toggleCameraMuteState(),
                   },
-                  disabledBorderColor: HMSThemeColors.surfaceBrighter,
-                  enabledBorderColor: HMSThemeColors.borderBright,
-                  offColor: HMSThemeColors.surfaceBrighter,
                   onColor: HMSThemeColors.backgroundDim,
                   isActive: data.item1,
                   child: Padding(
@@ -133,7 +138,6 @@ class _MeetingBottomNavigationBarState
                   child: const ChatBottomSheet()),
             )
           },
-          enabledBorderColor: HMSThemeColors.borderBright,
           onColor: HMSThemeColors.backgroundDim,
           isActive: true,
           child: Padding(
@@ -164,7 +168,6 @@ class _MeetingBottomNavigationBarState
                   child: const AppUtilitiesBottomSheet()),
             )
           },
-          enabledBorderColor: HMSThemeColors.borderBright,
           onColor: HMSThemeColors.backgroundDim,
           isActive: true,
           child: Padding(

@@ -1,21 +1,23 @@
-// Package imports
+///Dart imports
 import 'dart:async';
 
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/inset_tile_more_option.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/video_view.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/audio_mute_status.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/brb_tag.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/hand_raise.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/tile_border.dart';
-import 'package:provider/provider.dart';
 
-// Project imports
-
+///[InsetTile] is a widget that is used to render the local peer tile in the inset view
 class InsetTile extends StatefulWidget {
   final double itemHeight;
   final double itemWidth;
@@ -50,6 +52,7 @@ class _InsetTileState extends State<InsetTile> {
     _autoHideOption();
   }
 
+  ///This function is used to auto hide the more option button
   void _autoHideOption() {
     Timer(const Duration(seconds: 3), () {
       if (isButtonVisible && mounted) {
@@ -60,6 +63,7 @@ class _InsetTileState extends State<InsetTile> {
     });
   }
 
+  ///This function is used to toggle the visibility of the more option button
   void _toggleButtonVisibility() {
     if (!isButtonVisible) {
       setState(() {

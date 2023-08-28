@@ -12,6 +12,10 @@ import 'package:hms_room_kit/src/widgets/peer_widgets/name_and_network.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 
+///[DegradeTile] is used to show the degrade tile
+///when the connection is poor
+///The tile is shown when the track is degraded
+///The tile is hidden when the track is not degraded
 class DegradeTile extends StatefulWidget {
   const DegradeTile({Key? key}) : super(key: key);
 
@@ -34,7 +38,8 @@ class _DegradeTileState extends State<DegradeTile> {
                   child: Stack(
                     children: [
                       ClipRRect(
-                        // Clip it cleanly.
+                        ///Here we are using a backdrop filter to blur the background
+                        ///when the connection is poor
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: Container(

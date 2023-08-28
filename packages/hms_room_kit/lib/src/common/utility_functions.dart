@@ -99,6 +99,22 @@ class Utilities {
     Constant.streamingUrl = "${urlSplit.join('/')}?skip_preview=true";
   }
 
+  ///This function formats the number of peers
+  ///If the number of peers is greater than 1 million, we render the number in millions
+  ///If the number of peers is greater than 1 thousand, we render the number in thousands
+  ///else we render the number as it is
+  static String formatNumber(int number) {
+    if (number >= 1000000) {
+      double num = number / 1000000;
+      return '${num.toStringAsFixed(num.truncateToDouble() == num ? 0 : 1)}M';
+    } else if (number >= 1000) {
+      double num = number / 1000;
+      return '${num.toStringAsFixed(num.truncateToDouble() == num ? 0 : 1)}K';
+    } else {
+      return number.toString();
+    }
+  }
+
   static Future<bool> getPermissions() async {
     ///We request the permissions for the camera,microphone and bluetooth
     await Permission.camera.request();

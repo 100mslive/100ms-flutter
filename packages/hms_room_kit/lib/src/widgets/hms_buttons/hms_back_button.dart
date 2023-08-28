@@ -1,6 +1,10 @@
+///Package imports
 import 'package:flutter/material.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 
+///[HMSBackButton] is a button that is used to navigate back
 class HMSBackButton extends StatelessWidget {
   final Function() onPressed;
 

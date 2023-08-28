@@ -1,11 +1,17 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 
+///[RemotePeerBottomSheet] is a widget that is used to render the bottom sheet for remote peers
+///This bottom sheet is shown when the more option button is clicked on a remote peer tile
 class RemotePeerBottomSheet extends StatefulWidget {
   final MeetingStore meetingStore;
   final PeerTrackNode peerTrackNode;
@@ -31,6 +37,7 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
               children: [
                 Row(
                   children: [
+                    ///We render a Column with the name and role of the peer
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -55,18 +62,7 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                   ],
                 ),
                 Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.close,
-                        color: HMSThemeColors.onSurfaceHighEmphasis,
-                        size: 24,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
+                  children: const [HMSCrossButton()],
                 ),
               ],
             ),
@@ -81,6 +77,14 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
+
+              ///We render a list view with the following options
+              ///1. Pin Tile for Myself
+              ///2. Spotlight Tile for Everyone
+              ///3. Mute/Unmute Audio
+              ///4. Mute/Unmute Video
+              ///5. Volume
+              ///6. Remove Participant
               child: ListView(
                 children: [
                   ListTile(

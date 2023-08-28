@@ -3,20 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+//Project imports
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/message_container.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
-//Project imports
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
-
+///[HLSChat] is a widget that is used to display the chat screen
+///It is used to send messages to everyone, to a specific role or to a specific peer
 class HLSChat extends StatefulWidget {
   const HLSChat({super.key});
 
@@ -30,6 +32,7 @@ class _HLSChatState extends State<HLSChat> {
   String valueChoose = "Everyone";
   final ScrollController _scrollController = ScrollController();
   final DateFormat formatter = DateFormat('hh:mm a');
+
   @override
   void dispose() {
     messageTextController.dispose();
@@ -41,6 +44,7 @@ class _HLSChatState extends State<HLSChat> {
     valueChoose = newValue;
   }
 
+  ///This function is used to scroll to the end of the chat
   void _scrollToEnd() {
     WidgetsBinding.instance.addPostFrameCallback((_) =>
         _scrollController.animateTo(_scrollController.position.maxScrollExtent,
@@ -48,6 +52,7 @@ class _HLSChatState extends State<HLSChat> {
             curve: Curves.easeInOut));
   }
 
+  ///This function is used to get the sender of the message
   String sender(HMSMessageRecipient hmsMessageRecipient) {
     if ((hmsMessageRecipient.recipientPeer != null) &&
         (hmsMessageRecipient.recipientRoles == null)) {
@@ -59,6 +64,7 @@ class _HLSChatState extends State<HLSChat> {
     return "";
   }
 
+  ///This function is used to send the message
   void sendMessage() async {
     MeetingStore meetingStore = context.read<MeetingStore>();
     List<HMSRole> hmsRoles = meetingStore.roles;
@@ -128,131 +134,11 @@ class _HLSChatState extends State<HLSChat> {
                                 const SizedBox(
                                   width: 15,
                                 ),
-                                // Container(
-                                //   padding:
-                                //       const EdgeInsets.only(left: 10, right: 5),
-                                //   decoration: BoxDecoration(
-                                //     borderRadius: BorderRadius.circular(10.0),
-                                //     border: Border.all(
-                                //         color: borderColor,
-                                //         style: BorderStyle.solid,
-                                //         width: 0.80),
-                                //   ),
-                                //   child: DropdownButtonHideUnderline(
-                                //     child: Selector<
-                                //             MeetingStore,
-                                //             Tuple2<List<HMSRole>,
-                                //                 List<HMSPeer>>>(
-                                //         selector: (_, meetingStore) => Tuple2(
-                                //             meetingStore.roles,
-                                //             meetingStore.peers),
-                                //         builder: (context, data, _) {
-                                //           List<HMSRole> roles = data.item1;
-
-                                //           return HMSDropDown(
-                                //               selectedValue: valueChoose,
-                                //               buttonStyleData:
-                                //                   const ButtonStyleData(
-                                //                       width: 100, height: 35),
-                                //               menuItemStyleData:
-                                //                   const MenuItemStyleData(
-                                //                 height: 45,
-                                //               ),
-                                //               dropdownStyleData:
-                                //                   DropdownStyleData(
-                                //                 width: MediaQuery.of(context)
-                                //                         .size
-                                //                         .width *
-                                //                     0.4,
-                                //                 decoration: BoxDecoration(
-                                //                     borderRadius:
-                                //                         BorderRadius.circular(
-                                //                             8),
-                                //                     color: themeSurfaceColor),
-                                //                 offset: const Offset(-10, -10),
-                                //               ),
-                                //               dropDownItems: <DropdownMenuItem>[
-                                //                 DropdownMenuItem(
-                                //                   value: "Everyone",
-                                //                   child: Text(
-                                //                     "Everyone",
-                                //                     style: GoogleFonts.inter(
-                                //                       fontWeight:
-                                //                           FontWeight.w400,
-                                //                       fontSize: 12,
-                                //                       letterSpacing: 0.4,
-                                //                     ),
-                                //                     overflow:
-                                //                         TextOverflow.ellipsis,
-                                //                     maxLines: 1,
-                                //                   ),
-                                //                 ),
-                                //                 ...roles
-                                //                     .sortedBy((element) =>
-                                //                         element.priority
-                                //                             .toString())
-                                //                     .map((role) =>
-                                //                         DropdownMenuItem(
-                                //                           value: role.name,
-                                //                           child: Text(
-                                //                             role.name,
-                                //                             overflow:
-                                //                                 TextOverflow
-                                //                                     .ellipsis,
-                                //                             maxLines: 1,
-                                //                             style: GoogleFonts
-                                //                                 .inter(
-                                //                                     fontSize:
-                                //                                         12,
-                                //                                     color:
-                                //                                         iconColor),
-                                //                           ),
-                                //                         ))
-                                //                     .toList(),
-                                //                 ...data.item2
-                                //                     .sortedBy((element) =>
-                                //                         element.name)
-                                //                     .map((peer) {
-                                //                       return !peer.isLocal
-                                //                           ? DropdownMenuItem(
-                                //                               value:
-                                //                                   peer.peerId,
-                                //                               child: Text(
-                                //                                 "${peer.name} ${peer.isLocal ? "(You)" : ""}",
-                                //                                 style: GoogleFonts
-                                //                                     .inter(
-                                //                                         fontSize:
-                                //                                             12,
-                                //                                         color:
-                                //                                             iconColor),
-                                //                                 overflow:
-                                //                                     TextOverflow
-                                //                                         .ellipsis,
-                                //                                 maxLines: 1,
-                                //                               ),
-                                //                             )
-                                //                           : null;
-                                //                     })
-                                //                     .whereNotNull()
-                                //                     .toList(),
-                                //               ],
-                                //               updateSelectedValue:
-                                //                   _updateDropDownValue);
-                                //         }),
-                                //   ),
-                                // )
                               ],
                             ),
                           ),
                         ],
                       ),
-                      // IconButton(
-                      //   icon: SvgPicture.asset(
-                      //     "packages/hms_room_kit/lib/src/assets/icons/close_button.svg",
-                      //     width: 40,
-                      //   ),
-                      //   onPressed: () {},
-                      // ),
                     ],
                   ),
                   Padding(
