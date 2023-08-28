@@ -1,8 +1,1 @@
-<svg width="19" height="17" viewBox="0 0 19 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="Icon">
-<path id="Vector" d="M12.6667 16.0001V14.3335C12.6667 13.4494 12.3155 12.6016 11.6904 11.9764C11.0652 11.3513 10.2174 11.0001 9.33333 11.0001H4.33333C3.44928 11.0001 2.60143 11.3513 1.97631 11.9764C1.35119 12.6016 1 13.4494 1 14.3335V16.0001" stroke="#EFF0FA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_2" d="M6.83359 7.66667C8.67454 7.66667 10.1669 6.17428 10.1669 4.33333C10.1669 2.49238 8.67454 1 6.83359 1C4.99264 1 3.50026 2.49238 3.50026 4.33333C3.50026 6.17428 4.99264 7.66667 6.83359 7.66667Z" stroke="#EFF0FA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_3" d="M13.4997 5.16663L17.6664 9.33329" stroke="#EFF0FA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_4" d="M17.6664 5.16663L13.4997 9.33329" stroke="#EFF0FA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="19" height="17" fill="none" viewBox="0 0 19 17"><path stroke="#EFF0FA" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12.667 16v-1.666A3.334 3.334 0 0 0 9.333 11h-5A3.333 3.333 0 0 0 1 14.334V16m5.834-8.333a3.333 3.333 0 1 0 0-6.667 3.333 3.333 0 0 0 0 6.667Zm6.666-2.5 4.166 4.166m0-4.166L13.5 9.333"/></svg>
