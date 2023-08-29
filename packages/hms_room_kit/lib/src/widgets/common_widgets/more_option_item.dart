@@ -11,12 +11,14 @@ class MoreOptionItem extends StatelessWidget {
   final Widget optionIcon;
   final String optionText;
   final bool isActive;
+  final Color? optionTextColor;
   const MoreOptionItem(
       {super.key,
       required this.onTap,
       required this.optionIcon,
       required this.optionText,
-      this.isActive = false});
+      this.isActive = false,
+      this.optionTextColor});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class MoreOptionItem extends StatelessWidget {
             const SizedBox(height: 8),
             HMSSubtitleText(
               text: optionText,
-              textColor: HMSThemeColors.onSurfaceHighEmphasis,
+              textColor: optionTextColor??HMSThemeColors.onSurfaceHighEmphasis,
               fontWeight: FontWeight.w600,
             ),
           ],

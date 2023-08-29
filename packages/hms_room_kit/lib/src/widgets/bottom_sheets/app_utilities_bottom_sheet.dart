@@ -207,55 +207,78 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                   if (meetingStore
                           .localPeer?.role.permissions.browserRecording ??
                       false)
-                    MoreOptionItem(
-                      onTap: () async {
-                        bool isRecordingRunning = ((meetingStore
-                                    .recordingType["hls"] ??
-                                false) ||
-                            (meetingStore.recordingType["browser"] ?? false) ||
-                            (meetingStore.recordingType["server"] ?? false));
-                        if (isRecordingRunning) {
-                          Navigator.pop(context);
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: HMSThemeColors.surfaceDim,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(16),
-                                  topRight: Radius.circular(16)),
+                    ((meetingStore.streamingType["hls"] ?? false) ||
+                            (meetingStore.streamingType["rtmp"] ?? false))
+                        ? MoreOptionItem(
+                            onTap: (){},
+                            isActive:
+                                false,
+                            optionIcon: SvgPicture.asset(
+                              "packages/hms_room_kit/lib/src/assets/icons/record.svg",
+                              height: 20,
+                              width: 20,
+                              colorFilter: ColorFilter.mode(
+                                  HMSThemeColors.onSurfaceLowEmphasis,
+                                  BlendMode.srcIn),
                             ),
-                            context: context,
-                            builder: (ctx) => StopRecordingBottomSheet(
-                              meetingStore: meetingStore,
+                            optionText: "Start Recording",
+                            optionTextColor: HMSThemeColors.onSurfaceLowEmphasis,
+                          )
+                        : MoreOptionItem(
+                            onTap: () async {
+                              bool isRecordingRunning =
+                                  ((meetingStore.recordingType["hls"] ??
+                                          false) ||
+                                      (meetingStore.recordingType["browser"] ??
+                                          false) ||
+                                      (meetingStore.recordingType["server"] ??
+                                          false));
+                              if (isRecordingRunning) {
+                                Navigator.pop(context);
+                                showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  backgroundColor: HMSThemeColors.surfaceDim,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(16),
+                                        topRight: Radius.circular(16)),
+                                  ),
+                                  context: context,
+                                  builder: (ctx) => StopRecordingBottomSheet(
+                                    meetingStore: meetingStore,
+                                  ),
+                                );
+                              } else {
+                                Navigator.pop(context);
+                                meetingStore.startRtmpOrRecording(
+                                    meetingUrl: Constant.streamingUrl,
+                                    toRecord: true,
+                                    rtmpUrls: null);
+                              }
+                            },
+                            isActive:
+                                ((meetingStore.recordingType["hls"] ?? false) ||
+                                    (meetingStore.recordingType["browser"] ??
+                                        false) ||
+                                    (meetingStore.recordingType["server"] ??
+                                        false)),
+                            optionIcon: SvgPicture.asset(
+                              "packages/hms_room_kit/lib/src/assets/icons/record.svg",
+                              height: 20,
+                              width: 20,
+                              colorFilter: ColorFilter.mode(
+                                  HMSThemeColors.onSurfaceHighEmphasis,
+                                  BlendMode.srcIn),
                             ),
-                          );
-                        } else {
-                          Navigator.pop(context);
-                          meetingStore.startRtmpOrRecording(
-                              meetingUrl: Constant.streamingUrl,
-                              toRecord: true,
-                              rtmpUrls: null);
-                        }
-                      },
-                      isActive: ((meetingStore.recordingType["hls"] ?? false) ||
-                          (meetingStore.recordingType["browser"] ?? false) ||
-                          (meetingStore.recordingType["server"] ?? false)),
-                      optionIcon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/record.svg",
-                        height: 20,
-                        width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
-                      ),
-                      optionText: ((meetingStore.recordingType["hls"] ??
-                                  false) ||
-                              (meetingStore.recordingType["browser"] ??
-                                  false) ||
-                              (meetingStore.recordingType["server"] ?? false))
-                          ? "Stop Recording"
-                          : "Start Recording",
-                    )
+                            optionText: ((meetingStore.recordingType["hls"] ??
+                                        false) ||
+                                    (meetingStore.recordingType["browser"] ??
+                                        false) ||
+                                    (meetingStore.recordingType["server"] ??
+                                        false))
+                                ? "Stop Recording"
+                                : "Start Recording",
+                          )
                 ],
               )
             ],
