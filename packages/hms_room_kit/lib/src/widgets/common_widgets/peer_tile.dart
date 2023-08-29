@@ -217,7 +217,11 @@ class _PeerTileState extends State<PeerTile> {
                                                                         width:
                                                                             16,
                                                                         semanticsLabel:
-                                                                            "maximize_label",
+                                                                            "minimize_label",
+                                                                        colorFilter: ColorFilter.mode(
+                                            HMSThemeColors
+                                                .onSurfaceHighEmphasis,
+                                            BlendMode.srcIn),
                                                                       ),
                                                                     ),
                                                                   ),
@@ -308,6 +312,10 @@ class _PeerTileState extends State<PeerTile> {
                                         height: 16,
                                         width: 16,
                                         semanticsLabel: "maximize_label",
+                                        colorFilter: ColorFilter.mode(
+                                            HMSThemeColors
+                                                .onSurfaceHighEmphasis,
+                                            BlendMode.srcIn),
                                       ),
                                     ),
                                   ),
