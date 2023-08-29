@@ -41,7 +41,8 @@ class MoreOptionItem extends StatelessWidget {
             const SizedBox(height: 8),
             HMSSubtitleText(
               text: optionText,
-              textColor: optionTextColor??HMSThemeColors.onSurfaceHighEmphasis,
+              textColor:
+                  optionTextColor ?? HMSThemeColors.onSurfaceHighEmphasis,
               fontWeight: FontWeight.w600,
             ),
           ],

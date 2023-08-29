@@ -219,9 +219,8 @@ class _PeerTileState extends State<PeerTile> {
                                                                         semanticsLabel:
                                                                             "minimize_label",
                                                                         colorFilter: ColorFilter.mode(
-                                            HMSThemeColors
-                                                .onSurfaceHighEmphasis,
-                                            BlendMode.srcIn),
+                                                                            HMSThemeColors.onSurfaceHighEmphasis,
+                                                                            BlendMode.srcIn),
                                                                       ),
                                                                     ),
                                                                   ),

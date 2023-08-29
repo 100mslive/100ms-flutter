@@ -49,9 +49,9 @@ class StopRecordingBottomSheet extends StatelessWidget {
                       )
                     ],
                   ),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [
+                    children: [
                       HMSCrossButton(),
                     ],
                   )

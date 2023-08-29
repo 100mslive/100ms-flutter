@@ -53,13 +53,12 @@ class HMSAudioAction {
                 audioTrack?.setMute(!(audioTrack.isMute))
                 result.success(true)
             } else {
-                ///Checking whether preview for role audio track exist or not
-                if(hmssdkFlutterPlugin?.previewForRoleAudioTrack != null){
+                // /Checking whether preview for role audio track exist or not
+                if (hmssdkFlutterPlugin?.previewForRoleAudioTrack != null) {
                     val previewTrack = hmssdkFlutterPlugin.previewForRoleAudioTrack
                     previewTrack?.setMute(!(previewTrack.isMute))
                     result.success(true)
-                }
-                else{
+                } else {
                     result.success(false)
                 }
             }

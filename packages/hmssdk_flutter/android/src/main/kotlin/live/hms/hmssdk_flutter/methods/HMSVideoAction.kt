@@ -11,14 +11,14 @@ import live.hms.video.utils.HmsUtilities
 
 class HMSVideoAction {
     companion object {
-        fun videoActions(call: MethodCall, result: Result, hmssdk: HMSSDK,hmssdkFlutterPlugin: HmssdkFlutterPlugin?) {
+        fun videoActions(call: MethodCall, result: Result, hmssdk: HMSSDK, hmssdkFlutterPlugin: HmssdkFlutterPlugin?) {
             when (call.method) {
                 "switch_video" -> {
                     switchVideo(call, result, hmssdk)
                 }
 
                 "switch_camera" -> {
-                    switchCamera(result, hmssdk,hmssdkFlutterPlugin)
+                    switchCamera(result, hmssdk, hmssdkFlutterPlugin)
                 }
 
                 "is_video_mute" -> {
@@ -34,7 +34,7 @@ class HMSVideoAction {
                 }
 
                 "toggle_camera_mute_state" -> {
-                    toggleCameraMuteState(result, hmssdk,hmssdkFlutterPlugin)
+                    toggleCameraMuteState(result, hmssdk, hmssdkFlutterPlugin)
                 }
 
                 else -> {
@@ -62,13 +62,12 @@ class HMSVideoAction {
                 videoTrack.setMute(!(videoTrack.isMute))
                 result.success(true)
             } else {
-                ///Checking whether preview for role audio track exist or not
-                if(hmssdkFlutterPlugin?.previewForRoleVideoTrack != null){
+                // /Checking whether preview for role audio track exist or not
+                if (hmssdkFlutterPlugin?.previewForRoleVideoTrack != null) {
                     val previewTrack = hmssdkFlutterPlugin.previewForRoleVideoTrack
                     previewTrack?.setMute(!(previewTrack.isMute))
                     result.success(true)
-                }
-                else{
+                } else {
                     result.success(false)
                 }
             }
@@ -77,12 +76,11 @@ class HMSVideoAction {
         private fun switchCamera(result: Result, hmssdk: HMSSDK, hmssdkFlutterPlugin: HmssdkFlutterPlugin?) {
             val peer = hmssdk.getLocalPeer()
             var videoTrack = peer?.videoTrack
-            if(videoTrack == null){
-                ///Checking whether preview for role audio track exist or not
-                if(hmssdkFlutterPlugin?.previewForRoleVideoTrack != null){
+            if (videoTrack == null) {
+                // /Checking whether preview for role audio track exist or not
+                if (hmssdkFlutterPlugin?.previewForRoleVideoTrack != null) {
                     videoTrack = hmssdkFlutterPlugin.previewForRoleVideoTrack
-                }
-                else{
+                } else {
                     return
                 }
             }

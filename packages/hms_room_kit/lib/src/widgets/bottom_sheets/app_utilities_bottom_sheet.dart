@@ -49,9 +49,9 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       )
                     ],
                   ),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [
+                    children: [
                       HMSCrossButton(),
                     ],
                   )
@@ -210,9 +210,8 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                     ((meetingStore.streamingType["hls"] ?? false) ||
                             (meetingStore.streamingType["rtmp"] ?? false))
                         ? MoreOptionItem(
-                            onTap: (){},
-                            isActive:
-                                false,
+                            onTap: () {},
+                            isActive: false,
                             optionIcon: SvgPicture.asset(
                               "packages/hms_room_kit/lib/src/assets/icons/record.svg",
                               height: 20,
@@ -222,7 +221,8 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                   BlendMode.srcIn),
                             ),
                             optionText: "Start Recording",
-                            optionTextColor: HMSThemeColors.onSurfaceLowEmphasis,
+                            optionTextColor:
+                                HMSThemeColors.onSurfaceLowEmphasis,
                           )
                         : MoreOptionItem(
                             onTap: () async {

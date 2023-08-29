@@ -141,12 +141,12 @@ class HmssdkFlutterPlugin :
 
             // MARK: Audio Helpers
             "switch_audio", "is_audio_mute", "mute_room_audio_locally", "un_mute_room_audio_locally", "set_volume", "toggle_mic_mute_state" -> {
-                HMSAudioAction.audioActions(call, result, hmssdk!!,hmssdkFlutterPlugin)
+                HMSAudioAction.audioActions(call, result, hmssdk!!, hmssdkFlutterPlugin)
             }
 
             // MARK: Video Helpers
             "switch_video", "switch_camera", "is_video_mute", "mute_room_video_locally", "un_mute_room_video_locally", "toggle_camera_mute_state" -> {
-                HMSVideoAction.videoActions(call, result, hmssdk!!,hmssdkFlutterPlugin)
+                HMSVideoAction.videoActions(call, result, hmssdk!!, hmssdkFlutterPlugin)
             }
 
             // MARK: Messaging
@@ -670,30 +670,30 @@ class HmssdkFlutterPlugin :
         }
 
         role?.let { hmsRole ->
-            hmssdk?.
-            preview(
-                hmsRole,object : RolePreviewListener {
-                    override fun onError(error: HMSException) {
-                        result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)))
-                    }
-
-                    override fun onTracks(localTracks: Array<HMSTrack>) {
-                        val tracks = ArrayList<Any>()
-                        localTracks.forEach { track ->
-
-                            ///Assigning values to preview for role tracks
-                            if(track.type == HMSTrackType.AUDIO){
-                                previewForRoleAudioTrack = track as HMSLocalAudioTrack
-                            }
-                            else if(track.type == HMSTrackType.VIDEO && track.source == "regular"){
-                                previewForRoleVideoTrack = track as HMSLocalVideoTrack
-                            }
-                            HMSTrackExtension.toDictionary(track)?.let { tracks.add(it) }
+            hmssdk
+                ?.preview(
+                    hmsRole,
+                    object : RolePreviewListener {
+                        override fun onError(error: HMSException) {
+                            result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)))
                         }
-                        result.success(HMSResultExtension.toDictionary(true, tracks))
-                    }
-                },
-            )
+
+                        override fun onTracks(localTracks: Array<HMSTrack>) {
+                            val tracks = ArrayList<Any>()
+                            localTracks.forEach { track ->
+
+                                // /Assigning values to preview for role tracks
+                                if (track.type == HMSTrackType.AUDIO) {
+                                    previewForRoleAudioTrack = track as HMSLocalAudioTrack
+                                } else if (track.type == HMSTrackType.VIDEO && track.source == "regular") {
+                                    previewForRoleVideoTrack = track as HMSLocalVideoTrack
+                                }
+                                HMSTrackExtension.toDictionary(track)?.let { tracks.add(it) }
+                            }
+                            result.success(HMSResultExtension.toDictionary(true, tracks))
+                        }
+                    },
+                )
         }
     }
 
