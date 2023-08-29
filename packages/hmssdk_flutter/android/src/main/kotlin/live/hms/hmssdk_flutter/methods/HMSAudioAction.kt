@@ -8,7 +8,7 @@ import live.hms.video.utils.HmsUtilities
 
 class HMSAudioAction {
     companion object {
-        fun audioActions(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        fun audioActions(call: MethodCall, result: Result, hmssdk: HMSSDK, hmssdkFlutterPlugin: HmssdkFlutterPlugin?) {
             when (call.method) {
                 "switch_audio" -> {
                     switchAudio(call, result, hmssdk)
@@ -26,7 +26,7 @@ class HMSAudioAction {
                     setVolume(call, result, hmssdk)
                 }
                 "toggle_mic_mute_state" -> {
-                    toggleMicMuteState(result, hmssdk)
+                    toggleMicMuteState(result, hmssdk, hmssdkFlutterPlugin)
                 }
                 else -> {
                     result.notImplemented()
@@ -46,14 +46,22 @@ class HMSAudioAction {
             }
         }
 
-        private fun toggleMicMuteState(result: Result, hmssdk: HMSSDK) {
+        private fun toggleMicMuteState(result: Result, hmssdk: HMSSDK, hmssdkFlutterPlugin: HmssdkFlutterPlugin?) {
             val peer = hmssdk.getLocalPeer()
             val audioTrack = peer?.audioTrack
             if (audioTrack != null) {
                 audioTrack?.setMute(!(audioTrack.isMute))
                 result.success(true)
             } else {
-                result.success(false)
+                ///Checking whether preview for role audio track exist or not
+                if(hmssdkFlutterPlugin?.previewForRoleAudioTrack != null){
+                    val previewTrack = hmssdkFlutterPlugin.previewForRoleAudioTrack
+                    previewTrack?.setMute(!(previewTrack.isMute))
+                    result.success(true)
+                }
+                else{
+                    result.success(false)
+                }
             }
         }
 

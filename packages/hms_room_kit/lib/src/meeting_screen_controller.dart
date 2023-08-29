@@ -1,13 +1,17 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hms_room_kit/src/common/utility_components.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_viewer_page.dart';
 import 'package:hms_room_kit/src/meeting/meeting_page.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
-import 'package:provider/provider.dart';
 
+///[MeetingScreenController] is the controller for the meeting screen
+///It is used to join the room
 class MeetingScreenController extends StatefulWidget {
   ///[roomCode] is the room code of the room to join
   final String roomCode;
@@ -60,31 +64,17 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
   @override
   void initState() {
     super.initState();
-    setInitValues();
+    _setInitValues();
     Utilities.initForegroundTask();
   }
 
-  void initMeeting() async {
-    HMSException? ans = await context
-        .read<MeetingStore>()
-        .join(widget.user, widget.roomCode, roomConfig: widget.config);
-    if (ans != null && mounted) {
-      UtilityComponents.showErrorDialog(
-          context: context,
-          errorMessage: "ACTION: ${ans.action} DESCRIPTION: ${ans.description}",
-          errorTitle: ans.message ?? "Join Error",
-          actionMessage: "OK",
-          action: () {
-            Navigator.of(context).popUntil((route) => route.isFirst);
-          });
-    }
-  }
-
+  ///This function sets the HLSPlayerStore if the role is hls-viewer
   void _setHLSPlayerStore() {
     _hlsPlayerStore ??= HLSPlayerStore();
   }
 
-  void setInitValues() async {
+  ///This function sets the initial values of the meeting
+  void _setInitValues() async {
     context.read<MeetingStore>().setSettings();
   }
 
@@ -92,6 +82,8 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
   Widget build(BuildContext context) {
     return Selector<MeetingStore, String?>(
         builder: (_, data, __) {
+          ///If the role is hls-viewer then we show the HLSViewerPage
+          ///else we show the MeetingPage
           if (data?.contains("hls-") ?? false) {
             _setHLSPlayerStore();
             return ListenableProvider.value(

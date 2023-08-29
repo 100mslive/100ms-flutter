@@ -1,10 +1,14 @@
+///Package imports
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/remote_peer_bottom_sheet.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
-import 'package:provider/provider.dart';
 
+///[MoreOption] is a widget that is used to render the more option button on peer tile
 class MoreOption extends StatefulWidget {
   const MoreOption({
     Key? key,
@@ -24,6 +28,8 @@ class _MoreOptionState extends State<MoreOption> {
       right: 5,
       child: GestureDetector(
         onTap: () {
+          ///[peerTrackNode] is the peerTrackNode of the peer whose more option is clicked
+          ///We only show the modal bottom sheet if the peer is not the local peer
           var peerTrackNode = context.read<PeerTrackNode>();
           if (peerTrackNode.peer.peerId != meetingStore.localPeer!.peerId) {
             showModalBottomSheet(

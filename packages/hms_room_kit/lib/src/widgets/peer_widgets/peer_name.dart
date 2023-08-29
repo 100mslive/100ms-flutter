@@ -8,6 +8,7 @@ import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 
+///[PeerName] is a widget that is used to render the name of the peer
 class PeerName extends StatelessWidget {
   final double maxWidth;
   const PeerName({super.key, required this.maxWidth});

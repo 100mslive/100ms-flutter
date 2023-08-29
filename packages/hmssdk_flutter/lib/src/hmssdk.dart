@@ -669,6 +669,10 @@ class HMSSDK {
   ///
   /// **role** - The new [role] into which the Peer is going to be changed into.
   ///
+  /// This returns an object of Future<dynamic> which can be either
+  /// of HMSException type or a List<HMSTrack> type based on whether
+  /// method execution is completed successfully or not.
+  ///
   /// Refer [previewForRole guide here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/peer/change-role)
   Future<dynamic> previewForRole({required String role}) async {
     var arguments = {
@@ -694,6 +698,11 @@ class HMSSDK {
 
   /// Cancel the Previewing for Role invocation.
   /// If a [previewForRole] call was performed previously then calling this method clears the tracks created anticipating a Change of Role
+  /// This method only needs to be called if the user declined the request for role change.
+  ///
+  /// This returns an object of Future<dynamic> which can be either
+  /// of HMSException type or a boolean value [true] based on whether
+  /// method execution is completed successfully or not.
   ///
   /// Refer the [cancelPreview guide here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/peer/change-role)
   Future<dynamic> cancelPreview() async {

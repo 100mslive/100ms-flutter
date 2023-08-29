@@ -1,6 +1,9 @@
+///Package imports
 import 'package:flutter/cupertino.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 
 ///This renders the text based on the number of participants who are already in the room
 ///If there is only a single peer in room then we render "1 other in session"
@@ -15,10 +18,11 @@ class PreviewParticipantsText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HMSSubtitleText(
+    return HMSTitleText(
         text: "$peerCount ${peerCount > 1 ? "others" : "other"} in session",
-        fontWeight: FontWeight.w600,
+        lineHeight: 20,
         fontSize: 14,
+        letterSpacing: 0.25,
         textColor: HMSThemeColors.onSurfaceHighEmphasis);
   }
 }

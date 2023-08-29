@@ -1,12 +1,13 @@
 //Package imports
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
-import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 //Project imports
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
+import 'package:hms_room_kit/src/model/peer_track_node.dart';
 
+///[AudioMuteStatus] is a widget that is used to render the audio mute status
 class AudioMuteStatus extends StatefulWidget {
   const AudioMuteStatus({super.key});
 
@@ -41,6 +42,9 @@ class _AudioMuteStatusState extends State<AudioMuteStatus> {
                             width: 16,
                             height: 16,
                             semanticsLabel: "audio_mute_label",
+                            colorFilter: ColorFilter.mode(
+                                HMSThemeColors.onSecondaryHighEmphasis,
+                                BlendMode.srcIn),
                           )),
                     ),
                   ),

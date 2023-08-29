@@ -1,13 +1,19 @@
+///Package imports
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/grid_layouts/grid_layout.dart';
 import 'package:hms_room_kit/src/widgets/grid_layouts/screen_share_grid_layout.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
+///This widget renders the grid view of the meeting screen with inset tile
+///The grid view is rendered based on the number of peers in the meeting
+///The grid view is rendered using the [PageView] widget
 class CustomOneToOneGrid extends StatefulWidget {
   const CustomOneToOneGrid({super.key});
 
@@ -20,6 +26,10 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
 
   @override
   Widget build(BuildContext context) {
+    ///The grid view is rendered using the [PageView] widget
+    ///The number of pages in the [PageView] is equal to [numberOfPeers/6 + (if number of peers is not divisible by 6 then we add 1 else we add 0)]
+    ///One thing to note here is that in this view we filter out the local peer since we are rendering the local peer in the inset tile
+    ///The inset tile is rendered at the top of the grid view
     return Selector<MeetingStore,
             Tuple5<List<PeerTrackNode>, int, int, PeerTrackNode, int>>(
         selector: (_, meetingStore) => Tuple5(
@@ -32,6 +42,9 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
           int numberOfPeers = data.item2 - 1;
           int pageCount =
               (numberOfPeers ~/ 6) + (numberOfPeers % 6 == 0 ? 0 : 1);
+
+          ///If the remote peer is sharing screen then we render the [ScreenshareGridLayout] with inset tile
+          ///Else we render the normal layout with inset tile
           return data.item5 > 0
               ? ScreenshareGridLayout(
                   peerTracks: data.item1
@@ -41,7 +54,10 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
                       .toList(),
                   screenshareCount: data.item5,
                 )
-              : Column(
+              :
+
+              ///If no screen is being shared we render the normal layout with inset tile
+              Column(
                   children: [
                     Expanded(
                       child: PageView.builder(
@@ -49,18 +65,31 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
                           controller: controller,
                           allowImplicitScrolling: true,
                           itemCount: pageCount,
-                          onPageChanged: (num) {
-                            context.read<MeetingStore>().setCurrentPage(num);
+                          onPageChanged: (newPage) {
+                            context
+                                .read<MeetingStore>()
+                                .setCurrentPage(newPage);
                           },
                           itemBuilder: (context, index) => GridLayout(
                               numberOfTiles: numberOfPeers,
                               index: index,
+
+                              ///Here we filter out the local peer since we are rendering the local peer in the inset tile
+                              ///We only take the screenshare or remote peers
+                              ///
+                              ///Since the screenshare case is already handled above the code never reaches here
                               peerTracks: data.item1
                                   .where((element) =>
                                       !element.peer.isLocal ||
                                       element.track?.source == "SCREEN")
                                   .toList())),
                     ),
+
+                    ///This renders the dots at the bottom of the grid view
+                    ///This is only rendered if the number of pages is greater than 1
+                    ///The number of dots is equal to [numberOfPeers/6 + (if number of peers is not divisible by 6 then we add 1 else we add 0)]
+                    ///The active dot is the current page
+                    ///The inactive dots are the pages other than the current page
                     if (pageCount > 1)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),

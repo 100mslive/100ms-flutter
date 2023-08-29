@@ -1,6 +1,17 @@
+///Package imports
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+///[HMSSubtitleText] returns a text widget with the default theme
+///The paramters and their default values are as follows:
+///[text] - The text to be displayed, this is a required parameter
+///[textColor] - The color of the text, this is a required parameter
+///[letterSpacing] - The spacing between the letters, default value is 0.4
+///[lineHeight] - The height of the line, default value is 16
+///[fontSize] - The size of the font, default value is 14
+///[fontWeight] - The weight of the font, default value is FontWeight.w400
+///[textOverflow] - The overflow of the text, default value is TextOverflow.ellipsis
+///[textAlign] - The alignment of the text, default value is TextAlign.left
 class HMSSubtitleText extends StatelessWidget {
   final String text;
   final Color textColor;
@@ -27,6 +38,7 @@ class HMSSubtitleText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(text,
         overflow: textOverflow,
+        softWrap: true,
         textAlign: textAlign,
         style: GoogleFonts.inter(
             height: lineHeight! / fontSize!,

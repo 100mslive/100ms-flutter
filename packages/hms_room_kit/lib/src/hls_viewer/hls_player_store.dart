@@ -42,7 +42,6 @@ class HLSPlayerStore extends ChangeNotifier {
       }
       return;
     } else {
-      isChatOpened = false;
       areStreamControlsVisible = true;
     }
     notifyListeners();

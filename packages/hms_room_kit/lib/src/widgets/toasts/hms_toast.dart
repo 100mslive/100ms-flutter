@@ -1,6 +1,16 @@
+///Package imports
 import 'package:flutter/material.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 
+///[HMSToast] is a widget that is used to render the toast
+///[leading] is a widget that is used to render the leading widget
+///[subtitle] is a widget that is used to render the subtitle widget
+///[action] is a widget that is used to render the action widget
+///[cancelToastButton] is a widget that is used to render the cancel toast button
+///[toastColor] is the color of the toast
+///[toastPosition] is the position of the toast from the bottom
 class HMSToast extends StatefulWidget {
   final Widget? leading;
   final Widget? subtitle;

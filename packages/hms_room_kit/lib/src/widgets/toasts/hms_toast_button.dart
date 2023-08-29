@@ -1,6 +1,17 @@
+///Package imports
 import 'package:flutter/material.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 
+///[HMSToastButton] is a button that is used in the toast
+///It takes the following parameters:
+///[buttonTitle] is the title of the button
+///[action] is the function that is called when the button is clicked
+///[height] is the height of the button
+///[width] is the width of the button
+///[buttonColor] is the color of the button
+///[textColor] is the color of the text of the button
 class HMSToastButton extends StatelessWidget {
   final String buttonTitle;
   final Function action;

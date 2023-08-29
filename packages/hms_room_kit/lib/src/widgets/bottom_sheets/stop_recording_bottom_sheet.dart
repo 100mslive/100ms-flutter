@@ -1,10 +1,17 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 
+///[StopRecordingBottomSheet] is a bottom sheet that is used to stop the recording
+///It has following parameters:
+///[meetingStore] is a [MeetingStore] object
 class StopRecordingBottomSheet extends StatelessWidget {
   final MeetingStore meetingStore;
   const StopRecordingBottomSheet({super.key, required this.meetingStore});
@@ -44,17 +51,8 @@ class StopRecordingBottomSheet extends StatelessWidget {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.close,
-                          color: HMSThemeColors.onSurfaceHighEmphasis,
-                          size: 24,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
+                    children: const [
+                      HMSCrossButton(),
                     ],
                   )
                 ],
