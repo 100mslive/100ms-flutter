@@ -539,6 +539,7 @@ class MeetingStore extends ChangeNotifier
     previewForRoleAudioTrack = null;
     previewForRoleVideoTrack = null;
     _hmsSDKInteractor.acceptChangeRole(hmsRoleChangeRequest, this);
+    HMSRoomLayout.resetLayout(hmsRoleChangeRequest.suggestedRole.name);
     if (isRaisedHand) {
       changeMetadata();
     }
@@ -1261,14 +1262,14 @@ class MeetingStore extends ChangeNotifier
         } else {
           if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
             if (HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf
-                    ?.elements?.onStageExp?.onStageRole
+                    ?.elements?.onStageExp?.offStageRoles
                     ?.contains(peer.role.name) ??
                 false) {
               toggleToastForRoleChange(peer: peer);
             }
           } else if (HMSRoomLayout.peerType == PeerRoleType.hlsViewer) {
             if (HMSRoomLayout.roleLayoutData?.screens?.conferencing
-                    ?.hlsLiveStreaming?.elements?.onStageExp?.onStageRole
+                    ?.hlsLiveStreaming?.elements?.onStageExp?.offStageRoles
                     ?.contains(peer.role.name) ??
                 false) {
               toggleToastForRoleChange(peer: peer);
@@ -1750,10 +1751,7 @@ class MeetingStore extends ChangeNotifier
     if (peerToBringOnStage != null) {
       peerToBringOnStage = null;
     } else {
-      if (HMSRoomLayout
-                  .roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
-              null &&
-          (peer.metadata?.contains("\"isHandRaised\":true") ?? false)) {
+      if (peer.metadata?.contains("\"isHandRaised\":true") ?? false) {
         peerToBringOnStage = peer;
       }
     }

@@ -4,6 +4,7 @@ import "dart:math" as math;
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
@@ -19,6 +20,22 @@ class HMSBringOnStageToast extends StatelessWidget {
   final MeetingStore meetingStore;
   const HMSBringOnStageToast(
       {super.key, required this.peer, required this.meetingStore});
+
+  String? _getButtonText() {
+    if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
+      if (HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf
+              ?.elements?.onStageExp?.offStageRoles
+              ?.contains(peer.role.name) ??
+          false) {
+        return HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf
+            ?.elements?.onStageExp?.bringToStageLabel;
+      } else {
+        return HMSRoomLayout.roleLayoutData?.screens?.conferencing
+            ?.hlsLiveStreaming?.elements?.onStageExp?.bringToStageLabel;
+      }
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +59,7 @@ class HMSBringOnStageToast extends StatelessWidget {
         ),
       ),
       action: HMSToastButton(
-        buttonTitle: "Bring on Stage",
+        buttonTitle: _getButtonText() ?? "",
         action: () {
           HMSRole? onStageRole = meetingStore.getOnStageRole();
           if (onStageRole != null) {
