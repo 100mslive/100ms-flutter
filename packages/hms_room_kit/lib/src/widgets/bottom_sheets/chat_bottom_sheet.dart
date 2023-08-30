@@ -215,43 +215,44 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0, left: 16,top: 16),
-                child: Row(
-                  children: [
-                    HMSTitleText(
-                      text: "SEND TO ",
-                      textColor: HMSThemeColors.onSurfaceMediumEmphasis,
-                      fontSize: 10,
-                      lineHeight: 16,
-                      letterSpacing: 1.5,
-                    ),
-                    Container(
-                        width: 96,
-                        height: 24,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: HMSThemeColors.borderBright, width: 1),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(4)),
-                            color:
-                                HMSThemeColors.surfaceDim),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            HMSTitleText(
-                                text: "EVERYONE",
-                                fontSize: 10,
-                                lineHeight: 16,
-                                letterSpacing: 1.5,
-                                textColor:
-                                    HMSThemeColors.onSurfaceHighEmphasis),
-                            Icon(Icons.keyboard_arrow_down,color: HMSThemeColors.onSurfaceMediumEmphasis,size: 16,),
-                          ],
-                        ))
-                  ],
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(bottom: 8.0, left: 16,top: 16),
+              //   child: Row(
+              //     children: [
+              //       HMSTitleText(
+              //         text: "SEND TO ",
+              //         textColor: HMSThemeColors.onSurfaceMediumEmphasis,
+              //         fontSize: 10,
+              //         lineHeight: 16,
+              //         letterSpacing: 1.5,
+              //       ),
+              //       Container(
+              //           width: 96,
+              //           height: 24,
+              //           decoration: BoxDecoration(
+              //               border: Border.all(
+              //                   color: HMSThemeColors.borderBright, width: 1),
+              //               borderRadius:
+              //                   const BorderRadius.all(Radius.circular(4)),
+              //               color:
+              //                   HMSThemeColors.surfaceDim),
+              //           child: Row(
+              //             mainAxisAlignment: MainAxisAlignment.center,
+              //             children: [
+              //               HMSTitleText(
+              //                   text: "EVERYONE",
+              //                   fontSize: 10,
+              //                   lineHeight: 16,
+              //                   letterSpacing: 1.5,
+              //                   textColor:
+              //                       HMSThemeColors.onSurfaceHighEmphasis),
+              //               Icon(Icons.keyboard_arrow_down,color: HMSThemeColors.onSurfaceMediumEmphasis,size: 16,),
+              //             ],
+              //           ))
+              //     ],
+              //   ),
+              // ),
+              
               Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),

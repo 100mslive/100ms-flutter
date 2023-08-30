@@ -32,7 +32,7 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
   Widget build(BuildContext context) {
     return SafeArea(
       child: FractionallySizedBox(
-        heightFactor: 0.81,
+        heightFactor: 0.87,
         child: Padding(
           padding: const EdgeInsets.only(top: 12.0, left: 16, right: 16),
           child: SingleChildScrollView(
@@ -96,7 +96,7 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                   ],
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.7,
+                  height: MediaQuery.of(context).size.height * 0.78,
                   child: TabBarView(
                     controller: _controller,
                     children: const [
