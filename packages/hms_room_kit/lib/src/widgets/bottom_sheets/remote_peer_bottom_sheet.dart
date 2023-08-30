@@ -61,7 +61,7 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                     ),
                   ],
                 ),
-                const Row(
+                 Row(
                   children: [HMSCrossButton()],
                 ),
               ],
