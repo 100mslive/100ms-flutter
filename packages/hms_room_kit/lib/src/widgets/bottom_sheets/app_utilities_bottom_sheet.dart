@@ -49,9 +49,9 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       )
                     ],
                   ),
-                   Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [
+                    children: [
                       HMSCrossButton(),
                     ],
                   )
