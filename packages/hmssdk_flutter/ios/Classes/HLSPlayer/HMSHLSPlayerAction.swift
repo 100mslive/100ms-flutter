@@ -72,7 +72,7 @@ class HMSHLSPlayerAction {
 
         let hlsUrl = arguments["hls_url"] as? String
 
-        NotificationCenter.default.post(name: NSNotification.Name(HLS_PLAYER_METHOD), object: nil, userInfo: [METHOD_CALL: "start_hls_player", "hls_url": hlsUrl])
+        NotificationCenter.default.post(name: NSNotification.Name(HLS_PLAYER_METHOD), object: nil, userInfo: [METHOD_CALL: "start_hls_player", "hls_url": hlsUrl as Any])
         result(nil)
     }
 
