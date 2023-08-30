@@ -77,8 +77,12 @@ class PreviewStore extends ChangeNotifier
     this.room = room;
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
+        HMSRoomLayout.resetLayout(each.role.name);
+        notifyListeners();
         peer = each;
-        if (each.role.name.indexOf("hls-") == 0) {
+        if (HMSRoomLayout
+                .roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
+            null) {
           isHLSLink = true;
         }
         if (!each.role.publishSettings!.allowed.contains("video")) {
@@ -151,7 +155,9 @@ class PreviewStore extends ChangeNotifier
           //the HMSConfig for external usage
           endPoint: initEndPoint);
       await HMSRoomLayout.getRoomLayout(
-          hmsSDKInteractor: hmsSDKInteractor, authToken: tokenData);
+        hmsSDKInteractor: hmsSDKInteractor,
+        authToken: tokenData,
+      );
       hmsSDKInteractor.startHMSLogger(
           Constant.webRTCLogLevel, Constant.sdkLogLevel);
       hmsSDKInteractor.addPreviewListener(this);

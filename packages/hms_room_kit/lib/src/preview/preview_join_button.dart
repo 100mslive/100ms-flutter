@@ -33,7 +33,8 @@ class PreviewJoinButton extends StatelessWidget {
       ///If the join button type is `join and go live` and the HLS streaming is started
       ///we show the join now button
       ///If the join button type is `join now`, we show the join now button
-      child: HMSRoomLayout.data?[0].screens?.preview?.joinForm?.joinBtnType ==
+      child: HMSRoomLayout.roleLayoutData?.screens?.preview?.joinForm
+                      ?.joinBtnType ==
                   JoinButtonType.JOIN_BTN_TYPE_JOIN_AND_GO_LIVE &&
               !previewStore.isHLSStreamingStarted
 
@@ -67,8 +68,8 @@ class PreviewJoinButton extends StatelessWidget {
                       width: 8,
                     ),
                     HMSTitleText(
-                      text: HMSRoomLayout.data?[0].screens?.preview?.joinForm
-                              ?.goLiveBtnLabel ??
+                      text: HMSRoomLayout.roleLayoutData?.screens?.preview
+                              ?.joinForm?.goLiveBtnLabel ??
                           'Go Live',
                       textColor: isEmpty
                           ? HMSThemeColors.onPrimaryLowEmphasis

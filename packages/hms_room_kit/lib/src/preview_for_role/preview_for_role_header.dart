@@ -30,12 +30,13 @@ class _PreviewForRoleHeaderState extends State<PreviewForRoleHeader> {
           Row(
             children: [
               ///We render the logo as set in the dashboard
-              HMSRoomLayout.data?[0].logo?.url == null
+              HMSRoomLayout.roleLayoutData?.logo?.url == null
                   ? Container()
-                  : HMSRoomLayout.data![0].logo!.url!.contains("svg")
-                      ? SvgPicture.network(HMSRoomLayout.data![0].logo!.url!)
+                  : HMSRoomLayout.roleLayoutData!.logo!.url!.contains("svg")
+                      ? SvgPicture.network(
+                          HMSRoomLayout.roleLayoutData!.logo!.url!)
                       : Image.network(
-                          HMSRoomLayout.data![0].logo!.url!,
+                          HMSRoomLayout.roleLayoutData!.logo!.url!,
                           height: 30,
                           width: 30,
                         ),

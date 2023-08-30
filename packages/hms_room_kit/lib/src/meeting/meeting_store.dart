@@ -11,6 +11,7 @@ import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/hmssdk_interactor.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/model/rtc_stats.dart';
 import 'package:hms_room_kit/src/service/app_secrets.dart';
@@ -401,8 +402,23 @@ class MeetingStore extends ChangeNotifier
     return await _hmsSDKInteractor.getRoles();
   }
 
-  HMSRole getOnStageRole() {
-    return roles.firstWhere((role) => role.name == "host");
+  HMSRole? getOnStageRole() {
+    if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
+      String? roleName = HMSRoomLayout.roleLayoutData?.screens?.conferencing
+          ?.defaultConf?.elements?.onStageExp?.onStageRole;
+      int? roleIndex = roles.indexWhere((element) => element.name == roleName);
+      if (roleIndex != -1) {
+        return roles[roleIndex];
+      }
+    } else if (HMSRoomLayout.peerType == PeerRoleType.hlsViewer) {
+      String? roleName = HMSRoomLayout.roleLayoutData?.screens?.conferencing
+          ?.hlsLiveStreaming?.elements?.onStageExp?.onStageRole;
+      int? roleIndex = roles.indexWhere((element) => element.name == roleName);
+      if (roleIndex != -1) {
+        return roles[roleIndex];
+      }
+    }
+    return null;
   }
 
   void changeTrackState(HMSTrack track, bool mute) {
@@ -626,7 +642,9 @@ class MeetingStore extends ChangeNotifier
         }
         localPeer = each;
         addPeer(localPeer!);
-        if (localPeer!.role.name.contains("hls-") == true) isHLSLink = true;
+        if (HMSRoomLayout
+                .roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
+            null) isHLSLink = true;
         index = peerTracks
             .indexWhere((element) => element.uid == "${each.peerId}mainVideo");
         if (each.videoTrack != null) {
@@ -655,7 +673,9 @@ class MeetingStore extends ChangeNotifier
     getAudioDevicesList();
     notifyListeners();
 
-    if (Platform.isIOS && !(localPeer?.role.name.contains("hls-") ?? false)) {
+    if (Platform.isIOS &&
+        HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf !=
+            null) {
       HMSIOSPIPController.setup(
           autoEnterPip: true,
           aspectRatio: [9, 16],
@@ -1193,7 +1213,9 @@ class MeetingStore extends ChangeNotifier
           getSpotlightPeer();
           localPeer = peer;
         }
-        if (peer.role.name.contains("hls-")) {
+        if (HMSRoomLayout
+                .roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
+            null) {
           isHLSLink = peer.isLocal;
           peerTracks.removeWhere(
               (leftPeer) => leftPeer.uid == "${peer.peerId}mainVideo");
@@ -1205,7 +1227,9 @@ class MeetingStore extends ChangeNotifier
 
         if (peer.isLocal) {
           if (Platform.isIOS) {
-            if (peer.role.name.contains("hls-")) {
+            if (HMSRoomLayout
+                    .roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
+                null) {
               HMSIOSPIPController.destroy();
             } else {
               HMSIOSPIPController.setup(
@@ -1235,7 +1259,21 @@ class MeetingStore extends ChangeNotifier
           }
           peerTrackNode.notify();
         } else {
-          toggleToastForRoleChange(peer: peer);
+          if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
+            if (HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf
+                    ?.elements?.onStageExp?.onStageRole
+                    ?.contains(peer.role.name) ??
+                false) {
+              toggleToastForRoleChange(peer: peer);
+            }
+          } else if (HMSRoomLayout.peerType == PeerRoleType.hlsViewer) {
+            if (HMSRoomLayout.roleLayoutData?.screens?.conferencing
+                    ?.hlsLiveStreaming?.elements?.onStageExp?.onStageRole
+                    ?.contains(peer.role.name) ??
+                false) {
+              toggleToastForRoleChange(peer: peer);
+            }
+          }
         }
         updatePeerAt(peer);
         updateFilteredList(update, peer);
@@ -1712,7 +1750,9 @@ class MeetingStore extends ChangeNotifier
     if (peerToBringOnStage != null) {
       peerToBringOnStage = null;
     } else {
-      if (peer.role.name.contains("hls-") &&
+      if (HMSRoomLayout
+                  .roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
+              null &&
           (peer.metadata?.contains("\"isHandRaised\":true") ?? false)) {
         peerToBringOnStage = peer;
       }

@@ -105,7 +105,8 @@ class _PreviewPageState extends State<PreviewPage> {
 
       ///When the user does not have permission to stream, or the stream is already started, or the flow is webRTC flow, then we directly navigate to the meeting screen.
       ///Without starting the HLS stream.
-      if (HMSRoomLayout.data?[0].screens?.preview?.joinForm?.joinBtnType ==
+      if (HMSRoomLayout
+                  .roleLayoutData?.screens?.preview?.joinForm?.joinBtnType ==
               JoinButtonType.JOIN_BTN_TYPE_JOIN_ONLY ||
           previewStore.isHLSStreamingStarted) {
         previewStore.toggleIsRoomJoinedAndHLSStarted();
@@ -115,7 +116,8 @@ class _PreviewPageState extends State<PreviewPage> {
 
       setState(() {
         isJoiningRoom = false;
-        if (HMSRoomLayout.data?[0].screens?.preview?.joinForm?.joinBtnType ==
+        if (HMSRoomLayout
+                .roleLayoutData?.screens?.preview?.joinForm?.joinBtnType ==
             JoinButtonType.JOIN_BTN_TYPE_JOIN_AND_GO_LIVE) {
           isHLSStarting = true;
         }

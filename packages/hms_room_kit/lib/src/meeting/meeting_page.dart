@@ -269,8 +269,8 @@ class _MeetingPageState extends State<MeetingPage> {
                                       Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Padding(
+                                        children: const [
+                                          Padding(
                                               padding: EdgeInsets.only(
                                                   left: 15,
                                                   right: 15,
@@ -278,21 +278,10 @@ class _MeetingPageState extends State<MeetingPage> {
                                                   bottom: 2),
                                               child: MeetingHeader()),
                                           Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 8.0),
-                                              child: Selector<MeetingStore,
-                                                      String?>(
-                                                  selector: (_, meetingStore) =>
-                                                      meetingStore
-                                                          .localPeer?.role.name,
-                                                  builder: (_, roleName, __) {
-                                                    return (!(roleName
-                                                                ?.contains(
-                                                                    "hls-") ??
-                                                            true))
-                                                        ? const MeetingBottomNavigationBar()
-                                                        : Container();
-                                                  }))
+                                              padding:
+                                                  EdgeInsets.only(bottom: 8.0),
+                                              child:
+                                                  MeetingBottomNavigationBar())
                                         ],
                                       ),
                                       // Selector<MeetingStore,

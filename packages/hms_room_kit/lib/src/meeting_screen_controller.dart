@@ -1,5 +1,6 @@
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -84,7 +85,9 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
         builder: (_, data, __) {
           ///If the role is hls-viewer then we show the HLSViewerPage
           ///else we show the MeetingPage
-          if (data?.contains("hls-") ?? false) {
+          if (HMSRoomLayout
+                  .roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
+              null) {
             _setHLSPlayerStore();
             return ListenableProvider.value(
                 value: _hlsPlayerStore, child: const HLSViewerPage());

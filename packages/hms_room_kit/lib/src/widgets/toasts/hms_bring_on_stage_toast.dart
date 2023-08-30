@@ -44,9 +44,11 @@ class HMSBringOnStageToast extends StatelessWidget {
       action: HMSToastButton(
         buttonTitle: "Bring on Stage",
         action: () {
-          meetingStore.changeRoleOfPeer(
-              peer: peer, roleName: meetingStore.getOnStageRole());
-          meetingStore.toggleToastForRoleChange(peer: peer);
+          HMSRole? onStageRole = meetingStore.getOnStageRole();
+          if (onStageRole != null) {
+            meetingStore.changeRoleOfPeer(peer: peer, roleName: onStageRole);
+            meetingStore.toggleToastForRoleChange(peer: peer);
+          }
         },
         height: 36,
         width: 135,
