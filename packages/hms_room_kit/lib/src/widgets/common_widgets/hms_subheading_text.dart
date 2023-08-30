@@ -14,6 +14,7 @@ import 'package:google_fonts/google_fonts.dart';
 ///[maxLines] - The maximum number of lines, default value is 1
 ///[textOverflow] - The overflow of the text, default value is TextOverflow.ellipsis
 ///[maxLines] - The maximum number of lines, default value is 1
+///[textAlign] - The alignment of the text, default value is TextAlign.start
 class HMSSubheadingText extends StatelessWidget {
   final String text;
   final Color textColor;
@@ -22,6 +23,7 @@ class HMSSubheadingText extends StatelessWidget {
   final double? fontSize;
   final FontWeight? fontWeight;
   final TextOverflow? textOverflow;
+  final TextAlign? textAlign;
   final int maxLines;
   const HMSSubheadingText(
       {Key? key,
@@ -32,7 +34,8 @@ class HMSSubheadingText extends StatelessWidget {
       this.fontSize = 14,
       this.maxLines = 1,
       this.fontWeight = FontWeight.w400,
-      this.textOverflow = TextOverflow.ellipsis})
+      this.textOverflow = TextOverflow.ellipsis,
+      this.textAlign=TextAlign.start})
       : super(key: key);
 
   @override
@@ -40,6 +43,7 @@ class HMSSubheadingText extends StatelessWidget {
     return Text(text,
         overflow: textOverflow,
         softWrap: true,
+        textAlign: textAlign,
         maxLines: maxLines,
         style: GoogleFonts.inter(
             height: lineHeight! / fontSize!,

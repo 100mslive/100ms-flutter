@@ -1,6 +1,7 @@
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -11,7 +12,6 @@ import 'package:hms_room_kit/src/enums/meeting_mode.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/app_utilities_bottom_sheet.dart';
-import 'package:hms_room_kit/src/widgets/bottom_sheets/chat_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
 
 ///This renders the meeting bottom navigation bar
@@ -128,14 +128,14 @@ class _MeetingBottomNavigationBarState
             context.read<MeetingStore>().setNewMessageFalse(),
             showModalBottomSheet(
               isScrollControlled: true,
-              backgroundColor: HMSThemeColors.backgroundDefault,
+              backgroundColor: HMSThemeColors.surfaceDim,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
               context: context,
               builder: (ctx) => ChangeNotifierProvider.value(
                   value: context.read<MeetingStore>(),
-                  child: const ChatBottomSheet()),
+                  child: const ChatParticipantsTabBar()),
             )
           },
           onColor: HMSThemeColors.backgroundDim,

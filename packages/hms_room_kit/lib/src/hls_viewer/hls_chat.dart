@@ -312,11 +312,6 @@ class _HLSChatState extends State<HLSChat> {
                                   margin:
                                       const EdgeInsets.symmetric(vertical: 2),
                                   child: MessageContainer(
-                                    isLocalMessage:
-                                        data.item1[index].sender?.isLocal ??
-                                                false
-                                            ? true
-                                            : false,
                                     message: data.item1[index].message
                                         .trim()
                                         .toString(),
