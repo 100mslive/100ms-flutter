@@ -92,7 +92,8 @@ class MeetingStore extends ChangeNotifier
 
   List<HMSPeer> peers = [];
 
-  List<HMSPeer> filteredPeers = [];
+  ///Map with key as role and value as list of peers with that role
+  Map<String, List<HMSPeer>> filteredPeers = {};
 
   String selectedRoleFilter = "Everyone";
 
@@ -1105,12 +1106,21 @@ class MeetingStore extends ChangeNotifier
 
   void removePeer(HMSPeer peer) {
     peers.remove(peer);
-    if (filteredPeers.contains(peer)) filteredPeers.remove(peer);
+    if (filteredPeers[peer.role.name]?.contains(peer) ?? false) {
+      filteredPeers[peer.role.name]?.remove(peer);
+      if (filteredPeers[peer.role.name]?.isEmpty ?? false) {
+        filteredPeers.remove(peer.role.name);
+      }
+    }
   }
 
   void addPeer(HMSPeer peer) {
     if (!peers.contains(peer)) peers.add(peer);
-    if (checkForFilteredList(peer)) filteredPeers.add(peer);
+    if (!filteredPeers.containsKey(peer.role.name)) {
+      filteredPeers[peer.role.name] = [peer];
+    } else if (!(filteredPeers[peer.role.name]?.contains(peer) ?? true)) {
+      filteredPeers[peer.role.name]?.add(peer);
+    }
   }
 
   void addMessage(HMSMessage message) {
@@ -1123,30 +1133,46 @@ class MeetingStore extends ChangeNotifier
     peers.insert(index, peer);
   }
 
-  void updateFilteredList(HMSPeerUpdate peerUpdate, HMSPeer peer) {
-    String currentRole = selectedRoleFilter;
-    int index =
-        filteredPeers.indexWhere((element) => element.peerId == peer.peerId);
+  void _insertHandRaisedPeer(HMSPeer peer) {
+    if (!filteredPeers.containsKey("Hand Raised")) {
+      filteredPeers["Hand Raised"] = [peer];
+    } else if (!(filteredPeers["Hand Raised"]?.contains(peer) ?? true)) {
+      filteredPeers["Hand Raised"]?.add(peer);
+    }
+  }
 
-    if (index != -1) {
-      filteredPeers.removeAt(index);
+  void updatePeerMap(HMSPeerUpdate peerUpdate, HMSPeer peer,
+      {HMSRole? oldRole}) {
+    int? index = filteredPeers[peer.role.name]
+        ?.indexWhere((element) => element.peerId == peer.peerId);
+
+    if (index != null && index != -1) {
+      filteredPeers[peer.role.name]?.removeAt(index);
       if ((peerUpdate == HMSPeerUpdate.nameChanged)) {
-        filteredPeers.insert(index, peer);
+        filteredPeers[peer.role.name]?.insert(index, peer);
       } else if (peerUpdate == HMSPeerUpdate.metadataChanged) {
-        if ((peer.metadata?.contains("\"isHandRaised\":true") ?? false) ||
-            ((currentRole == "Everyone") || (currentRole == peer.role.name))) {
-          filteredPeers.insert(index, peer);
+        if ((peer.metadata?.contains("\"isHandRaised\":true") ?? false)) {
+          _insertHandRaisedPeer(peer);
+        } else if ((peer.metadata?.contains("\"isHandRaised\":false") ??
+            false)) {
+          filteredPeers["Hand Raised"]?.remove(peer);
+          if (filteredPeers["Hand Raised"]?.isEmpty ?? false) {
+            filteredPeers.remove("Hand Raised");
+          }
         }
-      } else if (peerUpdate == HMSPeerUpdate.roleUpdated &&
-          ((currentRole == "Everyone") || (currentRole == "Raised Hand"))) {
-        filteredPeers.insert(index, peer);
+      } else if (peerUpdate == HMSPeerUpdate.roleUpdated) {
+        if (oldRole != null) {
+          filteredPeers[oldRole.name]
+              ?.removeWhere((oldPeer) => oldPeer.peerId == peer.peerId);
+        }
       }
     } else {
-      if ((peerUpdate == HMSPeerUpdate.metadataChanged &&
-              currentRole == "Raised Hand") ||
-          (peerUpdate == HMSPeerUpdate.roleUpdated &&
-              currentRole == peer.role.name)) {
-        filteredPeers.add(peer);
+      if (peerUpdate == HMSPeerUpdate.roleUpdated) {
+        if (!filteredPeers.containsKey(peer.role.name)) {
+          filteredPeers[peer.role.name] = [peer];
+        } else {
+          filteredPeers[peer.role.name]?.add(peer);
+        }
       }
     }
   }
@@ -1217,8 +1243,11 @@ class MeetingStore extends ChangeNotifier
         }
 
         Utilities.showToast("${peer.name}'s role changed to ${peer.role.name}");
+        int oldRole =
+            peers.indexWhere((oldPeer) => oldPeer.peerId == peer.peerId);
         updatePeerAt(peer);
-        updateFilteredList(update, peer);
+        updatePeerMap(update, peer,
+            oldRole: oldRole != -1 ? peers[oldRole].role : null);
         notifyListeners();
         break;
 
@@ -1238,7 +1267,7 @@ class MeetingStore extends ChangeNotifier
           toggleToastForRoleChange(peer: peer);
         }
         updatePeerAt(peer);
-        updateFilteredList(update, peer);
+        updatePeerMap(update, peer);
         break;
 
       case HMSPeerUpdate.nameChanged:
@@ -1262,7 +1291,7 @@ class MeetingStore extends ChangeNotifier
           }
         }
         updatePeerAt(peer);
-        updateFilteredList(update, peer);
+        updatePeerMap(update, peer);
         break;
 
       case HMSPeerUpdate.networkQualityUpdated:
@@ -1515,35 +1544,6 @@ class MeetingStore extends ChangeNotifier
   void setMessageInfoFalse() {
     isMessageInfoShown = false;
     notifyListeners();
-  }
-
-  void getFilteredList(String type) {
-    filteredPeers.clear();
-    filteredPeers.addAll(peers);
-    filteredPeers.removeWhere((element) => element.isLocal);
-    filteredPeers.sortedBy(((element) => element.role.priority.toString()));
-    filteredPeers.insert(0, localPeer!);
-    if (type == "Everyone") {
-      return;
-    } else if (type == "Raised Hand") {
-      filteredPeers = filteredPeers
-          .where((element) =>
-              element.metadata != null &&
-              element.metadata!.contains("\"isHandRaised\":true"))
-          .toList();
-    } else {
-      filteredPeers =
-          filteredPeers.where((element) => element.role.name == type).toList();
-    }
-    notifyListeners();
-  }
-
-  bool checkForFilteredList(HMSPeer peer) {
-    if ((selectedRoleFilter == "Everyone") ||
-        (peer.role.name == selectedRoleFilter)) {
-      return true;
-    }
-    return false;
   }
 
   void setSpotlightOnTrackUpdate(HMSTrack track) {

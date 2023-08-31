@@ -6,7 +6,8 @@ import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 
 ///This renders the cross button
 class HMSCrossButton extends StatelessWidget {
-  const HMSCrossButton({super.key});
+  final Function? onPressed;
+  const HMSCrossButton({super.key, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +18,9 @@ class HMSCrossButton extends StatelessWidget {
         size: 24,
       ),
       onPressed: () {
+        if (onPressed != null) {
+          onPressed!();
+        }
         Navigator.pop(context);
       },
     );

@@ -134,7 +134,11 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
                 textCapitalization: TextCapitalization.sentences,
                 textInputAction: TextInputAction.send,
                 style: GoogleFonts.inter(
-                    color: HMSThemeColors.onSurfaceHighEmphasis),
+                            color: HMSThemeColors.onSurfaceHighEmphasis,
+                            fontWeight: FontWeight.w400,
+                            height: 20 / 14,
+                            fontSize: 14,
+                            letterSpacing: 0.25),
                 controller: messageTextController,
                 decoration: InputDecoration(
                     suffixIcon: IconButton(
@@ -166,8 +170,8 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
                         height: 0.6,
                         letterSpacing: 0.25,
                         fontWeight: FontWeight.w400),
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    contentPadding:const EdgeInsets.only(
+                                left: 16, bottom: 8, top: 12, right: 8),
                     hintText: "Send a message..."),
               ),
             ),
