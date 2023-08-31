@@ -38,12 +38,13 @@ class _MeetingHeaderState extends State<MeetingHeader> {
             ///If the logo is null, we render an empty SizedBox
             ///If the logo is an svg, we render the svg
             ///If the logo is an image, we render the image
-            HMSRoomLayout.data?[0].logo?.url == null
+            HMSRoomLayout.roleLayoutData?.logo?.url == null
                 ? Container()
-                : HMSRoomLayout.data![0].logo!.url!.contains("svg")
-                    ? SvgPicture.network(HMSRoomLayout.data![0].logo!.url!)
+                : HMSRoomLayout.roleLayoutData!.logo!.url!.contains("svg")
+                    ? SvgPicture.network(
+                        HMSRoomLayout.roleLayoutData!.logo!.url!)
                     : Image.network(
-                        HMSRoomLayout.data![0].logo!.url!,
+                        HMSRoomLayout.roleLayoutData!.logo!.url!,
                         height: 30,
                         width: 30,
                       ),

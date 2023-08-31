@@ -4,6 +4,7 @@ import 'dart:convert';
 ///Package imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/hmssdk_interactor.dart';
+import 'package:hms_room_kit/src/layout_api/hms_conferencing_items.dart';
 import 'package:hms_room_kit/src/service/app_secrets.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
@@ -101,7 +102,7 @@ class JoinForm {
 
 class Screens {
   final Preview? preview;
-  final Map<String, dynamic>? conferencing;
+  final Conferencing? conferencing;
   final Map<String, dynamic>? leave;
 
   Screens({
@@ -112,8 +113,12 @@ class Screens {
 
   factory Screens.fromJson(Map<String, dynamic>? json) {
     return Screens(
-      preview: Preview.fromJson(json?['preview']?['default']?['elements']),
-      conferencing: json?['conferencing'],
+      preview: json?.containsKey('preview') == true
+          ? Preview.fromJson(json?['preview']?['default']?['elements'])
+          : null,
+      conferencing: json?.containsKey('conferencing') == true
+          ? Conferencing.fromJson(json?['conferencing'])
+          : null,
       leave: json?['leave'],
     );
   }
@@ -150,6 +155,7 @@ class AppTypoGraphy {
 class LayoutData {
   final String? id;
   final String? roleId;
+  final String? role;
   final String? templateId;
   final String? appId;
   final List<Theme>? themes;
@@ -160,6 +166,7 @@ class LayoutData {
   LayoutData({
     this.id,
     this.roleId,
+    this.role,
     this.templateId,
     this.appId,
     this.themes,
@@ -175,6 +182,7 @@ class LayoutData {
     return LayoutData(
       id: json['id'],
       roleId: json['role_id'],
+      role: json['role'],
       templateId: json['template_id'],
       appId: json['app_id'],
       themes: List<Theme>.from(
@@ -187,20 +195,42 @@ class LayoutData {
   }
 }
 
+enum PeerRoleType { hlsViewer, conferencing }
+
 class HMSRoomLayout {
   static List<LayoutData>? data;
   static int? limit;
   static String? last;
+  static LayoutData? roleLayoutData;
+  static PeerRoleType? peerType;
 
   static Future<void> getRoomLayout(
       {required HMSSDKInteractor hmsSDKInteractor,
-      required String authToken}) async {
+      required String authToken,
+      String? roleName}) async {
     dynamic value = await hmsSDKInteractor.getRoomLayout(
         authToken: authToken, endPoint: getLayoutAPIEndpoint());
     if (value != null && value.runtimeType != HMSException) {
       _setLayout(layoutJson: jsonDecode(value));
-      HMSThemeColors.applyLayoutColors(data?[0].themes?[0].palette);
+      resetLayout(roleName);
     }
+  }
+
+  static void resetLayout(String? roleName) {
+    if (roleName != null) {
+      int? roleIndex =
+          data?.indexWhere((layoutData) => layoutData.role == roleName);
+      if (roleIndex != null && roleIndex != -1) {
+        HMSThemeColors.applyLayoutColors(data?[roleIndex].themes?[0].palette);
+        roleLayoutData = data?[roleIndex];
+        return;
+      }
+    }
+    HMSThemeColors.applyLayoutColors(data?[0].themes?[0].palette);
+    roleLayoutData = data?[0];
+    peerType = roleLayoutData?.screens?.conferencing?.hlsLiveStreaming != null
+        ? PeerRoleType.hlsViewer
+        : PeerRoleType.conferencing;
   }
 
   static void _setLayout({required Map<String, dynamic> layoutJson}) {

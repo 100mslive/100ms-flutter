@@ -59,13 +59,13 @@ class PreviewHeader extends StatelessWidget {
                 children: [
                   ///We render a generic logo which can be replaced
                   ///with the company logo from dashboard
-                  HMSRoomLayout.data?[0].logo?.url == null
+                  HMSRoomLayout.roleLayoutData?.logo?.url == null
                       ? Container()
-                      : HMSRoomLayout.data![0].logo!.url!.contains("svg")
+                      : HMSRoomLayout.roleLayoutData!.logo!.url!.contains("svg")
                           ? SvgPicture.network(
-                              HMSRoomLayout.data![0].logo!.url!)
+                              HMSRoomLayout.roleLayoutData!.logo!.url!)
                           : Image.network(
-                              HMSRoomLayout.data![0].logo!.url!,
+                              HMSRoomLayout.roleLayoutData!.logo!.url!,
                               height: 30,
                               width: 30,
                             ),
@@ -73,7 +73,7 @@ class PreviewHeader extends StatelessWidget {
                     height: 16,
                   ),
                   HMSTitleText(
-                      text: HMSRoomLayout.data?[0].screens?.preview
+                      text: HMSRoomLayout.roleLayoutData?.screens?.preview
                               ?.previewHeader?.title ??
                           "Get Started",
                       fontSize: 24,
@@ -83,7 +83,7 @@ class PreviewHeader extends StatelessWidget {
                     height: 4,
                   ),
                   HMSSubheadingText(
-                      text: HMSRoomLayout.data?[0].screens?.preview
+                      text: HMSRoomLayout.roleLayoutData?.screens?.preview
                               ?.previewHeader?.subTitle ??
                           "Setup your audio and video before joining",
                       textColor: HMSThemeColors.onSurfaceMediumEmphasis),
