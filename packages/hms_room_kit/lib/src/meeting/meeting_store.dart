@@ -17,7 +17,6 @@ import 'package:hms_room_kit/src/model/rtc_stats.dart';
 import 'package:hms_room_kit/src/service/app_secrets.dart';
 import 'package:hms_room_kit/src/service/room_service.dart';
 import 'package:intl/intl.dart';
-import 'package:collection/collection.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
