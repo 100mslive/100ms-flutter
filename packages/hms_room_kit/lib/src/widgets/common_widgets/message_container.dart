@@ -27,7 +27,7 @@ class MessageContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Padding(
-      padding: const EdgeInsets.only(bottom:16.0),
+      padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -61,6 +61,7 @@ class MessageContainer extends StatelessWidget {
                 children: [
                   if (role == "")
                     PopupMenuButton(
+                      position: PopupMenuPosition.under,
                       color: HMSThemeColors.surfaceDefault,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),
@@ -94,9 +95,10 @@ class MessageContainer extends StatelessWidget {
                             onTap: () => context
                                 .read<MeetingStore>()
                                 .setSessionMetadataForKey(
-                                    key: SessionStoreKeyValues
-                                        .getNameFromMethod(SessionStoreKey
-                                            .pinnedMessageSessionKey),
+                                    key:
+                                        SessionStoreKeyValues.getNameFromMethod(
+                                            SessionStoreKey
+                                                .pinnedMessageSessionKey),
                                     metadata: "${senderName!}: $message"),
                           );
                         });

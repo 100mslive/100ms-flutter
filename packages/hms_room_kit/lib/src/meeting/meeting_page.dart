@@ -116,309 +116,315 @@ class _MeetingPageState extends State<MeetingPage> {
                                           HMSThemeColors.primaryDefault,
                                       scaffoldBackgroundColor:
                                           HMSThemeColors.backgroundDim),
-                                  child: Stack(
-                                    children: [
-                                      Selector<
-                                              MeetingStore,
-                                              Tuple6<
-                                                  List<PeerTrackNode>,
-                                                  bool,
-                                                  int,
-                                                  int,
-                                                  MeetingMode,
-                                                  PeerTrackNode?>>(
-                                          selector: (_, meetingStore) => Tuple6(
-                                              meetingStore.peerTracks,
-                                              meetingStore.isHLSLink,
-                                              meetingStore.peerTracks.length,
-                                              meetingStore.screenShareCount,
-                                              meetingStore.meetingMode,
-                                              meetingStore.peerTracks.isNotEmpty
-                                                  ? meetingStore.peerTracks[
-                                                      meetingStore
-                                                          .screenShareCount]
-                                                  : null),
-                                          builder: (_, data, __) {
-                                            if (data.item3 == 0) {
-                                              return Center(
-                                                  child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  CircularProgressIndicator(
-                                                    strokeWidth: 2,
-                                                    color: HMSThemeColors
-                                                        .primaryDefault,
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  if (context
-                                                      .read<MeetingStore>()
-                                                      .peers
-                                                      .isNotEmpty)
-                                                    HMSTitleText(
-                                                        text:
-                                                            "Please wait for broadcaster to join",
-                                                        textColor: HMSThemeColors
-                                                            .onSurfaceHighEmphasis)
-                                                ],
-                                              ));
-                                            }
-                                            return Selector<
-                                                    MeetingStore,
-                                                    Tuple2<MeetingMode,
-                                                        HMSPeer?>>(
-                                                selector: (_, meetingStore) =>
-                                                    Tuple2(
-                                                        meetingStore
-                                                            .meetingMode,
-                                                        meetingStore.localPeer),
-                                                builder: (_, modeData, __) {
-                                                  Size size = Size(
-                                                      MediaQuery.of(context)
-                                                          .size
-                                                          .width,
-                                                      MediaQuery.of(context)
+                                  child: SingleChildScrollView(
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top - MediaQuery.of(context).padding.bottom,
+                                      child: Stack(
+                                        children: [
+                                          Selector<
+                                                  MeetingStore,
+                                                  Tuple6<
+                                                      List<PeerTrackNode>,
+                                                      bool,
+                                                      int,
+                                                      int,
+                                                      MeetingMode,
+                                                      PeerTrackNode?>>(
+                                              selector: (_, meetingStore) => Tuple6(
+                                                  meetingStore.peerTracks,
+                                                  meetingStore.isHLSLink,
+                                                  meetingStore.peerTracks.length,
+                                                  meetingStore.screenShareCount,
+                                                  meetingStore.meetingMode,
+                                                  meetingStore.peerTracks.isNotEmpty
+                                                      ? meetingStore.peerTracks[
+                                                          meetingStore
+                                                              .screenShareCount]
+                                                      : null),
+                                              builder: (_, data, __) {
+                                                if (data.item3 == 0) {
+                                                  return Center(
+                                                      child: Column(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 2,
+                                                        color: HMSThemeColors
+                                                            .primaryDefault,
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      if (context
+                                                          .read<MeetingStore>()
+                                                          .peers
+                                                          .isNotEmpty)
+                                                        HMSTitleText(
+                                                            text:
+                                                                "Please wait for broadcaster to join",
+                                                            textColor: HMSThemeColors
+                                                                .onSurfaceHighEmphasis)
+                                                    ],
+                                                  ));
+                                                }
+                                                return Selector<
+                                                        MeetingStore,
+                                                        Tuple2<MeetingMode,
+                                                            HMSPeer?>>(
+                                                    selector: (_, meetingStore) =>
+                                                        Tuple2(
+                                                            meetingStore
+                                                                .meetingMode,
+                                                            meetingStore.localPeer),
+                                                    builder: (_, modeData, __) {
+                                                      Size size = Size(
+                                                          MediaQuery.of(context)
                                                               .size
-                                                              .height -
-                                                          122 -
+                                                              .width,
                                                           MediaQuery.of(context)
-                                                              .padding
-                                                              .bottom -
-                                                          MediaQuery.of(context)
-                                                              .padding
-                                                              .top);
-                                                  return Positioned(
-                                                      top: 55,
-                                                      left: 0,
-                                                      right: 0,
-                                                      bottom: 68,
-                                                      /***
-                                                       * The logic for gridview is as follows:
-                                                       * - Default mode is Active Speaker mode which displays only 4 tiles on screen without scroll and updates the tile according to who is currently speaking
-                                                       * - If there are only 2 peers in the room in which one is local peer then automatically the mode is switched to oneToOne mode
-                                                       * - As the peer count increases the mode is switched back to active speaker view in case of default mode
-                                                       * - Remaining as the mode from bottom sheet is selected corresponding grid layout is rendered
-                                                      */
-                                                      child: (modeData.item1 ==
-                                                              MeetingMode
-                                                                  .activeSpeakerWithInset)
-                                                          ? OneToOneMode(
-                                                              bottomMargin: 225,
-                                                              peerTracks:
-                                                                  data.item1,
-                                                              screenShareCount:
-                                                                  data.item4,
-                                                              context: context,
-                                                              size: size)
-                                                          : (modeData.item1 ==
+                                                                  .size
+                                                                  .height -
+                                                              122 -
+                                                              MediaQuery.of(context)
+                                                                  .padding
+                                                                  .bottom -
+                                                              MediaQuery.of(context)
+                                                                  .padding
+                                                                  .top);
+                                                      return Positioned(
+                                                          top: 55,
+                                                          left: 0,
+                                                          right: 0,
+                                                          bottom: 68,
+                                                          /***
+                                                           * The logic for gridview is as follows:
+                                                           * - Default mode is Active Speaker mode which displays only 4 tiles on screen without scroll and updates the tile according to who is currently speaking
+                                                           * - If there are only 2 peers in the room in which one is local peer then automatically the mode is switched to oneToOne mode
+                                                           * - As the peer count increases the mode is switched back to active speaker view in case of default mode
+                                                           * - Remaining as the mode from bottom sheet is selected corresponding grid layout is rendered
+                                                          */
+                                                          child: (modeData.item1 ==
                                                                   MeetingMode
-                                                                      .activeSpeakerWithoutInset)
-                                                              ? const CustomGridView()
-                                                              // basicGridView(
-                                                              //     peerTracks: data
-                                                              //         .item1
-                                                              //         .sublist(
-                                                              //             0,
-                                                              //             min(data.item1.length,
-                                                              //                 data.item4 + 4)),
-                                                              //     itemCount: min(data.item3, data.item4 + 4),
-                                                              //     screenShareCount: data.item4,
-                                                              //     context: context,
-                                                              //     isPortrait: true,
-                                                              //     size: size)
+                                                                      .activeSpeakerWithInset)
+                                                              ? OneToOneMode(
+                                                                  bottomMargin: 225,
+                                                                  peerTracks:
+                                                                      data.item1,
+                                                                  screenShareCount:
+                                                                      data.item4,
+                                                                  context: context,
+                                                                  size: size)
                                                               : (modeData.item1 ==
                                                                       MeetingMode
-                                                                          .hero)
-                                                                  ? heroMode(
-                                                                      peerTracks: data
-                                                                          .item1,
-                                                                      itemCount: data
-                                                                          .item3,
-                                                                      screenShareCount: data
-                                                                          .item4,
-                                                                      context:
-                                                                          context,
-                                                                      isPortrait:
-                                                                          isPortraitMode,
-                                                                      size:
-                                                                          size)
+                                                                          .activeSpeakerWithoutInset)
+                                                                  ? const CustomGridView()
+                                                                  // basicGridView(
+                                                                  //     peerTracks: data
+                                                                  //         .item1
+                                                                  //         .sublist(
+                                                                  //             0,
+                                                                  //             min(data.item1.length,
+                                                                  //                 data.item4 + 4)),
+                                                                  //     itemCount: min(data.item3, data.item4 + 4),
+                                                                  //     screenShareCount: data.item4,
+                                                                  //     context: context,
+                                                                  //     isPortrait: true,
+                                                                  //     size: size)
                                                                   : (modeData.item1 ==
                                                                           MeetingMode
-                                                                              .audio)
-                                                                      ? audioMode(
-                                                                          peerTracks: data.item1.sublist(data
-                                                                              .item4),
+                                                                              .hero)
+                                                                      ? heroMode(
+                                                                          peerTracks: data
+                                                                              .item1,
                                                                           itemCount: data
-                                                                              .item1
-                                                                              .sublist(data
-                                                                                  .item4)
-                                                                              .length,
+                                                                              .item3,
+                                                                          screenShareCount: data
+                                                                              .item4,
                                                                           context:
                                                                               context,
                                                                           isPortrait:
                                                                               isPortraitMode,
                                                                           size:
                                                                               size)
-                                                                      : (data.item5 ==
-                                                                              MeetingMode.single)
-                                                                          ? fullScreenMode(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: isPortraitMode, size: size)
-                                                                          : basicGridView(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: true, size: size));
-                                                });
-                                          }),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: const [
-                                          Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 15,
-                                                  right: 15,
-                                                  top: 5,
-                                                  bottom: 2),
-                                              child: MeetingHeader()),
-                                          Padding(
-                                              padding:
-                                                  EdgeInsets.only(bottom: 8.0),
-                                              child:
-                                                  MeetingBottomNavigationBar())
+                                                                      : (modeData.item1 ==
+                                                                              MeetingMode
+                                                                                  .audio)
+                                                                          ? audioMode(
+                                                                              peerTracks: data.item1.sublist(data
+                                                                                  .item4),
+                                                                              itemCount: data
+                                                                                  .item1
+                                                                                  .sublist(data
+                                                                                      .item4)
+                                                                                  .length,
+                                                                              context:
+                                                                                  context,
+                                                                              isPortrait:
+                                                                                  isPortraitMode,
+                                                                              size:
+                                                                                  size)
+                                                                          : (data.item5 ==
+                                                                                  MeetingMode.single)
+                                                                              ? fullScreenMode(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: isPortraitMode, size: size)
+                                                                              : basicGridView(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: true, size: size));
+                                                    });
+                                              }),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: const [
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 15,
+                                                      right: 15,
+                                                      top: 5,
+                                                      bottom: 2),
+                                                  child: MeetingHeader()),
+                                              Padding(
+                                                  padding:
+                                                      EdgeInsets.only(bottom: 8.0),
+                                                  child:
+                                                      MeetingBottomNavigationBar())
+                                            ],
+                                          ),
+                                          // Selector<MeetingStore,
+                                          //         HMSRoleChangeRequest?>(
+                                          //     selector: (_, meetingStore) =>
+                                          //         meetingStore
+                                          //             .currentRoleChangeRequest,
+                                          //     builder: (_, roleChangeRequest, __) {
+                                          //       if (roleChangeRequest != null) {
+                                          //         HMSRoleChangeRequest
+                                          //             currentRequest =
+                                          //             roleChangeRequest;
+                                          //         context
+                                          //                 .read<MeetingStore>()
+                                          //                 .currentRoleChangeRequest =
+                                          //             null;
+                                          //         WidgetsBinding.instance
+                                          //             .addPostFrameCallback((_) {
+                                          //           UtilityComponents
+                                          //               .showRoleChangeDialog(
+                                          //                   currentRequest,
+                                          //                   context);
+                                          //         });
+                                          //       }
+                                          //       return const SizedBox();
+                                          //     }),
+                                          Selector<MeetingStore,
+                                                  HMSTrackChangeRequest?>(
+                                              selector: (_, meetingStore) =>
+                                                  meetingStore
+                                                      .hmsTrackChangeRequest,
+                                              builder:
+                                                  (_, hmsTrackChangeRequest, __) {
+                                                if (hmsTrackChangeRequest != null) {
+                                                  HMSTrackChangeRequest
+                                                      currentRequest =
+                                                      hmsTrackChangeRequest;
+                                                  context
+                                                      .read<MeetingStore>()
+                                                      .hmsTrackChangeRequest = null;
+                                                  WidgetsBinding.instance
+                                                      .addPostFrameCallback((_) {
+                                                    UtilityComponents
+                                                        .showTrackChangeDialog(
+                                                            context,
+                                                            currentRequest);
+                                                  });
+                                                }
+                                                return const SizedBox();
+                                              }),
+                                          Selector<MeetingStore, bool>(
+                                              selector: (_, meetingStore) =>
+                                                  meetingStore
+                                                      .showAudioDeviceChangePopup,
+                                              builder: (_,
+                                                  showAudioDeviceChangePopup, __) {
+                                                if (showAudioDeviceChangePopup) {
+                                                  context
+                                                          .read<MeetingStore>()
+                                                          .showAudioDeviceChangePopup =
+                                                      false;
+                                                  WidgetsBinding.instance
+                                                      .addPostFrameCallback((_) {
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (_) =>
+                                                            AudioDeviceChangeDialog(
+                                                              currentAudioDevice: context
+                                                                  .read<
+                                                                      MeetingStore>()
+                                                                  .currentAudioOutputDevice!,
+                                                              audioDevicesList: context
+                                                                  .read<
+                                                                      MeetingStore>()
+                                                                  .availableAudioOutputDevices,
+                                                              changeAudioDevice:
+                                                                  (audioDevice) {
+                                                                context
+                                                                    .read<
+                                                                        MeetingStore>()
+                                                                    .switchAudioOutput(
+                                                                        audioDevice:
+                                                                            audioDevice);
+                                                              },
+                                                            ));
+                                                  });
+                                                }
+                                                return const SizedBox();
+                                              }),
+                                          Selector<MeetingStore, bool>(
+                                              selector: (_, meetingStore) =>
+                                                  meetingStore.reconnecting,
+                                              builder: (_, reconnecting, __) {
+                                                if (reconnecting) {
+                                                  return UtilityComponents
+                                                      .showReconnectingDialog(
+                                                          context);
+                                                }
+                                                return const SizedBox();
+                                              }),
+                                          Selector<MeetingStore, bool>(
+                                              selector: (_, meetingStore) =>
+                                                  meetingStore.isScreenShareOn,
+                                              builder: (_, isScreenShareOn, __) {
+                                                return isScreenShareOn
+                                                    ? HMSLocalScreenShareToast(
+                                                        meetingStore: context
+                                                            .read<MeetingStore>(),
+                                                      )
+                                                    : Container();
+                                              }),
+                                          Selector<MeetingStore, HMSPeer?>(
+                                              selector: (_, meetingStore) =>
+                                                  meetingStore.peerToBringOnStage,
+                                              builder: (_, peerToBringOnStage, __) {
+                                                return peerToBringOnStage != null
+                                                    ? HMSBringOnStageToast(
+                                                        peer: peerToBringOnStage,
+                                                        meetingStore: context
+                                                            .read<MeetingStore>(),
+                                                      )
+                                                    : Container();
+                                              }),
+                                          Selector<MeetingStore, HMSPeer?>(
+                                              selector: (_, meetingStore) =>
+                                                  meetingStore.peerDeclinedRequest,
+                                              builder:
+                                                  (_, peerDeclinedRequest, __) {
+                                                return peerDeclinedRequest != null
+                                                    ? HMSRoleChangeDeclineToast(
+                                                        peer: peerDeclinedRequest,
+                                                        meetingStore: context
+                                                            .read<MeetingStore>(),
+                                                      )
+                                                    : Container();
+                                              }),
                                         ],
                                       ),
-                                      // Selector<MeetingStore,
-                                      //         HMSRoleChangeRequest?>(
-                                      //     selector: (_, meetingStore) =>
-                                      //         meetingStore
-                                      //             .currentRoleChangeRequest,
-                                      //     builder: (_, roleChangeRequest, __) {
-                                      //       if (roleChangeRequest != null) {
-                                      //         HMSRoleChangeRequest
-                                      //             currentRequest =
-                                      //             roleChangeRequest;
-                                      //         context
-                                      //                 .read<MeetingStore>()
-                                      //                 .currentRoleChangeRequest =
-                                      //             null;
-                                      //         WidgetsBinding.instance
-                                      //             .addPostFrameCallback((_) {
-                                      //           UtilityComponents
-                                      //               .showRoleChangeDialog(
-                                      //                   currentRequest,
-                                      //                   context);
-                                      //         });
-                                      //       }
-                                      //       return const SizedBox();
-                                      //     }),
-                                      Selector<MeetingStore,
-                                              HMSTrackChangeRequest?>(
-                                          selector: (_, meetingStore) =>
-                                              meetingStore
-                                                  .hmsTrackChangeRequest,
-                                          builder:
-                                              (_, hmsTrackChangeRequest, __) {
-                                            if (hmsTrackChangeRequest != null) {
-                                              HMSTrackChangeRequest
-                                                  currentRequest =
-                                                  hmsTrackChangeRequest;
-                                              context
-                                                  .read<MeetingStore>()
-                                                  .hmsTrackChangeRequest = null;
-                                              WidgetsBinding.instance
-                                                  .addPostFrameCallback((_) {
-                                                UtilityComponents
-                                                    .showTrackChangeDialog(
-                                                        context,
-                                                        currentRequest);
-                                              });
-                                            }
-                                            return const SizedBox();
-                                          }),
-                                      Selector<MeetingStore, bool>(
-                                          selector: (_, meetingStore) =>
-                                              meetingStore
-                                                  .showAudioDeviceChangePopup,
-                                          builder: (_,
-                                              showAudioDeviceChangePopup, __) {
-                                            if (showAudioDeviceChangePopup) {
-                                              context
-                                                      .read<MeetingStore>()
-                                                      .showAudioDeviceChangePopup =
-                                                  false;
-                                              WidgetsBinding.instance
-                                                  .addPostFrameCallback((_) {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (_) =>
-                                                        AudioDeviceChangeDialog(
-                                                          currentAudioDevice: context
-                                                              .read<
-                                                                  MeetingStore>()
-                                                              .currentAudioOutputDevice!,
-                                                          audioDevicesList: context
-                                                              .read<
-                                                                  MeetingStore>()
-                                                              .availableAudioOutputDevices,
-                                                          changeAudioDevice:
-                                                              (audioDevice) {
-                                                            context
-                                                                .read<
-                                                                    MeetingStore>()
-                                                                .switchAudioOutput(
-                                                                    audioDevice:
-                                                                        audioDevice);
-                                                          },
-                                                        ));
-                                              });
-                                            }
-                                            return const SizedBox();
-                                          }),
-                                      Selector<MeetingStore, bool>(
-                                          selector: (_, meetingStore) =>
-                                              meetingStore.reconnecting,
-                                          builder: (_, reconnecting, __) {
-                                            if (reconnecting) {
-                                              return UtilityComponents
-                                                  .showReconnectingDialog(
-                                                      context);
-                                            }
-                                            return const SizedBox();
-                                          }),
-                                      Selector<MeetingStore, bool>(
-                                          selector: (_, meetingStore) =>
-                                              meetingStore.isScreenShareOn,
-                                          builder: (_, isScreenShareOn, __) {
-                                            return isScreenShareOn
-                                                ? HMSLocalScreenShareToast(
-                                                    meetingStore: context
-                                                        .read<MeetingStore>(),
-                                                  )
-                                                : Container();
-                                          }),
-                                      Selector<MeetingStore, HMSPeer?>(
-                                          selector: (_, meetingStore) =>
-                                              meetingStore.peerToBringOnStage,
-                                          builder: (_, peerToBringOnStage, __) {
-                                            return peerToBringOnStage != null
-                                                ? HMSBringOnStageToast(
-                                                    peer: peerToBringOnStage,
-                                                    meetingStore: context
-                                                        .read<MeetingStore>(),
-                                                  )
-                                                : Container();
-                                          }),
-                                      Selector<MeetingStore, HMSPeer?>(
-                                          selector: (_, meetingStore) =>
-                                              meetingStore.peerDeclinedRequest,
-                                          builder:
-                                              (_, peerDeclinedRequest, __) {
-                                            return peerDeclinedRequest != null
-                                                ? HMSRoleChangeDeclineToast(
-                                                    peer: peerDeclinedRequest,
-                                                    meetingStore: context
-                                                        .read<MeetingStore>(),
-                                                  )
-                                                : Container();
-                                          }),
-                                    ],
+                                    ),
                                   ),
                                 ),
                               ),
