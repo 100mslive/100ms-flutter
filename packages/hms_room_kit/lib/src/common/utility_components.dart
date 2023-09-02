@@ -15,6 +15,8 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_dropdown.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_disconnected_toast.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_reconnection_toast.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -989,138 +991,84 @@ class UtilityComponents {
     );
   }
 
-  static Future<bool> showErrorDialog(
-      {required BuildContext context,
-      required String errorMessage,
-      required String errorTitle,
-      required String actionMessage,
-      required Function() action}) async {
-    bool? res = await showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return WillPopScope(
-            onWillPop: () async => false,
-            child: AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              insetPadding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              backgroundColor: HMSThemeColors.backgroundDefault,
-              title: Center(
-                child: Text(
-                  errorTitle,
-                  style: GoogleFonts.inter(
-                      color: HMSThemeColors.alertErrorDefault,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
-              content: Text(errorMessage,
-                  style: GoogleFonts.inter(
-                      color: HMSThemeColors.onSurfaceHighEmphasis,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400)),
-              actions: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                        style: ButtonStyle(
-                            shadowColor: MaterialStateProperty.all(
-                                HMSThemeColors.backgroundDefault),
-                            backgroundColor: MaterialStateProperty.all(
-                                HMSThemeColors.primaryDefault),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(RoundedRectangleBorder(
-                              side: BorderSide(
-                                  width: 1,
-                                  color: HMSThemeColors.primaryDefault),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ))),
-                        onPressed: action,
-                        child: Text(
-                          actionMessage,
-                          style: GoogleFonts.inter(),
-                        )),
-                  ],
-                )
-              ],
-            ),
-          );
-        });
-    return res ?? false;
+  // static Future<bool> showErrorDialog(
+  //     {required BuildContext context,
+  //     required String errorMessage,
+  //     required String errorTitle,
+  //     required String actionMessage,
+  //     required Function() action}) async {
+  //   bool? res = await showDialog(
+  //       barrierDismissible: false,
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return WillPopScope(
+  //           onWillPop: () async => false,
+  //           child: AlertDialog(
+  //             shape: RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(12)),
+  //             insetPadding:
+  //                 const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+  //             backgroundColor: HMSThemeColors.backgroundDefault,
+  //             title: Center(
+  //               child: Text(
+  //                 errorTitle,
+  //                 style: GoogleFonts.inter(
+  //                     color: HMSThemeColors.alertErrorDefault,
+  //                     fontSize: 16,
+  //                     fontWeight: FontWeight.w600),
+  //               ),
+  //             ),
+  //             content: Text(errorMessage,
+  //                 style: GoogleFonts.inter(
+  //                     color: HMSThemeColors.onSurfaceHighEmphasis,
+  //                     fontSize: 14,
+  //                     fontWeight: FontWeight.w400)),
+  //             actions: [
+  //               Row(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 children: [
+  //                   ElevatedButton(
+  //                       style: ButtonStyle(
+  //                           shadowColor: MaterialStateProperty.all(
+  //                               HMSThemeColors.backgroundDefault),
+  //                           backgroundColor: MaterialStateProperty.all(
+  //                               HMSThemeColors.primaryDefault),
+  //                           shape: MaterialStateProperty.all<
+  //                               RoundedRectangleBorder>(RoundedRectangleBorder(
+  //                             side: BorderSide(
+  //                                 width: 1,
+  //                                 color: HMSThemeColors.primaryDefault),
+  //                             borderRadius: BorderRadius.circular(8.0),
+  //                           ))),
+  //                       onPressed: action,
+  //                       child: Text(
+  //                         actionMessage,
+  //                         style: GoogleFonts.inter(),
+  //                       )),
+  //                 ],
+  //               )
+  //             ],
+  //           ),
+  //         );
+  //       });
+  //   return res ?? false;
+  // }
+
+  static Widget showReconnectingDialog(BuildContext context) {
+    return Container(
+        height: MediaQuery.of(context).size.height,
+        color: HMSThemeColors.backgroundDefault.withOpacity(0.5),
+        child: const HMSReconnectionToast());
   }
 
-  static Widget showReconnectingDialog(BuildContext context,
-      {String alertMessage = "Leave Room"}) {
+  static Widget showFailureError(
+      BuildContext context, Function onLeavePressed) {
     return Container(
-      height: MediaQuery.of(context).size.height,
-      color: HMSThemeColors.backgroundDefault.withOpacity(0.5),
-      child: Center(
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 10),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(12)),
-            color: HMSThemeColors.backgroundDefault,
-            boxShadow: [
-              BoxShadow(
-                color: HMSThemeColors.backgroundDefault,
-                offset: const Offset(0.0, 1.0),
-                blurRadius: 6.0,
-              ),
-            ],
-          ),
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            Text(
-              "Reconnecting...",
-              style: GoogleFonts.inter(
-                  color: HMSThemeColors.alertErrorDefault,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            LinearProgressIndicator(
-              color: HMSThemeColors.primaryDefault,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Text('Oops, No internet Connection.\nReconnecting...',
-                style: GoogleFonts.inter(
-                    color: HMSThemeColors.onSurfaceHighEmphasis,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400)),
-            const SizedBox(
-              height: 15,
-            ),
-            ElevatedButton(
-                style: ButtonStyle(
-                    shadowColor: MaterialStateProperty.all(
-                        HMSThemeColors.backgroundDefault),
-                    backgroundColor: MaterialStateProperty.all(
-                        HMSThemeColors.backgroundDefault),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                      side: BorderSide(
-                          width: 1, color: HMSThemeColors.backgroundDefault),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ))),
-                child: Text(
-                  alertMessage,
-                  style: GoogleFonts.inter(),
-                ),
-                onPressed: () {
-                  context.read<MeetingStore>().leave();
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                })
-          ]),
-        ),
-      ),
-    );
+        height: MediaQuery.of(context).size.height,
+        color: HMSThemeColors.backgroundDefault.withOpacity(0.5),
+        child: HMSDisconnectedToast(
+          onLeavePressed: onLeavePressed,
+        ));
   }
 
   static onEndStream(

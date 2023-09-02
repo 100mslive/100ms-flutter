@@ -58,10 +58,8 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                                     text: "Chat",
                                     fontWeight: FontWeight.w600,
                                     textColor: _controller.index == 0
-                                        ? HMSThemeColors
-                                            .onSurfaceHighEmphasis
-                                        : HMSThemeColors
-                                            .onSurfaceLowEmphasis),
+                                        ? HMSThemeColors.onSurfaceHighEmphasis
+                                        : HMSThemeColors.onSurfaceLowEmphasis),
                               ),
                               Tab(
                                 child: HMSSubheadingText(
@@ -69,10 +67,8 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                                         "Participants (${context.read<MeetingStore>().peers.length})",
                                     fontWeight: FontWeight.w600,
                                     textColor: _controller.index == 1
-                                        ? HMSThemeColors
-                                            .onSurfaceHighEmphasis
-                                        : HMSThemeColors
-                                            .onSurfaceLowEmphasis),
+                                        ? HMSThemeColors.onSurfaceHighEmphasis
+                                        : HMSThemeColors.onSurfaceLowEmphasis),
                               ),
                             ],
                             indicatorPadding: const EdgeInsets.all(4),
@@ -87,9 +83,8 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         HMSCrossButton(
-                          onPressed: () => context
-                              .read<MeetingStore>()
-                              .setNewMessageFalse(),
+                          onPressed: () =>
+                              context.read<MeetingStore>().setNewMessageFalse(),
                         ),
                       ],
                     ),
@@ -97,9 +92,7 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.78,
-                  child: TabBarView(
-                    controller: _controller,
-                    children: const [
+                  child: TabBarView(controller: _controller, children: const [
                     ChatBottomSheet(),
                     ParticipantsBottomSheet()
                   ]),

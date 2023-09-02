@@ -79,13 +79,11 @@ class _ScreenControllerState extends State<ScreenController> {
     ///If preview fails then we show the error dialog
     ///with the error message and description
     if (ans != null && mounted) {
-      UtilityComponents.showErrorDialog(
+      showGeneralDialog(
           context: context,
-          errorMessage: "ACTION: ${ans.action} DESCRIPTION: ${ans.description}",
-          errorTitle: ans.message ?? "Join Error",
-          actionMessage: "OK",
-          action: () {
-            Navigator.popUntil(context, (route) => route.isFirst);
+          pageBuilder: (_, data, __) {
+            return UtilityComponents.showFailureError(context,
+                () => Navigator.of(context).popUntil((route) => route.isFirst));
           });
     } else {
       _hmsSDKInteractor.toggleAlwaysScreenOn();

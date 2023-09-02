@@ -17,14 +17,14 @@ class HMSToast extends StatefulWidget {
   final Widget? action;
   final Widget? cancelToastButton;
   final Color? toastColor;
-  final double toastPosition;
+  final double? toastPosition;
   const HMSToast(
       {super.key,
       this.leading,
       this.subtitle,
       this.action,
       this.cancelToastButton,
-      this.toastPosition = 68,
+      this.toastPosition,
       this.toastColor});
 
   @override
@@ -35,7 +35,7 @@ class _HMSToastState extends State<HMSToast> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: widget.toastPosition),
+      padding: EdgeInsets.only(bottom: widget.toastPosition ?? 68),
       child: AlertDialog(
         insetPadding: const EdgeInsets.all(0),
         alignment: Alignment.bottomCenter,
@@ -44,7 +44,7 @@ class _HMSToastState extends State<HMSToast> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         content: Container(
           decoration: BoxDecoration(
-              color: widget.toastColor ?? HMSThemeColors.surfaceDefault,
+              color: widget.toastColor ?? HMSThemeColors.surfaceDim,
               borderRadius: BorderRadius.circular(8)),
           height: 52,
           width: MediaQuery.of(context).size.width - 24,

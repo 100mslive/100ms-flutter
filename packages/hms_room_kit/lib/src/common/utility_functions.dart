@@ -6,10 +6,9 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/animated_text.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
-import 'package:hms_room_kit/src/common/constants.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -113,6 +112,20 @@ class Utilities {
     } else {
       return number.toString();
     }
+  }
+
+  ///This contains the list of toasts possible colors
+  static final List<Color> _toastColors = [
+    HMSThemeColors.surfaceDim,
+    HMSThemeColors.surfaceDim.withOpacity(0.8),
+    HMSThemeColors.surfaceDim.withOpacity(0.6),
+  ];
+
+  ///This method returns the toast color based on the index and the number of toasts
+  static Color getToastColor(int index, int toastsCount) {
+    if (toastsCount == 1) return _toastColors[0];
+    if (toastsCount == 2) return _toastColors[1 - index];
+    return _toastColors[2 - index];
   }
 
   static Future<bool> getPermissions() async {

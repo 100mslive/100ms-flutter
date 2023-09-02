@@ -56,26 +56,9 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
       child: Selector<MeetingStore, Tuple2<bool, HMSException?>>(
           selector: (_, meetingStore) =>
               Tuple2(meetingStore.isRoomEnded, meetingStore.hmsException),
-          builder: (_, data, __) {
-            if (data.item2 != null &&
-                (data.item2?.code?.errorCode == 1003 ||
-                    data.item2?.code?.errorCode == 2000 ||
-                    data.item2?.code?.errorCode == 4005)) {
+          builder: (_, failureData, __) {
+            if (failureData.item1) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                UtilityComponents.showErrorDialog(
-                    context: context,
-                    errorMessage:
-                        "Error Code: ${data.item2!.code?.errorCode ?? ""} ${data.item2!.description}",
-                    errorTitle: data.item2!.message ?? "",
-                    actionMessage: "Leave Room",
-                    action: () {
-                      Navigator.of(context).popUntil((route) => route.isFirst);
-                    });
-              });
-            }
-            if (data.item1) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Utilities.showToast(context.read<MeetingStore>().description);
                 Navigator.of(context).popUntil((route) => route.isFirst);
               });
             }
@@ -283,6 +266,18 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                         }
                                         return const SizedBox();
                                       }),
+                                  if (failureData.item2 != null &&
+                                      (failureData.item2?.code?.errorCode ==
+                                              1003 ||
+                                          failureData.item2?.code?.errorCode ==
+                                              2000 ||
+                                          failureData.item2?.code?.errorCode ==
+                                              4005))
+                                    UtilityComponents.showFailureError(
+                                        context,
+                                        () => context
+                                            .read<MeetingStore>()
+                                            .leave())
                                 ],
                               ),
                             ),

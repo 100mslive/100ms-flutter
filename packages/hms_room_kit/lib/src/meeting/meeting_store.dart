@@ -1,12 +1,17 @@
-//Package imports
-
+///Dart imports
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
+
+//Package imports
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:intl/intl.dart';
+
+//Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
@@ -16,12 +21,12 @@ import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/model/rtc_stats.dart';
 import 'package:hms_room_kit/src/service/app_secrets.dart';
 import 'package:hms_room_kit/src/service/room_service.dart';
-import 'package:intl/intl.dart';
-import 'package:collection/collection.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_toast_model.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
 
-//Project imports
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-
+///[MeetingStore] is the store that is used to store the data of the meeting
+///It takes the following parameters:
+///[hmsSDKInteractor] is the interactor that is used to interact with the SDK
 class MeetingStore extends ChangeNotifier
     with WidgetsBindingObserver
     implements
@@ -76,6 +81,8 @@ class MeetingStore extends ChangeNotifier
   bool reconnected = false;
 
   bool isRoomEnded = false;
+
+  List<HMSToastModel> toasts = [];
 
   Map<String, bool> recordingType = {
     "browser": false,
@@ -365,6 +372,42 @@ class MeetingStore extends ChangeNotifier
 
   Future<void> isScreenShareActive() async {
     isScreenShareOn = await _hmsSDKInteractor.isScreenShareActive();
+    if (isScreenShareOn) {
+      int index = toasts.indexWhere(
+          (toast) => toast.hmsToastType == HMSToastsType.localScreenshareToast);
+      if (index == -1) {
+        toasts.add(HMSToastModel(this,
+            hmsToastType: HMSToastsType.localScreenshareToast));
+        notifyListeners();
+      }
+    } else {
+      toasts.removeWhere((element) =>
+          element.hmsToastType == HMSToastsType.localScreenshareToast);
+      notifyListeners();
+    }
+  }
+
+  void removeToast(HMSToastsType hmsToastsType, {dynamic data}) {
+    switch (hmsToastsType) {
+      case HMSToastsType.roleChangeToast:
+        toasts.removeWhere((toast) =>
+            toast.hmsToastType == HMSToastsType.roleChangeToast &&
+            data.peerId == toast.toastData.peerId);
+        break;
+      case HMSToastsType.errorToast:
+        toasts.removeWhere(
+            (toast) => toast.hmsToastType == HMSToastsType.errorToast);
+        break;
+      case HMSToastsType.localScreenshareToast:
+        toasts.removeWhere((toast) =>
+            toast.hmsToastType == HMSToastsType.localScreenshareToast);
+        break;
+      case HMSToastsType.roleChangeDeclineToast:
+        toasts.removeWhere((toast) =>
+            toast.hmsToastType == HMSToastsType.roleChangeDeclineToast);
+        break;
+    }
+    notifyListeners();
   }
 
   void changeStatsVisible() {
@@ -461,11 +504,8 @@ class MeetingStore extends ChangeNotifier
   }
 
   void toggleRequestDeclined(HMSPeer? sender) {
-    if (peerDeclinedRequest != null) {
-      peerDeclinedRequest = null;
-    } else {
-      peerDeclinedRequest = sender;
-    }
+    toasts.add(HMSToastModel(sender,
+        hmsToastType: HMSToastsType.roleChangeDeclineToast));
     notifyListeners();
   }
 
@@ -1150,8 +1190,10 @@ class MeetingStore extends ChangeNotifier
 
   void updatePeerAt(HMSPeer peer) {
     int index = peers.indexOf(peer);
-    peers.removeAt(index);
-    peers.insert(index, peer);
+    if (index != -1) {
+      peers.removeAt(index);
+      peers.insert(index, peer);
+    }
   }
 
   void _insertHandRaisedPeer(HMSPeer peer) {
@@ -1294,14 +1336,14 @@ class MeetingStore extends ChangeNotifier
                     ?.elements?.onStageExp?.offStageRoles
                     ?.contains(peer.role.name) ??
                 false) {
-              toggleToastForRoleChange(peer: peer);
+              addRemoveToastsForRoleChange(peer: peer);
             }
           } else if (HMSRoomLayout.peerType == PeerRoleType.hlsViewer) {
             if (HMSRoomLayout.roleLayoutData?.screens?.conferencing
                     ?.hlsLiveStreaming?.elements?.onStageExp?.offStageRoles
                     ?.contains(peer.role.name) ??
                 false) {
-              toggleToastForRoleChange(peer: peer);
+              addRemoveToastsForRoleChange(peer: peer);
             }
           }
         }
@@ -1745,20 +1787,22 @@ class MeetingStore extends ChangeNotifier
   }
 
   ///
-  /// Methods to toggle values
+  /// Method to toggle the role change toast
   ///
-  void toggleToastForRoleChange({required HMSPeer peer}) {
-    if (peerToBringOnStage != null) {
-      peerToBringOnStage = null;
-    } else {
-      if (peer.metadata?.contains("\"isHandRaised\":true") ?? false) {
-        peerToBringOnStage = peer;
-      }
+  void addRemoveToastsForRoleChange({required HMSPeer peer}) {
+    if (peer.metadata?.contains("\"isHandRaised\":true") ?? false) {
+      toasts.add(
+          HMSToastModel(peer, hmsToastType: HMSToastsType.roleChangeToast));
+      notifyListeners();
+    } else if (peer.metadata?.contains("\"isHandRaised\":false") ?? false) {
+      toasts.removeWhere((toast) =>
+          toast.hmsToastType == HMSToastsType.roleChangeToast &&
+          peer.peerId == toast.toastData.peerId);
+      notifyListeners();
     }
-    notifyListeners();
   }
-//Get onSuccess or onException callbacks for HMSActionResultListenerMethod
 
+//Get onSuccess or onException callbacks for HMSActionResultListenerMethod
   @override
   void onSuccess(
       {HMSActionResultListenerMethod methodType =
@@ -1910,6 +1954,9 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.changeTrackStateForRole:
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
+        toasts.add(HMSToastModel(hmsException,
+            hmsToastType: HMSToastsType.errorToast));
+        notifyListeners();
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:
         break;
