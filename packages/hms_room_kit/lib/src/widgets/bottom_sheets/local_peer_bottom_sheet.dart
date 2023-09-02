@@ -71,8 +71,8 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                       ),
                     ],
                   ),
-                  const Row(
-                    children: [HMSCrossButton()],
+                  Row(
+                    children: const [HMSCrossButton()],
                   ),
                 ],
               ),
