@@ -13,7 +13,7 @@ class Conferencing {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (defaultConf != null) {
       data['default'] = defaultConf!.toJson();
     }
@@ -36,7 +36,7 @@ class Default {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (elements != null) {
       data['elements'] = elements!.toJson();
     }
@@ -56,7 +56,7 @@ class HlsLiveStreaming {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (elements != null) {
       data['elements'] = elements!.toJson();
     }
@@ -191,7 +191,7 @@ class Chat {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (initialState != null) {
       data['initial_state'] = initialState;
     }

@@ -53,7 +53,7 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        height: 192,
+        height: MediaQuery.of(context).size.height * 0.2,
         child: Column(
           children: [
             ///Chat Header

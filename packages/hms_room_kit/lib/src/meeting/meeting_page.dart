@@ -455,7 +455,6 @@ class _MeetingPageState extends State<MeetingPage> {
                                                       ));
                                                 }).toList());
                                               }),
-
                                           Selector<MeetingStore, bool>(
                                               selector: (_, meetingStore) =>
                                                   meetingStore.reconnecting,
@@ -467,7 +466,6 @@ class _MeetingPageState extends State<MeetingPage> {
                                                 }
                                                 return const SizedBox();
                                               }),
-
                                           if (failureErrors.item2 != null)
                                             if (failureErrors.item2?.code?.errorCode == 1003 ||
                                                 failureErrors.item2?.code
