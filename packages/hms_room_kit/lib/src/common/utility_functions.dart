@@ -14,7 +14,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 ///This class contains the utility functions used in the app
 class Utilities {
-
   static RegExp regexEmoji = RegExp(
       r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])');
 
@@ -138,7 +137,6 @@ class Utilities {
 
   ///This function gets permissions for the camera,microphone and bluetooth headphones
   static Future<bool> getPermissions() async {
-
     ///We request the permissions for the camera,microphone and bluetooth
     await Permission.camera.request();
     await Permission.microphone.request();

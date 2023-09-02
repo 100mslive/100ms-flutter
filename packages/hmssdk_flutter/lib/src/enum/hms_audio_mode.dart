@@ -3,7 +3,6 @@ enum HMSAudioMode { VOICE, MUSIC }
 
 /// Extension for [HMSAudioMode] enum
 extension HMSAudioModeValues on HMSAudioMode {
-
   /// return value of enum
   static HMSAudioMode getAudioModeFromName(String name) {
     switch (name) {

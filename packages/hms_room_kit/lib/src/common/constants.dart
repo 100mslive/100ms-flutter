@@ -3,7 +3,6 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 /// This class contains the constants used throughout the application
 class Constant {
-
   /// [Constant.defaultMeetingLink] is the default meeting link that will be used
   static String defaultMeetingLink =
       "https://public.app.100ms.live/meeting/xvm-wxwo-gbl";

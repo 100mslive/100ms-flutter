@@ -311,10 +311,10 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                               : basicGridView(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: true, size: size));
                                                     });
                                               }),
-                                          Column(
+                                          const Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
-                                            children: const [
+                                            children: [
                                               Padding(
                                                   padding: EdgeInsets.only(
                                                       left: 15,

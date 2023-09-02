@@ -10,7 +10,6 @@ import 'package:hms_room_kit/src/screen_controller.dart';
 ///[roomCode] - The room code of the room to join
 ///[options] - The options for the prebuilt for more details check the [HMSPrebuiltOptions] class
 class HMSPrebuilt extends StatelessWidget {
-
   ///The room code of the room to join
   ///This is a required parameter
   ///
@@ -25,7 +24,6 @@ class HMSPrebuilt extends StatelessWidget {
 
   ///The key for the widget
   const HMSPrebuilt({super.key, required this.roomCode, this.options});
-
 
   ///Builds the widget
   ///Returns a [ScreenController] widget
