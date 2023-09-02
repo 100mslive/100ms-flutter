@@ -39,7 +39,7 @@ With support for HLS and RTMP Live Streaming and Recording, Picture-in-Picture (
 
 📖 Do refer the Complete [Installation Guide here](https://www.100ms.live/docs/flutter/v2/features/integration).
 
-## 🏃‍♀️ How to run the Example App
+## 🏃♀️ How to run the Example App
 
 The fully fledged Example app is [available here](https://github.com/100mslive/100ms-flutter/tree/main/example).
 
@@ -581,7 +581,7 @@ void onException(
 
 📖 Do refer the Complete Documentation Guide [available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart).
 
-🏃‍♀️ Checkout the Example app implementation [available here](https://github.com/100mslive/100ms-flutter/tree/main/example).
+🏃♀️ Checkout the Example app implementation [available here](https://github.com/100mslive/100ms-flutter/tree/main/example).
 
 🚀 We have added explanations & recommended usage guide for different features, UI Layouts, Data Store, etc in [Example app ReadMe](https://github.com/100mslive/100ms-flutter/blob/main/example/README.md).
 

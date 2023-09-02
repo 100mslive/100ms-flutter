@@ -26,6 +26,7 @@ class HMSPrebuiltOptions {
   //this config
   final HMSIOSScreenshareConfig? iOSScreenshareConfig;
 
+  ///[HMSPrebuiltOptions] is a class that is used to pass the options to the prebuilt
   HMSPrebuiltOptions(
       {this.userName,
       this.userId,

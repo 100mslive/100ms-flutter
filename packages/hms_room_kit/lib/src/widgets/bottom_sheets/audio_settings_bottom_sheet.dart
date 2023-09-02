@@ -77,8 +77,8 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
                                 ),
                               ],
                             ),
-                            Row(
-                              children: [HMSCrossButton()],
+                             Row(
+                              children: const [HMSCrossButton()],
                             ),
                           ],
                         ),

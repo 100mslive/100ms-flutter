@@ -354,7 +354,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                         ),
                                                   Padding(
                                                     padding: const EdgeInsets
-                                                            .fromLTRB(
+                                                        .fromLTRB(
                                                         16, 8, 16, 16),
                                                     child: Row(
                                                       mainAxisAlignment:
