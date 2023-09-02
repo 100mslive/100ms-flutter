@@ -50,7 +50,7 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                       )
                     ],
                   ),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [HMSCrossButton()],
                   )

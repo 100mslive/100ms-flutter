@@ -12,10 +12,13 @@ import 'package:hms_room_kit/src/common/animated_text.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+///This class contains the utility functions used in the app
 class Utilities {
+
   static RegExp regexEmoji = RegExp(
       r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])');
 
+  ///This function is used to get the avatar title
   static String getAvatarTitle(String name) {
     if (name.isEmpty) {
       return "👤";
@@ -40,6 +43,7 @@ class Utilities {
     return name.toUpperCase();
   }
 
+  ///This function is used to get the avatar background colour
   static Color getBackgroundColour(String name) {
     if (name.isEmpty) {
       return avatarColors[0];
@@ -62,6 +66,7 @@ class Utilities {
     const Alignment(0.8, 0.5)
   ];
 
+  ///This function is used to get Aspect Ratio of the screen
   static double getRatio(Size size, BuildContext context) {
     EdgeInsets viewPadding = MediaQuery.of(context).viewPadding;
     return (size.height -
@@ -73,10 +78,12 @@ class Utilities {
         (size.width);
   }
 
+  ///This function is used to get HLS Player's Aspect Ratio for the screen
   static double getHLSRatio(Size size, BuildContext context) {
     return (size.height - 1) / (size.width);
   }
 
+  ///This function is used to get HLS Player's Default Aspect Ratio for the screen
   static double getHLSPlayerDefaultRatio(Size size) {
     if (Platform.isAndroid) {
       return size.width / (size.height - 100);
@@ -85,6 +92,7 @@ class Utilities {
     }
   }
 
+  ///This function is used to get the RTMP URL from the room link
   static void setRTMPUrl(String roomUrl) {
     if (roomUrl.contains("flutterhms.page.link") &&
         roomUrl.contains("meetingUrl")) {
@@ -128,7 +136,9 @@ class Utilities {
     return _toastColors[2 - index];
   }
 
+  ///This function gets permissions for the camera,microphone and bluetooth headphones
   static Future<bool> getPermissions() async {
+
     ///We request the permissions for the camera,microphone and bluetooth
     await Permission.camera.request();
     await Permission.microphone.request();
@@ -221,6 +231,7 @@ class Utilities {
     }
   }
 
+  ///This method is used to get names for the audio devices
   static String getAudioDeviceName(HMSAudioDevice? hmsAudioDevice) {
     switch (hmsAudioDevice) {
       case HMSAudioDevice.SPEAKER_PHONE:
@@ -236,6 +247,7 @@ class Utilities {
     }
   }
 
+  ///This method is used to get camera permissions
   static Future<bool> getCameraPermissions() async {
     if (Platform.isIOS) return true;
     await Permission.camera.request();
@@ -245,14 +257,6 @@ class Utilities {
     }
 
     return true;
-  }
-
-  static void showToast(String message, {int time = 1}) {
-    // BotToast.showText(
-    //     textStyle: GoogleFonts.inter(fontSize: 14),
-    //     text: message,
-    //     contentColor: Colors.black87,
-    //     duration: Duration(seconds: time));
   }
 
   static void showTimedMetadata(String message,

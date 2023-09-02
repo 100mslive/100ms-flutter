@@ -1,26 +1,15 @@
-//Dart imports
 import 'dart:io';
 
-///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_recording_error_toast.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-
-///Project imports
-import 'package:hms_room_kit/src/common/utility_functions.dart';
-import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_bottom_navigation_bar.dart';
 import 'package:hms_room_kit/src/meeting/meeting_header.dart';
 import 'package:hms_room_kit/src/widgets/meeting_modes/custom_grid_view.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_bring_on_stage_toast.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_local_screen_share_toast.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_role_change_decline_toast.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_toast_model.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
@@ -32,11 +21,9 @@ import 'package:hms_room_kit/src/widgets/meeting_modes/hero_mode.dart';
 import 'package:hms_room_kit/src/widgets/meeting_modes/one_to_one_mode.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/meeting/pip_view.dart';
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
-///[MeetingPage] is the main page of the meeting
-///It takes the following parameters:
-///[meetingLink] is the link of the meeting
-///[isRoomMute] is the flag to mute the room
 class MeetingPage extends StatefulWidget {
   final String meetingLink;
   final bool isRoomMute;
@@ -68,53 +55,6 @@ class _MeetingPageState extends State<MeetingPage> {
     context.read<MeetingStore>().initForegroundTask();
   }
 
-  ///This method returns the toast according to the type of toast
-  Widget getToast(HMSToastModel toast, int index, int toastsCount) {
-    switch (toast.hmsToastType) {
-      case HMSToastsType.roleChangeToast:
-        return HMSBringOnStageToast(
-          toastColor: Utilities.getToastColor(index, toastsCount),
-          peer: toast.toastData,
-          meetingStore: context.read<MeetingStore>(),
-        );
-      case HMSToastsType.errorToast:
-        return HMSRecordingErrorToast(
-            recordingError: toast.toastData,
-            meetingStore: context.read<MeetingStore>());
-      case HMSToastsType.localScreenshareToast:
-        return HMSLocalScreenShareToast(
-          toastColor: Utilities.getToastColor(index, toastsCount),
-          meetingStore: context.read<MeetingStore>(),
-        );
-
-      case HMSToastsType.roleChangeDeclineToast:
-        return HMSRoleChangeDeclineToast(
-          peer: toast.toastData,
-          toastColor: Utilities.getToastColor(index, toastsCount),
-          meetingStore: context.read<MeetingStore>(),
-        );
-    }
-  }
-
-  ///This method returns the scale of the toast according to the index and the total number of toasts
-  double _getToastScale(int index, int toastsCount) {
-    if (toastsCount == 1) {
-      return 1;
-    } else if (toastsCount == 2) {
-      if (index == 0) {
-        return 0.95;
-      }
-      return 1;
-    } else {
-      if (index == 0) {
-        return 0.90;
-      } else if (index == 1) {
-        return 0.95;
-      }
-      return 1;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     bool isPortraitMode =
@@ -128,9 +68,35 @@ class _MeetingPageState extends State<MeetingPage> {
           child: Selector<MeetingStore, Tuple2<bool, HMSException?>>(
               selector: (_, meetingStore) =>
                   Tuple2(meetingStore.isRoomEnded, meetingStore.hmsException),
-              builder: (_, failureErrors, __) {
-                if (failureErrors.item1) {
+              builder: (_, data, __) {
+                if (data.item2 != null) {
+                  if (data.item2?.code?.errorCode == 1003 ||
+                      data.item2?.code?.errorCode == 2000 ||
+                      data.item2?.code?.errorCode == 4005 ||
+                      data.item2?.code?.errorCode == 424) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      UtilityComponents.showErrorDialog(
+                          context: context,
+                          errorMessage:
+                              "Error Code: ${data.item2!.code?.errorCode ?? ""} ${data.item2!.description}",
+                          errorTitle: data.item2!.message ?? "",
+                          actionMessage: "Leave Room",
+                          action: () {
+                            Navigator.of(context)
+                                .popUntil((route) => route.isFirst);
+                          });
+                    });
+                  } else {
+                    Utilities.showToast(
+                        "Error : ${data.item2!.code?.errorCode ?? ""} ${data.item2!.description} ${data.item2!.message}",
+                        time: 5);
+                  }
+                  context.read<MeetingStore>().hmsException = null;
+                }
+                if (data.item1) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
+                    Utilities.showToast(
+                        context.read<MeetingStore>().description);
                     Navigator.of(context).popUntil((route) => route.isFirst);
                   });
                 }
@@ -311,10 +277,10 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                               : basicGridView(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: true, size: size));
                                                     });
                                               }),
-                                          Column(
+                                          const Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
-                                            children: const [
+                                            children: [
                                               Padding(
                                                   padding: EdgeInsets.only(
                                                       left: 15,
@@ -421,40 +387,6 @@ class _MeetingPageState extends State<MeetingPage> {
                                                 }
                                                 return const SizedBox();
                                               }),
-                                          Selector<
-                                                  MeetingStore,
-                                                  Tuple2<List<HMSToastModel>,
-                                                      int>>(
-                                              selector: (_, meetingStore) =>
-                                                  Tuple2(
-                                                      meetingStore.toasts
-                                                          .toList(),
-                                                      meetingStore
-                                                          .toasts.length),
-                                              builder: (_, toastsItem, __) {
-                                                if (toastsItem.item1.isEmpty) {
-                                                  return Container();
-                                                }
-                                                return Stack(
-                                                    children: toastsItem.item1
-                                                        .asMap()
-                                                        .entries
-                                                        .map((toasts) {
-                                                  return Positioned(
-                                                      bottom:
-                                                          48.0 + 8 * toasts.key,
-                                                      left: 12,
-                                                      child: Transform.scale(
-                                                        scale: _getToastScale(
-                                                            toasts.key,
-                                                            toastsItem.item2),
-                                                        child: getToast(
-                                                            toasts.value,
-                                                            toasts.key,
-                                                            toastsItem.item2),
-                                                      ));
-                                                }).toList());
-                                              }),
                                           Selector<MeetingStore, bool>(
                                               selector: (_, meetingStore) =>
                                                   meetingStore.reconnecting,
@@ -466,23 +398,53 @@ class _MeetingPageState extends State<MeetingPage> {
                                                 }
                                                 return const SizedBox();
                                               }),
-                                          if (failureErrors.item2 != null)
-                                            if (failureErrors.item2?.code?.errorCode == 1003 ||
-                                                failureErrors.item2?.code
-                                                        ?.errorCode ==
-                                                    2000 ||
-                                                failureErrors.item2?.code
-                                                        ?.errorCode ==
-                                                    4005 ||
-                                                failureErrors.item2?.code
-                                                        ?.errorCode ==
-                                                    424)
-                                              UtilityComponents
-                                                  .showFailureError(
-                                                      context,
-                                                      () => context
-                                                          .read<MeetingStore>()
-                                                          .leave())
+                                          Selector<MeetingStore, bool>(
+                                              selector: (_, meetingStore) =>
+                                                  meetingStore.isScreenShareOn,
+                                              builder:
+                                                  (_, isScreenShareOn, __) {
+                                                return isScreenShareOn
+                                                    ? HMSLocalScreenShareToast(
+                                                        meetingStore:
+                                                            context.read<
+                                                                MeetingStore>(),
+                                                      )
+                                                    : Container();
+                                              }),
+                                          Selector<MeetingStore, HMSPeer?>(
+                                              selector: (_, meetingStore) =>
+                                                  meetingStore
+                                                      .peerToBringOnStage,
+                                              builder:
+                                                  (_, peerToBringOnStage, __) {
+                                                return peerToBringOnStage !=
+                                                        null
+                                                    ? HMSBringOnStageToast(
+                                                        peer:
+                                                            peerToBringOnStage,
+                                                        meetingStore:
+                                                            context.read<
+                                                                MeetingStore>(),
+                                                      )
+                                                    : Container();
+                                              }),
+                                          Selector<MeetingStore, HMSPeer?>(
+                                              selector: (_, meetingStore) =>
+                                                  meetingStore
+                                                      .peerDeclinedRequest,
+                                              builder:
+                                                  (_, peerDeclinedRequest, __) {
+                                                return peerDeclinedRequest !=
+                                                        null
+                                                    ? HMSRoleChangeDeclineToast(
+                                                        peer:
+                                                            peerDeclinedRequest,
+                                                        meetingStore:
+                                                            context.read<
+                                                                MeetingStore>(),
+                                                      )
+                                                    : Container();
+                                              }),
                                         ],
                                       ),
                                     ),
