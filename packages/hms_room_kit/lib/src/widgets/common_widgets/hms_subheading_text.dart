@@ -35,7 +35,7 @@ class HMSSubheadingText extends StatelessWidget {
       this.maxLines = 1,
       this.fontWeight = FontWeight.w400,
       this.textOverflow = TextOverflow.ellipsis,
-      this.textAlign=TextAlign.start})
+      this.textAlign = TextAlign.start})
       : super(key: key);
 
   @override

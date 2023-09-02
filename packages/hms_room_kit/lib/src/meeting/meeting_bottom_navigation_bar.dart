@@ -120,36 +120,46 @@ class _MeetingBottomNavigationBarState
               }),
 
         ///Chat Button
-        HMSEmbeddedButton(
-          onTap: () => {
-            context.read<MeetingStore>().getSessionMetadata(
-                SessionStoreKeyValues.getNameFromMethod(
-                    SessionStoreKey.pinnedMessageSessionKey)),
-            context.read<MeetingStore>().setNewMessageFalse(),
-            showModalBottomSheet(
-              isScrollControlled: true,
-              backgroundColor: HMSThemeColors.surfaceDim,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              context: context,
-              builder: (ctx) => ChangeNotifierProvider.value(
-                  value: context.read<MeetingStore>(),
-                  child: const ChatParticipantsTabBar()),
-            )
-          },
-          onColor: HMSThemeColors.backgroundDim,
-          isActive: true,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SvgPicture.asset(
-              "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
-              colorFilter: ColorFilter.mode(
-                  HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
-              semanticsLabel: "chat_button",
-            ),
-          ),
-        ),
+        Selector<MeetingStore, bool>(
+            selector: (_, meetingStore) => meetingStore.isNewMessageReceived,
+            builder: (_, isNewMessageReceived, __) {
+              return HMSEmbeddedButton(
+                onTap: () => {
+                  context.read<MeetingStore>().getSessionMetadata(
+                      SessionStoreKeyValues.getNameFromMethod(
+                          SessionStoreKey.pinnedMessageSessionKey)),
+                  context.read<MeetingStore>().setNewMessageFalse(),
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    backgroundColor: HMSThemeColors.surfaceDim,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    context: context,
+                    builder: (ctx) => ChangeNotifierProvider.value(
+                        value: context.read<MeetingStore>(),
+                        child: const ChatParticipantsTabBar()),
+                  )
+                },
+                onColor: HMSThemeColors.backgroundDim,
+                isActive: true,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: isNewMessageReceived
+                      ? SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/message_badge_on.svg",
+                          semanticsLabel: "chat_button",
+                        )
+                      : SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
+                          semanticsLabel: "chat_button",
+                        ),
+                ),
+              );
+            }),
 
         ///Menu Button
         HMSEmbeddedButton(

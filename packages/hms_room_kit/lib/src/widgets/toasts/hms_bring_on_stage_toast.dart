@@ -5,6 +5,7 @@ import "dart:math" as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
@@ -15,11 +16,23 @@ import 'package:hms_room_kit/src/widgets/toasts/hms_toast.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toast_button.dart';
 
 ///[HMSBringOnStageToast] renders the toast when a user requests to be on stage
+///It takes the following parameters:
+///[peer] is the peer that requested to be on stage
+///[meetingStore] is the meetingStore of the meeting
+///[toastColor] is the color of the toast
+///[toastPosition] is the position of the toast from the bottom
 class HMSBringOnStageToast extends StatelessWidget {
   final HMSPeer peer;
   final MeetingStore meetingStore;
+  final Color? toastColor;
+  final double? toastPosition;
+
   const HMSBringOnStageToast(
-      {super.key, required this.peer, required this.meetingStore});
+      {super.key,
+      required this.peer,
+      required this.meetingStore,
+      this.toastColor,
+      this.toastPosition});
 
   String? _getButtonText() {
     if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
@@ -40,6 +53,8 @@ class HMSBringOnStageToast extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HMSToast(
+      toastColor: toastColor,
+      toastPosition: toastPosition,
       leading: SvgPicture.asset(
         "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
         height: 24,
@@ -64,7 +79,7 @@ class HMSBringOnStageToast extends StatelessWidget {
           HMSRole? onStageRole = meetingStore.getOnStageRole();
           if (onStageRole != null) {
             meetingStore.changeRoleOfPeer(peer: peer, roleName: onStageRole);
-            meetingStore.toggleToastForRoleChange(peer: peer);
+            meetingStore.removeToast(HMSToastsType.roleChangeToast);
           }
         },
         height: 36,
@@ -79,7 +94,7 @@ class HMSBringOnStageToast extends StatelessWidget {
           size: 24,
         ),
         onPressed: () {
-          meetingStore.toggleToastForRoleChange(peer: peer);
+          meetingStore.removeToast(HMSToastsType.roleChangeToast, data: peer);
         },
       ),
     );

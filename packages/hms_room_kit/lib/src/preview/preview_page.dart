@@ -17,7 +17,6 @@ import 'package:hms_room_kit/src/preview/preview_header.dart';
 import 'package:hms_room_kit/src/preview/preview_join_button.dart';
 import 'package:hms_room_kit/src/preview/preview_network_indicator.dart';
 import 'package:hms_room_kit/src/screen_controller.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/error_dialog.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_loader.dart';
 import 'package:hms_room_kit/src/widgets/hms_buttons/hms_back_button.dart';
@@ -82,15 +81,15 @@ class _PreviewPageState extends State<PreviewPage> {
 
       ///If the room join fails we show the error dialog
       if (ans != null && mounted) {
-        UtilityComponents.showErrorDialog(
+        showGeneralDialog(
             context: context,
-            errorMessage:
-                "ACTION: ${ans.action} DESCRIPTION: ${ans.description}",
-            errorTitle: ans.message ?? "Join Error",
-            actionMessage: "OK",
-            action: () {
-              Navigator.of(context).popUntil((route) => route.isFirst);
+            pageBuilder: (_, data, __) {
+              return UtilityComponents.showFailureError(
+                  context,
+                  () =>
+                      Navigator.of(context).popUntil((route) => route.isFirst));
             });
+        return;
       }
 
       /// If the room join is successful
@@ -175,10 +174,6 @@ class _PreviewPageState extends State<PreviewPage> {
       child: Selector<PreviewStore, HMSException?>(
           selector: (_, previewStore) => previewStore.error,
           builder: (_, error, __) {
-            if (error != null) {
-              ErrorDialog.showTerminalErrorDialog(
-                  context: context, error: error);
-            }
             return Scaffold(
               resizeToAvoidBottomInset: false,
               backgroundColor: HMSThemeColors.backgroundDim,
@@ -453,7 +448,12 @@ class _PreviewPageState extends State<PreviewPage> {
                                         )
                                       ],
                                     ),
-                                  )
+                                  ),
+                                if (error != null)
+                                  UtilityComponents.showFailureError(
+                                      context,
+                                      () => Navigator.of(context)
+                                          .popUntil((route) => route.isFirst)),
                               ],
                             ),
                     ),

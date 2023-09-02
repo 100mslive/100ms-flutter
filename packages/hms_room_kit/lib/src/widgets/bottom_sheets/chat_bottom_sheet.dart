@@ -111,7 +111,8 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
 
                       ///If there are no chats and no pinned messages
                       (data.item2 == 0 && data.item3 == null)
-                          ? const Expanded(child: Center(child: HMSEmptyChatWidget()))
+                          ? const Expanded(
+                              child: Center(child: HMSEmptyChatWidget()))
                           : Expanded(
                               child: Column(children: [
                                 ///If there is a pinned chat
@@ -119,7 +120,8 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 8.0),
                                     child: Container(
-                                      constraints: const BoxConstraints(maxHeight: 150),
+                                      constraints:
+                                          const BoxConstraints(maxHeight: 150),
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(8),
@@ -144,10 +146,11 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                   ),
                                                   const SizedBox(width: 8),
                                                   SizedBox(
-                                                    width: MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        0.75,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.75,
                                                     child: SelectableLinkify(
                                                       text: data.item3!,
                                                       onOpen: (link) async {
@@ -164,14 +167,14 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                           const LinkifyOptions(
                                                               humanize: false),
                                                       style: GoogleFonts.inter(
-                                                          fontSize: 14.0,
-                                                          color: HMSThemeColors
-                                                              .onSurfaceHighEmphasis,
-                                                          letterSpacing: 0.25,
-                                                          height: 20 / 14,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          ),
+                                                        fontSize: 14.0,
+                                                        color: HMSThemeColors
+                                                            .onSurfaceHighEmphasis,
+                                                        letterSpacing: 0.25,
+                                                        height: 20 / 14,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      ),
                                                       linkStyle: GoogleFonts.inter(
                                                           fontSize: 14.0,
                                                           color: HMSThemeColors
@@ -189,7 +192,8 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                   GestureDetector(
                                                       onTap: () {
                                                         context
-                                                            .read<MeetingStore>()
+                                                            .read<
+                                                                MeetingStore>()
                                                             .setSessionMetadataForKey(
                                                                 key: SessionStoreKeyValues
                                                                     .getNameFromMethod(
@@ -201,10 +205,12 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                         "packages/hms_room_kit/lib/src/assets/icons/close.svg",
                                                         height: 20,
                                                         width: 20,
-                                                        colorFilter: ColorFilter.mode(
-                                                            HMSThemeColors
-                                                                .onSurfaceMediumEmphasis,
-                                                            BlendMode.srcIn),
+                                                        colorFilter:
+                                                            ColorFilter.mode(
+                                                                HMSThemeColors
+                                                                    .onSurfaceMediumEmphasis,
+                                                                BlendMode
+                                                                    .srcIn),
                                                       )),
                                                 ],
                                               )
