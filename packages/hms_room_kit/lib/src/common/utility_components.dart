@@ -706,8 +706,8 @@ class UtilityComponents {
                                       ))),
                                   onPressed: () {
                                     if (selectedRoles.isEmpty) {
-                                      // Utilities.showToast(
-                                      //     "Please select a role");
+                                      Utilities.showToast(
+                                          "Please select a role");
                                     } else {
                                       meetingStore.changeRoleOfPeersWithRoles(
                                           toRole, selectedRoles);
@@ -833,8 +833,8 @@ class UtilityComponents {
                             }
                           else
                             {
-                              // Utilities.showToast(
-                              //     "Please enter RTMP URLs or enable recording")
+                              Utilities.showToast(
+                                  "Please enter RTMP URLs or enable recording")
                             }
                         },
                         child: Padding(
@@ -1220,7 +1220,7 @@ class UtilityComponents {
                     textCapitalization: TextCapitalization.words,
                     textInputAction: TextInputAction.done,
                     onSubmitted: (value) => (textController.text == "")
-                        ? debugPrint("Name can't be empty")
+                        ? Utilities.showToast("Name can't be empty")
                         : Navigator.pop(context, textController.text.trim()),
                     autofocus: true,
                     controller: textController,
@@ -1284,7 +1284,7 @@ class UtilityComponents {
                       onPressed: () => {
                         if (textController.text == "")
                           {
-                            // Utilities.showToast("Name can't be empty")
+                            Utilities.showToast("Name can't be empty"),
                           }
                         else
                           {Navigator.pop(context, textController.text.trim())}
@@ -1436,9 +1436,10 @@ class UtilityComponents {
                               borderRadius: BorderRadius.circular(8.0),
                             ))),
                         onPressed: () => {
-                          if (meetingStore.isAudioShareStarted){
+                          if (meetingStore.isAudioShareStarted)
                             meetingStore.setAudioMixingMode(valueChoose)
-                          },
+                          else
+                            Utilities.showToast("Audio Share not enabled"),
                           Navigator.pop(context),
                           Navigator.pop(context)
                         },

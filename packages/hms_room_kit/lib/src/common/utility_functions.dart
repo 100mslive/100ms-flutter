@@ -259,6 +259,14 @@ class Utilities {
     return true;
   }
 
+  static void showToast(String message, {int time = 1}) {
+    // BotToast.showText(
+    //     textStyle: GoogleFonts.inter(fontSize: 14),
+    //     text: message,
+    //     contentColor: Colors.black87,
+    //     duration: Duration(seconds: time));
+  }
+
   static void showTimedMetadata(String message,
       {int time = 1, Alignment align = const Alignment(0, 0.8)}) {
     BotToast.showText(
