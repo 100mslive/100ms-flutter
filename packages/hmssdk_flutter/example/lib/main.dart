@@ -362,7 +362,7 @@ class _HomePageState extends State<HomePage> {
                         contentPadding: EdgeInsets.only(left: 16),
                         fillColor: themeSurfaceColor,
                         filled: true,
-                        hintText: 'Paste the room code here',
+                        hintText: 'Paste the room code or link here',
                         hintStyle: GoogleFonts.inter(
                             color: hmsHintColor,
                             height: 1.5,
