@@ -41,9 +41,12 @@ class ScreenElements {
   });
 
   factory ScreenElements.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return ScreenElements();
+    }
     return ScreenElements(
-      title: json?['title'],
-      subTitle: json?['sub_title'],
+      title: json['title'],
+      subTitle: json['sub_title'],
     );
   }
 }
@@ -58,9 +61,12 @@ class Preview {
   });
 
   factory Preview.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return Preview();
+    }
     return Preview(
-      previewHeader: ScreenElements.fromJson(json?['preview_header']),
-      joinForm: JoinForm.fromJson(json?['join_form']),
+      previewHeader: ScreenElements.fromJson(json['preview_header']),
+      joinForm: JoinForm.fromJson(json['join_form']),
     );
   }
 }
@@ -112,14 +118,17 @@ class Screens {
   });
 
   factory Screens.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return Screens();
+    }
     return Screens(
-      preview: json?.containsKey('preview') == true
-          ? Preview.fromJson(json?['preview']?['default']?['elements'])
+      preview: json.containsKey('preview') == true
+          ? Preview.fromJson(json['preview']?['default']?['elements'])
           : null,
-      conferencing: json?.containsKey('conferencing') == true
-          ? Conferencing.fromJson(json?['conferencing'])
+      conferencing: json.containsKey('conferencing') == true
+          ? Conferencing.fromJson(json['conferencing'])
           : null,
-      leave: json?['leave'],
+      leave: json['leave'],
     );
   }
 }
@@ -199,7 +208,7 @@ enum PeerRoleType { hlsViewer, conferencing }
 
 class HMSRoomLayout {
   static List<LayoutData>? data;
-  static int? limit;
+  static String? limit;
   static String? last;
   static LayoutData? roleLayoutData;
   static PeerRoleType? peerType;

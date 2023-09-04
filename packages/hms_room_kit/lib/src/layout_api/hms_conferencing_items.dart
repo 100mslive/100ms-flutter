@@ -4,7 +4,12 @@ class Conferencing {
 
   Conferencing({this.defaultConf, this.hlsLiveStreaming});
 
-  Conferencing.fromJson(Map<String, dynamic> json) {
+  Conferencing.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      defaultConf = null;
+      hlsLiveStreaming = null;
+      return;
+    }
     defaultConf =
         json.containsKey('default') ? Default.fromJson(json['default']) : null;
     hlsLiveStreaming = json.containsKey('hls_live_streaming')
@@ -29,7 +34,11 @@ class Default {
 
   Default({this.elements});
 
-  Default.fromJson(Map<String, dynamic> json) {
+  Default.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      elements = null;
+      return;
+    }
     elements = json.containsKey('elements')
         ? Elements.fromJson(json['elements'])
         : null;
@@ -49,7 +58,11 @@ class HlsLiveStreaming {
 
   HlsLiveStreaming({this.elements});
 
-  HlsLiveStreaming.fromJson(Map<String, dynamic> json) {
+  HlsLiveStreaming.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      elements = null;
+      return;
+    }
     elements = json.containsKey('elements')
         ? Elements.fromJson(json['elements'])
         : null;
@@ -79,7 +92,15 @@ class Elements {
     this.onStageExp,
   });
 
-  Elements.fromJson(Map<String, dynamic> json) {
+  Elements.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      chat = null;
+      participantList = null;
+      videoTileLayout = null;
+      emojiReactions = null;
+      onStageExp = null;
+      return;
+    }
     chat = json.containsKey('chat') ? Chat.fromJson(json['chat']) : null;
     participantList = json['participant_list'];
     videoTileLayout = json.containsKey('video_tile_layout')
@@ -121,7 +142,14 @@ class OnStageExp {
     this.offStageRoles,
   });
 
-  OnStageExp.fromJson(Map<String, dynamic> json) {
+  OnStageExp.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      bringToStageLabel = null;
+      removeFromStageLabel = null;
+      onStageRole = null;
+      offStageRoles = null;
+      return;
+    }
     bringToStageLabel = json['bring_to_stage_label'];
     removeFromStageLabel = json['remove_from_stage_label'];
     onStageRole = json['on_stage_role'];
@@ -154,7 +182,13 @@ class VideoTileLayout {
     this.enableSpotlightingPeer,
   });
 
-  VideoTileLayout.fromJson(Map<String, dynamic> json) {
+  VideoTileLayout.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      enableLocalTileInset = null;
+      prominentRoles = null;
+      enableSpotlightingPeer = null;
+      return;
+    }
     enableLocalTileInset = json['enable_local_tile_inset'];
     prominentRoles =
         json.containsKey('prominent_roles') && json['prominent_roles'] is List
@@ -181,7 +215,13 @@ class Chat {
 
   Chat({this.initialState, this.isOverlay, this.allowPinningMessages});
 
-  Chat.fromJson(Map<String, dynamic> json) {
+  Chat.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      initialState = null;
+      isOverlay = null;
+      allowPinningMessages = null;
+      return;
+    }
     initialState =
         json.containsKey('initial_state') ? json['initial_state'] : null;
     isOverlay = json.containsKey('is_overlay') ? json['is_overlay'] : null;
