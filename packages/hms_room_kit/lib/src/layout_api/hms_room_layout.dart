@@ -245,7 +245,7 @@ class HMSRoomLayout {
   static void _setLayout({required Map<String, dynamic> layoutJson}) {
     data = List<LayoutData>.from((layoutJson['data'] ?? [])
         .map((appData) => LayoutData.fromJson(appData)));
-    limit = layoutJson['limit'];
+    limit = layoutJson['limit'].toString();
     last = layoutJson['last'];
   }
 }
