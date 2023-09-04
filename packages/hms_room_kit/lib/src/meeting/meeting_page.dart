@@ -4,6 +4,10 @@ import 'dart:io';
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:hms_room_kit/src/preview_for_role/preview_for_role_bottom_sheet.dart';
+import 'package:hms_room_kit/src/preview_for_role/preview_for_role_header.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
+import 'package:hms_room_kit/src/widgets/meeting_modes/custom_one_to_one_grid.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_recording_error_toast.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -15,7 +19,6 @@ import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_bottom_navigation_bar.dart';
 import 'package:hms_room_kit/src/meeting/meeting_header.dart';
-import 'package:hms_room_kit/src/widgets/meeting_modes/custom_grid_view.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_bring_on_stage_toast.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_local_screen_share_toast.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_role_change_decline_toast.dart';
@@ -251,8 +254,12 @@ class _MeetingPageState extends State<MeetingPage> {
                                                            * - Remaining as the mode from bottom sheet is selected corresponding grid layout is rendered
                                                           */
                                                           child: (modeData.item1 ==
-                                                                  MeetingMode
-                                                                      .activeSpeakerWithInset)
+                                                                      MeetingMode
+                                                                          .activeSpeakerWithInset &&
+                                                                  (context.read<MeetingStore>().localPeer?.audioTrack !=
+                                                                          null ||
+                                                                      context.read<MeetingStore>().localPeer?.videoTrack !=
+                                                                          null))
                                                               ? OneToOneMode(
                                                                   bottomMargin:
                                                                       225,
@@ -268,19 +275,10 @@ class _MeetingPageState extends State<MeetingPage> {
                                                               : (modeData.item1 ==
                                                                       MeetingMode
                                                                           .activeSpeakerWithoutInset)
-                                                                  ? const CustomGridView()
-                                                                  // basicGridView(
-                                                                  //     peerTracks: data
-                                                                  //         .item1
-                                                                  //         .sublist(
-                                                                  //             0,
-                                                                  //             min(data.item1.length,
-                                                                  //                 data.item4 + 4)),
-                                                                  //     itemCount: min(data.item3, data.item4 + 4),
-                                                                  //     screenShareCount: data.item4,
-                                                                  //     context: context,
-                                                                  //     isPortrait: true,
-                                                                  //     size: size)
+                                                                  ? const CustomOneToOneGrid(
+                                                                      isLocalInsetPresent:
+                                                                          false,
+                                                                    )
                                                                   : (modeData.item1 ==
                                                                           MeetingMode
                                                                               .hero)
@@ -308,7 +306,9 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                               size: size)
                                                                           : (data.item5 == MeetingMode.single)
                                                                               ? fullScreenMode(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: isPortraitMode, size: size)
-                                                                              : basicGridView(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: true, size: size));
+                                                                              : const CustomOneToOneGrid(
+                                                                                  isLocalInsetPresent: false,
+                                                                                ));
                                                     });
                                               }),
                                           Column(
@@ -329,6 +329,117 @@ class _MeetingPageState extends State<MeetingPage> {
                                                       MeetingBottomNavigationBar())
                                             ],
                                           ),
+
+                                          ///This gets rendered when the previewForRole method is called
+                                          ///This is used to show the preview for role component
+                                          Selector<
+                                                  MeetingStore,
+                                                  Tuple3<
+                                                      HMSLocalVideoTrack?,
+                                                      HMSLocalAudioTrack?,
+                                                      HMSRoleChangeRequest?>>(
+                                              selector: (_, meetingStore) => Tuple3(
+                                                  meetingStore
+                                                      .previewForRoleVideoTrack,
+                                                  meetingStore
+                                                      .previewForRoleAudioTrack,
+                                                  meetingStore
+                                                      .currentRoleChangeRequest),
+                                              builder: (_, previewForRoleTracks,
+                                                  __) {
+                                                ///If the preview for role tracks are not null
+                                                ///we show the preview for role component
+                                                ///else we show and empty Container
+                                                if (previewForRoleTracks.item1 != null ||
+                                                    previewForRoleTracks
+                                                            .item2 !=
+                                                        null ||
+                                                    previewForRoleTracks
+                                                            .item3 !=
+                                                        null) {
+                                                  WidgetsBinding.instance
+                                                      .addPostFrameCallback(
+                                                          (timeStamp) {
+                                                    ///For preview for role component we use the [showGeneralDialog]
+                                                    showGeneralDialog(
+                                                        context: context,
+                                                        pageBuilder:
+                                                            (ctx, _, __) {
+                                                          return ListenableProvider
+                                                              .value(
+                                                            value: context.read<
+                                                                MeetingStore>(),
+                                                            child: Scaffold(
+                                                              body: SafeArea(
+                                                                child:
+                                                                    Container(
+                                                                  color: HMSThemeColors
+                                                                      .backgroundDim,
+                                                                  height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height,
+                                                                  width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+
+                                                                  ///We render the preview for role component
+                                                                  child: Stack(
+                                                                    children: [
+                                                                      ///This renders the video component
+                                                                      ///[HMSVideoView] is only rendered if video is ON
+                                                                      ///
+                                                                      ///else we render the [HMSCircularAvatar]
+                                                                      Selector<
+                                                                              MeetingStore,
+                                                                              bool>(
+                                                                          selector: (_, meetingStore) => meetingStore
+                                                                              .isVideoOn,
+                                                                          builder: (_,
+                                                                              isVideoOn,
+                                                                              __) {
+                                                                            return Container(
+                                                                              height: MediaQuery.of(context).size.height,
+                                                                              width: MediaQuery.of(context).size.width,
+                                                                              color: HMSThemeColors.backgroundDim,
+                                                                              child: (isVideoOn && previewForRoleTracks.item1 != null)
+                                                                                  ? Center(
+                                                                                      child: HMSVideoView(
+                                                                                        scaleType: ScaleType.SCALE_ASPECT_FILL,
+                                                                                        track: previewForRoleTracks.item1!,
+                                                                                        setMirror: true,
+                                                                                      ),
+                                                                                    )
+                                                                                  : Center(
+                                                                                      child: HMSCircularAvatar(name: context.read<MeetingStore>().localPeer?.name ?? ""),
+                                                                                    ),
+                                                                            );
+                                                                          }),
+
+                                                                      ///This renders the preview for role header
+                                                                      const PreviewForRoleHeader(),
+
+                                                                      ///This renders the preview for role bottom sheet
+                                                                      PreviewForRoleBottomSheet(
+                                                                        meetingStore:
+                                                                            context.read<MeetingStore>(),
+                                                                        roleChangeRequest: context
+                                                                            .read<MeetingStore>()
+                                                                            .currentRoleChangeRequest,
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        });
+                                                  });
+                                                }
+                                                return Container();
+                                              }),
+
                                           // Selector<MeetingStore,
                                           //         HMSRoleChangeRequest?>(
                                           //     selector: (_, meetingStore) =>
