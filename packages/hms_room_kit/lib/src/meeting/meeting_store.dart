@@ -76,6 +76,8 @@ class MeetingStore extends ChangeNotifier
 
   bool isScreenShareOn = false;
 
+  BuildContext? screenshareContext;
+
   bool reconnecting = false;
 
   bool reconnected = false;
@@ -1431,6 +1433,13 @@ class MeetingStore extends ChangeNotifier
               peerTracks.removeAt(peerIndex);
               notifyListeners();
               changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
+            }
+
+            //pop the full screen screenshare when the screenshare is stopped
+            //set the screenshareContext to null
+            if (screenshareContext != null) {
+              Navigator.pop(screenshareContext!);
+              screenshareContext = null;
             }
 
             ///Need to check why we were doing this

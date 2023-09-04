@@ -146,152 +146,150 @@ class _PeerTileState extends State<PeerTile> {
                                   onTap: () {
                                     showGeneralDialog(
                                         context: context,
-                                        transitionBuilder: (ctx, animation,
-                                            secondaryAnimation, value) {
-                                          return Transform.scale(
-                                            scale: animation.value,
-                                            child: Opacity(
-                                                opacity: animation.value,
-                                                child: ListenableProvider.value(
-                                                  value: context
-                                                      .read<PeerTrackNode>(),
-                                                  child: Scaffold(
-                                                    body: SafeArea(
-                                                      child: Container(
-                                                        color: HMSThemeColors
-                                                            .backgroundDim,
-                                                        height: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .height,
-                                                        width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
-                                                        child: Stack(
-                                                          children: [
-                                                            InteractiveViewer(
-                                                              child:
-                                                                  ListenableProvider
-                                                                      .value(
-                                                                value: context.read<
-                                                                    MeetingStore>(),
-                                                                child:
-                                                                    VideoView(
-                                                                  uid: context
-                                                                      .read<
-                                                                          PeerTrackNode>()
-                                                                      .uid,
-                                                                  scaleType: widget
-                                                                      .scaleType,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Positioned(
-                                                                top: 5,
-                                                                right: 5,
-                                                                child:
-                                                                    GestureDetector(
-                                                                  onTap: () {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                  },
-                                                                  child:
-                                                                      Container(
-                                                                    height: 40,
-                                                                    width: 40,
-                                                                    decoration: BoxDecoration(
-                                                                        color: HMSThemeColors
-                                                                            .backgroundDim
-                                                                            .withAlpha(
-                                                                                64),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(8)),
-                                                                    child:
-                                                                        Center(
-                                                                      child: SvgPicture
-                                                                          .asset(
-                                                                        "packages/hms_room_kit/lib/src/assets/icons/minimize.svg",
-                                                                        height:
-                                                                            16,
-                                                                        width:
-                                                                            16,
-                                                                        semanticsLabel:
-                                                                            "minimize_label",
-                                                                        colorFilter: ColorFilter.mode(
-                                                                            HMSThemeColors.onSurfaceHighEmphasis,
-                                                                            BlendMode.srcIn),
+                                        transitionBuilder: (dialogContext,
+                                            animation,
+                                            secondaryAnimation,
+                                            value) {
+                                          if (mounted) {
+                                            ///Setting the screenshare context 
+                                            ///in the meeting store to store the current context
+                                            ///so that we can pop the dialog from the meeting store when screenshare is stopped
+                                            context
+                                                    .read<MeetingStore>()
+                                                    .screenshareContext =
+                                                dialogContext;
+                                          }
+                                          ///Here we check whether the full screen screenshare is mounted or not
+                                          return context.mounted
+                                              ? Transform.scale(
+                                                  scale: animation.value,
+                                                  child: Opacity(
+                                                      opacity: animation.value,
+                                                      child: ListenableProvider
+                                                          .value(
+                                                        value: context.read<
+                                                            PeerTrackNode>(),
+                                                        child: Scaffold(
+                                                          body: SafeArea(
+                                                            child: Container(
+                                                              color: HMSThemeColors
+                                                                  .backgroundDim,
+                                                              height:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height,
+                                                              width:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+                                                              child: Stack(
+                                                                children: [
+                                                                  InteractiveViewer(
+                                                                    child: ListenableProvider
+                                                                        .value(
+                                                                      value: context
+                                                                          .read<
+                                                                              MeetingStore>(),
+                                                                      child:
+                                                                          VideoView(
+                                                                        uid: context
+                                                                            .read<PeerTrackNode>()
+                                                                            .uid,
+                                                                        scaleType:
+                                                                            widget.scaleType,
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                )),
-                                                            Positioned(
-                                                              //Bottom left
-                                                              bottom: 5,
-                                                              left: 5,
-                                                              child: Container(
-                                                                decoration: BoxDecoration(
-                                                                    color: HMSThemeColors
-                                                                        .backgroundDim
-                                                                        .withOpacity(
-                                                                            0.64),
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            8)),
-                                                                child: Center(
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: const EdgeInsets
-                                                                        .only(
-                                                                        left:
-                                                                            8.0,
-                                                                        right:
-                                                                            4,
-                                                                        top: 4,
-                                                                        bottom:
-                                                                            4),
-                                                                    child: Row(
-                                                                      mainAxisSize:
-                                                                          MainAxisSize
-                                                                              .min,
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .center,
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        SvgPicture
-                                                                            .asset(
-                                                                          "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
+                                                                  Positioned(
+                                                                      top: 5,
+                                                                      right: 5,
+                                                                      child:
+                                                                          GestureDetector(
+                                                                        onTap:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              dialogContext);
+                                                                          context
+                                                                              .read<MeetingStore>()
+                                                                              .screenshareContext = null;
+                                                                        },
+                                                                        child:
+                                                                            Container(
                                                                           height:
-                                                                              20,
+                                                                              40,
                                                                           width:
-                                                                              20,
-                                                                          colorFilter: ColorFilter.mode(
-                                                                              HMSThemeColors.onSurfaceHighEmphasis,
-                                                                              BlendMode.srcIn),
+                                                                              40,
+                                                                          decoration: BoxDecoration(
+                                                                              color: HMSThemeColors.backgroundDim.withAlpha(64),
+                                                                              borderRadius: BorderRadius.circular(8)),
+                                                                          child:
+                                                                              Center(
+                                                                            child:
+                                                                                SvgPicture.asset(
+                                                                              "packages/hms_room_kit/lib/src/assets/icons/minimize.svg",
+                                                                              height: 16,
+                                                                              width: 16,
+                                                                              semanticsLabel: "minimize_label",
+                                                                              colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
+                                                                            ),
+                                                                          ),
                                                                         ),
-                                                                        const SizedBox(
-                                                                          width:
-                                                                              6,
+                                                                      )),
+                                                                  Positioned(
+                                                                    //Bottom left
+                                                                    bottom: 5,
+                                                                    left: 5,
+                                                                    child:
+                                                                        Container(
+                                                                      decoration: BoxDecoration(
+                                                                          color: HMSThemeColors.backgroundDim.withOpacity(
+                                                                              0.64),
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8)),
+                                                                      child:
+                                                                          Center(
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: const EdgeInsets.only(
+                                                                              left: 8.0,
+                                                                              right: 4,
+                                                                              top: 4,
+                                                                              bottom: 4),
+                                                                          child:
+                                                                              Row(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.center,
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.center,
+                                                                            children: [
+                                                                              SvgPicture.asset(
+                                                                                "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
+                                                                                height: 20,
+                                                                                width: 20,
+                                                                                colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
+                                                                              ),
+                                                                              const SizedBox(
+                                                                                width: 6,
+                                                                              ),
+                                                                              ScreenshareTileName(maxWidth: constraints.maxWidth)
+                                                                            ],
+                                                                          ),
                                                                         ),
-                                                                        ScreenshareTileName(
-                                                                            maxWidth:
-                                                                                constraints.maxWidth)
-                                                                      ],
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
+                                                                ],
                                                               ),
                                                             ),
-                                                          ],
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                )),
-                                          );
+                                                      )),
+                                                )
+                                              : Container();
                                         },
                                         pageBuilder: (ctx, animation,
                                             secondaryAnimation) {
