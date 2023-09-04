@@ -14,8 +14,11 @@ import 'package:hms_room_kit/src/widgets/grid_layouts/screen_share_grid_layout.d
 ///This widget renders the grid view of the meeting screen with inset tile
 ///The grid view is rendered based on the number of peers in the meeting
 ///The grid view is rendered using the [PageView] widget
+///This has following parameters:
+///[isLocalInsetPresent] is used to check if the local inset tile is present or not
 class CustomOneToOneGrid extends StatefulWidget {
-  const CustomOneToOneGrid({super.key});
+  final bool isLocalInsetPresent;
+  const CustomOneToOneGrid({super.key, this.isLocalInsetPresent = true});
 
   @override
   State<CustomOneToOneGrid> createState() => _CustomOneToOneGridState();
@@ -39,7 +42,7 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
             meetingStore.peerTracks[0],
             meetingStore.screenShareCount),
         builder: (_, data, __) {
-          int numberOfPeers = data.item2 - 1;
+          int numberOfPeers = data.item2 - (widget.isLocalInsetPresent ? 1 : 0);
           int pageCount =
               (numberOfPeers ~/ 6) + (numberOfPeers % 6 == 0 ? 0 : 1);
 
@@ -80,7 +83,7 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
                               ///Since the screenshare case is already handled above the code never reaches here
                               peerTracks: data.item1
                                   .where((element) =>
-                                      !element.peer.isLocal ||
+                                      !(element.peer.isLocal) ||
                                       element.track?.source == "SCREEN")
                                   .toList())),
                     ),

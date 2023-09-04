@@ -511,7 +511,6 @@ class MeetingStore extends ChangeNotifier
 
   dynamic previewForRole(String role) async {
     var result = await _hmsSDKInteractor.previewForRole(role: role);
-
     ///Handle the exception
     if (result is HMSException) {
       log(result.toString());
@@ -585,6 +584,7 @@ class MeetingStore extends ChangeNotifier
       changeMetadata();
     }
     currentRoleChangeRequest = null;
+    notifyListeners();
   }
 
   void changeName({required String name}) {
@@ -675,7 +675,8 @@ class MeetingStore extends ChangeNotifier
       if (each.isLocal) {
         int index = peerTracks
             .indexWhere((element) => element.uid == "${each.peerId}mainVideo");
-        if (index == -1) {
+        if (index == -1 &&
+            (each.audioTrack != null || each.videoTrack != null)) {
           peerTracks.add(PeerTrackNode(
               peer: each,
               uid: "${each.peerId}mainVideo",
@@ -805,6 +806,7 @@ class MeetingStore extends ChangeNotifier
     }
 
     if (peer.isLocal) {
+      localPeer = peer;
       if (track.kind == HMSTrackKind.kHMSTrackKindAudio &&
           track.source == "REGULAR") {
         isMicOn = !track.isMute;
@@ -1593,6 +1595,11 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
+  ///This method rearranges tiles based on whether camera is ON/OFF
+  ///and whether the peer is in spotlight or not
+  ///If the peer is in spotlight then it is placed on the first index
+  ///If video is ON then the peer is placed on the first index
+  ///If video is OFF then the peer is placed on the last index
   rearrangeTile(PeerTrackNode peerTrackNode, int index) {
     if (peerTrackNode.track!.isMute) {
       if (peerTracks.length - 1 > index &&
