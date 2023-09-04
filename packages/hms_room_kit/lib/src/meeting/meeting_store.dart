@@ -511,6 +511,7 @@ class MeetingStore extends ChangeNotifier
 
   dynamic previewForRole(String role) async {
     var result = await _hmsSDKInteractor.previewForRole(role: role);
+
     ///Handle the exception
     if (result is HMSException) {
       log(result.toString());
