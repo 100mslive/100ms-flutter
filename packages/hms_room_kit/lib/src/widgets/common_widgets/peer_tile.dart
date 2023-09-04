@@ -19,7 +19,6 @@ import 'package:hms_room_kit/src/widgets/peer_widgets/brb_tag.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/hand_raise.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/more_option.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/rtc_stats_view.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/tile_border.dart';
 
 ///This widget is used to render the peer tile
 ///It contains following parameters
@@ -94,9 +93,6 @@ class _PeerTileState extends State<PeerTile> {
                             avatarTitleTextLineHeight:
                                 widget.avatarTitleTextLineHeight,
                           ),
-                          TileBorder(
-                              name: context.read<PeerTrackNode>().peer.name,
-                              uid: context.read<PeerTrackNode>().uid),
                           Semantics(
                             label:
                                 "fl_${context.read<PeerTrackNode>().peer.name}_degraded_tile",
@@ -151,7 +147,7 @@ class _PeerTileState extends State<PeerTile> {
                                             secondaryAnimation,
                                             value) {
                                           if (mounted) {
-                                            ///Setting the screenshare context 
+                                            ///Setting the screenshare context
                                             ///in the meeting store to store the current context
                                             ///so that we can pop the dialog from the meeting store when screenshare is stopped
                                             context
@@ -159,6 +155,7 @@ class _PeerTileState extends State<PeerTile> {
                                                     .screenshareContext =
                                                 dialogContext;
                                           }
+
                                           ///Here we check whether the full screen screenshare is mounted or not
                                           return context.mounted
                                               ? Transform.scale(

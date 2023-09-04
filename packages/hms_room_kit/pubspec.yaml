@@ -25,7 +25,7 @@ dependencies:
   draggable_widget: ^2.0.0
   badges: ^3.1.1
   shared_preferences: ^2.2.0
-  avatar_glow: ^2.0.2
+  lottie: ^2.3.2
   flutter_svg: ^2.0.5
   path_provider: ^2.0.15
   dropdown_button2: ^2.1.4

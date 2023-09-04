@@ -1,11 +1,8 @@
 ///Package imports
-import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 ///Project imports
-import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
 
@@ -31,34 +28,17 @@ class _AudioLevelAvatarState extends State<AudioLevelAvatar> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      ///[Selector] is used to rebuild the widget when the audio level changes
-      child: Selector<PeerTrackNode, Tuple2<int, String>>(
-          selector: (_, peerTrackNode) =>
-              Tuple2(peerTrackNode.audioLevel, peerTrackNode.peer.name),
-          builder: (_, data, __) {
-            return data.item1 == -1
-                ? HMSCircularAvatar(
-                    name: data.item2,
-                    avatarRadius: widget.avatarRadius,
-                    avatarTitleFontSize: widget.avatarTitleFontSize,
-                    avatarTitleTextLineHeight: widget.avatarTitleTextLineHeight,
-                  )
-                : AvatarGlow(
-                    repeat: true,
-                    showTwoGlows: true,
-                    duration: const Duration(seconds: 1),
-                    endRadius: (data.item1 != -1)
-                        ? widget.avatarRadius + (data.item1).toDouble()
-                        : widget.avatarRadius,
-                    glowColor: Utilities.getBackgroundColour(data.item2),
-                    child: HMSCircularAvatar(
-                      name: data.item2,
-                      avatarRadius: widget.avatarRadius,
-                      avatarTitleFontSize: widget.avatarTitleFontSize,
-                      avatarTitleTextLineHeight:
-                          widget.avatarTitleTextLineHeight,
-                    ));
-          }),
-    );
+
+        ///[Selector] is used to rebuild the widget when the audio level changes
+        child: Selector<PeerTrackNode, String>(
+            selector: (_, peerTrackNode) => peerTrackNode.peer.name,
+            builder: (_, peerName, __) {
+              return HMSCircularAvatar(
+                name: peerName,
+                avatarRadius: widget.avatarRadius,
+                avatarTitleFontSize: widget.avatarTitleFontSize,
+                avatarTitleTextLineHeight: widget.avatarTitleTextLineHeight,
+              );
+            }));
   }
 }
