@@ -10,7 +10,6 @@ import 'package:hms_room_kit/src/widgets/peer_widgets/hand_raise.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/more_option.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/network_icon_widget.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/rtc_stats_view.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/tile_border.dart';
 import 'package:provider/provider.dart';
 
 // Project imports
@@ -70,9 +69,6 @@ class AudioTile extends StatelessWidget {
               const HandRaise(), //bottom left
               const BRBTag(), //top right
               const AudioMuteStatus(),
-              TileBorder(
-                  name: context.read<PeerTrackNode>().peer.name,
-                  uid: context.read<PeerTrackNode>().uid),
               RTCStatsView(isLocal: context.read<PeerTrackNode>().peer.isLocal),
               const MoreOption(), //bottom center
             ],
