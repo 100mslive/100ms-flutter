@@ -62,7 +62,8 @@ class HMSRoleChangeDeclineToast extends StatelessWidget {
           size: 24,
         ),
         onPressed: () {
-          meetingStore.removeToast(HMSToastsType.roleChangeDeclineToast);
+          meetingStore.removeToast(HMSToastsType.roleChangeDeclineToast,
+              data: peer);
         },
       ),
     );

@@ -348,6 +348,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                               builder: (_, previewForRoleTracks,
                                                   __) {
                                                 ///If the preview for role tracks are not null
+                                                ///or role change request is not null
                                                 ///we show the preview for role component
                                                 ///else we show and empty Container
                                                 if (previewForRoleTracks.item1 != null ||
@@ -440,30 +441,6 @@ class _MeetingPageState extends State<MeetingPage> {
                                                 return Container();
                                               }),
 
-                                          // Selector<MeetingStore,
-                                          //         HMSRoleChangeRequest?>(
-                                          //     selector: (_, meetingStore) =>
-                                          //         meetingStore
-                                          //             .currentRoleChangeRequest,
-                                          //     builder: (_, roleChangeRequest, __) {
-                                          //       if (roleChangeRequest != null) {
-                                          //         HMSRoleChangeRequest
-                                          //             currentRequest =
-                                          //             roleChangeRequest;
-                                          //         context
-                                          //                 .read<MeetingStore>()
-                                          //                 .currentRoleChangeRequest =
-                                          //             null;
-                                          //         WidgetsBinding.instance
-                                          //             .addPostFrameCallback((_) {
-                                          //           UtilityComponents
-                                          //               .showRoleChangeDialog(
-                                          //                   currentRequest,
-                                          //                   context);
-                                          //         });
-                                          //       }
-                                          //       return const SizedBox();
-                                          //     }),
                                           Selector<MeetingStore,
                                                   HMSTrackChangeRequest?>(
                                               selector: (_, meetingStore) =>
@@ -590,6 +567,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                     424)
                                               UtilityComponents
                                                   .showFailureError(
+                                                      failureErrors.item2!,
                                                       context,
                                                       () => context
                                                           .read<MeetingStore>()

@@ -3,7 +3,12 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:collection/collection.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+//Project imports
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/constants.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
@@ -17,12 +22,8 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_disconnected_toast.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_reconnection_toast.dart';
-import 'package:provider/provider.dart';
 
-//Project imports
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:collection/collection.dart';
-
+///[UtilityComponents] contains the common components used in the app
 class UtilityComponents {
   static Future<dynamic> onBackPressed(BuildContext context) {
     MeetingStore meetingStore = context.read<MeetingStore>();
@@ -1061,12 +1062,15 @@ class UtilityComponents {
         child: const HMSReconnectionToast());
   }
 
+  ///This returns the error toasts whenever the error is terminal
   static Widget showFailureError(
-      BuildContext context, Function onLeavePressed) {
+      HMSException exception, BuildContext context, Function onLeavePressed) {
     return Container(
         height: MediaQuery.of(context).size.height,
         color: HMSThemeColors.backgroundDefault.withOpacity(0.5),
         child: HMSDisconnectedToast(
+          errorDescription:
+              "CODE: ${exception.code?.errorCode}, ${exception.message}",
           onLeavePressed: onLeavePressed,
         ));
   }
