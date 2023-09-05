@@ -65,7 +65,7 @@ class  HMSRoomExtension {
             return "hls_streaming_state_updated"
         case .hlsRecordingStateUpdated:
             return "hls_recording_state_updated"
-        case .metaDataUpdated:
+        case .peerCountUpdated:
             return "room_peer_count_updated"
         default:
             return "unknown_update"
