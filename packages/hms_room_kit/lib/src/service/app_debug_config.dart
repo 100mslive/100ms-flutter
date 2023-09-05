@@ -1,5 +1,6 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+/// The [AppDebugConfig] class contains the debug configuration for the UI
 class AppDebugConfig {
   /*
   Setting these values to defaults and can be toggled from the application
@@ -17,8 +18,10 @@ class AppDebugConfig {
   static bool isDebugMode = false;
   static bool isMockLayoutAPIEnabled = false;
 
+  /// The [iOSScreenshareConfig] contains the configuration for the iOS screenshare
   static HMSIOSScreenshareConfig? iOSScreenshareConfig;
 
+  /// Resets the debug configuration to default values
   static void resetToDefault() {
     joinWithMutedAudio = true;
     joinWithMutedVideo = true;
