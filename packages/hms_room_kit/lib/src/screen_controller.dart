@@ -82,7 +82,7 @@ class _ScreenControllerState extends State<ScreenController> {
       showGeneralDialog(
           context: context,
           pageBuilder: (_, data, __) {
-            return UtilityComponents.showFailureError(context,
+            return UtilityComponents.showFailureError(ans, context,
                 () => Navigator.of(context).popUntil((route) => route.isFirst));
           });
     } else {

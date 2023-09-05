@@ -150,19 +150,23 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                   ///This renders the preview for role component
                                   Selector<
                                           MeetingStore,
-                                          Tuple2<HMSLocalVideoTrack?,
-                                              HMSLocalAudioTrack?>>(
-                                      selector: (_, meetingStore) => Tuple2(
+                                          Tuple3<
+                                              HMSLocalVideoTrack?,
+                                              HMSLocalAudioTrack?,
+                                              HMSRoleChangeRequest?>>(
+                                      selector: (_, meetingStore) => Tuple3(
                                           meetingStore.previewForRoleVideoTrack,
+                                          meetingStore.previewForRoleAudioTrack,
                                           meetingStore
-                                              .previewForRoleAudioTrack),
+                                              .currentRoleChangeRequest),
                                       builder: (_, previewForRoleTracks, __) {
                                         ///If the preview for role tracks are not null
                                         ///we show the preview for role component
                                         ///else we show and empty Container
-                                        if (previewForRoleTracks.item1 !=
-                                                null ||
+                                        if (previewForRoleTracks.item1 != null ||
                                             previewForRoleTracks.item2 !=
+                                                null ||
+                                            previewForRoleTracks.item3 !=
                                                 null) {
                                           WidgetsBinding.instance
                                               .addPostFrameCallback(
@@ -274,6 +278,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                           failureData.item2?.code?.errorCode ==
                                               4005))
                                     UtilityComponents.showFailureError(
+                                        failureData.item2!,
                                         context,
                                         () => context
                                             .read<MeetingStore>()

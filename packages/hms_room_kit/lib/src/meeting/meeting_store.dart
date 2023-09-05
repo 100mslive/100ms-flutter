@@ -406,7 +406,8 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSToastsType.roleChangeDeclineToast:
         toasts.removeWhere((toast) =>
-            toast.hmsToastType == HMSToastsType.roleChangeDeclineToast);
+            toast.hmsToastType == HMSToastsType.roleChangeDeclineToast &&
+            data.peerId == toast.toastData.peerId);
         break;
     }
     notifyListeners();
@@ -900,7 +901,6 @@ class MeetingStore extends ChangeNotifier
     log("onRoleChangeRequest-> sender: ${roleChangeRequest.suggestedBy} role: ${roleChangeRequest.suggestedRole}");
     currentRoleChangeRequest = roleChangeRequest;
     previewForRole(roleChangeRequest.suggestedRole.name);
-    notifyListeners();
   }
 
   void setCurrentPage(int newPage) {

@@ -85,6 +85,7 @@ class _PreviewPageState extends State<PreviewPage> {
             context: context,
             pageBuilder: (_, data, __) {
               return UtilityComponents.showFailureError(
+                  ans,
                   context,
                   () =>
                       Navigator.of(context).popUntil((route) => route.isFirst));
@@ -451,6 +452,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                   ),
                                 if (error != null)
                                   UtilityComponents.showFailureError(
+                                      error,
                                       context,
                                       () => Navigator.of(context)
                                           .popUntil((route) => route.isFirst)),

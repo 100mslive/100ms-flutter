@@ -79,7 +79,7 @@ class HMSBringOnStageToast extends StatelessWidget {
           HMSRole? onStageRole = meetingStore.getOnStageRole();
           if (onStageRole != null) {
             meetingStore.changeRoleOfPeer(peer: peer, roleName: onStageRole);
-            meetingStore.removeToast(HMSToastsType.roleChangeToast);
+            meetingStore.removeToast(HMSToastsType.roleChangeToast, data: peer);
           }
         },
         height: 36,
