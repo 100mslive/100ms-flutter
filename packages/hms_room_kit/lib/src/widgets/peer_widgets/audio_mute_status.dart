@@ -66,13 +66,13 @@ class _AudioMuteStatusState extends State<AudioMuteStatus> {
                                 height: 24,
                                 width: 24)
                             : SvgPicture.asset(
-                              'packages/hms_room_kit/lib/src/assets/icons/zero_audio_level.svg',
-                              fit: BoxFit.scaleDown,
-                              semanticsLabel: "audio_mute_label",
-                              colorFilter: ColorFilter.mode(
-                                  HMSThemeColors.onSecondaryHighEmphasis,
-                                  BlendMode.srcIn),
-                            )),
+                                'packages/hms_room_kit/lib/src/assets/icons/zero_audio_level.svg',
+                                fit: BoxFit.scaleDown,
+                                semanticsLabel: "audio_mute_label",
+                                colorFilter: ColorFilter.mode(
+                                    HMSThemeColors.onSecondaryHighEmphasis,
+                                    BlendMode.srcIn),
+                              )),
               ));
         });
   }

@@ -11,10 +11,8 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_dropdown.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 
-
 /// The [AudioModeSelectDialog] is a dialog that allows the user to select the current audio output route
 class AudioModeSelectDialog extends StatefulWidget {
-
   /// The current audio mode
   final HMSAudioMode currentAudioMode;
 
@@ -34,7 +32,6 @@ class AudioModeSelectDialog extends StatefulWidget {
 
 /// The state of the [AudioModeSelectDialog]
 class AudioModeSelectDialogState extends State<AudioModeSelectDialog> {
-
   /// The current audio mode
   HMSAudioMode? valueChoose;
 

@@ -47,7 +47,6 @@ class HMSThemeColors {
   static Color baseBlack = const Color(0xFF000000);
   static Color baseWhite = const Color(0xFFFFFFFF);
 
-
   /// Returns the color from the given [hexColor]
   static int _getColorFromHex(String hexColor) {
     hexColor = hexColor.toUpperCase().replaceAll("#", "");
