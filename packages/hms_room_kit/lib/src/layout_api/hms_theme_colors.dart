@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// The [HMSThemeColors] class contains the color constants used in the UI
 class HMSThemeColors {
   static Color primaryDefault = const Color(0xFF2572ED);
   static Color primaryBright = const Color(0xFF538DFF);
@@ -46,6 +47,7 @@ class HMSThemeColors {
   static Color baseBlack = const Color(0xFF000000);
   static Color baseWhite = const Color(0xFFFFFFFF);
 
+  /// Returns the color from the given [hexColor]
   static int _getColorFromHex(String hexColor) {
     hexColor = hexColor.toUpperCase().replaceAll("#", "");
     if (hexColor.length == 6) {
@@ -61,6 +63,7 @@ class HMSThemeColors {
     return hexNum;
   }
 
+  /// Applies the layout colors from the given [palette]
   static void applyLayoutColors(Map<String, String>? palette) {
     palette?.forEach((key, value) {
       switch (key) {
@@ -167,6 +170,7 @@ class HMSThemeColors {
     });
   }
 
+  /// Resets the layout colors to the default values
   static void resetLayoutColors() {
     primaryDefault = const Color(0xFF2572ED);
     primaryBright = const Color(0xFF538DFF);

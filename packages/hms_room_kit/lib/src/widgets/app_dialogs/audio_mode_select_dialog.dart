@@ -11,32 +11,43 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_dropdown.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 
+/// The [AudioModeSelectDialog] is a dialog that allows the user to select the current audio output route
 class AudioModeSelectDialog extends StatefulWidget {
+  /// The current audio mode
   final HMSAudioMode currentAudioMode;
+
+  /// The callback that is called when the audio mode is changed
   final Function(HMSAudioMode) changeAudioMode;
 
+  /// Constructs a new instance of [AudioModeSelectDialog]
   const AudioModeSelectDialog(
       {super.key,
       required this.currentAudioMode,
       required this.changeAudioMode});
 
+  /// State of the [AudioModeSelectDialog]
   @override
   AudioModeSelectDialogState createState() => AudioModeSelectDialogState();
 }
 
+/// The state of the [AudioModeSelectDialog]
 class AudioModeSelectDialogState extends State<AudioModeSelectDialog> {
+  /// The current audio mode
   HMSAudioMode? valueChoose;
 
+  /// The callback that is called when the audio mode is changed
   void _updateDropDownValue(dynamic newValue) {
     valueChoose = newValue;
   }
 
+  /// Initializes the state of the [AudioModeSelectDialog]
   @override
   void initState() {
     super.initState();
     valueChoose = widget.currentAudioMode;
   }
 
+  /// Builds the UI of the [AudioModeSelectDialog]
   @override
   Widget build(BuildContext context) {
     String message = "Select the audio mode";
