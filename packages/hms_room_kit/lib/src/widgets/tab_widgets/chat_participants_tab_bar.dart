@@ -8,7 +8,8 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart
 import 'package:provider/provider.dart';
 
 class ChatParticipantsTabBar extends StatefulWidget {
-  const ChatParticipantsTabBar({super.key});
+  final int tabIndex;
+  const ChatParticipantsTabBar({super.key,this.tabIndex = 0});
 
   @override
   State<ChatParticipantsTabBar> createState() => _ChatParticipantsTabBarState();
@@ -21,7 +22,7 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
   @override
   void initState() {
     super.initState();
-    _controller = TabController(length: 2, vsync: this);
+    _controller = TabController(length: 2, vsync: this,initialIndex: widget.tabIndex);
 
     _controller.addListener(() {
       setState(() {});

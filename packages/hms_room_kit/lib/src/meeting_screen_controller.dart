@@ -39,6 +39,9 @@ class MeetingScreenController extends StatefulWidget {
   ///[role] is the role of the user joining the room
   final HMSRole? role;
 
+  ///[roles] list of available roles in the room
+  final List<HMSRole>? availableroles;
+
   ///[config] is the config of the room
   ///For more details checkout the [HMSConfig] class
   final HMSConfig? config;
@@ -52,6 +55,7 @@ class MeetingScreenController extends StatefulWidget {
       this.showStats = false,
       this.mirrorCamera = true,
       this.role,
+      this.availableroles,
       this.config})
       : super(key: key);
 
@@ -76,7 +80,7 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
 
   ///This function sets the initial values of the meeting
   void _setInitValues() async {
-    context.read<MeetingStore>().setSettings();
+    context.read<MeetingStore>().setSettings(widget.availableroles);
   }
 
   @override

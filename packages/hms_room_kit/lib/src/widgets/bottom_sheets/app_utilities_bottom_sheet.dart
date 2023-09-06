@@ -2,15 +2,16 @@
 import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/end_service_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
+import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
-import 'package:hms_room_kit/src/widgets/bottom_sheets/stop_recording_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/more_option_item.dart';
 import 'package:hms_room_kit/src/common/constants.dart';
-import 'package:hms_room_kit/src/widgets/bottom_sheets/participants_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 
@@ -81,8 +82,10 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                           ),
                           context: context,
                           builder: (ctx) => ChangeNotifierProvider.value(
-                              value: context.read<MeetingStore>(),
-                              child: const ParticipantsBottomSheet()),
+                              value: meetingStore,
+                              child: const ChatParticipantsTabBar(
+                                tabIndex: 1,
+                              )),
                         );
                       },
                       optionIcon: badge.Badge(
@@ -244,8 +247,32 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                         topRight: Radius.circular(16)),
                                   ),
                                   context: context,
-                                  builder: (ctx) => StopRecordingBottomSheet(
-                                    meetingStore: meetingStore,
+                                  builder: (ctx) => EndServiceBottomSheet(
+                                    onButtonPressed: () =>
+                                        meetingStore.stopRtmpAndRecording(),
+                                    title: HMSTitleText(
+                                      text: "Stop Recording",
+                                      textColor:
+                                          HMSThemeColors.alertErrorDefault,
+                                      letterSpacing: 0.15,
+                                      fontSize: 20,
+                                    ),
+                                    bottomSheetTitleIcon: SvgPicture.asset(
+                                      "packages/hms_room_kit/lib/src/assets/icons/alert.svg",
+                                      height: 20,
+                                      width: 20,
+                                      colorFilter: ColorFilter.mode(
+                                          HMSThemeColors.alertErrorDefault,
+                                          BlendMode.srcIn),
+                                    ),
+                                    subTitle: HMSSubheadingText(
+                                      text:
+                                          "Are you sure you want to stop recording? You\n can’t undo this action.",
+                                      maxLines: 2,
+                                      textColor: HMSThemeColors
+                                          .onSurfaceMediumEmphasis,
+                                    ),
+                                    buttonText: "Stop Recording",
                                   ),
                                 );
                               } else {

@@ -101,7 +101,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                             HMSThemeColors
                                                 .onSurfaceHighEmphasis,
                                             BlendMode.srcIn),
-                                        semanticsLabel: "chat_button",
+                                        semanticsLabel: "hand_raise_button",
                                       ),
                                     ),
                                   );

@@ -103,7 +103,7 @@ class MeetingStore extends ChangeNotifier
   List<HMSPeer> peers = [];
 
   ///Map with key as role and value as list of peers with that role
-  Map<String, List<HMSPeer>> filteredPeers = {};
+  Map<String, List<HMSPeer>> filteredPeers = {"Hand Raised": []};
 
   String selectedRoleFilter = "Everyone";
 
@@ -617,12 +617,16 @@ class MeetingStore extends ChangeNotifier
         true, HMSTrackKind.kHMSTrackKindAudio, "regular", roles, this);
   }
 
-  void setSettings() async {
+  void setSettings(List<HMSRole>? availableRoles) async {
     isStatsVisible = await Utilities.getBoolData(key: 'show-stats') ?? false;
     isAutoSimulcast =
         await Utilities.getBoolData(key: 'is-auto-simulcast') ?? true;
     if (isStatsVisible) {
       _hmsSDKInteractor.addStatsListener(this);
+    }
+
+    if (availableRoles != null) {
+      roles = availableRoles;
     }
   }
 
@@ -675,6 +679,7 @@ class MeetingStore extends ChangeNotifier
     if (room.hmshlsStreamingState?.running == true) {
       streamingType["hls"] = true;
     }
+    setParticipantsList(roles);
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
         int index = peerTracks
@@ -713,8 +718,12 @@ class MeetingStore extends ChangeNotifier
         break;
       }
     }
-    roles = await getRoles();
-    roles.removeWhere((element) => element.name == "__internal_recorder");
+
+    if (roles.isEmpty) {
+      roles = await getRoles();
+      roles.removeWhere((element) => element.name == "__internal_recorder");
+      setParticipantsList(roles);
+    }
     Utilities.saveStringData(key: "meetingLink", value: meetingUrl);
     getCurrentAudioDevice();
     getAudioDevicesList();
@@ -730,6 +739,25 @@ class MeetingStore extends ChangeNotifier
     } else if (Platform.isAndroid) {
       HMSAndroidPIPController.setup();
     }
+  }
+
+  void setParticipantsList(List<HMSRole> roles) {
+    String? onStageRoles = HMSRoomLayout.roleLayoutData?.screens?.conferencing
+        ?.defaultConf?.elements?.onStageExp?.onStageRole;
+    if (onStageRoles != null) {
+      filteredPeers[onStageRoles] = [];
+    }
+    roles
+        .where((role) => role.publishSettings?.allowed.isNotEmpty ?? false)
+        .forEach((element) {
+      filteredPeers[element.name] = [];
+    });
+
+    roles
+        .where((role) => role.publishSettings?.allowed.isEmpty ?? false)
+        .forEach((element) {
+      filteredPeers[element.name] = [];
+    });
   }
 
   void initForegroundTask() {
@@ -882,6 +910,8 @@ class MeetingStore extends ChangeNotifier
     log("onMessage-> sender: ${message.sender} message: ${message.message} time: ${message.time}, type: ${message.type}");
     switch (message.type) {
       case "metadata":
+        break;
+      case "EMOJI_REACTION":
         break;
       case "role_change_declined":
         toggleRequestDeclined(message.sender);
@@ -1172,21 +1202,20 @@ class MeetingStore extends ChangeNotifier
 
   void removePeer(HMSPeer peer) {
     peers.remove(peer);
-    if (filteredPeers[peer.role.name]?.contains(peer) ?? false) {
-      filteredPeers[peer.role.name]?.remove(peer);
-      if (filteredPeers[peer.role.name]?.isEmpty ?? false) {
-        filteredPeers.remove(peer.role.name);
-      }
+    filteredPeers[peer.role.name]?.remove(peer);
+    if (peer.metadata?.contains("\"isHandRaised\":true") ?? false) {
+      filteredPeers["Hand Raised"]?.remove(peer);
     }
+    notifyListeners();
   }
 
   void addPeer(HMSPeer peer) {
     if (!peers.contains(peer)) peers.add(peer);
-    if (!filteredPeers.containsKey(peer.role.name)) {
-      filteredPeers[peer.role.name] = [peer];
-    } else if (!(filteredPeers[peer.role.name]?.contains(peer) ?? true)) {
-      filteredPeers[peer.role.name]?.add(peer);
+    filteredPeers[peer.role.name]?.add(peer);
+    if (peer.metadata?.contains("\"isHandRaised\":true") ?? false) {
+      filteredPeers["Hand Raised"]?.add(peer);
     }
+    notifyListeners();
   }
 
   void addMessage(HMSMessage message) {
@@ -1201,48 +1230,33 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  void _insertHandRaisedPeer(HMSPeer peer) {
-    if (!filteredPeers.containsKey("Hand Raised")) {
-      filteredPeers["Hand Raised"] = [peer];
-    } else if (!(filteredPeers["Hand Raised"]?.contains(peer) ?? true)) {
-      filteredPeers["Hand Raised"]?.add(peer);
-    }
-  }
-
   void updatePeerMap(HMSPeerUpdate peerUpdate, HMSPeer peer,
       {HMSRole? oldRole}) {
     int? index = filteredPeers[peer.role.name]
         ?.indexWhere((element) => element.peerId == peer.peerId);
 
     if (index != null && index != -1) {
-      filteredPeers[peer.role.name]?.removeAt(index);
       if ((peerUpdate == HMSPeerUpdate.nameChanged)) {
+        filteredPeers[peer.role.name]?.removeAt(index);
         filteredPeers[peer.role.name]?.insert(index, peer);
       } else if (peerUpdate == HMSPeerUpdate.metadataChanged) {
         if ((peer.metadata?.contains("\"isHandRaised\":true") ?? false)) {
-          _insertHandRaisedPeer(peer);
+          filteredPeers["Hand Raised"]?.add(peer);
         } else if ((peer.metadata?.contains("\"isHandRaised\":false") ??
             false)) {
           filteredPeers["Hand Raised"]?.remove(peer);
-          if (filteredPeers["Hand Raised"]?.isEmpty ?? false) {
-            filteredPeers.remove("Hand Raised");
-          }
-        }
-      } else if (peerUpdate == HMSPeerUpdate.roleUpdated) {
-        if (oldRole != null) {
-          filteredPeers[oldRole.name]
-              ?.removeWhere((oldPeer) => oldPeer.peerId == peer.peerId);
         }
       }
     } else {
       if (peerUpdate == HMSPeerUpdate.roleUpdated) {
-        if (!filteredPeers.containsKey(peer.role.name)) {
-          filteredPeers[peer.role.name] = [peer];
-        } else {
-          filteredPeers[peer.role.name]?.add(peer);
+        if (oldRole != null) {
+          filteredPeers[oldRole.name]
+              ?.removeWhere((oldPeer) => oldPeer.peerId == peer.peerId);
         }
+        filteredPeers[peer.role.name]?.add(peer);
       }
     }
+    notifyListeners();
   }
 
   void setLandscapeLock(bool value) {

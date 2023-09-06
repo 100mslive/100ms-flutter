@@ -226,7 +226,7 @@ class _PreviewForRoleBottomSheetState extends State<PreviewForRoleBottomSheet> {
                       child: Center(
                         child: HMSTitleText(
                             text: "Decline",
-                            textColor: HMSThemeColors.onPrimaryHighEmphasis),
+                            textColor: HMSThemeColors.onSurfaceHighEmphasis),
                       ),
                     ))
               ],

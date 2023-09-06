@@ -182,6 +182,7 @@ class _PreviewPageState extends State<PreviewPage> {
                   ? ListenableProvider.value(
                       value: _meetingStore,
                       child: MeetingScreenController(
+                        availableroles: previewStore.roles,
                         role: previewStore.peer?.role,
                         roomCode: widget.meetingLink,
                         localPeerNetworkQuality: null,

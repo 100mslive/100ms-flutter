@@ -29,7 +29,6 @@ import 'package:hms_room_kit/src/enums/meeting_mode.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/app_dialogs/audio_device_change_dialog.dart';
 import 'package:hms_room_kit/src/widgets/meeting_modes/audio_mode.dart';
-import 'package:hms_room_kit/src/widgets/meeting_modes/basic_grid_view.dart';
 import 'package:hms_room_kit/src/widgets/meeting_modes/full_screen_mode.dart';
 import 'package:hms_room_kit/src/widgets/meeting_modes/hero_mode.dart';
 import 'package:hms_room_kit/src/widgets/meeting_modes/one_to_one_mode.dart';

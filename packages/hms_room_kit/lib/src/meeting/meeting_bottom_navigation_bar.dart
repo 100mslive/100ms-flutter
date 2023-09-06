@@ -35,14 +35,16 @@ class _MeetingBottomNavigationBarState
       children: [
         ///Leave Button
         HMSEmbeddedButton(
-          onTap: () async => {await UtilityComponents.onBackPressed(context)},
+          onTap: () async => {
+            await UtilityComponents.onBackPressed(context)
+            },
           offColor: HMSThemeColors.alertErrorDefault,
           disabledBorderColor: HMSThemeColors.alertErrorDefault,
           isActive: false,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SvgPicture.asset(
-              "packages/hms_room_kit/lib/src/assets/icons/leave.svg",
+              "packages/hms_room_kit/lib/src/assets/icons/exit_room.svg",
               colorFilter: ColorFilter.mode(
                   HMSThemeColors.alertErrorBrighter, BlendMode.srcIn),
               semanticsLabel: "leave_room_button",
@@ -132,8 +134,10 @@ class _MeetingBottomNavigationBarState
                   showModalBottomSheet(
                     isScrollControlled: true,
                     backgroundColor: HMSThemeColors.surfaceDim,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16)),
                     ),
                     context: context,
                     builder: (ctx) => ChangeNotifierProvider.value(
@@ -146,10 +150,16 @@ class _MeetingBottomNavigationBarState
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: isNewMessageReceived
-                      ? SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/message_badge_on.svg",
-                          semanticsLabel: "chat_button",
-                        )
+                      ? Badge(
+                        backgroundColor: HMSThemeColors.primaryDefault,
+                        child: SvgPicture.asset(
+                            "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
+                            semanticsLabel: "chat_button",
+                            colorFilter: ColorFilter.mode(
+                              HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
+                          ),
+                      )
                       : SvgPicture.asset(
                           "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
                           colorFilter: ColorFilter.mode(
