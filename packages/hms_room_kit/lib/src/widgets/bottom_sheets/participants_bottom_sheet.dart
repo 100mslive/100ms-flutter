@@ -253,7 +253,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.only(top:16),
+        padding: const EdgeInsets.only(top: 16),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,161 +279,163 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                         itemCount: data.item1.keys.length,
                         itemBuilder: (context, index) {
                           String role = data.item1.keys.elementAt(index);
-                          return 
-                          (data.item1[role]?.isNotEmpty??false)?
-                          Column(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: ExpansionTile(
-                                  tilePadding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 0),
-                                  shape: RoundedRectangleBorder(
-                                      side: BorderSide(
-                                          color: HMSThemeColors.borderDefault,
-                                          width: 1),
-                                      borderRadius: BorderRadius.circular(8)),
-                                  collapsedShape: RoundedRectangleBorder(
-                                      side: BorderSide(
-                                          color: HMSThemeColors.borderDefault,
-                                          width: 1),
-                                      borderRadius: BorderRadius.circular(8)),
-                                  collapsedIconColor:
-                                      HMSThemeColors.onSurfaceHighEmphasis,
-                                  iconColor:
-                                      HMSThemeColors.onSurfaceHighEmphasis,
-                                  title: HMSSubheadingText(
-                                    text:
-                                        "${data.item1.keys.elementAt(index)} (${data.item1[role]?.length})",
-                                    textColor: HMSThemeColors
-                                        .onSurfaceMediumEmphasis,
-                                    letterSpacing: 0.1,
-                                  ),
+                          return (data.item1[role]?.isNotEmpty ?? false)
+                              ? Column(
                                   children: [
-                                    SizedBox(
-                                      height:
-                                          (data.item1[role]?.length ?? 0) *
-                                              48,
-                                      child: ListView.builder(
-                                          physics: const NeverScrollableScrollPhysics(),
-                                          itemCount:
-                                              data.item1[role]?.length ?? 0,
-                                          itemBuilder: (context, peerIndex) {
-                                            return Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                peerIndex != 0
-                                                    ? const SizedBox(
-                                                        height: 8,
-                                                      )
-                                                    : Divider(
-                                                        height: 5,
-                                                        color: HMSThemeColors
-                                                            .borderDefault,
-                                                      ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                      .fromLTRB(
-                                                      16, 8, 16, 16),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: ExpansionTile(
+                                        tilePadding: const EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 0),
+                                        shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                                color: HMSThemeColors
+                                                    .borderDefault,
+                                                width: 1),
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        collapsedShape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                                color: HMSThemeColors
+                                                    .borderDefault,
+                                                width: 1),
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        collapsedIconColor: HMSThemeColors
+                                            .onSurfaceHighEmphasis,
+                                        iconColor: HMSThemeColors
+                                            .onSurfaceHighEmphasis,
+                                        title: HMSSubheadingText(
+                                          text:
+                                              "${data.item1.keys.elementAt(index)} (${data.item1[role]?.length})",
+                                          textColor: HMSThemeColors
+                                              .onSurfaceMediumEmphasis,
+                                          letterSpacing: 0.1,
+                                        ),
+                                        children: [
+                                          SizedBox(
+                                            height: (data.item1[role]?.length ??
+                                                    0) *
+                                                48,
+                                            child: ListView.builder(
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                itemCount:
+                                                    data.item1[role]?.length ??
+                                                        0,
+                                                itemBuilder:
+                                                    (context, peerIndex) {
+                                                  return Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
-                                                      HMSTitleText(
-                                                          text: (data
-                                                              .item1[role]![
-                                                                  peerIndex]
-                                                              .name),
-                                                          fontSize: 14,
-                                                          lineHeight: 20,
-                                                          letterSpacing: 0.1,
-                                                          textColor:
-                                                              HMSThemeColors
-                                                                  .onSurfaceHighEmphasis),
-                                                      Row(
-                                                        children: [
-                                                          PopupMenuButton(
-                                                            color: HMSThemeColors
-                                                                .surfaceDefault,
-                                                            shape: RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            8)),
-                                                            itemBuilder:
-                                                                (context) {
-                                                              return List
-                                                                  .generate(1,
-                                                                      (index) {
-                                                                return PopupMenuItem(
-                                                                    height:
-                                                                        52,
-                                                                    child:
-                                                                        Row(
-                                                                      children: [
-                                                                        SvgPicture
-                                                                            .asset(
-                                                                          "packages/hms_room_kit/lib/src/assets/icons/change_role.svg",
-                                                                          height:
-                                                                              20,
-                                                                          width:
-                                                                              20,
-                                                                          colorFilter:
-                                                                              ColorFilter.mode(HMSThemeColors.onSurfaceMediumEmphasis, BlendMode.srcIn),
-                                                                        ),
-                                                                        const SizedBox(
-                                                                          width:
-                                                                              8,
-                                                                        ),
-                                                                        HMSTitleText(
-                                                                          text:
-                                                                              "Change Role",
-                                                                          fontSize:
-                                                                              14,
-                                                                          lineHeight:
-                                                                              20,
-                                                                          letterSpacing:
-                                                                              0.1,
-                                                                          textColor:
-                                                                              HMSThemeColors.onSurfaceHighEmphasis,
-                                                                        )
-                                                                      ],
-                                                                    ),
-                                                                    onTap: () =>
-                                                                        {});
-                                                              });
-                                                            },
-                                                            child: SvgPicture
-                                                                .asset(
-                                                              "packages/hms_room_kit/lib/src/assets/icons/more.svg",
-                                                              height: 20,
-                                                              width: 20,
-                                                              colorFilter: ColorFilter.mode(
-                                                                  HMSThemeColors
-                                                                      .onSurfaceMediumEmphasis,
-                                                                  BlendMode
-                                                                      .srcIn),
+                                                      peerIndex != 0
+                                                          ? const SizedBox(
+                                                              height: 8,
+                                                            )
+                                                          : Divider(
+                                                              height: 5,
+                                                              color: HMSThemeColors
+                                                                  .borderDefault,
                                                             ),
-                                                          )
-                                                        ],
-                                                      )
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .fromLTRB(
+                                                                16, 8, 16, 16),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            HMSTitleText(
+                                                                text: (data
+                                                                    .item1[
+                                                                        role]![
+                                                                        peerIndex]
+                                                                    .name),
+                                                                fontSize: 14,
+                                                                lineHeight: 20,
+                                                                letterSpacing:
+                                                                    0.1,
+                                                                textColor:
+                                                                    HMSThemeColors
+                                                                        .onSurfaceHighEmphasis),
+                                                            Row(
+                                                              children: [
+                                                                PopupMenuButton(
+                                                                  color: HMSThemeColors
+                                                                      .surfaceDefault,
+                                                                  shape: RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              8)),
+                                                                  itemBuilder:
+                                                                      (context) {
+                                                                    return List
+                                                                        .generate(
+                                                                            1,
+                                                                            (index) {
+                                                                      return PopupMenuItem(
+                                                                          height:
+                                                                              52,
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              SvgPicture.asset(
+                                                                                "packages/hms_room_kit/lib/src/assets/icons/change_role.svg",
+                                                                                height: 20,
+                                                                                width: 20,
+                                                                                colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceMediumEmphasis, BlendMode.srcIn),
+                                                                              ),
+                                                                              const SizedBox(
+                                                                                width: 8,
+                                                                              ),
+                                                                              HMSTitleText(
+                                                                                text: "Change Role",
+                                                                                fontSize: 14,
+                                                                                lineHeight: 20,
+                                                                                letterSpacing: 0.1,
+                                                                                textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                                                                              )
+                                                                            ],
+                                                                          ),
+                                                                          onTap: () =>
+                                                                              {});
+                                                                    });
+                                                                  },
+                                                                  child:
+                                                                      SvgPicture
+                                                                          .asset(
+                                                                    "packages/hms_room_kit/lib/src/assets/icons/more.svg",
+                                                                    height: 20,
+                                                                    width: 20,
+                                                                    colorFilter: ColorFilter.mode(
+                                                                        HMSThemeColors
+                                                                            .onSurfaceMediumEmphasis,
+                                                                        BlendMode
+                                                                            .srcIn),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
                                                     ],
-                                                  ),
-                                                ),
-                                              ],
-                                            );
-                                          }),
+                                                  );
+                                                }),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 16,
                                     )
                                   ],
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 16,
-                              )
-                            ],
-                          ):const SizedBox();
+                                )
+                              : const SizedBox();
                         });
                   })
             ],

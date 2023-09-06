@@ -249,8 +249,7 @@ class _PeerTileState extends State<PeerTile> {
                                                                           Center(
                                                                         child:
                                                                             Padding(
-                                                                          padding: const EdgeInsets
-                                                                              .only(
+                                                                          padding: const EdgeInsets.only(
                                                                               left: 8.0,
                                                                               right: 4,
                                                                               top: 4,

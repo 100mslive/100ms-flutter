@@ -38,6 +38,8 @@ class _ScreenControllerState extends State<ScreenController> {
   @override
   void initState() {
     super.initState();
+    Constant.prebuiltOptions = widget.options;
+    Constant.meetingUrl = widget.roomCode;
     _checkPermissions();
   }
 

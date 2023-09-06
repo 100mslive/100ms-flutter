@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 class ChatParticipantsTabBar extends StatefulWidget {
   final int tabIndex;
-  const ChatParticipantsTabBar({super.key,this.tabIndex = 0});
+  const ChatParticipantsTabBar({super.key, this.tabIndex = 0});
 
   @override
   State<ChatParticipantsTabBar> createState() => _ChatParticipantsTabBarState();
@@ -22,7 +22,8 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
   @override
   void initState() {
     super.initState();
-    _controller = TabController(length: 2, vsync: this,initialIndex: widget.tabIndex);
+    _controller =
+        TabController(length: 2, vsync: this, initialIndex: widget.tabIndex);
 
     _controller.addListener(() {
       setState(() {});

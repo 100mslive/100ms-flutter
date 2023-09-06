@@ -21,21 +21,21 @@ class LeaveSessionTile extends StatelessWidget {
       this.titleColor,
       this.subTitleColor,
       this.onTap,
-      this.tileColor, this.tilePadding});
+      this.tileColor,
+      this.tilePadding});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap:  () => {
-        if(onTap!= null){
-          onTap!()
-        }
+      onTap: () => {
+        if (onTap != null) {onTap!()}
       },
       child: Container(
         height: 116,
         color: tileColor ?? HMSThemeColors.surfaceDim,
         child: Padding(
-          padding: tilePadding??const EdgeInsets.only(top: 24.0, left: 20, right: 20),
+          padding: tilePadding ??
+              const EdgeInsets.only(top: 24.0, left: 20, right: 20),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

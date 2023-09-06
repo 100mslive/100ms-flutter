@@ -38,7 +38,9 @@ class UtilityComponents {
       context: context,
       builder: (ctx) => ChangeNotifierProvider.value(
           value: context.read<MeetingStore>(),
-          child: LeaveSessionBottomSheet(meetingStore: meetingStore,)),
+          child: LeaveSessionBottomSheet(
+            meetingStore: meetingStore,
+          )),
     );
 
     // showDialog(

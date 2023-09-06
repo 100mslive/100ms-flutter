@@ -7,6 +7,7 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:hms_room_kit/src/preview_for_role/preview_for_role_bottom_sheet.dart';
 import 'package:hms_room_kit/src/preview_for_role/preview_for_role_header.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_left_room_screen.dart';
 import 'package:hms_room_kit/src/widgets/meeting_modes/custom_one_to_one_grid.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_recording_error_toast.dart';
 import 'package:provider/provider.dart';
@@ -127,13 +128,16 @@ class _MeetingPageState extends State<MeetingPage> {
           return ans;
         },
         child: WithForegroundTask(
-          child: Selector<MeetingStore, Tuple2<bool, HMSException?>>(
-              selector: (_, meetingStore) =>
-                  Tuple2(meetingStore.isRoomEnded, meetingStore.hmsException),
+          child: Selector<MeetingStore, Tuple3<bool, HMSException?, bool>>(
+              selector: (_, meetingStore) => Tuple3(meetingStore.isRoomEnded,
+                  meetingStore.hmsException, meetingStore.isEndRoomCalled),
               builder: (_, failureErrors, __) {
                 if (failureErrors.item1) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => HMSLeftRoomScreen(
+                              isEndRoomCalled: failureErrors.item3,
+                            )));
                   });
                 }
                 return Selector<MeetingStore, bool>(

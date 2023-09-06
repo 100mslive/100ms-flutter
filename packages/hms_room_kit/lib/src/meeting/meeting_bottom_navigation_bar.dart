@@ -35,9 +35,7 @@ class _MeetingBottomNavigationBarState
       children: [
         ///Leave Button
         HMSEmbeddedButton(
-          onTap: () async => {
-            await UtilityComponents.onBackPressed(context)
-            },
+          onTap: () async => {await UtilityComponents.onBackPressed(context)},
           offColor: HMSThemeColors.alertErrorDefault,
           disabledBorderColor: HMSThemeColors.alertErrorDefault,
           isActive: false,
@@ -151,15 +149,15 @@ class _MeetingBottomNavigationBarState
                   padding: const EdgeInsets.all(8.0),
                   child: isNewMessageReceived
                       ? Badge(
-                        backgroundColor: HMSThemeColors.primaryDefault,
-                        child: SvgPicture.asset(
+                          backgroundColor: HMSThemeColors.primaryDefault,
+                          child: SvgPicture.asset(
                             "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
                             semanticsLabel: "chat_button",
                             colorFilter: ColorFilter.mode(
-                              HMSThemeColors.onSurfaceHighEmphasis,
-                              BlendMode.srcIn),
+                                HMSThemeColors.onSurfaceHighEmphasis,
+                                BlendMode.srcIn),
                           ),
-                      )
+                        )
                       : SvgPicture.asset(
                           "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
                           colorFilter: ColorFilter.mode(

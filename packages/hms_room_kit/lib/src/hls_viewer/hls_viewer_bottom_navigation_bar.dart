@@ -64,7 +64,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: SvgPicture.asset(
-                                  "packages/hms_room_kit/lib/src/assets/icons/leave.svg",
+                                  "packages/hms_room_kit/lib/src/assets/icons/exit_room.svg",
                                   colorFilter: ColorFilter.mode(
                                       HMSThemeColors.alertErrorBrighter,
                                       BlendMode.srcIn),
