@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/end_service_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
@@ -80,10 +81,10 @@ class LeaveSessionBottomSheet extends StatelessWidget {
                   HMSThemeColors.alertErrorBrighter, BlendMode.srcIn),
               semanticsLabel: "leave_room_button",
             ),
-            title: "End For All",
+            title: HMSRoomLayout.peerType==PeerRoleType.hlsViewer?"End Session":"End For All",
             titleColor: HMSThemeColors.alertErrorBrighter,
             subTitle:
-                "The session will end for everyone. You can’t undo this action.",
+                HMSRoomLayout.peerType==PeerRoleType.hlsViewer?"The session and stream will end for everyone. You can’t undo this action.":"The session will end for everyone. You can’t undo this action.",
             subTitleColor: HMSThemeColors.alertErrorBright,
             onTap: () => {
               Navigator.pop(context),
@@ -98,7 +99,9 @@ class LeaveSessionBottomSheet extends StatelessWidget {
                 context: context,
                 builder: (ctx) => EndServiceBottomSheet(
                   onButtonPressed: () => {
-                    meetingStore.stopHLSStreaming(),
+                    if( HMSRoomLayout.peerType==PeerRoleType.hlsViewer && meetingStore.hasHlsStarted){
+                      meetingStore.stopHLSStreaming(),
+                    },
                     meetingStore.endRoom(false, "Room Ended From Flutter"),
                   },
                   title: HMSTitleText(
@@ -116,7 +119,7 @@ class LeaveSessionBottomSheet extends StatelessWidget {
                   ),
                   subTitle: HMSSubheadingText(
                     text:
-                        "The session will end for everyone and all the activities, including the stream will stop. You can’t undo this action.",
+                        HMSRoomLayout.peerType==PeerRoleType.hlsViewer?"The session will end for everyone and all the activities, including the stream will stop. You can’t undo this action.":"The session will end for everyone and all the activities will stop. You can’t undo this action.",
                     maxLines: 3,
                     textColor: HMSThemeColors.onSurfaceMediumEmphasis,
                   ),
