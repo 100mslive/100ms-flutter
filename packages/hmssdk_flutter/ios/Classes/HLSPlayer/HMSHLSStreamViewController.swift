@@ -82,7 +82,15 @@ class HMSHLSStreamViewController: HMSHLSPlayerDelegate {
             return
         }
         hmssdkFlutterPlugin.hlsPlayerSink?(data)
-
     }
 
+    func onResolutionChanged(videoSize: CGSize) {
+        let playerView = hlsPlayer?.videoPlayerViewController(showsPlayerControls: false)
+        if videoSize.width >= videoSize.height {
+            playerView?.videoGravity = .resizeAspect
+        }
+        else {
+            playerView?.videoGravity = .resizeAspectFill
+        }
+    }
 }
