@@ -62,6 +62,7 @@ class _PreviewPageState extends State<PreviewPage> {
     _meetingStore = MeetingStore(
       hmsSDKInteractor: previewStore.hmsSDKInteractor,
     );
+    _meetingStore.roles = previewStore.roles;
   }
 
   ///This function joins the room only if the name is not empty

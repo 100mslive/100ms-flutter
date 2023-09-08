@@ -50,11 +50,13 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
           ///Else we render the normal layout with inset tile
           return data.item5 > 0
               ? ScreenshareGridLayout(
-                  peerTracks: data.item1
-                      .where((element) =>
-                          !element.peer.isLocal ||
-                          element.track?.source == "SCREEN")
-                      .toList(),
+                  peerTracks: widget.isLocalInsetPresent
+                      ? data.item1
+                          .where((element) =>
+                              !element.peer.isLocal ||
+                              element.track?.source == "SCREEN")
+                          .toList()
+                      : data.item1,
                   screenshareCount: data.item5,
                 )
               :
@@ -77,15 +79,18 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
                               numberOfTiles: numberOfPeers,
                               index: index,
 
-                              ///Here we filter out the local peer since we are rendering the local peer in the inset tile
+                              ///Here we filter out the local peer since we are rendering the local peer in the inset tile iff isLocalInsetPresent is true
                               ///We only take the screenshare or remote peers
                               ///
+                              ///If isLocalInsetPresent is false we render all the peers in grid layout
                               ///Since the screenshare case is already handled above the code never reaches here
-                              peerTracks: data.item1
-                                  .where((element) =>
-                                      !(element.peer.isLocal) ||
-                                      element.track?.source == "SCREEN")
-                                  .toList())),
+                              peerTracks: widget.isLocalInsetPresent
+                                  ? data.item1
+                                      .where((element) =>
+                                          !(element.peer.isLocal) ||
+                                          element.track?.source == "SCREEN")
+                                      .toList()
+                                  : data.item1)),
                     ),
 
                     ///This renders the dots at the bottom of the grid view

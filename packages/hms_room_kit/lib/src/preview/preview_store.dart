@@ -293,6 +293,7 @@ class PreviewStore extends ChangeNotifier
 
   void getRoles() async {
     roles = await hmsSDKInteractor.getRoles();
+    roles.removeWhere((element) => element.name == "__internal_recorder");
     notifyListeners();
   }
 

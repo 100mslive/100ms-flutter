@@ -41,10 +41,12 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
   }
 
   void _scrollToEnd() {
-    WidgetsBinding.instance.addPostFrameCallback((_) =>
-        _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeInOut));
+    if (_scrollController.positions.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollController
+          .animateTo(_scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut));
+    }
   }
 
   String sender(HMSMessageRecipient hmsMessageRecipient) {

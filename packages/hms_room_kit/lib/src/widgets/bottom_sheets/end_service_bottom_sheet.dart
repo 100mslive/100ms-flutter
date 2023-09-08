@@ -1,25 +1,40 @@
 ///Package imports
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 ///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
-import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 
-///[StopRecordingBottomSheet] is a bottom sheet that is used to stop the recording
+///[EndServiceBottomSheet] is a bottom sheet that is used to render the bottom sheet to stop services
 ///It has following parameters:
-///[meetingStore] is a [MeetingStore] object
-class StopRecordingBottomSheet extends StatelessWidget {
-  final MeetingStore meetingStore;
-  const StopRecordingBottomSheet({super.key, required this.meetingStore});
+///[bottomSheetTitleIcon] is the icon that is shown on the top left of the bottom sheet
+/// [title] is the title of the bottom sheet
+/// [subTitle] is the subtitle of the bottom sheet
+/// [buttonText] is the text of the button
+/// [onButtonPressed] is the function that is called when the button is pressed
+/// [buttonColor] is the color of the button
+class EndServiceBottomSheet extends StatelessWidget {
+  final Widget? bottomSheetTitleIcon;
+  final Widget? title;
+  final Widget? subTitle;
+  final String? buttonText;
+  final Function? onButtonPressed;
+  final Color? buttonColor;
+
+  const EndServiceBottomSheet(
+      {super.key,
+      this.bottomSheetTitleIcon,
+      this.title,
+      this.subTitle,
+      this.buttonText,
+      this.onButtonPressed,
+      this.buttonColor});
 
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: 0.23,
+      heightFactor: 0.25,
       child: Padding(
         padding: const EdgeInsets.only(top: 16.0, left: 20, right: 20),
         child: SingleChildScrollView(
@@ -31,22 +46,11 @@ class StopRecordingBottomSheet extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/alert.svg",
-                        height: 20,
-                        width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.alertErrorDefault, BlendMode.srcIn),
-                      ),
+                      bottomSheetTitleIcon ?? const SizedBox(),
                       const SizedBox(
                         width: 8,
                       ),
-                      HMSTitleText(
-                        text: "Stop Recording",
-                        textColor: HMSThemeColors.alertErrorDefault,
-                        letterSpacing: 0.15,
-                        fontSize: 20,
-                      )
+                      title ?? const SizedBox()
                     ],
                   ),
                   Row(
@@ -60,12 +64,7 @@ class StopRecordingBottomSheet extends StatelessWidget {
               const SizedBox(
                 height: 8,
               ),
-              HMSSubheadingText(
-                text:
-                    "Are you sure you want to stop recording? You\n can’t undo this action.",
-                maxLines: 2,
-                textColor: HMSThemeColors.onSurfaceMediumEmphasis,
-              ),
+              subTitle ?? const SizedBox(),
               const SizedBox(
                 height: 16,
               ),
@@ -74,20 +73,22 @@ class StopRecordingBottomSheet extends StatelessWidget {
                       shadowColor:
                           MaterialStateProperty.all(HMSThemeColors.surfaceDim),
                       backgroundColor: MaterialStateProperty.all(
-                          HMSThemeColors.alertErrorDefault),
+                          buttonColor ?? HMSThemeColors.alertErrorDefault),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ))),
                   onPressed: () {
-                    meetingStore.stopRtmpAndRecording();
+                    if (onButtonPressed != null) {
+                      onButtonPressed!();
+                    }
                     Navigator.pop(context);
                   },
                   child: SizedBox(
                     height: 48,
                     child: Center(
                       child: HMSTitleText(
-                          text: "Stop Recording",
+                          text: buttonText ?? "",
                           textColor: HMSThemeColors.alertErrorBrighter),
                     ),
                   ))

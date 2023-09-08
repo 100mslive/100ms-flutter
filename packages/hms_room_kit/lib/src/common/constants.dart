@@ -1,4 +1,5 @@
 //Class contains the constants used throughout the application
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 /// This class contains the constants used throughout the application
@@ -24,4 +25,8 @@ class Constant {
 
   /// [Constant.debugMode] is the debug mode for the application
   static bool debugMode = false;
+
+  /// [Constant.options] is the prebuilt options for the application
+  /// This is saved for later usages in the application
+  static HMSPrebuiltOptions? prebuiltOptions;
 }

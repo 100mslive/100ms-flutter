@@ -3,6 +3,7 @@ import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
@@ -57,6 +58,7 @@ class MessageContainer extends StatelessWidget {
                   ),
                 ],
               ),
+              if(HMSRoomLayout.isMessagePinningAllowed??true)
               Row(
                 children: [
                   if (role == "")

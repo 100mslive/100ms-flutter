@@ -1,5 +1,6 @@
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_left_room_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -53,13 +54,16 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
         bool ans = await UtilityComponents.onBackPressed(context) ?? false;
         return ans;
       },
-      child: Selector<MeetingStore, Tuple2<bool, HMSException?>>(
-          selector: (_, meetingStore) =>
-              Tuple2(meetingStore.isRoomEnded, meetingStore.hmsException),
+      child: Selector<MeetingStore, Tuple3<bool, HMSException?, bool>>(
+          selector: (_, meetingStore) => Tuple3(meetingStore.isRoomEnded,
+              meetingStore.hmsException, meetingStore.isEndRoomCalled),
           builder: (_, failureData, __) {
             if (failureData.item1) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.of(context).popUntil((route) => route.isFirst);
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => HMSLeftRoomScreen(
+                          isEndRoomCalled: failureData.item3,
+                        )));
               });
             }
             return Selector<MeetingStore, bool>(

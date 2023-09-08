@@ -1,13 +1,15 @@
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/overlay_participants_bottom_sheet.dart';
+import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart' as badge;
 
 ///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/change_name_bottom_sheet.dart';
-import 'package:hms_room_kit/src/widgets/bottom_sheets/participants_bottom_sheet.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/more_option_item.dart';
@@ -73,13 +75,19 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                         showModalBottomSheet(
                           isScrollControlled: true,
                           backgroundColor: HMSThemeColors.surfaceDim,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16)),
                           ),
                           context: context,
                           builder: (ctx) => ChangeNotifierProvider.value(
                               value: context.read<MeetingStore>(),
-                              child: const ParticipantsBottomSheet()),
+                              child: (HMSRoomLayout.isOverlayChat ?? false)
+                                  ? const OverlayParticipantsBottomSheet()
+                                  : const ChatParticipantsTabBar(
+                                      tabIndex: 1,
+                                    )),
                         );
                       },
                       optionIcon: badge.Badge(
