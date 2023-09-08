@@ -65,8 +65,7 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                               ),
                               Tab(
                                 child: HMSSubheadingText(
-                                    text:
-                                        "Participants (${context.read<MeetingStore>().peers.length})",
+                                    text: "Participants",
                                     fontWeight: FontWeight.w600,
                                     textColor: _controller.index == 1
                                         ? HMSThemeColors.onSurfaceHighEmphasis

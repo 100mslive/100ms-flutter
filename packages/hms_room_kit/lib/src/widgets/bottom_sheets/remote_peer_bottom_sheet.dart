@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 ///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
@@ -27,7 +26,7 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: 0.6,
+      heightFactor: 0.35,
       child: Column(
         children: [
           Padding(
@@ -87,61 +86,62 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
               ///6. Remove Participant
               child: ListView(
                 children: [
-                  ListTile(
-                      horizontalTitleGap: 1,
-                      onTap: () async {
-                        widget.meetingStore
-                            .changePinTileStatus(widget.peerTrackNode);
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/pin.svg",
-                        semanticsLabel: "fl_local_pin_tile",
-                        height: 20,
-                        width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
-                      ),
-                      title: HMSSubheadingText(
-                          text: "Pin Tile for Myself",
-                          textColor: HMSThemeColors.onSurfaceHighEmphasis)),
-                  ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        if (widget.meetingStore.spotLightPeer?.uid ==
-                            widget.peerTrackNode.uid) {
-                          widget.meetingStore.setSessionMetadataForKey(
-                              key: SessionStoreKeyValues.getNameFromMethod(
-                                  SessionStoreKey.spotlight),
-                              metadata: null);
-                          return;
-                        }
+                  // ListTile(
+                  //     horizontalTitleGap: 1,
+                  //     onTap: () async {
+                  //       widget.meetingStore
+                  //           .changePinTileStatus(widget.peerTrackNode);
+                  //     },
+                  //     contentPadding: EdgeInsets.zero,
+                  //     leading: SvgPicture.asset(
+                  //       "packages/hms_room_kit/lib/src/assets/icons/pin.svg",
+                  //       semanticsLabel: "fl_local_pin_tile",
+                  //       height: 20,
+                  //       width: 20,
+                  //       colorFilter: ColorFilter.mode(
+                  //           HMSThemeColors.onSurfaceHighEmphasis,
+                  //           BlendMode.srcIn),
+                  //     ),
+                  //     title: HMSSubheadingText(
+                  //         text: "Pin Tile for Myself",
+                  //         textColor: HMSThemeColors.onSurfaceHighEmphasis)),
+                  // ListTile(
+                  //     horizontalTitleGap: 2,
+                  //     onTap: () async {
+                  //       if (widget.meetingStore.spotLightPeer?.uid ==
+                  //           widget.peerTrackNode.uid) {
+                  //         widget.meetingStore.setSessionMetadataForKey(
+                  //             key: SessionStoreKeyValues.getNameFromMethod(
+                  //                 SessionStoreKey.spotlight),
+                  //             metadata: null);
+                  //         return;
+                  //       }
 
-                        ///Setting the metadata as audio trackId if it's not present
-                        ///then setting it as video trackId
-                        String? metadata =
-                            (widget.peerTrackNode.audioTrack == null)
-                                ? widget.peerTrackNode.track?.trackId
-                                : widget.peerTrackNode.audioTrack?.trackId;
-                        widget.meetingStore.setSessionMetadataForKey(
-                            key: SessionStoreKeyValues.getNameFromMethod(
-                                SessionStoreKey.spotlight),
-                            metadata: metadata);
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/spotlight.svg",
-                        semanticsLabel: "fl_spotlight_local_tile",
-                        height: 20,
-                        width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
-                      ),
-                      title: HMSSubheadingText(
-                          text: "Spotlight Tile for Everyone",
-                          textColor: HMSThemeColors.onSurfaceHighEmphasis)),
+                  //       ///Setting the metadata as audio trackId if it's not present
+                  //       ///then setting it as video trackId
+                  //       String? metadata =
+                  //           (widget.peerTrackNode.audioTrack == null)
+                  //               ? widget.peerTrackNode.track?.trackId
+                  //               : widget.peerTrackNode.audioTrack?.trackId;
+                  //       widget.meetingStore.setSessionMetadataForKey(
+                  //           key: SessionStoreKeyValues.getNameFromMethod(
+                  //               SessionStoreKey.spotlight),
+                  //           metadata: metadata);
+                  //     },
+                  //     contentPadding: EdgeInsets.zero,
+                  //     leading: SvgPicture.asset(
+                  //       "packages/hms_room_kit/lib/src/assets/icons/spotlight.svg",
+                  //       semanticsLabel: "fl_spotlight_local_tile",
+                  //       height: 20,
+                  //       width: 20,
+                  //       colorFilter: ColorFilter.mode(
+                  //           HMSThemeColors.onSurfaceHighEmphasis,
+                  //           BlendMode.srcIn),
+                  //     ),
+                  //     title: HMSSubheadingText(
+                  //         text: "Spotlight Tile for Everyone",
+                  //         textColor: HMSThemeColors.onSurfaceHighEmphasis)),
+
                   ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {

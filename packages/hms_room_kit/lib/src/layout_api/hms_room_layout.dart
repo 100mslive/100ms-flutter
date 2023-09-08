@@ -212,6 +212,8 @@ class HMSRoomLayout {
   static String? last;
   static LayoutData? roleLayoutData;
   static PeerRoleType? peerType;
+  static bool? isOverlayChat;
+  static bool? isMessagePinningAllowed;
 
   static Future<void> getRoomLayout(
       {required HMSSDKInteractor hmsSDKInteractor,
@@ -240,6 +242,18 @@ class HMSRoomLayout {
     peerType = roleLayoutData?.screens?.conferencing?.hlsLiveStreaming != null
         ? PeerRoleType.hlsViewer
         : PeerRoleType.conferencing;
+    if (peerType == PeerRoleType.conferencing) {
+      isOverlayChat = roleLayoutData
+          ?.screens?.conferencing?.defaultConf?.elements?.chat?.isOverlay;
+      isMessagePinningAllowed = roleLayoutData?.screens?.conferencing
+          ?.defaultConf?.elements?.chat?.allowPinningMessages;
+    } else {
+      isOverlayChat = roleLayoutData
+          ?.screens?.conferencing?.hlsLiveStreaming?.elements?.chat?.isOverlay;
+
+      isMessagePinningAllowed = roleLayoutData?.screens?.conferencing
+          ?.hlsLiveStreaming?.elements?.chat?.allowPinningMessages;
+    }
   }
 
   static void _setLayout({required Map<String, dynamic> layoutJson}) {

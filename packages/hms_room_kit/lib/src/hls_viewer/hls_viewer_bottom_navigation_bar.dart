@@ -4,6 +4,8 @@ import 'dart:io';
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
+import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -117,9 +119,35 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                 builder: (_, isChatOpened, __) {
                                   return HMSEmbeddedButton(
                                     onTap: () => {
-                                      context
-                                          .read<HLSPlayerStore>()
-                                          .toggleIsChatOpened()
+                                      if (HMSRoomLayout.isOverlayChat ?? false)
+                                        {
+                                          context
+                                              .read<HLSPlayerStore>()
+                                              .toggleIsChatOpened()
+                                        }
+                                      else
+                                        {
+                                          showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            backgroundColor:
+                                                HMSThemeColors.surfaceDim,
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(16),
+                                                  topRight:
+                                                      Radius.circular(16)),
+                                            ),
+                                            context: context,
+                                            builder: (ctx) =>
+                                                ChangeNotifierProvider.value(
+                                                    value: context
+                                                        .read<MeetingStore>(),
+                                                    child:
+                                                        const ChatParticipantsTabBar(
+                                                      tabIndex: 0,
+                                                    )),
+                                          )
+                                        }
                                     },
                                     enabledBorderColor: HMSThemeColors
                                         .backgroundDim

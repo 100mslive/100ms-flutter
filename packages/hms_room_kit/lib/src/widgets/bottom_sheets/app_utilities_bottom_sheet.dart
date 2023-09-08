@@ -2,7 +2,9 @@
 import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/end_service_bottom_sheet.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/overlay_participants_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
@@ -83,9 +85,11 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                           context: context,
                           builder: (ctx) => ChangeNotifierProvider.value(
                               value: meetingStore,
-                              child: const ChatParticipantsTabBar(
-                                tabIndex: 1,
-                              )),
+                              child: (HMSRoomLayout.isOverlayChat ?? false)
+                                  ? const OverlayParticipantsBottomSheet()
+                                  : const ChatParticipantsTabBar(
+                                      tabIndex: 1,
+                                    )),
                         );
                       },
                       optionIcon: badge.Badge(

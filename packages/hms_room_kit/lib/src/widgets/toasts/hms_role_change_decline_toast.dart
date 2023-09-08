@@ -56,9 +56,9 @@ class HMSRoleChangeDeclineToast extends StatelessWidget {
         ),
       ),
       cancelToastButton: IconButton(
-        icon: const Icon(
+        icon: Icon(
           Icons.close,
-          color: Colors.white,
+          color: HMSThemeColors.onSurfaceHighEmphasis,
           size: 24,
         ),
         onPressed: () {

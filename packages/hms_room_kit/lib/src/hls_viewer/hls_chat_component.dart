@@ -14,7 +14,8 @@ import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 
 ///[HLSChatComponent] is a component that is used to show the chat
 class HLSChatComponent extends StatefulWidget {
-  const HLSChatComponent({super.key});
+  final double? height;
+  const HLSChatComponent({super.key, this.height});
 
   @override
   State<HLSChatComponent> createState() => _HLSChatComponentState();
@@ -53,7 +54,7 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.2,
+        height: widget.height ?? MediaQuery.of(context).size.height * 0.2,
         child: Column(
           children: [
             ///Chat Header
@@ -111,12 +112,13 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
               height: 8,
             ),
             Container(
-              height: 40,
+              height: 48,
               width: MediaQuery.of(context).size.width - 16,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: HMSThemeColors.surfaceDim),
               child: TextField(
+                textAlignVertical: TextAlignVertical.center,
                 keyboardType: TextInputType.text,
                 cursorColor: HMSThemeColors.onSurfaceHighEmphasis,
                 onTapOutside: (event) =>
@@ -171,7 +173,7 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
                         letterSpacing: 0.25,
                         fontWeight: FontWeight.w400),
                     contentPadding: const EdgeInsets.only(
-                        left: 16, bottom: 8, top: 12, right: 8),
+                        left: 16, right: 8, top: 0, bottom: 0),
                     hintText: "Send a message..."),
               ),
             ),

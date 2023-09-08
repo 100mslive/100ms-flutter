@@ -1,16 +1,21 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
-import 'package:hms_room_kit/src/model/peer_track_node.dart';
-import 'package:hms_room_kit/src/widgets/app_dialogs/change_role_option_dialog.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
-import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
+///Project imports
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
+import 'package:hms_room_kit/src/model/participant_store.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hms_room_kit/src/model/peer_track_node.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
+import 'package:hms_room_kit/src/meeting/meeting_store.dart';
+
+///[ParticipantsBottomSheet] is the bottom sheet that is shown when the user
+///clicks on the participants button
 class ParticipantsBottomSheet extends StatefulWidget {
   const ParticipantsBottomSheet({super.key});
 
@@ -37,102 +42,59 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
     bool changeRolePermission =
         meetingStore.localPeer?.role.permissions.changeRole ?? false;
 
-    //For HLS-Viewer
-    if (peerTrackNode == null) {
-      return changeRolePermission
-          ? PopupMenuButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              color: themeSurfaceColor,
-              icon: SvgPicture.asset(
-                "packages/hms_room_kit/lib/src/assets/icons/more.svg",
-                colorFilter:
-                    ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
-                fit: BoxFit.scaleDown,
-              ),
-              onSelected: (int value) async {
-                switch (value) {
-                  case 1:
-                    Navigator.pop(context);
-                    showDialog(
-                        context: context,
-                        builder: (_) => ChangeRoleOptionDialog(
-                              peerName: peer.name,
-                              roles: meetingStore.roles,
-                              peer: peer,
-                              changeRole: (role, forceChange) {
-                                meetingStore.changeRoleOfPeer(
-                                    peer: peer,
-                                    roleName: role,
-                                    forceChange: forceChange);
-                              },
-                            ));
-                    break;
-                  default:
-                    break;
-                }
-              },
-              itemBuilder: ((context) => [
-                    PopupMenuItem(
-                      value: 1,
-                      child: Row(children: [
-                        SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/role_change.svg",
-                            width: 15,
-                            colorFilter: ColorFilter.mode(
-                                themeDefaultColor, BlendMode.srcIn)),
-                        const SizedBox(
-                          width: 12,
-                        ),
-                        HMSTitleText(
-                          text: "Change Role",
-                          textColor: themeDefaultColor,
-                          fontSize: 14,
-                          lineHeight: 20,
-                          letterSpacing: 0.25,
-                        ),
-                      ]),
-                    ),
-                  ]))
-          : const SizedBox();
-    }
+    bool isHandRaised =
+        peer.metadata?.contains("\"isHandRaised\":true") ?? false;
+    bool isOnStageRole = meetingStore.getOnStageRole()?.name == peer.role.name;
+    bool isOnStageExpPresent = HMSRoomLayout.peerType == PeerRoleType.hlsViewer
+        ? HMSRoomLayout.roleLayoutData?.screens?.conferencing?.hlsLiveStreaming
+                ?.elements?.onStageExp !=
+            null
+        : HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf
+                ?.elements?.onStageExp !=
+            null;
+    bool hideThreeDot = isOnStageExpPresent &&
+        meetingStore.localPeer?.role.name == peer.role.name;
 
-    return (changeRolePermission || removePeerPermission || mutePermission)
+    return (!peer.isLocal &&
+            (changeRolePermission || removePeerPermission || mutePermission) &&
+            (!hideThreeDot))
         ? PopupMenuButton(
+            padding: EdgeInsets.zero,
+            position: PopupMenuPosition.under,
+            color: HMSThemeColors.surfaceDefault,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            color: themeSurfaceColor,
             onSelected: (int value) async {
               switch (value) {
                 case 1:
-                  Navigator.pop(context);
-                  showDialog(
-                      context: context,
-                      builder: (_) => ChangeRoleOptionDialog(
-                            peerName: peerTrackNode!.peer.name,
-                            roles: meetingStore.roles,
-                            peer: peerTrackNode.peer,
-                            changeRole: (role, forceChange) {
-                              meetingStore.changeRoleOfPeer(
-                                  peer: peerTrackNode!.peer,
-                                  roleName: role,
-                                  forceChange: forceChange);
-                            },
-                          ));
-
+                  if (isOnStageRole) {
+                    HMSRole? offStageRole = meetingStore.getOffStageRole();
+                    if (offStageRole != null) {
+                      meetingStore.changeRoleOfPeer(
+                          peer: peer,
+                          roleName: offStageRole,
+                          forceChange: false);
+                      return;
+                    }
+                  }
+                  HMSRole? onStageRole = meetingStore.getOnStageRole();
+                  if (onStageRole != null) {
+                    meetingStore.changeRoleOfPeer(
+                        peer: peer, roleName: onStageRole, forceChange: false);
+                  }
                   break;
                 case 2:
-                  if (peerTrackNode!.track == null) {
+                  if (peerTrackNode?.track == null) {
                     return;
                   }
                   meetingStore.changeTrackState(
-                      peerTrackNode.track!, !peerTrackNode.track!.isMute);
+                      peerTrackNode!.track!, !peerTrackNode.track!.isMute);
                   break;
                 case 3:
-                  if (peerTrackNode!.audioTrack == null) {
+                  if (peerTrackNode?.audioTrack == null) {
                     return;
                   }
-                  meetingStore.changeTrackState(peerTrackNode.audioTrack!,
+                  meetingStore.changeTrackState(peerTrackNode!.audioTrack!,
                       !peerTrackNode.audioTrack!.isMute);
                   break;
                 case 4:
@@ -147,34 +109,41 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                   break;
               }
             },
-            icon: SvgPicture.asset(
-              "packages/hms_room_kit/lib/src/assets/icons/more.svg",
-              colorFilter: ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
-              fit: BoxFit.scaleDown,
+            child: Icon(
+              Icons.more_vert_rounded,
+              size: 20,
+              color: HMSThemeColors.onSurfaceHighEmphasis,
             ),
             itemBuilder: (context) => [
-                  if (changeRolePermission)
+                  if (changeRolePermission && (isHandRaised || isOnStageRole))
                     PopupMenuItem(
                       value: 1,
                       child: Row(children: [
                         SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/role_change.svg",
-                            width: 15,
+                            "packages/hms_room_kit/lib/src/assets/icons/change_role.svg",
+                            width: 20,
+                            height: 20,
                             colorFilter: ColorFilter.mode(
-                                themeDefaultColor, BlendMode.srcIn)),
+                                HMSThemeColors.onSurfaceHighEmphasis,
+                                BlendMode.srcIn)),
                         const SizedBox(
-                          width: 12,
+                          width: 8,
                         ),
                         HMSTitleText(
-                          text: "Change Role",
-                          textColor: themeDefaultColor,
+                          text: isOnStageRole
+                              ? "Remove from Stage"
+                              : "Bring on Stage",
+                          textColor: HMSThemeColors.onSurfaceHighEmphasis,
                           fontSize: 14,
                           lineHeight: 20,
-                          letterSpacing: 0.25,
+                          letterSpacing: 0.1,
                         ),
                       ]),
                     ),
-                  if (mutePermission && !peerTrackNode!.peer.isLocal)
+                  if (mutePermission &&
+                      peerTrackNode != null &&
+                      !peerTrackNode.peer.isLocal &&
+                      isOnStageRole)
                     PopupMenuItem(
                       value: 2,
                       child: Row(children: [
@@ -183,23 +152,28 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                               ? "packages/hms_room_kit/lib/src/assets/icons/cam_state_on.svg"
                               : "packages/hms_room_kit/lib/src/assets/icons/cam_state_off.svg",
                           colorFilter: ColorFilter.mode(
-                              themeDefaultColor, BlendMode.srcIn),
-                          width: 15,
+                              HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
+                          width: 20,
+                          height: 20,
                         ),
                         const SizedBox(
-                          width: 12,
+                          width: 8,
                         ),
                         HMSTitleText(
                           text:
                               "${peerTrackNode.track?.isMute ?? false ? "Unmute" : "Mute"} Video",
-                          textColor: themeDefaultColor,
+                          textColor: HMSThemeColors.onSurfaceHighEmphasis,
                           fontSize: 14,
                           lineHeight: 20,
-                          letterSpacing: 0.25,
+                          letterSpacing: 0.1,
                         ),
                       ]),
                     ),
-                  if (mutePermission && !peerTrackNode!.peer.isLocal)
+                  if (mutePermission &&
+                      peerTrackNode != null &&
+                      !peerTrackNode.peer.isLocal &&
+                      isOnStageRole)
                     PopupMenuItem(
                       value: 3,
                       child: Row(children: [
@@ -208,40 +182,44 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                               ? "packages/hms_room_kit/lib/src/assets/icons/mic_state_on.svg"
                               : "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
                           colorFilter: ColorFilter.mode(
-                              themeDefaultColor, BlendMode.srcIn),
-                          width: 15,
+                              HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
+                          width: 20,
+                          height: 20,
                         ),
                         const SizedBox(
-                          width: 12,
+                          width: 8,
                         ),
                         HMSTitleText(
                           text:
                               "${peerTrackNode.audioTrack?.isMute ?? false ? "Unmute" : "Mute"} Audio",
-                          textColor: themeDefaultColor,
+                          textColor: HMSThemeColors.onSurfaceHighEmphasis,
                           fontSize: 14,
                           lineHeight: 20,
-                          letterSpacing: 0.25,
+                          letterSpacing: 0.1,
                         ),
                       ]),
                     ),
-                  if (removePeerPermission && !peerTrackNode!.peer.isLocal)
+                  if (removePeerPermission)
                     PopupMenuItem(
                       value: 4,
                       child: Row(children: [
                         SvgPicture.asset(
                             "packages/hms_room_kit/lib/src/assets/icons/peer_remove.svg",
-                            width: 15,
+                            width: 20,
+                            height: 20,
                             colorFilter: ColorFilter.mode(
-                                themeDefaultColor, BlendMode.srcIn)),
+                                HMSThemeColors.alertErrorDefault,
+                                BlendMode.srcIn)),
                         const SizedBox(
-                          width: 12,
+                          width: 8,
                         ),
                         HMSTitleText(
-                          text: "Remove Peer",
-                          textColor: themeDefaultColor,
+                          text: "Remove Participant",
+                          textColor: HMSThemeColors.alertErrorDefault,
                           fontSize: 14,
                           lineHeight: 20,
-                          letterSpacing: 0.25,
+                          letterSpacing: 0.1,
                         ),
                       ]),
                     ),
@@ -268,10 +246,11 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
               //     child: TextField(),
               //   ),
               // ),
-              Selector<MeetingStore, Tuple2<Map<String, List<HMSPeer>>, int>>(
+              Selector<MeetingStore,
+                      Tuple2<Map<String, List<ParticipantsStore>>, int>>(
                   selector: (_, meetingStore) => Tuple2(
-                      meetingStore.filteredPeers,
-                      meetingStore.filteredPeers.values.length),
+                      meetingStore.participantsInMeetingMap,
+                      meetingStore.participantsInMeeting),
                   builder: (_, data, __) {
                     return ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),
@@ -285,6 +264,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
                                       child: ExpansionTile(
+                                        childrenPadding: EdgeInsets.zero,
                                         tilePadding: const EdgeInsets.symmetric(
                                             horizontal: 16, vertical: 0),
                                         shape: RoundedRectangleBorder(
@@ -314,118 +294,139 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                         ),
                                         children: [
                                           SizedBox(
-                                            height: (data.item1[role]?.length ??
-                                                    0) *
-                                                48,
-                                            child: ListView.builder(
-                                                physics:
-                                                    const NeverScrollableScrollPhysics(),
-                                                itemCount:
-                                                    data.item1[role]?.length ??
-                                                        0,
-                                                itemBuilder:
-                                                    (context, peerIndex) {
-                                                  return Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      peerIndex != 0
-                                                          ? const SizedBox(
-                                                              height: 8,
-                                                            )
-                                                          : Divider(
-                                                              height: 5,
-                                                              color: HMSThemeColors
-                                                                  .borderDefault,
-                                                            ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .fromLTRB(
-                                                                16, 8, 16, 16),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            HMSTitleText(
-                                                                text: (data
-                                                                    .item1[
-                                                                        role]![
-                                                                        peerIndex]
-                                                                    .name),
-                                                                fontSize: 14,
-                                                                lineHeight: 20,
-                                                                letterSpacing:
-                                                                    0.1,
-                                                                textColor:
-                                                                    HMSThemeColors
-                                                                        .onSurfaceHighEmphasis),
-                                                            Row(
-                                                              children: [
-                                                                PopupMenuButton(
+                                            height: data.item1[role] == null
+                                                ? 0
+                                                : (data.item1[role]!.length) *
+                                                    56,
+                                            child: Center(
+                                              child: ListView.builder(
+                                                  physics:
+                                                      const NeverScrollableScrollPhysics(),
+                                                  itemCount: data.item1[role]
+                                                          ?.length ??
+                                                      0,
+                                                  itemBuilder:
+                                                      (context, peerIndex) {
+                                                    ParticipantsStore
+                                                        currentPeer =
+                                                        data.item1[role]![
+                                                            peerIndex];
+                                                    return Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 8.0),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          peerIndex != 0
+                                                              ? const SizedBox()
+                                                              : Divider(
+                                                                  height: 5,
                                                                   color: HMSThemeColors
-                                                                      .surfaceDefault,
-                                                                  shape: RoundedRectangleBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8)),
-                                                                  itemBuilder:
-                                                                      (context) {
-                                                                    return List
-                                                                        .generate(
-                                                                            1,
-                                                                            (index) {
-                                                                      return PopupMenuItem(
-                                                                          height:
-                                                                              52,
-                                                                          child:
-                                                                              Row(
-                                                                            children: [
-                                                                              SvgPicture.asset(
-                                                                                "packages/hms_room_kit/lib/src/assets/icons/change_role.svg",
-                                                                                height: 20,
-                                                                                width: 20,
-                                                                                colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceMediumEmphasis, BlendMode.srcIn),
-                                                                              ),
-                                                                              const SizedBox(
-                                                                                width: 8,
-                                                                              ),
-                                                                              HMSTitleText(
-                                                                                text: "Change Role",
-                                                                                fontSize: 14,
-                                                                                lineHeight: 20,
-                                                                                letterSpacing: 0.1,
-                                                                                textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                                                                              )
-                                                                            ],
-                                                                          ),
-                                                                          onTap: () =>
-                                                                              {});
-                                                                    });
-                                                                  },
-                                                                  child:
-                                                                      SvgPicture
-                                                                          .asset(
-                                                                    "packages/hms_room_kit/lib/src/assets/icons/more.svg",
-                                                                    height: 20,
-                                                                    width: 20,
-                                                                    colorFilter: ColorFilter.mode(
-                                                                        HMSThemeColors
-                                                                            .onSurfaceMediumEmphasis,
-                                                                        BlendMode
-                                                                            .srcIn),
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            )
-                                                          ],
-                                                        ),
+                                                                      .borderDefault,
+                                                                ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    16,
+                                                                    8,
+                                                                    16,
+                                                                    16),
+                                                            child:
+                                                                ListenableProvider
+                                                                    .value(
+                                                              value:
+                                                                  currentPeer,
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Selector<
+                                                                          ParticipantsStore,
+                                                                          String>(
+                                                                      selector: (_,
+                                                                              participantsStore) =>
+                                                                          participantsStore
+                                                                              .peer
+                                                                              .name,
+                                                                      builder: (_,
+                                                                          peerName,
+                                                                          __) {
+                                                                        return HMSTitleText(
+                                                                            text:
+                                                                                peerName + ((data.item1[role]![peerIndex].peer.isLocal) ? " (You)" : ""),
+                                                                            fontSize: 14,
+                                                                            lineHeight: 20,
+                                                                            letterSpacing: 0.1,
+                                                                            textColor: HMSThemeColors.onSurfaceHighEmphasis);
+                                                                      }),
+                                                                  Row(
+                                                                    children: [
+                                                                      Selector<
+                                                                              ParticipantsStore,
+                                                                              int>(
+                                                                          selector: (_, participantsStore) => (participantsStore.peer.networkQuality?.quality ??
+                                                                              -1),
+                                                                          builder: (_,
+                                                                              networkQuality,
+                                                                              __) {
+                                                                            return networkQuality != -1 && networkQuality < 3
+                                                                                ? Padding(
+                                                                                    padding: const EdgeInsets.only(right: 16.0),
+                                                                                    child: CircleAvatar(
+                                                                                      radius: 16,
+                                                                                      backgroundColor: HMSThemeColors.surfaceDefault,
+                                                                                      child: SvgPicture.asset(
+                                                                                        "packages/hms_room_kit/lib/src/assets/icons/network_$networkQuality.svg",
+                                                                                        height: 16,
+                                                                                        width: 16,
+                                                                                      ),
+                                                                                    ),
+                                                                                  )
+                                                                                : Container();
+                                                                          }),
+                                                                      Selector<
+                                                                              ParticipantsStore,
+                                                                              bool>(
+                                                                          selector: (_, participantsStore) => (participantsStore.peer.metadata?.contains("\"isHandRaised\":true") ??
+                                                                              false),
+                                                                          builder: (_,
+                                                                              isHandRaised,
+                                                                              __) {
+                                                                            return isHandRaised
+                                                                                ? Padding(
+                                                                                    padding: const EdgeInsets.only(right: 16.0),
+                                                                                    child: CircleAvatar(
+                                                                                      radius: 16,
+                                                                                      backgroundColor: HMSThemeColors.surfaceDefault,
+                                                                                      child: SvgPicture.asset(
+                                                                                        "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
+                                                                                        height: 16,
+                                                                                        width: 16,
+                                                                                        colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
+                                                                                      ),
+                                                                                    ),
+                                                                                  )
+                                                                                : Container();
+                                                                          }),
+                                                                      _kebabMenu(
+                                                                          currentPeer
+                                                                              .peer)
+                                                                    ],
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ],
-                                                  );
-                                                }),
+                                                    );
+                                                  }),
+                                            ),
                                           )
                                         ],
                                       ),

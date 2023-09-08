@@ -53,9 +53,9 @@ class HMSRecordingErrorToast extends StatelessWidget {
         textColor: HMSThemeColors.onSecondaryHighEmphasis,
       ),
       cancelToastButton: IconButton(
-        icon: const Icon(
+        icon: Icon(
           Icons.close,
-          color: Colors.white,
+          color: HMSThemeColors.onSurfaceHighEmphasis,
           size: 24,
         ),
         onPressed: () {
