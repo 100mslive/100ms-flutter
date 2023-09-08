@@ -58,7 +58,7 @@ class MessageContainer extends StatelessWidget {
                   ),
                 ],
               ),
-              if(HMSRoomLayout.isMessagePinningAllowed??true)
+              if(HMSRoomLayout.chatData?.allowPinningMessages??true)
               Row(
                 children: [
                   if (role == "")

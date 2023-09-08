@@ -133,7 +133,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isNewMessageReceived = false;
 
-  bool isOverlayChatOpened = false;
+  bool isOverlayChatOpened = HMSRoomLayout.chatData?.isOpenInitially??false;
 
   int firstTimeBuild = 0;
 

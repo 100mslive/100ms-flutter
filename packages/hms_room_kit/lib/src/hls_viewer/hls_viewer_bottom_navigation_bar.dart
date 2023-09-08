@@ -40,6 +40,10 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
             Selector<HLSPlayerStore, bool>(
                 selector: (_, hlsPlayerStore) => hlsPlayerStore.isChatOpened,
                 builder: (_, isChatOpened, __) {
+                  if (isChatOpened) {
+                    Provider.of<MeetingStore>(context, listen: true)
+                        .isNewMessageReceived = false;
+                  }
                   return isChatOpened ? const HLSChatComponent() : Container();
                 }),
 
@@ -119,7 +123,8 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                 builder: (_, isChatOpened, __) {
                                   return HMSEmbeddedButton(
                                     onTap: () => {
-                                      if (HMSRoomLayout.isOverlayChat ?? false)
+                                      if (HMSRoomLayout.chatData?.isOverlay ??
+                                          false)
                                         {
                                           context
                                               .read<HLSPlayerStore>()
@@ -156,16 +161,40 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                         .withAlpha(64),
                                     isActive: !isChatOpened,
                                     child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: SvgPicture.asset(
-                                        "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
-                                        colorFilter: ColorFilter.mode(
-                                            HMSThemeColors
-                                                .onSurfaceHighEmphasis,
-                                            BlendMode.srcIn),
-                                        semanticsLabel: "chat_button",
-                                      ),
-                                    ),
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Selector<MeetingStore, bool>(
+                                            selector: (_, meetingStore) =>
+                                                meetingStore
+                                                    .isNewMessageReceived,
+                                            builder:
+                                                (_, isNewMessageReceived, __) {
+                                              return isNewMessageReceived
+                                                  ? Badge(
+                                                      backgroundColor:
+                                                          HMSThemeColors
+                                                              .primaryDefault,
+                                                      child: SvgPicture.asset(
+                                                        "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
+                                                        semanticsLabel:
+                                                            "chat_button",
+                                                        colorFilter:
+                                                            ColorFilter.mode(
+                                                                HMSThemeColors
+                                                                    .onSurfaceHighEmphasis,
+                                                                BlendMode
+                                                                    .srcIn),
+                                                      ),
+                                                    )
+                                                  : SvgPicture.asset(
+                                                      "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
+                                                      colorFilter: ColorFilter.mode(
+                                                          HMSThemeColors
+                                                              .onSurfaceHighEmphasis,
+                                                          BlendMode.srcIn),
+                                                      semanticsLabel:
+                                                          "chat_button",
+                                                    );
+                                            })),
                                   );
                                 }),
                             const SizedBox(
