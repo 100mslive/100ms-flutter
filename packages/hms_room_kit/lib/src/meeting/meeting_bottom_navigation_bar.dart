@@ -34,29 +34,30 @@ class _MeetingBottomNavigationBarState
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Selector<MeetingStore, bool>(
-            selector: (_, meetingStore) => meetingStore.isOverlayChatOpened,
-            builder: (_, isOverlayChatOpened, __) {
-              return isOverlayChatOpened
-                  ? Container(
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                            Colors.black.withAlpha(0),
-                            Colors.black.withAlpha(64)
-                          ])),
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            bottom:
-                                MediaQuery.of(context).viewInsets.bottom + 15),
-                        child: HLSChatComponent(
-                          height: MediaQuery.of(context).size.height * 0.3,
-                        ),
-                      ))
-                  : const SizedBox();
-            }),
+        if (HMSRoomLayout.chatData?.isOverlay ?? false)
+          Selector<MeetingStore, bool>(
+              selector: (_, meetingStore) => meetingStore.isOverlayChatOpened,
+              builder: (_, isOverlayChatOpened, __) {
+                return isOverlayChatOpened
+                    ? Container(
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                              Colors.black.withAlpha(0),
+                              Colors.black.withAlpha(64)
+                            ])),
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom +
+                                  15),
+                          child: HLSChatComponent(
+                            height: MediaQuery.of(context).size.height * 0.3,
+                          ),
+                        ))
+                    : const SizedBox();
+              }),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -157,7 +158,7 @@ class _MeetingBottomNavigationBarState
                 builder: (_, chatState, __) {
                   return HMSEmbeddedButton(
                     onTap: () => {
-                      if (HMSRoomLayout.isOverlayChat ?? false)
+                      if (HMSRoomLayout.chatData?.isOverlay ?? false)
                         {context.read<MeetingStore>().toggleChatOverlay()}
                       else
                         {
@@ -181,7 +182,8 @@ class _MeetingBottomNavigationBarState
                         }
                     },
                     onColor: HMSThemeColors.backgroundDim,
-                    isActive: true,
+                    isActive: !(chatState.item2 &&
+                        (HMSRoomLayout.chatData?.isOverlay ?? false)),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: chatState.item1 && !chatState.item2

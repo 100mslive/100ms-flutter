@@ -83,7 +83,7 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                           context: context,
                           builder: (ctx) => ChangeNotifierProvider.value(
                               value: context.read<MeetingStore>(),
-                              child: (HMSRoomLayout.isOverlayChat ?? false)
+                              child: (HMSRoomLayout.chatData?.isOverlay ?? false)
                                   ? const OverlayParticipantsBottomSheet()
                                   : const ChatParticipantsTabBar(
                                       tabIndex: 1,

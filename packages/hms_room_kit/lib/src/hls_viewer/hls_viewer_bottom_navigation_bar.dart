@@ -119,7 +119,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                 builder: (_, isChatOpened, __) {
                                   return HMSEmbeddedButton(
                                     onTap: () => {
-                                      if (HMSRoomLayout.isOverlayChat ?? false)
+                                      if (HMSRoomLayout.chatData?.isOverlay ?? false)
                                         {
                                           context
                                               .read<HLSPlayerStore>()

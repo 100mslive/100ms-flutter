@@ -209,21 +209,21 @@ class VideoTileLayout {
 }
 
 class Chat {
-  String? initialState;
+  bool? isOpenInitially;
   bool? isOverlay;
   bool? allowPinningMessages;
 
-  Chat({this.initialState, this.isOverlay, this.allowPinningMessages});
+  Chat({this.isOpenInitially, this.isOverlay, this.allowPinningMessages});
 
   Chat.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
-      initialState = null;
+      isOpenInitially = null;
       isOverlay = null;
       allowPinningMessages = null;
       return;
     }
-    initialState =
-        json.containsKey('initial_state') ? json['initial_state'] : null;
+    isOpenInitially =
+        json.containsKey('initial_state') ? json['initial_state'].contains("CHAT_STATE_OPEN")?true:false : null;
     isOverlay = json.containsKey('is_overlay') ? json['is_overlay'] : null;
     allowPinningMessages = json.containsKey('allow_pinning_messages')
         ? json['allow_pinning_messages']
@@ -232,8 +232,8 @@ class Chat {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    if (initialState != null) {
-      data['initial_state'] = initialState;
+    if (isOpenInitially != null) {
+      data['initial_state'] = isOpenInitially;
     }
     if (isOverlay != null) {
       data['is_overlay'] = isOverlay;

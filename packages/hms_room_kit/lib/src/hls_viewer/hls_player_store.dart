@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 
 class HLSPlayerStore extends ChangeNotifier {
   ///This variable stores whether the application is in full screen or not
@@ -11,7 +12,9 @@ class HLSPlayerStore extends ChangeNotifier {
   ///This variable stores whether the buttons are visible or not
   bool areStreamControlsVisible = true;
 
-  bool isChatOpened = false;
+  ///This variable stores whether the chat is opened or not
+  ///The initial value is taken from the [HMSRoomLayout.chatData]
+  bool isChatOpened = HMSRoomLayout.chatData?.isOpenInitially??false;
 
   ///This variable stores whether the timer is active or not
   ///
