@@ -29,4 +29,4 @@ https://github.com/100mslive/100ms-flutter/issues/1486
 Room Kit: 0.2.0
 Core SDK: 1.7.6
 Android SDK: 2.7.4
-iOS SDK: 0.9.10
+iOS SDK: 0.9.11
