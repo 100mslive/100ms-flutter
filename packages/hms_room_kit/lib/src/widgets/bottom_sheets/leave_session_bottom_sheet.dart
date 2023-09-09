@@ -13,128 +13,184 @@ class LeaveSessionBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 12.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          LeaveSessionTile(
-            tilePadding: const EdgeInsets.only(top: 12.0, left: 20, right: 20),
-            leading: SvgPicture.asset(
-              "packages/hms_room_kit/lib/src/assets/icons/exit_room.svg",
-              colorFilter: ColorFilter.mode(
-                  HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
-              semanticsLabel: "leave_room_button",
-            ),
-            title: "Leave",
-            titleColor: HMSThemeColors.onSurfaceHighEmphasis,
-            subTitle:
-                "Others will continue after you leave. You can join the session again.",
-            subTitleColor: HMSThemeColors.onSurfaceMediumEmphasis,
-            onTap: () => {
-              Navigator.pop(context),
-              showModalBottomSheet(
-                isScrollControlled: true,
-                backgroundColor: HMSThemeColors.surfaceDim,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16)),
-                ),
-                context: context,
-                builder: (ctx) => EndServiceBottomSheet(
-                  onButtonPressed: () => {
-                    meetingStore.leave(),
-                  },
-                  title: HMSTitleText(
-                    text: "Leave Session",
-                    textColor: HMSThemeColors.alertErrorDefault,
-                    letterSpacing: 0.15,
-                    fontSize: 20,
-                  ),
-                  bottomSheetTitleIcon: SvgPicture.asset(
-                    "packages/hms_room_kit/lib/src/assets/icons/end_warning.svg",
-                    height: 20,
-                    width: 20,
+    return ((meetingStore.localPeer?.role.permissions.endRoom ?? false) ||
+            ((meetingStore.localPeer?.role.permissions.hlsStreaming ?? false) &&
+                meetingStore.hasHlsStarted))
+        ? Padding(
+            padding: const EdgeInsets.only(top: 12.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                LeaveSessionTile(
+                  tilePadding:
+                      const EdgeInsets.only(top: 12.0, left: 20, right: 20),
+                  leading: SvgPicture.asset(
+                    "packages/hms_room_kit/lib/src/assets/icons/exit_room.svg",
                     colorFilter: ColorFilter.mode(
-                        HMSThemeColors.alertErrorDefault, BlendMode.srcIn),
+                        HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
+                    semanticsLabel: "leave_room_button",
                   ),
-                  subTitle: HMSSubheadingText(
-                    text:
-                        "Others will continue after you leave. You can join\n the session again.",
-                    maxLines: 2,
-                    textColor: HMSThemeColors.onSurfaceMediumEmphasis,
-                  ),
-                  buttonText: "Leave Session",
-                ),
-              )
-            },
-          ),
-          if (meetingStore.localPeer?.role.permissions.endRoom ?? false)
-            LeaveSessionTile(
-              tileColor: HMSThemeColors.alertErrorDim,
-              leading: SvgPicture.asset(
-                "packages/hms_room_kit/lib/src/assets/icons/end.svg",
-                colorFilter: ColorFilter.mode(
-                    HMSThemeColors.alertErrorBrighter, BlendMode.srcIn),
-                semanticsLabel: "leave_room_button",
-              ),
-              title: HMSRoomLayout.peerType == PeerRoleType.hlsViewer
-                  ? "End Session"
-                  : "End For All",
-              titleColor: HMSThemeColors.alertErrorBrighter,
-              subTitle: HMSRoomLayout.peerType == PeerRoleType.hlsViewer
-                  ? "The session and stream will end for everyone. You can’t undo this action."
-                  : "The session will end for everyone. You can’t undo this action.",
-              subTitleColor: HMSThemeColors.alertErrorBright,
-              onTap: () => {
-                Navigator.pop(context),
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  backgroundColor: HMSThemeColors.surfaceDim,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        topRight: Radius.circular(16)),
-                  ),
-                  context: context,
-                  builder: (ctx) => EndServiceBottomSheet(
-                    onButtonPressed: () => {
-                      if (HMSRoomLayout.peerType == PeerRoleType.hlsViewer &&
-                          meetingStore.hasHlsStarted)
-                        {
-                          meetingStore.stopHLSStreaming(),
+                  title: "Leave",
+                  titleColor: HMSThemeColors.onSurfaceHighEmphasis,
+                  subTitle:
+                      "Others will continue after you leave. You can join the session again.",
+                  subTitleColor: HMSThemeColors.onSurfaceMediumEmphasis,
+                  onTap: () => {
+                    Navigator.pop(context),
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      backgroundColor: HMSThemeColors.surfaceDim,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16)),
+                      ),
+                      context: context,
+                      builder: (ctx) => EndServiceBottomSheet(
+                        onButtonPressed: () => {
+                          meetingStore.leave(),
                         },
-                      meetingStore.endRoom(false, "Room Ended From Flutter"),
-                    },
-                    title: HMSTitleText(
-                      text: "End Session",
-                      textColor: HMSThemeColors.alertErrorDefault,
-                      letterSpacing: 0.15,
-                      fontSize: 20,
-                    ),
-                    bottomSheetTitleIcon: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/src/assets/icons/end_warning.svg",
-                      height: 20,
-                      width: 20,
-                      colorFilter: ColorFilter.mode(
-                          HMSThemeColors.alertErrorDefault, BlendMode.srcIn),
-                    ),
-                    subTitle: HMSSubheadingText(
-                      text: HMSRoomLayout.peerType == PeerRoleType.hlsViewer
-                          ? "The session will end for everyone and all the activities, including the stream will stop. You can’t undo this action."
-                          : "The session will end for everyone and all the activities will stop. You can’t undo this action.",
-                      maxLines: 3,
-                      textColor: HMSThemeColors.onSurfaceMediumEmphasis,
-                    ),
-                    buttonText: "End Session",
+                        title: HMSTitleText(
+                          text: "Leave Session",
+                          textColor: HMSThemeColors.alertErrorDefault,
+                          letterSpacing: 0.15,
+                          fontSize: 20,
+                        ),
+                        bottomSheetTitleIcon: SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/end_warning.svg",
+                          height: 20,
+                          width: 20,
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.alertErrorDefault,
+                              BlendMode.srcIn),
+                        ),
+                        subTitle: HMSSubheadingText(
+                          text:
+                              "Others will continue after you leave. You can join\n the session again.",
+                          maxLines: 2,
+                          textColor: HMSThemeColors.onSurfaceMediumEmphasis,
+                        ),
+                        buttonText: "Leave Session",
+                      ),
+                    )
+                  },
+                ),
+                LeaveSessionTile(
+                  tileColor: HMSThemeColors.alertErrorDim,
+                  leading: SvgPicture.asset(
+                    "packages/hms_room_kit/lib/src/assets/icons/end.svg",
+                    colorFilter: ColorFilter.mode(
+                        HMSThemeColors.alertErrorBrighter, BlendMode.srcIn),
+                    semanticsLabel: "leave_room_button",
                   ),
-                )
-              },
+                  title:
+                      ((meetingStore.localPeer?.role.permissions.hlsStreaming ??
+                                  false) &&
+                              meetingStore.hasHlsStarted)
+                          ? "End Stream"
+                          : "End Session",
+                  titleColor: HMSThemeColors.alertErrorBrighter,
+                  subTitle: ((meetingStore
+                                  .localPeer?.role.permissions.hlsStreaming ??
+                              false) &&
+                          meetingStore.hasHlsStarted)
+                      ? "The stream will end for everyone after they’ve watched it."
+                      : "The session will end for everyone in the room immediately.",
+                  subTitleColor: HMSThemeColors.alertErrorBright,
+                  onTap: () => {
+                    Navigator.pop(context),
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      backgroundColor: HMSThemeColors.surfaceDim,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16)),
+                      ),
+                      context: context,
+                      builder: (ctx) => EndServiceBottomSheet(
+                        onButtonPressed: () => {
+                          if ((meetingStore.localPeer?.role.permissions
+                                      .hlsStreaming ??
+                                  false) &&
+                              meetingStore.hasHlsStarted)
+                            {
+                              meetingStore.stopHLSStreaming(),
+                              meetingStore.leave(),
+                            }
+                          else
+                            {
+                              meetingStore.endRoom(
+                                  false, "Room Ended From Flutter"),
+                            },
+                        },
+                        title: HMSTitleText(
+                          text: ((meetingStore.localPeer?.role.permissions
+                                          .hlsStreaming ??
+                                      false) &&
+                                  meetingStore.hasHlsStarted)
+                              ? "End Stream"
+                              : "End Session",
+                          textColor: HMSThemeColors.alertErrorDefault,
+                          letterSpacing: 0.15,
+                          fontSize: 20,
+                        ),
+                        bottomSheetTitleIcon: SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/end_warning.svg",
+                          height: 20,
+                          width: 20,
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.alertErrorDefault,
+                              BlendMode.srcIn),
+                        ),
+                        subTitle: HMSSubheadingText(
+                          text: ((meetingStore.localPeer?.role.permissions
+                                          .hlsStreaming ??
+                                      false) &&
+                                  meetingStore.hasHlsStarted)
+                              ? "The stream will end for everyone after they’ve watched it."
+                              : "The session will end for everyone in the room immediately.",
+                          maxLines: 3,
+                          textColor: HMSThemeColors.onSurfaceMediumEmphasis,
+                        ),
+                        buttonText: ((meetingStore.localPeer?.role.permissions
+                                        .hlsStreaming ??
+                                    false) &&
+                                meetingStore.hasHlsStarted)
+                            ? "End Stream"
+                            : "End Session",
+                      ),
+                    )
+                  },
+                ),
+              ],
             ),
-        ],
-      ),
-    );
+          )
+        : EndServiceBottomSheet(
+            onButtonPressed: () => {
+              meetingStore.leave(),
+            },
+            title: HMSTitleText(
+              text: "Leave Session",
+              textColor: HMSThemeColors.alertErrorDefault,
+              letterSpacing: 0.15,
+              fontSize: 20,
+            ),
+            bottomSheetTitleIcon: SvgPicture.asset(
+              "packages/hms_room_kit/lib/src/assets/icons/end_warning.svg",
+              height: 20,
+              width: 20,
+              colorFilter: ColorFilter.mode(
+                  HMSThemeColors.alertErrorDefault, BlendMode.srcIn),
+            ),
+            subTitle: HMSSubheadingText(
+              text:
+                  "Others will continue after you leave. You can join\n the session again.",
+              maxLines: 2,
+              textColor: HMSThemeColors.onSurfaceMediumEmphasis,
+            ),
+            buttonText: "Leave Session",
+          );
   }
 }

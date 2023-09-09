@@ -54,15 +54,19 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
         bool ans = await UtilityComponents.onBackPressed(context) ?? false;
         return ans;
       },
-      child: Selector<MeetingStore, Tuple3<bool, HMSException?, bool>>(
-          selector: (_, meetingStore) => Tuple3(meetingStore.isRoomEnded,
-              meetingStore.hmsException, meetingStore.isEndRoomCalled),
+      child: Selector<MeetingStore, Tuple4<bool, HMSException?, bool, bool>>(
+          selector: (_, meetingStore) => Tuple4(
+              meetingStore.isRoomEnded,
+              meetingStore.hmsException,
+              meetingStore.isEndRoomCalled,
+              meetingStore.localPeer?.role.permissions.hlsStreaming??false),
           builder: (_, failureData, __) {
             if (failureData.item1) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => HMSLeftRoomScreen(
                           isEndRoomCalled: failureData.item3,
+                          doesRoleHasStreamPermission: failureData.item4,
                         )));
               });
             }
