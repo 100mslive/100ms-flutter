@@ -1,12 +1,18 @@
 package live.hms.hmssdk_flutter.views
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
+import androidx.media3.common.Player
+import androidx.media3.common.VideoSize
+import androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
+import androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM
 import androidx.media3.ui.PlayerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -58,6 +64,28 @@ class HMSHLSPlayer(
 
             // Set the native player of the HLS player view.
             it.player = hlsPlayer?.getNativePlayer()
+
+            it.player?.addListener(object : Player.Listener {
+                override fun onSurfaceSizeChanged(width: Int, height: Int) {
+                    super.onSurfaceSizeChanged(width, height)
+
+                }
+                override fun onVideoSizeChanged(videoSize: VideoSize) {
+                    super.onVideoSizeChanged(videoSize)
+
+                        if (videoSize.height !=0 && videoSize.width !=0) {
+                            val width = videoSize.width
+                            val height = videoSize.height
+
+                            //landscape play
+                            if (width >= height) {
+                                hlsPlayerView?.resizeMode = RESIZE_MODE_FIT
+                            } else {
+                                hlsPlayerView?.resizeMode = RESIZE_MODE_ZOOM
+                            }
+                        }
+                }
+            })
         } ?: run {
             HMSErrorLogger.logError("init HMSHLSPlayer", "hlsPlayerView is null", "NULL_ERROR")
         }
