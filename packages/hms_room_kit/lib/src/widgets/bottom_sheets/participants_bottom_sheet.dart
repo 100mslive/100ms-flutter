@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 ///Project imports
+import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/model/participant_store.dart';
@@ -81,6 +82,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                   if (onStageRole != null) {
                     meetingStore.changeRoleOfPeer(
                         peer: peer, roleName: onStageRole, forceChange: false);
+                    meetingStore.removeToast(HMSToastsType.roleChangeToast,data: peer);
                   }
                   break;
                 case 2:
