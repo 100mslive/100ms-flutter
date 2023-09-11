@@ -1,13 +1,14 @@
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_chat_component.dart';
-import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
-import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 ///Project imports
+import 'package:hms_room_kit/src/hls_viewer/hls_chat_component.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/chat_only_bottom_sheet.dart';
+import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
@@ -177,7 +178,11 @@ class _MeetingBottomNavigationBarState
                             context: context,
                             builder: (ctx) => ChangeNotifierProvider.value(
                                 value: context.read<MeetingStore>(),
-                                child: const ChatParticipantsTabBar()),
+                                child: HMSRoomLayout.isParticipantsListEnabled
+                                    ? const ChatParticipantsTabBar(
+                                        tabIndex: 0,
+                                      )
+                                    : const ChatOnlyBottomSheet()),
                           )
                         }
                     },

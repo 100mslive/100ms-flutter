@@ -67,8 +67,11 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
               ),
 
               ///Here we render the participants button and the change name button
-              Row(
+              Wrap(
+                spacing: 12,
+                runSpacing: 24,
                 children: [
+                  if(HMSRoomLayout.isParticipantsListEnabled)
                   MoreOptionItem(
                       onTap: () async {
                         Navigator.pop(context);
@@ -126,9 +129,6 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                         ),
                       ),
                       optionText: "Participants"),
-                  const SizedBox(
-                    width: 12,
-                  ),
                   MoreOptionItem(
                       onTap: () async {
                         var meetingStore = context.read<MeetingStore>();

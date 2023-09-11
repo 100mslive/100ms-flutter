@@ -88,7 +88,7 @@ class _InsetTileState extends State<InsetTile> {
                 .setOffScreenStatus(false);
           },
           key: Key(context.read<PeerTrackNode>().uid),
-          child: GestureDetector(
+          child: InkWell(
             onTap: () => _toggleButtonVisibility(),
             child: Container(
               key: key,
@@ -102,13 +102,15 @@ class _InsetTileState extends State<InsetTile> {
                 label: "fl_${context.read<PeerTrackNode>().peer.name}_video_on",
                 child: Stack(
                   children: [
-                    VideoView(
-                        uid: context.read<PeerTrackNode>().uid,
-                        scaleType: widget.scaleType,
-                        avatarRadius: widget.avatarRadius,
-                        avatarTitleFontSize: widget.avatarTitleFontSize,
-                        avatarTitleTextLineHeight:
-                            widget.avatarTitleTextLineHeight),
+                    IgnorePointer(
+                      child: VideoView(
+                          uid: context.read<PeerTrackNode>().uid,
+                          scaleType: widget.scaleType,
+                          avatarRadius: widget.avatarRadius,
+                          avatarTitleFontSize: widget.avatarTitleFontSize,
+                          avatarTitleTextLineHeight:
+                              widget.avatarTitleTextLineHeight),
+                    ),
                     const HandRaise(), //top left
                     const BRBTag(), //top left
                     const AudioMuteStatus(), //top right

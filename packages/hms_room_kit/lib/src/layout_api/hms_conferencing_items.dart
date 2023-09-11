@@ -83,14 +83,15 @@ class Elements {
   VideoTileLayout? videoTileLayout;
   Map<String, dynamic>? emojiReactions;
   OnStageExp? onStageExp;
+  Map<String, dynamic>? brb;
 
-  Elements({
-    this.chat,
-    this.participantList,
-    this.videoTileLayout,
-    this.emojiReactions,
-    this.onStageExp,
-  });
+  Elements(
+      {this.chat,
+      this.participantList,
+      this.videoTileLayout,
+      this.emojiReactions,
+      this.onStageExp,
+      this.brb});
 
   Elements.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
@@ -99,6 +100,7 @@ class Elements {
       videoTileLayout = null;
       emojiReactions = null;
       onStageExp = null;
+      brb = null;
       return;
     }
     chat = json.containsKey('chat') ? Chat.fromJson(json['chat']) : null;
@@ -110,6 +112,7 @@ class Elements {
     onStageExp = json.containsKey('on_stage_exp')
         ? OnStageExp.fromJson(json['on_stage_exp'])
         : null;
+    brb = json.containsKey("brb") ? json["brb"] : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -125,6 +128,7 @@ class Elements {
     if (onStageExp != null) {
       data['on_stage_exp'] = onStageExp!.toJson();
     }
+    data['brb'] = brb;
     return data;
   }
 }
@@ -222,8 +226,11 @@ class Chat {
       allowPinningMessages = null;
       return;
     }
-    isOpenInitially =
-        json.containsKey('initial_state') ? json['initial_state'].contains("CHAT_STATE_OPEN")?true:false : null;
+    isOpenInitially = json.containsKey('initial_state')
+        ? json['initial_state'].contains("CHAT_STATE_OPEN")
+            ? true
+            : false
+        : null;
     isOverlay = json.containsKey('is_overlay') ? json['is_overlay'] : null;
     allowPinningMessages = json.containsKey('allow_pinning_messages')
         ? json['allow_pinning_messages']
