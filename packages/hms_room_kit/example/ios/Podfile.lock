@@ -6,14 +6,14 @@ PODS:
   - HMSBroadcastExtensionSDK (0.0.9)
   - HMSHLSPlayerSDK (0.0.2):
     - HMSAnalyticsSDK (= 0.0.2)
-  - HMSSDK (0.9.10):
+  - HMSSDK (0.9.11):
     - HMSAnalyticsSDK (= 0.0.2)
     - HMSWebRTC (= 1.0.5116)
   - hmssdk_flutter (1.7.5):
     - Flutter
     - HMSBroadcastExtensionSDK (= 0.0.9)
     - HMSHLSPlayerSDK (= 0.0.2)
-    - HMSSDK (= 0.9.10)
+    - HMSSDK (= 0.9.11)
   - HMSWebRTC (1.0.5116)
   - path_provider_foundation (0.0.1):
     - Flutter
@@ -70,8 +70,8 @@ SPEC CHECKSUMS:
   HMSAnalyticsSDK: 4d2a88a729b1eb42f3d25f217c28937ec318a5b7
   HMSBroadcastExtensionSDK: d80fe325f6c928bd8e5176290b5a4b7ae15d6fbb
   HMSHLSPlayerSDK: 6a54ad4d12f3dc2270d1ecd24019d71282a4f6a3
-  HMSSDK: d921a4e75470d0ca20a9390d52c07a20b1361d3f
-  hmssdk_flutter: bb8146d2a82e0a0221612a656f7e25e8974af917
+  HMSSDK: 77720372c9d6378f1b721cb0fb3553b3d1401a9b
+  hmssdk_flutter: 01116f8d3da3a0ebde0976151b37f9628b26d494
   HMSWebRTC: ae54e9dd91b869051b283b43b14f57d43b7bf8e1
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
