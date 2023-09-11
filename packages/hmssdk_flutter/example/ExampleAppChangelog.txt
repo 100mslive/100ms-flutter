@@ -1,30 +1,15 @@
-Board: https://github.com/100mslive/100ms-flutter/projects/27
+Board: https://github.com/100mslive/100ms-flutter/projects/30
 
-- Prebuilt: Equal prominence - Local & Remote Screenshares
-https://github.com/100mslive/100ms-flutter/issues/1491
+- Setting the HLS Player aspect ratio as per video stream content
+https://github.com/100mslive/100ms-flutter/pull/1556
 
-- HLS Streaming Layout - Broadcaster
-https://github.com/100mslive/100ms-flutter/issues/1507
+- Error Toasts as per Figma design
+https://github.com/100mslive/100ms-flutter/issues/1489
 
-- HLS Streaming Layout - Viewer
-https://github.com/100mslive/100ms-flutter/issues/1506
+- Added layout honouring of Layout API config
+https://github.com/100mslive/100ms-flutter/pull/1557
 
-- HLS Viewer on stage
-https://github.com/100mslive/100ms-flutter/issues/1515
-
-- HLS Viewer to stage
-https://github.com/100mslive/100ms-flutter/issues/1516
-
-- Degraded state blur over Video Tiles
-https://github.com/100mslive/100ms-flutter/issues/1508
-
-- Options on BottomSheet - BRB, handraise, recording, Change Name - UI
-https://github.com/100mslive/100ms-flutter/issues/1485
-
-- Tap / Auto timer to dismiss footer and expand video tile area
-https://github.com/100mslive/100ms-flutter/issues/1486
-
-- Updated to Android SDK version to 2.7.3 and iOS SDK version to 0.9.9
+- Updated to Android SDK version to 2.7.3 and iOS SDK version to 0.9.11
 
 Room Kit: 0.2.0
 Core SDK: 1.7.6
