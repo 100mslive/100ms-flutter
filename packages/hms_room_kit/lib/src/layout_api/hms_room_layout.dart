@@ -213,6 +213,8 @@ class HMSRoomLayout {
   static LayoutData? roleLayoutData;
   static PeerRoleType? peerType;
   static Chat? chatData;
+  static bool isParticipantsListEnabled = true;
+  static bool isBRBEnabled = true;
 
   static Future<void> getRoomLayout(
       {required HMSSDKInteractor hmsSDKInteractor,
@@ -244,9 +246,19 @@ class HMSRoomLayout {
     if (peerType == PeerRoleType.conferencing) {
       chatData =
           roleLayoutData?.screens?.conferencing?.defaultConf?.elements?.chat;
+      isParticipantsListEnabled = roleLayoutData
+              ?.screens?.conferencing?.defaultConf?.elements?.participantList !=
+          null;
+      isBRBEnabled = roleLayoutData?.screens?.conferencing?.defaultConf
+              ?.elements?.brb != null;
     } else {
       chatData = roleLayoutData
           ?.screens?.conferencing?.hlsLiveStreaming?.elements?.chat;
+      isParticipantsListEnabled = roleLayoutData?.screens?.conferencing
+              ?.hlsLiveStreaming?.elements?.participantList !=
+          null;
+      isBRBEnabled = roleLayoutData?.screens?.conferencing?.hlsLiveStreaming
+              ?.elements?.brb != null;
     }
   }
 

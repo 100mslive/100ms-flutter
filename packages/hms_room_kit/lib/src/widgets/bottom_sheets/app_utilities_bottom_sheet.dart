@@ -69,10 +69,12 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
               ),
 
               ///This renders the participants, screen share, brb, raise hand and recording options
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+              Wrap(
+                runSpacing: 24,
+                spacing: 12,
                 children: [
-                  ///This renders the participants option
+                  ///This renders the participants option if participants list is enabled
+                  if(HMSRoomLayout.isParticipantsListEnabled)
                   MoreOptionItem(
                       onTap: () async {
                         Navigator.pop(context);
@@ -128,9 +130,6 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         ),
                       ),
                       optionText: "Participants"),
-                  const SizedBox(
-                    width: 12,
-                  ),
 
                   ///This renders the screen share option
                   MoreOptionItem(
@@ -155,11 +154,9 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         ? "Sharing Screen"
                         : "Share Screen",
                   ),
-                  const SizedBox(
-                    width: 12,
-                  ),
 
                   ///This renders the brb option
+                  if(HMSRoomLayout.isBRBEnabled)
                   MoreOptionItem(
                       onTap: () async {
                         meetingStore.changeMetadataBRB();
@@ -174,18 +171,9 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       ),
                       optionText:
                           meetingStore.isBRB ? "I'm Back" : "Be Right Back")
-                ],
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-
-              ///This renders the raise hand and recording options
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  ///This renders the raise hand option
-                  MoreOptionItem(
+                
+                   ///This renders the raise hand option
+                  ,MoreOptionItem(
                       onTap: () async {
                         context.read<MeetingStore>().changeMetadata();
                         Navigator.pop(context);
@@ -202,9 +190,6 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       optionText: meetingStore.isRaisedHand
                           ? "Lower Hand"
                           : "Raise Hand"),
-                  const SizedBox(
-                    width: 12,
-                  ),
 
                   ///This renders the recording option
                   ///This option is only rendered if the local peer has the permission to
@@ -311,7 +296,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                 : "Start Recording",
                           )
                 ],
-              )
+              ),
             ],
           ),
         ),

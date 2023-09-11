@@ -176,6 +176,9 @@ class _PreviewPageState extends State<PreviewPage> {
       child: Selector<PreviewStore, HMSException?>(
           selector: (_, previewStore) => previewStore.error,
           builder: (_, error, __) {
+            if (previewStore.isRoomJoinedAndHLSStarted) {
+              previewStore.hmsSDKInteractor.removeUpdateListener(previewStore);
+            }
             return Scaffold(
               resizeToAvoidBottomInset: false,
               backgroundColor: HMSThemeColors.backgroundDim,

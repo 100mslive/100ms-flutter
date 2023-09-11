@@ -133,7 +133,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isNewMessageReceived = false;
 
-  bool isOverlayChatOpened = HMSRoomLayout.chatData?.isOpenInitially??false;
+  bool isOverlayChatOpened = HMSRoomLayout.chatData?.isOpenInitially ?? false;
 
   int firstTimeBuild = 0;
 
@@ -1258,9 +1258,13 @@ class MeetingStore extends ChangeNotifier
 
   void addPeer(HMSPeer peer) {
     if (!peers.contains(peer)) peers.add(peer);
-    participantsInMeetingMap[peer.role.name]
-        ?.add(ParticipantsStore(peer: peer));
-    participantsInMeeting++;
+    if (participantsInMeetingMap[peer.role.name]
+            ?.indexWhere((element) => element.peer.peerId == peer.peerId) ==
+        -1) {
+      participantsInMeetingMap[peer.role.name]
+          ?.add(ParticipantsStore(peer: peer));
+      participantsInMeeting++;
+    }
     if (peer.metadata?.contains("\"isHandRaised\":true") ?? false) {
       participantsInMeetingMap["Hand Raised"]
           ?.add(ParticipantsStore(peer: peer));
@@ -1289,11 +1293,22 @@ class MeetingStore extends ChangeNotifier
     if (index != null && index != -1) {
       if ((peerUpdate == HMSPeerUpdate.nameChanged)) {
         participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
+        if ((peer.metadata?.contains("\"isHandRaised\":true") ?? false)) {
+          int? peerIndex = participantsInMeetingMap["Hand Raised"]
+              ?.indexWhere((element) => element.peer.peerId == peer.peerId);
+          if(peerIndex != null && peerIndex != -1){
+            participantsInMeetingMap["Hand Raised"]?[peerIndex].updatePeer(peer);
+          }
+        }
       } else if (peerUpdate == HMSPeerUpdate.metadataChanged) {
         if ((peer.metadata?.contains("\"isHandRaised\":true") ?? false)) {
-          participantsInMeetingMap["Hand Raised"]
-              ?.add(ParticipantsStore(peer: peer));
-          participantsInMeeting++;
+          if (participantsInMeetingMap["Hand Raised"]?.indexWhere(
+                  (element) => element.peer.peerId == peer.peerId) ==
+              -1) {
+            participantsInMeetingMap["Hand Raised"]
+                ?.add(ParticipantsStore(peer: peer));
+            participantsInMeeting++;
+          }
           participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
         } else if ((peer.metadata?.contains("\"isHandRaised\":false") ??
             false)) {

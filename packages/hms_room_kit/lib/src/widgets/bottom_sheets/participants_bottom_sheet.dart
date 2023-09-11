@@ -297,7 +297,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                             height: data.item1[role] == null
                                                 ? 0
                                                 : (data.item1[role]!.length) *
-                                                    56,
+                                                    60,
                                             child: Center(
                                               child: ListView.builder(
                                                   physics:
