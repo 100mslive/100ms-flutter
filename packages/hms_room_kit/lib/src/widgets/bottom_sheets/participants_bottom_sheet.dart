@@ -1,4 +1,7 @@
 ///Package imports
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -69,20 +72,34 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
               switch (value) {
                 case 1:
                   if (isOnStageRole) {
-                    HMSRole? offStageRole = meetingStore.getOffStageRole();
-                    if (offStageRole != null) {
-                      meetingStore.changeRoleOfPeer(
-                          peer: peer,
-                          roleName: offStageRole,
-                          forceChange: false);
-                      return;
+                    if (peer.metadata != null) {
+                      String? peerMetadata = peer.metadata;
+                      if (peerMetadata?.contains("prevRole") ?? false) {
+                        String? previousRole =
+                            jsonDecode(peer.metadata!)["prevRole"];
+                        if (previousRole != null) {
+                          try {
+                            HMSRole? offStageRole = meetingStore.roles
+                                .firstWhere(
+                                    (element) => element.name == previousRole);
+                            meetingStore.changeRoleOfPeer(
+                                peer: peer,
+                                roleName: offStageRole,
+                                forceChange: false);
+                            return;
+                          } catch (e) {
+                            log(e.toString());
+                          }
+                        }
+                      }
                     }
                   }
                   HMSRole? onStageRole = meetingStore.getOnStageRole();
                   if (onStageRole != null) {
                     meetingStore.changeRoleOfPeer(
                         peer: peer, roleName: onStageRole, forceChange: false);
-                    meetingStore.removeToast(HMSToastsType.roleChangeToast,data: peer);
+                    meetingStore.removeToast(HMSToastsType.roleChangeToast,
+                        data: peer);
                   }
                   break;
                 case 2:

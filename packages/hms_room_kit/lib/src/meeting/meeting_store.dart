@@ -196,6 +196,8 @@ class MeetingStore extends ChangeNotifier
 
   bool isFlashOn = false;
 
+  String? previousRole;
+
   ///These variables are used in session metadata implementation *************************************************
 
   HMSSessionStore? _hmsSessionStore;
@@ -604,7 +606,8 @@ class MeetingStore extends ChangeNotifier
     isBRB = false;
     String value = isRaisedHand ? "true" : "false";
     _hmsSDKInteractor.changeMetadata(
-        metadata: "{\"isHandRaised\":$value,\"isBRBOn\":false}",
+        metadata:
+            "{\"isHandRaised\":$value,\"isBRBOn\":false,\"prevRole\":\"$previousRole\"}",
         hmsActionResultListener: this);
   }
 
@@ -615,7 +618,8 @@ class MeetingStore extends ChangeNotifier
     isRaisedHand = false;
     String value = isBRB ? "true" : "false";
     _hmsSDKInteractor.changeMetadata(
-        metadata: "{\"isHandRaised\":false,\"isBRBOn\":$value}",
+        metadata:
+            "{\"isHandRaised\":false,\"isBRBOn\":$value,\"prevRole\":\"$previousRole\"}",
         hmsActionResultListener: this);
     if (isMicOn) {
       toggleMicMuteState();
@@ -630,12 +634,15 @@ class MeetingStore extends ChangeNotifier
     previewForRoleAudioTrack = null;
     previewForRoleVideoTrack = null;
     _hmsSDKInteractor.acceptChangeRole(hmsRoleChangeRequest, this);
-    HMSRoomLayout.resetLayout(hmsRoleChangeRequest.suggestedRole.name);
-    if (isRaisedHand) {
-      changeMetadata();
+    if (localPeer != null) {
+      previousRole = localPeer?.role.name;
+      if (isRaisedHand) {
+        changeMetadata();
+      }
+      HMSRoomLayout.resetLayout(hmsRoleChangeRequest.suggestedRole.name);
+      currentRoleChangeRequest = null;
+      notifyListeners();
     }
-    currentRoleChangeRequest = null;
-    notifyListeners();
   }
 
   void changeName({required String name}) {
@@ -1296,8 +1303,9 @@ class MeetingStore extends ChangeNotifier
         if ((peer.metadata?.contains("\"isHandRaised\":true") ?? false)) {
           int? peerIndex = participantsInMeetingMap["Hand Raised"]
               ?.indexWhere((element) => element.peer.peerId == peer.peerId);
-          if(peerIndex != null && peerIndex != -1){
-            participantsInMeetingMap["Hand Raised"]?[peerIndex].updatePeer(peer);
+          if (peerIndex != null && peerIndex != -1) {
+            participantsInMeetingMap["Hand Raised"]?[peerIndex]
+                .updatePeer(peer);
           }
         }
       } else if (peerUpdate == HMSPeerUpdate.metadataChanged) {
@@ -1329,6 +1337,9 @@ class MeetingStore extends ChangeNotifier
             ?.removeWhere((oldPeer) => oldPeer.peer.peerId == peer.peerId);
         participantsInMeetingMap[peer.role.name]
             ?.add(ParticipantsStore(peer: peer));
+        participantsInMeetingMap[peer.role.name]
+                ?[participantsInMeetingMap[peer.role.name]!.length - 1]
+            .updatePeer(peer);
         notifyListeners();
       }
     }
@@ -1374,6 +1385,7 @@ class MeetingStore extends ChangeNotifier
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
           getSpotlightPeer();
+          HMSRoomLayout.resetLayout(peer.role.name);
           localPeer = peer;
         }
         if (HMSRoomLayout
