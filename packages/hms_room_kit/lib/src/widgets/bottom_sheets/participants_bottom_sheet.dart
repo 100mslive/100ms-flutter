@@ -117,11 +117,6 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                       !peerTrackNode.audioTrack!.isMute);
                   break;
                 case 4:
-                  var peer = await meetingStore.getPeer(
-                      peerId: peerTrackNode!.peer.peerId);
-                  if (peer == null) {
-                    return;
-                  }
                   meetingStore.removePeerFromRoom(peer);
                   break;
                 default:
