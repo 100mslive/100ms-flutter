@@ -115,7 +115,7 @@ class _InsetTileState extends State<InsetTile> {
                     const BRBTag(), //top left
                     const AudioMuteStatus(), //top right
                     if (isButtonVisible)
-                      InsetTileMoreOption(
+                      LocalPeerMoreOption(
                         callbackFunction: widget.callbackFunction,
                       ), //bottom right
                   ],

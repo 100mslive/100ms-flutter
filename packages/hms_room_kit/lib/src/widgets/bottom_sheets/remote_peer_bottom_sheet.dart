@@ -220,6 +220,8 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                       horizontalTitleGap: 2,
                       onTap: () async {
                         Navigator.pop(context);
+                        widget.meetingStore
+                            .removePeerFromRoom(widget.peerTrackNode.peer);
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(

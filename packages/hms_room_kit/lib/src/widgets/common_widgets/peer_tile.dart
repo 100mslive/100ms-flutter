@@ -103,7 +103,7 @@ class _PeerTileState extends State<PeerTile> {
                           const BRBTag(), //top left
                           const AudioMuteStatus(), //top right
                           context.read<PeerTrackNode>().peer.isLocal
-                              ? const InsetTileMoreOption()
+                              ? const LocalPeerMoreOption(isInsetTile: false,)
                               : const MoreOption(), //bottom right
                           Semantics(
                             label: "fl_stats_on_tile",
