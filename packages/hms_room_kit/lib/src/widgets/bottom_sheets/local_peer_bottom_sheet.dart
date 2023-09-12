@@ -20,12 +20,14 @@ class LocalPeerBottomSheet extends StatefulWidget {
   final MeetingStore meetingStore;
   final PeerTrackNode peerTrackNode;
   final Function()? callbackFunction;
+  final bool isInsetTile;
 
   const LocalPeerBottomSheet(
       {Key? key,
       required this.meetingStore,
       required this.peerTrackNode,
-      this.callbackFunction})
+      this.callbackFunction,
+      this.isInsetTile = true})
       : super(key: key);
   @override
   State<LocalPeerBottomSheet> createState() => _LocalPeerBottomSheetState();
@@ -35,7 +37,7 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: 0.26,
+      heightFactor: widget.isInsetTile?0.26:0.2,
       child: Padding(
           padding: const EdgeInsets.only(top: 16.0, left: 24, right: 24),
           child: Column(
@@ -184,6 +186,7 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                         title: HMSSubheadingText(
                             text: "Change Name",
                             textColor: HMSThemeColors.onSurfaceHighEmphasis)),
+                    if(widget.isInsetTile)
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {

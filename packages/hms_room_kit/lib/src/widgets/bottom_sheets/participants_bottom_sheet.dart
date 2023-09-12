@@ -56,12 +56,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
         : HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf
                 ?.elements?.onStageExp !=
             null;
-    bool hideThreeDot = isOnStageExpPresent &&
-        meetingStore.localPeer?.role.name == peer.role.name;
-
     return (!peer.isLocal &&
-            (changeRolePermission || removePeerPermission || mutePermission) &&
-            (!hideThreeDot))
+            (changeRolePermission || removePeerPermission || mutePermission))
         ? PopupMenuButton(
             padding: EdgeInsets.zero,
             position: PopupMenuPosition.under,
@@ -85,7 +81,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                             meetingStore.changeRoleOfPeer(
                                 peer: peer,
                                 roleName: offStageRole,
-                                forceChange: false);
+                                forceChange: true);
                             return;
                           } catch (e) {
                             log(e.toString());
@@ -129,7 +125,9 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
               color: HMSThemeColors.onSurfaceHighEmphasis,
             ),
             itemBuilder: (context) => [
-                  if (changeRolePermission && (isHandRaised || isOnStageRole))
+                  if (changeRolePermission && isOnStageExpPresent 
+                  && (isHandRaised || isOnStageRole)
+                  )
                     PopupMenuItem(
                       value: 1,
                       child: Row(children: [
