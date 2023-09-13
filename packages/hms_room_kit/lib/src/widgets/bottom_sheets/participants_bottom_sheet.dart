@@ -56,6 +56,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
         : HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf
                 ?.elements?.onStageExp !=
             null;
+    bool isOffStageRole = meetingStore.isOffStageRole(peer.role.name);
     return (!peer.isLocal &&
             (changeRolePermission || removePeerPermission || mutePermission))
         ? PopupMenuButton(
@@ -125,9 +126,9 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
               color: HMSThemeColors.onSurfaceHighEmphasis,
             ),
             itemBuilder: (context) => [
-                  if (changeRolePermission && isOnStageExpPresent 
-                  && (isHandRaised || isOnStageRole)
-                  )
+                  if (changeRolePermission &&
+                      isOnStageExpPresent &&
+                      ((isHandRaised && isOffStageRole) || isOnStageRole))
                     PopupMenuItem(
                       value: 1,
                       child: Row(children: [
