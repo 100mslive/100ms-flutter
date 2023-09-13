@@ -32,138 +32,135 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
 
   @override
   Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      heightFactor: 0.23,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 16.0, left: 20, right: 20),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      HMSTitleText(
-                        text: "Options",
-                        textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                        letterSpacing: 0.15,
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [HMSCrossButton()],
-                  )
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16, bottom: 16),
-                child: Divider(
-                  color: HMSThemeColors.borderDefault,
-                  height: 5,
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0, left: 20, right: 20,bottom: 24),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    HMSTitleText(
+                      text: "Options",
+                      textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                      letterSpacing: 0.15,
+                    )
+                  ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: const [HMSCrossButton()],
+                )
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 16, bottom: 16),
+              child: Divider(
+                color: HMSThemeColors.borderDefault,
+                height: 5,
               ),
+            ),
 
-              ///Here we render the participants button and the change name button
-              Wrap(
-                spacing: 12,
-                runSpacing: 24,
-                children: [
-                  if(HMSRoomLayout.isParticipantsListEnabled)
-                  MoreOptionItem(
-                      onTap: () async {
-                        Navigator.pop(context);
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: HMSThemeColors.surfaceDim,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16)),
-                          ),
-                          context: context,
-                          builder: (ctx) => ChangeNotifierProvider.value(
-                              value: context.read<MeetingStore>(),
-                              child: (HMSRoomLayout.chatData?.isOverlay ?? false)
-                                  ? const OverlayParticipantsBottomSheet()
-                                  : const ChatParticipantsTabBar(
-                                      tabIndex: 1,
-                                    )),
-                        );
-                      },
-                      optionIcon: badge.Badge(
-                        badgeStyle: badge.BadgeStyle(
-                            badgeColor: HMSThemeColors.surfaceDefault,
-                            padding: EdgeInsets.all(
-                                context.read<MeetingStore>().peers.length < 1000
+            ///Here we render the participants button and the change name button
+            Wrap(
+              spacing: 12,
+              runSpacing: 24,
+              children: [
+                if(HMSRoomLayout.isParticipantsListEnabled)
+                MoreOptionItem(
+                    onTap: () async {
+                      Navigator.pop(context);
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        backgroundColor: HMSThemeColors.surfaceDim,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(16),
+                              topRight: Radius.circular(16)),
+                        ),
+                        context: context,
+                        builder: (ctx) => ChangeNotifierProvider.value(
+                            value: context.read<MeetingStore>(),
+                            child: (HMSRoomLayout.chatData?.isOverlay ?? false)
+                                ? const OverlayParticipantsBottomSheet()
+                                : const ChatParticipantsTabBar(
+                                    tabIndex: 1,
+                                  )),
+                      );
+                    },
+                    optionIcon: badge.Badge(
+                      badgeStyle: badge.BadgeStyle(
+                          badgeColor: HMSThemeColors.surfaceDefault,
+                          padding: EdgeInsets.all(
+                              context.read<MeetingStore>().peers.length < 1000
+                                  ? 5
+                                  : 8)),
+                      badgeContent: HMSTitleText(
+                        text: context
+                            .read<MeetingStore>()
+                            .peers
+                            .length
+                            .toString(),
+                        textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                        fontSize: 10,
+                        lineHeight: 16,
+                        letterSpacing: 1.5,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                                (context.read<MeetingStore>().peers.length <
+                                        1000
                                     ? 5
-                                    : 8)),
-                        badgeContent: HMSTitleText(
-                          text: context
-                              .read<MeetingStore>()
-                              .peers
-                              .length
-                              .toString(),
-                          textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                          fontSize: 10,
-                          lineHeight: 16,
-                          letterSpacing: 1.5,
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal:
-                                  (context.read<MeetingStore>().peers.length <
-                                          1000
-                                      ? 5
-                                      : 10)),
-                          child: SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
-                            height: 20,
-                            width: 20,
-                            colorFilter: ColorFilter.mode(
-                                HMSThemeColors.onSurfaceHighEmphasis,
-                                BlendMode.srcIn),
-                          ),
+                                    : 10)),
+                        child: SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
+                          height: 20,
+                          width: 20,
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
                         ),
                       ),
-                      optionText: "Participants"),
-                  MoreOptionItem(
-                      onTap: () async {
-                        var meetingStore = context.read<MeetingStore>();
-                        Navigator.pop(context);
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: HMSThemeColors.surfaceDim,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16)),
-                          ),
-                          context: context,
-                          builder: (ctx) => ChangeNotifierProvider.value(
-                              value: meetingStore,
-                              child: Padding(
-                                  padding: EdgeInsets.only(
-                                      bottom:
-                                          MediaQuery.of(ctx).viewInsets.bottom),
-                                  child: const ChangeNameBottomSheet())),
-                        );
-                      },
-                      optionIcon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
-                        height: 20,
-                        width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
-                      ),
-                      optionText: "Change Name")
-                ],
-              ),
-            ],
-          ),
+                    ),
+                    optionText: "Participants"),
+                MoreOptionItem(
+                    onTap: () async {
+                      var meetingStore = context.read<MeetingStore>();
+                      Navigator.pop(context);
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        backgroundColor: HMSThemeColors.surfaceDim,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(16),
+                              topRight: Radius.circular(16)),
+                        ),
+                        context: context,
+                        builder: (ctx) => ChangeNotifierProvider.value(
+                            value: meetingStore,
+                            child: Padding(
+                                padding: EdgeInsets.only(
+                                    bottom:
+                                        MediaQuery.of(ctx).viewInsets.bottom),
+                                child: const ChangeNameBottomSheet())),
+                      );
+                    },
+                    optionIcon: SvgPicture.asset(
+                      "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
+                      height: 20,
+                      width: 20,
+                      colorFilter: ColorFilter.mode(
+                          HMSThemeColors.onSurfaceHighEmphasis,
+                          BlendMode.srcIn),
+                    ),
+                    optionText: "Change Name")
+              ],
+            ),
+          ],
         ),
       ),
     );
