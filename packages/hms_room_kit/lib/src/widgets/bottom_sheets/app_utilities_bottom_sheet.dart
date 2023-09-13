@@ -71,7 +71,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
               ///This renders the participants, screen share, brb, raise hand and recording options
               Wrap(
                 runSpacing: 24,
-                spacing: MediaQuery.of(context).size.width * 0.01,
+                spacing: MediaQuery.of(context).size.width * 0.005,
                 children: [
                   ///This renders the participants option if participants list is enabled
                   if(HMSRoomLayout.isParticipantsListEnabled)
