@@ -535,7 +535,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                   return Positioned(
                                                       bottom:
                                                           48.0 + 8 * toasts.key,
-                                                      left: 12,
+                                                      left: 5,
                                                       child: Transform.scale(
                                                         scale: _getToastScale(
                                                             toasts.key,

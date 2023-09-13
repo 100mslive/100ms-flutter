@@ -290,7 +290,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                     horizontalTitleGap: 2,
                     onTap: () async {
                       Navigator.pop(context);
-                      context.read<MeetingStore>().enterPipModeOnAndroid();
+                      // context.read<MeetingStore>().enterPipModeOnAndroid();
                     },
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(

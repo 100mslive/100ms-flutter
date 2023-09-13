@@ -25,26 +25,26 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    override fun onPictureInPictureModeChanged(
-        isInPictureInPictureMode: Boolean,
-        newConfig: Configuration?,
-    ) {
-        if (isInPictureInPictureMode) {
-            if (HMSPipAction.pipResult != null) {
-                HMSPipAction.pipResult?.success(true)
-                HMSPipAction.pipResult = null
-            }
-        } else {
-            Log.i("PIP Mode", "Exited PIP Mode")
-        }
-    }
+    // override fun onPictureInPictureModeChanged(
+    //     isInPictureInPictureMode: Boolean,
+    //     newConfig: Configuration?,
+    // ) {
+    //     if (isInPictureInPictureMode) {
+    //         if (HMSPipAction.pipResult != null) {
+    //             HMSPipAction.pipResult?.success(true)
+    //             HMSPipAction.pipResult = null
+    //         }
+    //     } else {
+    //         Log.i("PIP Mode", "Exited PIP Mode")
+    //     }
+    // }
 
-    override fun onUserLeaveHint() {
-        super.onUserLeaveHint()
-        // This should only work for android version above 8 since PIP is only supported after
-        // android 8 and will not be called after android 12 since it automatically gets handled by android.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-            HMSPipAction.autoEnterPipMode(this)
-        }
-    }
+    // override fun onUserLeaveHint() {
+    //     super.onUserLeaveHint()
+    //     // This should only work for android version above 8 since PIP is only supported after
+    //     // android 8 and will not be called after android 12 since it automatically gets handled by android.
+    //     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+    //         HMSPipAction.autoEnterPipMode(this)
+    //     }
+    // }
 }

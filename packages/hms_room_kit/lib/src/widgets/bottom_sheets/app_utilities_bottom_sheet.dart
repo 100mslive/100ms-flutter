@@ -34,7 +34,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
     return FractionallySizedBox(
       heightFactor: 0.4,
       child: Padding(
-        padding: const EdgeInsets.only(top: 16.0, left: 20, right: 20),
+        padding: EdgeInsets.only(top: 16.0, left:  MediaQuery.of(context).size.width * 0.04, right: MediaQuery.of(context).size.width * 0.04),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,7 +71,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
               ///This renders the participants, screen share, brb, raise hand and recording options
               Wrap(
                 runSpacing: 24,
-                spacing: MediaQuery.of(context).size.width < 390 ? 2 : 12,
+                spacing: MediaQuery.of(context).size.width * 0.01,
                 children: [
                   ///This renders the participants option if participants list is enabled
                   if(HMSRoomLayout.isParticipantsListEnabled)
@@ -163,11 +163,14 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         Navigator.pop(context);
                       },
                       isActive: meetingStore.isBRB,
-                      optionIcon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/brb.svg",
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
+                      optionIcon: Padding(
+                        padding: const EdgeInsets.only(top:8.0),
+                        child: SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/brb.svg",
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
+                        ),
                       ),
                       optionText:
                           meetingStore.isBRB ? "I'm Back" : "Be Right Back")

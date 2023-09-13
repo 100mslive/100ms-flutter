@@ -47,7 +47,7 @@ class _HMSToastState extends State<HMSToast> {
               color: widget.toastColor ?? HMSThemeColors.surfaceDim,
               borderRadius: BorderRadius.circular(8)),
           height: 52,
-          width: MediaQuery.of(context).size.width - 24,
+          width: MediaQuery.of(context).size.width - 10,
           child: Padding(
             padding: const EdgeInsets.only(left: 16.0, right: 8),
             child: Row(
