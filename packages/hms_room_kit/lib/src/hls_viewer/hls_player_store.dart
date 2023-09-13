@@ -14,7 +14,7 @@ class HLSPlayerStore extends ChangeNotifier {
 
   ///This variable stores whether the chat is opened or not
   ///The initial value is taken from the [HMSRoomLayout.chatData]
-  bool isChatOpened = HMSRoomLayout.chatData?.isOpenInitially??false;
+  bool isChatOpened = (HMSRoomLayout.chatData?.isOpenInitially??false) && (HMSRoomLayout.chatData?.isOverlay??false);
 
   ///This variable stores whether the timer is active or not
   ///

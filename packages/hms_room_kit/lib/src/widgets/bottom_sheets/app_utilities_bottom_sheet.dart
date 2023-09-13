@@ -85,7 +85,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         context: context,
                         builder: (ctx) => ChangeNotifierProvider.value(
                             value: meetingStore,
-                            child: (HMSRoomLayout.chatData?.isOverlay ?? false)
+                            child: (HMSRoomLayout.chatData == null || (HMSRoomLayout.chatData?.isOverlay ?? true))
                                 ? const OverlayParticipantsBottomSheet()
                                 : const ChatParticipantsTabBar(
                                     tabIndex: 1,

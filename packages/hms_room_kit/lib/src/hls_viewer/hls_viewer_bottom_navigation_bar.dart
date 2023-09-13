@@ -38,15 +38,18 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
         child: Column(
           children: [
             ///Chat Component only visible when the chat is opened
-            Selector<HLSPlayerStore, bool>(
-                selector: (_, hlsPlayerStore) => hlsPlayerStore.isChatOpened,
-                builder: (_, isChatOpened, __) {
-                  if (isChatOpened) {
-                    Provider.of<MeetingStore>(context, listen: true)
-                        .isNewMessageReceived = false;
-                  }
-                  return isChatOpened ? const HLSChatComponent() : Container();
-                }),
+            if (HMSRoomLayout.chatData != null)
+              Selector<HLSPlayerStore, bool>(
+                  selector: (_, hlsPlayerStore) => hlsPlayerStore.isChatOpened,
+                  builder: (_, isChatOpened, __) {
+                    if (isChatOpened) {
+                      Provider.of<MeetingStore>(context, listen: true)
+                          .isNewMessageReceived = false;
+                    }
+                    return isChatOpened
+                        ? const HLSChatComponent()
+                        : Container();
+                  }),
 
             ///Bottom Navigation Bar
             ///We render the leave button, hand raise button, chat button and the menu button
@@ -118,88 +121,95 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                             ),
 
                             ///Chat Button
-                            Selector<HLSPlayerStore, bool>(
-                                selector: (_, hlsPlayerStore) =>
-                                    hlsPlayerStore.isChatOpened,
-                                builder: (_, isChatOpened, __) {
-                                  return HMSEmbeddedButton(
-                                    onTap: () => {
-                                      if (HMSRoomLayout.chatData?.isOverlay ??
-                                          false)
-                                        {
-                                          context
-                                              .read<HLSPlayerStore>()
-                                              .toggleIsChatOpened()
-                                        }
-                                      else
-                                        {
-                                          showModalBottomSheet(
-                                            isScrollControlled: true,
-                                            backgroundColor:
-                                                HMSThemeColors.surfaceDim,
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(16),
-                                                  topRight:
-                                                      Radius.circular(16)),
-                                            ),
-                                            context: context,
-                                            builder: (ctx) =>
-                                                ChangeNotifierProvider.value(
-                                                    value: context
-                                                        .read<MeetingStore>(),
-                                                    child: HMSRoomLayout
-                                                            .isParticipantsListEnabled
-                                                        ? const ChatParticipantsTabBar(
-                                                            tabIndex: 0,
-                                                          )
-                                                        : const ChatOnlyBottomSheet()),
-                                          )
-                                        }
-                                    },
-                                    enabledBorderColor: HMSThemeColors
-                                        .backgroundDim
-                                        .withAlpha(64),
-                                    onColor: HMSThemeColors.backgroundDim
-                                        .withAlpha(64),
-                                    isActive: !isChatOpened,
-                                    child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Selector<MeetingStore, bool>(
-                                            selector: (_, meetingStore) =>
-                                                meetingStore
-                                                    .isNewMessageReceived,
-                                            builder:
-                                                (_, isNewMessageReceived, __) {
-                                              return isNewMessageReceived
-                                                  ? Badge(
-                                                      backgroundColor:
-                                                          HMSThemeColors
-                                                              .primaryDefault,
-                                                      child: SvgPicture.asset(
+                            if (HMSRoomLayout.chatData != null)
+                              Selector<HLSPlayerStore, bool>(
+                                  selector: (_, hlsPlayerStore) =>
+                                      hlsPlayerStore.isChatOpened,
+                                  builder: (_, isChatOpened, __) {
+                                    return HMSEmbeddedButton(
+                                      onTap: () => {
+                                        if (HMSRoomLayout.chatData?.isOverlay ??
+                                            false)
+                                          {
+                                            context
+                                                .read<HLSPlayerStore>()
+                                                .toggleIsChatOpened()
+                                          }
+                                        else
+                                          {
+                                            showModalBottomSheet(
+                                              isScrollControlled: true,
+                                              backgroundColor:
+                                                  HMSThemeColors.surfaceDim,
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(16),
+                                                    topRight:
+                                                        Radius.circular(16)),
+                                              ),
+                                              context: context,
+                                              builder: (ctx) =>
+                                                  ChangeNotifierProvider.value(
+                                                      value: context
+                                                          .read<MeetingStore>(),
+                                                      child: HMSRoomLayout
+                                                              .isParticipantsListEnabled
+                                                          ? const ChatParticipantsTabBar(
+                                                              tabIndex: 0,
+                                                            )
+                                                          : const ChatOnlyBottomSheet()),
+                                            )
+                                          }
+                                      },
+                                      enabledBorderColor: HMSThemeColors
+                                          .backgroundDim
+                                          .withAlpha(64),
+                                      onColor: HMSThemeColors.backgroundDim
+                                          .withAlpha(64),
+                                      isActive: !isChatOpened,
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Selector<MeetingStore, bool>(
+                                              selector: (_, meetingStore) =>
+                                                  meetingStore
+                                                      .isNewMessageReceived,
+                                              builder: (_, isNewMessageReceived,
+                                                  __) {
+                                                return isNewMessageReceived
+                                                    ? Badge(
+                                                        backgroundColor:
+                                                            HMSThemeColors
+                                                                .primaryDefault,
+                                                        child: SvgPicture.asset(
+                                                          "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
+                                                          semanticsLabel:
+                                                              "chat_button",
+                                                          colorFilter:
+                                                              ColorFilter.mode(
+                                                                  HMSThemeColors
+                                                                      .onSurfaceHighEmphasis,
+                                                                  BlendMode
+                                                                      .srcIn),
+                                                        ),
+                                                      )
+                                                    : SvgPicture.asset(
                                                         "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
-                                                        semanticsLabel:
-                                                            "chat_button",
                                                         colorFilter:
                                                             ColorFilter.mode(
                                                                 HMSThemeColors
                                                                     .onSurfaceHighEmphasis,
                                                                 BlendMode
                                                                     .srcIn),
-                                                      ),
-                                                    )
-                                                  : SvgPicture.asset(
-                                                      "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
-                                                      colorFilter: ColorFilter.mode(
-                                                          HMSThemeColors
-                                                              .onSurfaceHighEmphasis,
-                                                          BlendMode.srcIn),
-                                                      semanticsLabel:
-                                                          "chat_button",
-                                                    );
-                                            })),
-                                  );
-                                }),
+                                                        semanticsLabel:
+                                                            "chat_button",
+                                                      );
+                                              })),
+                                    );
+                                  }),
+                            
+                            if (HMSRoomLayout.chatData != null)
                             const SizedBox(
                               width: 24,
                             ),
