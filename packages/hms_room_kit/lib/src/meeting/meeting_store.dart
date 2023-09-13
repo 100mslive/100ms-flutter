@@ -133,7 +133,9 @@ class MeetingStore extends ChangeNotifier
 
   bool isNewMessageReceived = false;
 
-  bool isOverlayChatOpened = (HMSRoomLayout.chatData?.isOpenInitially ?? false) && (HMSRoomLayout.chatData?.isOverlay??false);
+  bool isOverlayChatOpened =
+      (HMSRoomLayout.chatData?.isOpenInitially ?? false) &&
+          (HMSRoomLayout.chatData?.isOverlay ?? false);
 
   int firstTimeBuild = 0;
 
@@ -496,23 +498,21 @@ class MeetingStore extends ChangeNotifier
   }
 
   ///This method returns the off stage roles
-  HMSRole? getOffStageRole() {
+  bool isOffStageRole(String? roleName) {
     if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
-      String? roleName = HMSRoomLayout.roleLayoutData?.screens?.conferencing
-          ?.defaultConf?.elements?.onStageExp?.offStageRoles?.first;
-      int? roleIndex = roles.indexWhere((element) => element.name == roleName);
+       int? roleIndex = HMSRoomLayout.roleLayoutData?.screens?.conferencing
+          ?.defaultConf?.elements?.onStageExp?.offStageRoles?.indexWhere((role) => role==roleName);
       if (roleIndex != -1) {
-        return roles[roleIndex];
+        return true;
       }
     } else if (HMSRoomLayout.peerType == PeerRoleType.hlsViewer) {
-      String? roleName = HMSRoomLayout.roleLayoutData?.screens?.conferencing
-          ?.hlsLiveStreaming?.elements?.onStageExp?.offStageRoles?.first;
-      int? roleIndex = roles.indexWhere((element) => element.name == roleName);
+       int? roleIndex = HMSRoomLayout.roleLayoutData?.screens?.conferencing
+          ?.hlsLiveStreaming?.elements?.onStageExp?.offStageRoles?.indexWhere((role) => role==roleName);
       if (roleIndex != -1) {
-        return roles[roleIndex];
+        return true;
       }
     }
-    return null;
+    return false;
   }
 
   void changeTrackState(HMSTrack track, bool mute) {
