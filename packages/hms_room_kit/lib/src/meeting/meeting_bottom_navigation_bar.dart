@@ -152,6 +152,7 @@ class _MeetingBottomNavigationBarState
                   }),
 
             ///Chat Button
+            if(HMSRoomLayout.chatData != null)
             Selector<MeetingStore, Tuple2>(
                 selector: (_, meetingStore) => Tuple2(
                     meetingStore.isNewMessageReceived,
