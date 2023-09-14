@@ -10,7 +10,11 @@ import live.hms.hmssdk_flutter.Constants
 import live.hms.hmssdk_flutter.methods.HMSPipAction
 
 class MainActivity : FlutterActivity() {
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+    ) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == Constants.SCREEN_SHARE_INTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             data?.action = Constants.HMSSDK_RECEIVER

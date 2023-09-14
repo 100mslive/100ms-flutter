@@ -500,14 +500,16 @@ class MeetingStore extends ChangeNotifier
   ///This method returns the off stage roles
   bool isOffStageRole(String? roleName) {
     if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
-       int? roleIndex = HMSRoomLayout.roleLayoutData?.screens?.conferencing
-          ?.defaultConf?.elements?.onStageExp?.offStageRoles?.indexWhere((role) => role==roleName);
+      int? roleIndex = HMSRoomLayout.roleLayoutData?.screens?.conferencing
+          ?.defaultConf?.elements?.onStageExp?.offStageRoles
+          ?.indexWhere((role) => role == roleName);
       if (roleIndex != -1) {
         return true;
       }
     } else if (HMSRoomLayout.peerType == PeerRoleType.hlsViewer) {
-       int? roleIndex = HMSRoomLayout.roleLayoutData?.screens?.conferencing
-          ?.hlsLiveStreaming?.elements?.onStageExp?.offStageRoles?.indexWhere((role) => role==roleName);
+      int? roleIndex = HMSRoomLayout.roleLayoutData?.screens?.conferencing
+          ?.hlsLiveStreaming?.elements?.onStageExp?.offStageRoles
+          ?.indexWhere((role) => role == roleName);
       if (roleIndex != -1) {
         return true;
       }
@@ -2206,7 +2208,7 @@ class MeetingStore extends ChangeNotifier
       //     }
       //   }
       // }
-    } 
+    }
     // else if (state == AppLifecycleState.inactive) {
     //   if (Platform.isAndroid && !isPipActive) {
     //     isPipActive = await HMSAndroidPIPController.isActive();

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/end_service_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';

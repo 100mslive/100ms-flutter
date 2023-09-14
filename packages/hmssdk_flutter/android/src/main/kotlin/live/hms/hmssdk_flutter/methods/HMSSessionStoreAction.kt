@@ -12,10 +12,12 @@ import live.hms.video.sdk.HMSSessionMetadataListener
 import live.hms.video.sessionstore.HmsSessionStore
 
 class HMSSessionStoreAction {
-
     companion object {
-
-        fun sessionStoreActions(call: MethodCall, result: Result, hmsSessionStore: HmsSessionStore?) {
+        fun sessionStoreActions(
+            call: MethodCall,
+            result: Result,
+            hmsSessionStore: HmsSessionStore?,
+        ) {
             when (call.method) {
                 "get_session_metadata_for_key" -> {
                     getSessionMetadataForKey(call, result, hmsSessionStore)
@@ -34,10 +36,15 @@ class HMSSessionStoreAction {
          *
          * This method returns [sessionMetadata] is the session metadata is available for corresponding key
          */
-        private fun getSessionMetadataForKey(call: MethodCall, result: Result, hmsSessionStore: HmsSessionStore?) {
-            val key = call.argument<String?>("key") ?: run {
-                HMSErrorLogger.returnArgumentsError("key is null")
-            }
+        private fun getSessionMetadataForKey(
+            call: MethodCall,
+            result: Result,
+            hmsSessionStore: HmsSessionStore?,
+        ) {
+            val key =
+                call.argument<String?>("key") ?: run {
+                    HMSErrorLogger.returnArgumentsError("key is null")
+                }
 
             key?.let {
                 key as String
@@ -58,13 +65,14 @@ class HMSSessionStoreAction {
                              * if it's a JsonNull we send it as null
                              */
                             sessionMetadata?.let {
-                                value = if (it.isJsonPrimitive) {
-                                    it.asString
-                                } else if (it.isJsonNull) {
-                                    null
-                                } else {
-                                    it.toString()
-                                }
+                                value =
+                                    if (it.isJsonPrimitive) {
+                                        it.asString
+                                    } else if (it.isJsonNull) {
+                                        null
+                                    } else {
+                                        it.toString()
+                                    }
                             }
 
                             result.success(HMSResultExtension.toDictionary(true, value))
@@ -83,10 +91,15 @@ class HMSSessionStoreAction {
          * This method sets the [data] provided during the method call
          * The completion of this method is marked by actionResultListener's [onSuccess] or [onError] callback
          */
-        private fun setSessionMetadataForKey(call: MethodCall, result: Result, hmsSessionStore: HmsSessionStore?) {
-            val key = call.argument<String?>("key") ?: run {
-                HMSErrorLogger.returnArgumentsError("key is null")
-            }
+        private fun setSessionMetadataForKey(
+            call: MethodCall,
+            result: Result,
+            hmsSessionStore: HmsSessionStore?,
+        ) {
+            val key =
+                call.argument<String?>("key") ?: run {
+                    HMSErrorLogger.returnArgumentsError("key is null")
+                }
 
             val data = call.argument<String?>("data")
 

@@ -3,7 +3,6 @@ package live.hms.hmssdk_flutter
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
 
 class HMSChangeTrackStateRequestExtension {
-
     companion object {
         fun toDictionary(hmsChangeTrackStateRequest: HMSChangeTrackStateRequest?): HashMap<String, Any?>? {
             val hashMap = HashMap<String, Any?>()

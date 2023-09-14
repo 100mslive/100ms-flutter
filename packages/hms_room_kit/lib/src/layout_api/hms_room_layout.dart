@@ -249,16 +249,18 @@ class HMSRoomLayout {
       isParticipantsListEnabled = roleLayoutData
               ?.screens?.conferencing?.defaultConf?.elements?.participantList !=
           null;
-      isBRBEnabled = roleLayoutData?.screens?.conferencing?.defaultConf
-              ?.elements?.brb != null;
+      isBRBEnabled =
+          roleLayoutData?.screens?.conferencing?.defaultConf?.elements?.brb !=
+              null;
     } else {
       chatData = roleLayoutData
           ?.screens?.conferencing?.hlsLiveStreaming?.elements?.chat;
       isParticipantsListEnabled = roleLayoutData?.screens?.conferencing
               ?.hlsLiveStreaming?.elements?.participantList !=
           null;
-      isBRBEnabled = roleLayoutData?.screens?.conferencing?.hlsLiveStreaming
-              ?.elements?.brb != null;
+      isBRBEnabled = roleLayoutData
+              ?.screens?.conferencing?.hlsLiveStreaming?.elements?.brb !=
+          null;
     }
   }
 

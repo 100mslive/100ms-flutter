@@ -11,7 +11,12 @@ import live.hms.video.utils.HmsUtilities
 
 class HMSVideoAction {
     companion object {
-        fun videoActions(call: MethodCall, result: Result, hmssdk: HMSSDK, hmssdkFlutterPlugin: HmssdkFlutterPlugin?) {
+        fun videoActions(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+            hmssdkFlutterPlugin: HmssdkFlutterPlugin?,
+        ) {
             when (call.method) {
                 "switch_video" -> {
                     switchVideo(call, result, hmssdk)
@@ -43,7 +48,11 @@ class HMSVideoAction {
             }
         }
 
-        private fun switchVideo(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        private fun switchVideo(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             val argsIsOn = call.argument<Boolean>("is_on")
             val peer = hmssdk.getLocalPeer()
             val videoTrack = peer?.videoTrack
@@ -55,7 +64,11 @@ class HMSVideoAction {
             }
         }
 
-        private fun toggleCameraMuteState(result: Result, hmssdk: HMSSDK, hmssdkFlutterPlugin: HmssdkFlutterPlugin?) {
+        private fun toggleCameraMuteState(
+            result: Result,
+            hmssdk: HMSSDK,
+            hmssdkFlutterPlugin: HmssdkFlutterPlugin?,
+        ) {
             val peer = hmssdk.getLocalPeer()
             val videoTrack = peer?.videoTrack
             if (videoTrack != null) {
@@ -73,7 +86,11 @@ class HMSVideoAction {
             }
         }
 
-        private fun switchCamera(result: Result, hmssdk: HMSSDK, hmssdkFlutterPlugin: HmssdkFlutterPlugin?) {
+        private fun switchCamera(
+            result: Result,
+            hmssdk: HMSSDK,
+            hmssdkFlutterPlugin: HmssdkFlutterPlugin?,
+        ) {
             val peer = hmssdk.getLocalPeer()
             var videoTrack = peer?.videoTrack
             if (videoTrack == null) {
@@ -89,7 +106,10 @@ class HMSVideoAction {
             }
         }
 
-        private fun isVideoMute(call: MethodCall, hmssdk: HMSSDK): Boolean {
+        private fun isVideoMute(
+            call: MethodCall,
+            hmssdk: HMSSDK,
+        ): Boolean {
             val peerId = call.argument<String>("peer_id")
             if (peerId == "null") {
                 return hmssdk.getLocalPeer()?.videoTrack?.isMute ?: true
@@ -98,7 +118,11 @@ class HMSVideoAction {
             return peer?.videoTrack?.isMute ?: true
         }
 
-        private fun toggleVideoMuteAll(shouldMute: Boolean, result: Result, hmssdk: HMSSDK) {
+        private fun toggleVideoMuteAll(
+            shouldMute: Boolean,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             val room: HMSRoom? = hmssdk.getRoom()
             if (room != null) {
                 val videoTracks: List<HMSVideoTrack> = HmsUtilities.getAllVideoTracks(room)

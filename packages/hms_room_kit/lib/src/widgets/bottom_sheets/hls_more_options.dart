@@ -33,7 +33,8 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 16.0, left: 20, right: 20,bottom: 24),
+      padding:
+          const EdgeInsets.only(top: 16.0, left: 20, right: 20, bottom: 24),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,9 +51,9 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                     )
                   ],
                 ),
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: const [HMSCrossButton()],
+                  children: [HMSCrossButton()],
                 )
               ],
             ),
@@ -69,64 +70,66 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
               spacing: 12,
               runSpacing: 24,
               children: [
-                if(HMSRoomLayout.isParticipantsListEnabled)
-                MoreOptionItem(
-                    onTap: () async {
-                      Navigator.pop(context);
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        backgroundColor: HMSThemeColors.surfaceDim,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(16),
-                              topRight: Radius.circular(16)),
-                        ),
-                        context: context,
-                        builder: (ctx) => ChangeNotifierProvider.value(
-                            value: context.read<MeetingStore>(),
-                            child: (HMSRoomLayout.chatData == null || (HMSRoomLayout.chatData?.isOverlay ?? true))
-                                ? const OverlayParticipantsBottomSheet()
-                                : const ChatParticipantsTabBar(
-                                    tabIndex: 1,
-                                  )),
-                      );
-                    },
-                    optionIcon: badge.Badge(
-                      badgeStyle: badge.BadgeStyle(
-                          badgeColor: HMSThemeColors.surfaceDefault,
-                          padding: EdgeInsets.all(
-                              context.read<MeetingStore>().peers.length < 1000
-                                  ? 5
-                                  : 8)),
-                      badgeContent: HMSTitleText(
-                        text: context
-                            .read<MeetingStore>()
-                            .peers
-                            .length
-                            .toString(),
-                        textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                        fontSize: 10,
-                        lineHeight: 16,
-                        letterSpacing: 1.5,
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal:
-                                (context.read<MeetingStore>().peers.length <
-                                        1000
+                if (HMSRoomLayout.isParticipantsListEnabled)
+                  MoreOptionItem(
+                      onTap: () async {
+                        Navigator.pop(context);
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: HMSThemeColors.surfaceDim,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16)),
+                          ),
+                          context: context,
+                          builder: (ctx) => ChangeNotifierProvider.value(
+                              value: context.read<MeetingStore>(),
+                              child: (HMSRoomLayout.chatData == null ||
+                                      (HMSRoomLayout.chatData?.isOverlay ??
+                                          true))
+                                  ? const OverlayParticipantsBottomSheet()
+                                  : const ChatParticipantsTabBar(
+                                      tabIndex: 1,
+                                    )),
+                        );
+                      },
+                      optionIcon: badge.Badge(
+                        badgeStyle: badge.BadgeStyle(
+                            badgeColor: HMSThemeColors.surfaceDefault,
+                            padding: EdgeInsets.all(
+                                context.read<MeetingStore>().peers.length < 1000
                                     ? 5
-                                    : 10)),
-                        child: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
-                          height: 20,
-                          width: 20,
-                          colorFilter: ColorFilter.mode(
-                              HMSThemeColors.onSurfaceHighEmphasis,
-                              BlendMode.srcIn),
+                                    : 8)),
+                        badgeContent: HMSTitleText(
+                          text: context
+                              .read<MeetingStore>()
+                              .peers
+                              .length
+                              .toString(),
+                          textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                          fontSize: 10,
+                          lineHeight: 16,
+                          letterSpacing: 1.5,
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal:
+                                  (context.read<MeetingStore>().peers.length <
+                                          1000
+                                      ? 5
+                                      : 10)),
+                          child: SvgPicture.asset(
+                            "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
+                            height: 20,
+                            width: 20,
+                            colorFilter: ColorFilter.mode(
+                                HMSThemeColors.onSurfaceHighEmphasis,
+                                BlendMode.srcIn),
+                          ),
                         ),
                       ),
-                    ),
-                    optionText: "Participants"),
+                      optionText: "Participants"),
                 MoreOptionItem(
                     onTap: () async {
                       var meetingStore = context.read<MeetingStore>();

@@ -128,9 +128,14 @@ class _MeetingPageState extends State<MeetingPage> {
           return ans;
         },
         child: WithForegroundTask(
-          child: Selector<MeetingStore, Tuple4<bool, HMSException?, bool,bool>>(
-              selector: (_, meetingStore) => Tuple4(meetingStore.isRoomEnded,
-                  meetingStore.hmsException, meetingStore.isEndRoomCalled,meetingStore.localPeer?.role.permissions.hlsStreaming??false),
+          child: Selector<MeetingStore,
+                  Tuple4<bool, HMSException?, bool, bool>>(
+              selector: (_, meetingStore) => Tuple4(
+                  meetingStore.isRoomEnded,
+                  meetingStore.hmsException,
+                  meetingStore.isEndRoomCalled,
+                  meetingStore.localPeer?.role.permissions.hlsStreaming ??
+                      false),
               builder: (_, failureErrors, __) {
                 if (failureErrors.item1) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -315,10 +320,10 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                                 ));
                                                     });
                                               }),
-                                          Column(
+                                          const Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
-                                            children: const [
+                                            children: [
                                               Padding(
                                                   padding: EdgeInsets.only(
                                                       left: 15,

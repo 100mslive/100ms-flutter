@@ -208,11 +208,11 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                               })),
                                     );
                                   }),
-                            
+
                             if (HMSRoomLayout.chatData != null)
-                            const SizedBox(
-                              width: 24,
-                            ),
+                              const SizedBox(
+                                width: 24,
+                              ),
 
                             ///Menu Button
                             HMSEmbeddedButton(

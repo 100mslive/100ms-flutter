@@ -58,64 +58,63 @@ class MessageContainer extends StatelessWidget {
                   ),
                 ],
               ),
-              if(HMSRoomLayout.chatData?.allowPinningMessages??true)
-              Row(
-                children: [
-                  if (role == "")
-                    PopupMenuButton(
-                      position: PopupMenuPosition.under,
-                      color: HMSThemeColors.surfaceDefault,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      itemBuilder: (context) {
-                        return List.generate(1, (index) {
-                          return PopupMenuItem(
-                            height: 52,
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(
-                                  "packages/hms_room_kit/lib/src/assets/icons/pin.svg",
-                                  height: 20,
-                                  width: 20,
-                                  colorFilter: ColorFilter.mode(
-                                      HMSThemeColors.onSurfaceMediumEmphasis,
-                                      BlendMode.srcIn),
-                                ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                HMSTitleText(
-                                  text: "Pin Message",
-                                  fontSize: 14,
-                                  lineHeight: 20,
-                                  letterSpacing: 0.1,
-                                  textColor:
-                                      HMSThemeColors.onSurfaceHighEmphasis,
-                                )
-                              ],
-                            ),
-                            onTap: () => context
-                                .read<MeetingStore>()
-                                .setSessionMetadataForKey(
-                                    key:
-                                        SessionStoreKeyValues.getNameFromMethod(
-                                            SessionStoreKey
-                                                .pinnedMessageSessionKey),
-                                    metadata: "${senderName!}: $message"),
-                          );
-                        });
-                      },
-                      child: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/more.svg",
-                        height: 20,
-                        width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceMediumEmphasis,
-                            BlendMode.srcIn),
-                      ),
-                    )
-                ],
-              )
+              if (HMSRoomLayout.chatData?.allowPinningMessages ?? true)
+                Row(
+                  children: [
+                    if (role == "")
+                      PopupMenuButton(
+                        position: PopupMenuPosition.under,
+                        color: HMSThemeColors.surfaceDefault,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        itemBuilder: (context) {
+                          return List.generate(1, (index) {
+                            return PopupMenuItem(
+                              height: 52,
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    "packages/hms_room_kit/lib/src/assets/icons/pin.svg",
+                                    height: 20,
+                                    width: 20,
+                                    colorFilter: ColorFilter.mode(
+                                        HMSThemeColors.onSurfaceMediumEmphasis,
+                                        BlendMode.srcIn),
+                                  ),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  HMSTitleText(
+                                    text: "Pin Message",
+                                    fontSize: 14,
+                                    lineHeight: 20,
+                                    letterSpacing: 0.1,
+                                    textColor:
+                                        HMSThemeColors.onSurfaceHighEmphasis,
+                                  )
+                                ],
+                              ),
+                              onTap: () => context
+                                  .read<MeetingStore>()
+                                  .setSessionMetadataForKey(
+                                      key: SessionStoreKeyValues
+                                          .getNameFromMethod(SessionStoreKey
+                                              .pinnedMessageSessionKey),
+                                      metadata: "${senderName!}: $message"),
+                            );
+                          });
+                        },
+                        child: SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/more.svg",
+                          height: 20,
+                          width: 20,
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.onSurfaceMediumEmphasis,
+                              BlendMode.srcIn),
+                        ),
+                      )
+                  ],
+                )
             ],
           ),
           const SizedBox(

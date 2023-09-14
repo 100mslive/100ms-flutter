@@ -1,5 +1,4 @@
-fastlane documentation
-----
+## fastlane documentation
 
 # Installation
 
@@ -29,15 +28,11 @@ Distributes the Runner iOS app on Firebase & TestFlight.
 [bundle exec] fastlane ios bump_version
 ```
 
-
-
 ### ios distribute_on_testflight
 
 ```sh
 [bundle exec] fastlane ios distribute_on_testflight
 ```
-
-
 
 ### ios post_message_on_slack
 
@@ -45,9 +40,7 @@ Distributes the Runner iOS app on Firebase & TestFlight.
 [bundle exec] fastlane ios post_message_on_slack
 ```
 
-
-
-----
+---
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
 

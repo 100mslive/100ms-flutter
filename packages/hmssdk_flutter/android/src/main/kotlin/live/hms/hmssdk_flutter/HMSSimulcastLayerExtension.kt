@@ -4,7 +4,6 @@ import live.hms.video.media.settings.HMSLayer
 import live.hms.video.media.settings.HMSSimulcastLayerDefinition
 
 class HMSSimulcastLayerExtension {
-
     companion object {
         fun toDictionary(layerDefinition: HMSSimulcastLayerDefinition): HashMap<String, Any?> {
             val hashMap = HashMap<String, Any?>()
