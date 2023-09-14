@@ -35,3 +35,5 @@ build/
 
 
 android/local.properties
+
+lib/src/service/app_secrets.dart
