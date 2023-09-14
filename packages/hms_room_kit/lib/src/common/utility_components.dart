@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/leave_session_bottom_sheet.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:collection/collection.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 //Project imports
@@ -23,6 +22,7 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_disconnected_toast.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_reconnection_toast.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 
 ///[UtilityComponents] contains the common components used in the app
 class UtilityComponents {
@@ -64,7 +64,7 @@ class UtilityComponents {
     //           ),
     //           Text(
     //             'Do you wish to leave?',
-    //             style: GoogleFonts.inter(
+    //             style: HMSTextStyle.setTextStyle(
     //                 color: errorColor,
     //                 fontSize: 20,
     //                 fontWeight: FontWeight.w600,
@@ -75,7 +75,7 @@ class UtilityComponents {
     //     ),
     //     content: Text(
     //         "You will leave the room immediately. You can’t undo this action.",
-    //         style: GoogleFonts.inter(
+    //         style: HMSTextStyle.setTextStyle(
     //             color: themeHintColor,
     //             fontSize: 14,
     //             fontWeight: FontWeight.w400,
@@ -104,7 +104,7 @@ class UtilityComponents {
     //                   padding: const EdgeInsets.symmetric(
     //                       horizontal: 8.0, vertical: 12),
     //                   child: Text('Nevermind',
-    //                       style: GoogleFonts.inter(
+    //                       style: HMSTextStyle.setTextStyle(
     //                           color: hmsWhiteColor,
     //                           fontSize: 16,
     //                           fontWeight: FontWeight.w600,
@@ -133,7 +133,7 @@ class UtilityComponents {
     //                     horizontal: 8.0, vertical: 12),
     //                 child: Text(
     //                   'Leave Room',
-    //                   style: GoogleFonts.inter(
+    //                   style: HMSTextStyle.setTextStyle(
     //                       color: themeDefaultColor,
     //                       fontSize: 16,
     //                       fontWeight: FontWeight.w600,
@@ -172,7 +172,7 @@ class UtilityComponents {
               ),
               Text(
                 'Leave Studio',
-                style: GoogleFonts.inter(
+                style: HMSTextStyle.setTextStyle(
                     color: themeDefaultColor,
                     fontSize: 20,
                     height: 24 / 20,
@@ -184,7 +184,7 @@ class UtilityComponents {
         ),
         content: Text(
             "Others will continue after you leave. You can join the studio again.",
-            style: GoogleFonts.inter(
+            style: HMSTextStyle.setTextStyle(
                 color: themeHintColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -286,7 +286,7 @@ class UtilityComponents {
             backgroundColor: themeBottomSheetColor,
             content: Text(
               message,
-              style: GoogleFonts.inter(
+              style: HMSTextStyle.setTextStyle(
                 color: iconColor,
               ),
             ),
@@ -294,7 +294,7 @@ class UtilityComponents {
               ElevatedButton(
                 child: Text(
                   'OK',
-                  style: GoogleFonts.inter(),
+                  style: HMSTextStyle.setTextStyle(),
                 ),
                 onPressed: () {
                   Navigator.pop(context);
@@ -335,7 +335,7 @@ class UtilityComponents {
                 ElevatedButton(
                   child: Text(
                     'Cancel',
-                    style: GoogleFonts.inter(),
+                    style: HMSTextStyle.setTextStyle(),
                   ),
                   onPressed: () {
                     Navigator.pop(context, '');
@@ -344,7 +344,7 @@ class UtilityComponents {
                 ElevatedButton(
                   child: Text(
                     'OK',
-                    style: GoogleFonts.inter(),
+                    style: HMSTextStyle.setTextStyle(),
                   ),
                   onPressed: () {
                     if (textController.text == "") {
@@ -380,7 +380,7 @@ class UtilityComponents {
                       children: [
                         Text(
                           "Single file per layer",
-                          style: GoogleFonts.inter(
+                          style: HMSTextStyle.setTextStyle(
                             color: iconColor,
                           ),
                         ),
@@ -400,7 +400,7 @@ class UtilityComponents {
                       children: [
                         Text(
                           "Video on Demand",
-                          style: GoogleFonts.inter(
+                          style: HMSTextStyle.setTextStyle(
                             color: iconColor,
                           ),
                         ),
@@ -421,7 +421,7 @@ class UtilityComponents {
                   ElevatedButton(
                     child: Text(
                       'Cancel',
-                      style: GoogleFonts.inter(),
+                      style: HMSTextStyle.setTextStyle(),
                     ),
                     onPressed: () {
                       Navigator.pop(context, '');
@@ -430,7 +430,7 @@ class UtilityComponents {
                   ElevatedButton(
                     child: Text(
                       'OK',
-                      style: GoogleFonts.inter(),
+                      style: HMSTextStyle.setTextStyle(),
                     ),
                     onPressed: () {
                       if (textController.text == "") {
@@ -459,7 +459,7 @@ class UtilityComponents {
                 backgroundColor: themeBottomSheetColor,
                 title: Text(
                   "Select Role for Mute",
-                  style: GoogleFonts.inter(
+                  style: HMSTextStyle.setTextStyle(
                     color: iconColor,
                   ),
                 ),
@@ -479,7 +479,7 @@ class UtilityComponents {
                                   children: [
                                     Text(
                                       roles[index].name,
-                                      style: GoogleFonts.inter(
+                                      style: HMSTextStyle.setTextStyle(
                                         color: iconColor,
                                       ),
                                     ),
@@ -504,7 +504,8 @@ class UtilityComponents {
                             children: [
                               Text(
                                 "Mute All",
-                                style: GoogleFonts.inter(color: Colors.red),
+                                style: HMSTextStyle.setTextStyle(
+                                    color: Colors.red),
                               ),
                               Checkbox(
                                   value: muteAll,
@@ -539,7 +540,7 @@ class UtilityComponents {
                                   },
                                   child: Text(
                                     "Cancel",
-                                    style: GoogleFonts.inter(),
+                                    style: HMSTextStyle.setTextStyle(),
                                   )),
                               ElevatedButton(
                                   style: ButtonStyle(
@@ -568,7 +569,7 @@ class UtilityComponents {
                                   },
                                   child: Text(
                                     "Mute",
-                                    style: GoogleFonts.inter(),
+                                    style: HMSTextStyle.setTextStyle(),
                                   ))
                             ],
                           )
@@ -597,7 +598,7 @@ class UtilityComponents {
                 backgroundColor: themeBottomSheetColor,
                 title: Text(
                   "Select roles for change role",
-                  style: GoogleFonts.inter(
+                  style: HMSTextStyle.setTextStyle(
                     color: iconColor,
                   ),
                 ),
@@ -617,7 +618,7 @@ class UtilityComponents {
                                   children: [
                                     Text(
                                       roles[index].name,
-                                      style: GoogleFonts.inter(
+                                      style: HMSTextStyle.setTextStyle(
                                         color: iconColor,
                                       ),
                                     ),
@@ -639,7 +640,7 @@ class UtilityComponents {
                               }),
                           Text(
                             "Change roles to",
-                            style: GoogleFonts.inter(
+                            style: HMSTextStyle.setTextStyle(
                               color: iconColor,
                             ),
                           ),
@@ -703,7 +704,7 @@ class UtilityComponents {
                                   },
                                   child: Text(
                                     "Cancel",
-                                    style: GoogleFonts.inter(
+                                    style: HMSTextStyle.setTextStyle(
                                         fontWeight: FontWeight.w600),
                                   )),
                               ElevatedButton(
@@ -733,7 +734,7 @@ class UtilityComponents {
                                   },
                                   child: Text(
                                     "Change Role",
-                                    style: GoogleFonts.inter(
+                                    style: HMSTextStyle.setTextStyle(
                                         fontWeight: FontWeight.w600),
                                   ))
                             ],
@@ -779,7 +780,7 @@ class UtilityComponents {
                         contentPadding: EdgeInsets.zero,
                         title: Text(
                           "Recording",
-                          style: GoogleFonts.inter(
+                          style: HMSTextStyle.setTextStyle(
                             color: iconColor,
                           ),
                         ),
@@ -817,7 +818,7 @@ class UtilityComponents {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 6, vertical: 12),
                             child: Text('Cancel',
-                                style: GoogleFonts.inter(
+                                style: HMSTextStyle.setTextStyle(
                                     color: themeDefaultColor,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -859,7 +860,7 @@ class UtilityComponents {
                               horizontal: 6, vertical: 12),
                           child: Text(
                             'Start RTMP',
-                            style: GoogleFonts.inter(
+                            style: HMSTextStyle.setTextStyle(
                                 color: hmsWhiteColor,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -899,7 +900,7 @@ class UtilityComponents {
               ),
               Text(
                 "End Room",
-                style: GoogleFonts.inter(
+                style: HMSTextStyle.setTextStyle(
                     color: errorColor,
                     fontSize: 20,
                     height: 24 / 20,
@@ -911,7 +912,7 @@ class UtilityComponents {
         ),
         content: Text(
             "The session will end for everyone and all the activities will stop. You can’t undo this action.",
-            style: GoogleFonts.inter(
+            style: HMSTextStyle.setTextStyle(
                 color: dialogcontentColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -941,7 +942,7 @@ class UtilityComponents {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8.0, vertical: 12),
                       child: Text("Don't End",
-                          style: GoogleFonts.inter(
+                          style: HMSTextStyle.setTextStyle(
                               color: themeDefaultColor,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -971,7 +972,7 @@ class UtilityComponents {
                         horizontal: 8.0, vertical: 12),
                     child: Text(
                       "End Room",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           color: hmsWhiteColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -1029,14 +1030,14 @@ class UtilityComponents {
   //             title: Center(
   //               child: Text(
   //                 errorTitle,
-  //                 style: GoogleFonts.inter(
+  //                 style: HMSTextStyle.setTextStyle(
   //                     color: HMSThemeColors.alertErrorDefault,
   //                     fontSize: 16,
   //                     fontWeight: FontWeight.w600),
   //               ),
   //             ),
   //             content: Text(errorMessage,
-  //                 style: GoogleFonts.inter(
+  //                 style: HMSTextStyle.setTextStyle(
   //                     color: HMSThemeColors.onSurfaceHighEmphasis,
   //                     fontSize: 14,
   //                     fontWeight: FontWeight.w400)),
@@ -1060,7 +1061,7 @@ class UtilityComponents {
   //                       onPressed: action,
   //                       child: Text(
   //                         actionMessage,
-  //                         style: GoogleFonts.inter(),
+  //                         style: HMSTextStyle.setTextStyle(),
   //                       )),
   //                 ],
   //               )
@@ -1120,7 +1121,7 @@ class UtilityComponents {
               ),
               Text(
                 title,
-                style: GoogleFonts.inter(
+                style: HMSTextStyle.setTextStyle(
                     color: errorColor,
                     fontSize: 20,
                     height: 24 / 20,
@@ -1131,7 +1132,7 @@ class UtilityComponents {
           ),
         ),
         content: Text(content,
-            style: GoogleFonts.inter(
+            style: HMSTextStyle.setTextStyle(
                 color: dialogcontentColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -1161,7 +1162,7 @@ class UtilityComponents {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8.0, vertical: 12),
                       child: Text(ignoreText,
-                          style: GoogleFonts.inter(
+                          style: HMSTextStyle.setTextStyle(
                               color: hmsWhiteColor,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -1194,7 +1195,7 @@ class UtilityComponents {
                         horizontal: 8.0, vertical: 12),
                     child: Text(
                       actionText,
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           color: themeDefaultColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -1226,7 +1227,7 @@ class UtilityComponents {
                   const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               backgroundColor: themeBottomSheetColor,
               title: Text("Change Name",
-                  style: GoogleFonts.inter(
+                  style: HMSTextStyle.setTextStyle(
                       color: themeDefaultColor,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.15,
@@ -1283,7 +1284,7 @@ class UtilityComponents {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 6, vertical: 12),
                           child: Text('Cancel',
-                              style: GoogleFonts.inter(
+                              style: HMSTextStyle.setTextStyle(
                                   color: themeDefaultColor,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -1314,7 +1315,7 @@ class UtilityComponents {
                             horizontal: 6, vertical: 12),
                         child: Text(
                           'Change',
-                          style: GoogleFonts.inter(
+                          style: HMSTextStyle.setTextStyle(
                               color: hmsWhiteColor,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -1437,7 +1438,7 @@ class UtilityComponents {
                             padding: const EdgeInsets.symmetric(
                                 vertical: 12, horizontal: 10),
                             child: Text('Cancel',
-                                style: GoogleFonts.inter(
+                                style: HMSTextStyle.setTextStyle(
                                     color: themeDefaultColor,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -1468,7 +1469,7 @@ class UtilityComponents {
                               vertical: 12, horizontal: 10),
                           child: Text(
                             'Change',
-                            style: GoogleFonts.inter(
+                            style: HMSTextStyle.setTextStyle(
                                 color: themeDefaultColor,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,

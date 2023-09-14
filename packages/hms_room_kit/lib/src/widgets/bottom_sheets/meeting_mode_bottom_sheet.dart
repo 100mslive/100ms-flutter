@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
@@ -53,7 +53,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                     child: Text(
                       "Meeting Modes",
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 16,
                           color: themeDefaultColor,
                           letterSpacing: 0.15,
@@ -108,7 +108,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       ),
                       title: Text(
                         "Normal Mode",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             fontSize: 14,
                             color: (meetingStore.meetingMode ==
                                     MeetingMode.equalProminenceWithInset)
@@ -145,7 +145,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       ),
                       title: Text(
                         "Active Speaker Mode",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             fontSize: 14,
                             color: (meetingStore.meetingMode ==
                                     MeetingMode.activeSpeakerWithInset)
@@ -180,7 +180,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       title: Text(
                         "Audio View",
                         semanticsLabel: "fl_audio_video_mode",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             fontSize: 14,
                             color: meetingStore.meetingMode == MeetingMode.audio
                                 ? errorColor
@@ -213,7 +213,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       ),
                       title: Text(
                         "Hero Mode",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             fontSize: 14,
                             color: meetingStore.meetingMode == MeetingMode.hero
                                 ? errorColor
@@ -246,7 +246,7 @@ class _MeetingModeBottomSheetState extends State<MeetingModeBottomSheet> {
                       ),
                       title: Text(
                         "Single Tile Mode",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             fontSize: 14,
                             color:
                                 meetingStore.meetingMode == MeetingMode.single

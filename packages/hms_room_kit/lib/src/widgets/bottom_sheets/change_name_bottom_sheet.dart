@@ -1,10 +1,10 @@
 ///Package imports
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_listenable_button.dart';
@@ -120,7 +120,7 @@ class _ChangeNameBottomSheetState extends State<ChangeNameBottomSheet> {
                     FocusManager.instance.primaryFocus?.unfocus(),
                 textInputAction: TextInputAction.done,
                 textCapitalization: TextCapitalization.words,
-                style: GoogleFonts.inter(
+                style: HMSTextStyle.setTextStyle(
                     color: HMSThemeColors.onSurfaceHighEmphasis),
                 controller: nameController,
                 keyboardType: TextInputType.text,
@@ -138,7 +138,7 @@ class _ChangeNameBottomSheetState extends State<ChangeNameBottomSheet> {
                     hintText: nameController.text.isEmpty
                         ? 'Enter Name...'
                         : nameController.text,
-                    hintStyle: GoogleFonts.inter(
+                    hintStyle: HMSTextStyle.setTextStyle(
                         color: HMSThemeColors.onSurfaceLowEmphasis,
                         height: 1.5,
                         fontSize: 16,

@@ -1,7 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
@@ -15,6 +14,7 @@ import 'package:provider/provider.dart';
 //Project imports
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 
 Widget fullScreenMode(
     {required List<PeerTrackNode> peerTracks,
@@ -54,7 +54,7 @@ Widget fullScreenMode(
                         Text(
                           "You are sharing your screen",
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.inter(
+                          style: HMSTextStyle.setTextStyle(
                               color: themeDefaultColor,
                               fontSize: 20,
                               letterSpacing: 0.15,

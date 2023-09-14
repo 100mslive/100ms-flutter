@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -16,6 +15,7 @@ import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/message_container.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 
 ///[HLSChat] is a widget that is used to display the chat screen
 ///It is used to send messages to everyone, to a specific role or to a specific peer
@@ -125,7 +125,7 @@ class _HLSChatState extends State<HLSChat> {
                               children: [
                                 Text(
                                   "Chat",
-                                  style: GoogleFonts.inter(
+                                  style: HMSTextStyle.setTextStyle(
                                       color: themeDefaultColor,
                                       fontSize: 20,
                                       letterSpacing: 0.15,
@@ -178,7 +178,7 @@ class _HLSChatState extends State<HLSChat> {
                                               0.66,
                                           child: Text(
                                             "Messages can only be seen by people in the call and are deleted when the call ends.",
-                                            style: GoogleFonts.inter(
+                                            style: HMSTextStyle.setTextStyle(
                                                 fontWeight: FontWeight.w400,
                                                 color: themeSubHeadingColor,
                                                 letterSpacing: 0.4,
@@ -241,13 +241,13 @@ class _HLSChatState extends State<HLSChat> {
                                         },
                                         options: const LinkifyOptions(
                                             humanize: false),
-                                        style: GoogleFonts.inter(
+                                        style: HMSTextStyle.setTextStyle(
                                             fontSize: 12.0,
                                             color: themeSubHeadingColor,
                                             letterSpacing: 0.4,
                                             height: 16 / 12,
                                             fontWeight: FontWeight.w400),
-                                        linkStyle: GoogleFonts.inter(
+                                        linkStyle: HMSTextStyle.setTextStyle(
                                             fontSize: 12.0,
                                             color: hmsdefaultColor,
                                             letterSpacing: 0.4,
@@ -289,7 +289,7 @@ class _HLSChatState extends State<HLSChat> {
                           return Center(
                               child: Text(
                             'No messages',
-                            style: GoogleFonts.inter(color: iconColor),
+                            style: HMSTextStyle.setTextStyle(color: iconColor),
                           ));
                         }
                         _scrollToEnd();
@@ -346,7 +346,7 @@ class _HLSChatState extends State<HLSChat> {
                             onSubmitted: (value) {
                               sendMessage();
                             },
-                            style: GoogleFonts.inter(color: iconColor),
+                            style: HMSTextStyle.setTextStyle(color: iconColor),
                             controller: messageTextController,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
@@ -354,7 +354,7 @@ class _HLSChatState extends State<HLSChat> {
                                 enabledBorder: InputBorder.none,
                                 errorBorder: InputBorder.none,
                                 disabledBorder: InputBorder.none,
-                                hintStyle: GoogleFonts.inter(
+                                hintStyle: HMSTextStyle.setTextStyle(
                                     color: themeHintColor,
                                     fontSize: 14,
                                     letterSpacing: 0.25,

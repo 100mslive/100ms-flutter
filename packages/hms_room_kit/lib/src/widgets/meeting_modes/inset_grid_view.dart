@@ -1,7 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
@@ -11,10 +10,11 @@ import 'package:hms_room_kit/src/widgets/common_widgets/peer_tile.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
-
-//Project imports
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
+//Project imports
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 
 /// Returns the Grid for inset mode
 Widget insetGridView(
@@ -61,7 +61,7 @@ Widget insetGridView(
                         ),
                         Text("You are sharing your screen",
                             textAlign: TextAlign.center,
-                            style: GoogleFonts.inter(
+                            style: HMSTextStyle.setTextStyle(
                               color: themeDefaultColor,
                               fontSize: 20,
                               letterSpacing: 0.15,

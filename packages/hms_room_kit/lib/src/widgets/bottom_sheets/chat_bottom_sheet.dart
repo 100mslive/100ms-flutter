@@ -2,19 +2,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+//Project imports
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/widgets/chat_widgets/hms_empty_chat_widget.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/message_container.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
-
-//Project imports
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ChatBottomSheet extends StatefulWidget {
   const ChatBottomSheet({super.key});
@@ -168,7 +168,8 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                       options:
                                                           const LinkifyOptions(
                                                               humanize: false),
-                                                      style: GoogleFonts.inter(
+                                                      style: HMSTextStyle
+                                                          .setTextStyle(
                                                         fontSize: 14.0,
                                                         color: HMSThemeColors
                                                             .onSurfaceHighEmphasis,
@@ -177,14 +178,17 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                         fontWeight:
                                                             FontWeight.w400,
                                                       ),
-                                                      linkStyle: GoogleFonts.inter(
-                                                          fontSize: 14.0,
-                                                          color: HMSThemeColors
-                                                              .primaryDefault,
-                                                          letterSpacing: 0.25,
-                                                          height: 20 / 14,
-                                                          fontWeight:
-                                                              FontWeight.w400),
+                                                      linkStyle: HMSTextStyle
+                                                          .setTextStyle(
+                                                              fontSize: 14.0,
+                                                              color: HMSThemeColors
+                                                                  .primaryDefault,
+                                                              letterSpacing:
+                                                                  0.25,
+                                                              height: 20 / 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400),
                                                     ),
                                                   ),
                                                 ],
@@ -322,7 +326,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                           onChanged: (value) {
                             setState(() {});
                           },
-                          style: GoogleFonts.inter(
+                          style: HMSTextStyle.setTextStyle(
                               color: HMSThemeColors.onSurfaceHighEmphasis,
                               fontWeight: FontWeight.w400,
                               height: 20 / 14,
@@ -365,7 +369,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                               enabledBorder: InputBorder.none,
                               errorBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
-                              hintStyle: GoogleFonts.inter(
+                              hintStyle: HMSTextStyle.setTextStyle(
                                   color: HMSThemeColors.onSurfaceLowEmphasis,
                                   fontSize: 14,
                                   height: 20 / 14,

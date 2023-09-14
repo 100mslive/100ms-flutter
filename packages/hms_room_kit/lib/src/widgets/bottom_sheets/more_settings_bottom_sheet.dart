@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
@@ -144,7 +144,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               Text(
                                 "Participants",
                                 semanticsLabel: "participants_button",
-                                style: GoogleFonts.inter(
+                                style: HMSTextStyle.setTextStyle(
                                     fontSize: 14,
                                     color: themeDefaultColor,
                                     letterSpacing: 0.25,
@@ -190,7 +190,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               Text(
                                 "Audio Settings",
                                 semanticsLabel: "fl_audio_settings",
-                                style: GoogleFonts.inter(
+                                style: HMSTextStyle.setTextStyle(
                                     fontSize: 14,
                                     color: themeDefaultColor,
                                     letterSpacing: 0.25,
@@ -698,7 +698,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                   //     title: Text(
                   //       "Modify Notifications",
                   //       semanticsLabel: "fl_notification_setting",
-                  //       style: GoogleFonts.inter(
+                  //       style: HMSTextStyle.setTextStyle(
                   //           fontSize: 14,
                   //           colorFilter:  ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                   //           letterSpacing: 0.25,

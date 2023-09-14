@@ -1,6 +1,8 @@
 ///Package imports
 import 'package:flutter/cupertino.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+///Project imports
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 
 ///[HMSSubtitleText] returns a text widget with the default theme
 ///The paramters and their default values are as follows:
@@ -40,7 +42,7 @@ class HMSSubtitleText extends StatelessWidget {
         overflow: textOverflow,
         softWrap: true,
         textAlign: textAlign,
-        style: GoogleFonts.inter(
+        style: HMSTextStyle.setTextStyle(
             height: lineHeight! / fontSize!,
             fontSize: fontSize,
             letterSpacing: letterSpacing,
