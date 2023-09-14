@@ -18,9 +18,9 @@ on:
       - develop
     paths-ignore:
       - '**.md'
-      - 'doc/**'
-      - '.git/'
-      - '.vscode/'
+      - doc/**
+      - .git/
+      - .vscode/
 
 jobs:
   analyze:
@@ -34,7 +34,7 @@ jobs:
       - name: ⚙️ Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: stable
           cache: true
       - name: ⚠️ℹ️ Run Dart analysis for hmssdk_flutter package
         uses: zgosalvez/github-actions-analyze-dart@v2.0.9
@@ -43,7 +43,7 @@ jobs:
       - name: ⚠️ℹ️ Run Dart analysis for hms_room_kit package
         uses: zgosalvez/github-actions-analyze-dart@v2.0.9
         with:
-        working-directory: "${{github.workspace}}/packages/hms_room_kit"
+          working-directory: "${{github.workspace}}/packages/hms_room_kit"
       - name: 📈 Check metrics
         uses: dart-code-checker/dart-code-metrics-action@v3.0.0
         with:
