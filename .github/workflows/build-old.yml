@@ -71,7 +71,7 @@ jobs:
           cp $PP_PATH_FLUTTERADHOCBROADCASTUPLOADEXTENSION ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH_FLUTTERAPPSTORE ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH_FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION ~/Library/MobileDevice/Provisioning\ Profiles
-      - name: Go to HMSLive Folder
+      - name: Run Release Script
         run: |
           chmod +x ./release-apps.sh
           ./release-apps.sh
