@@ -21,17 +21,17 @@ platform :android do
 
     updatedVersionCode = s[re, 1]
     updatedVersionName = s[/versionName\s+"(\d.\d.\d+)"/, 1]
-    
+
     f = File.new(path, 'w')
     f.write(s)
-    f.close 
+    f.close
 
     build_android_app(
       task: 'assemble',
       # flavor: "hmsInternal",
       build_type: 'Release'
     )
-    
+
     firebase_app_distribution(
       app: "1:19544678223:android:a33d9b410e9a290db32f3a",
       groups: "internal, External",
@@ -45,15 +45,15 @@ platform :android do
       message: ":flutter: 🎉 Flutter Android App released! 🎊 :flutter:",
       slack_url: ENV['SLACK_URL'],
       payload: {
-        "📲 Download from Firebase 🤖" => "https://appdistribution.firebase.dev/i/b623e5310929ab70",  
+        "📲 Download from Firebase 🤖" => "https://appdistribution.firebase.dev/i/b623e5310929ab70",
         "📝 Changelog" => File.read("../../ExampleAppChangelog.txt")
       },
-      default_payloads: ["git_branch"], 
-      attachment_properties: {      
+      default_payloads: ["git_branch"],
+      attachment_properties: {
         fields: [{
           title: "🤖🎊 App Version",
           value: updatedVersionName + " (" + updatedVersionCode + ")",
-          short: false 
+          short: false
         }]
       }
     )
