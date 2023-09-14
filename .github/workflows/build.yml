@@ -37,7 +37,6 @@ jobs:
         with:
           # 11
           channel: stable
-      # - name: Install the Apple certificate and provisioning profile
       - name: Set Environmnent Variables
         env:
             FLUTTER_HMS_JSON: ${{ secrets.FLUTTER_HMS_JSON }}
@@ -49,7 +48,10 @@ jobs:
       #     FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION: ${{ secrets.FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION }}
       #     KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
       #     SLACK_URL: ${{ secrets.SLACK_URL }}
-      # run: |
+        run: |
+            echo "Setting Environmnent Variables"
+            echo "FLUTTER_HMS_JSON: $FLUTTER_HMS_JSON"
+
       # create variables
       # CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
       # PP_PATH_FLUTTERADHOCDISTRIBUTION=$RUNNER_TEMP/FLUTTERADHOCDISTRIBUTION.mobileprovision
