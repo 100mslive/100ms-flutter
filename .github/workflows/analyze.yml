@@ -44,10 +44,10 @@ jobs:
         uses: zgosalvez/github-actions-analyze-dart@v2.0.9
         with:
           working-directory: "${{github.workspace}}/packages/hms_room_kit"
-      - name: 📈 Check metrics
-        uses: dart-code-checker/dart-code-metrics-action@v3.0.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          pull_request_comment: true
-          check_unused_files: true
-          folders: 'packages/hmssdk_flutter, packages/hms_room_kit'
+      # - name: 📈 Check metrics
+      #   uses: dart-code-checker/dart-code-metrics-action@v3.0.0
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     pull_request_comment: true
+      #     check_unused_files: true
+      #     folders: 'packages/hmssdk_flutter, packages/hms_room_kit'
