@@ -1,53 +1,53 @@
-name: 🧐 Analyze
+# name: 🧐 Analyze
 
-permissions: write-all
+# permissions: write-all
 
-on:
-  push:
-    branches:
-      - main
-      - develop
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - ready_for_review
-    branches:
-      - main
-      - develop
-    paths-ignore:
-      - '**.md'
-      - doc/**
-      - .git/
-      - .vscode/
+# on:
+#   push:
+#     branches:
+#       - main
+#       - develop
+#   pull_request:
+#     types:
+#       - opened
+#       - reopened
+#       - synchronize
+#       - ready_for_review
+#     branches:
+#       - main
+#       - develop
+#     paths-ignore:
+#       - '**.md'
+#       - doc/**
+#       - .git/
+#       - .vscode/
 
-jobs:
-  analyze:
-    name: Analyze
-    if: github.event.pull_request.draft == false
-    timeout-minutes: 30
-    runs-on: macos-latest
-    steps:
-      - name: ⬇️ Checkout repository
-        uses: actions/checkout@v3
-      - name: ⚙️ Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          cache: true
-      - name: ⚠️ℹ️ Run Dart analysis for hmssdk_flutter package
-        uses: zgosalvez/github-actions-analyze-dart@v2.0.9
-        with:
-          working-directory: "${{github.workspace}}/packages/hmssdk_flutter"
-      - name: ⚠️ℹ️ Run Dart analysis for hms_room_kit package
-        uses: zgosalvez/github-actions-analyze-dart@v2.0.9
-        with:
-          working-directory: "${{github.workspace}}/packages/hms_room_kit"
-      # - name: 📈 Check metrics
-      #   uses: dart-code-checker/dart-code-metrics-action@v3.0.0
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     pull_request_comment: true
-      #     check_unused_files: true
-      #     folders: 'packages/hmssdk_flutter, packages/hms_room_kit'
+# jobs:
+#   analyze:
+#     name: Analyze
+#     if: github.event.pull_request.draft == false
+#     timeout-minutes: 30
+#     runs-on: macos-latest
+#     steps:
+#       - name: ⬇️ Checkout repository
+#         uses: actions/checkout@v3
+#       - name: ⚙️ Setup Flutter
+#         uses: subosito/flutter-action@v2
+#         with:
+#           channel: stable
+#           cache: true
+#       - name: ⚠️ℹ️ Run Dart analysis for hmssdk_flutter package
+#         uses: zgosalvez/github-actions-analyze-dart@v2.0.9
+#         with:
+#           working-directory: "${{github.workspace}}/packages/hmssdk_flutter"
+#       - name: ⚠️ℹ️ Run Dart analysis for hms_room_kit package
+#         uses: zgosalvez/github-actions-analyze-dart@v2.0.9
+#         with:
+#           working-directory: "${{github.workspace}}/packages/hms_room_kit"
+#       # - name: 📈 Check metrics
+#       #   uses: dart-code-checker/dart-code-metrics-action@v3.0.0
+#       #   with:
+#       #     github_token: ${{ secrets.GITHUB_TOKEN }}
+#       #     pull_request_comment: true
+#       #     check_unused_files: true
+#       #     folders: 'packages/hmssdk_flutter, packages/hms_room_kit'
