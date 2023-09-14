@@ -9,10 +9,12 @@ import live.hms.video.media.tracks.*
 import live.hms.video.sdk.models.HMSPeer
 
 class HMSRtcStatsExtension {
-
     companion object {
-
-        fun toDictionary(hmsRemoteVideoStats: HMSRemoteVideoStats, track: HMSTrack, peer: HMSPeer): HashMap<String, Any?> {
+        fun toDictionary(
+            hmsRemoteVideoStats: HMSRemoteVideoStats,
+            track: HMSTrack,
+            peer: HMSPeer,
+        ): HashMap<String, Any?> {
             val args = HashMap<String, Any?>()
             args.put("peer", HMSPeerExtension.toDictionary(peer)!!)
             args.put("track", HMSTrackExtension.toDictionary(track)!!)
@@ -30,7 +32,11 @@ class HMSRtcStatsExtension {
             return args
         }
 
-        fun toDictionary(hmsRemoteAudioStats: HMSRemoteAudioStats, track: HMSTrack, peer: HMSPeer): HashMap<String, Any?> {
+        fun toDictionary(
+            hmsRemoteAudioStats: HMSRemoteAudioStats,
+            track: HMSTrack,
+            peer: HMSPeer,
+        ): HashMap<String, Any?> {
             val args = HashMap<String, Any?>()
             args.put("peer", HMSPeerExtension.toDictionary(peer)!!)
             args.put("track", HMSTrackExtension.toDictionary(track)!!)
@@ -46,7 +52,11 @@ class HMSRtcStatsExtension {
             return args
         }
 
-        fun toDictionary(hmsLocalAudioStats: HMSLocalAudioStats, track: HMSTrack, peer: HMSPeer): HashMap<String, Any?> {
+        fun toDictionary(
+            hmsLocalAudioStats: HMSLocalAudioStats,
+            track: HMSTrack,
+            peer: HMSPeer,
+        ): HashMap<String, Any?> {
             val args = HashMap<String, Any?>()
             args.put("peer", HMSPeerExtension.toDictionary(peer)!!)
             args.put("track", HMSTrackExtension.toDictionary(track)!!)
@@ -59,7 +69,11 @@ class HMSRtcStatsExtension {
             return args
         }
 
-        fun toDictionary(hmsLocalVideoStats: List<HMSLocalVideoStats>, track: HMSTrack, peer: HMSPeer): HashMap<String, Any?> {
+        fun toDictionary(
+            hmsLocalVideoStats: List<HMSLocalVideoStats>,
+            track: HMSTrack,
+            peer: HMSPeer,
+        ): HashMap<String, Any?> {
             val args = HashMap<String, Any?>()
             args["peer"] = HMSPeerExtension.toDictionary(peer)!!
             args["track"] = HMSTrackExtension.toDictionary(track)!!

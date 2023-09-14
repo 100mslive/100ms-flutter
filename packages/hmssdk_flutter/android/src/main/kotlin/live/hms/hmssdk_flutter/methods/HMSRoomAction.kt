@@ -8,7 +8,11 @@ import live.hms.video.sdk.*
 
 class HMSRoomAction {
     companion object {
-        fun roomActions(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        fun roomActions(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             when (call.method) {
                 "get_room" -> {
                     getRoom(result, hmssdk)
@@ -27,13 +31,25 @@ class HMSRoomAction {
                 }
             }
         }
-        private fun getRoom(result: Result, hmssdk: HMSSDK) {
+
+        private fun getRoom(
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             result.success(HMSRoomExtension.toDictionary(hmssdk?.getRoom()))
         }
-        private fun localPeer(result: Result, hmssdk: HMSSDK) {
+
+        private fun localPeer(
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             result.success(HMSPeerExtension.toDictionary(HMSCommonAction.getLocalPeer(hmssdk)))
         }
-        private fun getRemotePeers(result: Result, hmssdk: HMSSDK) {
+
+        private fun getRemotePeers(
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             val peersList = hmssdk.getRemotePeers()
             val peersMapList = ArrayList<HashMap<String, Any?>?>()
             peersList.forEach {
@@ -45,7 +61,10 @@ class HMSRoomAction {
         }
 
         // TODO: check behaviour when room is not joined
-        private fun getPeers(result: Result, hmssdk: HMSSDK) {
+        private fun getPeers(
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             val peersList = hmssdk.getPeers()
             val peersMapList = ArrayList<HashMap<String, Any?>?>()
             peersList.forEach {

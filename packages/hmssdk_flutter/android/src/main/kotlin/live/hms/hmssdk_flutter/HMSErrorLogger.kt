@@ -2,10 +2,9 @@ package live.hms.hmssdk_flutter
 
 import io.flutter.plugin.common.MethodChannel.Result
 import live.hms.video.utils.HMSLogger
+
 class HMSErrorLogger {
-
     companion object {
-
         private const val TAG = "FL_HMSSDK Error"
 
         /**
@@ -13,7 +12,11 @@ class HMSErrorLogger {
          * If you need to send the exception and error to flutter channel
          * then consider using [returnHMSException] method
          */
-        fun logError(methodName: String, error: String, errorType: String) {
+        fun logError(
+            methodName: String,
+            error: String,
+            errorType: String,
+        ) {
             HMSLogger.e(TAG, "$errorType: { method -> $methodName, error -> $error }")
         }
 
@@ -32,7 +35,12 @@ class HMSErrorLogger {
          * log the exception and then send the result to flutter with [success] as [false] and [data]
          * as [HMSException] map
          */
-        fun returnHMSException(methodName: String, error: String, errorType: String, result: Result) {
+        fun returnHMSException(
+            methodName: String,
+            error: String,
+            errorType: String,
+            result: Result,
+        ) {
             HMSLogger.e(TAG, "$errorType: { method -> $methodName, error -> $error }")
             result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError(description = error)))
         }

@@ -3,7 +3,6 @@ package live.hms.hmssdk_flutter
 import live.hms.video.sdk.models.role.VideoSimulcastLayersParams
 
 class HMSSimulcastSettingsPolicyExtension {
-
     companion object {
         fun toDictionary(layerParams: VideoSimulcastLayersParams): HashMap<String, Any?> {
             val hashMap = HashMap<String, Any?>()

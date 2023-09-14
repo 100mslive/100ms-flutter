@@ -4,7 +4,6 @@ import live.hms.video.media.codec.HMSVideoCodec
 import live.hms.video.sdk.models.role.VideoParams
 
 class VideoParamsExtension {
-
     companion object {
         fun toDictionary(videoParams: VideoParams): HashMap<String, Any>? {
             val args = HashMap<String, Any>()

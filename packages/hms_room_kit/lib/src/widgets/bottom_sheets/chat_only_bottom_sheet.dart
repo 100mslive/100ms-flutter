@@ -32,8 +32,9 @@ class ChatOnlyBottomSheet extends StatelessWidget {
                 const HMSCrossButton(),
               ],
             ),
-            const Expanded(child:Padding(
-              padding: EdgeInsets.only(bottom:8.0),
+            const Expanded(
+                child: Padding(
+              padding: EdgeInsets.only(bottom: 8.0),
               child: ChatBottomSheet(),
             ))
           ],

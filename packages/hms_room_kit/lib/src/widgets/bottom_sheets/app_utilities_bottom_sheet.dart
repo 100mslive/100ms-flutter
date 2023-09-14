@@ -32,7 +32,11 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
   Widget build(BuildContext context) {
     MeetingStore meetingStore = context.read<MeetingStore>();
     return Padding(
-      padding: EdgeInsets.only(top: 16.0, left:  MediaQuery.of(context).size.width * 0.04, right: MediaQuery.of(context).size.width * 0.04,bottom: 24),
+      padding: EdgeInsets.only(
+          top: 16.0,
+          left: MediaQuery.of(context).size.width * 0.04,
+          right: MediaQuery.of(context).size.width * 0.04,
+          bottom: 24),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,9 +54,9 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                     )
                   ],
                 ),
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: const [
+                  children: [
                     HMSCrossButton(),
                   ],
                 )
@@ -72,62 +76,64 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
               spacing: MediaQuery.of(context).size.width * 0.005,
               children: [
                 ///This renders the participants option if participants list is enabled
-                if(HMSRoomLayout.isParticipantsListEnabled)
-                MoreOptionItem(
-                    onTap: () async {
-                      Navigator.pop(context);
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        backgroundColor: HMSThemeColors.surfaceDim,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        context: context,
-                        builder: (ctx) => ChangeNotifierProvider.value(
-                            value: meetingStore,
-                            child: (HMSRoomLayout.chatData == null || (HMSRoomLayout.chatData?.isOverlay ?? true))
-                                ? const OverlayParticipantsBottomSheet()
-                                : const ChatParticipantsTabBar(
-                                    tabIndex: 1,
-                                  )),
-                      );
-                    },
-                    optionIcon: badge.Badge(
-                      badgeStyle: badge.BadgeStyle(
-                          badgeColor: HMSThemeColors.surfaceDefault,
-                          padding: EdgeInsets.all(
-                              context.read<MeetingStore>().peers.length < 1000
-                                  ? 5
-                                  : 8)),
-                      badgeContent: HMSTitleText(
-                        text: context
-                            .read<MeetingStore>()
-                            .peers
-                            .length
-                            .toString(),
-                        textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                        fontSize: 10,
-                        lineHeight: 16,
-                        letterSpacing: 1.5,
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal:
-                                (context.read<MeetingStore>().peers.length <
-                                        1000
+                if (HMSRoomLayout.isParticipantsListEnabled)
+                  MoreOptionItem(
+                      onTap: () async {
+                        Navigator.pop(context);
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: HMSThemeColors.surfaceDim,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          context: context,
+                          builder: (ctx) => ChangeNotifierProvider.value(
+                              value: meetingStore,
+                              child: (HMSRoomLayout.chatData == null ||
+                                      (HMSRoomLayout.chatData?.isOverlay ??
+                                          true))
+                                  ? const OverlayParticipantsBottomSheet()
+                                  : const ChatParticipantsTabBar(
+                                      tabIndex: 1,
+                                    )),
+                        );
+                      },
+                      optionIcon: badge.Badge(
+                        badgeStyle: badge.BadgeStyle(
+                            badgeColor: HMSThemeColors.surfaceDefault,
+                            padding: EdgeInsets.all(
+                                context.read<MeetingStore>().peers.length < 1000
                                     ? 5
-                                    : 10)),
-                        child: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
-                          height: 20,
-                          width: 20,
-                          colorFilter: ColorFilter.mode(
-                              HMSThemeColors.onSurfaceHighEmphasis,
-                              BlendMode.srcIn),
+                                    : 8)),
+                        badgeContent: HMSTitleText(
+                          text: context
+                              .read<MeetingStore>()
+                              .peers
+                              .length
+                              .toString(),
+                          textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                          fontSize: 10,
+                          lineHeight: 16,
+                          letterSpacing: 1.5,
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal:
+                                  (context.read<MeetingStore>().peers.length <
+                                          1000
+                                      ? 5
+                                      : 10)),
+                          child: SvgPicture.asset(
+                            "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
+                            height: 20,
+                            width: 20,
+                            colorFilter: ColorFilter.mode(
+                                HMSThemeColors.onSurfaceHighEmphasis,
+                                BlendMode.srcIn),
+                          ),
                         ),
                       ),
-                    ),
-                    optionText: "Participants"),
+                      optionText: "Participants"),
 
                 ///This renders the screen share option
                 MoreOptionItem(
@@ -145,8 +151,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                     height: 20,
                     width: 20,
                     colorFilter: ColorFilter.mode(
-                        HMSThemeColors.onSurfaceHighEmphasis,
-                        BlendMode.srcIn),
+                        HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                   ),
                   optionText: meetingStore.isScreenShareOn
                       ? "Sharing Screen"
@@ -154,27 +159,28 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                 ),
 
                 ///This renders the brb option
-                if(HMSRoomLayout.isBRBEnabled)
-                MoreOptionItem(
-                    onTap: () async {
-                      meetingStore.changeMetadataBRB();
-                      Navigator.pop(context);
-                    },
-                    isActive: meetingStore.isBRB,
-                    optionIcon: Padding(
-                      padding: const EdgeInsets.only(top:8.0),
-                      child: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/brb.svg",
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
+                if (HMSRoomLayout.isBRBEnabled)
+                  MoreOptionItem(
+                      onTap: () async {
+                        meetingStore.changeMetadataBRB();
+                        Navigator.pop(context);
+                      },
+                      isActive: meetingStore.isBRB,
+                      optionIcon: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/brb.svg",
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
+                        ),
                       ),
-                    ),
-                    optionText:
-                        meetingStore.isBRB ? "I'm Back" : "Be Right Back")
-              
-                 ///This renders the raise hand option
-                ,MoreOptionItem(
+                      optionText:
+                          meetingStore.isBRB ? "I'm Back" : "Be Right Back")
+
+                ///This renders the raise hand option
+                ,
+                MoreOptionItem(
                     onTap: () async {
                       context.read<MeetingStore>().changeMetadata();
                       Navigator.pop(context);
@@ -197,8 +203,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                 ///start/stop browser recording
                 ///
                 ///The recording permission is checked using the role of the local peer
-                if (meetingStore
-                        .localPeer?.role.permissions.browserRecording ??
+                if (meetingStore.localPeer?.role.permissions.browserRecording ??
                     false)
                   ((meetingStore.streamingType["hls"] ?? false) ||
                           (meetingStore.streamingType["rtmp"] ?? false))
@@ -214,14 +219,12 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                 BlendMode.srcIn),
                           ),
                           optionText: "Start Recording",
-                          optionTextColor:
-                              HMSThemeColors.onSurfaceLowEmphasis,
+                          optionTextColor: HMSThemeColors.onSurfaceLowEmphasis,
                         )
                       : MoreOptionItem(
                           onTap: () async {
                             bool isRecordingRunning =
-                                ((meetingStore.recordingType["hls"] ??
-                                        false) ||
+                                ((meetingStore.recordingType["hls"] ?? false) ||
                                     (meetingStore.recordingType["browser"] ??
                                         false) ||
                                     (meetingStore.recordingType["server"] ??
@@ -242,8 +245,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                       meetingStore.stopRtmpAndRecording(),
                                   title: HMSTitleText(
                                     text: "Stop Recording",
-                                    textColor:
-                                        HMSThemeColors.alertErrorDefault,
+                                    textColor: HMSThemeColors.alertErrorDefault,
                                     letterSpacing: 0.15,
                                     fontSize: 20,
                                   ),
@@ -259,8 +261,8 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                     text:
                                         "Are you sure you want to stop recording? You\n can’t undo this action.",
                                     maxLines: 2,
-                                    textColor: HMSThemeColors
-                                        .onSurfaceMediumEmphasis,
+                                    textColor:
+                                        HMSThemeColors.onSurfaceMediumEmphasis,
                                   ),
                                   buttonText: "Stop Recording",
                                 ),
@@ -273,12 +275,11 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                   rtmpUrls: null);
                             }
                           },
-                          isActive:
-                              ((meetingStore.recordingType["hls"] ?? false) ||
-                                  (meetingStore.recordingType["browser"] ??
-                                      false) ||
-                                  (meetingStore.recordingType["server"] ??
-                                      false)),
+                          isActive: ((meetingStore.recordingType["hls"] ??
+                                  false) ||
+                              (meetingStore.recordingType["browser"] ??
+                                  false) ||
+                              (meetingStore.recordingType["server"] ?? false)),
                           optionIcon: SvgPicture.asset(
                             "packages/hms_room_kit/lib/src/assets/icons/record.svg",
                             height: 20,
@@ -287,14 +288,14 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                 HMSThemeColors.onSurfaceHighEmphasis,
                                 BlendMode.srcIn),
                           ),
-                          optionText: ((meetingStore.recordingType["hls"] ??
-                                      false) ||
-                                  (meetingStore.recordingType["browser"] ??
-                                      false) ||
-                                  (meetingStore.recordingType["server"] ??
-                                      false))
-                              ? "Stop Recording"
-                              : "Start Recording",
+                          optionText:
+                              ((meetingStore.recordingType["hls"] ?? false) ||
+                                      (meetingStore.recordingType["browser"] ??
+                                          false) ||
+                                      (meetingStore.recordingType["server"] ??
+                                          false))
+                                  ? "Stop Recording"
+                                  : "Start Recording",
                         )
               ],
             ),

@@ -103,7 +103,9 @@ class _PeerTileState extends State<PeerTile> {
                           const BRBTag(), //top left
                           const AudioMuteStatus(), //top right
                           context.read<PeerTrackNode>().peer.isLocal
-                              ? const LocalPeerMoreOption(isInsetTile: false,)
+                              ? const LocalPeerMoreOption(
+                                  isInsetTile: false,
+                                )
                               : const MoreOption(), //bottom right
                           Semantics(
                             label: "fl_stats_on_tile",
@@ -249,7 +251,8 @@ class _PeerTileState extends State<PeerTile> {
                                                                           Center(
                                                                         child:
                                                                             Padding(
-                                                                          padding: const EdgeInsets.only(
+                                                                          padding: const EdgeInsets
+                                                                              .only(
                                                                               left: 8.0,
                                                                               right: 4,
                                                                               top: 4,

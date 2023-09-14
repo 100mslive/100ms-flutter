@@ -103,7 +103,9 @@ class Elements {
       brb = null;
       return;
     }
-    chat = (json.containsKey('chat') && json['chat'] != null) ? Chat.fromJson(json['chat']) : null;
+    chat = (json.containsKey('chat') && json['chat'] != null)
+        ? Chat.fromJson(json['chat'])
+        : null;
     participantList = json['participant_list'];
     videoTileLayout = json.containsKey('video_tile_layout')
         ? VideoTileLayout.fromJson(json['video_tile_layout']['grid'])

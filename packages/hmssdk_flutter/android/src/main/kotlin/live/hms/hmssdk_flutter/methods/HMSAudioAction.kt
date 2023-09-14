@@ -8,7 +8,12 @@ import live.hms.video.utils.HmsUtilities
 
 class HMSAudioAction {
     companion object {
-        fun audioActions(call: MethodCall, result: Result, hmssdk: HMSSDK, hmssdkFlutterPlugin: HmssdkFlutterPlugin?) {
+        fun audioActions(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+            hmssdkFlutterPlugin: HmssdkFlutterPlugin?,
+        ) {
             when (call.method) {
                 "switch_audio" -> {
                     switchAudio(call, result, hmssdk)
@@ -34,7 +39,11 @@ class HMSAudioAction {
             }
         }
 
-        private fun switchAudio(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        private fun switchAudio(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             val argsIsOn = call.argument<Boolean>("is_on")
             val peer = hmssdk.getLocalPeer()
             val audioTrack = peer?.audioTrack
@@ -46,7 +55,11 @@ class HMSAudioAction {
             }
         }
 
-        private fun toggleMicMuteState(result: Result, hmssdk: HMSSDK, hmssdkFlutterPlugin: HmssdkFlutterPlugin?) {
+        private fun toggleMicMuteState(
+            result: Result,
+            hmssdk: HMSSDK,
+            hmssdkFlutterPlugin: HmssdkFlutterPlugin?,
+        ) {
             val peer = hmssdk.getLocalPeer()
             val audioTrack = peer?.audioTrack
             if (audioTrack != null) {
@@ -64,7 +77,11 @@ class HMSAudioAction {
             }
         }
 
-        private fun toggleAudioMuteAll(shouldMute: Boolean, result: Result, hmssdk: HMSSDK) {
+        private fun toggleAudioMuteAll(
+            shouldMute: Boolean,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             val room: HMSRoom? = hmssdk.getRoom()
             if (room != null) {
                 val audioTracks: List<HMSAudioTrack> = HmsUtilities.getAllAudioTracks(room)
@@ -76,7 +93,11 @@ class HMSAudioAction {
             }
         }
 
-        private fun setVolume(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        private fun setVolume(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             val trackId = call.argument<String>("track_id")
             val volume = call.argument<Double>("volume")
 
@@ -103,7 +124,10 @@ class HMSAudioAction {
             result.success(map)
         }
 
-        private fun isAudioMute(call: MethodCall, hmssdk: HMSSDK): Boolean {
+        private fun isAudioMute(
+            call: MethodCall,
+            hmssdk: HMSSDK,
+        ): Boolean {
             val peerId = call.argument<String>("peer_id")
 
             if (peerId == "null") {
