@@ -2,10 +2,6 @@ name: 🧐 Analyze
 
 permissions: write-all
 
-concurrency:
-group: ${{ github.workflow }}-${{ github.head_ref }}
-  cancel-in-progress: true
-
 on:
   pull_request:
     types:
@@ -14,12 +10,13 @@ on:
       - synchronize
       - ready_for_review
     branches:
-      - ['main', 'develop' ]
+      - 'develop'
     paths-ignore:
       - '**.md'
       - 'doc/**'
       - '.git/'
       - '.vscode/'
+
 jobs:
   analyze:
     name: Analyze
