@@ -10,7 +10,7 @@ perform_pub_actions() {
 
 	echo "🌳🍀 git branch: $(git rev-parse --abbrev-ref HEAD)"
 
-	git pull --verbose
+	# git pull --verbose
 
 	flutter pub get
 
