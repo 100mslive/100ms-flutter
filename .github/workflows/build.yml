@@ -6,7 +6,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
 
   # # 3
   # workflow_dispatch:
@@ -70,6 +70,7 @@ jobs:
           cp $PP_PATH_FLUTTERADHOCBROADCASTUPLOADEXTENSION ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH_FLUTTERAPPSTORE ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH_FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION ~/Library/MobileDevice/Provisioning\ Profiles
+          export PATH="/opt/homebrew/opt/openssl@1.1/bin:$PATH"
       - name: Go to HMSLive Folder
         run: |
           chmod +x ./release-apps.sh
