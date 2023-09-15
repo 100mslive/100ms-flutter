@@ -88,6 +88,7 @@ jobs:
       - name: Build Android
         run: |
           echo "${{ vars.GOOGLE_SERVICES }}" > packages/hmssdk_flutter/example/android/app/google-services.json
+          echo packages/hmssdk_flutter/example/android/app/google-services.json
           cd packages/hmssdk_flutter/example/android/app
           cd ../..
           flutter build appbundle --debug -t lib/main.dart
