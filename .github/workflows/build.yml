@@ -87,9 +87,10 @@ jobs:
       # cp $PP_PATH_FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION ~/Library/MobileDevice/Provisioning\ Profiles
       - name: Build Android
         run: |
-          echo "${{ vars.GOOGLE_SERVICES }}" > packages/hmssdk_flutter/example/android/app/google-services.json
-          cat packages/hmssdk_flutter/example/android/app/google-services.json
-          cd packages/hmssdk_flutter/example/android/app
-          cd ../..
+          # echo "${{ vars.GOOGLE_SERVICES }}" > packages/hmssdk_flutter/example/android/app/google-services.json
+          # cat packages/hmssdk_flutter/example/android/app/google-services.json
+          # cd packages/hmssdk_flutter/example/android/app
+          # cd ../..
+          cd packages/hmssdk_flutter/example
           flutter build appbundle --debug -t lib/main.dart
         shell: bash
