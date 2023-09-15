@@ -70,7 +70,9 @@ class HMSLeftRoomScreen extends StatelessWidget {
                     ///If the room end is called, and peer role type is conferencing the text is "Session ended"
                     ///If you leave the room, and peer role type is hlsViewer the text is "You left the stream"
                     ///If tyou leave the room, and peer role type is conferencing the text is "You left the meeting"
-                    text: (doesRoleHasStreamPermission || roomlayout.HMSRoomLayout.peerType == roomlayout.PeerRoleType.hlsViewer)
+                    text: (doesRoleHasStreamPermission ||
+                            roomlayout.HMSRoomLayout.peerType ==
+                                roomlayout.PeerRoleType.hlsViewer)
                         ? "You left the stream"
                         : isEndRoomCalled
                             ? "Session ended"
@@ -149,7 +151,10 @@ class HMSLeftRoomScreen extends StatelessWidget {
                               ///The text is different if the room is ended or not
                               ///If the room end is called, the text is "Restart"
                               ///If you leave the room, the text is "Rejoin"
-                              text: (doesRoleHasStreamPermission || !(isEndRoomCalled)) ? "Rejoin":"Restart",
+                              text: (doesRoleHasStreamPermission ||
+                                      !(isEndRoomCalled))
+                                  ? "Rejoin"
+                                  : "Restart",
                               textColor: HMSThemeColors.onPrimaryHighEmphasis,
                             )
                           ],

@@ -11,9 +11,13 @@ import java.io.File
 import java.util.*
 
 class HMSCameraControlsAction {
-
     companion object {
-        fun cameraControlsAction(call: MethodCall, result: Result, hmssdk: HMSSDK, context: Context) {
+        fun cameraControlsAction(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+            context: Context,
+        ) {
             when (call.method) {
                 "is_tap_to_focus_supported" -> isTapToFocusSupported(result, hmssdk)
                 "is_zoom_supported" -> isZoomSupported(result, hmssdk)
@@ -27,7 +31,10 @@ class HMSCameraControlsAction {
         }
 
         // TODO: Complete the method
-        private fun isTapToFocusSupported(result: Result, hmssdk: HMSSDK) {
+        private fun isTapToFocusSupported(
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             hmssdk.getLocalPeer()?.let { localPeer ->
                 localPeer.videoTrack?.let { localVideoTrack ->
                     localVideoTrack.getCameraControl()?.let { cameraControl ->
@@ -40,7 +47,10 @@ class HMSCameraControlsAction {
         }
 
         // TODO: Complete the method
-        private fun isZoomSupported(result: Result, hmssdk: HMSSDK) {
+        private fun isZoomSupported(
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             hmssdk.getLocalPeer()?.let { localPeer ->
                 localPeer.videoTrack?.let { localVideoTrack ->
                     localVideoTrack.getCameraControl()?.let { cameraControl ->
@@ -57,11 +67,17 @@ class HMSCameraControlsAction {
          * Here we take the file path from user and save the image at that location
          * If flash is already on while calling this method then we turn OFF the flash
          */
-        private fun captureImageAtMaxSupportedResolution(call: MethodCall, result: Result, hmssdk: HMSSDK, context: Context) {
-            val withFlash: Boolean = call.argument<Boolean>("with_flash") ?: run {
-                HMSErrorLogger.returnArgumentsError("withFlash parameter is null in captureImageAtMaxSupportedResolution method")
-                false
-            }
+        private fun captureImageAtMaxSupportedResolution(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+            context: Context,
+        ) {
+            val withFlash: Boolean =
+                call.argument<Boolean>("with_flash") ?: run {
+                    HMSErrorLogger.returnArgumentsError("withFlash parameter is null in captureImageAtMaxSupportedResolution method")
+                    false
+                }
 
             // Creating a file at the application directory
             val dir = context.getExternalFilesDir("images")
@@ -116,7 +132,10 @@ class HMSCameraControlsAction {
         /***
          * This is used to check whether flash is supported by the current facing camera
          */
-        private fun isFlashSupported(result: Result, hmssdk: HMSSDK) {
+        private fun isFlashSupported(
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             hmssdk.getLocalPeer()?.let { localPeer ->
                 localPeer.videoTrack?.let { localVideoTrack ->
                     localVideoTrack.getCameraControl()?.let { cameraControl ->
@@ -142,7 +161,10 @@ class HMSCameraControlsAction {
          * Only if the flash is supported by the current facing camera
          * If video is muted then the flash light does not turn ON
          */
-        private fun toggleFlash(result: Result, hmssdk: HMSSDK) {
+        private fun toggleFlash(
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             hmssdk.getLocalPeer()?.let { localPeer ->
                 localPeer.videoTrack?.let { localVideoTrack ->
                     localVideoTrack.getCameraControl()?.let { cameraControl ->

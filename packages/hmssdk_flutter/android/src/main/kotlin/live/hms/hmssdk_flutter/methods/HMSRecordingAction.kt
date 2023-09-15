@@ -7,7 +7,11 @@ import live.hms.video.sdk.models.HMSRecordingConfig
 
 class HMSRecordingAction {
     companion object {
-        fun recordingActions(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        fun recordingActions(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             when (call.method) {
                 "start_rtmp_or_recording" -> {
                     startRtmpOrRecording(call, result, hmssdk)
@@ -21,24 +25,31 @@ class HMSRecordingAction {
             }
         }
 
-        private fun startRtmpOrRecording(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        private fun startRtmpOrRecording(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             val meetingUrl = call.argument<String?>("meeting_url")
-            val toRecord = call.argument<Boolean>("to_record") ?: run {
-                HMSErrorLogger.returnArgumentsError("toRecord parameter is null")
-            }
+            val toRecord =
+                call.argument<Boolean>("to_record") ?: run {
+                    HMSErrorLogger.returnArgumentsError("toRecord parameter is null")
+                }
             toRecord?.let { enableRecording ->
 
                 val listOfRtmpUrls: List<String> = call.argument<List<String>>("rtmp_urls") ?: listOf()
                 val resolutionMap = call.argument<Map<String, Int>>("resolution")
-                val hmsRecordingConfig = if (resolutionMap != null) {
-                    val resolution = HMSRtmpVideoResolution(
-                        width = resolutionMap["width"]!!,
-                        height = resolutionMap["height"]!!,
-                    )
-                    HMSRecordingConfig(meetingUrl, listOfRtmpUrls, enableRecording as Boolean, resolution)
-                } else {
-                    HMSRecordingConfig(meetingUrl, listOfRtmpUrls, enableRecording as Boolean)
-                }
+                val hmsRecordingConfig =
+                    if (resolutionMap != null) {
+                        val resolution =
+                            HMSRtmpVideoResolution(
+                                width = resolutionMap["width"]!!,
+                                height = resolutionMap["height"]!!,
+                            )
+                        HMSRecordingConfig(meetingUrl, listOfRtmpUrls, enableRecording as Boolean, resolution)
+                    } else {
+                        HMSRecordingConfig(meetingUrl, listOfRtmpUrls, enableRecording as Boolean)
+                    }
                 hmssdk.startRtmpOrRecording(
                     hmsRecordingConfig,
                     hmsActionResultListener = HMSCommonAction.getActionListener(result),
@@ -49,7 +60,10 @@ class HMSRecordingAction {
                 }
         }
 
-        private fun stopRtmpAndRecording(result: Result, hmssdk: HMSSDK) {
+        private fun stopRtmpAndRecording(
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             hmssdk.stopRtmpAndRecording(hmsActionResultListener = HMSCommonAction.getActionListener(result))
         }
     }

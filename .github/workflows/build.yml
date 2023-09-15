@@ -1,19 +1,27 @@
-name: Android Release
+name: Deploy UAT Apps
 
-# 1
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
 on:
-  # 2
   push:
-    branches: [ main ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main ]
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+    branches:
+      - main
+    paths-ignore:
+      - "**.md"
+      - doc/**
+      - .git/
+      - .vscode/
 
-  # # 3
-  # workflow_dispatch:
-
-# 4
 jobs:
-
   build_with_signing:
     runs-on: macos-latest
 
@@ -28,50 +36,53 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           # 11
-          channel: master
-      - name: Install the Apple certificate and provisioning profile
+          channel: stable
+      - name: Set Environmnent Variables
         env:
-          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
-          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
-          FLUTTERADHOCDISTRIBUTION: ${{ secrets.FLUTTERADHOCDISTRIBUTION }}
-          FLUTTERADHOCBROADCASTUPLOADEXTENSION: ${{ secrets.FLUTTERADHOCBROADCASTUPLOADEXTENSION }}
-          FLUTTERAPPSTORE: ${{ secrets.FLUTTERAPPSTORE }}
-          FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION: ${{ secrets.FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-          SLACK_URL: ${{ secrets.SLACK_URL }}
-          FLUTTER_HMS_JSON: ${{ secrets.FLUTTER_HMS_JSON }}
+            FLUTTER_HMS_JSON: ${{ secrets.FLUTTER_HMS_JSON }}
+      #     BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+      #     P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+      #     FLUTTERADHOCDISTRIBUTION: ${{ secrets.FLUTTERADHOCDISTRIBUTION }}
+      #     FLUTTERADHOCBROADCASTUPLOADEXTENSION: ${{ secrets.FLUTTERADHOCBROADCASTUPLOADEXTENSION }}
+      #     FLUTTERAPPSTORE: ${{ secrets.FLUTTERAPPSTORE }}
+      #     FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION: ${{ secrets.FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION }}
+      #     KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+      #     SLACK_URL: ${{ secrets.SLACK_URL }}
         run: |
-          # create variables
-          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
-          PP_PATH_FLUTTERADHOCDISTRIBUTION=$RUNNER_TEMP/FLUTTERADHOCDISTRIBUTION.mobileprovision
-          PP_PATH_FLUTTERADHOCBROADCASTUPLOADEXTENSION=$RUNNER_TEMP/FLUTTERADHOCBROADCASTUPLOADEXTENSION.mobileprovision
-          PP_PATH_FLUTTERAPPSTORE=$RUNNER_TEMP/FLUTTERAPPSTORE.mobileprovision
-          PP_PATH_FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION=$RUNNER_TEMP/FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION.mobileprovision
-          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+            echo "Setting Environmnent Variables"
+            echo "FLUTTER_HMS_JSON: $FLUTTER_HMS_JSON"
 
-          # import certificate and provisioning profile from secrets
-          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
-          echo -n "$FLUTTERADHOCDISTRIBUTION" | base64 --decode -o $PP_PATH_FLUTTERADHOCDISTRIBUTION
-          echo -n "$FLUTTERADHOCBROADCASTUPLOADEXTENSION" | base64 --decode -o $PP_PATH_FLUTTERADHOCBROADCASTUPLOADEXTENSION
-          echo -n "$FLUTTERAPPSTORE" | base64 --decode -o $PP_PATH_FLUTTERAPPSTORE
-          echo -n "$FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION" | base64 --decode -o $PP_PATH_FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION
+      # create variables
+      # CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+      # PP_PATH_FLUTTERADHOCDISTRIBUTION=$RUNNER_TEMP/FLUTTERADHOCDISTRIBUTION.mobileprovision
+      # PP_PATH_FLUTTERADHOCBROADCASTUPLOADEXTENSION=$RUNNER_TEMP/FLUTTERADHOCBROADCASTUPLOADEXTENSION.mobileprovision
+      # PP_PATH_FLUTTERAPPSTORE=$RUNNER_TEMP/FLUTTERAPPSTORE.mobileprovision
+      # PP_PATH_FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION=$RUNNER_TEMP/FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION.mobileprovision
+      # KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
-          # create temporary keychain
-          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+      # # import certificate and provisioning profile from secrets
+      # echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+      # echo -n "$FLUTTERADHOCDISTRIBUTION" | base64 --decode -o $PP_PATH_FLUTTERADHOCDISTRIBUTION
+      # echo -n "$FLUTTERADHOCBROADCASTUPLOADEXTENSION" | base64 --decode -o $PP_PATH_FLUTTERADHOCBROADCASTUPLOADEXTENSION
+      # echo -n "$FLUTTERAPPSTORE" | base64 --decode -o $PP_PATH_FLUTTERAPPSTORE
+      # echo -n "$FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION" | base64 --decode -o $PP_PATH_FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION
 
-          # import certificate to keychain
-          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
+      # # create temporary keychain
+      # security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+      # security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+      # security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
-          # apply provisioning profile
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH_FLUTTERADHOCDISTRIBUTION ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH_FLUTTERADHOCBROADCASTUPLOADEXTENSION ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH_FLUTTERAPPSTORE ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH_FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION ~/Library/MobileDevice/Provisioning\ Profiles
-      - name: Go to HMSLive Folder
+      # # import certificate to keychain
+      # security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+      # security list-keychain -d user -s $KEYCHAIN_PATH
+
+      # # apply provisioning profile
+      # mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+      # cp $PP_PATH_FLUTTERADHOCDISTRIBUTION ~/Library/MobileDevice/Provisioning\ Profiles
+      # cp $PP_PATH_FLUTTERADHOCBROADCASTUPLOADEXTENSION ~/Library/MobileDevice/Provisioning\ Profiles
+      # cp $PP_PATH_FLUTTERAPPSTORE ~/Library/MobileDevice/Provisioning\ Profiles
+      # cp $PP_PATH_FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION ~/Library/MobileDevice/Provisioning\ Profiles
+      - name: Run Release Apps Script
         run: |
           chmod +x ./release-apps.sh
           ./release-apps.sh

@@ -5,7 +5,10 @@ import live.hms.video.sdk.models.enums.HMSRoomUpdate
 
 class HMSRoomUpdateExtension {
     companion object {
-        fun toDictionary(room: HMSRoom?, update: HMSRoomUpdate?): HashMap<String, Any?>? {
+        fun toDictionary(
+            room: HMSRoom?,
+            update: HMSRoomUpdate?,
+        ): HashMap<String, Any?>? {
             val args = HashMap<String, Any?>()
 
             if (room == null)return null

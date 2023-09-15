@@ -4,11 +4,17 @@ import live.hms.video.media.settings.HMSLogSettings
 import live.hms.video.utils.HMSLogger
 
 class HMSLogSettings {
-
     companion object {
-
-        fun setLogSettings(maxDirSizeInBytes: Double, logStorageEnabled: Boolean, logLevel: String): HMSLogSettings {
-            return HMSLogSettings(maxDirSizeInBytes = maxDirSizeInBytes.toLong(), isLogStorageEnabled = logStorageEnabled, level = getLogLevel(logLevel))
+        fun setLogSettings(
+            maxDirSizeInBytes: Double,
+            logStorageEnabled: Boolean,
+            logLevel: String,
+        ): HMSLogSettings {
+            return HMSLogSettings(
+                maxDirSizeInBytes = maxDirSizeInBytes.toLong(),
+                isLogStorageEnabled = logStorageEnabled,
+                level = getLogLevel(logLevel),
+            )
         }
 
         private fun getLogLevel(logLevel: String?): HMSLogger.LogLevel {

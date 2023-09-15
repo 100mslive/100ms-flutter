@@ -88,8 +88,7 @@ class HMSHLSStreamViewController: HMSHLSPlayerDelegate {
         let playerView = hlsPlayer?.videoPlayerViewController(showsPlayerControls: false)
         if videoSize.width >= videoSize.height {
             playerView?.videoGravity = .resizeAspect
-        }
-        else {
+        } else {
             playerView?.videoGravity = .resizeAspectFill
         }
     }

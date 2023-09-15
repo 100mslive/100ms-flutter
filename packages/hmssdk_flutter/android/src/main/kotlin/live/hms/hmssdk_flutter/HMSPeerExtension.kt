@@ -5,7 +5,6 @@ import live.hms.video.sdk.models.enums.HMSPeerUpdate
 import java.text.SimpleDateFormat
 
 class HMSPeerExtension {
-
     companion object {
         fun toDictionary(peer: HMSPeer?): HashMap<String, Any?>? {
             val args = HashMap<String, Any?>()

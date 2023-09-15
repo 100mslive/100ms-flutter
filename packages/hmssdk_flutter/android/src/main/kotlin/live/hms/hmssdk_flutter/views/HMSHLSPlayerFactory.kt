@@ -14,7 +14,6 @@ class HMSHLSPlayerWidget(
     isHLSStatsRequired: Boolean,
     showPlayerControls: Boolean,
 ) : PlatformView {
-
     private var hmsHLSPlayer: HMSHLSPlayer? = null
 
     /**
@@ -41,8 +40,13 @@ class HMSHLSPlayerWidget(
         hmsHLSPlayer = null
     }
 }
+
 class HMSHLSPlayerFactory(private val plugin: HmssdkFlutterPlugin) : PlatformViewFactory(StandardMessageCodec.INSTANCE) {
-    override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
+    override fun create(
+        context: Context?,
+        viewId: Int,
+        args: Any?,
+    ): PlatformView {
         var hlsUrl: String? = null
         var isHLSStatsRequired: Boolean? = false
         var showPlayerControls: Boolean? = false

@@ -10,9 +10,12 @@ import live.hms.video.sdk.models.HMSRoom
 import live.hms.video.utils.HmsUtilities
 
 class HMSRemoteVideoTrackAction {
-
     companion object {
-        fun remoteVideoTrackActions(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK) {
+        fun remoteVideoTrackActions(
+            call: MethodCall,
+            result: MethodChannel.Result,
+            hmssdk: HMSSDK,
+        ) {
             when (call.method) {
                 "set_simulcast_layer" -> setSimulcastLayer(call, result, hmssdk)
                 "get_layer" -> getLayer(call, result, hmssdk)
@@ -20,7 +23,11 @@ class HMSRemoteVideoTrackAction {
             }
         }
 
-        private fun setSimulcastLayer(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK) {
+        private fun setSimulcastLayer(
+            call: MethodCall,
+            result: MethodChannel.Result,
+            hmssdk: HMSSDK,
+        ) {
             val trackId = call.argument<String>("track_id")
             val simulcastLayer: String? = call.argument<String>("layer")
 
@@ -52,7 +59,11 @@ class HMSRemoteVideoTrackAction {
             }
         }
 
-        private fun getLayer(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK) {
+        private fun getLayer(
+            call: MethodCall,
+            result: MethodChannel.Result,
+            hmssdk: HMSSDK,
+        ) {
             val trackId = call.argument<String>("track_id")
             val room: HMSRoom? = hmssdk.getRoom()
             if (trackId == null || room == null) {
@@ -65,7 +76,11 @@ class HMSRemoteVideoTrackAction {
             result.success(null)
         }
 
-        private fun getLayerDefinition(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK) {
+        private fun getLayerDefinition(
+            call: MethodCall,
+            result: MethodChannel.Result,
+            hmssdk: HMSSDK,
+        ) {
             val trackId = call.argument<String>("track_id")
             val room: HMSRoom? = hmssdk.getRoom()
             if (trackId == null || room == null) {
