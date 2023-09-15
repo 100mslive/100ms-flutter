@@ -87,7 +87,7 @@ jobs:
       # cp $PP_PATH_FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION ~/Library/MobileDevice/Provisioning\ Profiles
       - name: Build Android
         run: |
-          echo ${{ vars.GOOGLE_SERVICES }} > packages/hmssdk_flutter/example/android/app/google-services.json
+          echo "${{ vars.GOOGLE_SERVICES }}" > packages/hmssdk_flutter/example/android/app/google-services.json
           cd packages/hmssdk_flutter/example/android/app
           mv GOOGLE_SERVICES google-services.json
           cd ../..
