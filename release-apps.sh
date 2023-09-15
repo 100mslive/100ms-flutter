@@ -5,6 +5,9 @@ set -e
 set -x
 
 perform_pub_actions() {
+
+	cd packages/hmssdk_flutter
+
 	echo "🌳🍀 git branch: $(git rev-parse --abbrev-ref HEAD)"
 
 	git pull --verbose

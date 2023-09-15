@@ -1,0 +1,43 @@
+import 'package:flutter/material.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/meeting/meeting_store.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/participants_bottom_sheet.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
+import 'package:provider/provider.dart';
+
+class OverlayParticipantsBottomSheet extends StatelessWidget {
+  const OverlayParticipantsBottomSheet({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+        child: FractionallySizedBox(
+      heightFactor: 0.87,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 12.0, left: 16, right: 16),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Selector<MeetingStore, int>(
+                    selector: (_, meetingStore) =>
+                        meetingStore.participantsInMeeting,
+                    builder: (_, participantsInMeeting, __) {
+                      return HMSSubheadingText(
+                        text: "Participants ($participantsInMeeting)",
+                        textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                        fontWeight: FontWeight.w600,
+                      );
+                    }),
+                const HMSCrossButton(),
+              ],
+            ),
+            const Expanded(child: ParticipantsBottomSheet())
+          ],
+        ),
+      ),
+    ));
+  }
+}

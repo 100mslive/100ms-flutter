@@ -1,0 +1,45 @@
+///Package imports
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+///[HMSTitleText] is a widget that is used to render the title text
+///It takes following parameters:
+///[text] is the text to be rendered, this is a required parameter
+///[textColor] is the color of the text, this is a required parameter
+///[letterSpacing] is the spacing between the letters, default value is 0.5
+///[lineHeight] is the height of the line, default value is 24
+///[fontSize] is the size of the font, default value is 16
+///[fontWeight] is the weight of the font, default value is FontWeight.w600
+///[textOverflow] is the overflow of the text, default value is TextOverflow.ellipsis
+class HMSTitleText extends StatelessWidget {
+  final String text;
+  final Color textColor;
+  final double? letterSpacing;
+  final double? lineHeight;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final TextOverflow? textOverflow;
+
+  const HMSTitleText(
+      {Key? key,
+      required this.text,
+      required this.textColor,
+      this.letterSpacing = 0.5,
+      this.lineHeight = 24,
+      this.fontSize = 16,
+      this.fontWeight = FontWeight.w600,
+      this.textOverflow = TextOverflow.ellipsis})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(text,
+        overflow: textOverflow,
+        style: GoogleFonts.inter(
+            color: textColor,
+            height: lineHeight! / fontSize!,
+            fontSize: fontSize,
+            letterSpacing: letterSpacing,
+            fontWeight: fontWeight));
+  }
+}

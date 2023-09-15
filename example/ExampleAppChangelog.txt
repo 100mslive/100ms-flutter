@@ -1,9 +1,0 @@
-Board: https://github.com/100mslive/100ms-flutter/projects/20
-
-- Added Hybrid composition videoview on Android to improve performance
-https://github.com/100mslive/100ms-flutter/pull/1330
-
-
-Flutter SDK: 1.8.0
-Android SDK: 2.7.2
-iOS SDK: 0.9.6
