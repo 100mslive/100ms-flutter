@@ -1,6 +1,5 @@
 [![100ms-svg](https://user-images.githubusercontent.com/93931528/205858417-8c0a0d1b-2d46-4710-9316-7418092fd3d6.svg)](https://100ms.live/)
 
-[![HMSLive](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)
 [![HMSLive Room Kit](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)
 [![License](https://img.shields.io/github/license/100mslive/100ms-flutter)](https://www.100ms.live/)
 [![Documentation](https://img.shields.io/badge/Read-Documentation-blue)](https://docs.100ms.live/flutter/v2/foundation/basics)
