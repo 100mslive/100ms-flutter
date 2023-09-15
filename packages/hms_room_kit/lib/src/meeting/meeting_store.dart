@@ -20,8 +20,6 @@ import 'package:hms_room_kit/src/hmssdk_interactor.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/model/rtc_stats.dart';
-import 'package:hms_room_kit/src/service/app_secrets.dart';
-import 'package:hms_room_kit/src/service/room_service.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toast_model.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
 
@@ -218,62 +216,29 @@ class MeetingStore extends ChangeNotifier
 
   int currentScreenSharePage = 0;
 
-  Future<HMSException?> join(String userName, String roomUrl,
+  Future<HMSException?> join(String userName, String roomCode,
       {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
     //If we are joining the room from preview we already have authToken so we don't
     //need to call the getAuthTokenByRoomCode method
     if (roomConfig == null) {
-      // List<String?>? roomData = RoomService().getCode(roomUrl);
-
-      //If the link is not valid then we might not get the code and whether the link is a
-      //PROD or QA so we return the error in this case
-      // if (roomData != null && roomData.isEmpty) {
-      //   return HMSException(
-      //       message: "Invalid meeting URL",
-      //       description: "Provided meeting URL is invalid",
-      //       action: "Please Check the meeting URL",
-      //       isTerminal: false);
-      // }
-      String? tokenEndPoint;
-      String? initEndPoint;
-
-      if (roomUrl.contains("app.100ms.live")) {
-        List<String?>? roomData = RoomService().getCode(roomUrl);
-
-        //If the link is not valid then we might not get the code and whether the link is a
-        //PROD or QA so we return the error in this case
-        if (roomData == null || roomData.isEmpty) {
-          return HMSException(
-              message: "Invalid meeting URL",
-              description: "Provided meeting URL is invalid",
-              action: "Please Check the meeting URL",
-              isTerminal: false);
-        }
-
-        //qaTokenEndPoint is only required for 100ms internal testing
-        //It can be removed and should not affect the join method call
-        //For _endPoint just pass it as null
-        //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
-        tokenEndPoint = roomData[1] == "true" ? null : qaTokenEndPoint;
-        initEndPoint = roomData[1] == "true" ? "" : qaInitEndPoint;
-        AppDebugConfig.isProdRoom = roomData[1] == "true" ? true : false;
-
-        Constant.meetingCode = roomData[0] ?? '';
-      } else {
-        Constant.meetingCode = roomUrl;
-      }
       //We use this to get the auth token from room code
       dynamic tokenData = await _hmsSDKInteractor.getAuthTokenByRoomCode(
-          roomCode: Constant.meetingCode, endPoint: tokenEndPoint);
+          roomCode: Constant.roomCode, endPoint: Constant.tokenEndPoint);
 
+      ///If the tokenData is String then we set the authToken in the roomConfig
+      ///and then we join the room
+      ///
+      ///If the tokenData is HMSException then we return the HMSException i.e. tokenData
       if ((tokenData is String?) && tokenData != null) {
+        ///Success Scenario
         roomConfig = HMSConfig(
             authToken: tokenData,
             userName: userName,
             captureNetworkQualityInPreview: true,
-            endPoint: initEndPoint);
+            endPoint: Constant.initEndPoint);
       } else {
+        ///Error Scenario
         return tokenData;
       }
     }
@@ -284,7 +249,7 @@ class MeetingStore extends ChangeNotifier
     WidgetsBinding.instance.addObserver(this);
     setMeetingModeUsingLayoutApi();
     _hmsSDKInteractor.join(config: roomConfig);
-    meetingUrl = roomUrl;
+    meetingUrl = roomCode;
     return null;
   }
 
