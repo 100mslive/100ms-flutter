@@ -11,7 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hmssdk_flutter_example/app_secrets.dart';
 import 'package:hmssdk_flutter_example/app_settings_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:hmssdk_flutter_example/room_service.dart';
@@ -278,6 +277,10 @@ class _HomePageState extends State<HomePage> {
         return;
       }
 
+      ///************************************************************************************************** */
+
+      ///This section can be safely commented out as it's only required for 100ms internal usage
+
       //qaTokenEndPoint is only required for 100ms internal testing
       //It can be removed and should not affect the join method call
       //For _endPoint just pass it as null
@@ -289,11 +292,11 @@ class _HomePageState extends State<HomePage> {
       ///The key for the init end point is "initEndPointKey"
       ///The key for the layout api end point is "layoutAPIEndPointKey"
       if (roomData[1] == "false") {
-        endPoints = {};
-        endPoints[Constant.tokenEndPointKey] = qaTokenEndPoint;
-        endPoints[Constant.initEndPointKey] = qaInitEndPoint;
-        endPoints[Constant.layoutAPIEndPointKey] = qaLayoutAPIEndPoint;
+        endPoints = RoomService.setEndPoints();
       }
+
+      ///************************************************************************************************** */
+
       Constant.roomCode = roomData[0] ?? '';
     } else {
       Constant.roomCode = meetingLinkController.text.trim();

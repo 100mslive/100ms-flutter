@@ -36,10 +36,6 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
     super.dispose();
   }
 
-  void _updateDropDownValue(dynamic newValue) {
-    valueChoose = newValue;
-  }
-
   void _scrollToEnd() {
     if (_scrollController.positions.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _scrollController
