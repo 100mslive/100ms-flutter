@@ -36,7 +36,7 @@ class RoomService {
     return [code, isProd ? "true" : "false"];
   }
 
-  static Map<String, String>? setEndPoints() {
+  static Map<String, String> setEndPoints() {
     Map<String, String> endPoints = {};
     endPoints[Constant.tokenEndPointKey] = qaTokenEndPoint;
     endPoints[Constant.initEndPointKey] = qaInitEndPoint;
