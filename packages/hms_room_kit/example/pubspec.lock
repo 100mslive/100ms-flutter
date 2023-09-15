@@ -230,14 +230,15 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.2.0"
+    version: "1.0.0"
   hmssdk_flutter:
     dependency: transitive
     description:
-      path: "../../hmssdk_flutter"
-      relative: true
-    source: path
-    version: "1.7.6"
+      name: hmssdk_flutter
+      sha256: fb6cdad295b0c76be408beb9cef0fe3fab9aa25c775779943a68fab4e675628b
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.8.0"
   http:
     dependency: transitive
     description:
