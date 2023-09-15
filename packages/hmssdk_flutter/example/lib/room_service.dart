@@ -1,3 +1,6 @@
+import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hmssdk_flutter_example/app_secrets.dart';
+
 ///This class is only for 100ms internal usage
 /// and should not be edited
 class RoomService {
@@ -31,5 +34,14 @@ class RoomService {
       code = code.split("/preview/")[1];
     }
     return [code, isProd ? "true" : "false"];
+  }
+
+  static Map<String, String>? setEndPoints() {
+    Map<String, String> endPoints = {};
+    endPoints[Constant.tokenEndPointKey] = qaTokenEndPoint;
+    endPoints[Constant.initEndPointKey] = qaInitEndPoint;
+    endPoints[Constant.layoutAPIEndPointKey] = qaLayoutAPIEndPoint;
+
+    return endPoints;
   }
 }
