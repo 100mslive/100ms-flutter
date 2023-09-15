@@ -11,8 +11,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hmssdk_flutter_example/app_secrets.dart';
 import 'package:hmssdk_flutter_example/app_settings_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
+import 'package:hmssdk_flutter_example/room_service.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uni_links/uni_links.dart';
@@ -264,13 +266,47 @@ class _HomePageState extends State<HomePage> {
     if (meetingLinkController.text.trim().isEmpty) {
       return;
     }
+
+    Map<String, String>? endPoints;
+    if (meetingLinkController.text.trim().contains("app.100ms.live")) {
+      List<String?>? roomData =
+          RoomService.getCode(meetingLinkController.text.trim());
+
+      //If the link is not valid then we might not get the code and whether the link is a
+      //PROD or QA so we return the error in this case
+      if (roomData == null || roomData.isEmpty) {
+        return;
+      }
+
+      //qaTokenEndPoint is only required for 100ms internal testing
+      //It can be removed and should not affect the join method call
+      //For _endPoint just pass it as null
+      //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
+      //Pass the layoutAPIEndPoint as null the qa endPoint is only for 100ms internal testing
+
+      ///If you wish to set your own token end point then you can pass it in the endPoints map
+      ///The key for the token end point is "tokenEndPointKey"
+      ///The key for the init end point is "initEndPointKey"
+      ///The key for the layout api end point is "layoutAPIEndPointKey"
+      if (roomData[1] == "false") {
+        endPoints = {};
+        endPoints[Constant.tokenEndPointKey] = qaTokenEndPoint;
+        endPoints[Constant.initEndPointKey] = qaInitEndPoint;
+        endPoints[Constant.layoutAPIEndPointKey] = qaLayoutAPIEndPoint;
+      }
+      Constant.roomCode = roomData[0] ?? '';
+    } else {
+      Constant.roomCode = meetingLinkController.text.trim();
+    }
+
     FocusManager.instance.primaryFocus?.unfocus();
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (_) => HMSPrebuilt(
-                roomCode: meetingLinkController.text.trim(),
+                roomCode: Constant.roomCode,
                 options: HMSPrebuiltOptions(
+                    endPoints: endPoints,
                     iOSScreenshareConfig: HMSIOSScreenshareConfig(
                         appGroup: "group.flutterhms",
                         preferredExtension:
