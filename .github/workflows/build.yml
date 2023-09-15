@@ -1,4 +1,4 @@
-name: Deploy UAT Apps
+name: Build Appbundle
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
@@ -6,7 +6,9 @@ concurrency:
 
 on:
   push:
-    branches: [main, develop]
+    branches:
+      - main
+      - develop
   pull_request:
     types:
       - opened
@@ -15,6 +17,7 @@ on:
       - ready_for_review
     branches:
       - main
+      - develop
     paths-ignore:
       - "**.md"
       - doc/**
@@ -23,7 +26,9 @@ on:
 
 jobs:
   build_with_signing:
-    runs-on: macos-latest
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
@@ -32,14 +37,12 @@ jobs:
         with:
           distribution: zulu
           java-version: 12.x
-      # 10
       - uses: subosito/flutter-action@v2
         with:
-          # 11
           channel: stable
-      - name: Set Environmnent Variables
-        env:
-            FLUTTER_HMS_JSON: ${{ secrets.FLUTTER_HMS_JSON }}
+      # - name: Set Environmnent Variables
+        # env:
+            # FLUTTER_HMS_JSON: ${{ secrets.FLUTTER_HMS_JSON }}
       #     BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
       #     P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
       #     FLUTTERADHOCDISTRIBUTION: ${{ secrets.FLUTTERADHOCDISTRIBUTION }}
@@ -48,9 +51,9 @@ jobs:
       #     FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION: ${{ secrets.FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION }}
       #     KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
       #     SLACK_URL: ${{ secrets.SLACK_URL }}
-        run: |
-            echo "Setting Environmnent Variables"
-            echo "FLUTTER_HMS_JSON: $FLUTTER_HMS_JSON"
+        # run: |
+        #     echo "Setting Environmnent Variables"
+        #     echo "FLUTTER_HMS_JSON: $FLUTTER_HMS_JSON"
 
       # create variables
       # CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
@@ -82,8 +85,6 @@ jobs:
       # cp $PP_PATH_FLUTTERADHOCBROADCASTUPLOADEXTENSION ~/Library/MobileDevice/Provisioning\ Profiles
       # cp $PP_PATH_FLUTTERAPPSTORE ~/Library/MobileDevice/Provisioning\ Profiles
       # cp $PP_PATH_FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION ~/Library/MobileDevice/Provisioning\ Profiles
-      - name: Run Release Apps Script
-        run: |
-          chmod +x ./release-apps.sh
-          ./release-apps.sh
-        shell: bash
+      - name: Build Android
+        run:
+          flutter build appbundle --debug --flavor dev -t lib/main_dev.dart
