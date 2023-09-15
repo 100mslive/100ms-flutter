@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hmssdk_flutter_example/app_secrets.dart';
+import 'package:hmssdk_flutter_example/room_service.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRCodeScreen extends StatefulWidget {
@@ -38,9 +40,41 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
       if (scanData.code != null) {
         controller!.pauseCamera();
         FocusManager.instance.primaryFocus?.unfocus();
+
+        Map<String, String>? endPoints;
+        if (scanData.code!.trim().contains("app.100ms.live")) {
+          List<String?>? roomData =
+              RoomService.getCode(scanData.code!.trim());
+
+          //If the link is not valid then we might not get the code and whether the link is a
+          //PROD or QA so we return the error in this case
+          if (roomData == null || roomData.isEmpty) {
+            return;
+          }
+
+          //qaTokenEndPoint is only required for 100ms internal testing
+          //It can be removed and should not affect the join method call
+          //For _endPoint just pass it as null
+          //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
+          //Pass the layoutAPIEndPoint as null the qa endPoint is only for 100ms internal testing
+
+          ///If you wish to set your own token end point then you can pass it in the endPoints map
+          ///The key for the token end point is "tokenEndPointKey"
+          ///The key for the init end point is "initEndPointKey"
+          ///The key for the layout api end point is "layoutAPIEndPointKey"
+          if (roomData[1] == "false") {
+            endPoints = {};
+            endPoints[Constant.tokenEndPointKey] = qaTokenEndPoint;
+            endPoints[Constant.initEndPointKey] = qaInitEndPoint;
+            endPoints[Constant.layoutAPIEndPointKey] = qaLayoutAPIEndPoint;
+          }
+          Constant.roomCode = roomData[0] ?? '';
+        } else {
+          Constant.roomCode = scanData.code!.trim();
+        }
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (_) => HMSPrebuilt(
-                  roomCode: scanData.code!.trim(),
+                  roomCode: Constant.roomCode,
                   options: HMSPrebuiltOptions(userName: ""),
                 )));
       }
