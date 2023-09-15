@@ -55,7 +55,7 @@ class _ScreenControllerState extends State<ScreenController> {
   }
 
   ///This function sets the end points for the app
-  ///If the endPoints were set from the [HMSPrebuiltOptions] 
+  ///If the endPoints were set from the [HMSPrebuiltOptions]
   void _setEndPoints(Map<String, String> endPoints) {
     Constant.tokenEndPoint = (endPoints.containsKey(Constant.tokenEndPointKey))
         ? endPoints[Constant.tokenEndPointKey]
@@ -153,7 +153,7 @@ class _ScreenControllerState extends State<ScreenController> {
                     options: widget.options,
                   ))
               : PreviewPermissions(
-                  roomCode:Constant.roomCode,
+                  roomCode: Constant.roomCode,
                   options: widget.options,
                   callback: _isPermissionGrantedCallback),
     );
