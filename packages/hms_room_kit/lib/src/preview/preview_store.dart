@@ -6,10 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
-import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
-import 'package:hms_room_kit/src/common/constants.dart';
-import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/hmssdk_interactor.dart';
 import 'package:hms_room_kit/src/service/app_secrets.dart';
 import 'package:hms_room_kit/src/service/room_service.dart';
@@ -135,7 +133,7 @@ class PreviewStore extends ChangeNotifier
       //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
       tokenEndPoint = roomData[1] == "true" ? null : qaTokenEndPoint;
       initEndPoint = roomData[1] == "true" ? "" : qaInitEndPoint;
-
+      AppDebugConfig.isProdRoom = roomData[1] == "true" ? true : false;
       Constant.meetingCode = roomData[0] ?? '';
     } else {
       Constant.meetingCode = meetingLink;

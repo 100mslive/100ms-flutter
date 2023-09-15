@@ -257,6 +257,7 @@ class MeetingStore extends ChangeNotifier
         //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
         tokenEndPoint = roomData[1] == "true" ? null : qaTokenEndPoint;
         initEndPoint = roomData[1] == "true" ? "" : qaInitEndPoint;
+        AppDebugConfig.isProdRoom = roomData[1] == "true" ? true : false;
 
         Constant.meetingCode = roomData[0] ?? '';
       } else {

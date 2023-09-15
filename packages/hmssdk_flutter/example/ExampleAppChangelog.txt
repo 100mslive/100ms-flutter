@@ -13,5 +13,5 @@ https://github.com/100mslive/100ms-flutter/pull/1557
 
 Room Kit: 0.2.0
 Core SDK: 1.7.6
-Android SDK: 2.7.4
+Android SDK: 2.7.5
 iOS SDK: 0.9.12
