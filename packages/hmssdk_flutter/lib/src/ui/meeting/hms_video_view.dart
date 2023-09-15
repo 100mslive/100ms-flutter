@@ -3,8 +3,7 @@ import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'
-    show StandardMessageCodec;
+import 'package:flutter/services.dart' show StandardMessageCodec;
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
