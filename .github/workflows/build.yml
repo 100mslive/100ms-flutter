@@ -87,4 +87,6 @@ jobs:
       # cp $PP_PATH_FLUTTERAPPSTOREBROADCASTUPLOADEXTENSION ~/Library/MobileDevice/Provisioning\ Profiles
       - name: Build Android
         run:
-          flutter build appbundle --debug --flavor dev -t packages/hmssdk_flutter/example/lib/main.dart
+          pushd packages/hmssdk_flutter/example/lib/
+          flutter build appbundle --debug --flavor dev -t main.dart
+          popd
