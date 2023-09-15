@@ -43,7 +43,6 @@ class HMSDisconnectedToast extends StatelessWidget {
           if (onLeavePressed != null) {
             onLeavePressed!();
           }
-          Navigator.popUntil(context, (route) => route.isFirst);
         },
         buttonColor: HMSThemeColors.alertErrorDefault,
         textColor: HMSThemeColors.alertErrorBrighter,

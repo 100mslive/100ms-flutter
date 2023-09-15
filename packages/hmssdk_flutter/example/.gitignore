@@ -44,3 +44,4 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/flutter-hms-4aea6d38fd2a.json
