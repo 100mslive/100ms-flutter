@@ -8,7 +8,7 @@ class RoomService {
   /// subdomain is 100ms-rocks
   /// code is abc-defg-ghi
   ///
-  List<String?>? getCode(String roomUrl) {
+  static List<String?>? getCode(String roomUrl) {
     String url = roomUrl;
     if (url == "") return [];
     url = url.trim();
