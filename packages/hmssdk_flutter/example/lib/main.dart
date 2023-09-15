@@ -281,7 +281,7 @@ class _HomePageState extends State<HomePage> {
 
       ///This section can be safely commented out as it's only required for 100ms internal usage
 
-      //qaTokenEndPoint is only required for 100ms internal testing
+      // qaTokenEndPoint is only required for 100ms internal testing
       //It can be removed and should not affect the join method call
       //For _endPoint just pass it as null
       //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
@@ -291,9 +291,9 @@ class _HomePageState extends State<HomePage> {
       ///The key for the token end point is "tokenEndPointKey"
       ///The key for the init end point is "initEndPointKey"
       ///The key for the layout api end point is "layoutAPIEndPointKey"
-      if (roomData[1] == "false") {
-        endPoints = RoomService.setEndPoints();
-      }
+      // if (roomData[1] == "false") {
+        // endPoints = RoomService.setEndPoints();
+      // }
 
       ///************************************************************************************************** */
 
