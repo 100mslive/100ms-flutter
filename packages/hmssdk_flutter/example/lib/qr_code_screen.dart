@@ -67,7 +67,6 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
           if (roomData[1] == "false") {
             endPoints = RoomService.setEndPoints();
           }
-
           ///************************************************************************************************** */
 
           Constant.roomCode = roomData[0] ?? '';
