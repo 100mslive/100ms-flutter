@@ -2,10 +2,7 @@
 import 'dart:io' show Platform;
 
 // Flutter imports:
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart'
     show AndroidViewController, PlatformViewsService, StandardMessageCodec;
 

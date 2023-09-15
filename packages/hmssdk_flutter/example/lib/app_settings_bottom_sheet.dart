@@ -221,7 +221,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               setState(() {})
                             }),
                   ),
-                 ListTile(
+                  ListTile(
                     horizontalTitleGap: 2,
                     enabled: false,
                     contentPadding: EdgeInsets.zero,
