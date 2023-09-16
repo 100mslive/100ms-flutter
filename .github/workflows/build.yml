@@ -60,10 +60,11 @@ jobs:
         uses: norio-nomura/action-swiftlint@3.2.1
         env:
           DIFF_BASE: ${{ github.base_ref }}
-      - name: Run Linters
+      - name: Run Dart Linters
         run: |
           dart format .;dart fix --apply
           git status
+          flutter doctor
         shell: bash
       - name: Build Android App Bundle
         run: |
