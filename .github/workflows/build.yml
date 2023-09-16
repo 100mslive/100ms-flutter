@@ -64,7 +64,6 @@ jobs:
         run: |
           dart format .;dart fix --apply
           git status
-          flutter doctor
         shell: bash
       - name: Build Android App Bundle
         run: |
