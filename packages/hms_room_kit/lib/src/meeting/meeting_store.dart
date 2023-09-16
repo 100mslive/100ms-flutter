@@ -761,7 +761,8 @@ class MeetingStore extends ChangeNotifier
     String? onStageRoles = HMSRoomLayout.roleLayoutData?.screens?.conferencing
         ?.defaultConf?.elements?.onStageExp?.onStageRole;
     if (onStageRoles != null) {
-      participantsInMeetingMap[onStageRoles] = [];
+      String role = onStageRoles;
+      participantsInMeetingMap[role] = [];
     }
     roles
         .where((role) => role.publishSettings?.allowed.isNotEmpty ?? false)
