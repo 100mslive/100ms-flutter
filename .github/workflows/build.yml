@@ -62,7 +62,7 @@ jobs:
           DIFF_BASE: ${{ github.base_ref }}
       - name: Run Linters
         run: |
-          ktlint -F; swiftlint --fix
+          swiftlint --fix
           dart format .;dart fix --apply
           git status
         shell: bash
