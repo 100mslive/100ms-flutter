@@ -1,0 +1,32 @@
+name: Deploy Apps
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - release/**
+
+jobs:
+  deploy_apps:
+    runs-on: macos-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: 12.x
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Build Android
+        run: |
+          sh release-apps.sh
+        shell: bash
+
+
