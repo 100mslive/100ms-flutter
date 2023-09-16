@@ -268,12 +268,12 @@ class _HomePageState extends State<HomePage> {
 
     Map<String, String>? endPoints;
     if (meetingLinkController.text.trim().contains("app.100ms.live")) {
-      List<String?>? roomData =
-          RoomService.getCode(meetingLinkController.text.trim());
+      List<String?> roomData =
+          RoomService.getCode(meetingLinkController.text.trim()) ?? [];
 
       //If the link is not valid then we might not get the code and whether the link is a
       //PROD or QA so we return the error in this case
-      if (roomData == null || roomData.isEmpty) {
+      if (roomData.isEmpty) {
         return;
       }
 
@@ -292,7 +292,7 @@ class _HomePageState extends State<HomePage> {
       ///The key for the init end point is "initEndPointKey"
       ///The key for the layout api end point is "layoutAPIEndPointKey"
       // if (roomData[1] == "false") {
-        // endPoints = RoomService.setEndPoints();
+      // endPoints = RoomService.setEndPoints();
       // }
 
       ///************************************************************************************************** */

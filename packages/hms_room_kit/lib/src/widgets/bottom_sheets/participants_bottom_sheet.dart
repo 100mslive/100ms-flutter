@@ -70,8 +70,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                 case 1:
                   if (isOnStageRole) {
                     if (peer.metadata != null) {
-                      String? peerMetadata = peer.metadata;
-                      if (peerMetadata?.contains("prevRole") ?? false) {
+                      String peerMetadata = peer.metadata!;
+                      if (peerMetadata.contains("prevRole")) {
                         String? previousRole =
                             jsonDecode(peer.metadata!)["prevRole"];
                         if (previousRole != null) {

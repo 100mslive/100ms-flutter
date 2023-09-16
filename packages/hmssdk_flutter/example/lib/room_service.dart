@@ -1,4 +1,3 @@
-import 'package:hms_room_kit/hms_room_kit.dart';
 // import 'package:hmssdk_flutter_example/app_secrets.dart';
 
 ///This class is only for 100ms internal usage

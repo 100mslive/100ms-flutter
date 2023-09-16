@@ -42,11 +42,12 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
 
         Map<String, String>? endPoints;
         if (scanData.code!.trim().contains("app.100ms.live")) {
-          List<String?>? roomData = RoomService.getCode(scanData.code!.trim());
+          List<String?> roomData =
+              RoomService.getCode(scanData.code!.trim()) ?? [];
 
           //If the link is not valid then we might not get the code and whether the link is a
           //PROD or QA so we return the error in this case
-          if (roomData == null || roomData.isEmpty) {
+          if (roomData.isEmpty) {
             return;
           }
 
@@ -67,6 +68,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
           if (roomData[1] == "false") {
             endPoints = RoomService.setEndPoints();
           }
+
           ///************************************************************************************************** */
 
           Constant.roomCode = roomData[0] ?? '';
