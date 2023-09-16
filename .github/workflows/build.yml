@@ -29,6 +29,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+        contents: write
 
     steps:
       - name: Checkout repository
@@ -37,11 +39,24 @@ jobs:
         with:
           distribution: zulu
           java-version: 12.x
+      - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          cache: true
+      - run: flutter --version
+      - name: Run Linters
+        run: |
+          dart format .;dart fix --apply
+          git status
+        shell: bash
       - name: Build Android
         run: |
           cd packages/hmssdk_flutter/example
           flutter build appbundle --debug -t lib/main.dart
         shell: bash
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 🤖 automated changes by HMSBot
+          repository: .
+          commit_user_name: HMSBot
