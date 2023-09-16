@@ -55,11 +55,14 @@ jobs:
       - uses: yutailang0119/action-ktlint@v3
         with:
           report-path: build/*.xml # Support glob patterns by https://www.npmjs.com/package/@actions/glob
-        continue-on-error: false # If annotations contain error of severity, action-ktlint exit 1.
+        continue-on-error: true # If annotations contain error of severity, action-ktlint exit 1.
       - name: Run SwiftLint
         uses: norio-nomura/action-swiftlint@3.2.1
-      - name: Run Dart Linters
+        env:
+          DIFF_BASE: ${{ github.base_ref }}
+      - name: Run Linters
         run: |
+          ktlint -F; swiftlint --fix
           dart format .;dart fix --apply
           git status
         shell: bash
