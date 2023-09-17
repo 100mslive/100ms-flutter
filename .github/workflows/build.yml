@@ -62,7 +62,6 @@ jobs:
           DIFF_BASE: ${{ github.base_ref }}
       - name: Run Dart Linters
         run: |
-          dart format .;dart fix --apply
           git status
         shell: bash
       - name: Build Android App Bundle
