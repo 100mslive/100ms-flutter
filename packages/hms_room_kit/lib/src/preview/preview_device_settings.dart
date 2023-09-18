@@ -76,7 +76,7 @@ class _PreviewDeviceSettingsState extends State<PreviewDeviceSettings> {
                                 ),
                               ],
                             ),
-                            const Row(
+                             Row(
                               children: [HMSCrossButton()],
                             ),
                           ],
