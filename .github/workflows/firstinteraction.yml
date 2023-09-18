@@ -1,6 +1,7 @@
 name: first-interaction
 
 on:
+  workflow_dispatch:
   issues:
     types: [opened]
   pull_request:

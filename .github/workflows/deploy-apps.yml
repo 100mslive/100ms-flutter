@@ -5,10 +5,11 @@ concurrency:
   cancel-in-progress: true
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - release/**
-      - feature/setupGithubActions
+      # - feature/setupGithubActions
 
 jobs:
   deploy_apps:
