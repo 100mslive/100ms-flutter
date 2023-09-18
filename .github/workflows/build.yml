@@ -43,7 +43,6 @@ jobs:
         with:
           channel: stable
           cache: true
-      - run: flutter --version
       - name: Build Android App Bundle
         run: |
           cd packages/hmssdk_flutter/example
