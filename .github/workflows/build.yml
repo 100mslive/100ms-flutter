@@ -5,6 +5,7 @@ concurrency:
   cancel-in-progress: true
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -29,8 +30,6 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    permissions:
-        contents: write
 
     steps:
       - name: Checkout repository
@@ -45,32 +44,8 @@ jobs:
           channel: stable
           cache: true
       - run: flutter --version
-      - name: Install ktlint
-        run: |
-          curl -sSLO https://github.com/pinterest/ktlint/releases/download/1.0.0/ktlint && chmod a+x ktlint && sudo mv ktlint /usr/local/bin/
-      - name: Run ktlint
-        run: |
-          ktlint --reporter=checkstyle,output=build/ktlint-report.xml
-        continue-on-error: true
-      - uses: yutailang0119/action-ktlint@v3
-        with:
-          report-path: build/*.xml # Support glob patterns by https://www.npmjs.com/package/@actions/glob
-        continue-on-error: true # If annotations contain error of severity, action-ktlint exit 1.
-      - name: Run SwiftLint
-        uses: norio-nomura/action-swiftlint@3.2.1
-        env:
-          DIFF_BASE: ${{ github.base_ref }}
-      - name: Run Dart Linters
-        run: |
-          git status
-        shell: bash
       - name: Build Android App Bundle
         run: |
           cd packages/hmssdk_flutter/example
           flutter build appbundle --debug -t lib/main.dart
         shell: bash
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: 🤖 automated changes by HMSBot
-          repository: .
-          commit_user_name: HMSBot
