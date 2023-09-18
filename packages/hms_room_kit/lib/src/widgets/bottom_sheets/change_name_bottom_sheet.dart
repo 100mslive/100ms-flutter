@@ -86,7 +86,7 @@ class _ChangeNameBottomSheetState extends State<ChangeNameBottomSheet> {
                     )
                   ],
                 ),
-                const Row(
+                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [HMSCrossButton()],
                 )

@@ -53,7 +53,7 @@ class EndServiceBottomSheet extends StatelessWidget {
                       title ?? const SizedBox()
                     ],
                   ),
-                  const Row(
+                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       HMSCrossButton(),
