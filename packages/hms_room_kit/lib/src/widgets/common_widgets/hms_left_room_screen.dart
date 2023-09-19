@@ -125,7 +125,8 @@ class HMSLeftRoomScreen extends StatelessWidget {
                                 MaterialPageRoute(
                                     builder: (_) => HMSPrebuilt(
                                         roomCode: Constant.roomCode,
-                                        options: Constant.prebuiltOptions))),
+                                        options: Constant.prebuiltOptions,
+                                        onLeaveRoomCallback: Constant.onLeaveRoomCallback,))),
                           },
                       child: SizedBox(
                         height: 48,

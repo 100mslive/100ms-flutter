@@ -1184,6 +1184,11 @@ class MeetingStore extends ChangeNotifier
     peerTracks.clear();
     isRoomEnded = true;
     resetForegroundTaskAndOrientation();
+
+    ///Here we call the method passed by the user in HMSPrebuilt as a callback
+    if(Constant.onLeaveRoomCallback != null){
+      Constant.onLeaveRoomCallback!();
+    }
     notifyListeners();
   }
 
