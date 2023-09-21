@@ -1,7 +1,6 @@
 //Package imports
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:collection/collection.dart';
 
 //Project imports
@@ -11,6 +10,7 @@ import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_dropdown.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 
 class ChangeRoleOptionDialog extends StatefulWidget {
@@ -133,7 +133,7 @@ class ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                     width: width * 0.5,
                     child: Text(
                       "Request permission from the user",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                         color: themeDefaultColor,
                         fontSize: 14,
                         height: 20 / 14,
@@ -164,7 +164,7 @@ class ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
                   child: Text('Cancel',
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           color: themeDefaultColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -195,7 +195,7 @@ class ChangeRoleOptionDialogState extends State<ChangeRoleOptionDialog> {
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
                 child: Text(
                   'Change',
-                  style: GoogleFonts.inter(
+                  style: HMSTextStyle.setTextStyle(
                       color: themeDefaultColor,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

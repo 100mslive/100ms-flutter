@@ -1,5 +1,5 @@
 //Package imports
-import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
@@ -58,11 +58,11 @@ class Stats extends StatelessWidget {
                         height: 10,
                       ),
                       Text("Downlink\t ${data.item4 ?? "-1"}",
-                          style: GoogleFonts.inter(
+                          style: HMSTextStyle.setTextStyle(
                               color: iconColor, fontSize: 12)),
                       Text(
                           "Bitrate(A)\t ${data.item3?.hmsLocalAudioStats?.bitrate.toStringAsFixed(2) ?? "0.00"}",
-                          style: GoogleFonts.inter(
+                          style: HMSTextStyle.setTextStyle(
                               color: iconColor, fontSize: 12)),
                     ],
                   ));
@@ -87,35 +87,35 @@ class Stats extends StatelessWidget {
                   children: [
                     Text(
                         "Width\t ${data.item3?.hmsRemoteVideoStats?.resolution.width.toStringAsFixed(2) ?? "0.00"}",
-                        style:
-                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
+                        style: HMSTextStyle.setTextStyle(
+                            color: iconColor, fontSize: 12)),
                     Text(
                         "Height\t ${data.item3?.hmsRemoteVideoStats?.resolution.height.toStringAsFixed(2) ?? "0.00"}",
-                        style:
-                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
+                        style: HMSTextStyle.setTextStyle(
+                            color: iconColor, fontSize: 12)),
                     Text(
                         "FPS\t ${data.item3?.hmsRemoteVideoStats?.frameRate.toStringAsFixed(2) ?? "0.00"}",
-                        style:
-                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
+                        style: HMSTextStyle.setTextStyle(
+                            color: iconColor, fontSize: 12)),
                     Text("Downlink\t ${data.item4 ?? "-1"}",
-                        style:
-                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
+                        style: HMSTextStyle.setTextStyle(
+                            color: iconColor, fontSize: 12)),
                     Text(
                         "Bitrate(V)\t ${data.item3?.hmsRemoteVideoStats?.bitrate.toStringAsFixed(2) ?? "0.00"}",
-                        style:
-                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
+                        style: HMSTextStyle.setTextStyle(
+                            color: iconColor, fontSize: 12)),
                     Text(
                         "Bitrate(A)\t ${data.item3?.hmsRemoteAudioStats?.bitrate.toStringAsFixed(2) ?? "0.00"}",
-                        style:
-                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
+                        style: HMSTextStyle.setTextStyle(
+                            color: iconColor, fontSize: 12)),
                     Text(
                         "Jitter(V)\t ${data.item3?.hmsRemoteVideoStats?.jitter.toStringAsFixed(2) ?? "0.00"}",
-                        style:
-                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
+                        style: HMSTextStyle.setTextStyle(
+                            color: iconColor, fontSize: 12)),
                     Text(
                         "Jitter(A)\t ${data.item3?.hmsRemoteAudioStats?.jitter.toStringAsFixed(2) ?? "0.00"}",
-                        style:
-                            GoogleFonts.inter(color: iconColor, fontSize: 12)),
+                        style: HMSTextStyle.setTextStyle(
+                            color: iconColor, fontSize: 12)),
                   ],
                 ),
               );
@@ -130,14 +130,14 @@ class Stats extends StatelessWidget {
       children: [
         TableRow(children: [
           Text("Layer",
-              style: GoogleFonts.inter(
+              style: HMSTextStyle.setTextStyle(
                   color: iconColor, fontWeight: FontWeight.bold, fontSize: 10)),
           ...videoStats
               .map((layerStats) => Text(
                   HMSSimulcastLayerValue.getValueFromHMSSimulcastLayer(
                           layerStats?.hmsLayer)
                       .toUpperCase(),
-                  style: GoogleFonts.inter(
+                  style: HMSTextStyle.setTextStyle(
                       color: iconColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 10)))
@@ -145,39 +145,42 @@ class Stats extends StatelessWidget {
         ]),
         TableRow(children: [
           Text("Width",
-              style: GoogleFonts.inter(
+              style: HMSTextStyle.setTextStyle(
                   color: iconColor, fontWeight: FontWeight.bold, fontSize: 10)),
           ...videoStats
               .map(
                 (layerStats) => Text(
                   layerStats?.resolution.width.toStringAsFixed(2) ?? "0.00",
-                  style: GoogleFonts.inter(color: iconColor, fontSize: 10),
+                  style:
+                      HMSTextStyle.setTextStyle(color: iconColor, fontSize: 10),
                 ),
               )
               .toList()
         ]),
         TableRow(children: [
           Text("Height",
-              style: GoogleFonts.inter(
+              style: HMSTextStyle.setTextStyle(
                   color: iconColor, fontWeight: FontWeight.bold, fontSize: 10)),
           ...videoStats
               .map(
                 (layerStats) => Text(
                   layerStats?.resolution.height.toStringAsFixed(2) ?? "0.00",
-                  style: GoogleFonts.inter(color: iconColor, fontSize: 10),
+                  style:
+                      HMSTextStyle.setTextStyle(color: iconColor, fontSize: 10),
                 ),
               )
               .toList()
         ]),
         TableRow(children: [
           Text("FPS",
-              style: GoogleFonts.inter(
+              style: HMSTextStyle.setTextStyle(
                   color: iconColor, fontWeight: FontWeight.bold, fontSize: 10)),
           ...videoStats
               .map(
                 (layerStats) => Text(
                   layerStats?.frameRate.toStringAsFixed(2) ?? "0.00",
-                  style: GoogleFonts.inter(color: iconColor, fontSize: 10),
+                  style:
+                      HMSTextStyle.setTextStyle(color: iconColor, fontSize: 10),
                 ),
               )
               .toList()
@@ -185,14 +188,15 @@ class Stats extends StatelessWidget {
         TableRow(children: [
           Text(
             "Bitrate(V)",
-            style: GoogleFonts.inter(
+            style: HMSTextStyle.setTextStyle(
                 color: iconColor, fontWeight: FontWeight.bold, fontSize: 10),
           ),
           ...videoStats
               .map(
                 (layerStats) => Text(
                   layerStats?.bitrate.toStringAsFixed(2) ?? "0.00",
-                  style: GoogleFonts.inter(color: iconColor, fontSize: 10),
+                  style:
+                      HMSTextStyle.setTextStyle(color: iconColor, fontSize: 10),
                 ),
               )
               .toList()
@@ -200,14 +204,15 @@ class Stats extends StatelessWidget {
         TableRow(children: [
           Text(
             "Quality Limitation",
-            style: GoogleFonts.inter(
+            style: HMSTextStyle.setTextStyle(
                 color: iconColor, fontWeight: FontWeight.bold, fontSize: 10),
           ),
           ...videoStats
               .map(
                 (layerStats) => Text(
                   layerStats?.hmsQualityLimitationReasons?.reason.name ?? "",
-                  style: GoogleFonts.inter(color: iconColor, fontSize: 10),
+                  style:
+                      HMSTextStyle.setTextStyle(color: iconColor, fontSize: 10),
                 ),
               )
               .toList()

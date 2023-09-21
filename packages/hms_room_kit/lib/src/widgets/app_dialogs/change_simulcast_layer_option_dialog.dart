@@ -1,11 +1,11 @@
 //Package imports
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:collection/collection.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 //Project imports
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:collection/collection.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_dropdown.dart';
@@ -127,7 +127,7 @@ class ChangeSimulcastLayerOptionDialogState
                   padding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
                   child: Text('Cancel',
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           color: themeDefaultColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -158,7 +158,7 @@ class ChangeSimulcastLayerOptionDialogState
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
                 child: Text(
                   'Change',
-                  style: GoogleFonts.inter(
+                  style: HMSTextStyle.setTextStyle(
                       color: themeDefaultColor,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

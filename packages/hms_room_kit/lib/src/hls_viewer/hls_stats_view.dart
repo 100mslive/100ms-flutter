@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 
 class HLSStatsView extends StatelessWidget {
   const HLSStatsView({super.key});
@@ -22,7 +22,8 @@ class HLSStatsView extends StatelessWidget {
               builder: (_, bitrate, __) {
                 return Text(
                     "Bitrate : ${bitrate == null ? "-" : (bitrate / 8000)} KBps",
-                    style: GoogleFonts.inter(color: iconColor, fontSize: 12));
+                    style: HMSTextStyle.setTextStyle(
+                        color: iconColor, fontSize: 12));
               },
               selector: (_, meetingStore) =>
                   meetingStore.hlsPlayerStats?.averageBitrate),
@@ -33,7 +34,8 @@ class HLSStatsView extends StatelessWidget {
               builder: (_, bufferedDuration, __) {
                 return Text(
                     "Buffered Duration  : ${bufferedDuration == null ? "-" : bufferedDuration / 1000}",
-                    style: GoogleFonts.inter(color: iconColor, fontSize: 12));
+                    style: HMSTextStyle.setTextStyle(
+                        color: iconColor, fontSize: 12));
               },
               selector: (_, meetingStore) =>
                   meetingStore.hlsPlayerStats?.bufferedDuration),
@@ -43,7 +45,8 @@ class HLSStatsView extends StatelessWidget {
           Selector<MeetingStore, double?>(
               builder: (_, videoWidth, __) {
                 return Text("Video Width : ${videoWidth ?? "-"} px",
-                    style: GoogleFonts.inter(color: iconColor, fontSize: 12));
+                    style: HMSTextStyle.setTextStyle(
+                        color: iconColor, fontSize: 12));
               },
               selector: (_, meetingStore) =>
                   meetingStore.hlsPlayerStats?.videoWidth),
@@ -53,7 +56,8 @@ class HLSStatsView extends StatelessWidget {
           Selector<MeetingStore, double?>(
               builder: (_, videoHeight, __) {
                 return Text("Video Height : ${videoHeight ?? "-"} px",
-                    style: GoogleFonts.inter(color: iconColor, fontSize: 12));
+                    style: HMSTextStyle.setTextStyle(
+                        color: iconColor, fontSize: 12));
               },
               selector: (_, meetingStore) =>
                   meetingStore.hlsPlayerStats?.videoHeight),
@@ -63,7 +67,8 @@ class HLSStatsView extends StatelessWidget {
           Selector<MeetingStore, int?>(
               builder: (_, droppedFrameCount, __) {
                 return Text("Dropped Frames : ${droppedFrameCount ?? "-"} ",
-                    style: GoogleFonts.inter(color: iconColor, fontSize: 12));
+                    style: HMSTextStyle.setTextStyle(
+                        color: iconColor, fontSize: 12));
               },
               selector: (_, meetingStore) =>
                   meetingStore.hlsPlayerStats?.droppedFrameCount),
@@ -74,7 +79,8 @@ class HLSStatsView extends StatelessWidget {
               builder: (_, distanceFromLive, __) {
                 return Text(
                     "Distance from live edge : ${distanceFromLive == null ? "-" : distanceFromLive / 1000}s",
-                    style: GoogleFonts.inter(color: iconColor, fontSize: 12));
+                    style: HMSTextStyle.setTextStyle(
+                        color: iconColor, fontSize: 12));
               },
               selector: (_, meetingStore) =>
                   meetingStore.hlsPlayerStats?.distanceFromLive),

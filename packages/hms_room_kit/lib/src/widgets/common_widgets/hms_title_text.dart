@@ -1,6 +1,8 @@
 ///Package imports
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+///Project imports
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 
 ///[HMSTitleText] is a widget that is used to render the title text
 ///It takes following parameters:
@@ -35,7 +37,7 @@ class HMSTitleText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(text,
         overflow: textOverflow,
-        style: GoogleFonts.inter(
+        style: HMSTextStyle.setTextStyle(
             color: textColor,
             height: lineHeight! / fontSize!,
             fontSize: fontSize,

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/widgets/app_dialogs/hls_aspect_ratio_option_dialog.dart';
@@ -45,7 +45,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                     children: [
                       Text(
                         "More Options",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             fontSize: 16,
                             color: themeDefaultColor,
                             letterSpacing: 0.15,
@@ -133,7 +133,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                           Text(
                             "Participants",
                             semanticsLabel: "participants_button",
-                            style: GoogleFonts.inter(
+                            style: HMSTextStyle.setTextStyle(
                                 fontSize: 14,
                                 color: themeDefaultColor,
                                 letterSpacing: 0.25,
@@ -182,7 +182,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                           Text(
                             "Set Aspect Ratio",
                             semanticsLabel: "fl_aspect_ratio",
-                            style: GoogleFonts.inter(
+                            style: HMSTextStyle.setTextStyle(
                                 fontSize: 14,
                                 color: themeDefaultColor,
                                 letterSpacing: 0.25,
@@ -221,7 +221,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                 ),
                 title: Text(
                   "Change Name",
-                  style: GoogleFonts.inter(
+                  style: HMSTextStyle.setTextStyle(
                       fontSize: 14,
                       color: themeDefaultColor,
                       letterSpacing: 0.25,
@@ -247,7 +247,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                   title: Text(
                     "Raise Hand",
                     semanticsLabel: "hand_raise_button",
-                    style: GoogleFonts.inter(
+                    style: HMSTextStyle.setTextStyle(
                         fontSize: 14,
                         color: context.read<MeetingStore>().isRaisedHand
                             ? errorColor
@@ -279,7 +279,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                   title: Text(
                     "Modify Notifications",
                     semanticsLabel: "fl_notification_setting",
-                    style: GoogleFonts.inter(
+                    style: HMSTextStyle.setTextStyle(
                         fontSize: 14,
                         color: themeDefaultColor,
                         letterSpacing: 0.25,
@@ -302,7 +302,7 @@ class _ViewerSettingsBottomSheetState extends State<ViewerSettingsBottomSheet> {
                     title: Text(
                       "Enter Pip Mode",
                       semanticsLabel: "fl_pip_mode",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 14,
                           color: themeDefaultColor,
                           letterSpacing: 0.25,
