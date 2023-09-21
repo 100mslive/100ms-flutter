@@ -1186,8 +1186,8 @@ class MeetingStore extends ChangeNotifier
     resetForegroundTaskAndOrientation();
 
     ///Here we call the method passed by the user in HMSPrebuilt as a callback
-    if(Constant.onLeaveRoomCallback != null){
-      Constant.onLeaveRoomCallback!();
+    if (Constant.onLeave != null) {
+      Constant.onLeave!();
     }
     notifyListeners();
   }
