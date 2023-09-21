@@ -7,8 +7,8 @@ issue_tracker: https://github.com/100mslive/100ms-flutter/issues
 documentation: https://www.100ms.live/docs
 
 environment:
-  sdk: ">=2.17.0 <4.0.0"
-  flutter: ">=2.10.0"
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
 
 dependencies:
   flutter:
@@ -18,7 +18,7 @@ dependencies:
   intl: ^0.18.1
   permission_handler: ^11.0.0
   provider: ^6.0.5
-  google_fonts: ^4.0.4
+  google_fonts: ^6.1.0
   bot_toast: ^4.0.4
   draggable_widget: ^2.0.0
   badges: ^3.1.1
