@@ -29,9 +29,6 @@ import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/app_dialogs/audio_device_change_dialog.dart';
-import 'package:hms_room_kit/src/widgets/meeting_modes/audio_mode.dart';
-import 'package:hms_room_kit/src/widgets/meeting_modes/full_screen_mode.dart';
-import 'package:hms_room_kit/src/widgets/meeting_modes/hero_mode.dart';
 import 'package:hms_room_kit/src/widgets/meeting_modes/one_to_one_mode.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/meeting/pip_view.dart';
@@ -288,34 +285,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                       isLocalInsetPresent:
                                                                           false,
                                                                     )
-                                                                  : (modeData.item1 ==
-                                                                          MeetingMode
-                                                                              .hero)
-                                                                      ? heroMode(
-                                                                          peerTracks: data
-                                                                              .item1,
-                                                                          itemCount: data
-                                                                              .item3,
-                                                                          screenShareCount: data
-                                                                              .item4,
-                                                                          context:
-                                                                              context,
-                                                                          isPortrait:
-                                                                              isPortraitMode,
-                                                                          size:
-                                                                              size)
-                                                                      : (modeData.item1 ==
-                                                                              MeetingMode
-                                                                                  .audio)
-                                                                          ? audioMode(
-                                                                              peerTracks: data.item1.sublist(data.item4),
-                                                                              itemCount: data.item1.sublist(data.item4).length,
-                                                                              context: context,
-                                                                              isPortrait: isPortraitMode,
-                                                                              size: size)
-                                                                          : (data.item5 == MeetingMode.single)
-                                                                              ? fullScreenMode(peerTracks: data.item1, itemCount: data.item3, screenShareCount: data.item4, context: context, isPortrait: isPortraitMode, size: size)
-                                                                              : const CustomOneToOneGrid(
+                                                                  : const CustomOneToOneGrid(
                                                                                   isLocalInsetPresent: false,
                                                                                 ));
                                                     });
