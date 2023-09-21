@@ -4,8 +4,6 @@ import 'dart:io';
 ///Package imports
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:provider/provider.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 

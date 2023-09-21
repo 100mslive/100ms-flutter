@@ -9,7 +9,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter_example/app_settings_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';

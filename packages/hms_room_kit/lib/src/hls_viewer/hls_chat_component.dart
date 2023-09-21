@@ -10,8 +10,6 @@ import 'package:url_launcher/url_launcher.dart';
 ///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
-
 
 ///[HLSChatComponent] is a component that is used to show the chat
 class HLSChatComponent extends StatefulWidget {

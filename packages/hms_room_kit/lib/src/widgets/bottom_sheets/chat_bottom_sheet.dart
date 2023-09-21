@@ -9,7 +9,6 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 //Project imports
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/widgets/chat_widgets/hms_empty_chat_widget.dart';
