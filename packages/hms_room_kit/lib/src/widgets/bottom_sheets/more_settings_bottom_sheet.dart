@@ -11,7 +11,6 @@ import 'package:hms_room_kit/src/common/constants.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/widgets/app_dialogs/stats_for_nerds.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/audio_settings_bottom_sheet.dart';
-import 'package:hms_room_kit/src/widgets/bottom_sheets/meeting_mode_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/participants_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/start_hls_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/share_link_option.dart';
@@ -205,39 +204,6 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                   const SizedBox(
                     height: 10,
                   ),
-                  if (Constant.debugMode)
-                    ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        Navigator.pop(context);
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: HMSThemeColors.surfaceDim,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          context: context,
-                          builder: (ctx) => ChangeNotifierProvider.value(
-                              value: meetingStore,
-                              child: const MeetingModeBottomSheet()),
-                        );
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
-                        height: 20,
-                        width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
-                      ),
-                      title: HMSSubheadingText(
-                        text: "Meeting mode",
-                        textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                        letterSpacing: 0.15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
                   if (meetingStore.localPeer?.role.publishSettings?.allowed
                           .contains("screen") ??
                       false)
