@@ -7,7 +7,6 @@ import live.hms.video.media.settings.PhoneCallState
 import live.hms.video.sdk.HMSSDK
 
 class HMSTrackSettingsExtension {
-
     companion object {
         fun toDictionary(hmssdk: HMSSDK): HashMap<String, Any>? {
             val map = HashMap<String, Any>()
@@ -24,7 +23,10 @@ class HMSTrackSettingsExtension {
             return map
         }
 
-        fun setTrackSettings(hmsAudioTrackHashMap: HashMap<String, Any?>?, hmsVideoTrackHashMap: HashMap<String, Any?>?): HMSTrackSettings {
+        fun setTrackSettings(
+            hmsAudioTrackHashMap: HashMap<String, Any?>?,
+            hmsVideoTrackHashMap: HashMap<String, Any?>?,
+        ): HMSTrackSettings {
             var hmsAudioTrackSettings = HMSAudioTrackSettings.Builder()
 
             hmsAudioTrackSettings.setUseHardwareAcousticEchoCanceler(false)
@@ -44,7 +46,10 @@ class HMSTrackSettingsExtension {
                 val phoneCallMuteState = audioHashMap["phone_call_mute_state"] as? String
                 phoneCallMuteState?.let { callMuteState ->
                     when (callMuteState) {
-                        "ENABLE_MUTE_ON_PHONE_CALL_RING" -> hmsAudioTrackSettings.setPhoneCallMuteState(PhoneCallState.ENABLE_MUTE_ON_PHONE_CALL_RING)
+                        "ENABLE_MUTE_ON_PHONE_CALL_RING" ->
+                            hmsAudioTrackSettings.setPhoneCallMuteState(
+                                PhoneCallState.ENABLE_MUTE_ON_PHONE_CALL_RING,
+                            )
                         else -> hmsAudioTrackSettings.setPhoneCallMuteState(PhoneCallState.DISABLE_MUTE_ON_VOIP_PHONE_CALL_RING)
                     }
                 }
@@ -54,7 +59,10 @@ class HMSTrackSettingsExtension {
             if (hmsVideoTrackHashMap != null) {
                 val cameraFacing = getHMSCameraFacingFromValue(hmsVideoTrackHashMap["camera_facing"] as String?)
                 val disableAutoResize = hmsVideoTrackHashMap["disable_auto_resize"] as Boolean
-                val initialState = HMSTrackInitStateExtension.getHMSTrackInitStatefromValue(hmsVideoTrackHashMap["track_initial_state"] as String)
+                val initialState =
+                    HMSTrackInitStateExtension.getHMSTrackInitStatefromValue(
+                        hmsVideoTrackHashMap["track_initial_state"] as String,
+                    )
                 val forceSoftwareDecoder = hmsVideoTrackHashMap["force_software_decoder"] as Boolean
 
                 if (cameraFacing != null) {

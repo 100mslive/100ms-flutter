@@ -37,7 +37,7 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: widget.isInsetTile?0.26:0.2,
+      heightFactor: widget.isInsetTile ? 0.26 : 0.2,
       child: Padding(
           padding: const EdgeInsets.only(top: 16.0, left: 24, right: 24),
           child: Column(
@@ -72,8 +72,8 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                       ),
                     ],
                   ),
-                  Row(
-                    children: const [HMSCrossButton()],
+                  const Row(
+                    children: [HMSCrossButton()],
                   ),
                 ],
               ),
@@ -186,32 +186,33 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                         title: HMSSubheadingText(
                             text: "Change Name",
                             textColor: HMSThemeColors.onSurfaceHighEmphasis)),
-                    if(widget.isInsetTile)
-                    ListTile(
-                        horizontalTitleGap: 2,
-                        onTap: () async {
-                          Navigator.pop(context);
-                          if (widget.callbackFunction != null) {
-                            widget.callbackFunction!();
-                          }
-                        },
-                        contentPadding: EdgeInsets.zero,
-                        leading: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/minimize.svg",
-                          semanticsLabel: "fl_minimize_local_tile",
-                          height: 20,
-                          width: 20,
-                          colorFilter: ColorFilter.mode(
-                              widget.meetingStore.peerTracks.length > 1
-                                  ? HMSThemeColors.onSurfaceHighEmphasis
-                                  : HMSThemeColors.onSurfaceLowEmphasis,
-                              BlendMode.srcIn),
-                        ),
-                        title: HMSSubheadingText(
-                            text: "Minimize Your Tile",
-                            textColor: widget.meetingStore.peerTracks.length > 1
-                                ? HMSThemeColors.onSurfaceHighEmphasis
-                                : HMSThemeColors.onSurfaceLowEmphasis)),
+                    if (widget.isInsetTile)
+                      ListTile(
+                          horizontalTitleGap: 2,
+                          onTap: () async {
+                            Navigator.pop(context);
+                            if (widget.callbackFunction != null) {
+                              widget.callbackFunction!();
+                            }
+                          },
+                          contentPadding: EdgeInsets.zero,
+                          leading: SvgPicture.asset(
+                            "packages/hms_room_kit/lib/src/assets/icons/minimize.svg",
+                            semanticsLabel: "fl_minimize_local_tile",
+                            height: 20,
+                            width: 20,
+                            colorFilter: ColorFilter.mode(
+                                widget.meetingStore.peerTracks.length > 1
+                                    ? HMSThemeColors.onSurfaceHighEmphasis
+                                    : HMSThemeColors.onSurfaceLowEmphasis,
+                                BlendMode.srcIn),
+                          ),
+                          title: HMSSubheadingText(
+                              text: "Minimize Your Tile",
+                              textColor:
+                                  widget.meetingStore.peerTracks.length > 1
+                                      ? HMSThemeColors.onSurfaceHighEmphasis
+                                      : HMSThemeColors.onSurfaceLowEmphasis)),
                   ],
                 ),
               ),

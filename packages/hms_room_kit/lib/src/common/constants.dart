@@ -8,11 +8,8 @@ class Constant {
   static String defaultMeetingLink =
       "https://public.app.100ms.live/meeting/xvm-wxwo-gbl";
 
-  /// [Constant.meetingUrl] is the meeting link that will be used
-  static String meetingUrl = defaultMeetingLink;
-
-  /// [Constant.meetingCode] is the meeting code that will be used
-  static String meetingCode = "";
+  /// [Constant.roomCode] is the meeting code that will be used
+  static String roomCode = "";
 
   /// [Constant.streamingUrl] is the streaming url that will be used
   static String streamingUrl = "";
@@ -29,4 +26,25 @@ class Constant {
   /// [Constant.options] is the prebuilt options for the application
   /// This is saved for later usages in the application
   static HMSPrebuiltOptions? prebuiltOptions;
+
+  ///[Constant.tokenEndPoint] is the token end point for the QA environment
+  static String? tokenEndPoint;
+
+  ///[Constant.initEndPoint] is the init end point for the QA environment
+  static String? initEndPoint;
+
+  ///[Constant.layoutAPIEndPoint] is the layout api end point for the QA environment
+  static String? layoutAPIEndPoint;
+
+  ///[Constant.tokenEndPointKey] is the key for the token end point
+  static String tokenEndPointKey = "tokenEndPoint";
+
+  ///[Constant.initEndPointKey] is the key for the init end point
+  static String initEndPointKey = "initEndPoint";
+
+  ///[Constant.layoutAPIEndPointKey] is the key for the layout api end point
+  static String layoutAPIEndPointKey = "layoutAPIEndPoint";
+
+  ///[Constant.onLeave] is the function that you wish to execute while leaving the room
+  static Function? onLeave;
 }

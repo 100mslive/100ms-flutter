@@ -59,7 +59,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
               meetingStore.isRoomEnded,
               meetingStore.hmsException,
               meetingStore.isEndRoomCalled,
-              meetingStore.localPeer?.role.permissions.hlsStreaming??false),
+              meetingStore.localPeer?.role.permissions.hlsStreaming ?? false),
           builder: (_, failureData, __) {
             if (failureData.item1) {
               WidgetsBinding.instance.addPostFrameCallback((_) {

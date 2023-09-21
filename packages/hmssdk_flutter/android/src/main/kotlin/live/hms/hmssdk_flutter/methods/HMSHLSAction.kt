@@ -9,10 +9,12 @@ import live.hms.video.sdk.models.HMSHLSTimedMetadata
 import live.hms.video.sdk.models.HMSHlsRecordingConfig
 
 class HMSHLSAction {
-
     companion object {
-
-        fun hlsActions(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        fun hlsActions(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             when (call.method) {
                 "hls_start_streaming" -> {
                     hlsStreaming(call, result, hmssdk)
@@ -29,7 +31,11 @@ class HMSHLSAction {
             }
         }
 
-        private fun hlsStreaming(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        private fun hlsStreaming(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             val meetingUrlVariantsList = call.argument<List<Map<String, String>>?>("meeting_url_variants")
             val recordingConfig = call.argument<Map<String, Boolean>?>("recording_config")
             var meetingUrlVariant: ArrayList<HMSHLSMeetingURLVariant>? = null
@@ -47,10 +53,11 @@ class HMSHLSAction {
                 }
             }
             if (recordingConfig != null) {
-                hmsHLSRecordingConfig = HMSHlsRecordingConfig(
-                    singleFilePerLayer = recordingConfig?.get("single_file_per_layer")!!,
-                    videoOnDemand = recordingConfig?.get("video_on_demand")!!,
-                )
+                hmsHLSRecordingConfig =
+                    HMSHlsRecordingConfig(
+                        singleFilePerLayer = recordingConfig?.get("single_file_per_layer")!!,
+                        videoOnDemand = recordingConfig?.get("video_on_demand")!!,
+                    )
             }
             if (meetingUrlVariant != null || hmsHLSRecordingConfig != null) {
                 hlsConfig = HMSHLSConfig(meetingUrlVariant, hmsHLSRecordingConfig)
@@ -58,7 +65,11 @@ class HMSHLSAction {
             hmssdk.startHLSStreaming(config = hlsConfig, hmsActionResultListener = HMSCommonAction.getActionListener(result))
         }
 
-        private fun stopHLSStreaming(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        private fun stopHLSStreaming(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             val meetingUrlVariantsList = call.argument<List<Map<String, String>>>("meeting_url_variants")
 
             val meetingUrlVariant1: ArrayList<HMSHLSMeetingURLVariant> = ArrayList()
@@ -87,10 +98,15 @@ class HMSHLSAction {
          * From flutter we receive a list of Map<String,Any> and then we
          * convert it to list of HMSHLSTimedMetadata objects
          */
-        private fun sendHLSTimedMetadata(call: MethodCall, result: Result, hmssdk: HMSSDK) {
-            val metadata = call.argument<List<Map<String, Any>>>("metadata") ?: kotlin.run {
-                HMSErrorLogger.returnArgumentsError("metadata Parameter is null")
-            }
+        private fun sendHLSTimedMetadata(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
+            val metadata =
+                call.argument<List<Map<String, Any>>>("metadata") ?: kotlin.run {
+                    HMSErrorLogger.returnArgumentsError("metadata Parameter is null")
+                }
 
             metadata?.let {
                     hlsMetadataList ->

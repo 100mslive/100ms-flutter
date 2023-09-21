@@ -152,67 +152,67 @@ class _MeetingBottomNavigationBarState
                   }),
 
             ///Chat Button
-            if(HMSRoomLayout.chatData != null)
-            Selector<MeetingStore, Tuple2>(
-                selector: (_, meetingStore) => Tuple2(
-                    meetingStore.isNewMessageReceived,
-                    meetingStore.isOverlayChatOpened),
-                builder: (_, chatState, __) {
-                  return HMSEmbeddedButton(
-                    onTap: () => {
-                      if (HMSRoomLayout.chatData?.isOverlay ?? false)
-                        {context.read<MeetingStore>().toggleChatOverlay()}
-                      else
-                        {
-                          context.read<MeetingStore>().getSessionMetadata(
-                              SessionStoreKeyValues.getNameFromMethod(
-                                  SessionStoreKey.pinnedMessageSessionKey)),
-                          context.read<MeetingStore>().setNewMessageFalse(),
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: HMSThemeColors.surfaceDim,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(16),
-                                  topRight: Radius.circular(16)),
-                            ),
-                            context: context,
-                            builder: (ctx) => ChangeNotifierProvider.value(
-                                value: context.read<MeetingStore>(),
-                                child: HMSRoomLayout.isParticipantsListEnabled
-                                    ? const ChatParticipantsTabBar(
-                                        tabIndex: 0,
-                                      )
-                                    : const ChatOnlyBottomSheet()),
-                          )
-                        }
-                    },
-                    onColor: HMSThemeColors.backgroundDim,
-                    isActive: !(chatState.item2 &&
-                        (HMSRoomLayout.chatData?.isOverlay ?? false)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: chatState.item1 && !chatState.item2
-                          ? Badge(
-                              backgroundColor: HMSThemeColors.primaryDefault,
-                              child: SvgPicture.asset(
+            if (HMSRoomLayout.chatData != null)
+              Selector<MeetingStore, Tuple2>(
+                  selector: (_, meetingStore) => Tuple2(
+                      meetingStore.isNewMessageReceived,
+                      meetingStore.isOverlayChatOpened),
+                  builder: (_, chatState, __) {
+                    return HMSEmbeddedButton(
+                      onTap: () => {
+                        if (HMSRoomLayout.chatData?.isOverlay ?? false)
+                          {context.read<MeetingStore>().toggleChatOverlay()}
+                        else
+                          {
+                            context.read<MeetingStore>().getSessionMetadata(
+                                SessionStoreKeyValues.getNameFromMethod(
+                                    SessionStoreKey.pinnedMessageSessionKey)),
+                            context.read<MeetingStore>().setNewMessageFalse(),
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              backgroundColor: HMSThemeColors.surfaceDim,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(16),
+                                    topRight: Radius.circular(16)),
+                              ),
+                              context: context,
+                              builder: (ctx) => ChangeNotifierProvider.value(
+                                  value: context.read<MeetingStore>(),
+                                  child: HMSRoomLayout.isParticipantsListEnabled
+                                      ? const ChatParticipantsTabBar(
+                                          tabIndex: 0,
+                                        )
+                                      : const ChatOnlyBottomSheet()),
+                            )
+                          }
+                      },
+                      onColor: HMSThemeColors.backgroundDim,
+                      isActive: !(chatState.item2 &&
+                          (HMSRoomLayout.chatData?.isOverlay ?? false)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: chatState.item1 && !chatState.item2
+                            ? Badge(
+                                backgroundColor: HMSThemeColors.primaryDefault,
+                                child: SvgPicture.asset(
+                                  "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
+                                  semanticsLabel: "chat_button",
+                                  colorFilter: ColorFilter.mode(
+                                      HMSThemeColors.onSurfaceHighEmphasis,
+                                      BlendMode.srcIn),
+                                ),
+                              )
+                            : SvgPicture.asset(
                                 "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
-                                semanticsLabel: "chat_button",
                                 colorFilter: ColorFilter.mode(
                                     HMSThemeColors.onSurfaceHighEmphasis,
                                     BlendMode.srcIn),
+                                semanticsLabel: "chat_button",
                               ),
-                            )
-                          : SvgPicture.asset(
-                              "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
-                              colorFilter: ColorFilter.mode(
-                                  HMSThemeColors.onSurfaceHighEmphasis,
-                                  BlendMode.srcIn),
-                              semanticsLabel: "chat_button",
-                            ),
-                    ),
-                  );
-                }),
+                      ),
+                    );
+                  }),
 
             ///Menu Button
             HMSEmbeddedButton(

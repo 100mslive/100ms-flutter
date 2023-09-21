@@ -1,3 +1,40 @@
+# Latest Versions
+
+| Package           | Version                                                                                                   |
+| ------------------| --------------------------------------------------------------------------------------------------------- |
+| hms_room_kit      | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)        |
+| hmssdk_flutter    | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)    |
+
+
+## 1.8.0 - 2023-09-15
+
+### Added
+
+- Added `previewForRole` & `cancelPreview` APIs to preview the audio / video of a particular role before changing into the new Role.
+  ```dart
+  // preview video of a particular role
+  await hmsSDK.previewForRole(role: "viewer-on-stage");
+
+  // cancel preview
+  await hmsSDK.cancelPreview();
+  ```
+
+  Learn more about Change Role [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/peer/change-role)
+
+### Changed
+
+- Starting HLS Streaming will now return an appropriate `HMSException` when any error happens to start the streaming.
+  ```dart
+  Future<HMSException?> startHlsStreaming(
+      {HMSHLSConfig? hmshlsConfig,
+      HMSActionResultListener? hmsActionResultListener})
+  ```
+
+Updated to Android SDK 2.7.6 & iOS SDK 0.9.12
+
+**Full Changelog**: [1.7.5...1.8.0](https://github.com/100mslive/100ms-flutter/compare/1.7.5...1.8.0)
+
+
 ## 1.7.5 - 2023-08-18
 
 Bug fixes and performance improvements

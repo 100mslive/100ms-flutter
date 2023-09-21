@@ -10,7 +10,11 @@ class HMSCommonAction {
         fun getLocalPeer(hmssdk: HMSSDK): HMSLocalPeer? {
             return hmssdk.getLocalPeer()
         }
-        fun getPeerById(id: String, hmssdk: HMSSDK): HMSPeer? {
+
+        fun getPeerById(
+            id: String,
+            hmssdk: HMSSDK,
+        ): HMSPeer? {
             if (id == "") return getLocalPeer(hmssdk)
             val peers = hmssdk.getPeers()
             peers.forEach {
@@ -20,24 +24,26 @@ class HMSCommonAction {
             return null
         }
 
-        fun getActionListener(result: Result) = object : HMSActionResultListener {
-            override fun onError(error: HMSException) {
-                result.success(HMSExceptionExtension.toDictionary(error))
+        fun getActionListener(result: Result) =
+            object : HMSActionResultListener {
+                override fun onError(error: HMSException) {
+                    result.success(HMSExceptionExtension.toDictionary(error))
+                }
+
+                override fun onSuccess() {
+                    result.success(null)
+                }
             }
 
-            override fun onSuccess() {
-                result.success(null)
-            }
-        }
+        fun getTokenListener(result: Result) =
+            object : HMSTokenListener {
+                override fun onError(error: HMSException) {
+                    result.success(HMSResultExtension.toDictionary(success = false, data = HMSExceptionExtension.toDictionary(error)))
+                }
 
-        fun getTokenListener(result: Result) = object : HMSTokenListener {
-            override fun onError(error: HMSException) {
-                result.success(HMSResultExtension.toDictionary(success = false, data = HMSExceptionExtension.toDictionary(error)))
+                override fun onTokenSuccess(string: String) {
+                    result.success(HMSResultExtension.toDictionary(success = true, data = string))
+                }
             }
-
-            override fun onTokenSuccess(string: String) {
-                result.success(HMSResultExtension.toDictionary(success = true, data = string))
-            }
-        }
     }
 }

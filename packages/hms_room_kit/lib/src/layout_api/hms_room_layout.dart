@@ -2,11 +2,12 @@
 import 'dart:convert';
 
 ///Package imports
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/hmssdk_interactor.dart';
 import 'package:hms_room_kit/src/layout_api/hms_conferencing_items.dart';
-import 'package:hms_room_kit/src/service/app_secrets.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class Theme {
   final String? name;
@@ -219,9 +220,10 @@ class HMSRoomLayout {
   static Future<void> getRoomLayout(
       {required HMSSDKInteractor hmsSDKInteractor,
       required String authToken,
+      required String? endPoint,
       String? roleName}) async {
     dynamic value = await hmsSDKInteractor.getRoomLayout(
-        authToken: authToken, endPoint: getLayoutAPIEndpoint());
+        authToken: authToken, endPoint: endPoint);
     if (value != null && value.runtimeType != HMSException) {
       _setLayout(layoutJson: jsonDecode(value));
       resetLayout(roleName);
@@ -249,16 +251,18 @@ class HMSRoomLayout {
       isParticipantsListEnabled = roleLayoutData
               ?.screens?.conferencing?.defaultConf?.elements?.participantList !=
           null;
-      isBRBEnabled = roleLayoutData?.screens?.conferencing?.defaultConf
-              ?.elements?.brb != null;
+      isBRBEnabled =
+          roleLayoutData?.screens?.conferencing?.defaultConf?.elements?.brb !=
+              null;
     } else {
       chatData = roleLayoutData
           ?.screens?.conferencing?.hlsLiveStreaming?.elements?.chat;
       isParticipantsListEnabled = roleLayoutData?.screens?.conferencing
               ?.hlsLiveStreaming?.elements?.participantList !=
           null;
-      isBRBEnabled = roleLayoutData?.screens?.conferencing?.hlsLiveStreaming
-              ?.elements?.brb != null;
+      isBRBEnabled = roleLayoutData
+              ?.screens?.conferencing?.hlsLiveStreaming?.elements?.brb !=
+          null;
     }
   }
 

@@ -23,6 +23,7 @@ example/ios/Runner/GoogleService-Info.plist
 release-apps.sh
 example/lib/firebase_options.dart
 example/lib/service/firebase_options.dart
+example/lib/app_secrets.dart
 
 mobx-example-app
 example_riverpod

@@ -3,7 +3,6 @@ package live.hms.hmssdk_flutter.hls_player
 import live.hms.stats.model.PlayerStatsModel
 
 class HMSPlayerStatsExtension {
-
     companion object {
         fun toDictionary(hmsPlayerStatsModel: PlayerStatsModel): Map<String, Any?> {
             val args = HashMap<String, Any?>()

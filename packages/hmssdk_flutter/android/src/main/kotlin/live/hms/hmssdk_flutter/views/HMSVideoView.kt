@@ -26,22 +26,26 @@ class HMSVideoView(
     private val disableAutoSimulcastLayerSelect: Boolean,
     private val hmssdkFlutterPlugin: HmssdkFlutterPlugin?,
 ) : FrameLayout(context, null) {
-
     private var hmsVideoView: HMSVideoView? = null
     private var view: View? = null
-    private val broadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(contxt: Context?, intent: Intent?) {
-            if (intent?.action == track?.trackId) {
-                when (intent?.extras?.getString(METHOD_CALL)) {
-                    "CAPTURE_SNAPSHOT" -> {
-                        return captureSnapshot()
+    private val broadcastReceiver =
+        object : BroadcastReceiver() {
+            override fun onReceive(
+                contxt: Context?,
+                intent: Intent?,
+            ) {
+                if (intent?.action == track?.trackId) {
+                    when (intent?.extras?.getString(METHOD_CALL)) {
+                        "CAPTURE_SNAPSHOT" -> {
+                            return captureSnapshot()
+                        }
                     }
+                } else {
+                    Log.e("Receiver error", "No receiver found for given action")
                 }
-            } else {
-                Log.e("Receiver error", "No receiver found for given action")
             }
         }
-    }
+
     init {
         view =
             (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.hms_video_view, this)

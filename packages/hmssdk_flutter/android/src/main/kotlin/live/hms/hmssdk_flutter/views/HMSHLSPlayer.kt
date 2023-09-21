@@ -1,13 +1,11 @@
 package live.hms.hmssdk_flutter.views
 
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.FrameLayout
 import androidx.media3.common.Player
 import androidx.media3.common.VideoSize
@@ -40,7 +38,6 @@ class HMSHLSPlayer(
     private val isHLSStatsRequired: Boolean,
     showHLSControls: Boolean,
 ) : FrameLayout(context, null) {
-
     var hlsPlayer: HmsHlsPlayer? = null
     private var hlsPlayerView: PlayerView? = null
 
@@ -65,27 +62,32 @@ class HMSHLSPlayer(
             // Set the native player of the HLS player view.
             it.player = hlsPlayer?.getNativePlayer()
 
-            it.player?.addListener(object : Player.Listener {
-                override fun onSurfaceSizeChanged(width: Int, height: Int) {
-                    super.onSurfaceSizeChanged(width, height)
+            it.player?.addListener(
+                object : Player.Listener {
+                    override fun onSurfaceSizeChanged(
+                        width: Int,
+                        height: Int,
+                    ) {
+                        super.onSurfaceSizeChanged(width, height)
+                    }
 
-                }
-                override fun onVideoSizeChanged(videoSize: VideoSize) {
-                    super.onVideoSizeChanged(videoSize)
+                    override fun onVideoSizeChanged(videoSize: VideoSize) {
+                        super.onVideoSizeChanged(videoSize)
 
-                        if (videoSize.height !=0 && videoSize.width !=0) {
+                        if (videoSize.height != 0 && videoSize.width != 0) {
                             val width = videoSize.width
                             val height = videoSize.height
 
-                            //landscape play
+                            // landscape play
                             if (width >= height) {
                                 hlsPlayerView?.resizeMode = RESIZE_MODE_FIT
                             } else {
                                 hlsPlayerView?.resizeMode = RESIZE_MODE_ZOOM
                             }
                         }
-                }
-            })
+                    }
+                },
+            )
         } ?: run {
             HMSErrorLogger.logError("init HMSHLSPlayer", "hlsPlayerView is null", "NULL_ERROR")
         }
@@ -156,106 +158,110 @@ class HMSHLSPlayer(
      * An object implementing the HmsHlsPlaybackEvents interface.
      * It handles the events related to HLS playback.
      */
-    private val hmsHLSPlaybackEvents = object : HmsHlsPlaybackEvents {
-
-        /**
-         * Callback function triggered when there is a playback failure in the HLS player.
-         * It constructs a HashMap with the event details and error information, and sends it to the Flutter side through the plugin's sink.
-         * - Parameters:
-         *   - error: The HmsHlsException object representing the playback failure.
-         */
-        override fun onPlaybackFailure(error: HmsHlsException) {
-            val hashMap: HashMap<String, Any?> = HashMap()
-            val args: HashMap<String, String?> = HashMap()
-            hashMap["event_name"] = "on_playback_failure"
-            args["error"] = error.error.localizedMessage
-            hashMap["data"] = args
-            CoroutineScope(Dispatchers.Main).launch {
-                hmssdkFlutterPlugin?.hlsPlayerSink?.success(hashMap)
-            }
-        }
-
-        /**
-         * Callback function triggered when the playback state of the HLS player changes.
-         * It constructs a HashMap with the event details and the playback state information,
-         * and sends it to the Flutter side through the plugin's sink.
-         * - Parameters:
-         *   - p1: The HmsHlsPlaybackState representing the updated playback state.
-         */
-        override fun onPlaybackStateChanged(p1: HmsHlsPlaybackState) {
-            val hashMap: HashMap<String, Any?> = HashMap()
-            hashMap["event_name"] = "on_playback_state_changed"
-            hashMap["data"] = HMSHLSPlaybackStateExtension.toDictionary(p1)
-            if (hashMap["data"] != null) {
+    private val hmsHLSPlaybackEvents =
+        object : HmsHlsPlaybackEvents {
+            /**
+             * Callback function triggered when there is a playback failure in the HLS player.
+             * It constructs a HashMap with the event details and error information, and sends it to the Flutter side through the plugin's sink.
+             * - Parameters:
+             *   - error: The HmsHlsException object representing the playback failure.
+             */
+            override fun onPlaybackFailure(error: HmsHlsException) {
+                val hashMap: HashMap<String, Any?> = HashMap()
+                val args: HashMap<String, String?> = HashMap()
+                hashMap["event_name"] = "on_playback_failure"
+                args["error"] = error.error.localizedMessage
+                hashMap["data"] = args
                 CoroutineScope(Dispatchers.Main).launch {
                     hmssdkFlutterPlugin?.hlsPlayerSink?.success(hashMap)
                 }
             }
-        }
 
-        /**
-         * Callback function triggered when a cue event occurs in the HLS player.
-         * It constructs a HashMap with the event details and the cue information,
-         * and sends it to the Flutter side through the plugin's sink.
-         * - Parameters:
-         *   - hlsCue: The HmsHlsCue representing the cue event.
-         */
-        override fun onCue(hlsCue: HmsHlsCue) {
-            val hashMap: HashMap<String, Any?> = HashMap()
-            hashMap["event_name"] = "on_cue"
-            hashMap["data"] = HMSHLSCueExtension.toDictionary(hlsCue)
-            if (hashMap["data"] != null) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    hmssdkFlutterPlugin?.hlsPlayerSink?.success(hashMap)
+            /**
+             * Callback function triggered when the playback state of the HLS player changes.
+             * It constructs a HashMap with the event details and the playback state information,
+             * and sends it to the Flutter side through the plugin's sink.
+             * - Parameters:
+             *   - p1: The HmsHlsPlaybackState representing the updated playback state.
+             */
+            override fun onPlaybackStateChanged(p1: HmsHlsPlaybackState) {
+                val hashMap: HashMap<String, Any?> = HashMap()
+                hashMap["event_name"] = "on_playback_state_changed"
+                hashMap["data"] = HMSHLSPlaybackStateExtension.toDictionary(p1)
+                if (hashMap["data"] != null) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        hmssdkFlutterPlugin?.hlsPlayerSink?.success(hashMap)
+                    }
+                }
+            }
+
+            /**
+             * Callback function triggered when a cue event occurs in the HLS player.
+             * It constructs a HashMap with the event details and the cue information,
+             * and sends it to the Flutter side through the plugin's sink.
+             * - Parameters:
+             *   - hlsCue: The HmsHlsCue representing the cue event.
+             */
+            override fun onCue(hlsCue: HmsHlsCue) {
+                val hashMap: HashMap<String, Any?> = HashMap()
+                hashMap["event_name"] = "on_cue"
+                hashMap["data"] = HMSHLSCueExtension.toDictionary(hlsCue)
+                if (hashMap["data"] != null) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        hmssdkFlutterPlugin?.hlsPlayerSink?.success(hashMap)
+                    }
                 }
             }
         }
-    }
 
     /**
      * An object implementing the BroadcastReceiver interface.
      * It handles the events related to HLS Controller.
      */
-    private val broadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(contxt: Context?, intent: Intent?) {
-            if (intent?.action == HLS_PLAYER_INTENT) {
-                when (intent.extras?.getString(Constants.METHOD_CALL)) {
-                    "start_hls_player" -> {
-                        return start(intent.extras?.getString("hls_url"))
+    private val broadcastReceiver =
+        object : BroadcastReceiver() {
+            override fun onReceive(
+                contxt: Context?,
+                intent: Intent?,
+            ) {
+                if (intent?.action == HLS_PLAYER_INTENT) {
+                    when (intent.extras?.getString(Constants.METHOD_CALL)) {
+                        "start_hls_player" -> {
+                            return start(intent.extras?.getString("hls_url"))
+                        }
+                        "stop_hls_player" -> {
+                            return stop()
+                        }
+                        "pause_hls_player" -> {
+                            return pause()
+                        }
+                        "resume_hls_player" -> {
+                            return resume()
+                        }
+                        "seek_to_live_position" -> {
+                            return seekToLivePosition()
+                        }
+                        "seek_forward" -> {
+                            return seekForward(intent.extras?.getInt("seconds"))
+                        }
+                        "seek_backward" -> {
+                            return seekBackward(intent.extras?.getInt("seconds"))
+                        }
+                        "set_volume" -> {
+                            return setVolume(intent.extras?.getInt("volume"))
+                        }
+                        "add_hls_stats_listener" -> {
+                            return HLSStatsHandler.addHLSStatsListener(hmssdkFlutterPlugin, hlsPlayer)
+                        }
+                        "remove_hls_stats_listener" -> {
+                            return HLSStatsHandler.removeStatsListener(hlsPlayer)
+                        }
                     }
-                    "stop_hls_player" -> {
-                        return stop()
-                    }
-                    "pause_hls_player" -> {
-                        return pause()
-                    }
-                    "resume_hls_player" -> {
-                        return resume()
-                    }
-                    "seek_to_live_position" -> {
-                        return seekToLivePosition()
-                    }
-                    "seek_forward" -> {
-                        return seekForward(intent.extras?.getInt("seconds"))
-                    }
-                    "seek_backward" -> {
-                        return seekBackward(intent.extras?.getInt("seconds"))
-                    }
-                    "set_volume" -> {
-                        return setVolume(intent.extras?.getInt("volume"))
-                    }
-                    "add_hls_stats_listener" -> {
-                        return HLSStatsHandler.addHLSStatsListener(hmssdkFlutterPlugin, hlsPlayer)
-                    }
-                    "remove_hls_stats_listener" -> {
-                        return HLSStatsHandler.removeStatsListener(hlsPlayer)
-                    }
+                } else {
+                    Log.e("Receiver error", "No receiver found for given action")
                 }
-            } else {
-                Log.e("Receiver error", "No receiver found for given action")
             }
         }
-    }
 
     /**
      * Below methods handles the HLS Player controller calls

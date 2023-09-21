@@ -29,13 +29,13 @@ import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 ///This renders the Preview Screen
 class PreviewPage extends StatefulWidget {
   final String name;
-  final String meetingLink;
+  final String roomCode;
   final HMSPrebuiltOptions? options;
 
   const PreviewPage(
       {super.key,
       required this.name,
-      required this.meetingLink,
+      required this.roomCode,
       required this.options});
   @override
   State<PreviewPage> createState() => _PreviewPageState();
@@ -79,7 +79,7 @@ class _PreviewPageState extends State<PreviewPage> {
 
       /// We join the room here
       HMSException? ans =
-          await _meetingStore.join(nameController.text, widget.meetingLink);
+          await _meetingStore.join(nameController.text, Constant.roomCode);
 
       ///If the room join fails we show the error dialog
       if (ans != null && mounted) {
@@ -155,7 +155,7 @@ class _PreviewPageState extends State<PreviewPage> {
                   context,
                   CupertinoPageRoute(
                       builder: (_) => ScreenController(
-                            roomCode: widget.meetingLink,
+                            roomCode: Constant.roomCode,
                             options: widget.options,
                           ))),
             }
@@ -188,7 +188,7 @@ class _PreviewPageState extends State<PreviewPage> {
                       value: _meetingStore,
                       child: MeetingScreenController(
                         role: previewStore.peer?.role,
-                        roomCode: widget.meetingLink,
+                        roomCode: Constant.roomCode,
                         localPeerNetworkQuality: null,
                         user: nameController.text,
                       ),

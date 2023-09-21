@@ -45,9 +45,6 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
         meetingStore.localPeer?.role.permissions.removeOthers ?? false;
     bool changeRolePermission =
         meetingStore.localPeer?.role.permissions.changeRole ?? false;
-
-    bool isHandRaised =
-        peer.metadata?.contains("\"isHandRaised\":true") ?? false;
     bool isOnStageRole = meetingStore.getOnStageRole()?.name == peer.role.name;
     bool isOnStageExpPresent = HMSRoomLayout.peerType == PeerRoleType.hlsViewer
         ? HMSRoomLayout.roleLayoutData?.screens?.conferencing?.hlsLiveStreaming
@@ -57,6 +54,11 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                 ?.elements?.onStageExp !=
             null;
     bool isOffStageRole = meetingStore.isOffStageRole(peer.role.name);
+
+    ///Here we check whether to show three dots or not
+    ///We show three dots if the peer is not local
+    ///and the local peer has any of the following permissions:
+    ///changeRole, removeOthers, mute/unmute others
     return (!peer.isLocal &&
             (changeRolePermission || removePeerPermission || mutePermission))
         ? PopupMenuButton(
@@ -66,8 +68,17 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             onSelected: (int value) async {
+              ///Here we have defined the functions to be executed on clicking the options
               switch (value) {
                 case 1:
+
+                  ///If the peer is onStage already we show the option to remove from stage
+                  ///and the peer's role is changed to it's previous role
+                  ///
+                  ///If the peer is offStage we show the option to bring on stage
+                  ///and the peer 's role is changed to offStageRole from layout api
+                  ///We also update the peer metadata with the previous role
+                  ///which will be used while removing the peer from stage
                   if (isOnStageRole) {
                     if (peer.metadata != null) {
                       String? peerMetadata = peer.metadata;
@@ -100,6 +111,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                   }
                   break;
                 case 2:
+
+                  ///Here we check whether the video track is null or not
                   if (peerTrackNode?.track == null) {
                     return;
                   }
@@ -107,6 +120,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                       peerTrackNode!.track!, !peerTrackNode.track!.isMute);
                   break;
                 case 3:
+
+                  ///Here we check whether the audio track is null or not
                   if (peerTrackNode?.audioTrack == null) {
                     return;
                   }
@@ -114,6 +129,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                       !peerTrackNode.audioTrack!.isMute);
                   break;
                 case 4:
+
+                  ///This is called when someone clicks on remove Participant
                   meetingStore.removePeerFromRoom(peer);
                   break;
                 default:
@@ -128,7 +145,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
             itemBuilder: (context) => [
                   if (changeRolePermission &&
                       isOnStageExpPresent &&
-                      ((isHandRaised && isOffStageRole) || isOnStageRole))
+                      (isOffStageRole || isOnStageRole))
                     PopupMenuItem(
                       value: 1,
                       child: Row(children: [
@@ -155,8 +172,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                     ),
                   if (mutePermission &&
                       peerTrackNode != null &&
-                      !peerTrackNode.peer.isLocal &&
-                      isOnStageRole)
+                      !peerTrackNode.peer.isLocal)
                     PopupMenuItem(
                       value: 2,
                       child: Row(children: [
@@ -185,8 +201,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                     ),
                   if (mutePermission &&
                       peerTrackNode != null &&
-                      !peerTrackNode.peer.isLocal &&
-                      isOnStageRole)
+                      !peerTrackNode.peer.isLocal)
                     PopupMenuItem(
                       value: 3,
                       child: Row(children: [
@@ -343,7 +358,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                           Padding(
                                                             padding:
                                                                 const EdgeInsets
-                                                                        .fromLTRB(
+                                                                    .fromLTRB(
                                                                     16,
                                                                     8,
                                                                     16,
@@ -377,6 +392,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                                             letterSpacing: 0.1,
                                                                             textColor: HMSThemeColors.onSurfaceHighEmphasis);
                                                                       }),
+
+                                                                  ///This contains the network quality, hand raise icon and kebab menu
                                                                   Row(
                                                                     children: [
                                                                       Selector<

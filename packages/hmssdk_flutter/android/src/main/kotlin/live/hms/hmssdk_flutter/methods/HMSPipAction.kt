@@ -10,13 +10,17 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
 
 class HMSPipAction {
-
     companion object {
         var pipResult: Result? = null
         private var pipAutoEnterEnabled = false
         private var pipAspectRatio = mutableListOf(16, 9)
         private var isPIPEnabled = false
-        fun pipActions(call: MethodCall, result: Result, activity: Activity) {
+
+        fun pipActions(
+            call: MethodCall,
+            result: Result,
+            activity: Activity,
+        ) {
             when (call.method) {
                 "enter_pip_mode" -> {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -45,7 +49,10 @@ class HMSPipAction {
             }
         }
 
-        private fun setupPIP(call: MethodCall, result: Result) {
+        private fun setupPIP(
+            call: MethodCall,
+            result: Result,
+        ) {
             isPIPEnabled = true
             call.argument<List<Int>?>("ratio")?.let {
                 pipAspectRatio = it.toMutableList()
@@ -56,7 +63,11 @@ class HMSPipAction {
             result.success(null)
         }
 
-        private fun destroyPIP(call: MethodCall, result: Result, activity: Activity) {
+        private fun destroyPIP(
+            call: MethodCall,
+            result: Result,
+            activity: Activity,
+        ) {
             pipAspectRatio = mutableListOf(16, 9)
             pipAutoEnterEnabled = false
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && activity.isInPictureInPictureMode) {
@@ -73,7 +84,11 @@ class HMSPipAction {
         }
 
         @RequiresApi(Build.VERSION_CODES.O)
-        private fun enterPipMode(call: MethodCall, result: Result, activity: Activity) {
+        private fun enterPipMode(
+            call: MethodCall,
+            result: Result,
+            activity: Activity,
+        ) {
             isPIPEnabled = true
             call.argument<List<Int>>("aspect_ratio")?.let {
                 pipAspectRatio = it.toMutableList()

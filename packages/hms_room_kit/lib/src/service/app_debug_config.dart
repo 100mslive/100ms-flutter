@@ -16,7 +16,7 @@ class AppDebugConfig {
   static bool isAutoSimulcast = true;
 
   static bool isDebugMode = false;
-  static bool isMockLayoutAPIEnabled = false;
+  static bool isProdRoom = true;
 
   /// The [iOSScreenshareConfig] contains the configuration for the iOS screenshare
   static HMSIOSScreenshareConfig? iOSScreenshareConfig;
@@ -31,6 +31,6 @@ class AppDebugConfig {
     isSoftwareDecoderDisabled = true;
     isAudioMixerDisabled = true;
     isAutoSimulcast = true;
-    isMockLayoutAPIEnabled = false;
+    isProdRoom = true;
   }
 }

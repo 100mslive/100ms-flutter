@@ -1,18 +1,18 @@
 version: 0.1
 cli:
-  version: 1.14.2
+  version: 1.15.0
 plugins:
   sources:
     - id: trunk
-      ref: v1.2.2
+      ref: v1.2.3
       uri: https://github.com/trunk-io/plugins
 lint:
   enabled:
     - actionlint@1.6.25
     - checkov@2.4.9
-    - osv-scanner@1.3.6
-    - trivy@0.44.1
-    - trufflehog@3.54.3
+    - osv-scanner@1.4.0
+    - trivy@0.45.0
+    - trufflehog@3.55.1
     - oxipng@8.0.0
     - yamllint@1.32.0
     - markdownlint@0.36.0
@@ -22,7 +22,7 @@ lint:
     - shellcheck@0.9.0
     - gitleaks@8.18.0
     - svgo@3.0.2
-    - ktlint@0.50.0
+    - ktlint@1.0.0
 runtimes:
   enabled:
     - python@3.10.8

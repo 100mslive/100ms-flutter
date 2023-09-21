@@ -11,7 +11,11 @@ import live.hms.video.sdk.models.*
 
 class HMSAudioDeviceAction {
     companion object {
-        fun audioDeviceActions(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        fun audioDeviceActions(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             when (call.method) {
                 "get_audio_devices_list" -> {
                     getAudioDevicesList(call, result, hmssdk)
@@ -28,7 +32,11 @@ class HMSAudioDeviceAction {
             }
         }
 
-        private fun getAudioDevicesList(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        private fun getAudioDevicesList(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             val audioDevicesList = ArrayList<String>()
             for (device in hmssdk.getAudioDevicesList()) {
                 audioDevicesList.add(device.name)
@@ -38,13 +46,21 @@ class HMSAudioDeviceAction {
             }
         }
 
-        private fun getCurrentDevice(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        private fun getCurrentDevice(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             CoroutineScope(Dispatchers.Main).launch {
                 result.success(hmssdk.getAudioOutputRouteType().name)
             }
         }
 
-        private fun switchAudioOutput(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        private fun switchAudioOutput(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             var argument: String? = call.argument<String>("audio_device_name")
             if (argument != null) {
                 var audioDevice: HMSAudioManager.AudioDevice = HMSAudioManager.AudioDevice.valueOf(argument)

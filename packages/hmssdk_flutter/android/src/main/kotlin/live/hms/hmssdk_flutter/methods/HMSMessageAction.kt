@@ -10,7 +10,11 @@ import live.hms.video.sdk.models.HMSMessage
 
 class HMSMessageAction {
     companion object {
-        fun messageActions(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        fun messageActions(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             when (call.method) {
                 "send_broadcast_message" -> {
                     sendBroadCastMessage(call, result, hmssdk)
@@ -27,13 +31,21 @@ class HMSMessageAction {
             }
         }
 
-        private fun sendBroadCastMessage(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        private fun sendBroadCastMessage(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             val message = call.argument<String>("message")
             val type = call.argument<String>("type") ?: "chat"
             hmssdk?.sendBroadcastMessage(message!!, type, getMessageResultListener(result))
         }
 
-        private fun sendGroupMessage(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        private fun sendGroupMessage(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             val message = call.argument<String>("message")
             val roles: List<String>? = call.argument<List<String>>("roles")
             val type = call.argument<String>("type") ?: "chat"
@@ -43,7 +55,11 @@ class HMSMessageAction {
             hmssdk?.sendGroupMessage(message!!, type, hmsRoles, getMessageResultListener(result))
         }
 
-        private fun sendDirectMessage(call: MethodCall, result: Result, hmssdk: HMSSDK) {
+        private fun sendDirectMessage(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK,
+        ) {
             val message = call.argument<String>("message")
             val peerId = call.argument<String>("peer_id")
 
@@ -51,24 +67,26 @@ class HMSMessageAction {
             val peer = HMSCommonAction.getPeerById(peerId!!, hmssdk)
             hmssdk?.sendDirectMessage(message!!, type, peer!!, getMessageResultListener(result))
         }
-        private fun getMessageResultListener(result: Result) = object : HMSMessageResultListener {
-            override fun onError(error: HMSException) {
-                val args = HashMap<String, Any?>()
-                args["event_name"] = "on_error"
-                args["data"] = HMSExceptionExtension.toDictionary(error)
-                if (args["data"] != null) {
+
+        private fun getMessageResultListener(result: Result) =
+            object : HMSMessageResultListener {
+                override fun onError(error: HMSException) {
+                    val args = HashMap<String, Any?>()
+                    args["event_name"] = "on_error"
+                    args["data"] = HMSExceptionExtension.toDictionary(error)
+                    if (args["data"] != null) {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            result.success(args)
+                        }
+                    }
+                }
+
+                override fun onSuccess(hmsMessage: HMSMessage) {
+                    val args = HMSMessageExtension.toDictionary(hmsMessage)
                     CoroutineScope(Dispatchers.Main).launch {
                         result.success(args)
                     }
                 }
             }
-
-            override fun onSuccess(hmsMessage: HMSMessage) {
-                val args = HMSMessageExtension.toDictionary(hmsMessage)
-                CoroutineScope(Dispatchers.Main).launch {
-                    result.success(args)
-                }
-            }
-        }
     }
 }
