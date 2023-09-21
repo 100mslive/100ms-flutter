@@ -25,31 +25,28 @@ class HMSPrebuilt extends StatelessWidget {
   ///The callback for the leave room button
   ///This function can be passed if you wish to perform some specific actions
   ///in addition to leaving the room when the leave room button is pressed
-  final Function? onLeaveRoomCallback;
+  final Function? onLeave;
 
   ///The key for the widget
   const HMSPrebuilt(
-      {super.key,
-      required this.roomCode,
-      this.options,
-      this.onLeaveRoomCallback});
+      {super.key, required this.roomCode, this.options, this.onLeave});
 
   ///Builds the widget
   ///Returns a [ScreenController] widget
   ///The [ScreenController] is the main widget that renders the prebuilt
   ///For more details checkout the [ScreenController] class
-  ///It takes the [roomCode],[options] and [onLeaveRoomCallback] as parameters
+  ///It takes the [roomCode],[options] and [onLeave] as parameters
   ///The [roomCode] is the room code of the room to join
   ///The [options] are the options for the prebuilt
   ///For more details checkout the [HMSPrebuiltOptions] class
   ///The [options] are optional and are used to customize the prebuilt
-  ///The [onLeaveRoomCallback] is the callback for the leave room button
+  ///The [onLeave] is the callback for the leave room button
   @override
   Widget build(BuildContext context) {
     return ScreenController(
       roomCode: roomCode,
       options: options,
-      onLeaveRoomCallback: onLeaveRoomCallback,
+      onLeave: onLeave,
     );
   }
 }
