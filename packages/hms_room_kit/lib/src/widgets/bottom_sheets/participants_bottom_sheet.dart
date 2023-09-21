@@ -71,10 +71,11 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
               ///Here we have defined the functions to be executed on clicking the options
               switch (value) {
                 case 1:
+
                   ///If the peer is onStage already we show the option to remove from stage
                   ///and the peer's role is changed to it's previous role
                   ///
-                  ///If the peer is offStage we show the option to bring on stage 
+                  ///If the peer is offStage we show the option to bring on stage
                   ///and the peer 's role is changed to offStageRole from layout api
                   ///We also update the peer metadata with the previous role
                   ///which will be used while removing the peer from stage
@@ -110,6 +111,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                   }
                   break;
                 case 2:
+
                   ///Here we check whether the video track is null or not
                   if (peerTrackNode?.track == null) {
                     return;
@@ -118,6 +120,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                       peerTrackNode!.track!, !peerTrackNode.track!.isMute);
                   break;
                 case 3:
+
                   ///Here we check whether the audio track is null or not
                   if (peerTrackNode?.audioTrack == null) {
                     return;
@@ -126,6 +129,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                       !peerTrackNode.audioTrack!.isMute);
                   break;
                 case 4:
+
                   ///This is called when someone clicks on remove Participant
                   meetingStore.removePeerFromRoom(peer);
                   break;
@@ -354,7 +358,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                           Padding(
                                                             padding:
                                                                 const EdgeInsets
-                                                                        .fromLTRB(
+                                                                    .fromLTRB(
                                                                     16,
                                                                     8,
                                                                     16,
