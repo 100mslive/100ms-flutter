@@ -2179,8 +2179,7 @@ class MeetingStore extends ChangeNotifier
           }
         }
       }
-    }
-    else if (state == AppLifecycleState.inactive) {
+    } else if (state == AppLifecycleState.inactive) {
       if (Platform.isAndroid && !isPipActive) {
         isPipActive = await HMSAndroidPIPController.isActive();
       }
