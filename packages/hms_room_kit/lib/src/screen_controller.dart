@@ -49,7 +49,7 @@ class _ScreenControllerState extends State<ScreenController> {
     Constant.prebuiltOptions = widget.options;
     Constant.roomCode = widget.roomCode;
     Constant.onLeave = widget.onLeave;
-
+    Constant.isPIPAllowed = widget.options?.isPIPAllowed ?? false;
     ///Here we set the endPoints if it's non-null
     if (widget.options?.endPoints != null) {
       _setEndPoints(widget.options!.endPoints!);

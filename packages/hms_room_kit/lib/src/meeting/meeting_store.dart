@@ -604,6 +604,13 @@ class MeetingStore extends ChangeNotifier
       previousRole = localPeer?.role.name;
       if (isRaisedHand) {
         changeMetadata();
+      } else {
+        ///Setting the previous role
+        String value = isRaisedHand ? "true" : "false";
+        _hmsSDKInteractor.changeMetadata(
+            metadata:
+                "{\"isHandRaised\":$value,\"isBRBOn\":false,\"prevRole\":\"$previousRole\"}",
+            hmsActionResultListener: this);
       }
       HMSRoomLayout.resetLayout(hmsRoleChangeRequest.suggestedRole.name);
       currentRoleChangeRequest = null;
@@ -745,15 +752,18 @@ class MeetingStore extends ChangeNotifier
     getAudioDevicesList();
     notifyListeners();
 
-    if (Platform.isIOS &&
-        HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf !=
-            null) {
-      HMSIOSPIPController.setup(
-          autoEnterPip: true,
-          aspectRatio: [9, 16],
-          backgroundColor: Colors.black);
-    } else if (Platform.isAndroid) {
-      HMSAndroidPIPController.setup();
+    ///PIP Only needs to be called when it's enabled from PIP
+    if (Constant.isPIPAllowed) {
+      if (Platform.isIOS &&
+          HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf !=
+              null) {
+        HMSIOSPIPController.setup(
+            autoEnterPip: true,
+            aspectRatio: [9, 16],
+            backgroundColor: Colors.black);
+      } else if (Platform.isAndroid) {
+        HMSAndroidPIPController.setup(aspectRatio: [9, 16]);
+      }
     }
   }
 
@@ -1008,7 +1018,8 @@ class MeetingStore extends ChangeNotifier
     }
 
     // Below code for change track and text in PIP mode iOS and android.
-    if (updateSpeakers.isNotEmpty) {
+    //This is only executed if PIP is enabled
+    if (Constant.isPIPAllowed && updateSpeakers.isNotEmpty) {
       if (Platform.isIOS && (screenShareCount == 0 || isScreenShareOn)) {
         if (updateSpeakers[0].peer.videoTrack != null) {
           changePIPWindowTrackOnIOS(
@@ -1176,7 +1187,7 @@ class MeetingStore extends ChangeNotifier
 // Helper Methods
 
   void clearRoomState() async {
-    // clearPIPState();
+    clearPIPState();
     removeListeners();
     toggleAlwaysScreenOn();
     _hmsSDKInteractor.destroy();
@@ -1198,10 +1209,12 @@ class MeetingStore extends ChangeNotifier
   }
 
   void clearPIPState() {
-    if (Platform.isAndroid) {
-      HMSAndroidPIPController.destroy();
-    } else if (Platform.isIOS) {
-      HMSIOSPIPController.destroy();
+    if (Constant.isPIPAllowed) {
+      if (Platform.isAndroid) {
+        HMSAndroidPIPController.destroy();
+      } else if (Platform.isIOS) {
+        HMSIOSPIPController.destroy();
+      }
     }
   }
 
@@ -1371,7 +1384,7 @@ class MeetingStore extends ChangeNotifier
           }
         }
 
-        if (peer.isLocal) {
+        if (peer.isLocal && Constant.isPIPAllowed) {
           if (Platform.isIOS) {
             if (HMSRoomLayout
                     .roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
@@ -1781,7 +1794,7 @@ class MeetingStore extends ChangeNotifier
 
   void enterPipModeOnAndroid() async {
     //to check whether pip is available in android
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid && Constant.isPIPAllowed) {
       bool isPipAvailable = await HMSAndroidPIPController.isAvailable();
       if (isPipAvailable) {
         //[isPipActive] method can also be used to check whether application is in pip Mode or not
@@ -1792,16 +1805,19 @@ class MeetingStore extends ChangeNotifier
   }
 
   Future<bool> isPIPActive() async {
-    if (Platform.isAndroid) {
-      isPipActive = await HMSAndroidPIPController.isActive();
-    } else if (Platform.isIOS) {
-      isPipActive = await HMSIOSPIPController.isActive();
+    if (Constant.isPIPAllowed) {
+      if (Platform.isAndroid) {
+        isPipActive = await HMSAndroidPIPController.isActive();
+      } else if (Platform.isIOS) {
+        isPipActive = await HMSIOSPIPController.isActive();
+      }
+      return isPipActive;
     }
-    return isPipActive;
+    return false;
   }
 
   void changePIPWindowOnAndroid(String uid) {
-    if (Platform.isAndroid && isPipActive) {
+    if (Constant.isPIPAllowed && Platform.isAndroid && isPipActive) {
       int index = -1;
       index = peerTracks.indexWhere((element) => element.uid == uid);
       if (index != -1) {
@@ -1821,7 +1837,7 @@ class MeetingStore extends ChangeNotifier
       {HMSVideoTrack? track,
       required String alternativeText,
       required List<int> ratio}) async {
-    if (Platform.isIOS && track != null) {
+    if (Constant.isPIPAllowed && Platform.isIOS && track != null) {
       isPipActive = await isPIPActive();
       if (isPipActive) {
         HMSIOSPIPController.changeVideoTrack(
@@ -1837,7 +1853,7 @@ class MeetingStore extends ChangeNotifier
 
   void changePIPWindowTextOnIOS(
       {String? text, required List<int> ratio}) async {
-    if (Platform.isIOS && text != null) {
+    if (Constant.isPIPAllowed && Platform.isIOS && text != null) {
       isPipActive = await isPIPActive();
       if (isPipActive) {
         HMSIOSPIPController.changeText(
@@ -2117,7 +2133,7 @@ class MeetingStore extends ChangeNotifier
       return;
     }
     if (state == AppLifecycleState.resumed) {
-      if (Platform.isAndroid) {
+      if (Platform.isAndroid && Constant.isPIPAllowed) {
         isPipActive = await HMSAndroidPIPController.isActive();
       } else if (Platform.isIOS) {
         isPipActive = false;
@@ -2150,7 +2166,7 @@ class MeetingStore extends ChangeNotifier
         lastVideoStatus = true;
       }
 
-      if (Platform.isAndroid) {
+      if (Platform.isAndroid && Constant.isPIPAllowed) {
         isPipActive = await HMSAndroidPIPController.isActive();
         notifyListeners();
       }
@@ -2180,12 +2196,12 @@ class MeetingStore extends ChangeNotifier
         }
       }
     } else if (state == AppLifecycleState.inactive) {
-      if (Platform.isAndroid && !isPipActive) {
+      if (Constant.isPIPAllowed && Platform.isAndroid && !isPipActive) {
         isPipActive = await HMSAndroidPIPController.isActive();
       }
       notifyListeners();
     } else if (state == AppLifecycleState.detached) {
-      if (Platform.isAndroid && !isPipActive) {
+      if (Constant.isPIPAllowed && Platform.isAndroid && !isPipActive) {
         isPipActive = await HMSAndroidPIPController.isActive();
       }
       notifyListeners();
