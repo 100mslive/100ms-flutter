@@ -1,4 +1,4 @@
-name: Build Android Appbundle
+name: Build
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
