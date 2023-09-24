@@ -2145,3 +2145,9 @@ sample apps/flutter-quickstart-app/build/ios/Pods.build/Release-iphonesimulator/
 sample apps/flutter-quickstart-app/build/ios/Pods.build/Release-iphonesimulator/hmssdk_flutter.build/dgph
 sample apps/flutter-quickstart-app/build/ios/Pods.build/Release-iphonesimulator/HMSWebRTC.build/dgph
 sample apps/flutter-quickstart-app/build/ios/Pods.build/Release-iphonesimulator/Pods-Runner.build/dgph
+packages/hms_room_kit/.dart_tool
+packages/hmssdk_flutter/.dart_tool
+packages/hmssdk_flutter/example/.dart_tool
+packages/hmssdk_flutter/example/android/fastlane
+packages/hmssdk_flutter/example/build
+packages/hmssdk_flutter/example/ios/fastlane
