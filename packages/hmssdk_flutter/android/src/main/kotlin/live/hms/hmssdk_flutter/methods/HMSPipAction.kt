@@ -15,6 +15,7 @@ class HMSPipAction {
         private var pipAutoEnterEnabled = false
         private var pipAspectRatio = mutableListOf(16, 9)
         private var isPIPEnabled = false
+        private var pipParams : PictureInPictureParams.Builder? = null
 
         fun pipActions(
             call: MethodCall,
@@ -33,14 +34,9 @@ class HMSPipAction {
                     }
                 }
                 "is_pip_available" -> {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-                        result.success(
-                            activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE),
-                        )
-                    }
-                    else{
-                        result.success(false)
-                    }
+                    result.success(
+                        activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE),
+                    )
                 }
                 "setup_pip" -> {
                     setupPIP(call, result)
@@ -57,13 +53,22 @@ class HMSPipAction {
         private fun setupPIP(
             call: MethodCall,
             result: Result,
-        ) {
+        ){
             isPIPEnabled = true
             call.argument<List<Int>?>("ratio")?.let {
                 pipAspectRatio = it.toMutableList()
             }
             call.argument<Boolean?>("auto_enter_pip")?.let {
                 pipAutoEnterEnabled = it
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                pipParams = PictureInPictureParams.Builder()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    pipParams?.setAutoEnterEnabled(pipAutoEnterEnabled)
+                }
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                pipParams?.build()
             }
             result.success(null)
         }
@@ -102,24 +107,38 @@ class HMSPipAction {
                 pipAutoEnterEnabled = it
             }
 
-            var params = PictureInPictureParams.Builder().setAspectRatio(Rational(pipAspectRatio[0], pipAspectRatio[1]))
+            var params = pipParams?.setAspectRatio(Rational(pipAspectRatio[0], pipAspectRatio[1]))
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                params = params.setAutoEnterEnabled(pipAutoEnterEnabled)
+                params = params?.setAutoEnterEnabled(pipAutoEnterEnabled)
             }
             pipResult = result
-            activity.enterPictureInPictureMode(params.build())
+            params?.let {
+                activity.enterPictureInPictureMode(it.build())
+            }
+        }
+
+        fun enterPIP(activity: Activity){
+            pipParams?.let {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    activity.enterPictureInPictureMode(it.build())
+                } else {
+                    TODO("VERSION.SDK_INT < O")
+                }
+            }
         }
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun autoEnterPipMode(activity: Activity) {
             if (pipAutoEnterEnabled && isPIPEnabled) {
-                var params = PictureInPictureParams.Builder().setAspectRatio(Rational(pipAspectRatio[0], pipAspectRatio[1]))
+                var params =pipParams?.setAspectRatio(Rational(pipAspectRatio[0], pipAspectRatio[1]))
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    params = params.setAutoEnterEnabled(pipAutoEnterEnabled)
+                    params = params?.setAutoEnterEnabled(pipAutoEnterEnabled)
                 }
-                activity.enterPictureInPictureMode(params.build())
+                params?.let {
+                    activity.enterPictureInPictureMode(it.build())
+                }
             }
         }
 
@@ -129,8 +148,10 @@ class HMSPipAction {
          */
         fun disposePIP(activity: Activity) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && isPIPEnabled) {
-                activity.setPictureInPictureParams(PictureInPictureParams.Builder().setAutoEnterEnabled(false).build())
-                isPIPEnabled = false
+                pipParams?.let {
+                    activity.setPictureInPictureParams(it.setAutoEnterEnabled(false).build())
+                    isPIPEnabled = false
+                }
             }
         }
     }
