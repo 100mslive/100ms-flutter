@@ -2113,6 +2113,7 @@ class MeetingStore extends ChangeNotifier
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
+    log("AppState changed -> ${state.name}");
     if (isRoomEnded) {
       return;
     }
@@ -2180,10 +2181,14 @@ class MeetingStore extends ChangeNotifier
         }
       }
     } else if (state == AppLifecycleState.inactive) {
-      if (Platform.isAndroid && !isPipActive) {
-        isPipActive = await HMSAndroidPIPController.isActive();
-      }
-      notifyListeners();
+
+      isPipActive = await HMSAndroidPIPController.isActive();
+      Future.delayed(const Duration(milliseconds: 800)).then((value) async {
+        if (Platform.isAndroid && !isPipActive) {
+          isPipActive = await HMSAndroidPIPController.isActive();
+          notifyListeners();
+        }
+      });
     } else if (state == AppLifecycleState.detached) {
       if (Platform.isAndroid && !isPipActive) {
         isPipActive = await HMSAndroidPIPController.isActive();
