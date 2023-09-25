@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter_example/app_secrets.dart';
 
@@ -38,9 +39,9 @@ class RoomService {
 
   static Map<String, String> setEndPoints() {
     Map<String, String> endPoints = {};
-    endPoints[Constant.tokenEndPointKey] = qaTokenEndPoint;
-    endPoints[Constant.initEndPointKey] = qaInitEndPoint;
-    endPoints[Constant.layoutAPIEndPointKey] = qaLayoutAPIEndPoint;
+    endPoints[Constant.tokenEndPointKey] = "https://auth-nonprod.100ms.live${Platform.isIOS ? "/" : ""}";
+    endPoints[Constant.initEndPointKey] = "https://qa-init.100ms.live/init";
+    endPoints[Constant.layoutAPIEndPointKey] = "https://api-nonprod.100ms.live";
 
     return endPoints;
   }
