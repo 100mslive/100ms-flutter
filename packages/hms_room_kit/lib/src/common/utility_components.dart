@@ -37,116 +37,11 @@ class UtilityComponents {
       ),
       context: context,
       builder: (ctx) => ChangeNotifierProvider.value(
-          value: context.read<MeetingStore>(),
+          value: meetingStore,
           child: LeaveSessionBottomSheet(
             meetingStore: meetingStore,
           )),
     );
-
-    // showDialog(
-    //   context: context,
-    //   builder: (ctx) => AlertDialog(
-    //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-    //     insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-    //     actionsPadding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
-    //     backgroundColor: const Color.fromRGBO(32, 22, 23, 1),
-    //     title: SizedBox(
-    //       width: 300,
-    //       child: Row(
-    //         mainAxisSize: MainAxisSize.min,
-    //         children: [
-    //           SvgPicture.asset(
-    //             "packages/hms_room_kit/lib/src/assets/icons/end.svg",
-    //             width: 24,
-    //           ),
-    //           const SizedBox(
-    //             width: 5,
-    //           ),
-    //           Text(
-    //             'Do you wish to leave?',
-    //             style: HMSTextStyle.setTextStyle(
-    //                 color: errorColor,
-    //                 fontSize: 20,
-    //                 fontWeight: FontWeight.w600,
-    //                 letterSpacing: 0.25),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //     content: Text(
-    //         "You will leave the room immediately. You can’t undo this action.",
-    //         style: HMSTextStyle.setTextStyle(
-    //             color: themeHintColor,
-    //             fontSize: 14,
-    //             fontWeight: FontWeight.w400,
-    //             letterSpacing: 0.25)),
-    //     actions: [
-    //       Row(
-    //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //         children: [
-    //           Expanded(
-    //             child: ElevatedButton(
-    //                 style: ButtonStyle(
-    //                     shadowColor:
-    //                         MaterialStateProperty.all(themeSurfaceColor),
-    //                     backgroundColor: MaterialStateProperty.all(
-    //                       const Color.fromRGBO(32, 22, 23, 1),
-    //                     ),
-    //                     shape:
-    //                         MaterialStateProperty.all<RoundedRectangleBorder>(
-    //                             RoundedRectangleBorder(
-    //                       side: BorderSide(
-    //                           width: 1, color: popupButtonBorderColor),
-    //                       borderRadius: BorderRadius.circular(8.0),
-    //                     ))),
-    //                 onPressed: () => Navigator.pop(context, false),
-    //                 child: Padding(
-    //                   padding: const EdgeInsets.symmetric(
-    //                       horizontal: 8.0, vertical: 12),
-    //                   child: Text('Nevermind',
-    //                       style: HMSTextStyle.setTextStyle(
-    //                           color: hmsWhiteColor,
-    //                           fontSize: 16,
-    //                           fontWeight: FontWeight.w600,
-    //                           letterSpacing: 0.50)),
-    //                 )),
-    //           ),
-    //           const SizedBox(
-    //             width: 10,
-    //           ),
-    //           Expanded(
-    //             child: ElevatedButton(
-    //               style: ButtonStyle(
-    //                   shadowColor: MaterialStateProperty.all(themeSurfaceColor),
-    //                   backgroundColor: MaterialStateProperty.all(errorColor),
-    //                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-    //                       RoundedRectangleBorder(
-    //                     side: BorderSide(width: 1, color: errorColor),
-    //                     borderRadius: BorderRadius.circular(8.0),
-    //                   ))),
-    //               onPressed: () => {
-    //                 meetingStore.leave(),
-    //                 Navigator.popUntil(context, (route) => route.isFirst)
-    //               },
-    //               child: Padding(
-    //                 padding: const EdgeInsets.symmetric(
-    //                     horizontal: 8.0, vertical: 12),
-    //                 child: Text(
-    //                   'Leave Room',
-    //                   style: HMSTextStyle.setTextStyle(
-    //                       color: themeDefaultColor,
-    //                       fontSize: 16,
-    //                       fontWeight: FontWeight.w600,
-    //                       letterSpacing: 0.50),
-    //                 ),
-    //               ),
-    //             ),
-    //           ),
-    //         ],
-    //       )
-    //     ],
-    //   ),
-    // );
   }
 
   static Future<dynamic> onLeaveStudio(BuildContext context) {
