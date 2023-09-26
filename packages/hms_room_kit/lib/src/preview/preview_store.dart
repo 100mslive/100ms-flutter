@@ -244,6 +244,11 @@ class PreviewStore extends ChangeNotifier
 
   void leave() {
     hmsSDKInteractor.leave();
+
+    ///Here we call the method passed by the user in HMSPrebuilt as a callback
+    if(Constant.onLeaveRoomCallback != null){
+      Constant.onLeaveRoomCallback!();
+    }
     HMSThemeColors.resetLayoutColors();
     hmsSDKInteractor.toggleAlwaysScreenOn();
     destroy();
