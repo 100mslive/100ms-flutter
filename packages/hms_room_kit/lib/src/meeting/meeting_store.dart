@@ -1178,7 +1178,7 @@ class MeetingStore extends ChangeNotifier
 // Helper Methods
 
   void clearRoomState() async {
-    // clearPIPState();
+    clearPIPState();
     removeListeners();
     toggleAlwaysScreenOn();
     _hmsSDKInteractor.destroy();
