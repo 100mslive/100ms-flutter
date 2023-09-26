@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/constants.dart';
 
@@ -40,7 +40,8 @@ class LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
     return AlertDialog(
       title: Text(
         widget.peerName,
-        style: GoogleFonts.inter(color: iconColor, fontWeight: FontWeight.bold),
+        style: HMSTextStyle.setTextStyle(
+            color: iconColor, fontWeight: FontWeight.bold),
       ),
       backgroundColor: themeBottomSheetColor,
       content: SizedBox(
@@ -66,7 +67,7 @@ class LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                     ),
                     Text(
                       "Change Name",
-                      style: GoogleFonts.inter(color: iconColor),
+                      style: HMSTextStyle.setTextStyle(color: iconColor),
                     )
                   ],
                 ),
@@ -91,7 +92,7 @@ class LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                       ),
                       Text(
                         "Change Role",
-                        style: GoogleFonts.inter(color: iconColor),
+                        style: HMSTextStyle.setTextStyle(color: iconColor),
                       )
                     ],
                   ),
@@ -113,7 +114,7 @@ class LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                       ),
                       Text(
                         "Toggle Flash",
-                        style: GoogleFonts.inter(color: iconColor),
+                        style: HMSTextStyle.setTextStyle(color: iconColor),
                       )
                     ],
                   ),
@@ -141,7 +142,7 @@ class LocalPeerTileDialogState extends State<LocalPeerTileDialog> {
                         widget.isSpotlightedPeer
                             ? "Remove From Spotlight"
                             : "Spotlight Tile",
-                        style: GoogleFonts.inter(color: iconColor),
+                        style: HMSTextStyle.setTextStyle(color: iconColor),
                       )
                     ],
                   ),

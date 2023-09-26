@@ -1,7 +1,7 @@
 //Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/constants.dart';
 
@@ -54,7 +54,8 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
       backgroundColor: themeBottomSheetColor,
       title: Text(
         widget.peerName,
-        style: GoogleFonts.inter(color: iconColor, fontWeight: FontWeight.bold),
+        style: HMSTextStyle.setTextStyle(
+            color: iconColor, fontWeight: FontWeight.bold),
       ),
       content: SizedBox(
         width: double.infinity,
@@ -88,7 +89,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                       ),
                       Text(
                         "${widget.isVideoMuted ? "Unmute" : "Mute"} video",
-                        style: GoogleFonts.inter(color: iconColor),
+                        style: HMSTextStyle.setTextStyle(color: iconColor),
                       )
                     ],
                   ),
@@ -124,7 +125,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                       ),
                       Text(
                         "${widget.isAudioMuted ? "Unmute" : "Mute"} audio",
-                        style: GoogleFonts.inter(color: iconColor),
+                        style: HMSTextStyle.setTextStyle(color: iconColor),
                       ),
                     ],
                   ),
@@ -152,7 +153,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                       ),
                       Text(
                         "Remove Peer",
-                        style: GoogleFonts.inter(color: iconColor),
+                        style: HMSTextStyle.setTextStyle(color: iconColor),
                       )
                     ],
                   ),
@@ -177,7 +178,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                       ),
                       Text(
                         "Change Role",
-                        style: GoogleFonts.inter(color: iconColor),
+                        style: HMSTextStyle.setTextStyle(color: iconColor),
                       )
                     ],
                   ),
@@ -203,7 +204,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                         ),
                         Text(
                           "Streaming Quality",
-                          style: GoogleFonts.inter(color: iconColor),
+                          style: HMSTextStyle.setTextStyle(color: iconColor),
                         )
                       ],
                     ),
@@ -228,7 +229,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                       ),
                       Text(
                         widget.pinTile ? "Unpin Tile" : "Pin Tile",
-                        style: GoogleFonts.inter(color: iconColor),
+                        style: HMSTextStyle.setTextStyle(color: iconColor),
                       )
                     ],
                   ),
@@ -256,7 +257,7 @@ class RemotePeerTileDialogState extends State<RemotePeerTileDialog> {
                         widget.isSpotlightedPeer
                             ? "Remove From Spotlight"
                             : "Spotlight Tile",
-                        style: GoogleFonts.inter(color: iconColor),
+                        style: HMSTextStyle.setTextStyle(color: iconColor),
                       )
                     ],
                   ),

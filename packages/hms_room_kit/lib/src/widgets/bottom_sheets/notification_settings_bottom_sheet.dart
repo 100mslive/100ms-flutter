@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart' show GoogleFonts;
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 
@@ -58,7 +58,7 @@ class _NotificationSettingsBottomSheetState
                   children: [
                     Text(
                       "Notifications",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 16,
                           color: themeDefaultColor,
                           letterSpacing: 0.15,
@@ -106,7 +106,7 @@ class _NotificationSettingsBottomSheetState
                     title: Text(
                       "Peer Joined",
                       semanticsLabel: "fl_peer_join_notif",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 14,
                           color: themeDefaultColor,
                           letterSpacing: 0.25,
@@ -135,7 +135,7 @@ class _NotificationSettingsBottomSheetState
                     title: Text(
                       "Peer Left",
                       semanticsLabel: "fl_peer_leave_notif",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 14,
                           color: themeDefaultColor,
                           letterSpacing: 0.25,
@@ -164,7 +164,7 @@ class _NotificationSettingsBottomSheetState
                     title: Text(
                       "New Message",
                       semanticsLabel: "fl_new-message_notif",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 14,
                           color: themeDefaultColor,
                           letterSpacing: 0.25,
@@ -192,7 +192,7 @@ class _NotificationSettingsBottomSheetState
                     title: Text(
                       "Hand Raise",
                       semanticsLabel: "fl_hand_raise_notif",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 14,
                           color: themeDefaultColor,
                           letterSpacing: 0.25,
@@ -220,7 +220,7 @@ class _NotificationSettingsBottomSheetState
                     title: Text(
                       "Error",
                       semanticsLabel: "fl_error_notif",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 14,
                           color: themeDefaultColor,
                           letterSpacing: 0.25,

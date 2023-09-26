@@ -1,7 +1,6 @@
 //Package imports
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -10,6 +9,7 @@ import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_dropdown.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 
 class AudioDeviceChangeDialog extends StatefulWidget {
   final HMSAudioDevice currentAudioDevice;
@@ -119,7 +119,7 @@ class AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
                   child: Text('Cancel',
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           color: themeDefaultColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -150,7 +150,7 @@ class AudioDeviceChangeDialogState extends State<AudioDeviceChangeDialog> {
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
                 child: Text(
                   'Change',
-                  style: GoogleFonts.inter(
+                  style: HMSTextStyle.setTextStyle(
                       color: themeDefaultColor,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

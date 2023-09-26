@@ -117,8 +117,6 @@ class _MeetingPageState extends State<MeetingPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isPortraitMode =
-        MediaQuery.of(context).orientation == Orientation.portrait;
     return WillPopScope(
         onWillPop: () async {
           bool ans = await UtilityComponents.onBackPressed(context) ?? false;
@@ -264,7 +262,11 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                           .activeSpeakerWithInset &&
                                                                   (context.read<MeetingStore>().localPeer?.audioTrack !=
                                                                           null ||
-                                                                      context.read<MeetingStore>().localPeer?.videoTrack !=
+                                                                      context
+                                                                              .read<
+                                                                                  MeetingStore>()
+                                                                              .localPeer
+                                                                              ?.videoTrack !=
                                                                           null))
                                                               ? OneToOneMode(
                                                                   bottomMargin:
@@ -290,7 +292,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                                 ));
                                                     });
                                               }),
-                                           Column(
+                                          const Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [

@@ -1,9 +1,9 @@
 // Package imports
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 // Project imports
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
@@ -39,7 +39,7 @@ class TrackChangeRequestDialogState extends State<TrackChangeRequestDialog> {
         children: [
           Text(
             message,
-            style: GoogleFonts.inter(
+            style: HMSTextStyle.setTextStyle(
               color: iconColor,
             ),
           ),
