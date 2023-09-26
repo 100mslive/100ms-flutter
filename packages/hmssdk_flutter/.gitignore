@@ -25,6 +25,7 @@ example/android/flutter-hms-4aea6d38fd2a.json
 # /example/android/fastlane/report.xml
 
 example/android/fastlane
+example/android/local.properties
 example/ios/fastlane
 # example/ios/fastlane/Appfile
 # example/ios/fastlane/Fastfile
