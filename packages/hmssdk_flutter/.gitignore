@@ -22,6 +22,7 @@ private_key.pepk
 # example/android/fastlane/Pluginfile
 # example/android/fastlane/README.md
 example/android/flutter-hms-4aea6d38fd2a.json
+example/android/local.properties
 # /example/android/fastlane/report.xml
 
 example/android/fastlane
