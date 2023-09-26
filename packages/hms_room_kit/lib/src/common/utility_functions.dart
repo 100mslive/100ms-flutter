@@ -11,7 +11,6 @@ import 'package:hms_room_kit/src/common/animated_text.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 ///This class contains the utility functions used in the app
 class Utilities {
   static RegExp regexEmoji = RegExp(

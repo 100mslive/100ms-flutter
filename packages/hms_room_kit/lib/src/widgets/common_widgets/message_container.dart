@@ -14,7 +14,6 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 
-
 class MessageContainer extends StatelessWidget {
   final String message;
   final String? senderName;

@@ -44,7 +44,8 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                     ? SvgPicture.network(
                         HMSRoomLayout.roleLayoutData!.logo!.url!,
                         height: 30,
-                        width: 30,)
+                        width: 30,
+                      )
                     : Image.network(
                         HMSRoomLayout.roleLayoutData!.logo!.url!,
                         height: 30,

@@ -288,8 +288,9 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                           false,
                                                                     )
                                                                   : const CustomOneToOneGrid(
-                                                                                  isLocalInsetPresent: false,
-                                                                                ));
+                                                                      isLocalInsetPresent:
+                                                                          false,
+                                                                    ));
                                                     });
                                               }),
                                           const Column(
