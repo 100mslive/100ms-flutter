@@ -6,8 +6,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Rational
 import androidx.annotation.RequiresApi
+import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
+import live.hms.hmssdk_flutter.HMSResultExtension
 
 class HMSPipAction {
     companion object {
@@ -15,11 +17,12 @@ class HMSPipAction {
         private var pipAutoEnterEnabled = false
         private var pipAspectRatio = mutableListOf(16, 9)
         private var isPIPEnabled = false
-
+        private var pipSink: EventSink? = null
         fun pipActions(
             call: MethodCall,
             result: Result,
             activity: Activity,
+            pipSink: EventSink?
         ) {
             when (call.method) {
                 "enter_pip_mode" -> {
@@ -43,10 +46,10 @@ class HMSPipAction {
                     }
                 }
                 "setup_pip" -> {
-                    setupPIP(call, result)
+                    setupPIP(call, result,pipSink,activity)
                 }
                 "destroy_pip" -> {
-                    destroyPIP(call, result, activity)
+                    destroyPIP(result, activity)
                 }
                 else -> {
                     result.notImplemented()
@@ -57,6 +60,8 @@ class HMSPipAction {
         private fun setupPIP(
             call: MethodCall,
             result: Result,
+            pipSink: EventSink?,
+            activity: Activity
         ) {
             isPIPEnabled = true
             call.argument<List<Int>?>("ratio")?.let {
@@ -65,16 +70,25 @@ class HMSPipAction {
             call.argument<Boolean?>("auto_enter_pip")?.let {
                 pipAutoEnterEnabled = it
             }
+             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                 val params = PictureInPictureParams.Builder()
+                 params.setAspectRatio(Rational(pipAspectRatio[0], pipAspectRatio[1]))
+                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                     params.setAutoEnterEnabled(pipAutoEnterEnabled)
+                 }
+                 activity.setPictureInPictureParams(params.build())
+                 this.pipSink = pipSink
+            }
             result.success(null)
         }
 
         private fun destroyPIP(
-            call: MethodCall,
             result: Result,
             activity: Activity,
         ) {
             pipAspectRatio = mutableListOf(16, 9)
             pipAutoEnterEnabled = false
+            pipSink = null
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && activity.isInPictureInPictureMode) {
                 activity.moveTaskToBack(false)
             }
@@ -132,6 +146,20 @@ class HMSPipAction {
                 activity.setPictureInPictureParams(PictureInPictureParams.Builder().setAutoEnterEnabled(false).build())
                 isPIPEnabled = false
             }
+        }
+
+        fun sendPIPUpdate(isInPictureInPictureMode:Boolean){
+            if (pipResult != null) {
+                pipResult?.success(true)
+                pipResult = null
+            }
+            val args = HashMap<String, Any>()
+            val data = HashMap<String, Any>()
+            args["event_name"] = "on_picture_in_picture_mode_changed"
+
+            data["is_in_pip_mode"] = isInPictureInPictureMode
+            args["data"] = data
+            pipSink?.success(args)
         }
     }
 }

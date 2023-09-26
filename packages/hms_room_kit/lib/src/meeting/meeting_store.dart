@@ -34,7 +34,8 @@ class MeetingStore extends ChangeNotifier
         HMSStatsListener,
         HMSLogListener,
         HMSKeyChangeListener,
-        HMSHLSPlaybackEventsListener {
+        HMSHLSPlaybackEventsListener,
+        HMSPIPListener {
   late HMSSDKInteractor _hmsSDKInteractor;
 
   MeetingStore({required HMSSDKInteractor hmsSDKInteractor}) {
@@ -245,6 +246,7 @@ class MeetingStore extends ChangeNotifier
 
     _hmsSDKInteractor.addUpdateListener(this);
     _hmsSDKInteractor.addLogsListener(this);
+    _hmsSDKInteractor.addPIPListener(this);
     HMSHLSPlayerController.addHMSHLSPlaybackEventsListener(this);
     WidgetsBinding.instance.addObserver(this);
     setMeetingModeUsingLayoutApi();
@@ -1208,6 +1210,7 @@ class MeetingStore extends ChangeNotifier
   void removeListeners() {
     _hmsSDKInteractor.removeUpdateListener(this);
     _hmsSDKInteractor.removeLogsListener(this);
+    _hmsSDKInteractor.removePIPListener(this);
     _hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeListener: this);
     _hmsSDKInteractor.removeHMSLogger();
     HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(this);
@@ -2032,7 +2035,7 @@ class MeetingStore extends ChangeNotifier
         break;
     }
   }
-
+  
   @override
   void onException(
       {HMSActionResultListenerMethod methodType =
@@ -2117,12 +2120,6 @@ class MeetingStore extends ChangeNotifier
       return;
     }
     if (state == AppLifecycleState.resumed) {
-      if (Platform.isAndroid) {
-        isPipActive = await HMSAndroidPIPController.isActive();
-      } else if (Platform.isIOS) {
-        isPipActive = false;
-      }
-      notifyListeners();
 
       if (lastVideoStatus && !reconnecting) {
         toggleCameraMuteState();
@@ -2150,11 +2147,6 @@ class MeetingStore extends ChangeNotifier
         lastVideoStatus = true;
       }
 
-      if (Platform.isAndroid) {
-        isPipActive = await HMSAndroidPIPController.isActive();
-        notifyListeners();
-      }
-
       if (Platform.isIOS) {
         if (screenShareCount == 0 || isScreenShareOn) {
           int peerIndex = peerTracks.indexWhere((element) =>
@@ -2179,16 +2171,6 @@ class MeetingStore extends ChangeNotifier
           }
         }
       }
-    } else if (state == AppLifecycleState.inactive) {
-      if (Platform.isAndroid && !isPipActive) {
-        isPipActive = await HMSAndroidPIPController.isActive();
-      }
-      notifyListeners();
-    } else if (state == AppLifecycleState.detached) {
-      if (Platform.isAndroid && !isPipActive) {
-        isPipActive = await HMSAndroidPIPController.isActive();
-      }
-      notifyListeners();
     }
   }
 
@@ -2261,6 +2243,14 @@ class MeetingStore extends ChangeNotifier
     } else {
       HMSHLSPlayerController.addHLSStatsListener();
     }
+    notifyListeners();
+  }
+
+  ///Here we get updates related to PIP
+  @override
+  void onPictureInPictureModeChanged({required bool isInPipMode}) {
+    log("onPictureInPictureModeChanged-> isInPipMode: $isInPipMode");
+    isPipActive = isInPipMode;
     notifyListeners();
   }
 }

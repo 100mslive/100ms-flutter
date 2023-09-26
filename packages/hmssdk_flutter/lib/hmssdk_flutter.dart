@@ -22,6 +22,7 @@ export 'src/enum/hms_Quality_limitation_reason.dart';
 export 'src/enum/hms_simulcast_layer.dart';
 export 'src/enum/hms_audio_mode.dart';
 export 'src/enum/hms_hls_playback_state.dart';
+export 'src/enum/hms_pip_event_method.dart';
 
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';
@@ -98,6 +99,7 @@ export 'src/model/hls_player/hms_hls_player_controller.dart';
 export 'src/model/hls_player/hms_hls_player_stats.dart';
 export 'src/model/hls_player/hms_hls_cue.dart';
 export 'src/model/hls_player/hms_hls_timed_metadata.dart';
+export 'src/model/hms_pip_listener.dart';
 
 //Views
 export 'src/ui/meeting/hms_video_view.dart';

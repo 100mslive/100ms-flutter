@@ -32,14 +32,7 @@ class MainActivity : FlutterActivity() {
         isInPictureInPictureMode: Boolean,
         newConfig: Configuration?,
     ) {
-        if (isInPictureInPictureMode) {
-            if (HMSPipAction.pipResult != null) {
-                HMSPipAction.pipResult?.success(true)
-                HMSPipAction.pipResult = null
-            }
-        } else {
-            Log.i("PIP Mode", "Exited PIP Mode")
-        }
+        HMSPipAction.sendPIPUpdate(isInPictureInPictureMode)
     }
 
     override fun onUserLeaveHint() {

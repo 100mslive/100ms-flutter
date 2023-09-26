@@ -1380,6 +1380,20 @@ class HMSSDK {
     PlatformService.removeRTCStatsListener(listener);
   }
 
+  /// add listener to PIP mode updates 
+  /// 
+  /// TODO : Add docs links for PIP mode
+  void addPIPListener({required HMSPIPListener listener}) {
+    PlatformService.addPIPListener(listener);
+  }
+
+  /// remove listener to PIP mode updates
+  /// 
+  /// TODO : Add docs links for PIP mode
+  void removePIPListener({required HMSPIPListener listener}) {
+    PlatformService.removePIPListener(listener);
+  }
+
   /// To modify local peer's audio & video tracks settings use the [hmsTrackSetting]. Only required for advanced use cases.
   HMSTrackSetting? hmsTrackSetting;
 

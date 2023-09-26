@@ -82,3 +82,13 @@ class HMSHLSPlayerPlaybackEventResponse {
 
   HMSHLSPlayerPlaybackEventResponse({required this.method, required this.data});
 }
+
+///HMSPIPEventResponse contains all the responses sent from the pip channel
+///
+/// Checkout different responses in [HMSPIPEventMethod] enum
+class HMSPIPEventResponse {
+  final HMSPIPEventMethod method;
+  final Map<dynamic, dynamic> data;
+
+  HMSPIPEventResponse({required this.method, required this.data});
+}

@@ -23,7 +23,7 @@ class LeaveSessionBottomSheet extends StatelessWidget {
               children: [
                 LeaveSessionTile(
                   tilePadding:
-                      const EdgeInsets.only(top: 12.0, left: 20, right: 20),
+                      const EdgeInsets.only(top: 12.0, left: 18, right: 18),
                   leading: SvgPicture.asset(
                     "packages/hms_room_kit/lib/src/assets/icons/exit_room.svg",
                     colorFilter: ColorFilter.mode(

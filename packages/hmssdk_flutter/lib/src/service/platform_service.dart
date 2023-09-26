@@ -45,6 +45,10 @@ class PlatformService {
   static const EventChannel _hlsPlayerChannel =
       const EventChannel("hls_player_channel");
 
+  ///used to get stream of pip events
+  static const EventChannel _pipEventChannel =
+      const EventChannel("pip_event_channel");
+
   ///add meeting listeners.
   static List<HMSUpdateListener> updateListeners = [];
 
@@ -60,6 +64,9 @@ class PlatformService {
   ///List for event Listener
   static List<HMSStatsListener> statsListeners = [];
   static bool isStartedListening = false;
+
+  ///List for pip Listeners
+  static List<HMSPIPListener> pipListeners = [];
 
   ///add meetingListener
   static void addUpdateListener(HMSUpdateListener newListener) {
@@ -142,6 +149,17 @@ class PlatformService {
   static void removeHLSPlaybackEventListener(
       HMSHLSPlaybackEventsListener hmshlsPlaybackEventsListener) {
     hlsPlaybackEventListener.remove(hmshlsPlaybackEventsListener);
+  }
+
+  ///This method adds PIPListeners to the pipListeners list
+  ///It notifies all the listeners in the list whenever any events related to PIP occurs
+  static void addPIPListener(HMSPIPListener pipListener) {
+    pipListeners.add(pipListener);
+  }
+
+  ///This method removes PIPListeners from the pipListeners list
+  static void removePIPListener(HMSPIPListener pipListener) {
+    pipListeners.remove(pipListener);
   }
 
   ///used to invoke different methods at platform side and returns something but not neccessarily
@@ -506,6 +524,15 @@ class PlatformService {
     }).listen((event) {
       notifyHLSPlaybackEventListeners(event.method, event.data);
     });
+
+    _pipEventChannel.receiveBroadcastStream({'name': 'pip'}).map((event) {
+      HMSPIPEventMethod method =
+          HMSPIPEventMethodValues.getMethodFromName(event['event_name']);
+      Map data = event['data'];
+      return HMSPIPEventResponse(method: method, data: data);
+    }).listen((event) {
+      notifyPIPListeners(event.method, event.data);
+    });
   }
 
   static void notifyLogsUpdateListeners(
@@ -708,6 +735,17 @@ class PlatformService {
             playerStats: HMSHLSPlayerStats.fromMap(arguments)));
         break;
       case HMSHLSPlaybackEventMethod.unknown:
+        break;
+    }
+  }
+
+  static void notifyPIPListeners(HMSPIPEventMethod method, Map arguments) {
+    switch (method) {
+      case HMSPIPEventMethod.onPictureInPictureModeChanged:
+        pipListeners.forEach((e) => e.onPictureInPictureModeChanged(
+            isInPipMode: arguments["is_in_pip_mode"]));
+        break;
+      case HMSPIPEventMethod.unknown:
         break;
     }
   }

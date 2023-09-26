@@ -59,12 +59,14 @@ class HmssdkFlutterPlugin :
     private var rtcStatsChannel: EventChannel? = null
     private var sessionStoreChannel: EventChannel? = null
     var hlsPlayerChannel: EventChannel? = null
+    private var pipChannel: EventChannel? = null
     private var eventSink: EventChannel.EventSink? = null
     private var previewSink: EventChannel.EventSink? = null
     private var logsSink: EventChannel.EventSink? = null
     private var rtcSink: EventChannel.EventSink? = null
     private var sessionStoreSink: EventChannel.EventSink? = null
     var hlsPlayerSink: EventChannel.EventSink? = null
+    private var pipSink: EventChannel.EventSink? = null
     private lateinit var activity: Activity
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
@@ -80,25 +82,64 @@ class HmssdkFlutterPlugin :
     override fun onAttachedToEngine(
         @NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
     ) {
+        /**
+         * Here we initialise all the channels
+         * iff [hmssdkFlutterPlugin] is null, to avoid multiple channel initializations
+         * We also set the stream handler if the channel is correctly initialised
+         */
         if (hmssdkFlutterPlugin == null) {
+
+            /**
+             * [channel] takes care of all the method calls from flutter layer,
+             * it's the only method channel in the sdk
+             */
             this.channel = MethodChannel(flutterPluginBinding.binaryMessenger, "hmssdk_flutter")
+
+            /**
+             * [meetingEventChannel] takes care of all the events from meeting
+             */
             this.meetingEventChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "meeting_event_channel")
+
+            /**
+             * [previewChannel] takes care of all the events from preview
+             */
             this.previewChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "preview_event_channel")
 
+            /**
+             * [logsEventChannel] takes care of all the log events in the sdk
+             */
             this.logsEventChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "logs_event_channel")
 
+            /**
+             * [rtcStatsChannel] takes care of the RTC Stats, this helps in sending
+             * the RTC Stats to flutter layer
+             */
             this.rtcStatsChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "rtc_event_channel")
 
+            /**
+             * [sessionStoreChannel] handles the session store events
+             */
             this.sessionStoreChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "session_event_channel")
 
+            /**
+             * All the hls Player events are transferred through [hlsPlayerChannel]
+             */
             this.hlsPlayerChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "hls_player_channel")
 
+            /**
+             * All the events related to PIP are sent through [pipChannel]
+             */
+            this.pipChannel = EventChannel(flutterPluginBinding.binaryMessenger,"pip_event_channel")
+
+            /**
+             * Here we register the stream handler
+             */
             this.meetingEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Meeting event channel not found")
             this.channel?.setMethodCallHandler(this) ?: Log.e("Channel Error", "Event channel not found")
             this.previewChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Preview channel not found")
@@ -106,6 +147,11 @@ class HmssdkFlutterPlugin :
             this.rtcStatsChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "RTC Stats channel not found")
             this.sessionStoreChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Session Store channel not found")
             this.hlsPlayerChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "HLS Player channel not found")
+            this.pipChannel?.setStreamHandler(this)?:Log.e("Channel Error","PIP Channel not found")
+
+            /**
+             * Here we set the views i.e. HMSVideoView and HLSPlayer
+             */
             this.hmsVideoFactory = HMSVideoViewFactory(this)
             this.hmsHLSPlayerFactory = HMSHLSPlayerFactory(this)
 
@@ -212,7 +258,7 @@ class HmssdkFlutterPlugin :
                 setPlaybackAllowedForTrack(call, result)
             }
             "enter_pip_mode", "is_pip_active", "is_pip_available", "setup_pip", "destroy_pip" -> {
-                HMSPipAction.pipActions(call, result, this.activity)
+                HMSPipAction.pipActions(call, result, this.activity,pipSink)
             }
             "set_simulcast_layer", "get_layer", "get_layer_definition" -> {
                 HMSRemoteVideoTrackAction.remoteVideoTrackActions(call, result, hmssdk!!)
@@ -448,6 +494,7 @@ class HmssdkFlutterPlugin :
             rtcStatsChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "RTC Stats channel not found")
             sessionStoreChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Session Store channel not found")
             hlsPlayerChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "HLS Player channel not found")
+            pipChannel?.setStreamHandler(null)?:Log.e("Channel Error", "PIP channel not found")
             eventSink = null
             previewSink = null
             rtcSink = null
@@ -455,6 +502,7 @@ class HmssdkFlutterPlugin :
             sessionStoreSink = null
             hlsPlayerSink = null
             hmssdkFlutterPlugin = null
+            pipSink = null
         } else {
             Log.e("Plugin Error", "hmssdkFlutterPlugin is null in onDetachedFromEngine")
         }
@@ -580,6 +628,8 @@ class HmssdkFlutterPlugin :
             this.sessionStoreSink = events
         } else if (nameOfEventSink == "hls_player") {
             this.hlsPlayerSink = events
+        } else if (nameOfEventSink == "pip"){
+            this.pipSink = events
         }
     }
 

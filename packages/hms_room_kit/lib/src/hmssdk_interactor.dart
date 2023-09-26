@@ -150,6 +150,14 @@ class HMSSDKInteractor {
     hmsSDK.removePreviewListener(listener: listener);
   }
 
+  void addPIPListener(HMSPIPListener listener) {
+    hmsSDK.addPIPListener(listener: listener);
+  }
+
+  void removePIPListener(HMSPIPListener listener){
+    hmsSDK.removePIPListener(listener: listener);
+  }
+
   void acceptChangeRole(HMSRoleChangeRequest hmsRoleChangeRequest,
       HMSActionResultListener hmsActionResultListener) {
     hmsSDK.acceptChangeRole(
