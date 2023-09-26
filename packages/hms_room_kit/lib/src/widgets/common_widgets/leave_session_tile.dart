@@ -35,13 +35,13 @@ class LeaveSessionTile extends StatelessWidget {
         color: tileColor ?? HMSThemeColors.surfaceDim,
         child: Padding(
           padding: tilePadding ??
-              const EdgeInsets.only(top: 24.0, left: 20, right: 20),
+              const EdgeInsets.only(top: 24.0, left: 18, right: 18),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               leading ?? const SizedBox(),
               const SizedBox(
-                width: 16,
+                width: 14,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
