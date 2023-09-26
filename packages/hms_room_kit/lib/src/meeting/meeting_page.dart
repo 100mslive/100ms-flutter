@@ -320,7 +320,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                                 ));
                                                     });
                                               }),
-                                          const Column(
+                                           Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
