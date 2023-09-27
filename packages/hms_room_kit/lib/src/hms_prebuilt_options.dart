@@ -26,16 +26,11 @@ class HMSPrebuiltOptions {
   //this config
   final HMSIOSScreenshareConfig? iOSScreenshareConfig;
 
-  ///If true PIP is enabled in the application
-  ///else it's not.Default value is false
-  final bool isPIPAllowed;
-
   ///[HMSPrebuiltOptions] is a class that is used to pass the options to the prebuilt
   HMSPrebuiltOptions(
       {this.userName,
       this.userId,
       this.endPoints,
       this.debugInfo = false,
-      this.iOSScreenshareConfig,
-      this.isPIPAllowed = false});
+      this.iOSScreenshareConfig});
 }

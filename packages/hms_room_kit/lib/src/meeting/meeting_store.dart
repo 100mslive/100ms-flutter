@@ -751,20 +751,6 @@ class MeetingStore extends ChangeNotifier
     getCurrentAudioDevice();
     getAudioDevicesList();
     notifyListeners();
-
-    ///PIP Only needs to be called when it's enabled from PIP
-    if (Constant.isPIPAllowed) {
-      if (Platform.isIOS &&
-          HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf !=
-              null) {
-        HMSIOSPIPController.setup(
-            autoEnterPip: true,
-            aspectRatio: [9, 16],
-            backgroundColor: Colors.black);
-      } else if (Platform.isAndroid) {
-        HMSAndroidPIPController.setup(aspectRatio: [9, 16]);
-      }
-    }
   }
 
   void setParticipantsList(List<HMSRole> roles) {
@@ -1019,21 +1005,19 @@ class MeetingStore extends ChangeNotifier
 
     // Below code for change track and text in PIP mode iOS and android.
     //This is only executed if PIP is enabled
-    if (Constant.isPIPAllowed && updateSpeakers.isNotEmpty) {
-      if (Platform.isIOS && (screenShareCount == 0 || isScreenShareOn)) {
-        if (updateSpeakers[0].peer.videoTrack != null) {
-          changePIPWindowTrackOnIOS(
-              track: updateSpeakers[0].peer.videoTrack,
-              alternativeText: updateSpeakers[0].peer.name,
-              ratio: [9, 16]);
-        } else {
-          changePIPWindowTextOnIOS(
-              text: updateSpeakers[0].peer.name, ratio: [9, 16]);
-        }
-      } else if (Platform.isAndroid) {
-        changePIPWindowOnAndroid("${updateSpeakers[0].peer.peerId}mainVideo");
-      }
-    }
+      // if (Platform.isIOS && (screenShareCount == 0 || isScreenShareOn)) {
+      //   if (updateSpeakers[0].peer.videoTrack != null) {
+      //     changePIPWindowTrackOnIOS(
+      //         track: updateSpeakers[0].peer.videoTrack,
+      //         alternativeText: updateSpeakers[0].peer.name,
+      //         ratio: [9, 16]);
+      //   } else {
+      //     changePIPWindowTextOnIOS(
+      //         text: updateSpeakers[0].peer.name, ratio: [9, 16]);
+      //   }
+      // } else if (Platform.isAndroid) {
+      //   changePIPWindowOnAndroid("${updateSpeakers[0].peer.peerId}mainVideo");
+      // }
   }
 
   @override
@@ -1187,7 +1171,6 @@ class MeetingStore extends ChangeNotifier
 // Helper Methods
 
   void clearRoomState() async {
-    clearPIPState();
     removeListeners();
     toggleAlwaysScreenOn();
     _hmsSDKInteractor.destroy();
@@ -1209,13 +1192,13 @@ class MeetingStore extends ChangeNotifier
   }
 
   void clearPIPState() {
-    if (Constant.isPIPAllowed) {
-      if (Platform.isAndroid) {
-        HMSAndroidPIPController.destroy();
-      } else if (Platform.isIOS) {
-        HMSIOSPIPController.destroy();
-      }
-    }
+    // if (Constant.isPIPAllowed) {
+    //   if (Platform.isAndroid) {
+    //     HMSAndroidPIPController.destroy();
+    //   } else if (Platform.isIOS) {
+    //     HMSIOSPIPController.destroy();
+    //   }
+    // }
   }
 
   void removeListeners() {
@@ -1384,7 +1367,7 @@ class MeetingStore extends ChangeNotifier
           }
         }
 
-        if (peer.isLocal && Constant.isPIPAllowed) {
+        if (peer.isLocal) {
           if (Platform.isIOS) {
             if (HMSRoomLayout
                     .roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
