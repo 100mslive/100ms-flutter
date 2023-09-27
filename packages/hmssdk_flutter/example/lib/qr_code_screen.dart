@@ -79,7 +79,6 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                 roomCode: Constant.roomCode,
                 options: HMSPrebuiltOptions(
                     endPoints: endPoints,
-                    isPIPAllowed: true,
                     iOSScreenshareConfig: HMSIOSScreenshareConfig(
                         appGroup: "group.flutterhms",
                         preferredExtension:

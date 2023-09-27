@@ -309,7 +309,6 @@ class _HomePageState extends State<HomePage> {
                 roomCode: Constant.roomCode,
                 options: HMSPrebuiltOptions(
                     endPoints: endPoints,
-                    isPIPAllowed: true,
                     iOSScreenshareConfig: HMSIOSScreenshareConfig(
                         appGroup: "group.flutterhms",
                         preferredExtension:
