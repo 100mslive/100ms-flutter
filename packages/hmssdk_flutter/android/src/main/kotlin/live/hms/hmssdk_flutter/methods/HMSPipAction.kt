@@ -37,10 +37,10 @@ class HMSPipAction {
                         result.success(
                             activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE),
                         )
-                    }
-                    else{
-                        result.success(false)
-                    }
+                    } else
+                        {
+                            result.success(false)
+                        }
                 }
                 "setup_pip" -> {
                     setupPIP(call, result)

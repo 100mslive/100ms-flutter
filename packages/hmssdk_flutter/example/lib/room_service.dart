@@ -38,7 +38,8 @@ class RoomService {
 
   static Map<String, String> setEndPoints() {
     Map<String, String> endPoints = {};
-    endPoints[Constant.tokenEndPointKey] = "https://auth-nonprod.100ms.live${Platform.isIOS ? "/" : ""}";
+    endPoints[Constant.tokenEndPointKey] =
+        "https://auth-nonprod.100ms.live${Platform.isIOS ? "/" : ""}";
     endPoints[Constant.initEndPointKey] = "https://qa-init.100ms.live/init";
     endPoints[Constant.layoutAPIEndPointKey] = "https://api-nonprod.100ms.live";
 
