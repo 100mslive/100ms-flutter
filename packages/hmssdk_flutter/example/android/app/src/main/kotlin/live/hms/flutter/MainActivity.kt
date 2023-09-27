@@ -2,12 +2,8 @@ package live.hms.flutter
 
 import android.app.Activity
 import android.content.Intent
-import android.content.res.Configuration
-import android.os.Build
-import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
 import live.hms.hmssdk_flutter.Constants
-import live.hms.hmssdk_flutter.methods.HMSPipAction
 
 class MainActivity : FlutterActivity() {
     override fun onActivityResult(

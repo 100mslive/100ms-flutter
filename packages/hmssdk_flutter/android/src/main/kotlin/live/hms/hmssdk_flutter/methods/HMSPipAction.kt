@@ -33,13 +33,9 @@ class HMSPipAction {
                     }
                 }
                 "is_pip_available" -> {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-                        result.success(
-                            activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE),
-                        )
-                    } else {
-                        result.success(false)
-                    }
+                    result.success(
+                        activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE),
+                    )
                 }
                 "setup_pip" -> {
                     setupPIP(call, result)
