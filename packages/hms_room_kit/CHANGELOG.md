@@ -1,9 +1,15 @@
 # Latest Versions
 
-| Package           | Version                                                                                                   |
-| ------------------| --------------------------------------------------------------------------------------------------------- |
-| hms_room_kit      | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)        |
-| hmssdk_flutter    | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)    |
+| Package        | Version                                                                                                |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
+| hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
+
+## 1.0.2 - 2023-09-22
+
+### Changed
+
+- Bump minimal Flutter version to 3.10.0
 
 ## 1.0.2 - 2023-09-22
 
@@ -34,7 +40,7 @@
 - Preview For Role
 - Edge To Edge HLS Player
 - Updated Bottom Sheets
-And much more. Take it for a spin!
+  And much more. Take it for a spin!
 
 ## 0.1.0 - 2023-08-18
 
@@ -44,7 +50,7 @@ And much more. Take it for a spin!
 - Active Speaker Sorting
 - Newly Designed Header and Footer
 - Inset Tile for Local Peer
-And much more. Take it for a spin!
+  And much more. Take it for a spin!
 
 ## 0.0.4 - 2023-08-01
 

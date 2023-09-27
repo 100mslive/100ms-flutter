@@ -604,7 +604,7 @@ class MeetingStore extends ChangeNotifier
       previousRole = localPeer?.role.name;
       if (isRaisedHand) {
         changeMetadata();
-      }else {
+      } else {
         ///Setting the previous role
         String value = isRaisedHand ? "true" : "false";
         _hmsSDKInteractor.changeMetadata(

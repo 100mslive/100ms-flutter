@@ -1,0 +1,34 @@
+name: Appreciate first interaction
+
+on:
+  workflow_dispatch:
+  issues:
+    types: [opened]
+  pull_request:
+    branches:
+      - main
+      - develop
+    types: [opened]
+
+jobs:
+  check_for_first_interaction:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/first-interaction@main
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: |
+            Hello! Thank you for filing an issue.
+
+            Please include relevant logs or detailed description for faster resolutions.
+
+            We really appreciate your contribution!
+          pr-message: |
+            Hello! Thank you for your contribution.
+
+            If you are fixing a bug, please reference the issue number in the description.
+
+            If you are implementing a feature request, please check with the maintainers that the feature will be accepted first.
+
+            We really appreciate your contribution!
