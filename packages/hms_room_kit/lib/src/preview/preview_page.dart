@@ -169,7 +169,9 @@ class _PreviewPageState extends State<PreviewPage> {
 
     return WillPopScope(
       onWillPop: () async {
-        previewStore.leave();
+        if (!previewStore.isRoomJoinedAndHLSStarted) {
+          previewStore.leave();
+        }
         return true;
       },
       child: Selector<PreviewStore, HMSException?>(
