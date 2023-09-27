@@ -371,7 +371,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Text("Room Code",
                           key: Key('room_code_text'),
-                          style: HMSTextStyle.setTextStyle(
+                          style:HMSTextStyle.setTextStyle(
                               color: themeDefaultColor,
                               height: 1.5,
                               fontSize: 14,

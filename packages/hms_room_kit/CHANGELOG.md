@@ -11,6 +11,18 @@
 
 - Bump minimal Flutter version to 3.10.0
 
+## 1.0.2 - 2023-09-22
+
+### 🚀 Added
+
+- Added `onLeave` callback parameter in `HMSPrebuilt`
+
+### Changed
+
+- Bump minimal Flutter version to 3.10.0
+
+- Some Bug fixes and performance improvements
+
 ## 1.0.1 - 2023-09-15
 
 ### 🚀 Added
