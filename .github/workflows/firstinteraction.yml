@@ -6,8 +6,8 @@ on:
     types: [opened]
   pull_request:
     branches:
-        - main
-        - develop
+      - main
+      - develop
     types: [opened]
 
 jobs:

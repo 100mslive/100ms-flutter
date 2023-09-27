@@ -16,11 +16,10 @@ Integrate Real Time Audio and Video conferencing, Interactive Live Streaming, an
 
 With support for HLS and RTMP Live Streaming and Recording, Picture-in-Picture (PiP), CallKit, VoIP, one-to-one Video Call Modes, Audio Rooms, Video Player and much more, add immersive real-time communications to your apps.
 
-
-| Package           | Version                                                                                                   |
-| ------------------| --------------------------------------------------------------------------------------------------------- |
-| hms_room_kit      | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)        |
-| hmssdk_flutter    | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)    |
+| Package        | Version                                                                                                |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
+| hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
 📖 Read the Complete Documentation here: https://www.100ms.live/docs/flutter/v2/guides/quickstart
 

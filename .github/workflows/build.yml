@@ -46,7 +46,7 @@ jobs:
           cache: true
       - name: Build Android App Bundle
         env:
-            FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
+          FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
         run: |
           echo $FIREBASE_CONFIG > packages/hmssdk_flutter/example/android/app/google-services.json
           cd packages/hmssdk_flutter/example
