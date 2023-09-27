@@ -33,10 +33,10 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: Provide Firebase Android
         env:
-          FIREBASE_CONFIG_DEV: ${{ secrets.FIREBASE_CONFIG }}
+          FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
         run: echo $FIREBASE_CONFIG > ./packages/hmssdk_flutter/example/android/app/google-services.json
       - name: Checkout repository
         uses: actions/checkout@v3
