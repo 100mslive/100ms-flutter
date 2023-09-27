@@ -33,11 +33,6 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Provide Firebase Android
-        env:
-          FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
-        run: pwd;echo $FIREBASE_CONFIG > packages/hmssdk_flutter/example/android/app/google-services.json
       - name: Checkout repository
         uses: actions/checkout@v3
       - uses: actions/setup-java@v3
@@ -50,7 +45,12 @@ jobs:
           channel: stable
           cache: true
       - name: Build Android App Bundle
+        env:
+            FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
         run: |
+          echo $FIREBASE_CONFIG > packages/hmssdk_flutter/example/android/app/google-services.json
+          pwd
+          git status
           cd packages/hmssdk_flutter/example
           flutter build appbundle --debug -t lib/main.dart
         shell: bash
