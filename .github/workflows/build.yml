@@ -49,8 +49,6 @@ jobs:
             FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
         run: |
           echo $FIREBASE_CONFIG > packages/hmssdk_flutter/example/android/app/google-services.json
-          pwd
-          git status
           cd packages/hmssdk_flutter/example
           flutter build appbundle --debug -t lib/main.dart
         shell: bash
