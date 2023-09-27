@@ -1,7 +1,4 @@
-sample apps/hms-callkit-app/.dart_tool/flutter_build/b684ba75def7eb1d46425208935128f1/outputs.json
-sample apps/hms-callkit-app/.dart_tool/flutter_build/c59f8a27862d2129b3cbc08b58e71ea6/outputs.json
-sample apps/hms-callkit-app/.dart_tool/flutter_build/c8a732d3049414d121c7ba56cff1e323/outputs.json
-sample apps/hms-callkit-app/.dart_tool/flutter_build/c970366aa2a6e28e1f732d59bfa170d7/outputs.json
+sample apps/hms-callkit-app/.dart_tool/flutter_build/
 .dart_tool/package_config.json
 .dart_tool/package_config_subset
 .dart_tool/version
@@ -27,22 +24,13 @@ example/android/.gradle/
 example/android/.idea/
 example/ios/.symlinks/
 example/ios/Pods/
-sample apps/flutter-quickstart-app/.dart_tool/package_config.json
-sample apps/flutter-quickstart-app/.dart_tool/package_config_subset
-sample apps/flutter-quickstart-app/.dart_tool/version
-sample apps/hms-callkit-app/.dart_tool/package_config.json
-sample apps/hms-callkit-app/.dart_tool/package_config_subset
-sample apps/hms-callkit-app/.dart_tool/version
-sample apps/flutter-quickstart-app/build/ios/Pods.build/Release-iphonesimulator/Flutter.build/dgph
-sample apps/flutter-quickstart-app/build/ios/Pods.build/Release-iphonesimulator/HMSAnalyticsSDK.build/dgph
-sample apps/flutter-quickstart-app/build/ios/Pods.build/Release-iphonesimulator/HMSBroadcastExtensionSDK.build/dgph
-sample apps/flutter-quickstart-app/build/ios/Pods.build/Release-iphonesimulator/HMSSDK.build/dgph
-sample apps/flutter-quickstart-app/build/ios/Pods.build/Release-iphonesimulator/hmssdk_flutter.build/dgph
-sample apps/flutter-quickstart-app/build/ios/Pods.build/Release-iphonesimulator/HMSWebRTC.build/dgph
-sample apps/flutter-quickstart-app/build/ios/Pods.build/Release-iphonesimulator/Pods-Runner.build/dgph
+sample apps/flutter-quickstart-app/.dart_tool/
+sample apps/hms-callkit-app/.dart_tool/
+sample apps/flutter-quickstart-app/build/ios/Pods.build/
 packages/hms_room_kit/.dart_tool
 packages/hmssdk_flutter/.dart_tool
 packages/hmssdk_flutter/example/.dart_tool
 packages/hmssdk_flutter/example/android/fastlane
 packages/hmssdk_flutter/example/build
 packages/hmssdk_flutter/example/ios/fastlane
+packages/hmssdk_flutter/example/android/app/google-services.json
