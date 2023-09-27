@@ -9,7 +9,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter_example/app_settings_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
@@ -338,7 +337,7 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.symmetric(horizontal: 18),
                   child: Text('Experience the power of 100ms',
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           letterSpacing: 0.25,
                           color: themeDefaultColor,
                           height: 1.17,
@@ -353,7 +352,7 @@ class _HomePageState extends State<HomePage> {
                   child: Text(
                       'Jump right in by pasting a room link or scanning a QR code',
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           letterSpacing: 0.5,
                           color: themeSubHeadingColor,
                           height: 1.5,
@@ -372,7 +371,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Text("Room Code",
                           key: Key('room_code_text'),
-                          style: GoogleFonts.inter(
+                          style: HMSTextStyle.setTextStyle(
                               color: themeDefaultColor,
                               height: 1.5,
                               fontSize: 14,
@@ -389,7 +388,7 @@ class _HomePageState extends State<HomePage> {
                     onSubmitted: (value) {
                       joinMeeting();
                     },
-                    style: GoogleFonts.inter(),
+                    style: HMSTextStyle.setTextStyle(),
                     controller: meetingLinkController,
                     onChanged: (value) {
                       setState(() {});
@@ -400,7 +399,7 @@ class _HomePageState extends State<HomePage> {
                         fillColor: themeSurfaceColor,
                         filled: true,
                         hintText: 'Paste the room code or link here',
-                        hintStyle: GoogleFonts.inter(
+                        hintStyle: HMSTextStyle.setTextStyle(
                             color: hmsHintColor,
                             height: 1.5,
                             fontSize: 16,

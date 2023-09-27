@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:url_launcher/url_launcher.dart';
@@ -120,7 +119,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                   children: [
                     Text(
                       "App Settings",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 16,
                           color: themeDefaultColor,
                           letterSpacing: 0.15,
@@ -169,7 +168,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                   //   title: Text(
                   //     "Dark Mode",
                   //     semanticsLabel: "fl_dark_light_mode",
-                  //     style: GoogleFonts.inter(
+                  //     style: HMSTextStyle.setTextStyle(
                   //         fontSize: 14,
                   //         color: themeDefaultColor,
                   //         letterSpacing: 0.25,
@@ -204,7 +203,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     title: Text(
                       "Enable Debug Mode",
                       semanticsLabel: "fl_enable_debug_mode",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 14,
                           color: themeDefaultColor,
                           letterSpacing: 0.25,
@@ -234,7 +233,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     title: Text(
                       "Join with muted audio",
                       semanticsLabel: "fl_join_with_muted_audio",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 14,
                           color: themeDefaultColor,
                           letterSpacing: 0.25,
@@ -264,7 +263,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     title: Text(
                       "Join with muted video",
                       semanticsLabel: "fl_join_with_muted_video",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 14,
                           color: themeDefaultColor,
                           letterSpacing: 0.25,
@@ -293,7 +292,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                   //   title: Text(
                   //     "Skip Preview",
                   //     semanticsLabel: "fl_preview_enable",
-                  //     style: GoogleFonts.inter(
+                  //     style: HMSTextStyle.setTextStyle(
                   //         fontSize: 14,
                   //         color: themeDefaultColor,
                   //         letterSpacing: 0.25,
@@ -320,7 +319,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     title: Text(
                       "Mirror Camera",
                       semanticsLabel: "fl_mirror_camera_enable",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 14,
                           color: themeDefaultColor,
                           letterSpacing: 0.25,
@@ -349,7 +348,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     title: Text(
                       "Enable Stats",
                       semanticsLabel: "fl_stats_enable",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 14,
                           color: themeDefaultColor,
                           letterSpacing: 0.25,
@@ -379,7 +378,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       title: Text(
                         "Software Decoder",
                         semanticsLabel: "fl_software_decoder_enable",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             fontSize: 14,
                             color: themeDefaultColor,
                             letterSpacing: 0.25,
@@ -411,7 +410,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       title: Text(
                         "Disable Audio Mixer",
                         semanticsLabel: "fl_track_settings",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             fontSize: 14,
                             color: themeDefaultColor,
                             letterSpacing: 0.25,
@@ -440,7 +439,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     title: Text(
                       "Enable Auto Simulcast",
                       semanticsLabel: "fl_auto_simulcast",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 14,
                           color: themeDefaultColor,
                           letterSpacing: 0.25,
@@ -482,7 +481,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       title: Text(
                         "Audio Mode",
                         semanticsLabel: "fl_audio_mode",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             fontSize: 14,
                             color: themeDefaultColor,
                             letterSpacing: 0.25,
@@ -518,7 +517,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                   //     title: Text(
                   //       "Modify Notifications",
                   //       semanticsLabel: "fl_notification_setting",
-                  //       style: GoogleFonts.inter(
+                  //       style: HMSTextStyle.setTextStyle(
                   //           fontSize: 14,
                   //           color: themeDefaultColor,
                   //           letterSpacing: 0.25,
@@ -537,7 +536,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                     title: Text(
                       "Ask on Discord",
                       semanticsLabel: "fl_ask_feedback",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 14,
                           color: themeDefaultColor,
                           letterSpacing: 0.25,
@@ -553,7 +552,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       leading: Text(
                         "App Version",
                         semanticsLabel: "app_version",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             fontSize: 12,
                             color: themeDefaultColor,
                             letterSpacing: 0.25,
@@ -562,7 +561,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       trailing: Text(
                         widget.appVersion,
                         semanticsLabel: "app_version",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             fontSize: 12,
                             color: themeDefaultColor,
                             letterSpacing: 0.25,
@@ -579,7 +578,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       leading: Text(
                         "HMSSDK Version",
                         semanticsLabel: "hmssdk_version",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             fontSize: 12,
                             color: themeDefaultColor,
                             letterSpacing: 0.25,
@@ -588,7 +587,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       trailing: Text(
                         versions["flutter"] ?? "",
                         semanticsLabel: "hmssdk_version",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             fontSize: 12,
                             color: themeDefaultColor,
                             letterSpacing: 0.25,
@@ -608,7 +607,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       semanticsLabel: Platform.isAndroid
                           ? "android_sdk_version"
                           : "iOS_sdk_version",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 12,
                           color: themeDefaultColor,
                           letterSpacing: 0.25,
@@ -621,7 +620,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                       semanticsLabel: Platform.isAndroid
                           ? "android_sdk_version"
                           : "iOS_sdk_version",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 12,
                           color: themeDefaultColor,
                           letterSpacing: 0.25,

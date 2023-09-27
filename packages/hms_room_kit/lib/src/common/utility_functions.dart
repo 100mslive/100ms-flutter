@@ -5,7 +5,6 @@ import 'dart:math' as math;
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/animated_text.dart';
@@ -259,7 +258,7 @@ class Utilities {
 
   static void showToast(String message, {int time = 1}) {
     // BotToast.showText(
-    //     textStyle: GoogleFonts.inter(fontSize: 14),
+    //     textStyle: HMSTextStyle.setTextStyle(fontSize: 14),
     //     text: message,
     //     contentColor: Colors.black87,
     //     duration: Duration(seconds: time));
@@ -273,7 +272,7 @@ class Utilities {
             AnimatedTextWidget(
                 text: message, duration: Duration(seconds: time)),
         onlyOne: false,
-        textStyle: GoogleFonts.inter(fontSize: 14),
+        textStyle: HMSTextStyle.setTextStyle(fontSize: 14),
         text: message,
         contentColor: Colors.black87,
         duration: Duration(seconds: time));

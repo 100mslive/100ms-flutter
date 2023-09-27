@@ -44,4 +44,7 @@ class Constant {
 
   ///[Constant.layoutAPIEndPointKey] is the key for the layout api end point
   static String layoutAPIEndPointKey = "layoutAPIEndPoint";
+
+  ///[Constant.onLeave] is the function that you wish to execute while leaving the room
+  static Function? onLeave;
 }

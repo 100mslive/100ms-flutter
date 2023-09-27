@@ -1,17 +1,17 @@
 //Package imports
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-//Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:collection/collection.dart';
+import 'package:share_plus/share_plus.dart';
+
+//Project imports
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_dropdown.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
-import 'package:share_plus/share_plus.dart';
 
 class ShareLinkOptionDialog extends StatefulWidget {
   final List<HMSRole> roles;
@@ -122,7 +122,7 @@ class ShareLinkOptionDialogState extends State<ShareLinkOptionDialog> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
                   child: Text('Cancel',
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           color: themeDefaultColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -163,7 +163,7 @@ class ShareLinkOptionDialogState extends State<ShareLinkOptionDialog> {
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
                 child: Text(
                   'Share',
-                  style: GoogleFonts.inter(
+                  style: HMSTextStyle.setTextStyle(
                       color: themeDefaultColor,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

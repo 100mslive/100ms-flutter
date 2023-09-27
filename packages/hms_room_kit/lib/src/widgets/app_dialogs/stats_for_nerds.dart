@@ -1,6 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
@@ -242,7 +242,7 @@ class _StatsForNerdsState extends State<StatsForNerds> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
                 child: Text('Close',
-                    style: GoogleFonts.inter(
+                    style: HMSTextStyle.setTextStyle(
                         color: themeDefaultColor,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -281,7 +281,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Bitrate",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -300,7 +300,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Bytes Sent",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -320,7 +320,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Round Trip",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -354,7 +354,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Bitrate",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -373,7 +373,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Bytes Received",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -393,7 +393,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Jitter",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -412,7 +412,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Packet Lost",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -432,7 +432,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Packet Received",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -469,7 +469,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Bitrate",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -488,7 +488,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Bytes Sent",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -508,7 +508,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Frame Rate",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -528,7 +528,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Round Trip",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -548,7 +548,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Quality Limitation",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -582,7 +582,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Bitrate",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -601,7 +601,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Bytes Received",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -621,7 +621,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Jitter",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -640,7 +640,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "FPS",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -660,7 +660,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Packet Lost",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -680,7 +680,7 @@ class StatsUI extends StatelessWidget {
                     children: [
                       Text(
                         "Packet Received",
-                        style: GoogleFonts.inter(
+                        style: HMSTextStyle.setTextStyle(
                             color: themeDefaultColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,

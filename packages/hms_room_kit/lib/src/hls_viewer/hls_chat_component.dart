@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -93,7 +92,7 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
                                   }
                                 },
                                 options: const LinkifyOptions(humanize: false),
-                                style: GoogleFonts.inter(
+                                style: HMSTextStyle.setTextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
                                   height: 20 / 14,
@@ -135,7 +134,7 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
                 },
                 textCapitalization: TextCapitalization.sentences,
                 textInputAction: TextInputAction.send,
-                style: GoogleFonts.inter(
+                style: HMSTextStyle.setTextStyle(
                     color: HMSThemeColors.onSurfaceHighEmphasis,
                     fontWeight: FontWeight.w400,
                     height: 20 / 14,
@@ -166,7 +165,7 @@ class _HLSChatComponentState extends State<HLSChatComponent> {
                             width: 2, color: HMSThemeColors.primaryDefault),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8))),
-                    hintStyle: GoogleFonts.inter(
+                    hintStyle: HMSTextStyle.setTextStyle(
                         color: HMSThemeColors.onSurfaceLowEmphasis,
                         fontSize: 14,
                         height: 0.6,

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
@@ -95,7 +95,7 @@ class _StartHLSBottomSheetState extends State<StartHLSBottomSheet> {
             Text(
               "Stream directly from the browser using any device with multiple hosts and real-time messaging, all within this platform.",
               maxLines: 2,
-              style: GoogleFonts.inter(
+              style: HMSTextStyle.setTextStyle(
                   color: themeSubHeadingColor,
                   fontSize: 14,
                   height: 20 / 14,
@@ -205,7 +205,7 @@ class _StartHLSBottomSheetState extends State<StartHLSBottomSheet> {
                     width: MediaQuery.of(context).size.width - 65,
                     child: Text(
                       "If recording has to be enabled later, streaming has to be stopped first.",
-                      style: GoogleFonts.inter(
+                      style: HMSTextStyle.setTextStyle(
                           fontSize: 12,
                           color: themeSubHeadingColor,
                           letterSpacing: 0.4,

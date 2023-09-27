@@ -4,7 +4,6 @@ import 'dart:io';
 ///Package imports
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
@@ -170,7 +169,9 @@ class _PreviewPageState extends State<PreviewPage> {
 
     return WillPopScope(
       onWillPop: () async {
-        previewStore.leave();
+        if (!previewStore.isRoomJoinedAndHLSStarted) {
+          previewStore.leave();
+        }
         return true;
       },
       child: Selector<PreviewStore, HMSException?>(
@@ -333,9 +334,10 @@ class _PreviewPageState extends State<PreviewPage> {
                                                           textCapitalization:
                                                               TextCapitalization
                                                                   .words,
-                                                          style: GoogleFonts.inter(
-                                                              color: HMSThemeColors
-                                                                  .onSurfaceHighEmphasis),
+                                                          style: HMSTextStyle
+                                                              .setTextStyle(
+                                                                  color: HMSThemeColors
+                                                                      .onSurfaceHighEmphasis),
                                                           controller:
                                                               nameController,
                                                           keyboardType:
@@ -359,7 +361,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                                                   ///This renders the hint text
                                                                   hintText:
                                                                       'Enter Name...',
-                                                                  hintStyle: GoogleFonts.inter(
+                                                                  hintStyle: HMSTextStyle.setTextStyle(
                                                                       color: HMSThemeColors
                                                                           .onSurfaceLowEmphasis,
                                                                       height:

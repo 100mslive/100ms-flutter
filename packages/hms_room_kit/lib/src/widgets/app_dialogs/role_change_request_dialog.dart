@@ -1,6 +1,6 @@
 // Package imports
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/common/app_color.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
@@ -33,7 +33,7 @@ class RoleChangeRequestDialogState extends State<RoleChangeRequestDialog> {
         children: [
           Text(
             message,
-            style: GoogleFonts.inter(
+            style: HMSTextStyle.setTextStyle(
               color: iconColor,
             ),
           ),

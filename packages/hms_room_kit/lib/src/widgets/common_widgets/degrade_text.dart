@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +22,7 @@ class DegradeText extends StatelessWidget {
               maxLines: 1,
               softWrap: true,
               overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.inter(
+              style: HMSTextStyle.setTextStyle(
                   fontWeight: FontWeight.w400,
                   color: HMSThemeColors.onSurfaceLowEmphasis,
                   fontSize: 14,

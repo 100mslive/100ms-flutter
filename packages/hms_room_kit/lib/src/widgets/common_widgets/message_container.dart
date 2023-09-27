@@ -1,15 +1,18 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+///Project imports
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MessageContainer extends StatelessWidget {
   final String message;
@@ -129,13 +132,13 @@ class MessageContainer extends StatelessWidget {
               }
             },
             options: const LinkifyOptions(humanize: false),
-            style: GoogleFonts.inter(
+            style: HMSTextStyle.setTextStyle(
                 fontSize: 14.0,
                 color: HMSThemeColors.onSurfaceHighEmphasis,
                 height: 20 / 14,
                 letterSpacing: 0.25,
                 fontWeight: FontWeight.w400),
-            linkStyle: GoogleFonts.inter(
+            linkStyle: HMSTextStyle.setTextStyle(
                 fontSize: 14.0,
                 color: HMSThemeColors.primaryDefault,
                 letterSpacing: 0.25,
