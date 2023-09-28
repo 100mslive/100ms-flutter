@@ -105,4 +105,9 @@ abstract class HMSUpdateListener {
   /// - Parameters:
   ///   - hmsSessionStore: An instance of HMSSessionStore which will be used to call session metadata methods
   void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore});
+
+  ///Upon joining a room with existing peers, onPeerListUpdated will be called with the list of peers present
+  ///in the room instead of getting onPeerUpdate for each peer in the room.
+  ///Subsequent peer joins/leaves would be notified via both onPeerUpdate and onPeerListUpdated
+  void onPeerListUpdate({required List<HMSPeer> addedPeers,required List<HMSPeer> removedPeers});
 }

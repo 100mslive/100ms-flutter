@@ -216,6 +216,9 @@ class MeetingStore extends ChangeNotifier
 
   int currentScreenSharePage = 0;
 
+  ///This stores the number of peers in the room
+  int peersInRoom = 0;
+
   Future<HMSException?> join(String userName, String roomCode,
       {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
@@ -508,7 +511,7 @@ class MeetingStore extends ChangeNotifier
       return;
     }
     if (isRaisedHand) {
-      changeMetadata();
+      toggleLocalPeerHandRaise();
     }
     if (currentRoleChangeRequest?.suggestedBy != null) {
       _hmsSDKInteractor.sendDirectMessage(
@@ -567,25 +570,29 @@ class MeetingStore extends ChangeNotifier
     return await _hmsSDKInteractor.getPeer(peerId: peerId);
   }
 
-  void changeMetadata() {
-    isRaisedHand = !isRaisedHand;
-    isBRB = false;
-    String value = isRaisedHand ? "true" : "false";
-    _hmsSDKInteractor.changeMetadata(
-        metadata:
-            "{\"isHandRaised\":$value,\"isBRBOn\":false,\"prevRole\":\"$previousRole\"}",
-        hmsActionResultListener: this);
+  void toggleLocalPeerHandRaise() {
+    if (isRaisedHand) {
+      _hmsSDKInteractor.lowerLocalPeerHand(hmsActionResultListener: this);
+    } else {
+      _hmsSDKInteractor.raiseLocalPeerHand(hmsActionResultListener: this);
+    }
+  }
+
+  void lowerRemotePeerHand(HMSPeer forPeer) {
+    _hmsSDKInteractor.lowerRemotePeerHand(
+        forPeer: forPeer, hmsActionResultListener: this);
   }
 
   bool isBRB = false;
 
   void changeMetadataBRB() {
     isBRB = !isBRB;
-    isRaisedHand = false;
+    if (isRaisedHand) {
+      _hmsSDKInteractor.lowerLocalPeerHand(hmsActionResultListener: this);
+    }
     String value = isBRB ? "true" : "false";
     _hmsSDKInteractor.changeMetadata(
-        metadata:
-            "{\"isHandRaised\":false,\"isBRBOn\":$value,\"prevRole\":\"$previousRole\"}",
+        metadata: "{\"isBRBOn\":$value,\"prevRole\":\"$previousRole\"}",
         hmsActionResultListener: this);
     if (isMicOn) {
       toggleMicMuteState();
@@ -603,13 +610,11 @@ class MeetingStore extends ChangeNotifier
     if (localPeer != null) {
       previousRole = localPeer?.role.name;
       if (isRaisedHand) {
-        changeMetadata();
+        toggleLocalPeerHandRaise();
       } else {
         ///Setting the previous role
-        String value = isRaisedHand ? "true" : "false";
         _hmsSDKInteractor.changeMetadata(
-            metadata:
-                "{\"isHandRaised\":$value,\"isBRBOn\":false,\"prevRole\":\"$previousRole\"}",
+            metadata: "{\"isBRBOn\":false,\"prevRole\":\"$previousRole\"}",
             hmsActionResultListener: this);
       }
       HMSRoomLayout.resetLayout(hmsRoleChangeRequest.suggestedRole.name);
@@ -801,6 +806,7 @@ class MeetingStore extends ChangeNotifier
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
     log("onRoomUpdate-> room: ${room.toString()} update: ${update.name}");
+    peersInRoom = room.peerCount;
     switch (update) {
       case HMSRoomUpdate.browserRecordingStateUpdated:
         recordingType["browser"] =
@@ -827,11 +833,8 @@ class MeetingStore extends ChangeNotifier
             ? "HLS Streaming Started"
             : "HLS Streaming Stopped");
         break;
-      case HMSRoomUpdate.roomPeerCountUpdated:
-        hmsRoom = room;
-        return;
       default:
-        return;
+        break;
     }
     hmsRoom = room;
     notifyListeners();
@@ -932,19 +935,16 @@ class MeetingStore extends ChangeNotifier
   void onMessage({required HMSMessage message}) {
     log("onMessage-> sender: ${message.sender} message: ${message.message} time: ${message.time}, type: ${message.type}");
     switch (message.type) {
-      case "metadata":
-        break;
-      case "EMOJI_REACTION":
-        break;
       case "role_change_declined":
         toggleRequestDeclined(message.sender);
         break;
-      default:
+      case "chat":
         addMessage(message);
         isNewMessageReceived = true;
         Utilities.showNotification(
             "New message from ${message.sender?.name ?? ""}", "message");
         notifyListeners();
+      default:
         break;
     }
   }
@@ -1233,7 +1233,7 @@ class MeetingStore extends ChangeNotifier
     participantsInMeetingMap[peer.role.name]
         ?.removeWhere((oldPeer) => oldPeer.peer.peerId == peer.peerId);
     participantsInMeeting--;
-    if (peer.metadata?.contains("\"isHandRaised\":true") ?? false) {
+    if (peer.isHandRaised) {
       participantsInMeetingMap["Hand Raised"]
           ?.removeWhere((oldPeer) => oldPeer.peer.peerId == peer.peerId);
       participantsInMeeting--;
@@ -1250,7 +1250,7 @@ class MeetingStore extends ChangeNotifier
           ?.add(ParticipantsStore(peer: peer));
       participantsInMeeting++;
     }
-    if (peer.metadata?.contains("\"isHandRaised\":true") ?? false) {
+    if (peer.isHandRaised) {
       participantsInMeetingMap["Hand Raised"]
           ?.add(ParticipantsStore(peer: peer));
       participantsInMeeting++;
@@ -1278,7 +1278,7 @@ class MeetingStore extends ChangeNotifier
     if (index != null && index != -1) {
       if ((peerUpdate == HMSPeerUpdate.nameChanged)) {
         participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
-        if ((peer.metadata?.contains("\"isHandRaised\":true") ?? false)) {
+        if (peer.isHandRaised) {
           int? peerIndex = participantsInMeetingMap["Hand Raised"]
               ?.indexWhere((element) => element.peer.peerId == peer.peerId);
           if (peerIndex != null && peerIndex != -1) {
@@ -1286,8 +1286,8 @@ class MeetingStore extends ChangeNotifier
                 .updatePeer(peer);
           }
         }
-      } else if (peerUpdate == HMSPeerUpdate.metadataChanged) {
-        if ((peer.metadata?.contains("\"isHandRaised\":true") ?? false)) {
+      } else if (peerUpdate == HMSPeerUpdate.handRaiseUpdated) {
+        if (peer.isHandRaised) {
           if (participantsInMeetingMap["Hand Raised"]?.indexWhere(
                   (element) => element.peer.peerId == peer.peerId) ==
               -1) {
@@ -1296,8 +1296,7 @@ class MeetingStore extends ChangeNotifier
             participantsInMeeting++;
           }
           participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
-        } else if ((peer.metadata?.contains("\"isHandRaised\":false") ??
-            false)) {
+        } else if (!peer.isHandRaised) {
           participantsInMeetingMap["Hand Raised"]?.removeWhere(
               (handDownPeer) => handDownPeer.peer.peerId == peer.peerId);
           participantsInMeeting--;
@@ -1411,10 +1410,21 @@ class MeetingStore extends ChangeNotifier
         if (index != -1) {
           PeerTrackNode peerTrackNode = peerTracks[index];
           peerTrackNode.peer = peer;
-          if (peer.metadata?.contains("\"isHandRaised\":true") ?? false) {
-            Utilities.showNotification(
-                "${peer.name} raised hand", "hand-raise");
-          }
+          peerTrackNode.notify();
+        }
+        updatePeerAt(peer);
+        updatePeerMap(update, peer);
+        break;
+
+      case HMSPeerUpdate.handRaiseUpdated:
+        if (peer.isLocal) {
+          localPeer = peer;
+        }
+        int index = peerTracks
+            .indexWhere((element) => element.uid == "${peer.peerId}mainVideo");
+        if (index != -1) {
+          PeerTrackNode peerTrackNode = peerTracks[index];
+          peerTrackNode.peer = peer;
           peerTrackNode.notify();
         } else {
           if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
@@ -1894,11 +1904,11 @@ class MeetingStore extends ChangeNotifier
   /// Method to toggle the role change toast
   ///
   void addRemoveToastsForRoleChange({required HMSPeer peer}) {
-    if (peer.metadata?.contains("\"isHandRaised\":true") ?? false) {
+    if (peer.isHandRaised) {
       toasts.add(
           HMSToastModel(peer, hmsToastType: HMSToastsType.roleChangeToast));
       notifyListeners();
-    } else if (peer.metadata?.contains("\"isHandRaised\":false") ?? false) {
+    } else if (!peer.isHandRaised) {
       toasts.removeWhere((toast) =>
           toast.hmsToastType == HMSToastsType.roleChangeToast &&
           peer.peerId == toast.toastData.peerId);
@@ -2034,6 +2044,18 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.sendHLSTimedMetadata:
         Utilities.showToast("Metadata sent successfully");
         break;
+      case HMSActionResultListenerMethod.lowerLocalPeerHand:
+        isRaisedHand = false;
+        isBRB = false;
+        notifyListeners();
+        break;
+      case HMSActionResultListenerMethod.raiseLocalPeerHand:
+        isRaisedHand = true;
+        isBRB = false;
+        notifyListeners();
+        break;
+      case HMSActionResultListenerMethod.lowerRemotePeerHand:
+        break;
       default:
         log("ActionResultListener onException-> method: ${methodType.toString()}Could not find a valid case while switching");
         break;
@@ -2109,6 +2131,12 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.sendHLSTimedMetadata:
         // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.lowerLocalPeerHand:
+        break;
+      case HMSActionResultListenerMethod.raiseLocalPeerHand:
+        break;
+      case HMSActionResultListenerMethod.lowerRemotePeerHand:
         break;
       default:
         log("ActionResultListener onException-> method: ${methodType.toString()} Could not find a valid case while switching");
@@ -2270,5 +2298,15 @@ class MeetingStore extends ChangeNotifier
       HMSHLSPlayerController.addHLSStatsListener();
     }
     notifyListeners();
+  }
+
+  @override
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {
+    log("onPeerListUpdate -> addedPeers: $addedPeers removedPeers: $removedPeers");
+    for (var peer in addedPeers) {
+      addPeer(peer);
+    }
   }
 }

@@ -108,9 +108,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         badgeContent: HMSTitleText(
                           text: context
                               .read<MeetingStore>()
-                              .peers
-                              .length
-                              .toString(),
+                              .peersInRoom.toString(),
                           textColor: HMSThemeColors.onSurfaceHighEmphasis,
                           fontSize: 10,
                           lineHeight: 16,
@@ -182,7 +180,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                 ,
                 MoreOptionItem(
                     onTap: () async {
-                      context.read<MeetingStore>().changeMetadata();
+                      context.read<MeetingStore>().toggleLocalPeerHandRaise();
                       Navigator.pop(context);
                     },
                     isActive: meetingStore.isRaisedHand,

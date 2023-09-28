@@ -17,7 +17,10 @@ enum HMSPeerUpdate {
   defaultUpdate,
 
   ///Peer's network quality updates
-  networkQualityUpdated
+  networkQualityUpdated,
+
+  ///Peer's hand raise updates
+  handRaiseUpdated
 }
 
 extension HMSPeerUpdateValues on HMSPeerUpdate {
@@ -35,8 +38,8 @@ extension HMSPeerUpdateValues on HMSPeerUpdate {
         return HMSPeerUpdate.nameChanged;
       case 'networkQualityUpdated':
         return HMSPeerUpdate.networkQualityUpdated;
-      case 'defaultUpdate':
-        return HMSPeerUpdate.defaultUpdate;
+      case 'handRaiseUpdated':
+        return HMSPeerUpdate.handRaiseUpdated;
       default:
         return HMSPeerUpdate.defaultUpdate;
     }
@@ -59,10 +62,14 @@ extension HMSPeerUpdateValues on HMSPeerUpdate {
       case HMSPeerUpdate.nameChanged:
         return 'nameChanged';
 
-      case HMSPeerUpdate.defaultUpdate:
-        return 'defaultUpdate';
+      case HMSPeerUpdate.handRaiseUpdated:
+        return 'handRaiseUpdated';
+
       case HMSPeerUpdate.networkQualityUpdated:
         return 'networkQualityUpdated';
+
+      default:
+        return 'defaultUpdate';
     }
   }
 }

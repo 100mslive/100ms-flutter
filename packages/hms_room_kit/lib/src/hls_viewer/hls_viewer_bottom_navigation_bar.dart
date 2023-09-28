@@ -95,7 +95,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                     onTap: () => {
                                       context
                                           .read<MeetingStore>()
-                                          .changeMetadata(),
+                                          .toggleLocalPeerHandRaise(),
                                     },
                                     enabledBorderColor: HMSThemeColors
                                         .backgroundDim

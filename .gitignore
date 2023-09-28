@@ -1,36 +1,52 @@
-sample apps/hms-callkit-app/.dart_tool/flutter_build/
-.dart_tool/package_config.json
-.dart_tool/package_config_subset
-.dart_tool/version
-android/.gradle/6.8.3/gc.properties
-android/.gradle/6.8.3/fileChanges/last-build.bin
-android/.gradle/6.8.3/fileHashes/fileHashes.lock
-android/.gradle/buildOutputCleanup/buildOutputCleanup.lock
-android/.gradle/buildOutputCleanup/cache.properties
-android/.gradle/checksums/checksums.lock
-android/.gradle/checksums/sha1-checksums.bin
-android/.gradle/configuration-cache/gc.properties
-android/.gradle/vcs-1/gc.properties
-android/.idea/.name
-android/.idea/gradle.xml
-android/.idea/misc.xml
-android/.idea/workspace.xml
-example/.flutter-plugins
-example/.flutter-plugins-dependencies
-example/.dart_tool/package_config.json
-example/.dart_tool/package_config_subset
-example/.dart_tool/flutter_build/
-example/android/.gradle/
-example/android/.idea/
-example/ios/.symlinks/
-example/ios/Pods/
-sample apps/flutter-quickstart-app/.dart_tool/
-sample apps/hms-callkit-app/.dart_tool/
-sample apps/flutter-quickstart-app/build/ios/Pods.build/
-packages/hms_room_kit/.dart_tool
+## HMSSDK 
+packages/hmssdk_flutter/example/android/.gradle/6.8.3/gc.properties
+packages/hmssdk_flutter/example/android/.gradle/6.8.3/fileChanges/last-build.bin
+packages/hmssdk_flutter/example/android/.gradle/6.8.3/fileHashes/fileHashes.lock
+packages/hmssdk_flutter/example/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock
+packages/hmssdk_flutter/example/android/.gradle/buildOutputCleanup/cache.properties
+packages/hmssdk_flutter/example/android/.gradle/checksums/checksums.lock
+packages/hmssdk_flutter/example/android/.gradle/checksums/sha1-checksums.bin
+packages/hmssdk_flutter/example/android/.gradle/configuration-cache/gc.properties
+packages/hmssdk_flutter/example/android/.gradle/vcs-1/gc.properties
+packages/hmssdk_flutter/example/android/.idea/.name
+packages/hmssdk_flutter/example/android/local.properties
+packages/hmssdk_flutter/example/android/.idea/gradle.xml
+packages/hmssdk_flutter/example/android/.idea/misc.xml
+packages/hmssdk_flutter/example/android/.idea/workspace.xml
+packages/hmssdk_flutter/example/.flutter-plugins
+packages/hmssdk_flutter/example/.flutter-plugins-dependencies
+packages/hmssdk_flutter/example/.dart_tool/package_config.json
+packages/hmssdk_flutter/example/.dart_tool/package_config_subset
+packages/hmssdk_flutter/example/.dart_tool/flutter_build/
+packages/hmssdk_flutter/example/android/.gradle/
+packages/hmssdk_flutter/example/android/.idea/
+packages/hmssdk_flutter/example/ios/.symlinks/
+packages/hmssdk_flutter/example/ios/Pods/
 packages/hmssdk_flutter/.dart_tool
 packages/hmssdk_flutter/example/.dart_tool
 packages/hmssdk_flutter/example/android/fastlane
 packages/hmssdk_flutter/example/build
 packages/hmssdk_flutter/example/ios/fastlane
 packages/hmssdk_flutter/example/android/app/google-services.json
+
+##HMS ROOM KIT
+packages/hms_room_kit/.dart_tool
+packages/hms_room_kit/.DS_Store
+packages/hms_room_kit/.flutter-plugins
+packages/hms_room_kit/.flutter-plugins-dependencies
+packages/hms_room_kit/android/local.properties
+packages/hms_room_kit/ios/Flutter/flutter_export_environment.sh
+packages/hms_room_kit/ios/Flutter/Generated.xcconfig
+
+##Sample apps
+sample apps/flutter-quickstart-app/.dart_tool/
+sample apps/hms-callkit-app/.dart_tool/
+sample apps/flutter-quickstart-app/build/ios/Pods.build/
+sample apps/hms-callkit-app/.dart_tool/flutter_build/
+
+##GIT Files
+.dart_tool/package_config.json
+.dart_tool/package_config_subset
+.dart_tool/version
+.DS_Store
+packages/.DS_Store

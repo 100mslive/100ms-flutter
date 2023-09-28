@@ -24,6 +24,7 @@ class HMSRemotePeer extends HMSPeer {
   HMSRemotePeer(
       {required String peerId,
       required String name,
+      required bool isHandRaised,
       bool isLocal = false,
       required HMSRole role,
       String? customerUserId,
@@ -38,6 +39,7 @@ class HMSRemotePeer extends HMSPeer {
             peerId: peerId,
             name: name,
             isLocal: isLocal,
+            isHandRaised: isHandRaised,
             role: role,
             customerUserId: customerUserId,
             metadata: metadata,
@@ -66,6 +68,7 @@ class HMSRemotePeer extends HMSPeer {
       peerId: map['peer_id'],
       name: map['name'],
       isLocal: map['is_local'],
+      isHandRaised: map['is_hand_raised'],
       role: role,
       metadata: map['metadata'],
       customerUserId: map['customer_user_id'],

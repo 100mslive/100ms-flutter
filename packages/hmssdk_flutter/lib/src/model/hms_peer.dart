@@ -22,10 +22,8 @@ class HMSPeer {
   ///returns whether the peer is local or not.
   final bool isLocal;
 
-  @override
-  String toString() {
-    return 'HMSPeer{name: $name, isLocal: $isLocal}';
-  }
+  ///returns whether peer's hand is raised or not
+  final bool isHandRaised;
 
   ///the current role of the peer in the room
   final HMSRole role;
@@ -54,19 +52,21 @@ class HMSPeer {
   ///updatedAt is the time when the peer object was last updated
   final DateTime? updatedAt;
 
-  HMSPeer(
-      {required this.peerId,
-      required this.name,
-      required this.isLocal,
-      required this.role,
-      this.customerUserId,
-      this.metadata,
-      this.audioTrack,
-      this.videoTrack,
-      this.auxiliaryTracks,
-      this.networkQuality,
-      this.joinedAt,
-      this.updatedAt});
+  HMSPeer({
+    required this.peerId,
+    required this.name,
+    required this.isLocal,
+    required this.role,
+    required this.isHandRaised,
+    this.customerUserId,
+    this.metadata,
+    this.audioTrack,
+    this.videoTrack,
+    this.auxiliaryTracks,
+    this.networkQuality,
+    this.joinedAt,
+    this.updatedAt,
+  });
 
   ///important to compare using [peerId]
   @override
@@ -89,6 +89,7 @@ class HMSPeer {
             peerId: map['peer_id'],
             name: map['name'],
             isLocal: map['is_local'],
+            isHandRaised: map['is_hand_raised'],
             role: role,
             metadata: map['metadata'],
             customerUserId: map['customer_user_id'],
@@ -108,6 +109,7 @@ class HMSPeer {
             peerId: map['peer_id'],
             name: map['name'],
             isLocal: map['is_local'],
+            isHandRaised: map['is_hand_raised'],
             role: role,
             metadata: map['metadata'],
             customerUserId: map['customer_user_id'],
@@ -133,6 +135,12 @@ class HMSPeer {
     }
 
     return peer;
+  }
+
+
+  @override
+  String toString() {
+    return 'HMSPeer{name: $name, isLocal: $isLocal}';
   }
 
   static List<HMSPeer> fromListOfMap(List peersMap) {
