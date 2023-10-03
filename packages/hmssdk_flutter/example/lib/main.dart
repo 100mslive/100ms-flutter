@@ -309,6 +309,8 @@ class _HomePageState extends State<HomePage> {
             builder: (_) => HMSPrebuilt(
                 roomCode: Constant.roomCode,
                 options: HMSPrebuiltOptions(
+                    userId: "flutter-user",
+                    userName: "Test_User",
                     endPoints: endPoints,
                     iOSScreenshareConfig: HMSIOSScreenshareConfig(
                         appGroup: "group.flutterhms",
