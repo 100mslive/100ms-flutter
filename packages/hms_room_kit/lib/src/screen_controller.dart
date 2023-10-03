@@ -24,7 +24,13 @@ class ScreenController extends StatefulWidget {
   ///For more details checkout the [HMSPrebuiltOptions] class
   final HMSPrebuiltOptions? options;
 
-  const ScreenController({super.key, required this.roomCode, this.options});
+  ///The callback for the leave room button
+  ///This function can be passed if you wish to perform some specific actions
+  ///in addition to leaving the room when the leave room button is pressed
+  final Function? onLeave;
+
+  const ScreenController(
+      {super.key, required this.roomCode, this.options, this.onLeave});
   @override
   State<ScreenController> createState() => _ScreenControllerState();
 }
@@ -42,6 +48,7 @@ class _ScreenControllerState extends State<ScreenController> {
     ///Setting the prebuilt options and roomCode
     Constant.prebuiltOptions = widget.options;
     Constant.roomCode = widget.roomCode;
+    Constant.onLeave = widget.onLeave;
 
     ///Here we set the endPoints if it's non-null
     if (widget.options?.endPoints != null) {
@@ -103,7 +110,7 @@ class _ScreenControllerState extends State<ScreenController> {
     await _hmsSDKInteractor.build();
     _previewStore = PreviewStore(hmsSDKInteractor: _hmsSDKInteractor);
     HMSException? ans = await _previewStore.startPreview(
-        userName: widget.options?.userName??"", roomCode: Constant.roomCode);
+        userName: widget.options?.userName ?? "", roomCode: Constant.roomCode);
 
     ///If preview fails then we show the error dialog
     ///with the error message and description
@@ -149,7 +156,7 @@ class _ScreenControllerState extends State<ScreenController> {
                   value: _previewStore,
                   child: PreviewPage(
                     roomCode: Constant.roomCode,
-                    name:widget.options?.userName??"",
+                    name: widget.options?.userName ?? "",
                     options: widget.options,
                   ))
               : PreviewPermissions(
