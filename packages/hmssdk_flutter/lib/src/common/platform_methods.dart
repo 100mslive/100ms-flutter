@@ -187,7 +187,12 @@ enum PlatformMethod {
   toggleAlwaysScreenOn,
   getRoomLayout,
   previewForRole,
-  cancelPreview
+  cancelPreview,
+
+  ///PeerListIteratorMethods
+  getPeerListIterator,
+  peerListIteratorHasNext,
+  peerListIteratorNext
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -465,6 +470,15 @@ extension PlatformMethodValues on PlatformMethod {
         return "toggle_always_screen_on";
       case PlatformMethod.getRoomLayout:
         return "get_room_layout";
+
+      ///Peer list iterator methods
+      case PlatformMethod.getPeerListIterator:
+        return "get_peer_list_iterator";
+      case PlatformMethod.peerListIteratorHasNext:
+        return "peer_list_iterator_has_next";
+      case PlatformMethod.peerListIteratorNext:
+        return "peer_list_iterator_next";
+
       default:
         return 'unknown';
     }
@@ -744,6 +758,15 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.toggleAlwaysScreenOn;
       case "get_room_layout":
         return PlatformMethod.getRoomLayout;
+
+      ///Peer List Iterator methods
+      case "get_peer_list_iterator":
+        return PlatformMethod.getPeerListIterator;
+      case "peer_list_iterator_has_next":
+        return PlatformMethod.peerListIteratorHasNext;
+      case "peer_list_iterator_next":
+        return PlatformMethod.peerListIteratorNext;
+
       default:
         return PlatformMethod.unknown;
     }

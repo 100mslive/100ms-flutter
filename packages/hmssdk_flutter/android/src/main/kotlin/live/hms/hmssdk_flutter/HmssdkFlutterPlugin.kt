@@ -241,6 +241,9 @@ class HmssdkFlutterPlugin :
             "get_room_layout" -> {
                 getRoomLayout(call, result)
             }
+            "get_peer_list_iterator","peer_list_iterator_has_next","peer_list_iterator_next" -> {
+                HMSPeerListIteratorAction.peerListIteratorAction(call,result,hmssdk!!)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -539,6 +542,7 @@ class HmssdkFlutterPlugin :
     private fun leave(result: Result) {
         hmssdk!!.leave(hmsActionResultListener = HMSCommonAction.getActionListener(result))
         HMSPipAction.disposePIP(activity)
+        HMSPeerListIteratorAction.clearIteratorMap()
         removeAllKeyChangeListener()
     }
 
@@ -884,6 +888,7 @@ class HmssdkFlutterPlugin :
             hmsActionResultListener = HMSCommonAction.getActionListener(result),
         )
         HMSPipAction.disposePIP(activity)
+        HMSPeerListIteratorAction.clearIteratorMap()
         removeAllKeyChangeListener()
     }
 
@@ -1137,6 +1142,7 @@ class HmssdkFlutterPlugin :
                 if (HMSPipAction.isPIPActive(activity)) {
                     activity.moveTaskToBack(true)
                     HMSPipAction.disposePIP(activity)
+                    HMSPeerListIteratorAction.clearIteratorMap()
                     removeAllKeyChangeListener()
                 }
                 if (args["data"] != null) {

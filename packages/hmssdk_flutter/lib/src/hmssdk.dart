@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
+import 'package:hmssdk_flutter/src/model/peer_list_iterator_options.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../hmssdk_flutter.dart';
 
@@ -1378,6 +1379,28 @@ class HMSSDK {
   /// Refer [Call stats guide here](https://www.100ms.live/docs/flutter/v2/features/call-stats)
   void removeStatsListener({required HMSStatsListener listener}) {
     PlatformService.removeRTCStatsListener(listener);
+  }
+
+  /// Method to get the peer list iterator in the room, only in case of large rooms
+  /// 
+  /// Checkout the [HMSPeerListIterator] class for more details about the iterator
+  ///
+  /// **Parameters**:
+  /// 
+  /// **peerListIteratorOptions** - [peerListIteratorOptions] is the options to get the iterator based on the filter set in [peerListIteratorOptions] parameter
+  Future<dynamic> getPeerListIterator(
+      {PeerListIteratorOptions? peerListIteratorOptions}) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.getPeerListIterator,
+        arguments: {
+          "uid": DateTime.now().millisecondsSinceEpoch.toString(),
+          "peer_list_iterator_options": peerListIteratorOptions?.toMap()
+        });
+    if (result["success"]) {
+      return HMSPeerListIterator.fromMap(result["data"]);
+    } else {
+      return HMSException.fromMap(result["data"]["error"]);
+    }
   }
 
   /// To modify local peer's audio & video tracks settings use the [hmsTrackSetting]. Only required for advanced use cases.

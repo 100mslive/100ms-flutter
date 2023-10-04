@@ -291,6 +291,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "get_room_layout":
             getRoomLayout(call, result)
+            
+        case "get_peer_list_iterator","peer_list_iterator_has_next","peer_list_iterator_next":
+            HMSPeerListIteratorAction.peerListIteratorAction(call, result, hmsSDK)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -1590,5 +1593,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         destroyPIPController()
         removeAllKeyChangeListener()
         removeHMSLogger()
+        HMSPeerListIteratorAction.clearIteratorMap()
     }
 }
