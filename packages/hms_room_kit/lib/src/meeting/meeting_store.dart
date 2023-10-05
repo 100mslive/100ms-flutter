@@ -216,6 +216,10 @@ class MeetingStore extends ChangeNotifier
 
   int currentScreenSharePage = 0;
 
+  ///PeerList iterators
+
+  Map<String, HMSPeerListIterator> peerListIterators = {};
+
   Future<HMSException?> join(String userName, String roomCode,
       {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
@@ -653,6 +657,16 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
+  void setPeerListIterator(PeerListIteratorOptions options) async {
+    var peerListIterator = await _hmsSDKInteractor.getPeerListIterator(
+        peerListIteratorOptions: options);
+    if (peerListIterator != null && peerListIterator is HMSPeerListIterator) {
+      peerListIterators[peerListIterator.uid] = peerListIterator;
+    } else {
+      log("Error in getting peer list iterator");
+    }
+  }
+
   Future<List<HMSPeer>?> getPeers() async {
     return await _hmsSDKInteractor.getPeers();
   }
@@ -780,6 +794,12 @@ class MeetingStore extends ChangeNotifier
         .where((role) => role.publishSettings?.allowed.isEmpty ?? false)
         .forEach((element) {
       participantsInMeetingMap[element.name] = [];
+    });
+
+    List<String>? offStageRoles = HMSRoomLayout.roleLayoutData?.screens
+        ?.conferencing?.defaultConf?.elements?.onStageExp?.offStageRoles;
+    offStageRoles?.forEach((role) {
+      setPeerListIterator(PeerListIteratorOptions(limit: 10, byRoleName: role));
     });
   }
 

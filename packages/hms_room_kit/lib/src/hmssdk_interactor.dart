@@ -392,4 +392,10 @@ class HMSSDKInteractor {
   Future<dynamic> cancelPreview() async {
     return await hmsSDK.cancelPreview();
   }
+
+  Future<dynamic> getPeerListIterator(
+      {PeerListIteratorOptions? peerListIteratorOptions}) async {
+    return await hmsSDK.getPeerListIterator(
+        peerListIteratorOptions: peerListIteratorOptions);
+  }
 }
