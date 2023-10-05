@@ -202,8 +202,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             roleActions(call, result)
 
             // MARK: - Peer Action
-        case "change_metadata", "change_name":
-            peerActions(call, result)
+        case "change_metadata", "change_name", "raise_local_peer_hand", "lower_local_peer_hand", "lower_remote_peer_hand":
+            HMSPeerAction.peerActions(call, result,hmsSDK)
 
             // MARK: - RTMP
 
@@ -362,20 +362,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "cancel_preview":
             cancelPreview(result)
 
-        default:
-            result(FlutterMethodNotImplemented)
-        }
-    }
-
-    // MARK: - Peer Actions
-
-    private func peerActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        switch call.method {
-        case "change_metadata":
-            changeMetadata(call, result)
-
-        case "change_name":
-            changeName(call, result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -1060,50 +1046,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
         }
     }
-
-    private var hasChangedMetadata = false
-
-    private func changeMetadata(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-
-        let arguments = call.arguments as! [AnyHashable: Any]
-
-        guard let metadata = arguments["metadata"] as? String else {
-            result(HMSErrorExtension.getError("No metadata found in \(#function)"))
-            return
-        }
-
-        hmsSDK?.change(metadata: metadata) { [weak self] _, error in
-            if let error = error {
-                result(HMSErrorExtension.toDictionary(error))
-                return
-            } else {
-                if let strongSelf = self {
-                    strongSelf.hasChangedMetadata = !strongSelf.hasChangedMetadata
-                }
-                result(nil)
-            }
-        }
-    }
-
-    private func changeName(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-
-        let arguments = call.arguments as![AnyHashable: Any]
-
-        guard let name = arguments["name"] as? String else {
-            result(HMSErrorExtension.getError("No name found in \(#function)"))
-            return
-        }
-
-        hmsSDK?.change(name: name) { _, error in
-            if let error = error {
-                result(HMSErrorExtension.toDictionary(error))
-            } else {
-                result(nil)
-            }
-
-        }
-    }
-
+    
     // MARK: - Logging
 
     private var logLevel = HMSLogLevel.off
@@ -1417,6 +1360,28 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     public func onReconnected() {
         let data = [ "event_name": "on_re_connected" ]
+        eventSink?(data)
+    }
+    
+    public func onPeerListUpdate(added: [HMSPeer], removed: [HMSPeer]) {
+        var parameters = [String:Any]()
+        
+        var addedPeers = [Any]()
+        var removedPeers = [Any]()
+        
+        added.forEach{
+            addedPeers.append(HMSPeerExtension.toDictionary($0))
+        }
+        
+        removed.forEach{
+            removedPeers.append(HMSPeerExtension.toDictionary($0))
+        }
+        
+        parameters["added_peers"] = addedPeers
+        parameters["removed_peers"] = removedPeers
+        
+        let data = ["event_name": "on_peer_list_update","data":parameters] as [String : Any]
+        
         eventSink?(data)
     }
 

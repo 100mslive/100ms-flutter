@@ -192,7 +192,10 @@ enum PlatformMethod {
   ///PeerListIteratorMethods
   getPeerListIterator,
   peerListIteratorHasNext,
-  peerListIteratorNext
+  peerListIteratorNext,
+  lowerLocalPeerHand,
+  lowerRemotePeerHand,
+  raiseLocalPeerHand
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -479,6 +482,12 @@ extension PlatformMethodValues on PlatformMethod {
       case PlatformMethod.peerListIteratorNext:
         return "peer_list_iterator_next";
 
+      case PlatformMethod.lowerLocalPeerHand:
+        return "lower_local_peer_hand";
+      case PlatformMethod.lowerRemotePeerHand:
+        return "lower_remote_peer_hand";
+      case PlatformMethod.raiseLocalPeerHand:
+        return "raise_local_peer_hand";
       default:
         return 'unknown';
     }
@@ -767,6 +776,12 @@ extension PlatformMethodValues on PlatformMethod {
       case "peer_list_iterator_next":
         return PlatformMethod.peerListIteratorNext;
 
+      case "lower_local_peer_hand":
+        return PlatformMethod.lowerLocalPeerHand;
+      case "lower_remote_peer_hand":
+        return PlatformMethod.lowerRemotePeerHand;
+      case "raise_local_peer_hand":
+        return PlatformMethod.raiseLocalPeerHand;
       default:
         return PlatformMethod.unknown;
     }

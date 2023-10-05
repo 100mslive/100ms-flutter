@@ -349,4 +349,9 @@ class PreviewStore extends ChangeNotifier
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {}
+  
+  @override
+  void onPeerListUpdate({required List<HMSPeer> addedPeers, required List<HMSPeer> removedPeers}) {
+    log("onPeerListUpdate -> addedPeers: $addedPeers removedPeers: $removedPeers");
+  }
 }

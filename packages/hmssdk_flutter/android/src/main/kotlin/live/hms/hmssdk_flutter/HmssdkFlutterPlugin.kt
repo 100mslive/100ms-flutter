@@ -164,8 +164,8 @@ class HmssdkFlutterPlugin :
             }
 
             // MARK: Peer Actions
-            "change_metadata", "change_name" -> {
-                peerActions(call, result)
+            "change_metadata", "change_name", "raise_local_peer_hand", "lower_local_peer_hand", "lower_remote_peer_hand" -> {
+                HMSPeerAction.peerActions(call, result,hmssdk!!)
             }
 
             // MARK: Recording
@@ -319,25 +319,6 @@ class HmssdkFlutterPlugin :
             "cancel_preview" -> {
                 cancelPreview(result)
             }
-            else -> {
-                result.notImplemented()
-            }
-        }
-    }
-
-    // MARK: Peer Actions
-    private fun peerActions(
-        call: MethodCall,
-        result: Result,
-    ) {
-        when (call.method) {
-            "change_metadata" -> {
-                changeMetadata(call, result)
-            }
-            "change_name" -> {
-                changeName(call, result)
-            }
-
             else -> {
                 result.notImplemented()
             }
@@ -980,21 +961,6 @@ class HmssdkFlutterPlugin :
         result.success(true)
     }
 
-    private var hasChangedMetadata: Boolean = false
-
-    private fun changeMetadata(
-        call: MethodCall,
-        result: Result,
-    ) {
-        hasChangedMetadata = !hasChangedMetadata
-        val metadata = call.argument<String>("metadata")
-
-        hmssdk!!.changeMetadata(
-            metadata!!,
-            hmsActionResultListener = HMSCommonAction.getActionListener(result),
-        )
-    }
-
     private val hmsUpdateListener =
         object : HMSUpdateListener {
             override fun onChangeTrackStateRequest(details: HMSChangeTrackStateRequest) {
@@ -1189,6 +1155,37 @@ class HmssdkFlutterPlugin :
                     eventSink?.success(args)
                 }
             }
+
+            override fun peerListUpdated(
+                addedPeers: ArrayList<HMSPeer>?,
+                removedPeers: ArrayList<HMSPeer>?
+            ) {
+                val args = HashMap<String, Any?>()
+                args["event_name"] = "on_peer_list_update"
+                val parameters = HashMap<String,Any?>()
+                val peersAdded  = ArrayList<HashMap<String, Any?>?>()
+                val peersRemoved = ArrayList<HashMap<String, Any?>?>()
+                /**
+                 * Here we add peers to the list after parsing the
+                 * peer object
+                 */
+                addedPeers?.forEach {peer->
+                    peersAdded.add(HMSPeerExtension.toDictionary(peer))
+                }
+
+                removedPeers?.forEach{peer->
+                    peersRemoved.add(HMSPeerExtension.toDictionary(peer))
+                }
+
+                parameters["added_peers"] = peersAdded
+                parameters["removed_peers"] = peersRemoved
+
+                args["data"] = parameters
+
+                CoroutineScope(Dispatchers.Main).launch {
+                    eventSink?.success(args)
+                }
+            }
         }
 
     private val hmsPreviewListener =
@@ -1306,17 +1303,6 @@ class HmssdkFlutterPlugin :
     private fun getAllLogs(result: Result) {
         result.success(logsDump)
         logsBuffer.clear()
-    }
-
-    private fun changeName(
-        call: MethodCall,
-        result: Result,
-    ) {
-        val name = call.argument<String>("name")
-        hmssdk!!.changeName(
-            name = name!!,
-            hmsActionResultListener = HMSCommonAction.getActionListener(result),
-        )
     }
 
     fun onVideoViewError(

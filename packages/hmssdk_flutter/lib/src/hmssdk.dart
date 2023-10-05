@@ -1382,11 +1382,11 @@ class HMSSDK {
   }
 
   /// Method to get the peer list iterator in the room, only in case of large rooms
-  /// 
+  ///
   /// Checkout the [HMSPeerListIterator] class for more details about the iterator
   ///
   /// **Parameters**:
-  /// 
+  ///
   /// **peerListIteratorOptions** - [peerListIteratorOptions] is the options to get the iterator based on the filter set in [peerListIteratorOptions] parameter
   Future<dynamic> getPeerListIterator(
       {PeerListIteratorOptions? peerListIteratorOptions}) async {
@@ -1400,6 +1400,78 @@ class HMSSDK {
       return HMSPeerListIterator.fromMap(result["data"]);
     } else {
       return HMSException.fromMap(result["data"]["error"]);
+    }
+  }
+
+  ///Method to lower hand for local peer
+  ///
+  ///**Parameter**:
+  ///
+  ///**hmsActionResultListener** - [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess] and [HMSActionResultListener.onException] will be called.
+  ///
+  ///TODO: Add docs link
+  void lowerLocalPeerHand(
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    final dynamic result =
+        await PlatformService.invokeMethod(PlatformMethod.lowerLocalPeerHand);
+    if (hmsActionResultListener != null) {
+      if (result == null) {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.lowerLocalPeerHand);
+      } else {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.lowerLocalPeerHand,
+            hmsException: HMSException.fromMap(result["error"]));
+      }
+    }
+  }
+
+  ///Method to raise hand for local peer
+  ///
+  ///**Parameter**:
+  ///
+  ///**hmsActionResultListener** - [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess] and [HMSActionResultListener.onException] will be called.
+  ///
+  ///TODO: Add docs link
+  void raiseLocalPeerHand(
+      {HMSActionResultListener? hmsActionResultListener}) async {
+    final dynamic result =
+        await PlatformService.invokeMethod(PlatformMethod.raiseLocalPeerHand);
+    if (hmsActionResultListener != null) {
+      if (result == null) {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.raiseLocalPeerHand);
+      } else {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.raiseLocalPeerHand,
+            hmsException: HMSException.fromMap(result["error"]));
+      }
+    }
+  }
+
+  ///Method to lower remote peer's hand
+  ///
+  ///**Parameter**:
+  ///
+  ///**forPeer** - [forPeer] the peer whose hand you wish to lower
+  ///**hmsActionResultListener** - [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess] and [HMSActionResultListener.onException] will be called.
+  ///
+  ///TODO: Add docs link
+  void lowerRemotePeerHand(
+      {required HMSPeer forPeer,
+      HMSActionResultListener? hmsActionResultListener}) async {
+    final dynamic result = await PlatformService.invokeMethod(
+        PlatformMethod.lowerRemotePeerHand,
+        arguments: {"peer_id": forPeer.peerId});
+    if (hmsActionResultListener != null) {
+      if (result == null) {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.lowerRemotePeerHand);
+      } else {
+        hmsActionResultListener.onException(
+            methodType: HMSActionResultListenerMethod.lowerRemotePeerHand,
+            hmsException: HMSException.fromMap(result["error"]));
+      }
     }
   }
 

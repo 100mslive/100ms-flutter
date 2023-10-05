@@ -303,7 +303,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                   ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                        context.read<MeetingStore>().changeMetadata();
+                        context.read<MeetingStore>().toggleLocalPeerHandRaise();
                         Navigator.pop(context);
                       },
                       contentPadding: EdgeInsets.zero,
