@@ -51,3 +51,4 @@ sample apps/hms-callkit-app/.dart_tool/flutter_build/
 .dart_tool/version
 .DS_Store
 packages/.DS_Store
+Runner.ipa
