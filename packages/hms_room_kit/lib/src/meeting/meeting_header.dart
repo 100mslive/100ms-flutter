@@ -119,7 +119,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
             Selector<MeetingStore, Tuple2<bool, int>>(
                 selector: (_, meetingStore) => Tuple2(
                     meetingStore.streamingType['hls'] ?? false,
-                    meetingStore.peers.length),
+                    meetingStore.peersInRoom),
                 builder: (_, data, __) {
                   return data.item1
                       ? Container(

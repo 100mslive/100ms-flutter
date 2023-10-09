@@ -16,6 +16,7 @@ class  HMSPeerExtension {
             "peer_id": peer.peerID,
             "name": peer.name,
             "is_local": peer.isLocal,
+            "is_hand_raised": peer.isHandRaised,
             "customer_description": peer.metadata ?? "",
             "customer_user_id": peer.customerUserID ?? "",
             "joined_at": "\(peer.joinedAt)",
@@ -65,6 +66,8 @@ class  HMSPeerExtension {
             return "metadataChanged"
         case .networkQualityUpdated:
             return "networkQualityUpdated"
+        case .handRaiseUpdated:
+            return "handRaiseUpdated"
         @unknown default:
             return "defaultUpdate"
         }

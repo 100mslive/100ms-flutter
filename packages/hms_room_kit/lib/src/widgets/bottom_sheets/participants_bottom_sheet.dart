@@ -97,6 +97,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                             return;
                           } catch (e) {
                             log(e.toString());
+                            return;
                           }
                         }
                       }
@@ -111,6 +112,10 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                   }
                   break;
                 case 2:
+                  ///Here we lower the remote peer hand
+                  meetingStore.lowerRemotePeerHand(peer);
+                  break;
+                case 3:
 
                   ///Here we check whether the video track is null or not
                   if (peerTrackNode?.track == null) {
@@ -119,7 +124,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                   meetingStore.changeTrackState(
                       peerTrackNode!.track!, !peerTrackNode.track!.isMute);
                   break;
-                case 3:
+                case 4:
 
                   ///Here we check whether the audio track is null or not
                   if (peerTrackNode?.audioTrack == null) {
@@ -128,7 +133,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                   meetingStore.changeTrackState(peerTrackNode!.audioTrack!,
                       !peerTrackNode.audioTrack!.isMute);
                   break;
-                case 4:
+                case 5:
 
                   ///This is called when someone clicks on remove Participant
                   meetingStore.removePeerFromRoom(peer);
@@ -170,11 +175,34 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                         ),
                       ]),
                     ),
+                  if (peer.isHandRaised)
+                    PopupMenuItem(
+                      value: 2,
+                      child: Row(children: [
+                        SvgPicture.asset(
+                            "packages/hms_room_kit/lib/src/assets/icons/lower_hand.svg",
+                            width: 18,
+                            height: 18,
+                            colorFilter: ColorFilter.mode(
+                                HMSThemeColors.onSurfaceHighEmphasis,
+                                BlendMode.srcIn)),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        HMSTitleText(
+                          text: "Lower Hand",
+                          textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                          fontSize: 14,
+                          lineHeight: 20,
+                          letterSpacing: 0.1,
+                        ),
+                      ]),
+                    ),
                   if (mutePermission &&
                       peerTrackNode != null &&
                       !peerTrackNode.peer.isLocal)
                     PopupMenuItem(
-                      value: 2,
+                      value: 3,
                       child: Row(children: [
                         SvgPicture.asset(
                           peerTrackNode.track?.isMute ?? false
@@ -203,7 +231,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                       peerTrackNode != null &&
                       !peerTrackNode.peer.isLocal)
                     PopupMenuItem(
-                      value: 3,
+                      value: 4,
                       child: Row(children: [
                         SvgPicture.asset(
                           peerTrackNode.audioTrack?.isMute ?? false
@@ -230,7 +258,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                     ),
                   if (removePeerPermission)
                     PopupMenuItem(
-                      value: 4,
+                      value: 5,
                       child: Row(children: [
                         SvgPicture.asset(
                             "packages/hms_room_kit/lib/src/assets/icons/peer_remove.svg",
@@ -422,8 +450,9 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                                       Selector<
                                                                               ParticipantsStore,
                                                                               bool>(
-                                                                          selector: (_, participantsStore) => (participantsStore.peer.metadata?.contains("\"isHandRaised\":true") ??
-                                                                              false),
+                                                                          selector: (_, participantsStore) => (participantsStore
+                                                                              .peer
+                                                                              .isHandRaised),
                                                                           builder: (_,
                                                                               isHandRaised,
                                                                               __) {

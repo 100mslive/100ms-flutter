@@ -286,6 +286,25 @@ class PlatformService {
           notifyUpdateListeners(method, {});
           break;
 
+        case HMSUpdateListenerMethod.onPeerListUpdate:
+          List<HMSPeer> addedPeers = [];
+          List<HMSPeer> removedPeers = [];
+
+          if (data.containsKey("added_peers") && data["added_peers"] != null) {
+            for (var peer in data["added_peers"]) {
+              addedPeers.add(HMSPeer.fromMap(peer));
+            }
+          }
+
+          if (data.containsKey("removed_peers") &&
+              data["removed_peers"] != null) {
+            for (var peer in data["removed_peers"]) {
+              removedPeers.add(HMSPeer.fromMap(peer));
+            }
+          }
+
+          notifyUpdateListeners(method, {"added_peers":addedPeers,"removed_peers":removedPeers});
+          break;
         case HMSUpdateListenerMethod.unknown:
           break;
       }
@@ -659,6 +678,14 @@ class PlatformService {
       case HMSUpdateListenerMethod.onSessionStoreAvailable:
         updateListeners.forEach((e) =>
             e.onSessionStoreAvailable(hmsSessionStore: HMSSessionStore()));
+        break;
+
+      case HMSUpdateListenerMethod.onPeerListUpdate:
+        updateListeners.forEach((e) {
+          e.onPeerListUpdate(
+              addedPeers: arguments["added_peers"],
+              removedPeers: arguments["removed_peers"]);
+        });
         break;
 
       case HMSUpdateListenerMethod.unknown:

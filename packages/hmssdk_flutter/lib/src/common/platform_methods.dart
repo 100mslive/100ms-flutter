@@ -187,7 +187,10 @@ enum PlatformMethod {
   toggleAlwaysScreenOn,
   getRoomLayout,
   previewForRole,
-  cancelPreview
+  cancelPreview,
+  lowerLocalPeerHand,
+  lowerRemotePeerHand,
+  raiseLocalPeerHand
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -465,6 +468,12 @@ extension PlatformMethodValues on PlatformMethod {
         return "toggle_always_screen_on";
       case PlatformMethod.getRoomLayout:
         return "get_room_layout";
+      case PlatformMethod.lowerLocalPeerHand:
+        return "lower_local_peer_hand";
+      case PlatformMethod.lowerRemotePeerHand:
+        return "lower_remote_peer_hand";
+      case PlatformMethod.raiseLocalPeerHand:
+        return "raise_local_peer_hand";
       default:
         return 'unknown';
     }
@@ -744,6 +753,12 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.toggleAlwaysScreenOn;
       case "get_room_layout":
         return PlatformMethod.getRoomLayout;
+      case "lower_local_peer_hand":
+        return PlatformMethod.lowerLocalPeerHand;
+      case "lower_remote_peer_hand":
+        return PlatformMethod.lowerRemotePeerHand;
+      case "raise_local_peer_hand":
+        return PlatformMethod.raiseLocalPeerHand;
       default:
         return PlatformMethod.unknown;
     }
