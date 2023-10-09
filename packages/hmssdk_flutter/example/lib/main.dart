@@ -309,6 +309,7 @@ class _HomePageState extends State<HomePage> {
                 roomCode: Constant.roomCode,
                 options: HMSPrebuiltOptions(
                     endPoints: endPoints,
+                    userId: "user_flutter", // pass your custom unique user identifier here
                     iOSScreenshareConfig: HMSIOSScreenshareConfig(
                         appGroup: "group.flutterhms",
                         preferredExtension:
