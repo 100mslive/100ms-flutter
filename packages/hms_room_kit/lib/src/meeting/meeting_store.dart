@@ -1910,7 +1910,7 @@ class MeetingStore extends ChangeNotifier
       toasts.add(
           HMSToastModel(peer, hmsToastType: HMSToastsType.roleChangeToast));
       notifyListeners();
-    } else if (!peer.isHandRaised) {
+    } else {
       toasts.removeWhere((toast) =>
           toast.hmsToastType == HMSToastsType.roleChangeToast &&
           peer.peerId == toast.toastData.peerId);
