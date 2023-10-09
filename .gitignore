@@ -34,3 +34,4 @@ packages/hmssdk_flutter/example/android/fastlane
 packages/hmssdk_flutter/example/build
 packages/hmssdk_flutter/example/ios/fastlane
 packages/hmssdk_flutter/example/android/app/google-services.json
+packages/hmssdk_flutter/build/
