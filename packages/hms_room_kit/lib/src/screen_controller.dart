@@ -110,7 +110,7 @@ class _ScreenControllerState extends State<ScreenController> {
     await _hmsSDKInteractor.build();
     _previewStore = PreviewStore(hmsSDKInteractor: _hmsSDKInteractor);
     HMSException? ans = await _previewStore.startPreview(
-        userName: "", roomCode: Constant.roomCode);
+        userName: widget.options?.userName??"", roomCode: Constant.roomCode);
 
     ///If preview fails then we show the error dialog
     ///with the error message and description
@@ -156,7 +156,7 @@ class _ScreenControllerState extends State<ScreenController> {
                   value: _previewStore,
                   child: PreviewPage(
                     roomCode: Constant.roomCode,
-                    name: "",
+                    name: widget.options?.userName??"",
                     options: widget.options,
                   ))
               : PreviewPermissions(
