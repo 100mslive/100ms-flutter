@@ -20,6 +20,7 @@ buildscript {
 
 rootProject.allprojects {
     repositories {
+        mavenlocal()
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
@@ -41,9 +42,13 @@ android {
 }
 
 dependencies {
-    implementation "live.100ms:android-sdk:${sdkVersions['android']}"
-    implementation "live.100ms:video-view:${sdkVersions['android']}"
-    implementation "live.100ms:hls-player:${sdkVersions['android']}"
+//    implementation "live.100ms:android-sdk:${sdkVersions['android']}"
+//    implementation "live.100ms:video-view:${sdkVersions['android']}"
+//    implementation "live.100ms:hls-player:${sdkVersions['android']}"
+    implementation "live.100ms:android-sdk:2.7.8"
+    implementation "live.100ms:video-view:2.7.8"
+    implementation "live.100ms:hls-player:2.7.8"
+
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
