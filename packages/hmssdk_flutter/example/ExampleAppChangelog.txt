@@ -6,7 +6,10 @@ https://github.com/100mslive/100ms-flutter/pull/1601
 - Added first class api for hand raise and peer list updates
 https://github.com/100mslive/100ms-flutter/pull/1600
 
-Room Kit: 1.0.1
-Core SDK: 1.8.0
+- Added peer list iterator changes for large rooms
+https://github.com/100mslive/100ms-flutter/pull/1602
+
+Room Kit: 1.0.3
+Core SDK: 1.9.0
 Android SDK: 2.7.7
-iOS SDK: 1.0.1
+iOS SDK: 1.1.0
