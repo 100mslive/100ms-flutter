@@ -12,13 +12,14 @@ import SwiftUI
 
 @available(iOS 15.0, *)
 class HMSPIPAction {
+
     static var pipVideoCallViewController: UIViewController?
     static var pipController: AVPictureInPictureController?
     static var model: PiPModel?
-    static func pipAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?, _ swiftHmssdkFlutterPlugin: SwiftHmssdkFlutterPlugin) {
+    static func pipAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?, _ plugin: AVPictureInPictureControllerDelegate) {
         switch call.method {
         case "setup_pip":
-            setupPIP(call, result, hmsSDK, swiftHmssdkFlutterPlugin)
+            setupPIP(call, result, hmsSDK, plugin)
 
         case "start_pip":
             startPIP()
@@ -46,15 +47,17 @@ class HMSPIPAction {
         }
     }
 
-    static func setupPIP(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?, _ swiftHmssdkFlutterPlugin: SwiftHmssdkFlutterPlugin) {
+    static func setupPIP(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?, _ plugin: AVPictureInPictureControllerDelegate) {
 
         guard AVPictureInPictureController.isPictureInPictureSupported() else {
             result(HMSErrorExtension.getError("\(#function) PIP is not supported"))
-            return }
+            return
+        }
 
         guard let uiView = UIApplication.shared.keyWindow?.rootViewController?.view else {
             result(HMSErrorExtension.getError("\(#function) Failed to setup PIP"))
-            return }
+            return
+        }
 
         let pipVideoCallViewController = AVPictureInPictureVideoCallViewController()
 
@@ -63,15 +66,15 @@ class HMSPIPAction {
         model = PiPModel()
         model?.pipViewEnabled = true
 
-        let arguments = call.arguments as! [AnyHashable: Any]
+        let arguments = call.arguments as? [AnyHashable: Any]
 
-        if let scaleType = arguments["scale_type"] as? Int {
+        if let scaleType = arguments?["scale_type"] as? Int {
             model?.scaleType = getViewContentMode(scaleType)
         } else {
             model?.scaleType = .scaleAspectFill
         }
 
-        if let color = arguments["color"] as? [Int] {
+        if let color = arguments?["color"] as? [Int] {
             let colour = Color(red: CGFloat(color[0])/255, green: CGFloat(color[1])/255, blue: CGFloat(color[2])/255)
             model?.color = colour
         } else {
@@ -82,7 +85,7 @@ class HMSPIPAction {
 
         pipVideoCallViewController.view.addConstrained(subview: controller.view)
 
-        if let ratio = arguments["ratio"] as? [Int], ratio.count == 2 {
+        if let ratio = arguments?["ratio"] as? [Int], ratio.count == 2 {
             pipVideoCallViewController.preferredContentSize = CGSize(width: ratio[1], height: ratio[0])
         } else {
             pipVideoCallViewController.preferredContentSize = CGSize(width: uiView.frame.size.width, height: uiView.frame.size.height)
@@ -94,9 +97,9 @@ class HMSPIPAction {
 
         pipController = AVPictureInPictureController(contentSource: pipContentSource)
 
-        pipController?.delegate = swiftHmssdkFlutterPlugin
+        pipController?.delegate = plugin
 
-        if let autoEnterPIP = arguments["auto_enter_pip"] as? Bool {
+        if let autoEnterPIP = arguments?["auto_enter_pip"] as? Bool {
             pipController?.canStartPictureInPictureAutomaticallyFromInline = autoEnterPIP
         }
 

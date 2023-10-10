@@ -15,24 +15,24 @@ struct HMSPiPView: View {
 
     var body: some View {
         if model.pipViewEnabled {
-            VStack {
-                if let track = model.track, !(model.track?.isMute() ?? true) {
-                    GeometryReader { geo in
-                        if let contentMode = model.scaleType {
-                            HMSSampleBufferSwiftUIView(track: track, contentMode: contentMode, preferredSize: geo.size, model: model)
-                                .frame(width: geo.size.width, height: geo.size.height)
-                        } else {
-                            HMSSampleBufferSwiftUIView(track: track, contentMode: .scaleAspectFill, preferredSize: geo.size, model: model)
-                                .frame(width: geo.size.width, height: geo.size.height)
-                        }
+            GeometryReader { geo in
+                VStack {
+                    if let track = model.track, !(model.track?.isMute() ?? true) {
+
+                        HMSSampleBufferSwiftUIView(track: track,
+                                                   contentMode: model.scaleType ?? .scaleAspectFill,
+                                                   preferredSize: geo.size,
+                                                   model: model)
+                        .frame(width: geo.size.width, height: geo.size.height)
+
+                    } else if let text = model.text {
+                        Text(text)
                     }
-                } else if let text = model.text {
-                    Text(text)
                 }
+                .foregroundColor(.white)
+                .frame(maxWidth: geo.size.width, maxHeight: geo.size.height)
+                .background(model.color)
             }
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(model.color)
         }
     }
 }
