@@ -1437,7 +1437,7 @@ class HMSSDK {
   void lowerRemotePeerHand(
       {required HMSPeer forPeer,
       HMSActionResultListener? hmsActionResultListener}) async {
-    final dynamic result =  await PlatformService.invokeMethod(
+    final dynamic result = await PlatformService.invokeMethod(
         PlatformMethod.lowerRemotePeerHand,
         arguments: {"peer_id": forPeer.peerId});
     if (hmsActionResultListener != null) {

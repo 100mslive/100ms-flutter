@@ -303,7 +303,8 @@ class PlatformService {
             }
           }
 
-          notifyUpdateListeners(method, {"added_peers":addedPeers,"removed_peers":removedPeers});
+          notifyUpdateListeners(method,
+              {"added_peers": addedPeers, "removed_peers": removedPeers});
           break;
         case HMSUpdateListenerMethod.unknown:
           break;

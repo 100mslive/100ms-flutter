@@ -137,7 +137,6 @@ class HMSPeer {
     return peer;
   }
 
-
   @override
   String toString() {
     return 'HMSPeer{name: $name, isLocal: $isLocal}';

@@ -7,28 +7,28 @@ import live.hms.video.sdk.HMSSDK
 import live.hms.video.sdk.models.HMSPeer
 
 class HMSPeerAction {
-    companion object{
+    companion object {
         // MARK: Peer Actions
         fun peerActions(
             call: MethodCall,
             result: MethodChannel.Result,
-            hmssdk: HMSSDK
+            hmssdk: HMSSDK,
         ) {
             when (call.method) {
                 "change_metadata" -> {
-                    changeMetadata(call, result,hmssdk)
+                    changeMetadata(call, result, hmssdk)
                 }
                 "change_name" -> {
-                    changeName(call, result,hmssdk)
+                    changeName(call, result, hmssdk)
                 }
-                "raise_local_peer_hand"->{
-                    raiseLocalPeerHand(result,hmssdk)
+                "raise_local_peer_hand" -> {
+                    raiseLocalPeerHand(result, hmssdk)
                 }
-                "lower_local_peer_hand"->{
-                    lowerLocalPeerHand(result,hmssdk)
+                "lower_local_peer_hand" -> {
+                    lowerLocalPeerHand(result, hmssdk)
                 }
-                "lower_remote_peer_hand"->{
-                    lowerRemotePeerHand(call,result,hmssdk)
+                "lower_remote_peer_hand" -> {
+                    lowerRemotePeerHand(call, result, hmssdk)
                 }
                 else -> {
                     result.notImplemented()
@@ -39,7 +39,7 @@ class HMSPeerAction {
         private fun changeMetadata(
             call: MethodCall,
             result: MethodChannel.Result,
-            hmssdk:HMSSDK
+            hmssdk: HMSSDK,
         ) {
             val metadata = call.argument<String?>("metadata")
 
@@ -54,7 +54,7 @@ class HMSPeerAction {
         private fun changeName(
             call: MethodCall,
             result: MethodChannel.Result,
-            hmssdk: HMSSDK
+            hmssdk: HMSSDK,
         ) {
             val name = call.argument<String?>("name")
 
@@ -68,14 +68,14 @@ class HMSPeerAction {
 
         private fun lowerLocalPeerHand(
             result: MethodChannel.Result,
-            hmssdk: HMSSDK
+            hmssdk: HMSSDK,
         ) {
             hmssdk.lowerLocalPeerHand(HMSCommonAction.getActionListener(result))
         }
 
         private fun raiseLocalPeerHand(
             result: MethodChannel.Result,
-            hmssdk: HMSSDK
+            hmssdk: HMSSDK,
         ) {
             hmssdk.raiseLocalPeerHand(HMSCommonAction.getActionListener(result))
         }
@@ -83,21 +83,20 @@ class HMSPeerAction {
         private fun lowerRemotePeerHand(
             call: MethodCall,
             result: MethodChannel.Result,
-            hmssdk: HMSSDK
-        ){
+            hmssdk: HMSSDK,
+        ) {
             val peerId = call.argument<String?>("peer_id")
-            peerId?.let{
-                var forPeer : HMSPeer? = null
-                hmssdk.getPeers().forEach{ peer ->
-                   if(peer.peerID==peerId) {
-                       forPeer = peer
-                       return@forEach
-                   }
+            peerId?.let {
+                var forPeer: HMSPeer? = null
+                hmssdk.getPeers().forEach { peer ->
+                    if (peer.peerID == peerId) {
+                        forPeer = peer
+                        return@forEach
+                    }
                 }
                 forPeer?.let {
-                    hmssdk.lowerRemotePeerHand(it,HMSCommonAction.getActionListener(result))
+                    hmssdk.lowerRemotePeerHand(it, HMSCommonAction.getActionListener(result))
                 }
-
             }
         }
     }

@@ -112,6 +112,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                   }
                   break;
                 case 2:
+
                   ///Here we lower the remote peer hand
                   meetingStore.lowerRemotePeerHand(peer);
                   break;

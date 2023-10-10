@@ -203,7 +203,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - Peer Action
         case "change_metadata", "change_name", "raise_local_peer_hand", "lower_local_peer_hand", "lower_remote_peer_hand":
-            HMSPeerAction.peerActions(call, result,hmsSDK)
+            HMSPeerAction.peerActions(call, result, hmsSDK)
 
             // MARK: - RTMP
 
@@ -1043,7 +1043,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
         }
     }
-    
+
     // MARK: - Logging
 
     private var logLevel = HMSLogLevel.off
@@ -1359,26 +1359,26 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let data = [ "event_name": "on_re_connected" ]
         eventSink?(data)
     }
-    
+
     public func onPeerListUpdate(added: [HMSPeer], removed: [HMSPeer]) {
-        var parameters = [String:Any]()
-        
+        var parameters = [String: Any]()
+
         var addedPeers = [Any]()
         var removedPeers = [Any]()
-        
-        added.forEach{
+
+        added.forEach {
             addedPeers.append(HMSPeerExtension.toDictionary($0))
         }
-        
-        removed.forEach{
+
+        removed.forEach {
             removedPeers.append(HMSPeerExtension.toDictionary($0))
         }
-        
+
         parameters["added_peers"] = addedPeers
         parameters["removed_peers"] = removedPeers
-        
-        let data = ["event_name": "on_peer_list_update","data":parameters] as [String : Any]
-        
+
+        let data = ["event_name": "on_peer_list_update", "data": parameters] as [String: Any]
+
         eventSink?(data)
     }
 
