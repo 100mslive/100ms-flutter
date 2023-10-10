@@ -102,7 +102,7 @@ class HMSPeerListIteratorAction{
          * Here we find the iterator with [uid] passed from flutter channel
          * Since we need to perform the operation on that specific iterator
          */
-        guard let peerListIterator = peerListIterators["uid"]
+        guard let peerListIterator = peerListIterators[uid]
         else{
             HMSErrorLogger.returnHMSException(#function, "No peerListIterator with given uid found", "NULL Error", result)
             return
@@ -130,7 +130,7 @@ class HMSPeerListIteratorAction{
          * Here we find the iterator with [uid] passed from flutter channel
          * Since we need to perform the operation on that specific iterator
          */
-        guard let peerListIterator = peerListIterators["uid"]
+        guard let peerListIterator = peerListIterators[uid]
         else{
             HMSErrorLogger.returnHMSException(#function, "No peerListIterator with given uid found", "NULL Error", result)
             return
