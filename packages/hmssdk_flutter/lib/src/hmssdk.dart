@@ -1393,7 +1393,7 @@ class HMSSDK {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.getPeerListIterator,
         arguments: {
-          "uid": DateTime.now().millisecondsSinceEpoch.toString(),
+          "uid": DateTime.now().microsecondsSinceEpoch.toString(),
           "peer_list_iterator_options": peerListIteratorOptions?.toMap()
         });
     if (result["success"]) {

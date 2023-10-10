@@ -125,11 +125,14 @@ class HMSPeerListIteratorAction {
                         }
 
                         override fun onSuccess(result: ArrayList<HMSPeer>) {
+                            val data = HashMap<String,Any>()
                             val peerList = ArrayList<Any?>()
                             result.forEach { peer ->
-                                peerList.add(HMSPeerExtension.toDictionary(peer))
+                                peerList .add(HMSPeerExtension.toDictionary(peer))
                             }
-                            methodChannelResult.success(HMSResultExtension.toDictionary(true,peerList))
+                            data["peers"] = peerList
+                            data["total_count"] = iterator.totalCount
+                            methodChannelResult.success(HMSResultExtension.toDictionary(true,data))
                         }}
                         )
                     }   ?:run {

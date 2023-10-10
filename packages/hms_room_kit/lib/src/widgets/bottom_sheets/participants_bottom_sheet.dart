@@ -112,6 +112,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                   }
                   break;
                 case 2:
+
                   ///Here we lower the remote peer hand
                   meetingStore.lowerRemotePeerHand(peer);
                   break;
@@ -353,7 +354,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                             height: data.item1[role] == null
                                                 ? 0
                                                 : (data.item1[role]!.length) *
-                                                    60,
+                                                    54,
                                             child: Center(
                                               child: ListView.builder(
                                                   physics:
@@ -486,7 +487,57 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                     );
                                                   }),
                                             ),
-                                          )
+                                          ),
+                                          if ((HMSRoomLayout
+                                                      .roleLayoutData
+                                                      ?.screens
+                                                      ?.conferencing
+                                                      ?.defaultConf
+                                                      ?.elements
+                                                      ?.onStageExp
+                                                      ?.offStageRoles
+                                                      ?.contains(role) ??
+                                                  false) &&
+                                              ((context
+                                                          .read<MeetingStore>()
+                                                          .peerListIterators[
+                                                              role]
+                                                          ?.totalCount ??
+                                                      0) >
+                                                  10))
+                                            Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        16, 8, 16, 16),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        HMSSubheadingText(
+                                                            text: "View All",
+                                                            textColor:
+                                                                HMSThemeColors
+                                                                    .onSurfaceHighEmphasis),
+
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(left: 4.0),
+                                                          child: SvgPicture.asset(
+                                                              "packages/hms_room_kit/lib/src/assets/icons/right_arrow.svg",
+                                                              width: 24,
+                                                              height: 24,
+                                                              colorFilter:
+                                                                  ColorFilter.mode(
+                                                                      HMSThemeColors
+                                                                          .onSurfaceHighEmphasis,
+                                                                      BlendMode
+                                                                          .srcIn)),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  ],
+                                                )),
                                         ],
                                       ),
                                     ),

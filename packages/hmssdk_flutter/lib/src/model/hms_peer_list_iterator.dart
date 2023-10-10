@@ -18,16 +18,18 @@ class HMSPeerListIterator {
 
   ///total number of peers present with the iterator based on the filters applied with [PeerListIteratorOptions] while making
   ///[getPeerListIterator] method call
-  final int totalCount;
+  int _totalCount;
 
   ///unique id of the peer list iterator
   final String uid;
 
+  int get totalCount => _totalCount;
+
   HMSPeerListIterator({
     required this.limit,
-    required this.totalCount,
     required this.uid,
-  });
+    required totalCount,
+  }): _totalCount = totalCount;
 
   factory HMSPeerListIterator.fromMap(Map map) {
     return HMSPeerListIterator(
@@ -46,9 +48,9 @@ class HMSPeerListIterator {
         arguments: {"uid": uid});
     if (result["success"]) {
       return result["data"];
-    }else{
+    } else {
       return HMSException.fromMap(result["data"]["error"]);
-    } 
+    }
   }
 
   ///This method is used to get the next set of peers
@@ -61,7 +63,8 @@ class HMSPeerListIterator {
         arguments: {"uid": uid});
     if (result["success"]) {
       List<HMSPeer> peers = [];
-      for (var peer in result["data"]) {
+      _totalCount = result["data"]["total_count"];
+      for (var peer in result["data"]["peers"]) {
         peers.add(HMSPeer.fromMap(peer));
       }
       return peers;

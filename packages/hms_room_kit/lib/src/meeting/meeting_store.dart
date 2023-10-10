@@ -217,8 +217,9 @@ class MeetingStore extends ChangeNotifier
   int currentScreenSharePage = 0;
 
   ///PeerList iterators
-
+  ///This is a map with key as role and value as the iterator for that role
   Map<String, HMSPeerListIterator> peerListIterators = {};
+
   ///This stores the number of peers in the room
   int peersInRoom = 0;
 
@@ -661,14 +662,30 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  void setPeerListIterator(PeerListIteratorOptions options) async {
-    var peerListIterator = await _hmsSDKInteractor.getPeerListIterator(
-        peerListIteratorOptions: options);
-    if (peerListIterator != null && peerListIterator is HMSPeerListIterator) {
-      peerListIterators[peerListIterator.uid] = peerListIterator;
-    } else {
-      log("Error in getting peer list iterator");
-    }
+  void refreshPeerList() async {
+    log("Calling refresh PeerList Method $peerListIterators");
+    peerListIterators.clear();
+    List<String>? offStageRoles = HMSRoomLayout.roleLayoutData?.screens
+        ?.conferencing?.defaultConf?.elements?.onStageExp?.offStageRoles;
+    offStageRoles?.forEach((role) async {
+      var peerListIterator = await _hmsSDKInteractor.getPeerListIterator(
+          peerListIteratorOptions:
+              PeerListIteratorOptions(limit: 10, byRoleName: role));
+      if (peerListIterator != null && peerListIterator is HMSPeerListIterator) {
+        peerListIterators[role] = peerListIterator;
+        participantsInMeeting -= participantsInMeetingMap[role]?.length ?? 0;
+        participantsInMeetingMap[role]?.clear();
+        dynamic nonRealTimePeers = await peerListIterator.next();
+        if (nonRealTimePeers is List<HMSPeer>) {
+          log("Calling refresh PeerList Method $nonRealTimePeers");
+          if (nonRealTimePeers.isNotEmpty) {
+            for (var peer in nonRealTimePeers) {
+              addPeer(peer);
+            }
+          }
+        }
+      }
+    });
   }
 
   Future<List<HMSPeer>?> getPeers() async {
@@ -798,12 +815,6 @@ class MeetingStore extends ChangeNotifier
         .where((role) => role.publishSettings?.allowed.isEmpty ?? false)
         .forEach((element) {
       participantsInMeetingMap[element.name] = [];
-    });
-
-    List<String>? offStageRoles = HMSRoomLayout.roleLayoutData?.screens
-        ?.conferencing?.defaultConf?.elements?.onStageExp?.offStageRoles;
-    offStageRoles?.forEach((role) {
-      setPeerListIterator(PeerListIteratorOptions(limit: 10, byRoleName: role));
     });
   }
 
@@ -1255,7 +1266,6 @@ class MeetingStore extends ChangeNotifier
     if (peer.isHandRaised) {
       participantsInMeetingMap["Hand Raised"]
           ?.removeWhere((oldPeer) => oldPeer.peer.peerId == peer.peerId);
-      participantsInMeeting--;
     }
     notifyListeners();
   }
@@ -1272,7 +1282,6 @@ class MeetingStore extends ChangeNotifier
     if (peer.isHandRaised) {
       participantsInMeetingMap["Hand Raised"]
           ?.add(ParticipantsStore(peer: peer));
-      participantsInMeeting++;
     }
     notifyListeners();
   }
@@ -1312,13 +1321,11 @@ class MeetingStore extends ChangeNotifier
               -1) {
             participantsInMeetingMap["Hand Raised"]
                 ?.add(ParticipantsStore(peer: peer));
-            participantsInMeeting++;
           }
           participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
         } else if (!peer.isHandRaised) {
           participantsInMeetingMap["Hand Raised"]?.removeWhere(
               (handDownPeer) => handDownPeer.peer.peerId == peer.peerId);
-          participantsInMeeting--;
           participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
         }
         notifyListeners();

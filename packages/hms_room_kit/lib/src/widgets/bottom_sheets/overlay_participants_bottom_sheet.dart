@@ -23,10 +23,10 @@ class OverlayParticipantsBottomSheet extends StatelessWidget {
               children: [
                 Selector<MeetingStore, int>(
                     selector: (_, meetingStore) =>
-                        meetingStore.participantsInMeeting,
-                    builder: (_, participantsInMeeting, __) {
+                        meetingStore.peersInRoom,
+                    builder: (_, peersInRoom, __) {
                       return HMSSubheadingText(
-                        text: "Participants ($participantsInMeeting)",
+                        text: "Participants ($peersInRoom)",
                         textColor: HMSThemeColors.onSurfaceHighEmphasis,
                         fontWeight: FontWeight.w600,
                       );
