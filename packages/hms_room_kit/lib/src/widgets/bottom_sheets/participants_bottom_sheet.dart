@@ -32,13 +32,13 @@ class ParticipantsBottomSheet extends StatefulWidget {
 }
 
 class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
-
   Timer? timer;
 
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(const Duration(seconds: 5), (Timer t) => context.read<MeetingStore>().refreshPeerList());
+    timer = Timer.periodic(const Duration(seconds: 5),
+        (Timer t) => context.read<MeetingStore>().refreshPeerList());
   }
 
   @override
@@ -376,7 +376,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                             .onSurfaceHighEmphasis,
                                         title: HMSSubheadingText(
                                           text:
-                                              data.item1.keys.elementAt(index),
+                                              "${data.item1.keys.elementAt(index)} (${(HMSRoomLayout.offStageRoles?.contains(role) ?? false) ? context.read<MeetingStore>().peerListIterators[role]?.totalCount ?? 0 : data.item1[role]?.length}) ",
                                           textColor: HMSThemeColors
                                               .onSurfaceMediumEmphasis,
                                           letterSpacing: 0.1,
@@ -538,18 +538,19 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                       .borderDefault,
                                                 ),
                                                 Padding(
-                                                    padding: const EdgeInsets
+                                                  padding: const EdgeInsets
                                                         .fromLTRB(
-                                                        16, 8, 16, 16),
+                                                        16, 12, 16, 12),
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      viewAll(role);
+                                                    },
                                                     child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            viewAll(role);
-                                                          },
-                                                          child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          Row(
                                                             children: [
                                                               HMSSubheadingText(
                                                                   text:
@@ -574,10 +575,11 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                                             .srcIn)),
                                                               ),
                                                             ],
-                                                          ),
-                                                        )
-                                                      ],
-                                                    )),
+                                                          )
+                                                        ],
+                                                      ),
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                         ],

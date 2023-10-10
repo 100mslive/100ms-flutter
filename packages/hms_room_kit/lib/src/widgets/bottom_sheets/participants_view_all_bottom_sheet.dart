@@ -309,11 +309,15 @@ class _ParticipantsViewAllBottomSheetState
         : const SizedBox();
   }
 
+  void resetData() {
+    context.read<MeetingStore>().enableRefresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        context.read<MeetingStore>().enableRefresh();
+        resetData();
         return true;
       },
       child: SafeArea(
@@ -330,7 +334,7 @@ class _ParticipantsViewAllBottomSheetState
                     children: [
                       InkWell(
                         onTap: () {
-                          context.read<MeetingStore>().enableRefresh();
+                          resetData();
                           Navigator.pop(context);
                         },
                         child: SvgPicture.asset(
@@ -351,10 +355,7 @@ class _ParticipantsViewAllBottomSheetState
                       ),
                     ],
                   ),
-                  HMSCrossButton(
-                    onPressed: () =>
-                        context.read<MeetingStore>().enableRefresh(),
-                  ),
+                  HMSCrossButton(onPressed: () => resetData()),
                 ],
               ),
               Expanded(
@@ -400,20 +401,41 @@ class _ParticipantsViewAllBottomSheetState
                                   Expanded(
                                     child: ListView.builder(
                                         controller: _scrollController,
-                                        itemCount:
-                                            data.item1[widget.role]?.length ??
-                                                0,
+                                        ///Here we write logic for loader
+                                        itemCount: (data.item1[widget.role]
+                                                    ?.length ??
+                                                0) +
+                                            ((context
+                                                            .read<
+                                                                MeetingStore>()
+                                                            .peerListIterators[
+                                                                widget.role]
+                                                            ?.totalCount ??
+                                                        0) >
+                                                    (data.item1[widget.role]
+                                                            ?.length ??
+                                                        0)
+                                                ? 1
+                                                : 0),
                                         itemBuilder: (context, peerIndex) {
-                                          ParticipantsStore currentPeer = data
-                                              .item1[widget.role]![peerIndex];
                                           if (peerIndex ==
                                               data.item1[widget.role]?.length) {
-                                            return CircularProgressIndicator(
-                                              strokeWidth: 1,
-                                              color:
-                                                  HMSThemeColors.primaryDefault,
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 2.0),
+                                              child: Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 1,
+                                                  color: HMSThemeColors
+                                                      .primaryDefault,
+                                                ),
+                                              ),
                                             );
                                           }
+                                          ParticipantsStore currentPeer = data
+                                              .item1[widget.role]![peerIndex];
                                           return Padding(
                                             padding:
                                                 const EdgeInsets.only(top: 8.0),
