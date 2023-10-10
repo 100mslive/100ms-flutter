@@ -140,13 +140,17 @@ class HMSPeerListIteratorAction{
             if let error = error {
                 result(HMSResultExtension.toDictionary(false,HMSErrorExtension.toDictionary(error)))
             } else{
+                var data = [String:Any]()
                 var peersList = [Any]()
                 
                 peers?.forEach{
                     peersList.append(HMSPeerExtension.toDictionary($0))
                 }
                 
-                result(HMSResultExtension.toDictionary(true,peersList))
+                data["peers"] = peersList
+                data["total_count"] = peerListIterator.totalCount
+
+                result(HMSResultExtension.toDictionary(true,data))
             }
             
         })

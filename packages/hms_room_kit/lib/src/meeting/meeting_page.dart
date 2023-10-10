@@ -5,12 +5,6 @@ import 'dart:io';
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:hms_room_kit/src/preview_for_role/preview_for_role_bottom_sheet.dart';
-import 'package:hms_room_kit/src/preview_for_role/preview_for_role_header.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_left_room_screen.dart';
-import 'package:hms_room_kit/src/widgets/meeting_modes/custom_one_to_one_grid.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_recording_error_toast.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -33,6 +27,12 @@ import 'package:hms_room_kit/src/widgets/app_dialogs/audio_device_change_dialog.
 import 'package:hms_room_kit/src/widgets/meeting_modes/one_to_one_mode.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/meeting/pip_view.dart';
+import 'package:hms_room_kit/src/preview_for_role/preview_for_role_bottom_sheet.dart';
+import 'package:hms_room_kit/src/preview_for_role/preview_for_role_header.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_left_room_screen.dart';
+import 'package:hms_room_kit/src/widgets/meeting_modes/custom_one_to_one_grid.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_recording_error_toast.dart';
 
 ///[MeetingPage] is the main page of the meeting
 ///It takes the following parameters:
@@ -59,6 +59,12 @@ class _MeetingPageState extends State<MeetingPage> {
     checkAudioState();
     _enableForegroundService();
     timer = Timer.periodic(const Duration(seconds: 5), (Timer t) => context.read<MeetingStore>().refreshPeerList());
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   void checkAudioState() async {

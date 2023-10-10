@@ -220,6 +220,11 @@ class MeetingStore extends ChangeNotifier
   ///This is a map with key as role and value as the iterator for that role
   Map<String, HMSPeerListIterator> peerListIterators = {};
 
+  ///This checks whether to refresh peerlist or not
+  ///This is used in case when we are looking at a specific viewer role peerlist
+  ///i.e we are using the View All button functionalities.
+  bool disablePeerListRefresh = false;
+
   ///This stores the number of peers in the room
   int peersInRoom = 0;
 
@@ -662,7 +667,32 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
+  void nextPeersForRole(String role) async{
+    dynamic nextSetOfPeers = await peerListIterators[role]?.next();
+    if (nextSetOfPeers is List<HMSPeer> && nextSetOfPeers.isNotEmpty) {
+      for (var peer in nextSetOfPeers) {
+        addPeer(peer);
+      }
+    }
+  }
+
+  ///This method is used to disable the peer list refresh
+  void disableRefresh() {
+    disablePeerListRefresh = true;
+  }
+
+ ///This method is used to enable the peer list refresh
+  void enableRefresh() {
+    disablePeerListRefresh = false;
+  }
+
+  ///This method is used to refresh the peer list
   void refreshPeerList() async {
+
+    ///If the peer list refresh is disabled then we return
+    if (disablePeerListRefresh) {
+      return;
+    }
     log("Calling refresh PeerList Method $peerListIterators");
     peerListIterators.clear();
     List<String>? offStageRoles = HMSRoomLayout.roleLayoutData?.screens
