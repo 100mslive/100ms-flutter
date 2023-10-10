@@ -1,12 +1,11 @@
 /// This class is used to set the options for the [getPeerListIterator] method
-/// 
+///
 /// [byPeerIds] list of peerIds for which peer list is required
-/// 
+///
 /// [byRoleName] name of the role for which peer list is required
-/// 
+///
 /// [limit] maximum number of peers to be returned
 class PeerListIteratorOptions {
-
   /// list of peerIds for which peer list is required
   final List<String>? byPeerIds;
 

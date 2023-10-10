@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:hmssdk_flutter/src/manager/hms_sdk_manager.dart';
-import 'package:hmssdk_flutter/src/model/peer_list_iterator_options.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 import '../hmssdk_flutter.dart';
 

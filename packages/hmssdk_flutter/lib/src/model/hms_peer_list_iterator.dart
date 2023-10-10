@@ -29,7 +29,7 @@ class HMSPeerListIterator {
     required this.limit,
     required this.uid,
     required totalCount,
-  }): _totalCount = totalCount;
+  }) : _totalCount = totalCount;
 
   factory HMSPeerListIterator.fromMap(Map map) {
     return HMSPeerListIterator(

@@ -355,6 +355,5 @@ class PreviewStore extends ChangeNotifier
   @override
   void onPeerListUpdate(
       {required List<HMSPeer> addedPeers,
-      required List<HMSPeer> removedPeers}) {
-  }
+      required List<HMSPeer> removedPeers}) {}
 }

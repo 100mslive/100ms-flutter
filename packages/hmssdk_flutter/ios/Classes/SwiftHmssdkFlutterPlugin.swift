@@ -291,8 +291,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "get_room_layout":
             getRoomLayout(call, result)
-            
-        case "get_peer_list_iterator","peer_list_iterator_has_next","peer_list_iterator_next":
+
+        case "get_peer_list_iterator", "peer_list_iterator_has_next", "peer_list_iterator_next":
             HMSPeerListIteratorAction.peerListIteratorAction(call, result, hmsSDK)
 
         default:
@@ -1361,26 +1361,26 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let data = [ "event_name": "on_re_connected" ]
         eventSink?(data)
     }
-    
+
     public func onPeerListUpdate(added: [HMSPeer], removed: [HMSPeer]) {
-        var parameters = [String:Any]()
-        
+        var parameters = [String: Any]()
+
         var addedPeers = [Any]()
         var removedPeers = [Any]()
-        
-        added.forEach{
+
+        added.forEach {
             addedPeers.append(HMSPeerExtension.toDictionary($0))
         }
-        
-        removed.forEach{
+
+        removed.forEach {
             removedPeers.append(HMSPeerExtension.toDictionary($0))
         }
-        
+
         parameters["added_peers"] = addedPeers
         parameters["removed_peers"] = removedPeers
-        
-        let data = ["event_name": "on_peer_list_update","data":parameters] as [String : Any]
-        
+
+        let data = ["event_name": "on_peer_list_update", "data": parameters] as [String: Any]
+
         eventSink?(data)
     }
 

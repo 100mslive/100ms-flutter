@@ -669,7 +669,7 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  void nextPeersForRole(String role) async{
+  void nextPeersForRole(String role) async {
     dynamic nextSetOfPeers = await peerListIterators[role]?.next();
     if (nextSetOfPeers is List<HMSPeer> && nextSetOfPeers.isNotEmpty) {
       for (var peer in nextSetOfPeers) {
@@ -683,14 +683,13 @@ class MeetingStore extends ChangeNotifier
     disablePeerListRefresh = true;
   }
 
- ///This method is used to enable the peer list refresh
+  ///This method is used to enable the peer list refresh
   void enableRefresh() {
     disablePeerListRefresh = false;
   }
 
   ///This method is used to refresh the peer list
   void refreshPeerList() async {
-
     ///If the peer list refresh is disabled then we return
     if (disablePeerListRefresh) {
       return;

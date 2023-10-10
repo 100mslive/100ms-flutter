@@ -241,8 +241,8 @@ class HmssdkFlutterPlugin :
             "get_room_layout" -> {
                 getRoomLayout(call, result)
             }
-            "get_peer_list_iterator","peer_list_iterator_has_next","peer_list_iterator_next" -> {
-                HMSPeerListIteratorAction.peerListIteratorAction(call,result,hmssdk!!)
+            "get_peer_list_iterator", "peer_list_iterator_has_next", "peer_list_iterator_next" -> {
+                HMSPeerListIteratorAction.peerListIteratorAction(call, result, hmssdk!!)
             }
             else -> {
                 result.notImplemented()

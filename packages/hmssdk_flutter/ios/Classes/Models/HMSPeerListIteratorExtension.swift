@@ -8,17 +8,16 @@
 import Foundation
 import HMSSDK
 
-class HMSPeerListIteratorExtension{
-    
-    static func toDictionary(_ peerListIterator: HMSPeerListIterator,_ uid: String) -> [String:Any]{
-        
+class HMSPeerListIteratorExtension {
+
+    static func toDictionary(_ peerListIterator: HMSPeerListIterator, _ uid: String) -> [String: Any] {
+
         var dict = [
             "uid": uid,
             "limit": peerListIterator.options.limit,
             "total_count": peerListIterator.totalCount
-        ] as [String : Any]
-        
-        
+        ] as [String: Any]
+
         return dict
     }
 }
