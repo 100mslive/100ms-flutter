@@ -1,4 +1,5 @@
 ///Dart imports
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -31,6 +32,21 @@ class ParticipantsBottomSheet extends StatefulWidget {
 }
 
 class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
+
+  Timer? timer;
+
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(const Duration(seconds: 5), (Timer t) => context.read<MeetingStore>().refreshPeerList());
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
   void viewAll(String role) {
     showModalBottomSheet(
       isScrollControlled: true,

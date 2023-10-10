@@ -1,5 +1,4 @@
 //Dart imports
-import 'dart:async';
 import 'dart:io';
 
 ///Package imports
@@ -50,21 +49,13 @@ class MeetingPage extends StatefulWidget {
 }
 
 class _MeetingPageState extends State<MeetingPage> {
-  Timer? timer;
 
+  
   @override
   void initState() {
     super.initState();
     checkAudioState();
     _enableForegroundService();
-    timer = Timer.periodic(const Duration(seconds: 5),
-        (Timer t) => context.read<MeetingStore>().refreshPeerList());
-  }
-
-  @override
-  void dispose() {
-    timer?.cancel();
-    super.dispose();
   }
 
   void checkAudioState() async {
