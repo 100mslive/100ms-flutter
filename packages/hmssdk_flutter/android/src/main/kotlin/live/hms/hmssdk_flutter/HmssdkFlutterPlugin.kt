@@ -165,7 +165,7 @@ class HmssdkFlutterPlugin :
 
             // MARK: Peer Actions
             "change_metadata", "change_name", "raise_local_peer_hand", "lower_local_peer_hand", "lower_remote_peer_hand" -> {
-                HMSPeerAction.peerActions(call, result,hmssdk!!)
+                HMSPeerAction.peerActions(call, result, hmssdk!!)
             }
 
             // MARK: Recording
@@ -1158,22 +1158,22 @@ class HmssdkFlutterPlugin :
 
             override fun peerListUpdated(
                 addedPeers: ArrayList<HMSPeer>?,
-                removedPeers: ArrayList<HMSPeer>?
+                removedPeers: ArrayList<HMSPeer>?,
             ) {
                 val args = HashMap<String, Any?>()
                 args["event_name"] = "on_peer_list_update"
-                val parameters = HashMap<String,Any?>()
-                val peersAdded  = ArrayList<HashMap<String, Any?>?>()
+                val parameters = HashMap<String, Any?>()
+                val peersAdded = ArrayList<HashMap<String, Any?>?>()
                 val peersRemoved = ArrayList<HashMap<String, Any?>?>()
                 /**
                  * Here we add peers to the list after parsing the
                  * peer object
                  */
-                addedPeers?.forEach {peer->
+                addedPeers?.forEach { peer ->
                     peersAdded.add(HMSPeerExtension.toDictionary(peer))
                 }
 
-                removedPeers?.forEach{peer->
+                removedPeers?.forEach { peer ->
                     peersRemoved.add(HMSPeerExtension.toDictionary(peer))
                 }
 

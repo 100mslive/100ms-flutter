@@ -111,7 +111,9 @@ class PreviewStore extends ChangeNotifier
       {required String userName, required String roomCode}) async {
     //We use this to get the auth token from room code
     dynamic tokenData = await hmsSDKInteractor.getAuthTokenByRoomCode(
-        roomCode: roomCode, endPoint: Constant.tokenEndPoint);
+        userId: Constant.prebuiltOptions?.userId,
+        roomCode: roomCode,
+        endPoint: Constant.tokenEndPoint);
 
     if ((tokenData is String?) && tokenData != null) {
       roomConfig = HMSConfig(
@@ -352,6 +354,11 @@ class PreviewStore extends ChangeNotifier
   
   @override
   void onPeerListUpdate({required List<HMSPeer> addedPeers, required List<HMSPeer> removedPeers}) {
+
+  @override
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {
     log("onPeerListUpdate -> addedPeers: $addedPeers removedPeers: $removedPeers");
   }
 }

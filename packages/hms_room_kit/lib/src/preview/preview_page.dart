@@ -41,13 +41,14 @@ class PreviewPage extends StatefulWidget {
 
 class _PreviewPageState extends State<PreviewPage> {
   late MeetingStore _meetingStore;
-  TextEditingController nameController = TextEditingController();
+  late TextEditingController nameController;
   bool isJoiningRoom = false;
   bool isHLSStarting = false;
 
   @override
   void initState() {
     super.initState();
+    nameController = TextEditingController(text: widget.name);
   }
 
   @override

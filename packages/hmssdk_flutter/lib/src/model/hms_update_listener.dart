@@ -109,5 +109,6 @@ abstract class HMSUpdateListener {
   ///Upon joining a room with existing peers, onPeerListUpdated will be called with the list of peers present
   ///in the room instead of getting onPeerUpdate for each peer in the room.
   ///Subsequent peer joins/leaves would be notified via both onPeerUpdate and onPeerListUpdated
-  void onPeerListUpdate({required List<HMSPeer> addedPeers,required List<HMSPeer> removedPeers});
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers, required List<HMSPeer> removedPeers});
 }

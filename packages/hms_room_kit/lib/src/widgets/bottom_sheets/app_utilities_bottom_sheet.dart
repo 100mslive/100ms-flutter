@@ -108,7 +108,8 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         badgeContent: HMSTitleText(
                           text: context
                               .read<MeetingStore>()
-                              .peersInRoom.toString(),
+                              .peersInRoom
+                              .toString(),
                           textColor: HMSThemeColors.onSurfaceHighEmphasis,
                           fontSize: 10,
                           lineHeight: 16,

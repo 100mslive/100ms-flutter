@@ -28,6 +28,7 @@ packages/hmssdk_flutter/example/android/fastlane
 packages/hmssdk_flutter/example/build
 packages/hmssdk_flutter/example/ios/fastlane
 packages/hmssdk_flutter/example/android/app/google-services.json
+packages/hmssdk_flutter/build/
 
 ##HMS ROOM KIT
 packages/hms_room_kit/.dart_tool
@@ -50,3 +51,4 @@ sample apps/hms-callkit-app/.dart_tool/flutter_build/
 .dart_tool/version
 .DS_Store
 packages/.DS_Store
+Runner.ipa

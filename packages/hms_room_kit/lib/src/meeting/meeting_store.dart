@@ -236,7 +236,9 @@ class MeetingStore extends ChangeNotifier
     if (roomConfig == null) {
       //We use this to get the auth token from room code
       dynamic tokenData = await _hmsSDKInteractor.getAuthTokenByRoomCode(
-          roomCode: Constant.roomCode, endPoint: Constant.tokenEndPoint);
+          userId: Constant.prebuiltOptions?.userId,
+          roomCode: Constant.roomCode,
+          endPoint: Constant.tokenEndPoint);
 
       ///If the tokenData is String then we set the authToken in the roomConfig
       ///and then we join the room
@@ -1964,7 +1966,7 @@ class MeetingStore extends ChangeNotifier
       toasts.add(
           HMSToastModel(peer, hmsToastType: HMSToastsType.roleChangeToast));
       notifyListeners();
-    } else if (!peer.isHandRaised) {
+    } else {
       toasts.removeWhere((toast) =>
           toast.hmsToastType == HMSToastsType.roleChangeToast &&
           peer.peerId == toast.toastData.peerId);
