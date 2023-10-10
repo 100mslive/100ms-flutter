@@ -125,19 +125,20 @@ class _PlatformView extends StatelessWidget {
   Widget build(BuildContext context) {
     ///AndroidView for android it uses surfaceRenderer provided internally by webrtc.
     if (Platform.isAndroid) {
-      return AndroidView(
-        viewType: 'HMSVideoView',
-        onPlatformViewCreated: onPlatformViewCreated,
-        creationParamsCodec: StandardMessageCodec(),
-        creationParams: {
-          'track_id': track.trackId,
-          'set_mirror': track.source != "REGULAR" ? false : setMirror,
-          'scale_type': scaleType.value,
-          'match_parent': matchParent,
-          'disable_auto_simulcast_layer_select': disableAutoSimulcastLayerSelect
-        },
-        gestureRecognizers: {},
-      );
+      return Texture(textureId: textureId); // get textureId fom video view
+      // return AndroidView(
+      //   viewType: 'HMSVideoView',
+      //   onPlatformViewCreated: onPlatformViewCreated,
+      //   creationParamsCodec: StandardMessageCodec(),
+      //   creationParams: {
+      //     'track_id': track.trackId,
+      //     'set_mirror': track.source != "REGULAR" ? false : setMirror,
+      //     'scale_type': scaleType.value,
+      //     'match_parent': matchParent,
+      //     'disable_auto_simulcast_layer_select': disableAutoSimulcastLayerSelect
+      //   },
+      //   gestureRecognizers: {},
+      // );
     } else if (Platform.isIOS) {
       ///UIKitView for ios it uses VideoView provided by 100ms ios_sdk internally.
       return UiKitView(

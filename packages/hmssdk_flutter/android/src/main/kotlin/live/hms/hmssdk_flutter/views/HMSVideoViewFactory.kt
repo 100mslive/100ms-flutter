@@ -24,9 +24,9 @@ class HMSVideoViewWidget(
     private var hmsVideoView: HMSVideoView? = null
 
     init {
-        if (hmsVideoView == null) {
-            hmsVideoView = HMSVideoView(context, setMirror, scaleType, track, disableAutoSimulcastLayerSelect, hmssdkFlutterPlugin)
-        }
+//        if (hmsVideoView == null) {
+//            hmsVideoView = HMSVideoView(context, setMirror, scaleType, track, disableAutoSimulcastLayerSelect, hmssdkFlutterPlugin)
+//        }
     }
 
     override fun getView(): View? {
@@ -34,12 +34,12 @@ class HMSVideoViewWidget(
     }
 
     override fun dispose() {
-        if (hmsVideoView != null) {
-            hmsVideoView?.onDisposeCalled()
-        } else {
-            Log.e("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
-        }
-        hmsVideoView = null
+//        if (hmsVideoView != null) {
+//            hmsVideoView?.onDisposeCalled()
+//        } else {
+//            Log.e("HMSVideoView error", "onDisposeCalled error hmsVideoView is null")
+//        }
+//        hmsVideoView = null
     }
 }
 
