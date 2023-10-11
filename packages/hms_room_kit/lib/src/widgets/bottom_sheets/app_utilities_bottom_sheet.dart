@@ -98,12 +98,11 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       },
                       optionIcon: badge.Badge(
                         badgeStyle: badge.BadgeStyle(
-                            badgeColor: HMSThemeColors.surfaceDefault,
-                            ),
+                          badgeColor: HMSThemeColors.surfaceDefault,
+                        ),
                         badgeContent: HMSTitleText(
-                          text: Utilities.formatNumber(context
-                              .read<MeetingStore>()
-                              .peersInRoom),
+                          text: Utilities.formatNumber(
+                              context.read<MeetingStore>().peersInRoom),
                           textColor: HMSThemeColors.onSurfaceHighEmphasis,
                           fontSize: 10,
                           lineHeight: 16,
@@ -111,8 +110,15 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         ),
                         child: Padding(
                           padding: EdgeInsets.symmetric(
-                              horizontal:
-                                 context.read<MeetingStore>().peersInRoom < 1000 ? 15 : context.read<MeetingStore>().peersInRoom < 10000 ? 20: 30),
+                              horizontal: context
+                                          .read<MeetingStore>()
+                                          .peersInRoom <
+                                      1000
+                                  ? 15
+                                  : context.read<MeetingStore>().peersInRoom <
+                                          10000
+                                      ? 20
+                                      : 30),
                           child: SvgPicture.asset(
                             "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
                             height: 20,

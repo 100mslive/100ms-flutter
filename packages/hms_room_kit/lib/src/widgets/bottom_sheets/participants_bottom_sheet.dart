@@ -538,46 +538,45 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                       .borderDefault,
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets
-                                                        .fromLTRB(
-                                                        16, 12, 16, 12),
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          16, 12, 16, 12),
                                                   child: GestureDetector(
                                                     onTap: () {
                                                       viewAll(role);
                                                     },
                                                     child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .end,
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              HMSSubheadingText(
-                                                                  text:
-                                                                      "View All",
-                                                                  textColor:
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            HMSSubheadingText(
+                                                                text:
+                                                                    "View All",
+                                                                textColor:
+                                                                    HMSThemeColors
+                                                                        .onSurfaceHighEmphasis),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      left:
+                                                                          4.0),
+                                                              child: SvgPicture.asset(
+                                                                  "packages/hms_room_kit/lib/src/assets/icons/right_arrow.svg",
+                                                                  width: 24,
+                                                                  height: 24,
+                                                                  colorFilter: ColorFilter.mode(
                                                                       HMSThemeColors
-                                                                          .onSurfaceHighEmphasis),
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .only(
-                                                                        left:
-                                                                            4.0),
-                                                                child: SvgPicture.asset(
-                                                                    "packages/hms_room_kit/lib/src/assets/icons/right_arrow.svg",
-                                                                    width: 24,
-                                                                    height: 24,
-                                                                    colorFilter: ColorFilter.mode(
-                                                                        HMSThemeColors
-                                                                            .onSurfaceHighEmphasis,
-                                                                        BlendMode
-                                                                            .srcIn)),
-                                                              ),
-                                                            ],
-                                                          )
-                                                        ],
-                                                      ),
+                                                                          .onSurfaceHighEmphasis,
+                                                                      BlendMode
+                                                                          .srcIn)),
+                                                            ),
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ],

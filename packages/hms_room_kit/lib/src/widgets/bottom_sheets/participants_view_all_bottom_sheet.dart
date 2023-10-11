@@ -401,7 +401,8 @@ class _ParticipantsViewAllBottomSheetState
                                   Expanded(
                                     child: ListView.builder(
                                         controller: _scrollController,
-                                        ///Here we write logic for loader
+
+                                        ///We apply the check for showing loader here
                                         itemCount: (data.item1[widget.role]
                                                     ?.length ??
                                                 0) +

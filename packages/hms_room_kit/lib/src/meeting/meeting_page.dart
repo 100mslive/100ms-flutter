@@ -49,8 +49,6 @@ class MeetingPage extends StatefulWidget {
 }
 
 class _MeetingPageState extends State<MeetingPage> {
-
-  
   @override
   void initState() {
     super.initState();

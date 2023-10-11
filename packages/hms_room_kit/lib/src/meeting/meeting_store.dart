@@ -622,12 +622,12 @@ class MeetingStore extends ChangeNotifier
       previousRole = localPeer?.role.name;
       if (isRaisedHand) {
         toggleLocalPeerHandRaise();
-      } else {
-        ///Setting the previous role
-        _hmsSDKInteractor.changeMetadata(
-            metadata: "{\"isBRBOn\":false,\"prevRole\":\"$previousRole\"}",
-            hmsActionResultListener: this);
       }
+
+      ///Setting the previous role
+      _hmsSDKInteractor.changeMetadata(
+          metadata: "{\"isBRBOn\":false,\"prevRole\":\"$previousRole\"}",
+          hmsActionResultListener: this);
       HMSRoomLayout.resetLayout(hmsRoleChangeRequest.suggestedRole.name);
       currentRoleChangeRequest = null;
       notifyListeners();
