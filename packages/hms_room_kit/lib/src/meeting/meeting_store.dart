@@ -267,6 +267,13 @@ class MeetingStore extends ChangeNotifier
     return null;
   }
 
+  ///This method reapplies the theme layout based on the role name
+  void resetLayout(String roleName) {
+    HMSRoomLayout.resetLayout(roleName);
+    setMeetingModeUsingLayoutApi();
+    notifyListeners();
+  }
+
   ///This method is used to set the meeting mode using the layout api
   void setMeetingModeUsingLayoutApi() {
     if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
@@ -628,7 +635,7 @@ class MeetingStore extends ChangeNotifier
       _hmsSDKInteractor.changeMetadata(
           metadata: "{\"isBRBOn\":false,\"prevRole\":\"$previousRole\"}",
           hmsActionResultListener: this);
-      HMSRoomLayout.resetLayout(hmsRoleChangeRequest.suggestedRole.name);
+      // resetLayout(hmsRoleChangeRequest.suggestedRole.name);
       currentRoleChangeRequest = null;
       notifyListeners();
     }
@@ -1419,7 +1426,7 @@ class MeetingStore extends ChangeNotifier
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
           getSpotlightPeer();
-          HMSRoomLayout.resetLayout(peer.role.name);
+          resetLayout(peer.role.name);
           localPeer = peer;
         }
         if (HMSRoomLayout

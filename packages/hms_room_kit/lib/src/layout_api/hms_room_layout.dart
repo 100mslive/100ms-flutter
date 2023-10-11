@@ -235,14 +235,20 @@ class HMSRoomLayout {
     if (roleName != null) {
       int? roleIndex =
           data?.indexWhere((layoutData) => layoutData.role == roleName);
+
+      ///Check if that role theme is present
+      ///If not we assign the theme at 0th index
       if (roleIndex != null && roleIndex != -1) {
         HMSThemeColors.applyLayoutColors(data?[roleIndex].themes?[0].palette);
         roleLayoutData = data?[roleIndex];
-        return;
+      } else {
+        HMSThemeColors.applyLayoutColors(data?[0].themes?[0].palette);
+        roleLayoutData = data?[0];
       }
+    } else {
+      HMSThemeColors.applyLayoutColors(data?[0].themes?[0].palette);
+      roleLayoutData = data?[0];
     }
-    HMSThemeColors.applyLayoutColors(data?[0].themes?[0].palette);
-    roleLayoutData = data?[0];
     peerType = roleLayoutData?.screens?.conferencing?.hlsLiveStreaming != null
         ? PeerRoleType.hlsViewer
         : PeerRoleType.conferencing;
