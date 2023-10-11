@@ -9,6 +9,12 @@ https://github.com/100mslive/100ms-flutter/pull/1600
 - Added peer list iterator changes for large rooms
 https://github.com/100mslive/100ms-flutter/pull/1602
 
+Bug fixes:
+
+- Fix for local tile inset when inset is disabled after role changed
+
+- VoS joined from flutter cannot be removed from stage
+
 Room Kit: 1.0.3
 Core SDK: 1.9.0
 Android SDK: 2.7.7
