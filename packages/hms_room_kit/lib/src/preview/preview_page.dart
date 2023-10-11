@@ -67,7 +67,7 @@ class _PreviewPageState extends State<PreviewPage> {
 
   ///This function joins the room only if the name is not empty
   void _joinMeeting(PreviewStore previewStore) async {
-    if (nameController.text.isNotEmpty) {
+    if (nameController.text.trim().isNotEmpty) {
       FocusManager.instance.primaryFocus?.unfocus();
       setState(() {
         isJoiningRoom = true;
@@ -78,7 +78,7 @@ class _PreviewPageState extends State<PreviewPage> {
 
       /// We join the room here
       HMSException? ans =
-          await _meetingStore.join(nameController.text, Constant.roomCode);
+          await _meetingStore.join(nameController.text.trim(), Constant.roomCode);
 
       ///If the room join fails we show the error dialog
       if (ans != null && mounted) {
@@ -404,7 +404,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             PreviewJoinButton(
                                                           isEmpty:
                                                               nameController
-                                                                  .text.isEmpty,
+                                                                  .text
+                                                                  .trim()
+                                                                  .isEmpty,
                                                           previewStore:
                                                               previewStore,
                                                           isJoining:
