@@ -142,62 +142,67 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                   //         text: "Spotlight Tile for Everyone",
                   //         textColor: HMSThemeColors.onSurfaceHighEmphasis)),
 
-                  ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        Navigator.pop(context);
-                        if (widget.peerTrackNode.audioTrack != null) {
-                          widget.meetingStore.changeTrackState(
-                              widget.peerTrackNode.audioTrack!,
-                              !(widget.peerTrackNode.audioTrack!.isMute));
-                        }
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/${(widget.peerTrackNode.audioTrack?.isMute ?? true) ? "mic_state_on" : "mic_state_off"}.svg",
-                        semanticsLabel: "fl_mic_toggle",
-                        height: 20,
-                        width: 20,
-                        colorFilter: ColorFilter.mode(
-                            widget.peerTrackNode.audioTrack == null
+                  if (widget.meetingStore.localPeer?.role.permissions.mute ??
+                      false)
+                    ListTile(
+                        horizontalTitleGap: 2,
+                        onTap: () async {
+                          Navigator.pop(context);
+                          if (widget.peerTrackNode.audioTrack != null) {
+                            widget.meetingStore.changeTrackState(
+                                widget.peerTrackNode.audioTrack!,
+                                !(widget.peerTrackNode.audioTrack!.isMute));
+                          }
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        leading: SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/${(widget.peerTrackNode.audioTrack?.isMute ?? true) ? "mic_state_on" : "mic_state_off"}.svg",
+                          semanticsLabel: "fl_mic_toggle",
+                          height: 20,
+                          width: 20,
+                          colorFilter: ColorFilter.mode(
+                              widget.peerTrackNode.audioTrack == null
+                                  ? HMSThemeColors.onSurfaceLowEmphasis
+                                  : HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
+                        ),
+                        title: HMSSubheadingText(
+                            text:
+                                "${(widget.peerTrackNode.audioTrack?.isMute ?? true) ? "Unmute" : "Mute"} Audio",
+                            textColor: widget.peerTrackNode.audioTrack == null
                                 ? HMSThemeColors.onSurfaceLowEmphasis
-                                : HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
-                      ),
-                      title: HMSSubheadingText(
-                          text:
-                              "${(widget.peerTrackNode.audioTrack?.isMute ?? true) ? "Unmute" : "Mute"} Audio",
-                          textColor: widget.peerTrackNode.audioTrack == null
-                              ? HMSThemeColors.onSurfaceLowEmphasis
-                              : HMSThemeColors.onSurfaceHighEmphasis)),
-                  ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        Navigator.pop(context);
-                        if (widget.peerTrackNode.track != null) {
-                          widget.meetingStore.changeTrackState(
-                              widget.peerTrackNode.track!,
-                              !(widget.peerTrackNode.track!.isMute));
-                        }
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/${(widget.peerTrackNode.track?.isMute ?? true) ? "cam_state_on" : "cam_state_off"}.svg",
-                        semanticsLabel: "fl_camera_toggle",
-                        height: 20,
-                        width: 20,
-                        colorFilter: ColorFilter.mode(
-                            widget.peerTrackNode.track == null
+                                : HMSThemeColors.onSurfaceHighEmphasis)),
+
+                  if (widget.meetingStore.localPeer?.role.permissions.mute ??
+                      false)
+                    ListTile(
+                        horizontalTitleGap: 2,
+                        onTap: () async {
+                          Navigator.pop(context);
+                          if (widget.peerTrackNode.track != null) {
+                            widget.meetingStore.changeTrackState(
+                                widget.peerTrackNode.track!,
+                                !(widget.peerTrackNode.track!.isMute));
+                          }
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        leading: SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/${(widget.peerTrackNode.track?.isMute ?? true) ? "cam_state_on" : "cam_state_off"}.svg",
+                          semanticsLabel: "fl_camera_toggle",
+                          height: 20,
+                          width: 20,
+                          colorFilter: ColorFilter.mode(
+                              widget.peerTrackNode.track == null
+                                  ? HMSThemeColors.onSurfaceLowEmphasis
+                                  : HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
+                        ),
+                        title: HMSSubheadingText(
+                            text:
+                                "${(widget.peerTrackNode.track?.isMute ?? true) ? "Unmute" : "Mute"} Video",
+                            textColor: widget.peerTrackNode.track == null
                                 ? HMSThemeColors.onSurfaceLowEmphasis
-                                : HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
-                      ),
-                      title: HMSSubheadingText(
-                          text:
-                              "${(widget.peerTrackNode.track?.isMute ?? true) ? "Unmute" : "Mute"} Video",
-                          textColor: widget.peerTrackNode.track == null
-                              ? HMSThemeColors.onSurfaceLowEmphasis
-                              : HMSThemeColors.onSurfaceHighEmphasis)),
+                                : HMSThemeColors.onSurfaceHighEmphasis)),
                   // ListTile(
                   //     horizontalTitleGap: 2,
                   //     onTap: () async {
@@ -216,25 +221,29 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                   //     title: HMSSubheadingText(
                   //         text: "Volume",
                   //         textColor: HMSThemeColors.onSurfaceHighEmphasis)),
-                  ListTile(
-                      horizontalTitleGap: 2,
-                      onTap: () async {
-                        Navigator.pop(context);
-                        widget.meetingStore
-                            .removePeerFromRoom(widget.peerTrackNode.peer);
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      leading: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/peer_remove.svg",
-                        semanticsLabel: "fl_remove_peer",
-                        height: 20,
-                        width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.alertErrorDefault, BlendMode.srcIn),
-                      ),
-                      title: HMSSubheadingText(
-                          text: "Remove Participant",
-                          textColor: HMSThemeColors.alertErrorDefault)),
+                  if (widget.meetingStore.localPeer?.role.permissions
+                          .removeOthers ??
+                      false)
+                    ListTile(
+                        horizontalTitleGap: 2,
+                        onTap: () async {
+                          Navigator.pop(context);
+                          widget.meetingStore
+                              .removePeerFromRoom(widget.peerTrackNode.peer);
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        leading: SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/peer_remove.svg",
+                          semanticsLabel: "fl_remove_peer",
+                          height: 20,
+                          width: 20,
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.alertErrorDefault,
+                              BlendMode.srcIn),
+                        ),
+                        title: HMSSubheadingText(
+                            text: "Remove Participant",
+                            textColor: HMSThemeColors.alertErrorDefault)),
                 ],
               ),
             ),
