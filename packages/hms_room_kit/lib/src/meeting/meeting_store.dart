@@ -1027,8 +1027,10 @@ class MeetingStore extends ChangeNotifier
   @override
   void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {
     log("onRoleChangeRequest-> sender: ${roleChangeRequest.suggestedBy} role: ${roleChangeRequest.suggestedRole}");
-    currentRoleChangeRequest = roleChangeRequest;
-    previewForRole(roleChangeRequest.suggestedRole.name);
+    if (currentRoleChangeRequest == null) {
+      currentRoleChangeRequest = roleChangeRequest;
+      previewForRole(roleChangeRequest.suggestedRole.name);
+    }
   }
 
   void setCurrentPage(int newPage) {
