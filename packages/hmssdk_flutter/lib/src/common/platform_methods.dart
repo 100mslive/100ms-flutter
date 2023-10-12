@@ -188,6 +188,11 @@ enum PlatformMethod {
   getRoomLayout,
   previewForRole,
   cancelPreview,
+
+  ///PeerListIteratorMethods
+  getPeerListIterator,
+  peerListIteratorHasNext,
+  peerListIteratorNext,
   lowerLocalPeerHand,
   lowerRemotePeerHand,
   raiseLocalPeerHand
@@ -468,6 +473,15 @@ extension PlatformMethodValues on PlatformMethod {
         return "toggle_always_screen_on";
       case PlatformMethod.getRoomLayout:
         return "get_room_layout";
+
+      ///Peer list iterator methods
+      case PlatformMethod.getPeerListIterator:
+        return "get_peer_list_iterator";
+      case PlatformMethod.peerListIteratorHasNext:
+        return "peer_list_iterator_has_next";
+      case PlatformMethod.peerListIteratorNext:
+        return "peer_list_iterator_next";
+
       case PlatformMethod.lowerLocalPeerHand:
         return "lower_local_peer_hand";
       case PlatformMethod.lowerRemotePeerHand:
@@ -753,6 +767,15 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.toggleAlwaysScreenOn;
       case "get_room_layout":
         return PlatformMethod.getRoomLayout;
+
+      ///Peer List Iterator methods
+      case "get_peer_list_iterator":
+        return PlatformMethod.getPeerListIterator;
+      case "peer_list_iterator_has_next":
+        return PlatformMethod.peerListIteratorHasNext;
+      case "peer_list_iterator_next":
+        return PlatformMethod.peerListIteratorNext;
+
       case "lower_local_peer_hand":
         return PlatformMethod.lowerLocalPeerHand;
       case "lower_remote_peer_hand":

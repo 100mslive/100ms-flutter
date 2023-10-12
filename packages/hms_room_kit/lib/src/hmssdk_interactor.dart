@@ -393,6 +393,12 @@ class HMSSDKInteractor {
     return await hmsSDK.cancelPreview();
   }
 
+  Future<dynamic> getPeerListIterator(
+      {PeerListIteratorOptions? peerListIteratorOptions}) async {
+    return await hmsSDK.getPeerListIterator(
+        peerListIteratorOptions: peerListIteratorOptions);
+  }
+
   void lowerLocalPeerHand({HMSActionResultListener? hmsActionResultListener}) {
     hmsSDK.lowerLocalPeerHand(hmsActionResultListener: hmsActionResultListener);
   }

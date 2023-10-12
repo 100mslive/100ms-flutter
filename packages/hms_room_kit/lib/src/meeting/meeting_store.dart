@@ -216,6 +216,15 @@ class MeetingStore extends ChangeNotifier
 
   int currentScreenSharePage = 0;
 
+  ///PeerList iterators
+  ///This is a map with key as role and value as the iterator for that role
+  Map<String, HMSPeerListIterator> peerListIterators = {};
+
+  ///This checks whether to refresh peerlist or not
+  ///This is used in case when we are looking at a specific viewer role peerlist
+  ///i.e we are using the View All button functionalities.
+  bool disablePeerListRefresh = false;
+
   ///This stores the number of peers in the room
   int peersInRoom = 0;
 
@@ -256,6 +265,13 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.join(config: roomConfig);
     meetingUrl = roomCode;
     return null;
+  }
+
+  ///This method reapplies the theme layout based on the role name
+  void resetLayout(String roleName) {
+    HMSRoomLayout.resetLayout(roleName);
+    setMeetingModeUsingLayoutApi();
+    notifyListeners();
   }
 
   ///This method is used to set the meeting mode using the layout api
@@ -613,13 +629,13 @@ class MeetingStore extends ChangeNotifier
       previousRole = localPeer?.role.name;
       if (isRaisedHand) {
         toggleLocalPeerHandRaise();
-      } else {
-        ///Setting the previous role
-        _hmsSDKInteractor.changeMetadata(
-            metadata: "{\"isBRBOn\":false,\"prevRole\":\"$previousRole\"}",
-            hmsActionResultListener: this);
       }
-      HMSRoomLayout.resetLayout(hmsRoleChangeRequest.suggestedRole.name);
+
+      ///Setting the previous role
+      _hmsSDKInteractor.changeMetadata(
+          metadata: "{\"isBRBOn\":false,\"prevRole\":\"$previousRole\"}",
+          hmsActionResultListener: this);
+      // resetLayout(hmsRoleChangeRequest.suggestedRole.name);
       currentRoleChangeRequest = null;
       notifyListeners();
     }
@@ -658,6 +674,56 @@ class MeetingStore extends ChangeNotifier
     if (isStatsVisible) {
       _hmsSDKInteractor.addStatsListener(this);
     }
+  }
+
+  void nextPeersForRole(String role) async {
+    dynamic nextSetOfPeers = await peerListIterators[role]?.next();
+    if (nextSetOfPeers is List<HMSPeer> && nextSetOfPeers.isNotEmpty) {
+      for (var peer in nextSetOfPeers) {
+        addPeer(peer);
+      }
+    }
+  }
+
+  ///This method is used to disable the peer list refresh
+  void disableRefresh() {
+    disablePeerListRefresh = true;
+  }
+
+  ///This method is used to enable the peer list refresh
+  void enableRefresh() {
+    disablePeerListRefresh = false;
+  }
+
+  ///This method is used to refresh the peer list
+  void refreshPeerList() async {
+    ///If the peer list refresh is disabled then we return
+    if (disablePeerListRefresh) {
+      return;
+    }
+    log("Calling refresh PeerList Method $peerListIterators");
+    peerListIterators.clear();
+    List<String>? offStageRoles = HMSRoomLayout.roleLayoutData?.screens
+        ?.conferencing?.defaultConf?.elements?.onStageExp?.offStageRoles;
+    offStageRoles?.forEach((role) async {
+      var peerListIterator = await _hmsSDKInteractor.getPeerListIterator(
+          peerListIteratorOptions:
+              PeerListIteratorOptions(limit: 10, byRoleName: role));
+      if (peerListIterator != null && peerListIterator is HMSPeerListIterator) {
+        peerListIterators[role] = peerListIterator;
+        participantsInMeeting -= participantsInMeetingMap[role]?.length ?? 0;
+        participantsInMeetingMap[role]?.clear();
+        dynamic nonRealTimePeers = await peerListIterator.next();
+        if (nonRealTimePeers is List<HMSPeer>) {
+          log("Calling refresh PeerList Method $nonRealTimePeers");
+          if (nonRealTimePeers.isNotEmpty) {
+            for (var peer in nonRealTimePeers) {
+              addPeer(peer);
+            }
+          }
+        }
+      }
+    });
   }
 
   Future<List<HMSPeer>?> getPeers() async {
@@ -1238,7 +1304,6 @@ class MeetingStore extends ChangeNotifier
     if (peer.isHandRaised) {
       participantsInMeetingMap["Hand Raised"]
           ?.removeWhere((oldPeer) => oldPeer.peer.peerId == peer.peerId);
-      participantsInMeeting--;
     }
     notifyListeners();
   }
@@ -1255,7 +1320,6 @@ class MeetingStore extends ChangeNotifier
     if (peer.isHandRaised) {
       participantsInMeetingMap["Hand Raised"]
           ?.add(ParticipantsStore(peer: peer));
-      participantsInMeeting++;
     }
     notifyListeners();
   }
@@ -1295,13 +1359,11 @@ class MeetingStore extends ChangeNotifier
               -1) {
             participantsInMeetingMap["Hand Raised"]
                 ?.add(ParticipantsStore(peer: peer));
-            participantsInMeeting++;
           }
           participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
-        } else if (!peer.isHandRaised) {
+        } else {
           participantsInMeetingMap["Hand Raised"]?.removeWhere(
               (handDownPeer) => handDownPeer.peer.peerId == peer.peerId);
-          participantsInMeeting--;
           participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
         }
         notifyListeners();
@@ -1364,7 +1426,7 @@ class MeetingStore extends ChangeNotifier
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
           getSpotlightPeer();
-          HMSRoomLayout.resetLayout(peer.role.name);
+          resetLayout(peer.role.name);
           localPeer = peer;
         }
         if (HMSRoomLayout

@@ -27,7 +27,9 @@ packages/hmssdk_flutter/example/.dart_tool
 packages/hmssdk_flutter/example/android/fastlane
 packages/hmssdk_flutter/example/build
 packages/hmssdk_flutter/example/ios/fastlane
+packages/hmssdk_flutter/example/ios/flutter-hms-4aea6d38fd2a.json
 packages/hmssdk_flutter/example/android/app/google-services.json
+packages/hmssdk_flutter/example/android/flutter-hms-4aea6d38fd2a.json
 packages/hmssdk_flutter/build/
 
 ##HMS ROOM KIT

@@ -22,11 +22,10 @@ class OverlayParticipantsBottomSheet extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Selector<MeetingStore, int>(
-                    selector: (_, meetingStore) =>
-                        meetingStore.participantsInMeeting,
-                    builder: (_, participantsInMeeting, __) {
+                    selector: (_, meetingStore) => meetingStore.peersInRoom,
+                    builder: (_, peersInRoom, __) {
                       return HMSSubheadingText(
-                        text: "Participants ($participantsInMeeting)",
+                        text: "Participants ($peersInRoom)",
                         textColor: HMSThemeColors.onSurfaceHighEmphasis,
                         fontWeight: FontWeight.w600,
                       );
