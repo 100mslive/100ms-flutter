@@ -60,6 +60,8 @@ class _MeetingHeaderState extends State<MeetingHeader> {
             ///else we render an empty Container
             ///
             ///For hls streaming status we use the streamingType map from the [MeetingStore]
+            ///
+            ///If recording initialising state is true we show the loader
             Selector<MeetingStore, bool>(
                 selector: (_, meetingStore) =>
                     meetingStore.streamingType['hls'] ?? false,
@@ -97,8 +99,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                     meetingStore.recordingType["server"] ?? false,
                     meetingStore.recordingType["hls"] ?? false,
                     meetingStore
-                            .hmsRoom?.hmsBrowserRecordingState?.initialising ??
-                        false),
+                            .isRecordingInInitialisingState),
                 builder: (_, data, __) {
                   return (data.item1 || data.item2 || data.item3)
                       ? SvgPicture.asset(
@@ -114,7 +115,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                               height: 24,
                               width: 24,
                               child: CircularProgressIndicator(
-                                strokeWidth: 1,
+                                strokeWidth: 2,
                                 color: HMSThemeColors.onSurfaceHighEmphasis,
                               ))
                           : Container();
