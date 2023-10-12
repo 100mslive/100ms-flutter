@@ -11,8 +11,9 @@ class HMSHLSVariantExtension {
             args["hls_stream_url"] = hmshlsVariant.hlsStreamUrl ?: ""
             args["meeting_url"] = hmshlsVariant.meetingUrl ?: ""
             args["metadata"] = hmshlsVariant.metadata ?: ""
-            args["started_at"] =
-                SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(hmshlsVariant.startedAt).toString()
+            hmshlsVariant.startedAt?.let {
+                args["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(it).toString()
+            }
             return args
         }
     }
