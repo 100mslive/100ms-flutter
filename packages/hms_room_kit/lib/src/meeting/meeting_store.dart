@@ -1361,7 +1361,7 @@ class MeetingStore extends ChangeNotifier
                 ?.add(ParticipantsStore(peer: peer));
           }
           participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
-        } else if (!peer.isHandRaised) {
+        } else {
           participantsInMeetingMap["Hand Raised"]?.removeWhere(
               (handDownPeer) => handDownPeer.peer.peerId == peer.peerId);
           participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);

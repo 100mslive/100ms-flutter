@@ -1,5 +1,6 @@
 //Dart imports
 import 'dart:io';
+import 'dart:math';
 
 ///Package imports
 import 'package:flutter/material.dart';
@@ -497,8 +498,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                       int>>(
                                               selector: (_, meetingStore) =>
                                                   Tuple2(
-                                                      meetingStore.toasts
-                                                          .toList(),
+                                                      meetingStore.toasts,
                                                       meetingStore
                                                           .toasts.length),
                                               builder: (_, toastsItem, __) {
@@ -506,7 +506,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                   return Container();
                                                 }
                                                 return Stack(
-                                                    children: toastsItem.item1
+                                                    children: toastsItem.item1.sublist(0,min(3, toastsItem.item2))
                                                         .asMap()
                                                         .entries
                                                         .map((toasts) {
