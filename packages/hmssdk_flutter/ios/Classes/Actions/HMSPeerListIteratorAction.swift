@@ -58,7 +58,7 @@ class HMSPeerListIteratorAction {
             return
         }
 
-        peerListIteratorOptions = HMSPeerListIteratorOptions(filterByRoleName:  peerListOptionsMap?["by_role_name"] as? String, filterByPeerIds: peerListOptionsMap?["by_peer_ids"] as? [String], limit: limit)
+        peerListIteratorOptions = HMSPeerListIteratorOptions(filterByRoleName: peerListOptionsMap?["by_role_name"] as? String, filterByPeerIds: peerListOptionsMap?["by_peer_ids"] as? [String], limit: limit)
 
         var peerListIterator: HMSPeerListIterator?
 

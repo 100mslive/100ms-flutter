@@ -98,8 +98,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                     meetingStore.recordingType["browser"] ?? false,
                     meetingStore.recordingType["server"] ?? false,
                     meetingStore.recordingType["hls"] ?? false,
-                    meetingStore
-                            .isRecordingInInitialisingState),
+                    meetingStore.isRecordingInInitialisingState),
                 builder: (_, data, __) {
                   return (data.item1 || data.item2 || data.item3)
                       ? SvgPicture.asset(

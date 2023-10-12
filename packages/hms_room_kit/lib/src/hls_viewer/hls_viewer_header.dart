@@ -1,8 +1,6 @@
 ///Dart imports
 import 'dart:io';
 
-///Package imports
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
@@ -88,33 +86,31 @@ class HLSViewerHeader extends StatelessWidget {
                 ///If the recording is not started we show nothing
                 ///
                 ///If recording initialising state is true we show the loader
-                Selector<MeetingStore, Tuple4<bool, bool, bool,bool>>(
+                Selector<MeetingStore, Tuple4<bool, bool, bool, bool>>(
                     selector: (_, meetingStore) => Tuple4(
-                          meetingStore.recordingType["browser"] ?? false,
-                          meetingStore.recordingType["server"] ?? false,
-                          meetingStore.recordingType["hls"] ?? false,
-                          meetingStore
-                            .isRecordingInInitialisingState
-                        ),
+                        meetingStore.recordingType["browser"] ?? false,
+                        meetingStore.recordingType["server"] ?? false,
+                        meetingStore.recordingType["hls"] ?? false,
+                        meetingStore.isRecordingInInitialisingState),
                     builder: (_, data, __) {
                       return (data.item1 || data.item2 || data.item3)
-                      ? SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/record.svg",
-                          height: 24,
-                          width: 24,
-                          colorFilter: ColorFilter.mode(
-                              HMSThemeColors.alertErrorDefault,
-                              BlendMode.srcIn),
-                        )
-                      : data.item4
-                          ? SizedBox(
+                          ? SvgPicture.asset(
+                              "packages/hms_room_kit/lib/src/assets/icons/record.svg",
                               height: 24,
                               width: 24,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 1,
-                                color: HMSThemeColors.onSurfaceHighEmphasis,
-                              ))
-                          : Container();
+                              colorFilter: ColorFilter.mode(
+                                  HMSThemeColors.alertErrorDefault,
+                                  BlendMode.srcIn),
+                            )
+                          : data.item4
+                              ? SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                    color: HMSThemeColors.onSurfaceHighEmphasis,
+                                  ))
+                              : Container();
                     }),
                 const SizedBox(
                   width: 8,

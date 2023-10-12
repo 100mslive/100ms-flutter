@@ -506,7 +506,13 @@ class _MeetingPageState extends State<MeetingPage> {
                                                   return Container();
                                                 }
                                                 return Stack(
-                                                    children: toastsItem.item1.sublist(0,min(3, toastsItem.item2))
+                                                    children: toastsItem.item1
+                                                        .sublist(
+                                                            0,
+                                                            min(
+                                                                3,
+                                                                toastsItem
+                                                                    .item2))
                                                         .asMap()
                                                         .entries
                                                         .map((toasts) {
