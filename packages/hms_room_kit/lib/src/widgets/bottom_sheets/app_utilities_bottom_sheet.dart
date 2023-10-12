@@ -199,100 +199,107 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                 ///start/stop browser recording
                 ///
                 ///The recording permission is checked using the role of the local peer
+                ///
+                ///If Streaming is already running we disable the recording option
                 if (meetingStore.localPeer?.role.permissions.browserRecording ??
                     false)
-                  ((meetingStore.streamingType["hls"] ?? false) ||
-                          (meetingStore.streamingType["rtmp"] ?? false))
-                      ? MoreOptionItem(
-                          onTap: () {},
-                          isActive: false,
-                          optionIcon: SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/record.svg",
-                            height: 20,
-                            width: 20,
-                            colorFilter: ColorFilter.mode(
-                                HMSThemeColors.onSurfaceLowEmphasis,
-                                BlendMode.srcIn),
-                          ),
-                          optionText: "Start Recording",
-                          optionTextColor: HMSThemeColors.onSurfaceLowEmphasis,
-                        )
-                      : MoreOptionItem(
-                          onTap: () async {
-                            bool isRecordingRunning =
-                                ((meetingStore.recordingType["hls"] ?? false) ||
+                      ///If streaming is on or in initialising state disable the button
+                      ((meetingStore.streamingType["hls"] ?? false) ||
+                              (meetingStore.streamingType["rtmp"] ?? false) || meetingStore.isRecordingInInitialisingState)
+                          ? MoreOptionItem(
+                              onTap: () {},
+                              isActive: false,
+                              optionIcon: SvgPicture.asset(
+                                "packages/hms_room_kit/lib/src/assets/icons/record.svg",
+                                height: 20,
+                                width: 20,
+                                colorFilter: ColorFilter.mode(
+                                    HMSThemeColors.onSurfaceLowEmphasis,
+                                    BlendMode.srcIn),
+                              ),
+                              optionText: "Start Recording",
+                              optionTextColor:
+                                  HMSThemeColors.onSurfaceLowEmphasis,
+                            )
+                          : MoreOptionItem(
+                              onTap: () async {
+                                bool isRecordingRunning = ((meetingStore
+                                            .recordingType["hls"] ??
+                                        false) ||
                                     (meetingStore.recordingType["browser"] ??
                                         false) ||
                                     (meetingStore.recordingType["server"] ??
                                         false));
-                            if (isRecordingRunning) {
-                              Navigator.pop(context);
-                              showModalBottomSheet(
-                                isScrollControlled: true,
-                                backgroundColor: HMSThemeColors.surfaceDim,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(16),
-                                      topRight: Radius.circular(16)),
-                                ),
-                                context: context,
-                                builder: (ctx) => EndServiceBottomSheet(
-                                  onButtonPressed: () =>
-                                      meetingStore.stopRtmpAndRecording(),
-                                  title: HMSTitleText(
-                                    text: "Stop Recording",
-                                    textColor: HMSThemeColors.alertErrorDefault,
-                                    letterSpacing: 0.15,
-                                    fontSize: 20,
-                                  ),
-                                  bottomSheetTitleIcon: SvgPicture.asset(
-                                    "packages/hms_room_kit/lib/src/assets/icons/alert.svg",
-                                    height: 20,
-                                    width: 20,
-                                    colorFilter: ColorFilter.mode(
-                                        HMSThemeColors.alertErrorDefault,
-                                        BlendMode.srcIn),
-                                  ),
-                                  subTitle: HMSSubheadingText(
-                                    text:
-                                        "Are you sure you want to stop recording? You\n can’t undo this action.",
-                                    maxLines: 2,
-                                    textColor:
-                                        HMSThemeColors.onSurfaceMediumEmphasis,
-                                  ),
-                                  buttonText: "Stop Recording",
-                                ),
-                              );
-                            } else {
-                              Navigator.pop(context);
-                              meetingStore.startRtmpOrRecording(
-                                  meetingUrl: Constant.streamingUrl,
-                                  toRecord: true,
-                                  rtmpUrls: null);
-                            }
-                          },
-                          isActive: ((meetingStore.recordingType["hls"] ??
-                                  false) ||
-                              (meetingStore.recordingType["browser"] ??
-                                  false) ||
-                              (meetingStore.recordingType["server"] ?? false)),
-                          optionIcon: SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/record.svg",
-                            height: 20,
-                            width: 20,
-                            colorFilter: ColorFilter.mode(
-                                HMSThemeColors.onSurfaceHighEmphasis,
-                                BlendMode.srcIn),
-                          ),
-                          optionText:
-                              ((meetingStore.recordingType["hls"] ?? false) ||
+                                if (isRecordingRunning) {
+                                  Navigator.pop(context);
+                                  showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    backgroundColor: HMSThemeColors.surfaceDim,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(16),
+                                          topRight: Radius.circular(16)),
+                                    ),
+                                    context: context,
+                                    builder: (ctx) => EndServiceBottomSheet(
+                                      onButtonPressed: () =>
+                                          meetingStore.stopRtmpAndRecording(),
+                                      title: HMSTitleText(
+                                        text: "Stop Recording",
+                                        textColor:
+                                            HMSThemeColors.alertErrorDefault,
+                                        letterSpacing: 0.15,
+                                        fontSize: 20,
+                                      ),
+                                      bottomSheetTitleIcon: SvgPicture.asset(
+                                        "packages/hms_room_kit/lib/src/assets/icons/alert.svg",
+                                        height: 20,
+                                        width: 20,
+                                        colorFilter: ColorFilter.mode(
+                                            HMSThemeColors.alertErrorDefault,
+                                            BlendMode.srcIn),
+                                      ),
+                                      subTitle: HMSSubheadingText(
+                                        text:
+                                            "Are you sure you want to stop recording? You\n can’t undo this action.",
+                                        maxLines: 2,
+                                        textColor: HMSThemeColors
+                                            .onSurfaceMediumEmphasis,
+                                      ),
+                                      buttonText: "Stop Recording",
+                                    ),
+                                  );
+                                } else {
+                                  Navigator.pop(context);
+                                  meetingStore.startRtmpOrRecording(
+                                      meetingUrl: Constant.streamingUrl,
+                                      toRecord: true,
+                                      rtmpUrls: null);
+                                }
+                              },
+                              isActive: ((meetingStore.recordingType["hls"] ??
+                                      false) ||
+                                  (meetingStore.recordingType["browser"] ??
+                                      false) ||
+                                  (meetingStore.recordingType["server"] ??
+                                      false)),
+                              optionIcon: SvgPicture.asset(
+                                "packages/hms_room_kit/lib/src/assets/icons/record.svg",
+                                height: 20,
+                                width: 20,
+                                colorFilter: ColorFilter.mode(
+                                    HMSThemeColors.onSurfaceHighEmphasis,
+                                    BlendMode.srcIn),
+                              ),
+                              optionText: ((meetingStore.recordingType["hls"] ??
+                                          false) ||
                                       (meetingStore.recordingType["browser"] ??
                                           false) ||
                                       (meetingStore.recordingType["server"] ??
                                           false))
                                   ? "Stop Recording"
                                   : "Start Recording",
-                        )
+                            )
               ],
             ),
           ],

@@ -228,6 +228,9 @@ class MeetingStore extends ChangeNotifier
   ///This stores the number of peers in the room
   int peersInRoom = 0;
 
+  ///Check whether recording is in intialising state
+  bool isRecordingInInitialisingState = false;
+
   Future<HMSException?> join(String userName, String roomCode,
       {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
@@ -520,6 +523,8 @@ class MeetingStore extends ChangeNotifier
         meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
 
     _hmsSDKInteractor.startRtmpOrRecording(hmsRecordingConfig, this);
+    isRecordingInInitialisingState = true;
+    notifyListeners();
   }
 
   void cancelPreview() async {
@@ -879,6 +884,8 @@ class MeetingStore extends ChangeNotifier
       case HMSRoomUpdate.browserRecordingStateUpdated:
         recordingType["browser"] =
             room.hmsBrowserRecordingState?.running ?? false;
+        isRecordingInInitialisingState =
+            room.hmsBrowserRecordingState?.initialising ?? false;
         break;
       case HMSRoomUpdate.serverRecordingStateUpdated:
         recordingType["server"] =
@@ -2154,6 +2161,7 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         toasts.add(HMSToastModel(hmsException,
             hmsToastType: HMSToastsType.errorToast));
+        isRecordingInInitialisingState = false;
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:

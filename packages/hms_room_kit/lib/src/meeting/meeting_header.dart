@@ -60,6 +60,8 @@ class _MeetingHeaderState extends State<MeetingHeader> {
             ///else we render an empty Container
             ///
             ///For hls streaming status we use the streamingType map from the [MeetingStore]
+            ///
+            ///If recording initialising state is true we show the loader
             Selector<MeetingStore, bool>(
                 selector: (_, meetingStore) =>
                     meetingStore.streamingType['hls'] ?? false,
@@ -91,12 +93,13 @@ class _MeetingHeaderState extends State<MeetingHeader> {
             ///else we render an empty Container
             ///
             ///For recording status we use the recordingType map from the [MeetingStore]
-            Selector<MeetingStore, Tuple3<bool, bool, bool>>(
-                selector: (_, meetingStore) => Tuple3(
-                      meetingStore.recordingType["browser"] ?? false,
-                      meetingStore.recordingType["server"] ?? false,
-                      meetingStore.recordingType["hls"] ?? false,
-                    ),
+            Selector<MeetingStore, Tuple4<bool, bool, bool, bool>>(
+                selector: (_, meetingStore) => Tuple4(
+                    meetingStore.recordingType["browser"] ?? false,
+                    meetingStore.recordingType["server"] ?? false,
+                    meetingStore.recordingType["hls"] ?? false,
+                    meetingStore
+                            .isRecordingInInitialisingState),
                 builder: (_, data, __) {
                   return (data.item1 || data.item2 || data.item3)
                       ? SvgPicture.asset(
@@ -107,7 +110,15 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                               HMSThemeColors.alertErrorDefault,
                               BlendMode.srcIn),
                         )
-                      : Container();
+                      : data.item4
+                          ? SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: HMSThemeColors.onSurfaceHighEmphasis,
+                              ))
+                          : Container();
                 }),
             const SizedBox(
               width: 8,
