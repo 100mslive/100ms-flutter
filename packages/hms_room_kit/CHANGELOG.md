@@ -5,6 +5,21 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+## 1.0.3 - 2023-10-16
+
+### 🚀 Added
+
+- Large Room Support
+  - Enhanced Participants list to accommodate up to 20,000 peers in a room.
+
+- Added recording state indicator: showcasing "initializing" and "running" states.
+- Added `Lower Hand` Capability in Participant list 
+
+### Fixed
+
+- Fixed `userid` bug, where `userid` was not getting passed to SDK
+- Fixed UI bugs
+
 ## 1.0.2 - 2023-09-22
 
 ### 🚀 Added
