@@ -36,7 +36,7 @@ class HMSStreamingState {
             if (hmsBrowserRecordingState.running) {
                 map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(hmsBrowserRecordingState.startedAt).toString()
             }
-            map["initialising"] = false
+            map["initialising"] = hmsBrowserRecordingState.initialising
             return map
         }
 

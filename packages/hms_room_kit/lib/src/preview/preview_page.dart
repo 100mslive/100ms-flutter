@@ -41,13 +41,14 @@ class PreviewPage extends StatefulWidget {
 
 class _PreviewPageState extends State<PreviewPage> {
   late MeetingStore _meetingStore;
-  TextEditingController nameController = TextEditingController();
+  late TextEditingController nameController;
   bool isJoiningRoom = false;
   bool isHLSStarting = false;
 
   @override
   void initState() {
     super.initState();
+    nameController = TextEditingController(text: widget.name);
   }
 
   @override
@@ -66,7 +67,7 @@ class _PreviewPageState extends State<PreviewPage> {
 
   ///This function joins the room only if the name is not empty
   void _joinMeeting(PreviewStore previewStore) async {
-    if (nameController.text.isNotEmpty) {
+    if (nameController.text.trim().isNotEmpty) {
       FocusManager.instance.primaryFocus?.unfocus();
       setState(() {
         isJoiningRoom = true;
@@ -76,8 +77,8 @@ class _PreviewPageState extends State<PreviewPage> {
       _setMeetingStore(previewStore);
 
       /// We join the room here
-      HMSException? ans =
-          await _meetingStore.join(nameController.text, Constant.roomCode);
+      HMSException? ans = await _meetingStore.join(
+          nameController.text.trim(), Constant.roomCode);
 
       ///If the room join fails we show the error dialog
       if (ans != null && mounted) {
@@ -403,7 +404,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                                             PreviewJoinButton(
                                                           isEmpty:
                                                               nameController
-                                                                  .text.isEmpty,
+                                                                  .text
+                                                                  .trim()
+                                                                  .isEmpty,
                                                           previewStore:
                                                               previewStore,
                                                           isJoining:

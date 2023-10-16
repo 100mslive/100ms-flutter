@@ -13,9 +13,9 @@ class HandRaise extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<PeerTrackNode, String?>(
-        builder: (_, metadata, __) {
-          return metadata?.contains("\"isHandRaised\":true") ?? false
+    return Selector<PeerTrackNode, bool>(
+        builder: (_, isHandRaised, __) {
+          return isHandRaised
               ? Positioned(
                   top: 5,
                   left: 5,
@@ -45,6 +45,6 @@ class HandRaise extends StatelessWidget {
                 )
               : Container();
         },
-        selector: (_, peerTrackNode) => peerTrackNode.peer.metadata);
+        selector: (_, peerTrackNode) => peerTrackNode.peer.isHandRaised);
   }
 }

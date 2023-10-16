@@ -2,20 +2,18 @@
 import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
+import 'package:hms_room_kit/src/widgets/common_widgets/more_option_item.dart';
+import 'package:hms_room_kit/src/meeting/meeting_store.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/end_service_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/overlay_participants_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
-import 'package:provider/provider.dart';
-
-///Project imports
-import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/more_option_item.dart';
-import 'package:hms_room_kit/src/common/constants.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
-import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 
 ///This renders the app utilities bottom sheet for webRTC or broadcaster
 ///It contains the participants, screen share, brb, raise hand and recording
@@ -100,17 +98,11 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       },
                       optionIcon: badge.Badge(
                         badgeStyle: badge.BadgeStyle(
-                            badgeColor: HMSThemeColors.surfaceDefault,
-                            padding: EdgeInsets.all(
-                                context.read<MeetingStore>().peers.length < 1000
-                                    ? 5
-                                    : 8)),
+                          badgeColor: HMSThemeColors.surfaceDefault,
+                        ),
                         badgeContent: HMSTitleText(
-                          text: context
-                              .read<MeetingStore>()
-                              .peers
-                              .length
-                              .toString(),
+                          text: Utilities.formatNumber(
+                              context.read<MeetingStore>().peersInRoom),
                           textColor: HMSThemeColors.onSurfaceHighEmphasis,
                           fontSize: 10,
                           lineHeight: 16,
@@ -118,11 +110,15 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         ),
                         child: Padding(
                           padding: EdgeInsets.symmetric(
-                              horizontal:
-                                  (context.read<MeetingStore>().peers.length <
-                                          1000
-                                      ? 5
-                                      : 10)),
+                              horizontal: context
+                                          .read<MeetingStore>()
+                                          .peersInRoom <
+                                      1000
+                                  ? 15
+                                  : context.read<MeetingStore>().peersInRoom <
+                                          10000
+                                      ? 20
+                                      : 30),
                           child: SvgPicture.asset(
                             "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
                             height: 20,
@@ -182,7 +178,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                 ,
                 MoreOptionItem(
                     onTap: () async {
-                      context.read<MeetingStore>().changeMetadata();
+                      context.read<MeetingStore>().toggleLocalPeerHandRaise();
                       Navigator.pop(context);
                     },
                     isActive: meetingStore.isRaisedHand,
@@ -203,10 +199,15 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                 ///start/stop browser recording
                 ///
                 ///The recording permission is checked using the role of the local peer
+                ///
+                ///If Streaming is already running we disable the recording option
                 if (meetingStore.localPeer?.role.permissions.browserRecording ??
                     false)
+
+                  ///If streaming is on or in initialising state disable the button
                   ((meetingStore.streamingType["hls"] ?? false) ||
-                          (meetingStore.streamingType["rtmp"] ?? false))
+                          (meetingStore.streamingType["rtmp"] ?? false) ||
+                          meetingStore.isRecordingInInitialisingState)
                       ? MoreOptionItem(
                           onTap: () {},
                           isActive: false,

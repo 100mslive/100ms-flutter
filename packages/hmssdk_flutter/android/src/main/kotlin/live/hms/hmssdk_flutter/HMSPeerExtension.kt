@@ -15,6 +15,7 @@ class HMSPeerExtension {
             args["is_local"] = peer.isLocal
             args["role"] = HMSRoleExtension.toDictionary(peer.hmsRole)
             args["metadata"] = peer.metadata
+            args["is_hand_raised"] = peer.isHandRaised
             args["customer_user_id"] = peer.customerUserID
             args["audio_track"] = HMSTrackExtension.toDictionary(peer.audioTrack)
             args["video_track"] = HMSTrackExtension.toDictionary(peer.videoTrack)
@@ -41,6 +42,7 @@ class HMSPeerExtension {
                 HMSPeerUpdate.NETWORK_QUALITY_UPDATED -> "networkQualityUpdated"
                 HMSPeerUpdate.BECAME_DOMINANT_SPEAKER -> "becameDominantSpeaker"
                 HMSPeerUpdate.NO_DOMINANT_SPEAKER -> "noDominantSpeaker"
+                HMSPeerUpdate.HAND_RAISED_CHANGED -> "handRaiseUpdated"
                 else -> "defaultUpdate"
             }
         }

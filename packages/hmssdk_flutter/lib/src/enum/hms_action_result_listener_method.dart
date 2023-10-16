@@ -23,5 +23,8 @@ enum HMSActionResultListenerMethod {
   changeRoleOfPeersWithRoles,
   setSessionMetadataForKey,
   sendHLSTimedMetadata,
+  lowerLocalPeerHand,
+  lowerRemotePeerHand,
+  raiseLocalPeerHand,
   unknown
 }
