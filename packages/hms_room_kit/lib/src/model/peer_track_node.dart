@@ -10,7 +10,6 @@ class PeerTrackNode extends ChangeNotifier {
   String uid;
   HMSVideoTrack? track;
   HMSAudioTrack? audioTrack;
-  bool isOffscreen;
   int? networkQuality;
   RTCStats? stats;
   int audioLevel;
@@ -21,7 +20,6 @@ class PeerTrackNode extends ChangeNotifier {
       this.track,
       this.audioTrack,
       required this.uid,
-      this.isOffscreen = true,
       this.networkQuality = -1,
       this.stats,
       this.audioLevel = -1,
@@ -29,7 +27,7 @@ class PeerTrackNode extends ChangeNotifier {
 
   @override
   String toString() {
-    return 'PeerTrackNode{peerId: ${peer.peerId}, name: ${peer.name}, track: $track}, isVideoOn: $isOffscreen }';
+    return 'PeerTrackNode{peerId: ${peer.peerId}, name: ${peer.name}, track: $track} }';
   }
 
   void notify() {
@@ -37,51 +35,51 @@ class PeerTrackNode extends ChangeNotifier {
   }
 
   void setOffScreenStatus(bool currentState) {
-    isOffscreen = currentState;
+    // isOffscreen = currentState;
     notify();
   }
 
   void setAudioLevel(int audioLevel) {
     this.audioLevel = audioLevel;
-    if (!isOffscreen) {
-      notify();
-    }
+    // if (!isOffscreen) {
+    //   notify();
+    // }
   }
 
   void setNetworkQuality(int? networkQuality) {
     if (networkQuality != null) {
       this.networkQuality = networkQuality;
-      if (!isOffscreen) {
-        notify();
-      }
+      // if (!isOffscreen) {
+      //   notify();
+      // }
     }
   }
 
   void setHMSRemoteAudioStats(HMSRemoteAudioStats hmsRemoteAudioStats) {
     stats?.hmsRemoteAudioStats = hmsRemoteAudioStats;
-    if (!isOffscreen) {
-      notify();
-    }
+    // if (!isOffscreen) {
+    //   notify();
+    // }
   }
 
   void setHMSRemoteVideoStats(HMSRemoteVideoStats hmsRemoteVideoStats) {
     stats?.hmsRemoteVideoStats = hmsRemoteVideoStats;
-    if (!isOffscreen) {
-      notify();
-    }
+    // if (!isOffscreen) {
+    //   notify();
+    // }
   }
 
   void setHMSLocalVideoStats(List<HMSLocalVideoStats> hmsLocalVideoStats) {
     stats?.hmsLocalVideoStats = hmsLocalVideoStats;
-    if (!isOffscreen) {
-      notify();
-    }
+    // if (!isOffscreen) {
+    //   notify();
+    // }
   }
 
   void setHMSLocalAudioStats(HMSLocalAudioStats hmsLocalAudioStats) {
     stats?.hmsLocalAudioStats = hmsLocalAudioStats;
-    if (!isOffscreen) {
-      notify();
-    }
+    // if (!isOffscreen) {
+    //   notify();
+    // }
   }
 }

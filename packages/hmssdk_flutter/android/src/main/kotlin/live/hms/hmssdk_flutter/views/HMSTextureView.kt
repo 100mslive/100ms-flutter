@@ -10,15 +10,21 @@ import live.hms.videoview.textureview.HMSTextureRenderer
 
 class HMSTextureView(
     texture: SurfaceTexture,
-    track: HMSVideoTrack,
+    val track: HMSVideoTrack,
     var entry: TextureRegistry.SurfaceTextureEntry?
 ){
 
 //    var eventChannel: EventChannel? = null
 //    var eventSink: EventSink? = null
     var hmsTextureRenderer: HMSTextureRenderer? = null
+    var uid: Long? = null
     init {
         hmsTextureRenderer = HMSTextureRenderer(texture)
+        addTrack()
+        uid = entry?.id()
+    }
+
+    fun addTrack(){
         hmsTextureRenderer?.addTrack(track)
     }
 

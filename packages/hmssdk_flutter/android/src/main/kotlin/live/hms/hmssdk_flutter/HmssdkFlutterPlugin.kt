@@ -605,6 +605,14 @@ class HmssdkFlutterPlugin :
 
         val trackId = call.argument<String?>("track_id")
         trackId?.let {
+            if(renderers.containsKey(it)){
+                val renderer = renderers[it]
+                renderer?.addTrack()
+                val data = HashMap<String,Any>()
+                data["texture_id"] = renderer?.uid!!
+                result.success(HMSResultExtension.toDictionary(true,data))
+                return
+            }
             val room = hmssdk?.getRoom()
 
             room?.let { currentRoom ->
@@ -614,7 +622,7 @@ class HmssdkFlutterPlugin :
                     entry?.let { surfaceTextureEntry ->
                         val surfaceTexture = surfaceTextureEntry.surfaceTexture()
                         val renderer = HMSTextureView(surfaceTexture,videoTrack,entry)
-                        renderers["${entry.id()}$trackId"] = renderer
+                        renderers["$trackId"] = renderer
 //                        val eventChannel = EventChannel(
 //                            hmsBinaryMessenger,
 //                            "HMSTextureView/Texture" + entry.id()

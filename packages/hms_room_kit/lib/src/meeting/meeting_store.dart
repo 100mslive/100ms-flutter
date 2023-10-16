@@ -1045,68 +1045,68 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
-    //To handle the active speaker mode scenario
-    if ((currentPage == 0) &&
-        (meetingMode == MeetingMode.activeSpeakerWithInset ||
-            meetingMode == MeetingMode.activeSpeakerWithoutInset) &&
-        peerTracks.length > 6) {
-      /* Here we iterate through the updateSpeakers list
-       * and do the following:
-       * Find the index of the peer
-       * If the peer is out of the screen when you are on first page
-       * we remove the peer from that index and insert it on the first index
-      */
-      for (var speaker in updateSpeakers) {
-        int index = peerTracks.indexWhere((previousSpeaker) =>
-            previousSpeaker.uid == "${speaker.peer.peerId}mainVideo");
-        if (index > 5) {
-          PeerTrackNode activeSpeaker = peerTracks[index];
-          peerTracks.removeAt(index);
-          peerTracks.insert(screenShareCount, activeSpeaker);
-          peerTracks[screenShareCount].setOffScreenStatus(false);
-        }
-      }
-      notifyListeners();
-    }
-
-    //This is to handle the borders around the tiles of peers who are currently speaking
-    //Reseting the borders of the tile everytime the update is received
-    if (activeSpeakerIds.isNotEmpty) {
-      for (var key in activeSpeakerIds) {
-        int index = peerTracks.indexWhere((element) => element.uid == key);
-        if (index != -1) {
-          peerTracks[index].setAudioLevel(-1);
-        }
-      }
-      activeSpeakerIds.clear();
-    }
-
-    //Setting the border for peers who are speaking
-    for (var element in updateSpeakers) {
-      activeSpeakerIds.add("${element.peer.peerId}mainVideo");
-      int index = peerTracks
-          .indexWhere((element) => element.uid == activeSpeakerIds.last);
-      if (index != -1) {
-        peerTracks[index].setAudioLevel(element.audioLevel);
-      }
-    }
-
-    // Below code for change track and text in PIP mode iOS and android.
-    // if (updateSpeakers.isNotEmpty) {
-    //   if (Platform.isIOS && (screenShareCount == 0 || isScreenShareOn)) {
-    //     if (updateSpeakers[0].peer.videoTrack != null) {
-    //       changePIPWindowTrackOnIOS(
-    //           track: updateSpeakers[0].peer.videoTrack,
-    //           alternativeText: updateSpeakers[0].peer.name,
-    //           ratio: [9, 16]);
-    //     } else {
-    //       changePIPWindowTextOnIOS(
-    //           text: updateSpeakers[0].peer.name, ratio: [9, 16]);
+    // //To handle the active speaker mode scenario
+    // if ((currentPage == 0) &&
+    //     (meetingMode == MeetingMode.activeSpeakerWithInset ||
+    //         meetingMode == MeetingMode.activeSpeakerWithoutInset) &&
+    //     peerTracks.length > 6) {
+    //   /* Here we iterate through the updateSpeakers list
+    //    * and do the following:
+    //    * Find the index of the peer
+    //    * If the peer is out of the screen when you are on first page
+    //    * we remove the peer from that index and insert it on the first index
+    //   */
+    //   for (var speaker in updateSpeakers) {
+    //     int index = peerTracks.indexWhere((previousSpeaker) =>
+    //         previousSpeaker.uid == "${speaker.peer.peerId}mainVideo");
+    //     if (index > 5) {
+    //       PeerTrackNode activeSpeaker = peerTracks[index];
+    //       peerTracks.removeAt(index);
+    //       peerTracks.insert(screenShareCount, activeSpeaker);
+    //       peerTracks[screenShareCount].setOffScreenStatus(false);
     //     }
-    //   } else if (Platform.isAndroid) {
-    //     changePIPWindowOnAndroid("${updateSpeakers[0].peer.peerId}mainVideo");
+    //   }
+    //   notifyListeners();
+    // }
+
+    // //This is to handle the borders around the tiles of peers who are currently speaking
+    // //Reseting the borders of the tile everytime the update is received
+    // if (activeSpeakerIds.isNotEmpty) {
+    //   for (var key in activeSpeakerIds) {
+    //     int index = peerTracks.indexWhere((element) => element.uid == key);
+    //     if (index != -1) {
+    //       peerTracks[index].setAudioLevel(-1);
+    //     }
+    //   }
+    //   activeSpeakerIds.clear();
+    // }
+
+    // //Setting the border for peers who are speaking
+    // for (var element in updateSpeakers) {
+    //   activeSpeakerIds.add("${element.peer.peerId}mainVideo");
+    //   int index = peerTracks
+    //       .indexWhere((element) => element.uid == activeSpeakerIds.last);
+    //   if (index != -1) {
+    //     peerTracks[index].setAudioLevel(element.audioLevel);
     //   }
     // }
+
+    // // Below code for change track and text in PIP mode iOS and android.
+    // // if (updateSpeakers.isNotEmpty) {
+    // //   if (Platform.isIOS && (screenShareCount == 0 || isScreenShareOn)) {
+    // //     if (updateSpeakers[0].peer.videoTrack != null) {
+    // //       changePIPWindowTrackOnIOS(
+    // //           track: updateSpeakers[0].peer.videoTrack,
+    // //           alternativeText: updateSpeakers[0].peer.name,
+    // //           ratio: [9, 16]);
+    // //     } else {
+    // //       changePIPWindowTextOnIOS(
+    // //           text: updateSpeakers[0].peer.name, ratio: [9, 16]);
+    // //     }
+    // //   } else if (Platform.isAndroid) {
+    // //     changePIPWindowOnAndroid("${updateSpeakers[0].peer.peerId}mainVideo");
+    // //   }
+    // // }
   }
 
   @override

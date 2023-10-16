@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:developer';
 import 'dart:io' show Platform;
 
 // Flutter imports:
@@ -124,7 +125,6 @@ class _PlatformView extends StatefulWidget {
 }
 
 class _PlatformViewState extends State<_PlatformView> {
-
   int? textureId;
 
   void onPlatformViewCreated(int id) {}
@@ -141,19 +141,26 @@ class _PlatformViewState extends State<_PlatformView> {
     super.dispose();
   }
 
-  void getTextureId() async{
-    var result = await PlatformService.invokeMethod(PlatformMethod.createTextureView,
+  void getTextureId() async {
+    log("getTextureId 1 called timestamp: ${DateTime.now().millisecondsSinceEpoch}}");
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.createTextureView,
         arguments: {"track_id": widget.track.trackId});
     if (result["success"] && mounted) {
       setState(() {
         textureId = result["data"]["texture_id"];
       });
+    log("getTextureId 2 called timestamp: ${DateTime.now().millisecondsSinceEpoch}}");
     }
   }
 
-  void disposeTextureView() async{
-    var result = await PlatformService.invokeMethod(PlatformMethod.disposeTextureView,
-        arguments: {"track_id": widget.track.trackId,"texture_id":textureId.toString()});
+  void disposeTextureView() async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.disposeTextureView,
+        arguments: {
+          "track_id": widget.track.trackId,
+          "texture_id": textureId.toString()
+        });
     if (result["success"] && mounted) {
       setState(() {
         textureId = null;
@@ -165,9 +172,8 @@ class _PlatformViewState extends State<_PlatformView> {
   Widget build(BuildContext context) {
     ///AndroidView for android it uses surfaceRenderer provided internally by webrtc.
     if (Platform.isAndroid) {
-      return 
-      textureId == null ? Container() : Texture(textureId: textureId!);
-      
+      return textureId == null ? Container(color: Colors.red,) : Texture(textureId: textureId!);
+
       // /Texture(textureId: textureId); // get textureId fom video view
       // return AndroidView(
       //   viewType: 'HMSVideoView',
