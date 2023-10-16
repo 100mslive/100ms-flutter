@@ -258,11 +258,13 @@ class HmssdkFlutterPlugin :
                 createTextureView(call,result)
             }
             "dispose_texture_view" -> {
-                disposeTextureView(call,result)
+                disposeTextureView(call, result)
+            }
 
             "get_peer_list_iterator", "peer_list_iterator_has_next", "peer_list_iterator_next" -> {
                 HMSPeerListIteratorAction.peerListIteratorAction(call, result, hmssdk!!)
             }
+
             else -> {
                 result.notImplemented()
             }
