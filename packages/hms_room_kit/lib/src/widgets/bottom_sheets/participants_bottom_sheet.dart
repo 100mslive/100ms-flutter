@@ -1,11 +1,14 @@
-///Package imports
+///Dart imports
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
 import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
@@ -13,7 +16,7 @@ import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/model/participant_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/participants_view_all_bottom_sheet.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
@@ -29,6 +32,35 @@ class ParticipantsBottomSheet extends StatefulWidget {
 }
 
 class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
+  Timer? timer;
+
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(const Duration(seconds: 5),
+        (Timer t) => context.read<MeetingStore>().refreshPeerList());
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  void viewAll(String role) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: HMSThemeColors.surfaceDim,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      context: context,
+      builder: (ctx) => ChangeNotifierProvider.value(
+          value: context.read<MeetingStore>(),
+          child: ParticipantsViewAllBottomSheet(role: role)),
+    );
+  }
+
   Widget _kebabMenu(HMSPeer peer) {
     final meetingStore = context.read<MeetingStore>();
     PeerTrackNode? peerTrackNode;
@@ -344,7 +376,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                             .onSurfaceHighEmphasis,
                                         title: HMSSubheadingText(
                                           text:
-                                              "${data.item1.keys.elementAt(index)} (${data.item1[role]?.length})",
+                                              "${data.item1.keys.elementAt(index)} (${(HMSRoomLayout.offStageRoles?.contains(role) ?? false) ? context.read<MeetingStore>().peerListIterators[role]?.totalCount ?? 0 : data.item1[role]?.length}) ",
                                           textColor: HMSThemeColors
                                               .onSurfaceMediumEmphasis,
                                           letterSpacing: 0.1,
@@ -354,7 +386,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                             height: data.item1[role] == null
                                                 ? 0
                                                 : (data.item1[role]!.length) *
-                                                    60,
+                                                    54,
                                             child: Center(
                                               child: ListView.builder(
                                                   physics:
@@ -487,7 +519,68 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                     );
                                                   }),
                                             ),
-                                          )
+                                          ),
+                                          if ((HMSRoomLayout.offStageRoles
+                                                      ?.contains(role) ??
+                                                  false) &&
+                                              ((context
+                                                          .read<MeetingStore>()
+                                                          .peerListIterators[
+                                                              role]
+                                                          ?.totalCount ??
+                                                      0) >
+                                                  10))
+                                            Column(
+                                              children: [
+                                                Divider(
+                                                  height: 5,
+                                                  color: HMSThemeColors
+                                                      .borderDefault,
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          16, 12, 16, 12),
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      viewAll(role);
+                                                    },
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            HMSSubheadingText(
+                                                                text:
+                                                                    "View All",
+                                                                textColor:
+                                                                    HMSThemeColors
+                                                                        .onSurfaceHighEmphasis),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      left:
+                                                                          4.0),
+                                                              child: SvgPicture.asset(
+                                                                  "packages/hms_room_kit/lib/src/assets/icons/right_arrow.svg",
+                                                                  width: 24,
+                                                                  height: 24,
+                                                                  colorFilter: ColorFilter.mode(
+                                                                      HMSThemeColors
+                                                                          .onSurfaceHighEmphasis,
+                                                                      BlendMode
+                                                                          .srcIn)),
+                                                            ),
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                         ],
                                       ),
                                     ),

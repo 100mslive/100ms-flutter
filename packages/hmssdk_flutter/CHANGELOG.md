@@ -5,6 +5,24 @@
 | hms_room_kit      | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)        |
 | hmssdk_flutter    | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)    |
 
+## 1.9.0 - 2023-10-16
+
+### Added
+
+- Large Room Support
+    - Added first class "Hand Raise" apis: `raiseLocalPeerHand`, `lowerLocalPeerHand`, `lowerRemotePeerHand`
+    - Added `onPeerListUpdate` event on `HMSUpdateListener`, This requires overriding the `onPeerListUpdate` method in all implementations of HMSUpdateListener.
+    - Added "Peer List Iterator" APIs - `getPeerListIterator`
+
+  For more details refer [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/peer/large-room)
+
+- Added `isHandRaised` property on `HMSPeer` class instance
+
+- Added `initialising` property on `HMSBrowserRecordingState` class instance
+
+Updated to Android SDK 2.7.7 & iOS SDK 1.1.0
+
+**Full Changelog**: [1.8.0...1.9.0](https://github.com/100mslive/100ms-flutter/compare/1.8.0...1.9.0)
 
 ## 1.8.0 - 2023-09-15
 

@@ -1380,6 +1380,28 @@ class HMSSDK {
     PlatformService.removeRTCStatsListener(listener);
   }
 
+  /// Method to get the peer list iterator in the room, only in case of large rooms
+  ///
+  /// Checkout the [HMSPeerListIterator] class for more details about the iterator
+  ///
+  /// **Parameters**:
+  ///
+  /// **peerListIteratorOptions** - [peerListIteratorOptions] is the options to get the iterator based on the filter set in [peerListIteratorOptions] parameter
+  Future<dynamic> getPeerListIterator(
+      {PeerListIteratorOptions? peerListIteratorOptions}) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.getPeerListIterator,
+        arguments: {
+          "uid": DateTime.now().microsecondsSinceEpoch.toString(),
+          "peer_list_iterator_options": peerListIteratorOptions?.toMap()
+        });
+    if (result["success"]) {
+      return HMSPeerListIterator.fromMap(result["data"]);
+    } else {
+      return HMSException.fromMap(result["data"]["error"]);
+    }
+  }
+
   ///Method to lower hand for local peer
   ///
   ///**Parameter**:

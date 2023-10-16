@@ -1,8 +1,7 @@
 ///Dart imports
 import 'dart:io';
 
-///Package imports
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:provider/provider.dart';
@@ -85,12 +84,14 @@ class HLSViewerHeader extends StatelessWidget {
                 ///We render the recording icon based on the recording status
                 ///If the recording is started we show the recording icon
                 ///If the recording is not started we show nothing
-                Selector<MeetingStore, Tuple3<bool, bool, bool>>(
-                    selector: (_, meetingStore) => Tuple3(
-                          meetingStore.recordingType["browser"] ?? false,
-                          meetingStore.recordingType["server"] ?? false,
-                          meetingStore.recordingType["hls"] ?? false,
-                        ),
+                ///
+                ///If recording initialising state is true we show the loader
+                Selector<MeetingStore, Tuple4<bool, bool, bool, bool>>(
+                    selector: (_, meetingStore) => Tuple4(
+                        meetingStore.recordingType["browser"] ?? false,
+                        meetingStore.recordingType["server"] ?? false,
+                        meetingStore.recordingType["hls"] ?? false,
+                        meetingStore.isRecordingInInitialisingState),
                     builder: (_, data, __) {
                       return (data.item1 || data.item2 || data.item3)
                           ? SvgPicture.asset(
@@ -101,7 +102,15 @@ class HLSViewerHeader extends StatelessWidget {
                                   HMSThemeColors.alertErrorDefault,
                                   BlendMode.srcIn),
                             )
-                          : Container();
+                          : data.item4
+                              ? SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                    color: HMSThemeColors.onSurfaceHighEmphasis,
+                                  ))
+                              : Container();
                     }),
                 const SizedBox(
                   width: 8,
@@ -113,7 +122,7 @@ class HLSViewerHeader extends StatelessWidget {
                 Selector<MeetingStore, Tuple2<bool, int>>(
                     selector: (_, meetingStore) => Tuple2(
                         meetingStore.streamingType['hls'] ?? false,
-                        meetingStore.peers.length),
+                        meetingStore.peersInRoom),
                     builder: (_, data, __) {
                       return data.item1
                           ? Container(

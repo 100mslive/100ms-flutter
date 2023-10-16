@@ -40,7 +40,6 @@ class HMSPeerAction {
             result(HMSErrorExtension.getError("No name found in \(#function)"))
             return
         }
-
         hmsSDK?.change(name: name) { _, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
@@ -59,7 +58,6 @@ class HMSPeerAction {
             result(HMSErrorExtension.getError("No metadata found in \(#function)"))
             return
         }
-
         hmsSDK?.change(metadata: metadata) {_, error in
             if let error = error {
                 result(HMSErrorExtension.toDictionary(error))
