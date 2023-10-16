@@ -11,7 +11,7 @@
 
 - Large Room Support
     - Added first class "Hand Raise" apis: `raiseLocalPeerHand`, `lowerLocalPeerHand`, `lowerRemotePeerHand`
-    - Added `onPeerListUpdate` event on `HMSUpdateListener`
+    - Added `onPeerListUpdate` event on `HMSUpdateListener`, This requires overriding the `onPeerListUpdate` method in all implementations of HMSUpdateListener.
     - Added "Peer List Iterator" APIs - `getPeerListIterator`
 
   For more details refer [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/peer/large-room)
