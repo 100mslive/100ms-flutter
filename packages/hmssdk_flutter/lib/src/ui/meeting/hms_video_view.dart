@@ -7,6 +7,7 @@ import 'package:flutter/services.dart' show StandardMessageCodec;
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 ///100ms HMSVideoView
 ///
@@ -102,9 +103,8 @@ class HMSVideoView extends StatelessWidget {
   }
 }
 
-class _PlatformView extends StatelessWidget {
+class _PlatformView extends StatefulWidget {
   final HMSTrack track;
-
   final bool setMirror;
   final bool matchParent;
   final ScaleType scaleType;
@@ -119,13 +119,50 @@ class _PlatformView extends StatelessWidget {
       this.disableAutoSimulcastLayerSelect = false})
       : super(key: key);
 
+  @override
+  State<_PlatformView> createState() => _PlatformViewState();
+}
+
+class _PlatformViewState extends State<_PlatformView> {
+
+  int? textureId;
+
   void onPlatformViewCreated(int id) {}
+
+  @override
+  void initState() {
+    super.initState();
+    getTextureId();
+  }
+
+  @override
+  void dispose() {
+    disposeTextureView();
+    super.dispose();
+  }
+
+  void getTextureId() async{
+    var result = await PlatformService.invokeMethod(PlatformMethod.createTextureView,
+        arguments: {"track_id": widget.track.trackId});
+    if (result["success"]) {
+      setState(() {
+        textureId = result["data"]["texture_id"];
+      });
+    }
+  }
+
+  void disposeTextureView() async{
+
+  }
 
   @override
   Widget build(BuildContext context) {
     ///AndroidView for android it uses surfaceRenderer provided internally by webrtc.
     if (Platform.isAndroid) {
-      return Texture(textureId: textureId); // get textureId fom video view
+      return 
+      textureId == null ? Container() : Texture(textureId: textureId!);
+      
+      // /Texture(textureId: textureId); // get textureId fom video view
       // return AndroidView(
       //   viewType: 'HMSVideoView',
       //   onPlatformViewCreated: onPlatformViewCreated,
@@ -146,11 +183,13 @@ class _PlatformView extends StatelessWidget {
         onPlatformViewCreated: onPlatformViewCreated,
         creationParamsCodec: StandardMessageCodec(),
         creationParams: {
-          'track_id': track.trackId,
-          'set_mirror': track.source != "REGULAR" ? false : setMirror,
-          'scale_type': scaleType.value,
-          'match_parent': matchParent,
-          'disable_auto_simulcast_layer_select': disableAutoSimulcastLayerSelect
+          'track_id': widget.track.trackId,
+          'set_mirror':
+              widget.track.source != "REGULAR" ? false : widget.setMirror,
+          'scale_type': widget.scaleType.value,
+          'match_parent': widget.matchParent,
+          'disable_auto_simulcast_layer_select':
+              widget.disableAutoSimulcastLayerSelect
         },
         gestureRecognizers: {},
       );

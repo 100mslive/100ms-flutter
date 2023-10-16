@@ -14,11 +14,14 @@ import com.google.gson.JsonElement
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import io.flutter.view.TextureRegistry
+import io.flutter.view.TextureRegistry.SurfaceTextureEntry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,6 +29,7 @@ import live.hms.hmssdk_flutter.Constants.Companion.METHOD_CALL
 import live.hms.hmssdk_flutter.hls_player.HMSHLSPlayerAction
 import live.hms.hmssdk_flutter.methods.*
 import live.hms.hmssdk_flutter.views.HMSHLSPlayerFactory
+import live.hms.hmssdk_flutter.views.HMSTextureView
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
 import live.hms.video.audio.HMSAudioManager.*
 import live.hms.video.connection.stats.*
@@ -77,6 +81,9 @@ class HmssdkFlutterPlugin :
     private var hmsKeyChangeObserverList = ArrayList<HMSKeyChangeObserver>()
     var hlsStreamUrl: String? = null
 
+    val renderers = HashMap<String,HMSTextureView>()
+    var hmsTextureRegistry: TextureRegistry? = null
+    var hmsBinaryMessenger: BinaryMessenger? = null
     override fun onAttachedToEngine(
         @NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
     ) {
@@ -118,11 +125,16 @@ class HmssdkFlutterPlugin :
                 "HMSHLSPlayer",
                 hmsHLSPlayerFactory,
             )
+
+            hmsTextureRegistry = flutterPluginBinding.textureRegistry
+            hmsBinaryMessenger = flutterPluginBinding.binaryMessenger
+
             hmssdkFlutterPlugin = this
         } else {
             Log.e("Plugin Warning", "hmssdkFlutterPlugin already exists in onAttachedToEngine")
         }
     }
+
 
     override fun onMethodCall(
         @NonNull call: MethodCall,
@@ -240,6 +252,12 @@ class HmssdkFlutterPlugin :
             }
             "get_room_layout" -> {
                 getRoomLayout(call, result)
+            }
+            "create_texture_view" -> {
+                createTextureView(call,result)
+            }
+            "dispose_texture_view" -> {
+                disposeTextureView(call,result)
             }
             else -> {
                 result.notImplemented()
@@ -575,6 +593,54 @@ class HmssdkFlutterPlugin :
 
         return null
     }
+
+    private fun createTextureView(call: MethodCall, result: Result){
+
+        val trackId = call.argument<String?>("track_id")
+        trackId?.let {
+            val room = hmssdk?.getRoom()
+
+            room?.let { currentRoom ->
+                val track = HmsUtilities.getVideoTrack(it,currentRoom)
+                track?.let { videoTrack ->
+                    val entry: SurfaceTextureEntry? = hmsTextureRegistry?.createSurfaceTexture()
+                    entry?.let { surfaceTextureEntry ->
+                        val surfaceTexture = surfaceTextureEntry.surfaceTexture()
+                        val renderer = HMSTextureView(surfaceTexture,videoTrack)
+                        renderers["${entry.id()}$trackId"] = renderer
+                        val eventChannel = EventChannel(
+                            hmsBinaryMessenger,
+                            "HMSTextureView/Texture" + entry.id()
+                        )
+
+                        eventChannel.setStreamHandler(renderer)
+                        renderer.setTextureViewEventChannel(eventChannel)
+
+                        val data = HashMap<String,Any>()
+
+                        data["texture_id"] = surfaceTextureEntry.id()
+                        result.success(HMSResultExtension.toDictionary(true,data))
+                        return
+                }?: run {
+                        HMSErrorLogger.returnHMSException("createTextureView","SurfaceTextureEntry is null","NULL ERROR",result)
+                    }
+            }?: run {
+                    HMSErrorLogger.returnHMSException("createTextureView","No track with $trackId found","Track not found error",result)
+                }
+            }?: run {
+                    HMSErrorLogger.returnHMSException("createTextureView","room is null","NULL ERROR",result)
+            }
+        } ?: run {
+                HMSErrorLogger.returnHMSException(
+                    "createTextureView",
+                    "trackId is null",
+                    "NULL ERROR",
+                    result
+                )
+        }
+    }
+
+
 
     private fun getAllTracks(): ArrayList<HMSTrack> {
         val room = hmssdk!!.getRoom()

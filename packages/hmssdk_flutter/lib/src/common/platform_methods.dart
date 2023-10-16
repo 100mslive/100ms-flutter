@@ -190,7 +190,9 @@ enum PlatformMethod {
   cancelPreview,
   lowerLocalPeerHand,
   lowerRemotePeerHand,
-  raiseLocalPeerHand
+  raiseLocalPeerHand,
+  createTextureView,
+  disposeTextureView
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -474,6 +476,10 @@ extension PlatformMethodValues on PlatformMethod {
         return "lower_remote_peer_hand";
       case PlatformMethod.raiseLocalPeerHand:
         return "raise_local_peer_hand";
+      case PlatformMethod.createTextureView:
+        return "create_texture_view";
+      case PlatformMethod.disposeTextureView:
+        return "dispose_texture_view";
       default:
         return 'unknown';
     }
@@ -759,6 +765,10 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.lowerRemotePeerHand;
       case "raise_local_peer_hand":
         return PlatformMethod.raiseLocalPeerHand;
+      case "create_texture_view":
+        return PlatformMethod.createTextureView;
+      case "dispose_texture_view":
+        return PlatformMethod.disposeTextureView;
       default:
         return PlatformMethod.unknown;
     }
