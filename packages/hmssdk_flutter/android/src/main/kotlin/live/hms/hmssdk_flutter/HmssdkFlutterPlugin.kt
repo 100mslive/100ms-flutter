@@ -606,16 +606,16 @@ class HmssdkFlutterPlugin :
                     val entry: SurfaceTextureEntry? = hmsTextureRegistry?.createSurfaceTexture()
                     entry?.let { surfaceTextureEntry ->
                         val surfaceTexture = surfaceTextureEntry.surfaceTexture()
-                        val renderer = HMSTextureView(surfaceTexture,videoTrack)
+                        val renderer = HMSTextureView(surfaceTexture,videoTrack,entry)
                         renderers["${entry.id()}$trackId"] = renderer
-                        val eventChannel = EventChannel(
-                            hmsBinaryMessenger,
-                            "HMSTextureView/Texture" + entry.id()
-                        )
+//                        val eventChannel = EventChannel(
+//                            hmsBinaryMessenger,
+//                            "HMSTextureView/Texture" + entry.id()
+//                        )
 
-                        eventChannel.setStreamHandler(renderer)
-                        renderer.setTextureViewEventChannel(eventChannel)
-
+//                        eventChannel.setStreamHandler(renderer)
+//                        renderer.setTextureViewEventChannel(eventChannel)
+                        Log.i("HMSTextureView","createTextureView renderer size is ${renderers.size}")
                         val data = HashMap<String,Any>()
 
                         data["texture_id"] = surfaceTextureEntry.id()
@@ -640,7 +640,28 @@ class HmssdkFlutterPlugin :
         }
     }
 
+    private fun disposeTextureView(call: MethodCall,result: Result){
+        val trackId = call.argument<String?>("track_id") ?: HMSErrorLogger.returnArgumentsError("trackId is null")
+        val textureId = call.argument<String?>("texture_id")  ?: HMSErrorLogger.returnArgumentsError("textureId is null")
 
+        var renderer = renderers["$textureId$trackId"]
+
+        if(renderer != null){
+            renderer.disposeTextureView()
+            Log.i("HMSTextureView","disposeTextureView renderer size is ${renderers.size}")
+            renderer = null
+            renderers.remove("$textureId$trackId")
+            result.success(HMSResultExtension.toDictionary(true,null))
+        }
+        else {
+            HMSErrorLogger.returnHMSException(
+                "disposeTextureView",
+                "No textureView with given textureId found",
+                "Key not found error",
+                result
+            )
+        }
+    }
 
     private fun getAllTracks(): ArrayList<HMSTrack> {
         val room = hmssdk!!.getRoom()

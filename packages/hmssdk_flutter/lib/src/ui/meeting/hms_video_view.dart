@@ -144,7 +144,7 @@ class _PlatformViewState extends State<_PlatformView> {
   void getTextureId() async{
     var result = await PlatformService.invokeMethod(PlatformMethod.createTextureView,
         arguments: {"track_id": widget.track.trackId});
-    if (result["success"]) {
+    if (result["success"] && mounted) {
       setState(() {
         textureId = result["data"]["texture_id"];
       });
@@ -152,7 +152,13 @@ class _PlatformViewState extends State<_PlatformView> {
   }
 
   void disposeTextureView() async{
-
+    var result = await PlatformService.invokeMethod(PlatformMethod.disposeTextureView,
+        arguments: {"track_id": widget.track.trackId,"texture_id":textureId.toString()});
+    if (result["success"] && mounted) {
+      setState(() {
+        textureId = null;
+      });
+    }
   }
 
   @override
