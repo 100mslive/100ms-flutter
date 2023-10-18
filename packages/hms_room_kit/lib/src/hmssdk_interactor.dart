@@ -413,4 +413,12 @@ class HMSSDKInteractor {
     hmsSDK.lowerRemotePeerHand(
         forPeer: forPeer, hmsActionResultListener: hmsActionResultListener);
   }
+
+  void addTrack({required HMSVideoTrack track}) {
+    hmsSDK.addTrack(track: track);
+  }
+
+  void removeTrack({required HMSVideoTrack track}) {
+    hmsSDK.removeTrack(track: track);
+  }
 }

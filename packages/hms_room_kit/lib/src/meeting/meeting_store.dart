@@ -1823,6 +1823,14 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
+  void addTrack({required HMSVideoTrack track}) {
+    _hmsSDKInteractor.addTrack(track: track);
+  }
+
+  void removeTrack({required HMSVideoTrack track}) {
+    _hmsSDKInteractor.removeTrack(track: track);
+  }
+
   HMSAudioFilePlayerNode audioFilePlayerNode =
       HMSAudioFilePlayerNode("audioFilePlayerNode");
   HMSMicNode micNode = HMSMicNode();

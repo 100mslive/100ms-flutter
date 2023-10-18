@@ -91,6 +91,7 @@ class _VideoViewState extends State<VideoView> {
                     ),
                   )
                 : ClipRRect(
+                  clipBehavior: Clip.none,
                     borderRadius: const BorderRadius.all(
                       Radius.circular(10),
                     ),

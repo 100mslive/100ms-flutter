@@ -40,34 +40,31 @@ class _DegradeTileState extends State<DegradeTile> {
                       ClipRRect(
                         ///Here we are using a backdrop filter to blur the background
                         ///when the connection is poor
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                          child: Container(
-                            color: Colors.transparent,
+                        child: Container(
+                          color: Colors.black.withOpacity(0.5),
+                          alignment: Alignment.center,
+                          child: Align(
                             alignment: Alignment.center,
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  HMSSubheadingText(
-                                    text: "Poor connection",
-                                    textColor:
-                                        HMSThemeColors.onSurfaceHighEmphasis,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.1,
-                                  ),
-                                  const SizedBox(
-                                    height: 4,
-                                  ),
-                                  HMSSubtitleText(
-                                    text:
-                                        "The video will resume\n automatically when the\n connection improves",
-                                    textColor:
-                                        HMSThemeColors.onSurfaceHighEmphasis,
-                                  )
-                                ],
-                              ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                HMSSubheadingText(
+                                  text: "Poor connection",
+                                  textColor:
+                                      HMSThemeColors.onSurfaceHighEmphasis,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.1,
+                                ),
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                                HMSSubtitleText(
+                                  text:
+                                      "The video will resume\n automatically when the\n connection improves",
+                                  textColor:
+                                      HMSThemeColors.onSurfaceHighEmphasis,
+                                )
+                              ],
                             ),
                           ),
                         ),

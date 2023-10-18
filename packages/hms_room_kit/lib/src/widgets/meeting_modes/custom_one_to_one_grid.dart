@@ -1,6 +1,7 @@
 ///Package imports
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/widgets/grid_layouts/texture_view_grid.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -65,32 +66,40 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
               Column(
                   children: [
                     Expanded(
-                      child: PageView.builder(
-                          physics: const PageScrollPhysics(),
-                          controller: controller,
-                          allowImplicitScrolling: true,
-                          itemCount: pageCount,
-                          onPageChanged: (newPage) {
-                            context
-                                .read<MeetingStore>()
-                                .setCurrentPage(newPage);
-                          },
-                          itemBuilder: (context, index) => GridLayout(
-                              numberOfTiles: numberOfPeers,
-                              index: index,
+                      child: TextureViewGrid(
+                          peerTracks: widget.isLocalInsetPresent
+                              ? data.item1
+                                  .where((element) =>
+                                      !(element.peer.isLocal) ||
+                                      element.track?.source == "SCREEN")
+                                  .toList()
+                              : data.item1),
+                      // child: PageView.builder(
+                      //     physics: const PageScrollPhysics(),
+                      //     controller: controller,
+                      //     allowImplicitScrolling: true,
+                      //     itemCount: pageCount,
+                      //     onPageChanged: (newPage) {
+                      //       context
+                      //           .read<MeetingStore>()
+                      //           .setCurrentPage(newPage);
+                      //     },
+                      //     itemBuilder: (context, index) => GridLayout(
+                      //         numberOfTiles: numberOfPeers,
+                      //         index: index,
 
-                              ///Here we filter out the local peer since we are rendering the local peer in the inset tile iff isLocalInsetPresent is true
-                              ///We only take the screenshare or remote peers
-                              ///
-                              ///If isLocalInsetPresent is false we render all the peers in grid layout
-                              ///Since the screenshare case is already handled above the code never reaches here
-                              peerTracks: widget.isLocalInsetPresent
-                                  ? data.item1
-                                      .where((element) =>
-                                          !(element.peer.isLocal) ||
-                                          element.track?.source == "SCREEN")
-                                      .toList()
-                                  : data.item1)),
+                      //         ///Here we filter out the local peer since we are rendering the local peer in the inset tile iff isLocalInsetPresent is true
+                      //         ///We only take the screenshare or remote peers
+                      //         ///
+                      //         ///If isLocalInsetPresent is false we render all the peers in grid layout
+                      //         ///Since the screenshare case is already handled above the code never reaches here
+                      //         peerTracks: widget.isLocalInsetPresent
+                      //             ? data.item1
+                      //                 .where((element) =>
+                      //                     !(element.peer.isLocal) ||
+                      //                     element.track?.source == "SCREEN")
+                      //                 .toList()
+                      //             : data.item1)),
                     ),
 
                     ///This renders the dots at the bottom of the grid view

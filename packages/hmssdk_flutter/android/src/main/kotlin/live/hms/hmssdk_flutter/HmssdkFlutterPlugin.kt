@@ -261,6 +261,14 @@ class HmssdkFlutterPlugin :
                 disposeTextureView(call, result)
             }
 
+            "add_track" -> {
+                addTrack(call,result)
+            }
+
+            "remove_track" -> {
+                removeTrack(call,result)
+            }
+
             "get_peer_list_iterator", "peer_list_iterator_has_next", "peer_list_iterator_next" -> {
                 HMSPeerListIteratorAction.peerListIteratorAction(call, result, hmssdk!!)
             }
@@ -630,7 +638,6 @@ class HmssdkFlutterPlugin :
 
 //                        eventChannel.setStreamHandler(renderer)
 //                        renderer.setTextureViewEventChannel(eventChannel)
-                        Log.i("HMSTextureView","createTextureView renderer size is ${renderers.size}")
                         val data = HashMap<String,Any>()
 
                         data["texture_id"] = surfaceTextureEntry.id()
@@ -657,15 +664,13 @@ class HmssdkFlutterPlugin :
 
     private fun disposeTextureView(call: MethodCall,result: Result){
         val trackId = call.argument<String?>("track_id") ?: HMSErrorLogger.returnArgumentsError("trackId is null")
-        val textureId = call.argument<String?>("texture_id")  ?: HMSErrorLogger.returnArgumentsError("textureId is null")
 
-        var renderer = renderers["$textureId$trackId"]
+        var renderer = renderers["$trackId"]
 
         if(renderer != null){
             renderer.disposeTextureView()
-            Log.i("HMSTextureView","disposeTextureView renderer size is ${renderers.size}")
             renderer = null
-            renderers.remove("$textureId$trackId")
+            renderers.remove("$trackId")
             result.success(HMSResultExtension.toDictionary(true,null))
         }
         else {
@@ -676,6 +681,22 @@ class HmssdkFlutterPlugin :
                 result
             )
         }
+    }
+
+    private fun addTrack(call: MethodCall, result: Result){
+        val trackId = call.argument<String?>("track_id") ?: HMSErrorLogger.returnArgumentsError("trackId is null")
+        val renderer = renderers["$trackId"]
+        renderer?.addTrack()
+        result.success(null)
+    }
+
+    private fun removeTrack(call: MethodCall, result: Result){
+        val trackId = call.argument<String?>("track_id") ?: HMSErrorLogger.returnArgumentsError("trackId is null")
+
+        val renderer = renderers["$trackId"]
+        renderer?.removeTrack()
+        result.success(null)
+
     }
 
     private fun getAllTracks(): ArrayList<HMSTrack> {
