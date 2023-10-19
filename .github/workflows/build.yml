@@ -44,12 +44,19 @@ jobs:
         with:
           channel: stable
           cache: true
+      - name: Get Flutter dependencies in Core SDK
+        run: flutter pub get
+        working-directory: packages/hmssdk_flutter
+      - name: Get Flutter dependencies in Room Kit
+        run: flutter pub get
+        working-directory: packages/hms_room_kit
+      - name: Analyze Dart
+        uses: zgosalvez/github-actions-analyze-dart@v2
       - name: Build Android App Bundle
         env:
           FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
         run: |
           echo $FIREBASE_CONFIG > packages/hmssdk_flutter/example/android/app/google-services.json
           cd packages/hmssdk_flutter/example
-          flutter analyze
           flutter build appbundle --debug -t lib/main.dart
         shell: bash
