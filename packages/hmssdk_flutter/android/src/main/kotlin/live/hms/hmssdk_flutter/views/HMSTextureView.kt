@@ -20,8 +20,8 @@ class HMSTextureView(
     var uid: Long? = null
     init {
         hmsTextureRenderer = HMSTextureRenderer(texture)
-        Log.i("HMSTextureView","creating texture view $entry $hmsTextureRenderer")
-        addTrack()
+        Log.i("HMSTextureView","creating texture view track: ${track.trackId}")
+//        addTrack()
         uid = entry?.id()
     }
 
@@ -36,7 +36,7 @@ class HMSTextureView(
     }
 
     fun disposeTextureView(){
-        Log.i("HMSTextureView","disposeTextureView $entry $hmsTextureRenderer")
+        Log.i("HMSTextureView","disposeTextureView track: ${track.trackId}")
         hmsTextureRenderer?.removeTrack()
         entry?.release()
         entry = null

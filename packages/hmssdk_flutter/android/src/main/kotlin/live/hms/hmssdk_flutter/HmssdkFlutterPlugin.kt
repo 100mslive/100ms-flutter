@@ -612,6 +612,7 @@ class HmssdkFlutterPlugin :
     private fun createTextureView(call: MethodCall, result: Result){
 
         val trackId = call.argument<String?>("track_id")
+        val addTrackByDefault = call.argument<Boolean?>("add_track_by_def")?:false
         trackId?.let {
             if(renderers.containsKey(it)){
                 val renderer = renderers[it]
@@ -630,6 +631,10 @@ class HmssdkFlutterPlugin :
                     entry?.let { surfaceTextureEntry ->
                         val surfaceTexture = surfaceTextureEntry.surfaceTexture()
                         val renderer = HMSTextureView(surfaceTexture,videoTrack,entry)
+                        if(addTrackByDefault){
+                            Log.i("HMSTextureView","Init Add Track called for track: ${track.trackId}")
+                            renderer.addTrack()
+                        }
                         renderers["$trackId"] = renderer
 //                        val eventChannel = EventChannel(
 //                            hmsBinaryMessenger,

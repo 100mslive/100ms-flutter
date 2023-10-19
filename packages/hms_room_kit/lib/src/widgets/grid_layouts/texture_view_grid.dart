@@ -14,6 +14,7 @@ class _TextureViewGridState extends State<TextureViewGrid> {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
+        cacheExtent: 400,
         scrollDirection: Axis.horizontal,
         physics: const PageScrollPhysics(),
         gridDelegate:

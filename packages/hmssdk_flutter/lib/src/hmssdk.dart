@@ -1474,16 +1474,16 @@ class HMSSDK {
     }
   }
 
-  void addTrack({required HMSVideoTrack track}){
-    PlatformService.invokeMethod(
+  void addTrack({required HMSVideoTrack track}) async{
+    await PlatformService.invokeMethod(
         PlatformMethod.addTrack,
         arguments: {
           "track_id":track.trackId,
         });
   }
 
-  void removeTrack({required HMSVideoTrack track}){
-    PlatformService.invokeMethod(
+  void removeTrack({required HMSVideoTrack track}) async{
+    await PlatformService.invokeMethod(
         PlatformMethod.removeTrack,
         arguments: {
           "track_id": track.trackId,

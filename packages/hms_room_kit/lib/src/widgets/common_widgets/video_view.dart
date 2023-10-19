@@ -1,4 +1,6 @@
 //Package imports
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -55,6 +57,7 @@ class _VideoViewState extends State<VideoView> {
     ///We use the [Selector] widget to rebuild the widget when the peer track node changes
     return Selector<PeerTrackNode, Tuple2<HMSVideoTrack?, bool>>(
         builder: (_, data, __) {
+          log("gettextureId Creating HMSVideoView with peerId: ${context.read<PeerTrackNode>().peer.name}");
           ///If the peer track node is null or the peer is muted or the peer is offscreen
           ///We render the avatar
           if ((data.item1 == null) || data.item2) {
@@ -81,6 +84,7 @@ class _VideoViewState extends State<VideoView> {
                       // [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
                       // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
                       child: HMSVideoView(
+                        addTrackByDefault: !context.read<PeerTrackNode>().isOffscreen,
                         key: Key(data.item1!.trackId),
                         scaleType: widget.scaleType,
                         track: data.item1!,
@@ -91,7 +95,7 @@ class _VideoViewState extends State<VideoView> {
                     ),
                   )
                 : ClipRRect(
-                  clipBehavior: Clip.none,
+                    clipBehavior: Clip.none,
                     borderRadius: const BorderRadius.all(
                       Radius.circular(10),
                     ),
@@ -99,6 +103,7 @@ class _VideoViewState extends State<VideoView> {
                       // [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
                       // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
                       child: HMSVideoView(
+                        addTrackByDefault: !context.read<PeerTrackNode>().isOffscreen,
                         key: Key(data.item1!.trackId),
                         scaleType: ScaleType.SCALE_ASPECT_FILL,
                         track: data.item1!,
@@ -110,8 +115,7 @@ class _VideoViewState extends State<VideoView> {
                   );
           }
         },
-        selector: (_, peerTrackNode) => Tuple2(
-            peerTrackNode.track,
-            (peerTrackNode.track?.isMute ?? true)));
+        selector: (_, peerTrackNode) =>
+            Tuple2(peerTrackNode.track, (peerTrackNode.track?.isMute ?? true)));
   }
 }

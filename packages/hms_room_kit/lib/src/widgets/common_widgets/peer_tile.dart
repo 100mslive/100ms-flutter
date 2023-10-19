@@ -1,4 +1,6 @@
 // Package imports
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_detector/focus_detector.dart';
@@ -65,6 +67,7 @@ class _PeerTileState extends State<PeerTile> {
               context
                   .read<MeetingStore>()
                   .removeTrack(track: context.read<PeerTrackNode>().track!);
+              log("getTextureId Track Removed for peer: ${context.read<PeerTrackNode>().peer.name}");
             }
           }
         },
@@ -76,6 +79,7 @@ class _PeerTileState extends State<PeerTile> {
                 .read<MeetingStore>()
                 .addTrack(track: context.read<PeerTrackNode>().track!);
           }
+          log("getTextureId Track Added for peer: ${context.read<PeerTrackNode>().peer.name}");
         },
         child: LayoutBuilder(builder: (context, BoxConstraints constraints) {
           return context.read<PeerTrackNode>().uid.contains("mainVideo")

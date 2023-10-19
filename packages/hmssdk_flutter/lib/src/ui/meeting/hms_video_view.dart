@@ -55,6 +55,8 @@ class HMSVideoView extends StatelessWidget {
   /// [disableAutoSimulcastLayerSelect] - To disable auto simulcast (Adaptive Bitrate)
   final bool disableAutoSimulcastLayerSelect;
 
+  final bool addTrackByDefault;
+
   ///100ms HMSVideoView
   ///
   ///HMSVideoView used to render video in ios and android devices
@@ -89,7 +91,8 @@ class HMSVideoView extends StatelessWidget {
           "matchParent is not longer necessary and will be removed in future version")
       this.matchParent = true,
       this.scaleType = ScaleType.SCALE_ASPECT_FIT,
-      this.disableAutoSimulcastLayerSelect = false})
+      this.disableAutoSimulcastLayerSelect = false,
+      this.addTrackByDefault = true})
       : super(key: key);
 
   @override
@@ -100,6 +103,7 @@ class HMSVideoView extends StatelessWidget {
       setMirror: setMirror,
       scaleType: this.scaleType,
       disableAutoSimulcastLayerSelect: disableAutoSimulcastLayerSelect,
+      addTrackByDefault: addTrackByDefault,
     );
   }
 }
@@ -110,6 +114,7 @@ class _PlatformView extends StatefulWidget {
   final bool matchParent;
   final ScaleType scaleType;
   final bool disableAutoSimulcastLayerSelect;
+  final bool addTrackByDefault;
 
   _PlatformView(
       {Key? key,
@@ -117,7 +122,8 @@ class _PlatformView extends StatefulWidget {
       this.setMirror = false,
       this.matchParent = true,
       required this.scaleType,
-      this.disableAutoSimulcastLayerSelect = false})
+      this.disableAutoSimulcastLayerSelect = false,
+      this.addTrackByDefault = true})
       : super(key: key);
 
   @override
@@ -145,12 +151,13 @@ class _PlatformViewState extends State<_PlatformView> {
     log("getTextureId 1 called timestamp: ${DateTime.now().millisecondsSinceEpoch}}");
     var result = await PlatformService.invokeMethod(
         PlatformMethod.createTextureView,
-        arguments: {"track_id": widget.track.trackId});
+        arguments: {"track_id": widget.track.trackId,
+        "add_track_by_def":widget.addTrackByDefault});
     if (result["success"] && mounted) {
       setState(() {
         textureId = result["data"]["texture_id"];
       });
-    log("getTextureId 2 called timestamp: ${DateTime.now().millisecondsSinceEpoch}}");
+      log("getTextureId 2 called timestamp: ${DateTime.now().millisecondsSinceEpoch}}");
     }
   }
 
@@ -172,7 +179,11 @@ class _PlatformViewState extends State<_PlatformView> {
   Widget build(BuildContext context) {
     ///AndroidView for android it uses surfaceRenderer provided internally by webrtc.
     if (Platform.isAndroid) {
-      return textureId == null ? Container(color: Colors.red,) : Texture(textureId: textureId!);
+      return textureId == null
+          ? Container(
+              color: Colors.red,
+            )
+          : Texture(textureId: textureId!);
 
       // /Texture(textureId: textureId); // get textureId fom video view
       // return AndroidView(
