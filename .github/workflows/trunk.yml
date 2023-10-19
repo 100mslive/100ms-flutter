@@ -1,5 +1,6 @@
 name: Trunk Check
 on:
+  # trunk-ignore(yamllint/empty-values)
   workflow_dispatch:
   pull_request:
     paths-ignore:
