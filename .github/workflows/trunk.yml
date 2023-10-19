@@ -2,6 +2,9 @@ name: Trunk Check
 on:
   workflow_dispatch:
   pull_request:
+    paths-ignore:
+      - docs/**
+      - .github/**
 
 concurrency:
   group: ${{ github.head_ref || github.run_id }}
