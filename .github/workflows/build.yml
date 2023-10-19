@@ -49,6 +49,8 @@ jobs:
         working-directory: packages/hmssdk_flutter
       - name: Analyze Dart
         uses: zgosalvez/github-actions-analyze-dart@v2
+        with:
+          working-directory: packages/hmssdk_flutter
       - name: Build Android App Bundle
         env:
           FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
