@@ -2,8 +2,7 @@
 # HMSROOMKIT Example App 🚀
 
 
-This contains a sample application built using `hms_room_kit`;
-``
+This contains a sample application built using `hms_room_kit`
 Steps to get on local machine=
 1. Clone the hms_flutter_sdk 
 2. Cd inside the hms_room_kit package.
