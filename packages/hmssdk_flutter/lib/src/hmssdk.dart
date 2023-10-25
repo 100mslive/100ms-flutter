@@ -1474,22 +1474,6 @@ class HMSSDK {
     }
   }
 
-  void addTrack({required HMSVideoTrack track}) async{
-    await PlatformService.invokeMethod(
-        PlatformMethod.addTrack,
-        arguments: {
-          "track_id":track.trackId,
-        });
-  }
-
-  void removeTrack({required HMSVideoTrack track}) async{
-    await PlatformService.invokeMethod(
-        PlatformMethod.removeTrack,
-        arguments: {
-          "track_id": track.trackId,
-        });
-  }
-
   /// To modify local peer's audio & video tracks settings use the [hmsTrackSetting]. Only required for advanced use cases.
   HMSTrackSetting? hmsTrackSetting;
 

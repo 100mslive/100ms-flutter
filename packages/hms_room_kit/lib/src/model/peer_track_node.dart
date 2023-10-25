@@ -14,7 +14,7 @@ class PeerTrackNode extends ChangeNotifier {
   RTCStats? stats;
   int audioLevel;
   bool pinTile;
-  bool isOffscreen = false;
+  bool isOffscreen = true;
 
   PeerTrackNode(
       {required this.peer,

@@ -37,13 +37,15 @@ class PeerTile extends StatefulWidget {
   final double avatarRadius;
   final double avatarTitleFontSize;
   final double avatarTitleTextLineHeight;
+  final HMSVideoViewController? videoViewController;
   const PeerTile(
       {Key? key,
       this.scaleType = ScaleType.SCALE_ASPECT_FILL,
       this.islongPressEnabled = true,
       this.avatarRadius = 34,
       this.avatarTitleFontSize = 34,
-      this.avatarTitleTextLineHeight = 40})
+      this.avatarTitleTextLineHeight = 40,
+      this.videoViewController})
       : super(key: key);
 
   @override
@@ -64,10 +66,8 @@ class _PeerTileState extends State<PeerTile> {
             Provider.of<PeerTrackNode>(context, listen: false)
                 .setOffScreenStatus(true);
             if (context.read<PeerTrackNode>().track != null) {
-              context
-                  .read<MeetingStore>()
-                  .removeTrack(track: context.read<PeerTrackNode>().track!);
-              log("getTextureId Track Removed for peer: ${context.read<PeerTrackNode>().peer.name}");
+              log("HMSVideoViewController remove video track ${context.read<PeerTrackNode>().peer.name}");
+              widget.videoViewController?.removeTrack();
             }
           }
         },
@@ -75,11 +75,10 @@ class _PeerTileState extends State<PeerTile> {
           Provider.of<PeerTrackNode>(context, listen: false)
               .setOffScreenStatus(false);
           if (context.read<PeerTrackNode>().track != null) {
-            context
-                .read<MeetingStore>()
-                .addTrack(track: context.read<PeerTrackNode>().track!);
+            log("HMSVideoViewController add video track ${context.read<PeerTrackNode>().peer.name}");
+            widget.videoViewController
+                ?.addTrack(track: context.read<PeerTrackNode>().track!);
           }
-          log("getTextureId Track Added for peer: ${context.read<PeerTrackNode>().peer.name}");
         },
         child: LayoutBuilder(builder: (context, BoxConstraints constraints) {
           return context.read<PeerTrackNode>().uid.contains("mainVideo")
@@ -101,12 +100,13 @@ class _PeerTileState extends State<PeerTile> {
                           avatarRadius: widget.avatarRadius,
                           avatarTitleTextLineHeight:
                               widget.avatarTitleTextLineHeight,
+                          videoViewController: widget.videoViewController,
                         ),
-                        Semantics(
-                          label:
-                              "fl_${context.read<PeerTrackNode>().peer.name}_degraded_tile",
-                          child: const DegradeTile(),
-                        ),
+                        // Semantics(
+                        //   label:
+                        //       "fl_${context.read<PeerTrackNode>().peer.name}_degraded_tile",
+                        //   child: const DegradeTile(),
+                        // ),
                         Selector<PeerTrackNode, bool>(
                             selector: (_, peerTrackNode) =>
                                 peerTrackNode.isOffscreen,

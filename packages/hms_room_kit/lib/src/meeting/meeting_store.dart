@@ -231,6 +231,9 @@ class MeetingStore extends ChangeNotifier
   ///Check whether recording is in intialising state
   bool isRecordingInInitialisingState = false;
 
+  ///Pool of video views
+  List<HMSVideoViewController> viewControllers = [];
+
   Future<HMSException?> join(String userName, String roomCode,
       {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
@@ -829,7 +832,7 @@ class MeetingStore extends ChangeNotifier
     getCurrentAudioDevice();
     getAudioDevicesList();
     notifyListeners();
-
+    setViewControllers();
     // if (Platform.isIOS &&
     //     HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf !=
     //         null) {
@@ -840,6 +843,12 @@ class MeetingStore extends ChangeNotifier
     // } else if (Platform.isAndroid) {
     //   HMSAndroidPIPController.setup();
     // }
+  }
+
+  void setViewControllers() {
+    for (var i = 0; i < 6; i++) {
+      viewControllers.add(HMSVideoViewController(addTrackByDefault: false));
+    }
   }
 
   void setParticipantsList(List<HMSRole> roles) {
@@ -1268,6 +1277,11 @@ class MeetingStore extends ChangeNotifier
     peerTracks.clear();
     isRoomEnded = true;
     resetForegroundTaskAndOrientation();
+
+    viewControllers.forEach((element) {
+      element.disposeTextureView();
+    });
+    viewControllers.clear();
 
     ///Here we call the method passed by the user in HMSPrebuilt as a callback
     if (Constant.onLeave != null) {
@@ -1821,14 +1835,6 @@ class MeetingStore extends ChangeNotifier
     if (spotlightMetadata == track.trackId) {
       setPeerToSpotlight(spotlightMetadata);
     }
-  }
-
-  void addTrack({required HMSVideoTrack track}) {
-    _hmsSDKInteractor.addTrack(track: track);
-  }
-
-  void removeTrack({required HMSVideoTrack track}) {
-    _hmsSDKInteractor.removeTrack(track: track);
   }
 
   HMSAudioFilePlayerNode audioFilePlayerNode =

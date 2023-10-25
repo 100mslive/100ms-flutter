@@ -35,6 +35,8 @@ class VideoView extends StatefulWidget {
   final double avatarRadius;
   final double avatarTitleFontSize;
   final double avatarTitleTextLineHeight;
+  final HMSVideoViewController? videoViewController;
+
   const VideoView(
       {Key? key,
       this.viewSize,
@@ -44,7 +46,8 @@ class VideoView extends StatefulWidget {
       this.scaleType = ScaleType.SCALE_ASPECT_FILL,
       this.avatarRadius = 34,
       this.avatarTitleFontSize = 34,
-      this.avatarTitleTextLineHeight = 32})
+      this.avatarTitleTextLineHeight = 32,
+      this.videoViewController})
       : super(key: key);
 
   @override
@@ -57,7 +60,6 @@ class _VideoViewState extends State<VideoView> {
     ///We use the [Selector] widget to rebuild the widget when the peer track node changes
     return Selector<PeerTrackNode, Tuple2<HMSVideoTrack?, bool>>(
         builder: (_, data, __) {
-          log("gettextureId Creating HMSVideoView with peerId: ${context.read<PeerTrackNode>().peer.name}");
           ///If the peer track node is null or the peer is muted or the peer is offscreen
           ///We render the avatar
           if ((data.item1 == null) || data.item2) {
@@ -84,6 +86,7 @@ class _VideoViewState extends State<VideoView> {
                       // [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
                       // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
                       child: HMSVideoView(
+                        controller: widget.videoViewController,
                         addTrackByDefault: !context.read<PeerTrackNode>().isOffscreen,
                         key: Key(data.item1!.trackId),
                         scaleType: widget.scaleType,
@@ -103,6 +106,7 @@ class _VideoViewState extends State<VideoView> {
                       // [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
                       // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
                       child: HMSVideoView(
+                        controller: widget.videoViewController,
                         addTrackByDefault: !context.read<PeerTrackNode>().isOffscreen,
                         key: Key(data.item1!.trackId),
                         scaleType: ScaleType.SCALE_ASPECT_FILL,

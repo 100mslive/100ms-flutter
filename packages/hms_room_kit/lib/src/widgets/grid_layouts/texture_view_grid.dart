@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/grid_layouts/listenable_peer_widget.dart';
+import 'package:provider/provider.dart';
 
 class TextureViewGrid extends StatefulWidget {
   final List<PeerTrackNode> peerTracks;
@@ -14,11 +16,11 @@ class _TextureViewGridState extends State<TextureViewGrid> {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-        cacheExtent: 400,
         scrollDirection: Axis.horizontal,
         physics: const PageScrollPhysics(),
-        gridDelegate:
-             SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,mainAxisExtent: MediaQuery.of(context).size.width/2),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            mainAxisExtent: MediaQuery.of(context).size.width / 2),
         itemCount: widget.peerTracks.length,
         itemBuilder: (context, index) {
           return ListenablePeerWidget(

@@ -8,7 +8,7 @@ import 'package:flutter/services.dart' show StandardMessageCodec;
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/service/platform_service.dart';
+import 'package:hmssdk_flutter/src/ui/meeting/hms_video_view_controller.dart';
 
 ///100ms HMSVideoView
 ///
@@ -57,6 +57,8 @@ class HMSVideoView extends StatelessWidget {
 
   final bool addTrackByDefault;
 
+  final HMSVideoViewController? controller;
+
   ///100ms HMSVideoView
   ///
   ///HMSVideoView used to render video in ios and android devices
@@ -92,7 +94,8 @@ class HMSVideoView extends StatelessWidget {
       this.matchParent = true,
       this.scaleType = ScaleType.SCALE_ASPECT_FIT,
       this.disableAutoSimulcastLayerSelect = false,
-      this.addTrackByDefault = true})
+      this.addTrackByDefault = true,
+      this.controller})
       : super(key: key);
 
   @override
@@ -104,6 +107,7 @@ class HMSVideoView extends StatelessWidget {
       scaleType: this.scaleType,
       disableAutoSimulcastLayerSelect: disableAutoSimulcastLayerSelect,
       addTrackByDefault: addTrackByDefault,
+      controller: controller,
     );
   }
 }
@@ -115,6 +119,7 @@ class _PlatformView extends StatefulWidget {
   final ScaleType scaleType;
   final bool disableAutoSimulcastLayerSelect;
   final bool addTrackByDefault;
+  final HMSVideoViewController? controller;
 
   _PlatformView(
       {Key? key,
@@ -123,7 +128,8 @@ class _PlatformView extends StatefulWidget {
       this.matchParent = true,
       required this.scaleType,
       this.disableAutoSimulcastLayerSelect = false,
-      this.addTrackByDefault = true})
+      this.addTrackByDefault = true,
+      this.controller})
       : super(key: key);
 
   @override
@@ -131,59 +137,42 @@ class _PlatformView extends StatefulWidget {
 }
 
 class _PlatformViewState extends State<_PlatformView> {
-  int? textureId;
+  HMSVideoViewController? viewController;
 
   void onPlatformViewCreated(int id) {}
 
   @override
   void initState() {
+    if (widget.controller == null) {
+      viewController = HMSVideoViewController(
+          track: widget.track as HMSVideoTrack, callback: setView);
+    } else {
+      viewController = widget.controller;
+    }
     super.initState();
-    getTextureId();
+  }
+
+  void setView() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
   void dispose() {
-    disposeTextureView();
+    // viewController?.disposeTextureView(callback: setView);
     super.dispose();
-  }
-
-  void getTextureId() async {
-    log("getTextureId 1 called timestamp: ${DateTime.now().millisecondsSinceEpoch}}");
-    var result = await PlatformService.invokeMethod(
-        PlatformMethod.createTextureView,
-        arguments: {"track_id": widget.track.trackId,
-        "add_track_by_def":widget.addTrackByDefault});
-    if (result["success"] && mounted) {
-      setState(() {
-        textureId = result["data"]["texture_id"];
-      });
-      log("getTextureId 2 called timestamp: ${DateTime.now().millisecondsSinceEpoch}}");
-    }
-  }
-
-  void disposeTextureView() async {
-    var result = await PlatformService.invokeMethod(
-        PlatformMethod.disposeTextureView,
-        arguments: {
-          "track_id": widget.track.trackId,
-          "texture_id": textureId.toString()
-        });
-    if (result["success"] && mounted) {
-      setState(() {
-        textureId = null;
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     ///AndroidView for android it uses surfaceRenderer provided internally by webrtc.
     if (Platform.isAndroid) {
-      return textureId == null
+      return viewController?.textureId == null
           ? Container(
               color: Colors.red,
             )
-          : Texture(textureId: textureId!);
+          : Texture(textureId: viewController!.textureId!);
 
       // /Texture(textureId: textureId); // get textureId fom video view
       // return AndroidView(

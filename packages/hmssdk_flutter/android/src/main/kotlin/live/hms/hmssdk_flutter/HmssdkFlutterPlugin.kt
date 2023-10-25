@@ -613,29 +613,41 @@ class HmssdkFlutterPlugin :
 
         val trackId = call.argument<String?>("track_id")
         val addTrackByDefault = call.argument<Boolean?>("add_track_by_def")?:false
-        trackId?.let {
-            if(renderers.containsKey(it)){
-                val renderer = renderers[it]
-                renderer?.addTrack()
-                val data = HashMap<String,Any>()
-                data["texture_id"] = renderer?.uid!!
-                result.success(HMSResultExtension.toDictionary(true,data))
-                return
-            }
-            val room = hmssdk?.getRoom()
 
-            room?.let { currentRoom ->
-                val track = HmsUtilities.getVideoTrack(it,currentRoom)
-                track?.let { videoTrack ->
-                    val entry: SurfaceTextureEntry? = hmsTextureRegistry?.createSurfaceTexture()
-                    entry?.let { surfaceTextureEntry ->
-                        val surfaceTexture = surfaceTextureEntry.surfaceTexture()
-                        val renderer = HMSTextureView(surfaceTexture,videoTrack,entry)
-                        if(addTrackByDefault){
+        val entry: SurfaceTextureEntry? = hmsTextureRegistry?.createSurfaceTexture()
+        entry?.let { surfaceTextureEntry ->
+            val surfaceTexture = surfaceTextureEntry.surfaceTexture()
+            val renderer = HMSTextureView(surfaceTexture,entry)
+            if(addTrackByDefault){
+                val room = hmssdk?.getRoom()
+                room?.let { currentRoom ->
+                    trackId?.let {currentTrackId ->
+                        val track = HmsUtilities.getVideoTrack(currentTrackId,currentRoom)
+                        track?.let { videoTrack ->
                             Log.i("HMSTextureView","Init Add Track called for track: ${track.trackId}")
-                            renderer.addTrack()
+                            renderer.addTrack(videoTrack)
+                        }?: run {
+                            HMSErrorLogger.returnHMSException("createTextureView","No track with $trackId found","Track not found error",result)
+                            return
                         }
-                        renderers["$trackId"] = renderer
+                    }?: run {
+                        HMSErrorLogger.returnHMSException("createTextureView","trackId is null"," NULL ERROR",result)
+                        return
+                    }
+                }?: run {
+                    HMSErrorLogger.returnHMSException("createTextureView","Room is null","NULL Error",result)
+                    return
+                }
+            }
+            renderers["${surfaceTextureEntry.id()}"] = renderer
+            val data = HashMap<String,Any>()
+            data["texture_id"] = surfaceTextureEntry.id()
+            result.success(HMSResultExtension.toDictionary(true,data))
+
+        }?:run{
+            HMSErrorLogger.returnHMSException("createTextureView","entry is null","NULL Error",result)
+            return
+        }
 //                        val eventChannel = EventChannel(
 //                            hmsBinaryMessenger,
 //                            "HMSTextureView/Texture" + entry.id()
@@ -643,39 +655,18 @@ class HmssdkFlutterPlugin :
 
 //                        eventChannel.setStreamHandler(renderer)
 //                        renderer.setTextureViewEventChannel(eventChannel)
-                        val data = HashMap<String,Any>()
 
-                        data["texture_id"] = surfaceTextureEntry.id()
-                        result.success(HMSResultExtension.toDictionary(true,data))
-                        return
-                }?: run {
-                        HMSErrorLogger.returnHMSException("createTextureView","SurfaceTextureEntry is null","NULL ERROR",result)
-                    }
-            }?: run {
-                    HMSErrorLogger.returnHMSException("createTextureView","No track with $trackId found","Track not found error",result)
-                }
-            }?: run {
-                    HMSErrorLogger.returnHMSException("createTextureView","room is null","NULL ERROR",result)
-            }
-        } ?: run {
-                HMSErrorLogger.returnHMSException(
-                    "createTextureView",
-                    "trackId is null",
-                    "NULL ERROR",
-                    result
-                )
-        }
     }
 
     private fun disposeTextureView(call: MethodCall,result: Result){
-        val trackId = call.argument<String?>("track_id") ?: HMSErrorLogger.returnArgumentsError("trackId is null")
+        val textureId = call.argument<String?>("texture_id") ?: HMSErrorLogger.returnArgumentsError("textureId is null")
 
-        var renderer = renderers["$trackId"]
+        var renderer = renderers["$textureId"]
 
         if(renderer != null){
             renderer.disposeTextureView()
             renderer = null
-            renderers.remove("$trackId")
+            renderers.remove("$textureId")
             result.success(HMSResultExtension.toDictionary(true,null))
         }
         else {
@@ -689,16 +680,65 @@ class HmssdkFlutterPlugin :
     }
 
     private fun addTrack(call: MethodCall, result: Result){
-        val trackId = call.argument<String?>("track_id") ?: HMSErrorLogger.returnArgumentsError("trackId is null")
-        val renderer = renderers["$trackId"]
-        renderer?.addTrack()
-        result.success(null)
+        val trackId = call.argument<String?>("track_id")
+        val textureId = call.argument<String?>("texture_id")
+
+        textureId?.let {texture ->
+            trackId?.let {
+                val renderer = renderers["$textureId"]
+                renderer?.let { textureRenderer ->
+                    val room = hmssdk?.getRoom()
+                    room?.let { currentRoom ->
+                        val track = HmsUtilities.getVideoTrack(trackId,currentRoom)
+                        track?.let {videoTrack ->
+                            textureRenderer.addTrack(videoTrack)
+                            result.success(null)
+                        }?: run {
+                            HMSErrorLogger.returnHMSException(
+                                "addTrack",
+                                "track with given trackId not found",
+                                "Track not found error",
+                                result
+                            )
+                        }
+                    }?: run {
+                        HMSErrorLogger.returnHMSException(
+                            "addTrack",
+                            "room not found",
+                            "room not found error",
+                            result
+                        )
+                    }
+                }?: run {
+                    HMSErrorLogger.returnHMSException(
+                        "addTrack",
+                        "renderer with given $texture not found",
+                        "renderer not found error",
+                        result
+                    )
+                }
+            }?: run {
+                HMSErrorLogger.returnHMSException(
+                    "addTrack",
+                    "trackId is null",
+                    "NULL ERROR",
+                    result
+                )
+            }
+        }?:run {
+            HMSErrorLogger.returnHMSException(
+                "addTrack",
+                "textureId is null",
+                "NULL ERROR",
+                result
+            )
+        }
     }
 
     private fun removeTrack(call: MethodCall, result: Result){
-        val trackId = call.argument<String?>("track_id") ?: HMSErrorLogger.returnArgumentsError("trackId is null")
+        val textureId = call.argument<String?>("texture_id")
 
-        val renderer = renderers["$trackId"]
+        val renderer = renderers["$textureId"]
         renderer?.removeTrack()
         result.success(null)
 
