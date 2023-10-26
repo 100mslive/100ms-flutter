@@ -1278,9 +1278,9 @@ class MeetingStore extends ChangeNotifier
     isRoomEnded = true;
     resetForegroundTaskAndOrientation();
 
-    viewControllers.forEach((element) {
+    for (var element in viewControllers) {
       element.disposeTextureView();
-    });
+    }
     viewControllers.clear();
 
     ///Here we call the method passed by the user in HMSPrebuilt as a callback

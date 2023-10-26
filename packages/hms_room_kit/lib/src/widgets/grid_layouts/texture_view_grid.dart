@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/grid_layouts/listenable_peer_widget.dart';
-import 'package:provider/provider.dart';
 
 class TextureViewGrid extends StatefulWidget {
   final List<PeerTrackNode> peerTracks;

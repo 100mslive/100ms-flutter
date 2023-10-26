@@ -66,8 +66,10 @@ class _PeerTileState extends State<PeerTile> {
             Provider.of<PeerTrackNode>(context, listen: false)
                 .setOffScreenStatus(true);
             if (context.read<PeerTrackNode>().track != null) {
-              log("HMSVideoViewController remove video track ${context.read<PeerTrackNode>().peer.name}");
-              widget.videoViewController?.removeTrack();
+              // log("HMSVideoViewController remove video track ${context.read<PeerTrackNode>().peer.name}");
+
+              ///Avoiding remove track
+              // widget.videoViewController?.removeTrack();
             }
           }
         },
@@ -85,7 +87,6 @@ class _PeerTileState extends State<PeerTile> {
               ? Container(
                   key: key,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
                     color: HMSThemeColors.backgroundDefault,
                   ),
                   child: Semantics(
@@ -102,11 +103,13 @@ class _PeerTileState extends State<PeerTile> {
                               widget.avatarTitleTextLineHeight,
                           videoViewController: widget.videoViewController,
                         ),
-                        // Semantics(
-                        //   label:
-                        //       "fl_${context.read<PeerTrackNode>().peer.name}_degraded_tile",
-                        //   child: const DegradeTile(),
-                        // ),
+                        Semantics(
+                          label:
+                              "fl_${context.read<PeerTrackNode>().peer.name}_degraded_tile",
+                          child: DegradeTile(
+                            constraints: constraints,
+                          ),
+                        ),
                         Selector<PeerTrackNode, bool>(
                             selector: (_, peerTrackNode) =>
                                 peerTrackNode.isOffscreen,
@@ -116,8 +119,6 @@ class _PeerTileState extends State<PeerTile> {
                                       label: "fl_video_off",
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
                                           color:
                                               HMSThemeColors.backgroundDefault,
                                         ),
@@ -129,7 +130,7 @@ class _PeerTileState extends State<PeerTile> {
                                               widget.avatarTitleTextLineHeight,
                                         ),
                                       ))
-                                  : Container();
+                                  : const SizedBox();
                             }),
                         NameAndNetwork(maxWidth: constraints.maxWidth),
                         const HandRaise(), //top left

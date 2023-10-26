@@ -1,6 +1,6 @@
 // Dart imports:
-import 'dart:developer';
 import 'dart:io' show Platform;
+import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -8,7 +8,6 @@ import 'package:flutter/services.dart' show StandardMessageCodec;
 
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/ui/meeting/hms_video_view_controller.dart';
 
 ///100ms HMSVideoView
 ///
@@ -160,7 +159,9 @@ class _PlatformViewState extends State<_PlatformView> {
 
   @override
   void dispose() {
-    // viewController?.disposeTextureView(callback: setView);
+    if(widget.controller == null){
+      viewController?.disposeTextureView(callback: setView);
+    }
     super.dispose();
   }
 
@@ -169,10 +170,28 @@ class _PlatformViewState extends State<_PlatformView> {
     ///AndroidView for android it uses surfaceRenderer provided internally by webrtc.
     if (Platform.isAndroid) {
       return viewController?.textureId == null
-          ? Container(
-              color: Colors.red,
-            )
-          : Texture(textureId: viewController!.textureId!);
+          ? SizedBox()
+          : LayoutBuilder(
+              builder: (context, constraints) => Center(
+                child: FittedBox(
+                  clipBehavior: Clip.hardEdge,
+                  fit: widget.scaleType == ScaleType.SCALE_ASPECT_FIT
+                      ? BoxFit.contain
+                      : BoxFit.cover,
+                  child: SizedBox(
+                    width: widget.scaleType == ScaleType.SCALE_ASPECT_FIT?(constraints.maxHeight * (16 / 9)):constraints.maxWidth,
+                    height: constraints.maxHeight,
+                    child: Center(
+                      child: Transform(
+                          transform: Matrix4.identity()
+                            ..rotateY(widget.setMirror ? -pi : 0.0),
+                          alignment: FractionalOffset.center,
+                          child: Texture(textureId: viewController!.textureId!)),
+                    ),
+                  ),
+                ),
+              ),
+            );
 
       // /Texture(textureId: textureId); // get textureId fom video view
       // return AndroidView(

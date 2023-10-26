@@ -25,15 +25,15 @@ class ListenablePeerWidget extends StatelessWidget {
     return ChangeNotifierProvider.value(
         key: ValueKey("${peerTracks[index].uid}video_view"),
         value: peerTracks[index],
-        child: Selector<MeetingStore,HMSVideoViewController>(
-          selector: (_,meetingStore) => meetingStore.viewControllers[index%6],
-          builder: (_,viewController,__) {
-            return PeerTile(
-              videoViewController: viewController,
-              key: ValueKey("${peerTracks[index].uid}audio_view"),
-              scaleType: scaleType,
-            );
-          }
-        ));
+        child: Selector<MeetingStore, HMSVideoViewController>(
+            selector: (_, meetingStore) =>
+                meetingStore.viewControllers[index % 6],
+            builder: (_, viewController, __) {
+              return PeerTile(
+                videoViewController: viewController,
+                key: ValueKey("${peerTracks[index].uid}audio_view"),
+                scaleType: scaleType,
+              );
+            }));
   }
 }
