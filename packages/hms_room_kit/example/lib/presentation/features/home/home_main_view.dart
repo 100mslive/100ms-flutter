@@ -5,7 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:sample_application/presentation/features/dashbaord/dashbaord_main_view.dart';
+import 'package:sample_application/presentation/features/dashboard/dashboard_main_view.dart';
 
 class HomeMainView extends StatefulWidget {
   const HomeMainView({super.key});
