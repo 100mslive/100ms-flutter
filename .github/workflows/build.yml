@@ -34,12 +34,11 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - uses: actions/setup-java@v3
         with:
           distribution: zulu
           java-version: 12.x
-      - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -56,12 +55,10 @@ jobs:
         with:
           working-directory: packages/hmssdk_flutter
       - name: Commit and Push changes
-        run: |
-          git config --global user.name "🤖 100ms Flutter Bot"
-          git config --global user.email "yogesh@100ms.live"
-          git add .
-          git commit -m "🤖 100ms Flutter Bot: Format and Fix"
-          git push --verbose
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 🤖 Automated Format and Fix
+          commit_user_name: 🤖 100ms Flutter Bot
       - name: Build Android App Bundle
         env:
           FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
