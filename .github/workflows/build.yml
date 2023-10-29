@@ -47,10 +47,22 @@ jobs:
       - name: Get Flutter dependencies in Core SDK
         run: flutter pub get
         working-directory: packages/hmssdk_flutter
-      - name: Analyze Dart
+      - name: Dart Format
+        run: dart format .
+      - name: Dart Fix
+        run: dart fix --apply
+      - name: Flutter Analyze
         uses: zgosalvez/github-actions-analyze-dart@v2
         with:
           working-directory: packages/hmssdk_flutter
+      - name: Commit Changes
+        run: |
+          git config --global user.name "🤖 100ms Flutter Bot"
+          git config --global user.email "yogesh@100ms.live"
+          git status
+          git add .
+          git commit -m "🤖 100ms Flutter Bot: Format and Fix"
+          git push --verbose
       - name: Build Android App Bundle
         env:
           FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
