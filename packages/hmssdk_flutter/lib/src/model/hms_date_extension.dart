@@ -4,7 +4,7 @@
 ///in local time zone format.
 class HMSDateExtension {
   static DateTime convertDate(String date) {
-    DateTime _dateTime = DateTime.parse(date).toLocal();
-    return _dateTime;
+    DateTime dateTime = DateTime.parse(date).toLocal();
+    return dateTime;
   }
 }

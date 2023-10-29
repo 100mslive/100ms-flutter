@@ -149,7 +149,7 @@ class HMSPeer {
 
   Future<List<HMSTrack>> getAllTracks() async {
     var result = await PlatformService.invokeMethod(PlatformMethod.getAllTracks,
-        arguments: {"peer_id": this.peerId});
+        arguments: {"peer_id": peerId});
     List<HMSTrack> tracks = [];
     result.forEach((element) {
       HMSTrack hmsTrack = HMSTrack.fromMap(map: element, isLocal: isLocal);
@@ -161,7 +161,7 @@ class HMSPeer {
 
   Future<HMSTrack> getTrackById({required String trackId}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.getTrackById,
-        arguments: {"peer_id": this.peerId, "track_id": trackId});
+        arguments: {"peer_id": peerId, "track_id": trackId});
 
     HMSTrack hmsTrack = HMSTrack.fromMap(map: result, isLocal: isLocal);
     return hmsTrack;

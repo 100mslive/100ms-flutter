@@ -32,7 +32,7 @@ class HMSRecordingConfig {
       "meeting_url": meetingUrl,
       "to_record": toRecord,
       "rtmp_urls": rtmpUrls,
-      "resolution": resolution?.toMap() ?? null
+      "resolution": resolution?.toMap()
     };
   }
 }

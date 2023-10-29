@@ -20,10 +20,10 @@ class HMSHLSVariant {
 
   Map<String, dynamic> toMap() {
     return {
-      'hlsStreamUrl': this.hlsStreamUrl,
-      'meetingUrl': this.meetingUrl,
-      'metadata': this.metadata,
-      'startedAt': this.startedAt,
+      'hlsStreamUrl': hlsStreamUrl,
+      'meetingUrl': meetingUrl,
+      'metadata': metadata,
+      'startedAt': startedAt,
     };
   }
 

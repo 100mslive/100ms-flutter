@@ -25,8 +25,8 @@ class HMSIOSScreenshareConfig {
   /// Converts the [HMSIOSScreenshareConfig] instance to a Map.
   Map<String, String> toMap() {
     return {
-      'app_group': this.appGroup,
-      'preferred_extension': this.preferredExtension,
+      'app_group': appGroup,
+      'preferred_extension': preferredExtension,
     };
   }
 }

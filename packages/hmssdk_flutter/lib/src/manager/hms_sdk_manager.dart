@@ -20,7 +20,7 @@ class HmsSdkManager {
         .loadString('packages/hmssdk_flutter/lib/assets/sdk-versions.json');
     var versions = json.decode(sdkVersions);
     if (versions['flutter'] == null) {
-      throw FormatException("flutter version not found");
+      throw const FormatException("flutter version not found");
     } else {
       List<String> dartSDKVersion = Platform.version.split(" ");
       Map<String, dynamic> arguments = {
@@ -30,7 +30,7 @@ class HmsSdkManager {
         "ios_screenshare_config": iOSScreenshareConfig?.toMap(),
         "hms_log_settings": hmsLogSettings?.toMap(),
         "dart_sdk_version":
-            dartSDKVersion.length > 0 ? dartSDKVersion[0] : "null",
+            dartSDKVersion.isNotEmpty ? dartSDKVersion[0] : "null",
         "hmssdk_version": versions['flutter'],
         "is_prebuilt": isPrebuilt
       };

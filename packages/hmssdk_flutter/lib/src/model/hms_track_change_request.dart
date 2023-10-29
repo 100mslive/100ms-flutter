@@ -16,9 +16,9 @@ class HMSTrackChangeRequest {
 
   Map<String, dynamic> toMap() {
     return {
-      'mute': this.mute,
-      'requested_by': this.requestBy,
-      'track': this.track,
+      'mute': mute,
+      'requested_by': requestBy,
+      'track': track,
     };
   }
 

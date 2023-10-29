@@ -31,7 +31,7 @@ class HMSHLSPlayer extends StatelessWidget {
 
   final bool? showPlayerControls;
 
-  HMSHLSPlayer(
+  const HMSHLSPlayer(
       {Key? key, this.hlsUrl, this.isHLSStatsRequired, this.showPlayerControls})
       : super(key: key);
 
@@ -52,7 +52,7 @@ class _PlatformView extends StatelessWidget {
 
   final bool? showPlayerControls;
 
-  _PlatformView(
+  const _PlatformView(
       {Key? key,
       this.hlsUrl,
       this.isHLSStatsRequired = false,
@@ -69,26 +69,26 @@ class _PlatformView extends StatelessWidget {
         key: key,
         viewType: 'HMSHLSPlayer',
         onPlatformViewCreated: onPlatformViewCreated,
-        creationParamsCodec: StandardMessageCodec(),
+        creationParamsCodec: const StandardMessageCodec(),
         creationParams: {
           'hls_url': hlsUrl,
           'is_hls_stats_required': isHLSStatsRequired,
           'show_player_controls': showPlayerControls
         },
-        gestureRecognizers: {},
+        gestureRecognizers: const {},
       );
     } else if (Platform.isIOS) {
       ///UIKitView for ios it uses VideoView provided by 100ms ios_sdk internally.
       return UiKitView(
         viewType: 'HMSHLSPlayer',
         onPlatformViewCreated: onPlatformViewCreated,
-        creationParamsCodec: StandardMessageCodec(),
+        creationParamsCodec: const StandardMessageCodec(),
         creationParams: {
           'hls_url': hlsUrl,
           'is_hls_stats_required': isHLSStatsRequired,
           'show_player_controls': showPlayerControls
         },
-        gestureRecognizers: {},
+        gestureRecognizers: const {},
       );
     } else {
       throw UnimplementedError(

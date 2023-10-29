@@ -11,7 +11,7 @@ class HMSSpeaker {
 
   factory HMSSpeaker.fromMap(Map data) {
     HMSPeer peer = HMSPeer.fromMap(data['peer']);
-    return new HMSSpeaker(
+    return HMSSpeaker(
       peer: peer,
       track: data['track']['instance_of']
           ? HMSVideoTrack.fromMap(map: data['track'], isLocal: peer.isLocal)
@@ -22,9 +22,9 @@ class HMSSpeaker {
 
   Map<String, dynamic> toMap() {
     return {
-      'peer': this.peer,
-      'track': this.track,
-      'audioLevel': this.audioLevel,
+      'peer': peer,
+      'track': track,
+      'audioLevel': audioLevel,
     };
   }
 

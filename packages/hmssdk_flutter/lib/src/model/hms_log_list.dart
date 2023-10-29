@@ -9,11 +9,11 @@ class HMSLogList {
   factory HMSLogList.fromMap(List<dynamic> logs) {
     List<String> listHMSLog = [];
 
-    logs.forEach((element) {
+    for (var element in logs) {
       if (element != null) {
         listHMSLog.add(element);
       }
-    });
+    }
 
     return HMSLogList(hmsLog: listHMSLog);
   }
@@ -21,9 +21,9 @@ class HMSLogList {
   @override
   String toString() {
     String result = "";
-    hmsLog.forEach((element) {
-      result += element + "\n";
-    });
+    for (var element in hmsLog) {
+      result += "$element\n";
+    }
     return result;
   }
 }

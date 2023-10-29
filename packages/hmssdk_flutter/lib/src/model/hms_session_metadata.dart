@@ -9,6 +9,6 @@ class HMSSessionMetadata {
   factory HMSSessionMetadata.fromMap(Map map) {
     return HMSSessionMetadata(
         metadata:
-            map["data"]["metadata"] != null ? map["data"]["metadata"] : null);
+            map["data"]["metadata"]);
   }
 }

@@ -48,15 +48,15 @@ class HMSException {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': this.id,
-      'name': this.id,
+      'id': id,
+      'name': id,
       'code': code?.errorCode ?? '',
-      'message': this.message,
-      'info': this.description,
-      'description': this.description,
-      'action': this.action,
-      'params': this.params,
-      'isTerminal': this.params
+      'message': message,
+      'info': description,
+      'description': description,
+      'action': action,
+      'params': params,
+      'isTerminal': params
     };
   }
 }

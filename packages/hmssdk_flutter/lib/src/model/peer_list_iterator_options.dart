@@ -23,9 +23,9 @@ class PeerListIteratorOptions {
 
   Map<String, dynamic> toMap() {
     return {
-      'by_peer_ids': this.byPeerIds,
-      'by_role_name': this.byRoleName,
-      'limit': this.limit,
+      'by_peer_ids': byPeerIds,
+      'by_role_name': byRoleName,
+      'limit': limit,
     };
   }
 }

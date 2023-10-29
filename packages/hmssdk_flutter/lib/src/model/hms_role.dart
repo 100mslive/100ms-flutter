@@ -51,10 +51,10 @@ class HMSRole {
 
   Map<String, dynamic> toMap() {
     return {
-      'name': this.name,
-      'publishSettings': this.publishSettings,
-      'subscribeSettings': this.subscribeSettings,
-      'priority': this.priority,
+      'name': name,
+      'publishSettings': publishSettings,
+      'subscribeSettings': subscribeSettings,
+      'priority': priority,
       'permissions': permissions
     };
   }

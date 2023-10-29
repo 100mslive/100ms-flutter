@@ -20,9 +20,9 @@ class HMSPeerRemovedFromPeer {
 
   Map<String, dynamic> toMap() {
     return {
-      'peer_who_removed': this.peerWhoRemoved,
-      'reason': this.reason,
-      'room_was_ended': this.roomWasEnded,
+      'peer_who_removed': peerWhoRemoved,
+      'reason': reason,
+      'room_was_ended': roomWasEnded,
     };
   }
 

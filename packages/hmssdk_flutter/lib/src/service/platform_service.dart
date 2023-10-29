@@ -20,30 +20,30 @@ import 'package:hmssdk_flutter/src/model/hms_key_change_observer.dart';
 
 class PlatformService {
   ///used to pass data to platform using methods
-  static const MethodChannel _channel = const MethodChannel('hmssdk_flutter');
+  static const MethodChannel _channel = MethodChannel('hmssdk_flutter');
 
   ///used to get stream of data from platform side happening in the room.
   static const EventChannel _meetingEventChannel =
-      const EventChannel('meeting_event_channel');
+      EventChannel('meeting_event_channel');
 
   ///used to get stream of data from platform side happening in the preview.
   static const EventChannel _previewEventChannel =
-      const EventChannel('preview_event_channel');
+      EventChannel('preview_event_channel');
 
   static const EventChannel _logsEventChannel =
-      const EventChannel("logs_event_channel");
+      EventChannel("logs_event_channel");
 
   ///used to get stream of rtc Stats
   static const EventChannel _rtcStatsChannel =
-      const EventChannel("rtc_event_channel");
+      EventChannel("rtc_event_channel");
 
   ///used to get stream of session store changes
   static const EventChannel _sessionStoreChannel =
-      const EventChannel("session_event_channel");
+      EventChannel("session_event_channel");
 
   ///used to get stream of session store changes
   static const EventChannel _hlsPlayerChannel =
-      const EventChannel("hls_player_channel");
+      EventChannel("hls_player_channel");
 
   ///add meeting listeners.
   static List<HMSUpdateListener> updateListeners = [];
@@ -223,9 +223,9 @@ class PlatformService {
           List<HMSSpeaker> speakers = [];
           if (data.containsKey('speakers') && data['speakers'] is List) {
             if ((data['speakers'] as List).isNotEmpty) {
-              (data['speakers'] as List).forEach((element) {
+              for (var element in (data['speakers'] as List)) {
                 speakers.add(HMSSpeaker.fromMap(element as Map));
-              });
+              }
             }
           }
 
@@ -532,10 +532,10 @@ class PlatformService {
       HMSLogsUpdateListenerMethod method, List<dynamic> arguments) {
     switch (method) {
       case HMSLogsUpdateListenerMethod.onLogsUpdate:
-        logsListeners.forEach((element) {
+        for (var element in logsListeners) {
           HMSLogList hmsLogList = HMSLogList.fromMap(arguments);
           element.onLogMessage(hmsLogList: hmsLogList);
-        });
+        }
         break;
       case HMSLogsUpdateListenerMethod.unknown:
         break;
@@ -547,34 +547,34 @@ class PlatformService {
       HMSPreviewUpdateListenerMethod method, Map<String, dynamic> arguments) {
     switch (method) {
       case HMSPreviewUpdateListenerMethod.onPreviewVideo:
-        previewListeners.forEach((e) {
+        for (var e in previewListeners) {
           e.onPreview(
               room: arguments['room'], localTracks: arguments['local_tracks']);
-        });
+        }
         break;
       case HMSPreviewUpdateListenerMethod.onError:
-        previewListeners.forEach((e) {
+        for (var e in previewListeners) {
           e.onHMSError(error: arguments["error"]);
-        });
+        }
         break;
       case HMSPreviewUpdateListenerMethod.unknown:
         break;
       case HMSPreviewUpdateListenerMethod.onPeerUpdate:
-        previewListeners.forEach((e) {
+        for (var e in previewListeners) {
           e.onPeerUpdate(peer: arguments['peer'], update: arguments['update']);
-        });
+        }
         break;
       case HMSPreviewUpdateListenerMethod.onRoomUpdate:
-        previewListeners.forEach((e) {
+        for (var e in previewListeners) {
           e.onRoomUpdate(room: arguments['room'], update: arguments['update']);
-        });
+        }
         break;
       case HMSPreviewUpdateListenerMethod.onAudioDeviceChanged:
-        previewListeners.forEach((e) {
+        for (var e in previewListeners) {
           e.onAudioDeviceChanged(
               currentAudioDevice: arguments["current_audio_device"],
               availableAudioDevice: arguments["available_audio_device"]);
-        });
+        }
         break;
     }
   }
@@ -583,32 +583,41 @@ class PlatformService {
       HMSStatsListenerMethod method, Map<String, dynamic> arguments) {
     switch (method) {
       case HMSStatsListenerMethod.onLocalAudioStats:
-        statsListeners.forEach((e) => e.onLocalAudioStats(
+        for (var e in statsListeners) {
+          e.onLocalAudioStats(
             hmsLocalAudioStats: arguments['local_audio_stats'],
             track: arguments["track"],
-            peer: arguments["peer"]));
+            peer: arguments["peer"]);
+        }
         break;
       case HMSStatsListenerMethod.onLocalVideoStats:
-        statsListeners.forEach((e) => e.onLocalVideoStats(
+        for (var e in statsListeners) {
+          e.onLocalVideoStats(
             hmsLocalVideoStats: arguments['local_video_stats'],
             track: arguments["track"],
-            peer: arguments["peer"]));
+            peer: arguments["peer"]);
+        }
         break;
       case HMSStatsListenerMethod.onRemoteAudioStats:
-        statsListeners.forEach((e) => e.onRemoteAudioStats(
+        for (var e in statsListeners) {
+          e.onRemoteAudioStats(
             hmsRemoteAudioStats: arguments['remote_audio_stats'],
             track: arguments["track"],
-            peer: arguments["peer"]));
+            peer: arguments["peer"]);
+        }
         break;
       case HMSStatsListenerMethod.onRemoteVideoStats:
-        statsListeners.forEach((e) => e.onRemoteVideoStats(
+        for (var e in statsListeners) {
+          e.onRemoteVideoStats(
             hmsRemoteVideoStats: arguments['remote_video_stats'],
             track: arguments["track"],
-            peer: arguments["peer"]));
+            peer: arguments["peer"]);
+        }
         break;
       case HMSStatsListenerMethod.onRtcStats:
-        statsListeners.forEach((e) =>
-            e.onRTCStats(hmsrtcStatsReport: arguments['rtc_stats_report']));
+        for (var e in statsListeners) {
+          e.onRTCStats(hmsrtcStatsReport: arguments['rtc_stats_report']);
+        }
         break;
       case HMSStatsListenerMethod.unknown:
         break;
@@ -620,73 +629,96 @@ class PlatformService {
       HMSUpdateListenerMethod method, Map<String, dynamic> arguments) {
     switch (method) {
       case HMSUpdateListenerMethod.onJoinRoom:
-        updateListeners.forEach((e) => e.onJoin(room: arguments['room']));
+        for (var e in updateListeners) {
+          e.onJoin(room: arguments['room']);
+        }
         break;
       case HMSUpdateListenerMethod.onUpdateRoom:
-        updateListeners.forEach((e) => e.onRoomUpdate(
-            room: arguments['room'], update: arguments['update']));
+        for (var e in updateListeners) {
+          e.onRoomUpdate(
+            room: arguments['room'], update: arguments['update']);
+        }
         break;
       case HMSUpdateListenerMethod.onPeerUpdate:
-        updateListeners.forEach((e) => e.onPeerUpdate(
-            peer: arguments['peer'], update: arguments['update']));
+        for (var e in updateListeners) {
+          e.onPeerUpdate(
+            peer: arguments['peer'], update: arguments['update']);
+        }
         break;
       case HMSUpdateListenerMethod.onTrackUpdate:
-        updateListeners.forEach((e) => e.onTrackUpdate(
+        for (var e in updateListeners) {
+          e.onTrackUpdate(
             track: arguments['track'],
             trackUpdate: arguments['update'],
-            peer: arguments['peer']));
+            peer: arguments['peer']);
+        }
         break;
       case HMSUpdateListenerMethod.onError:
-        updateListeners.forEach((e) => e.onHMSError(error: arguments['error']));
+        for (var e in updateListeners) {
+          e.onHMSError(error: arguments['error']);
+        }
         break;
       case HMSUpdateListenerMethod.onMessage:
-        updateListeners
-            .forEach((e) => e.onMessage(message: arguments['message']));
+        for (var e in updateListeners) {
+          e.onMessage(message: arguments['message']);
+        }
         break;
       case HMSUpdateListenerMethod.onUpdateSpeaker:
-        updateListeners.forEach(
-            (e) => e.onUpdateSpeakers(updateSpeakers: arguments['speakers']));
+        for (var e in updateListeners) {
+          e.onUpdateSpeakers(updateSpeakers: arguments['speakers']);
+        }
         break;
       case HMSUpdateListenerMethod.onReconnecting:
-        updateListeners.forEach((e) => e.onReconnecting());
+        for (var e in updateListeners) {
+          e.onReconnecting();
+        }
         break;
       case HMSUpdateListenerMethod.onReconnected:
-        updateListeners.forEach((e) => e.onReconnected());
+        for (var e in updateListeners) {
+          e.onReconnected();
+        }
         break;
       case HMSUpdateListenerMethod.onRoleChangeRequest:
-        updateListeners.forEach((e) => e.onRoleChangeRequest(
-            roleChangeRequest: arguments['role_change_request']));
+        for (var e in updateListeners) {
+          e.onRoleChangeRequest(
+            roleChangeRequest: arguments['role_change_request']);
+        }
         break;
       case HMSUpdateListenerMethod.onChangeTrackStateRequest:
-        updateListeners.forEach((e) => e.onChangeTrackStateRequest(
-            hmsTrackChangeRequest: arguments['track_change_request']));
+        for (var e in updateListeners) {
+          e.onChangeTrackStateRequest(
+            hmsTrackChangeRequest: arguments['track_change_request']);
+        }
         break;
 
       case HMSUpdateListenerMethod.onRemovedFromRoom:
         if (updateListeners.isEmpty) break;
-        updateListeners.forEach((element) {
+        for (var element in updateListeners) {
           element.onRemovedFromRoom(
               hmsPeerRemovedFromPeer: arguments['removed_from_room']);
-        });
+        }
         break;
 
       case HMSUpdateListenerMethod.onAudioDeviceChanged:
-        updateListeners.forEach((e) => e.onAudioDeviceChanged(
+        for (var e in updateListeners) {
+          e.onAudioDeviceChanged(
             currentAudioDevice: arguments["current_audio_device"],
-            availableAudioDevice: arguments["available_audio_device"]));
+            availableAudioDevice: arguments["available_audio_device"]);
+        }
         break;
 
       case HMSUpdateListenerMethod.onSessionStoreAvailable:
-        updateListeners.forEach((e) =>
-            e.onSessionStoreAvailable(hmsSessionStore: HMSSessionStore()));
+        for (var e in updateListeners) {
+          e.onSessionStoreAvailable(hmsSessionStore: HMSSessionStore());
+        }
         break;
 
       case HMSUpdateListenerMethod.onPeerListUpdate:
-        updateListeners.forEach((e) {
+        for (var e in updateListeners) {
           e.onPeerListUpdate(
               addedPeers: arguments["added_peers"],
               removedPeers: arguments["removed_peers"]);
-        });
+        }
         break;
 
       case HMSUpdateListenerMethod.unknown:
@@ -715,25 +747,32 @@ class PlatformService {
       HMSHLSPlaybackEventMethod method, Map arguments) {
     switch (method) {
       case HMSHLSPlaybackEventMethod.onPlaybackFailure:
-        hlsPlaybackEventListener
-            .forEach((e) => e.onPlaybackFailure(error: arguments["error"]));
+        for (var e in hlsPlaybackEventListener) {
+          e.onPlaybackFailure(error: arguments["error"]);
+        }
         break;
       case HMSHLSPlaybackEventMethod.onPlaybackStateChanged:
-        hlsPlaybackEventListener.forEach((e) => e.onPlaybackStateChanged(
+        for (var e in hlsPlaybackEventListener) {
+          e.onPlaybackStateChanged(
             playbackState: HMSHLSPlaybackStateValues.getMethodFromName(
-                arguments["playback_state"])));
+                arguments["playback_state"]));
+        }
         break;
       case HMSHLSPlaybackEventMethod.onCue:
-        hlsPlaybackEventListener
-            .forEach((e) => e.onCue(hlsCue: HMSHLSCue.fromMap(arguments)));
+        for (var e in hlsPlaybackEventListener) {
+          e.onCue(hlsCue: HMSHLSCue.fromMap(arguments));
+        }
         break;
       case HMSHLSPlaybackEventMethod.onHLSError:
-        hlsPlaybackEventListener.forEach(
-            (e) => e.onHLSError(hlsException: HMSException.fromMap(arguments)));
+        for (var e in hlsPlaybackEventListener) {
+          e.onHLSError(hlsException: HMSException.fromMap(arguments));
+        }
         break;
       case HMSHLSPlaybackEventMethod.onHLSEventUpdate:
-        hlsPlaybackEventListener.forEach((e) => e.onHLSEventUpdate(
-            playerStats: HMSHLSPlayerStats.fromMap(arguments)));
+        for (var e in hlsPlaybackEventListener) {
+          e.onHLSEventUpdate(
+            playerStats: HMSHLSPlayerStats.fromMap(arguments));
+        }
         break;
       case HMSHLSPlaybackEventMethod.unknown:
         break;

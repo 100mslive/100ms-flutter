@@ -28,7 +28,7 @@ class HMSNetworkQuality {
 
   Map<String, dynamic> toMap() {
     return {
-      'quality': this.quality,
+      'quality': quality,
     };
   }
 

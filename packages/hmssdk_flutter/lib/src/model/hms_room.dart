@@ -80,9 +80,9 @@ class HMSRoom {
         name: map['name'],
         peers: peers,
         metaData: map['meta_data'],
-        peerCount: map["peer_count"] != null ? map["peer_count"] : 0,
-        startedAt: map["started_at"] != null ? map["started_at"] : 0,
-        sessionId: map["session_id"] != null ? map["session_id"] : "");
+        peerCount: map["peer_count"] ?? 0,
+        startedAt: map["started_at"] ?? 0,
+        sessionId: map["session_id"] ?? "");
   }
 
   @override

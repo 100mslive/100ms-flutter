@@ -18,9 +18,9 @@ class HMSMessageRecipient {
 
   Map<String, dynamic> toMap() {
     return {
-      'recipientPeer': this.recipientPeer,
-      'roles': this.recipientRoles,
-      'hmsMessageRecipientType': this.hmsMessageRecipientType,
+      'recipientPeer': recipientPeer,
+      'roles': recipientRoles,
+      'hmsMessageRecipientType': hmsMessageRecipientType,
     };
   }
 
@@ -46,10 +46,10 @@ class HMSMessageRecipient {
 
   static List<HMSRole> getRoles(List list) {
     List<HMSRole> hmsRole = <HMSRole>[];
-    if (list.length == 0) return hmsRole;
-    list.forEach((element) {
+    if (list.isEmpty) return hmsRole;
+    for (var element in list) {
       hmsRole.add(HMSRole.fromMap(element));
-    });
+    }
     return hmsRole;
   }
 }

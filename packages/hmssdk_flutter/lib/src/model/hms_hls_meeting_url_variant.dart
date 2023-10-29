@@ -9,8 +9,8 @@ class HMSHLSMeetingURLVariant {
 
   Map<String, dynamic> toMap() {
     return {
-      'meeting_url': this.meetingUrl ?? null,
-      'meta_data': this.metadata,
+      'meeting_url': meetingUrl,
+      'meta_data': metadata,
     };
   }
 

@@ -45,7 +45,7 @@ class HMSAudioTrackSetting {
 
   factory HMSAudioTrackSetting.fromMap(Map map) {
     List<HMSAudioNode> nodeList = [];
-    List? node = map["audio_source"] ?? null;
+    List? node = map["audio_source"];
     HMSAudioMixerSource? audioMixerSource;
     if (node != null) {
       for (String i in node) {
@@ -74,7 +74,7 @@ class HMSAudioTrackSetting {
 
     return HMSAudioTrackSetting(
         useHardwareAcousticEchoCanceler:
-            map['user_hardware_acoustic_echo_canceler'] ?? null,
+            map['user_hardware_acoustic_echo_canceler'],
         audioSource: audioMixerSource,
         trackInitialState: map.containsKey("track_initial_state")
             ? HMSTrackInitStateValue.getHMSTrackInitStateFromName(

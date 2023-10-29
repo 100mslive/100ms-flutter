@@ -79,7 +79,7 @@ class HMSVideoView extends StatelessWidget {
   /// Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
   ///
   /// Refer [HMSVideoView guide here](https://www.100ms.live/docs/flutter/v2/features/render-video)
-  HMSVideoView(
+  const HMSVideoView(
       {Key? key,
       required this.track,
       this.setMirror = false,
@@ -94,9 +94,9 @@ class HMSVideoView extends StatelessWidget {
   Widget build(BuildContext context) {
     return _PlatformView(
       track: track,
-      matchParent: this.matchParent,
+      matchParent: matchParent,
       setMirror: setMirror,
-      scaleType: this.scaleType,
+      scaleType: scaleType,
       disableAutoSimulcastLayerSelect: disableAutoSimulcastLayerSelect,
     );
   }
@@ -110,7 +110,7 @@ class _PlatformView extends StatelessWidget {
   final ScaleType scaleType;
   final bool disableAutoSimulcastLayerSelect;
 
-  _PlatformView(
+  const _PlatformView(
       {Key? key,
       required this.track,
       this.setMirror = false,
@@ -128,7 +128,7 @@ class _PlatformView extends StatelessWidget {
       return AndroidView(
         viewType: 'HMSVideoView',
         onPlatformViewCreated: onPlatformViewCreated,
-        creationParamsCodec: StandardMessageCodec(),
+        creationParamsCodec: const StandardMessageCodec(),
         creationParams: {
           'track_id': track.trackId,
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
@@ -136,14 +136,14 @@ class _PlatformView extends StatelessWidget {
           'match_parent': matchParent,
           'disable_auto_simulcast_layer_select': disableAutoSimulcastLayerSelect
         },
-        gestureRecognizers: {},
+        gestureRecognizers: const {},
       );
     } else if (Platform.isIOS) {
       ///UIKitView for ios it uses VideoView provided by 100ms ios_sdk internally.
       return UiKitView(
         viewType: 'HMSFlutterPlatformView',
         onPlatformViewCreated: onPlatformViewCreated,
-        creationParamsCodec: StandardMessageCodec(),
+        creationParamsCodec: const StandardMessageCodec(),
         creationParams: {
           'track_id': track.trackId,
           'set_mirror': track.source != "REGULAR" ? false : setMirror,
@@ -151,7 +151,7 @@ class _PlatformView extends StatelessWidget {
           'match_parent': matchParent,
           'disable_auto_simulcast_layer_select': disableAutoSimulcastLayerSelect
         },
-        gestureRecognizers: {},
+        gestureRecognizers: const {},
       );
     } else {
       throw UnimplementedError(
