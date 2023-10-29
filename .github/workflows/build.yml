@@ -54,6 +54,12 @@ jobs:
         uses: zgosalvez/github-actions-analyze-dart@v2
         with:
           working-directory: packages/hmssdk_flutter
+      - name: Check SDK Publish Sanity
+        run: |
+          cd packages/hmssdk_flutter
+          flutter pub publish --dry-run
+          cd ../hms_room_kit
+          flutter pub publish --dry-run
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
