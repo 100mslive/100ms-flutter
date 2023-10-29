@@ -310,7 +310,7 @@ class _HomePageState extends State<HomePage> {
                         NavigationService.instance.pushNamedIfNotCurrent(
                             AppRoute.previewPage,
                             args: authToken);
-                                            },
+                      },
                       child: const Padding(
                         padding: EdgeInsets.all(12.0),
                         child: Row(

@@ -7,8 +7,6 @@ class HMSSessionMetadata {
   HMSSessionMetadata({this.metadata});
 
   factory HMSSessionMetadata.fromMap(Map map) {
-    return HMSSessionMetadata(
-        metadata:
-            map["data"]["metadata"]);
+    return HMSSessionMetadata(metadata: map["data"]["metadata"]);
   }
 }

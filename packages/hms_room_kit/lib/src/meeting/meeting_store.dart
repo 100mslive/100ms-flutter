@@ -846,7 +846,7 @@ class MeetingStore extends ChangeNotifier
     String? onStageRoles = HMSRoomLayout.roleLayoutData?.screens?.conferencing
         ?.defaultConf?.elements?.onStageExp?.onStageRole;
     participantsInMeetingMap[onStageRoles] = [];
-      roles
+    roles
         .where((role) => role.publishSettings?.allowed.isNotEmpty ?? false)
         .forEach((element) {
       participantsInMeetingMap[element.name] = [];
@@ -870,7 +870,7 @@ class MeetingStore extends ChangeNotifier
         await _hmsSessionStore?.getSessionMetadataForKey(key: "spotlight");
     setPeerToSpotlight(metadata);
     spotlightMetadata = metadata;
-    }
+  }
 
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {

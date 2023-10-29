@@ -585,33 +585,33 @@ class PlatformService {
       case HMSStatsListenerMethod.onLocalAudioStats:
         for (var e in statsListeners) {
           e.onLocalAudioStats(
-            hmsLocalAudioStats: arguments['local_audio_stats'],
-            track: arguments["track"],
-            peer: arguments["peer"]);
+              hmsLocalAudioStats: arguments['local_audio_stats'],
+              track: arguments["track"],
+              peer: arguments["peer"]);
         }
         break;
       case HMSStatsListenerMethod.onLocalVideoStats:
         for (var e in statsListeners) {
           e.onLocalVideoStats(
-            hmsLocalVideoStats: arguments['local_video_stats'],
-            track: arguments["track"],
-            peer: arguments["peer"]);
+              hmsLocalVideoStats: arguments['local_video_stats'],
+              track: arguments["track"],
+              peer: arguments["peer"]);
         }
         break;
       case HMSStatsListenerMethod.onRemoteAudioStats:
         for (var e in statsListeners) {
           e.onRemoteAudioStats(
-            hmsRemoteAudioStats: arguments['remote_audio_stats'],
-            track: arguments["track"],
-            peer: arguments["peer"]);
+              hmsRemoteAudioStats: arguments['remote_audio_stats'],
+              track: arguments["track"],
+              peer: arguments["peer"]);
         }
         break;
       case HMSStatsListenerMethod.onRemoteVideoStats:
         for (var e in statsListeners) {
           e.onRemoteVideoStats(
-            hmsRemoteVideoStats: arguments['remote_video_stats'],
-            track: arguments["track"],
-            peer: arguments["peer"]);
+              hmsRemoteVideoStats: arguments['remote_video_stats'],
+              track: arguments["track"],
+              peer: arguments["peer"]);
         }
         break;
       case HMSStatsListenerMethod.onRtcStats:
@@ -635,22 +635,20 @@ class PlatformService {
         break;
       case HMSUpdateListenerMethod.onUpdateRoom:
         for (var e in updateListeners) {
-          e.onRoomUpdate(
-            room: arguments['room'], update: arguments['update']);
+          e.onRoomUpdate(room: arguments['room'], update: arguments['update']);
         }
         break;
       case HMSUpdateListenerMethod.onPeerUpdate:
         for (var e in updateListeners) {
-          e.onPeerUpdate(
-            peer: arguments['peer'], update: arguments['update']);
+          e.onPeerUpdate(peer: arguments['peer'], update: arguments['update']);
         }
         break;
       case HMSUpdateListenerMethod.onTrackUpdate:
         for (var e in updateListeners) {
           e.onTrackUpdate(
-            track: arguments['track'],
-            trackUpdate: arguments['update'],
-            peer: arguments['peer']);
+              track: arguments['track'],
+              trackUpdate: arguments['update'],
+              peer: arguments['peer']);
         }
         break;
       case HMSUpdateListenerMethod.onError:
@@ -681,13 +679,13 @@ class PlatformService {
       case HMSUpdateListenerMethod.onRoleChangeRequest:
         for (var e in updateListeners) {
           e.onRoleChangeRequest(
-            roleChangeRequest: arguments['role_change_request']);
+              roleChangeRequest: arguments['role_change_request']);
         }
         break;
       case HMSUpdateListenerMethod.onChangeTrackStateRequest:
         for (var e in updateListeners) {
           e.onChangeTrackStateRequest(
-            hmsTrackChangeRequest: arguments['track_change_request']);
+              hmsTrackChangeRequest: arguments['track_change_request']);
         }
         break;
 
@@ -702,8 +700,8 @@ class PlatformService {
       case HMSUpdateListenerMethod.onAudioDeviceChanged:
         for (var e in updateListeners) {
           e.onAudioDeviceChanged(
-            currentAudioDevice: arguments["current_audio_device"],
-            availableAudioDevice: arguments["available_audio_device"]);
+              currentAudioDevice: arguments["current_audio_device"],
+              availableAudioDevice: arguments["available_audio_device"]);
         }
         break;
 
@@ -754,8 +752,8 @@ class PlatformService {
       case HMSHLSPlaybackEventMethod.onPlaybackStateChanged:
         for (var e in hlsPlaybackEventListener) {
           e.onPlaybackStateChanged(
-            playbackState: HMSHLSPlaybackStateValues.getMethodFromName(
-                arguments["playback_state"]));
+              playbackState: HMSHLSPlaybackStateValues.getMethodFromName(
+                  arguments["playback_state"]));
         }
         break;
       case HMSHLSPlaybackEventMethod.onCue:
@@ -770,8 +768,7 @@ class PlatformService {
         break;
       case HMSHLSPlaybackEventMethod.onHLSEventUpdate:
         for (var e in hlsPlaybackEventListener) {
-          e.onHLSEventUpdate(
-            playerStats: HMSHLSPlayerStats.fromMap(arguments));
+          e.onHLSEventUpdate(playerStats: HMSHLSPlayerStats.fromMap(arguments));
         }
         break;
       case HMSHLSPlaybackEventMethod.unknown:

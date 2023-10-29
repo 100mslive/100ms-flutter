@@ -786,9 +786,10 @@ class HMSSDK {
       HMSActionResultListener? hmsActionResultListener}) async {
     List<String> rolesMap = [];
 
-    if (roles != null) for (var role in roles) {
-   rolesMap.add(role.name);
- }
+    if (roles != null)
+      for (var role in roles) {
+        rolesMap.add(role.name);
+      }
 
     var arguments = {
       "mute": mute,
