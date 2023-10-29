@@ -46,6 +46,9 @@ jobs:
       - name: Get Flutter dependencies in Core SDK
         run: flutter pub get
         working-directory: packages/hmssdk_flutter
+      - name: Get Flutter dependencies in Room Kit SDK
+        run: flutter pub get
+        working-directory: packages/hms_room_kit
       - name: Dart Format
         run: dart format .
       - name: Dart Fix
@@ -54,20 +57,12 @@ jobs:
         uses: zgosalvez/github-actions-analyze-dart@v2
         with:
           working-directory: packages/hmssdk_flutter
-      - name: Check Publish Sanity for HMSSDK
-        uses: sakebook/actions-flutter-pub-publisher@v1.4.1
-        with:
-            credential: ${{ secrets.CREDENTIAL_JSON }}
-            package_directory: packages/hmssdk_flutter
-            skip_test: true
-            dry_run: true
-      - name: Check Publish Sanity for HMSSDK
-        uses: sakebook/actions-flutter-pub-publisher@v1.4.1
-        with:
-            credential: ${{ secrets.CREDENTIAL_JSON }}
-            package_directory: packages/hms_room_kit
-            skip_test: true
-            dry_run: true
+      - name: Check SDK Publish Sanity
+        run: |
+          cd packages/hmssdk_flutter
+          flutter pub publish --dry-run
+          cd ../hms_room_kit
+          flutter pub publish --dry-run
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
