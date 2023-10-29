@@ -46,9 +46,6 @@ jobs:
       - name: Get Flutter dependencies in Core SDK
         run: flutter pub get
         working-directory: packages/hmssdk_flutter
-      - name: Get Flutter dependencies in Room Kit SDK
-        run: flutter pub get
-        working-directory: packages/hms_room_kit
       - name: Dart Format
         run: dart format .
       - name: Dart Fix
