@@ -5,6 +5,10 @@
 | hms_room_kit      | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)        |
 | hmssdk_flutter    | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)    |
 
+## 1.9.1
+
+**Full Changelog**: [1.9.0...1.9.1](https://github.com/100mslive/100ms-flutter/compare/1.9.0...1.9.1)
+
 ## 1.9.0 - 2023-10-16
 
 ### Added
