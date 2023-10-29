@@ -55,11 +55,10 @@ jobs:
         uses: zgosalvez/github-actions-analyze-dart@v2
         with:
           working-directory: packages/hmssdk_flutter
-      - name: Commit Changes
+      - name: Commit and Push changes
         run: |
           git config --global user.name "🤖 100ms Flutter Bot"
           git config --global user.email "yogesh@100ms.live"
-          git status
           git add .
           git commit -m "🤖 100ms Flutter Bot: Format and Fix"
           git push --verbose
