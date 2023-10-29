@@ -27,7 +27,7 @@ on:
       - "**.txt"
 
 jobs:
-  build_appbundle:
+  check_build:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     timeout-minutes: 30
