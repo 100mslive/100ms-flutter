@@ -1,21 +1,9 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 
-- Fixed userid bug in prebuilt
-https://github.com/100mslive/100ms-flutter/pull/1601
+- Performance Improvement in the SDK
+https://github.com/100mslive/100ms-flutter/pull/1614
 
-- Added first class api for hand raise and peer list updates
-https://github.com/100mslive/100ms-flutter/pull/1600
-
-- Added peer list iterator changes for large rooms
-https://github.com/100mslive/100ms-flutter/pull/1602
-
-Bug fixes:
-
-- Fix for local tile inset when inset is disabled after role changed
-
-- VoS joined from flutter cannot be removed from stage
-
-Room Kit: 1.0.3
-Core SDK: 1.9.0
-Android SDK: 2.7.7
+Room Kit: 1.0.4
+Core SDK: 1.9.1
+Android SDK: feature/custom-texture-imp
 iOS SDK: 1.1.0
