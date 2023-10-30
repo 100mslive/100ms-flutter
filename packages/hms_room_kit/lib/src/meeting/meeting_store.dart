@@ -708,8 +708,9 @@ class MeetingStore extends ChangeNotifier
     }
     log("Calling refresh PeerList Method $peerListIterators");
     peerListIterators.clear();
-    List<String>? offStageRoles = HMSRoomLayout.roleLayoutData?.screens
-        ?.conferencing?.defaultConf?.elements?.onStageExp?.offStageRoles;
+    List<String> offStageRoles = HMSRoomLayout.roleLayoutData?.screens
+            ?.conferencing?.defaultConf?.elements?.onStageExp?.offStageRoles ??
+        [];
     offStageRoles.forEach((role) async {
       var peerListIterator = await _hmsSDKInteractor.getPeerListIterator(
           peerListIteratorOptions:

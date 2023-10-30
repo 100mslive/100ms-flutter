@@ -106,8 +106,8 @@ class _ParticipantsViewAllBottomSheetState
                   ///which will be used while removing the peer from stage
                   if (isOnStageRole) {
                     if (peer.metadata != null) {
-                      String? peerMetadata = peer.metadata;
-                      if (peerMetadata.contains("prevRole") ?? false) {
+                      String peerMetadata = peer.metadata!;
+                      if (peerMetadata.contains("prevRole")) {
                         String? previousRole =
                             jsonDecode(peer.metadata!)["prevRole"];
                         if (previousRole != null) {
