@@ -67,22 +67,22 @@ class _ScreenshareGridLayoutState extends State<ScreenshareGridLayout> {
                 ///The active dot is the current page
                 ///The inactive dots are the pages other than the current page
                 if (widget.screenshareCount > 1)
-                  Selector<MeetingStore, int>(
-                      selector: (_, meetingStore) =>
-                          meetingStore.currentScreenSharePage,
-                      builder: (_, currentScreenSharePage, __) {
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: DotsIndicator(
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Selector<MeetingStore, int>(
+                        selector: (_, meetingStore) =>
+                            meetingStore.currentScreenSharePage,
+                        builder: (_, currentScreenSharePage, __) {
+                          return DotsIndicator(
                             dotsCount: widget.screenshareCount,
                             position: currentScreenSharePage,
                             decorator: DotsDecorator(
                                 activeColor:
                                     HMSThemeColors.onSurfaceHighEmphasis,
                                 color: HMSThemeColors.onSurfaceLowEmphasis),
-                          ),
-                        );
-                      })
+                          );
+                        }),
+                  )
               ],
             )),
 
