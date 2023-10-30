@@ -81,9 +81,9 @@ class HmssdkFlutterPlugin :
     private var hmsKeyChangeObserverList = ArrayList<HMSKeyChangeObserver>()
     var hlsStreamUrl: String? = null
 
-    val renderers = HashMap<String,HMSTextureView>()
-    var hmsTextureRegistry: TextureRegistry? = null
-    var hmsBinaryMessenger: BinaryMessenger? = null
+    private val renderers = HashMap<String,HMSTextureView>()
+    private var hmsTextureRegistry: TextureRegistry? = null
+    private var hmsBinaryMessenger: BinaryMessenger? = null
     override fun onAttachedToEngine(
         @NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
     ) {
@@ -468,6 +468,8 @@ class HmssdkFlutterPlugin :
             sessionStoreSink = null
             hlsPlayerSink = null
             hmssdkFlutterPlugin = null
+            hmsBinaryMessenger = null
+            hmsTextureRegistry = null
         } else {
             Log.e("Plugin Error", "hmssdkFlutterPlugin is null in onDetachedFromEngine")
         }
@@ -640,6 +642,12 @@ class HmssdkFlutterPlugin :
                 }
             }
             renderers["${surfaceTextureEntry.id()}"] = renderer
+            val eventChannel = EventChannel(
+                hmsBinaryMessenger,
+                "HMSTextureView/Texture/" + entry.id()
+            )
+            eventChannel.setStreamHandler(renderer)
+            renderer.setTextureViewEventChannel(eventChannel)
             val data = HashMap<String,Any>()
             data["texture_id"] = surfaceTextureEntry.id()
             result.success(HMSResultExtension.toDictionary(true,data))
@@ -648,14 +656,6 @@ class HmssdkFlutterPlugin :
             HMSErrorLogger.returnHMSException("createTextureView","entry is null","NULL Error",result)
             return
         }
-//                        val eventChannel = EventChannel(
-//                            hmsBinaryMessenger,
-//                            "HMSTextureView/Texture" + entry.id()
-//                        )
-
-//                        eventChannel.setStreamHandler(renderer)
-//                        renderer.setTextureViewEventChannel(eventChannel)
-
     }
 
     private fun disposeTextureView(call: MethodCall,result: Result){

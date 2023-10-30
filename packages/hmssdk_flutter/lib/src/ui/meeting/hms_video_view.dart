@@ -34,6 +34,11 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 /// **key** - [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
 /// Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
 ///
+/// **addTrackByDefault** - To call addTrack by default as HMSVideoView is attached to the tree. Default value is [true]
+///
+/// **controller** - To control the video view, this is useful for custom usecases when you wish to control the addTrack and removeTrack
+/// track functionalities on your own.
+///
 /// Refer [HMSVideoView guide here](https://www.100ms.live/docs/flutter/v2/features/render-video)
 class HMSVideoView extends StatelessWidget {
   /// This will render video with trackId present in the track
@@ -54,8 +59,11 @@ class HMSVideoView extends StatelessWidget {
   /// [disableAutoSimulcastLayerSelect] - To disable auto simulcast (Adaptive Bitrate)
   final bool disableAutoSimulcastLayerSelect;
 
+  /// [addTrackByDefault] - To call addTrack by default as HMSVideoView is attached to the tree. Default value is [true]
   final bool addTrackByDefault;
 
+  /// [controller] - To control the video view, this is useful for custom usecases when you wish to control the addTrack and removeTrack
+  /// track functionalities on your own.
   final HMSVideoViewController? controller;
 
   ///100ms HMSVideoView
@@ -159,7 +167,7 @@ class _PlatformViewState extends State<_PlatformView> {
 
   @override
   void dispose() {
-    if(widget.controller == null){
+    if (widget.controller == null) {
       viewController?.disposeTextureView(callback: setView);
     }
     super.dispose();
@@ -179,34 +187,22 @@ class _PlatformViewState extends State<_PlatformView> {
                       ? BoxFit.contain
                       : BoxFit.cover,
                   child: SizedBox(
-                    width: widget.scaleType == ScaleType.SCALE_ASPECT_FIT?(constraints.maxHeight * (16 / 9)):constraints.maxWidth,
+                    width: widget.scaleType == ScaleType.SCALE_ASPECT_FIT
+                        ? (constraints.maxHeight * (16 / 9))
+                        : constraints.maxWidth,
                     height: constraints.maxHeight,
                     child: Center(
                       child: Transform(
                           transform: Matrix4.identity()
                             ..rotateY(widget.setMirror ? -pi : 0.0),
                           alignment: FractionalOffset.center,
-                          child: Texture(textureId: viewController!.textureId!)),
+                          child:
+                              Texture(textureId: viewController!.textureId!)),
                     ),
                   ),
                 ),
               ),
             );
-
-      // /Texture(textureId: textureId); // get textureId fom video view
-      // return AndroidView(
-      //   viewType: 'HMSVideoView',
-      //   onPlatformViewCreated: onPlatformViewCreated,
-      //   creationParamsCodec: StandardMessageCodec(),
-      //   creationParams: {
-      //     'track_id': track.trackId,
-      //     'set_mirror': track.source != "REGULAR" ? false : setMirror,
-      //     'scale_type': scaleType.value,
-      //     'match_parent': matchParent,
-      //     'disable_auto_simulcast_layer_select': disableAutoSimulcastLayerSelect
-      //   },
-      //   gestureRecognizers: {},
-      // );
     } else if (Platform.isIOS) {
       ///UIKitView for ios it uses VideoView provided by 100ms ios_sdk internally.
       return UiKitView(
