@@ -1,21 +1,17 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 
-- Fixed userid bug in prebuilt
-https://github.com/100mslive/100ms-flutter/pull/1601
+Disabled chat from dashboard but can see chat cta and send message
+- https://100ms.atlassian.net/browse/FLUT-97?atlOrigin=eyJpIjoiMWVhZTE4YzhlNzViNGY3MDhjNmUxYWI1MjhjOTE2YWYiLCJwIjoiaiJ9
 
-- Added first class api for hand raise and peer list updates
-https://github.com/100mslive/100ms-flutter/pull/1600
+Disconnect error message in toast
+- https://100ms.atlassian.net/browse/FLUT-136?atlOrigin=eyJpIjoiNWUyN2I5YTUwNzAxNDAxMzk1ZTM5YTBiZjYxMjdjYjIiLCJwIjoiaiJ9
 
-- Added peer list iterator changes for large rooms
-https://github.com/100mslive/100ms-flutter/pull/1602
+Application is crashing while joining a room with server recording ON
+- https://100ms.atlassian.net/browse/FLUT-138?atlOrigin=eyJpIjoiOTJjMTJmOTU2MDQ0NDhkNWFiNTkyNGViNjJlMzFiY2UiLCJwIjoiaiJ9
 
-Bug fixes:
-
-- Fix for local tile inset when inset is disabled after role changed
-
-- VoS joined from flutter cannot be removed from stage
+Updated android SDK to 2.7.9
 
 Room Kit: 1.0.3
-Core SDK: 1.9.0
-Android SDK: 2.7.7
+Core SDK: 1.9.1
+Android SDK: 2.7.9
 iOS SDK: 1.1.0
