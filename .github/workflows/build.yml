@@ -19,6 +19,8 @@ on:
     branches:
       - main
       - develop
+    paths:
+      - "**/*.dart"
     paths-ignore:
       - "**.md"
       - doc/**
