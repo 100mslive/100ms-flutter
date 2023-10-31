@@ -1,15 +1,13 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 
-Disabled chat from dashboard but can see chat cta and send message
-- https://100ms.atlassian.net/browse/FLUT-97?atlOrigin=eyJpIjoiMWVhZTE4YzhlNzViNGY3MDhjNmUxYWI1MjhjOTE2YWYiLCJwIjoiaiJ9
+Disabled chat from the dashboard but can see chat cta and send message
+- https://100ms.atlassian.net/browse/FLUT-97
 
 Disconnect error message in toast
-- https://100ms.atlassian.net/browse/FLUT-136?atlOrigin=eyJpIjoiNWUyN2I5YTUwNzAxNDAxMzk1ZTM5YTBiZjYxMjdjYjIiLCJwIjoiaiJ9
+- https://100ms.atlassian.net/browse/FLUT-136
 
-Application is crashing while joining a room with server recording ON
-- https://100ms.atlassian.net/browse/FLUT-138?atlOrigin=eyJpIjoiOTJjMTJmOTU2MDQ0NDhkNWFiNTkyNGViNjJlMzFiY2UiLCJwIjoiaiJ9
-
-Updated android SDK to 2.7.9
+The application is crashing while joining a room with server recording ON
+- https://100ms.atlassian.net/browse/FLUT-138
 
 Room Kit: 1.0.3
 Core SDK: 1.9.1
