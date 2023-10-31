@@ -304,13 +304,15 @@ class _HomePageState extends State<HomePage> {
                             tokenEndpoint: "Enter your token endpoint here",
                             userId: "Enter the user Id here");
                         //Checking whether authentication token is null or not
-                        call(
-                            receiverFCMToken: fcmTokenController.text,
-                            authToken: authToken);
-                        NavigationService.instance.pushNamedIfNotCurrent(
-                            AppRoute.previewPage,
-                            args: authToken);
-                                            },
+                        if (authToken != null) {
+                          call(
+                              receiverFCMToken: fcmTokenController.text,
+                              authToken: authToken);
+                          NavigationService.instance.pushNamedIfNotCurrent(
+                              AppRoute.previewPage,
+                              args: authToken);
+                        }
+                      },
                       child: const Padding(
                         padding: EdgeInsets.all(12.0),
                         child: Row(

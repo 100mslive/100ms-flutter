@@ -124,7 +124,7 @@ class HMSSDKInteractor {
   Future<HMSPeer?> getPeer({required String peerId}) async {
     List<HMSPeer>? peers = await hmsSDK.getPeers();
 
-    return peers.firstWhere((element) => element.peerId == peerId);
+    return peers?.firstWhere((element) => element.peerId == peerId);
   }
 
   void changeTrackState(HMSTrack forRemoteTrack, bool mute,
