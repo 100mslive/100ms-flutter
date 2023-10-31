@@ -1,7 +1,6 @@
 name: KtLint
 
 on:
-  # trunk-ignore(yamllint/empty-values)
   workflow_dispatch:
   pull_request:
     paths:
@@ -14,7 +13,7 @@ concurrency:
 permissions: read-all
 
 jobs:
-  SwiftLint:
+  KtLint:
     runs-on: ubuntu-latest
 
     permissions:
