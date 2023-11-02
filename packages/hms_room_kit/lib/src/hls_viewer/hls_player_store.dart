@@ -29,7 +29,7 @@ class HLSPlayerStore extends ChangeNotifier {
   ///In other case we hide th buttons after 5 seconds
   void startTimerToHideButtons() {
     _isTimerActive = true;
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 5), () {
       if (isStreamPlaying) {
         areStreamControlsVisible = false;
         notifyListeners();

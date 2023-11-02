@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart' show StandardMessageCodec;
 
 // Project imports:
@@ -126,6 +127,7 @@ class _PlatformView extends StatelessWidget {
     ///AndroidView for android it uses surfaceRenderer provided internally by webrtc.
     if (Platform.isAndroid) {
       return AndroidView(
+        hitTestBehavior: PlatformViewHitTestBehavior.transparent,
         viewType: 'HMSVideoView',
         onPlatformViewCreated: onPlatformViewCreated,
         creationParamsCodec: StandardMessageCodec(),
@@ -141,6 +143,7 @@ class _PlatformView extends StatelessWidget {
     } else if (Platform.isIOS) {
       ///UIKitView for ios it uses VideoView provided by 100ms ios_sdk internally.
       return UiKitView(
+        hitTestBehavior: PlatformViewHitTestBehavior.transparent,
         viewType: 'HMSFlutterPlatformView',
         onPlatformViewCreated: onPlatformViewCreated,
         creationParamsCodec: StandardMessageCodec(),
