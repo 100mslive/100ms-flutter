@@ -9,6 +9,13 @@ Disconnect error message in toast
 The application is crashing while joining a room with server recording ON
 - https://100ms.atlassian.net/browse/FLUT-138
 
+Unable to hide header and footer
+- https://100ms.atlassian.net/browse/FLUT-44
+
+Known Issues:
+
+- Video view rebuilds when header and footer hides/unhides
+
 Room Kit: 1.0.3
 Core SDK: 1.9.1
 Android SDK: 2.7.9
