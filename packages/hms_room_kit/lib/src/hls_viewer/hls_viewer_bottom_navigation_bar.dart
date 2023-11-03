@@ -60,7 +60,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                 builder: (_, areStreamControlsVisible, __) {
                   return AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    height: areStreamControlsVisible?40:0,
+                    height: areStreamControlsVisible ? 40 : 0,
                     child: areStreamControlsVisible
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,

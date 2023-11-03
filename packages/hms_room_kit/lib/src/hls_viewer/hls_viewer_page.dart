@@ -137,7 +137,9 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                               return AnimatedContainer(
                                                 duration: const Duration(
                                                     milliseconds: 200),
-                                                height: areStreamControlsVisible?100:0,
+                                                height: areStreamControlsVisible
+                                                    ? 100
+                                                    : 0,
                                                 child: areStreamControlsVisible
                                                     ? const HLSViewerHeader()
                                                     : Container(),
