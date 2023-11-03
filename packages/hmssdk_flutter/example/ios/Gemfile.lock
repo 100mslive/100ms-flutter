@@ -3,21 +3,26 @@ GEM
   specs:
     CFPropertyList (3.0.6)
       rexml
+    activesupport (7.0.8)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
     addressable (2.8.5)
       public_suffix (>= 2.0.2, < 6.0)
     artifactory (3.0.15)
     atomos (0.1.3)
     aws-eventstream (1.2.0)
-    aws-partitions (1.826.0)
-    aws-sdk-core (3.183.0)
+    aws-partitions (1.836.0)
+    aws-sdk-core (3.185.1)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.5)
       jmespath (~> 1, >= 1.6.1)
-    aws-sdk-kms (1.71.0)
-      aws-sdk-core (~> 3, >= 3.177.0)
+    aws-sdk-kms (1.72.0)
+      aws-sdk-core (~> 3, >= 3.184.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.135.0)
+    aws-sdk-s3 (1.136.0)
       aws-sdk-core (~> 3, >= 3.181.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.6)
@@ -29,6 +34,7 @@ GEM
     colored2 (3.1.2)
     commander (4.6.0)
       highline (~> 2.0.0)
+    concurrent-ruby (1.2.2)
     declarative (0.0.20)
     digest-crc (0.6.5)
       rake (>= 12.0.0, < 14.0.0)
@@ -36,7 +42,7 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.8.1)
     emoji_regex (3.2.3)
-    excon (0.103.0)
+    excon (0.104.0)
     faraday (1.10.3)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
@@ -106,11 +112,11 @@ GEM
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
-    fastlane-plugin-firebase_app_distribution (0.7.3)
+    fastlane-plugin-firebase_app_distribution (0.7.4)
       google-apis-firebaseappdistribution_v1 (~> 0.3.0)
     fastlane-plugin-versioning (0.5.2)
     gh_inspector (1.1.3)
-    google-apis-androidpublisher_v3 (0.49.0)
+    google-apis-androidpublisher_v3 (0.51.0)
       google-apis-core (>= 0.11.0, < 2.a)
     google-apis-core (0.11.1)
       addressable (~> 2.5, >= 2.5.1)
@@ -153,11 +159,14 @@ GEM
     http-cookie (1.0.5)
       domain_name (~> 0.5)
     httpclient (2.8.3)
+    i18n (1.14.1)
+      concurrent-ruby (~> 1.0)
     jmespath (1.6.2)
     json (2.6.3)
     jwt (2.7.1)
     mini_magick (4.12.0)
     mini_mime (1.1.5)
+    minitest (5.20.0)
     multi_json (1.15.0)
     multipart-post (2.3.0)
     nanaimo (0.3.0)
@@ -193,14 +202,16 @@ GEM
     tty-screen (0.8.1)
     tty-spinner (0.9.3)
       tty-cursor (~> 0.7)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
     uber (0.1.0)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.2)
-    unicode-display_width (2.4.2)
+    unicode-display_width (2.5.0)
     webrick (1.8.1)
     word_wrap (1.0.0)
-    xcodeproj (1.22.0)
+    xcodeproj (1.23.0)
       CFPropertyList (>= 2.3.3, < 4.0)
       atomos (~> 0.1.3)
       claide (>= 1.0.2, < 2.0)
@@ -213,14 +224,13 @@ GEM
       xcpretty (~> 0.2, >= 0.0.7)
 
 PLATFORMS
-  arm64-darwin-21
   arm64-darwin-22
-  x86_64-darwin-20
 
 DEPENDENCIES
+  activesupport (= 7.0.8)
   fastlane
   fastlane-plugin-firebase_app_distribution
   fastlane-plugin-versioning
 
 BUNDLED WITH
-   2.4.17
+   2.4.20

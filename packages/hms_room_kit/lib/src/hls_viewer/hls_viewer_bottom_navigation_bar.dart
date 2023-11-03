@@ -58,197 +58,207 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                 selector: (_, hlsPlayerStore) =>
                     hlsPlayerStore.areStreamControlsVisible,
                 builder: (_, areStreamControlsVisible, __) {
-                  return areStreamControlsVisible
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ///Leave Button
-                            HMSEmbeddedButton(
-                              onTap: () async => {
-                                await UtilityComponents.onBackPressed(context)
-                              },
-                              offColor: HMSThemeColors.alertErrorDefault,
-                              disabledBorderColor:
-                                  HMSThemeColors.alertErrorDefault,
-                              isActive: false,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: SvgPicture.asset(
-                                  "packages/hms_room_kit/lib/src/assets/icons/exit_room.svg",
-                                  colorFilter: ColorFilter.mode(
-                                      HMSThemeColors.alertErrorBrighter,
-                                      BlendMode.srcIn),
-                                  semanticsLabel: "leave_room_button",
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    height: areStreamControlsVisible ? 40 : 0,
+                    child: areStreamControlsVisible
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ///Leave Button
+                              HMSEmbeddedButton(
+                                onTap: () async => {
+                                  await UtilityComponents.onBackPressed(context)
+                                },
+                                offColor: HMSThemeColors.alertErrorDefault,
+                                disabledBorderColor:
+                                    HMSThemeColors.alertErrorDefault,
+                                isActive: false,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SvgPicture.asset(
+                                    "packages/hms_room_kit/lib/src/assets/icons/exit_room.svg",
+                                    colorFilter: ColorFilter.mode(
+                                        HMSThemeColors.alertErrorBrighter,
+                                        BlendMode.srcIn),
+                                    semanticsLabel: "leave_room_button",
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 24,
-                            ),
+                              const SizedBox(
+                                width: 24,
+                              ),
 
-                            ///Hand Raise Button
-                            Selector<MeetingStore, bool>(
-                                selector: (_, meetingStore) =>
-                                    meetingStore.isRaisedHand,
-                                builder: (_, isRaisedHand, __) {
-                                  return HMSEmbeddedButton(
-                                    onTap: () => {
-                                      context
-                                          .read<MeetingStore>()
-                                          .toggleLocalPeerHandRaise(),
-                                    },
-                                    enabledBorderColor: HMSThemeColors
-                                        .backgroundDim
-                                        .withAlpha(64),
-                                    onColor: HMSThemeColors.backgroundDim
-                                        .withAlpha(64),
-                                    isActive: !isRaisedHand,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: SvgPicture.asset(
-                                        "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
-                                        colorFilter: ColorFilter.mode(
-                                            HMSThemeColors
-                                                .onSurfaceHighEmphasis,
-                                            BlendMode.srcIn),
-                                        semanticsLabel: "hand_raise_button",
-                                      ),
-                                    ),
-                                  );
-                                }),
-                            const SizedBox(
-                              width: 24,
-                            ),
-
-                            ///Chat Button
-                            if (HMSRoomLayout.chatData != null)
-                              Selector<HLSPlayerStore, bool>(
-                                  selector: (_, hlsPlayerStore) =>
-                                      hlsPlayerStore.isChatOpened,
-                                  builder: (_, isChatOpened, __) {
+                              ///Hand Raise Button
+                              Selector<MeetingStore, bool>(
+                                  selector: (_, meetingStore) =>
+                                      meetingStore.isRaisedHand,
+                                  builder: (_, isRaisedHand, __) {
                                     return HMSEmbeddedButton(
                                       onTap: () => {
-                                        if (HMSRoomLayout.chatData?.isOverlay ??
-                                            false)
-                                          {
-                                            context
-                                                .read<HLSPlayerStore>()
-                                                .toggleIsChatOpened()
-                                          }
-                                        else
-                                          {
-                                            showModalBottomSheet(
-                                              isScrollControlled: true,
-                                              backgroundColor:
-                                                  HMSThemeColors.surfaceDim,
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(16),
-                                                    topRight:
-                                                        Radius.circular(16)),
-                                              ),
-                                              context: context,
-                                              builder: (ctx) =>
-                                                  ChangeNotifierProvider.value(
-                                                      value: context
-                                                          .read<MeetingStore>(),
-                                                      child: HMSRoomLayout
-                                                              .isParticipantsListEnabled
-                                                          ? const ChatParticipantsTabBar(
-                                                              tabIndex: 0,
-                                                            )
-                                                          : const ChatOnlyBottomSheet()),
-                                            )
-                                          }
+                                        context
+                                            .read<MeetingStore>()
+                                            .toggleLocalPeerHandRaise(),
                                       },
                                       enabledBorderColor: HMSThemeColors
                                           .backgroundDim
                                           .withAlpha(64),
                                       onColor: HMSThemeColors.backgroundDim
                                           .withAlpha(64),
-                                      isActive: !isChatOpened,
+                                      isActive: !isRaisedHand,
                                       child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Selector<MeetingStore, bool>(
-                                              selector: (_, meetingStore) =>
-                                                  meetingStore
-                                                      .isNewMessageReceived,
-                                              builder: (_, isNewMessageReceived,
-                                                  __) {
-                                                return isNewMessageReceived
-                                                    ? Badge(
-                                                        backgroundColor:
-                                                            HMSThemeColors
-                                                                .primaryDefault,
-                                                        child: SvgPicture.asset(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: SvgPicture.asset(
+                                          "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
+                                          colorFilter: ColorFilter.mode(
+                                              HMSThemeColors
+                                                  .onSurfaceHighEmphasis,
+                                              BlendMode.srcIn),
+                                          semanticsLabel: "hand_raise_button",
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                              const SizedBox(
+                                width: 24,
+                              ),
+
+                              ///Chat Button
+                              if (HMSRoomLayout.chatData != null)
+                                Selector<HLSPlayerStore, bool>(
+                                    selector: (_, hlsPlayerStore) =>
+                                        hlsPlayerStore.isChatOpened,
+                                    builder: (_, isChatOpened, __) {
+                                      return HMSEmbeddedButton(
+                                        onTap: () => {
+                                          if (HMSRoomLayout
+                                                  .chatData?.isOverlay ??
+                                              false)
+                                            {
+                                              context
+                                                  .read<HLSPlayerStore>()
+                                                  .toggleIsChatOpened()
+                                            }
+                                          else
+                                            {
+                                              showModalBottomSheet(
+                                                isScrollControlled: true,
+                                                backgroundColor:
+                                                    HMSThemeColors.surfaceDim,
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  16),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  16)),
+                                                ),
+                                                context: context,
+                                                builder: (ctx) => ChangeNotifierProvider
+                                                    .value(
+                                                        value: context.read<
+                                                            MeetingStore>(),
+                                                        child: HMSRoomLayout
+                                                                .isParticipantsListEnabled
+                                                            ? const ChatParticipantsTabBar(
+                                                                tabIndex: 0,
+                                                              )
+                                                            : const ChatOnlyBottomSheet()),
+                                              )
+                                            }
+                                        },
+                                        enabledBorderColor: HMSThemeColors
+                                            .backgroundDim
+                                            .withAlpha(64),
+                                        onColor: HMSThemeColors.backgroundDim
+                                            .withAlpha(64),
+                                        isActive: !isChatOpened,
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Selector<MeetingStore, bool>(
+                                                selector: (_, meetingStore) =>
+                                                    meetingStore
+                                                        .isNewMessageReceived,
+                                                builder: (_,
+                                                    isNewMessageReceived, __) {
+                                                  return isNewMessageReceived
+                                                      ? Badge(
+                                                          backgroundColor:
+                                                              HMSThemeColors
+                                                                  .primaryDefault,
+                                                          child:
+                                                              SvgPicture.asset(
+                                                            "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
+                                                            semanticsLabel:
+                                                                "chat_button",
+                                                            colorFilter:
+                                                                ColorFilter.mode(
+                                                                    HMSThemeColors
+                                                                        .onSurfaceHighEmphasis,
+                                                                    BlendMode
+                                                                        .srcIn),
+                                                          ),
+                                                        )
+                                                      : SvgPicture.asset(
                                                           "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
-                                                          semanticsLabel:
-                                                              "chat_button",
                                                           colorFilter:
                                                               ColorFilter.mode(
                                                                   HMSThemeColors
                                                                       .onSurfaceHighEmphasis,
                                                                   BlendMode
                                                                       .srcIn),
-                                                        ),
-                                                      )
-                                                    : SvgPicture.asset(
-                                                        "packages/hms_room_kit/lib/src/assets/icons/message_badge_off.svg",
-                                                        colorFilter:
-                                                            ColorFilter.mode(
-                                                                HMSThemeColors
-                                                                    .onSurfaceHighEmphasis,
-                                                                BlendMode
-                                                                    .srcIn),
-                                                        semanticsLabel:
-                                                            "chat_button",
-                                                      );
-                                              })),
-                                    );
-                                  }),
+                                                          semanticsLabel:
+                                                              "chat_button",
+                                                        );
+                                                })),
+                                      );
+                                    }),
 
-                            if (HMSRoomLayout.chatData != null)
-                              const SizedBox(
-                                width: 24,
-                              ),
+                              if (HMSRoomLayout.chatData != null)
+                                const SizedBox(
+                                  width: 24,
+                                ),
 
-                            ///Menu Button
-                            HMSEmbeddedButton(
-                              onTap: () async => {
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  backgroundColor: HMSThemeColors.surfaceDim,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(16),
-                                        topRight: Radius.circular(16)),
-                                  ),
-                                  context: context,
-                                  builder: (ctx) => ChangeNotifierProvider.value(
-                                      value: context.read<MeetingStore>(),
-                                      child: const HLSMoreOptionsBottomSheet()),
-                                )
-                              },
-                              enabledBorderColor:
-                                  HMSThemeColors.backgroundDim.withAlpha(64),
-                              onColor:
-                                  HMSThemeColors.backgroundDim.withAlpha(64),
-                              isActive: true,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: SvgPicture.asset(
-                                    "packages/hms_room_kit/lib/src/assets/icons/menu.svg",
-                                    colorFilter: ColorFilter.mode(
-                                        HMSThemeColors.onSurfaceHighEmphasis,
-                                        BlendMode.srcIn),
-                                    semanticsLabel: "more_button"),
+                              ///Menu Button
+                              HMSEmbeddedButton(
+                                onTap: () async => {
+                                  showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    backgroundColor: HMSThemeColors.surfaceDim,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(16),
+                                          topRight: Radius.circular(16)),
+                                    ),
+                                    context: context,
+                                    builder: (ctx) => ChangeNotifierProvider.value(
+                                        value: context.read<MeetingStore>(),
+                                        child:
+                                            const HLSMoreOptionsBottomSheet()),
+                                  )
+                                },
+                                enabledBorderColor:
+                                    HMSThemeColors.backgroundDim.withAlpha(64),
+                                onColor:
+                                    HMSThemeColors.backgroundDim.withAlpha(64),
+                                isActive: true,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SvgPicture.asset(
+                                      "packages/hms_room_kit/lib/src/assets/icons/menu.svg",
+                                      colorFilter: ColorFilter.mode(
+                                          HMSThemeColors.onSurfaceHighEmphasis,
+                                          BlendMode.srcIn),
+                                      semanticsLabel: "more_button"),
+                                ),
                               ),
-                            ),
-                          ],
-                        )
-                      : Container();
+                            ],
+                          )
+                        : Container(),
+                  );
                 }),
           ],
         ),
