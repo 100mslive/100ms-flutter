@@ -9,6 +9,9 @@ Upgrade Android SDK to fix Auto simulcast issue in HmsVideoView
 Remove default usage of Software Echo Cancellation
 - https://100ms.atlassian.net/browse/FLUT-146
 
+Post call interruption fix
+- https://100ms.atlassian.net/browse/FLUT-143
+
 Room Kit: 1.0.3
 Core SDK: 1.9.2
 Android SDK: 2.8.0
