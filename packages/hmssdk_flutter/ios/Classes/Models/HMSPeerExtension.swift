@@ -19,7 +19,7 @@ class  HMSPeerExtension {
             "is_hand_raised": peer.isHandRaised,
             "customer_description": peer.metadata ?? "",
             "customer_user_id": peer.customerUserID ?? "",
-            "joined_at": "\(peer.joinedAt)",
+            "joined_at": "\(peer.joinedAt.timeIntervalSince1970)",
             "updated_at": "\(peer.updatedAt)"
         ] as [String: Any]
 

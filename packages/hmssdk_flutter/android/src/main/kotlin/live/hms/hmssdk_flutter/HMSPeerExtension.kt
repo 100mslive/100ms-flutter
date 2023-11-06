@@ -20,7 +20,7 @@ class HMSPeerExtension {
             args["audio_track"] = HMSTrackExtension.toDictionary(peer.audioTrack)
             args["video_track"] = HMSTrackExtension.toDictionary(peer.videoTrack)
             args["network_quality"] = HMSNetworkQualityExtension.toDictionary(peer.networkQuality)
-            args["joined_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(peer.joinedAt).toString()
+            args["joined_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(peer.joinedAt).toString() // should be seconds since epoch time
 
             val auxTrackList = ArrayList<Any>()
             peer.auxiliaryTracks.forEach {
