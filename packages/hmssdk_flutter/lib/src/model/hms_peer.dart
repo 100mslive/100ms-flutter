@@ -85,26 +85,7 @@ class HMSPeer {
     // TODO: add auxiliary tracks
 
     HMSPeer peer = (map['is_local'] == true)
-        ? HMSLocalPeer(
-            peerId: map['peer_id'],
-            name: map['name'],
-            isLocal: map['is_local'],
-            isHandRaised: map['is_hand_raised'],
-            role: role,
-            metadata: map['metadata'],
-            customerUserId: map['customer_user_id'],
-            networkQuality: map['network_quality'] == null
-                ? null
-                : HMSNetworkQuality.fromMap(
-                    map['network_quality'],
-                  ),
-            joinedAt: map.containsKey("joined_at")
-                ? HMSDateExtension.convertDate(map["joined_at"])
-                : null,
-            updatedAt: map.containsKey("updated_at")
-                ? HMSDateExtension.convertDate(map["updated_at"])
-                : null,
-          )
+        ? HMSLocalPeer.fromMap(map)
         : HMSRemotePeer(
             peerId: map['peer_id'],
             name: map['name'],

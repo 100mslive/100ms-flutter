@@ -62,10 +62,10 @@ class HMSLocalPeer extends HMSPeer {
           ? HMSNetworkQuality.fromMap(map["network_quality"])
           : null,
       joinedAt: map.containsKey("joined_at")
-          ? HMSDateExtension.convertDate(map["joined_at"])
+          ? HMSDateExtension.optionalConvertDate(map["joined_at"].toInt())
           : null,
       updatedAt: map.containsKey("updated_at")
-          ? HMSDateExtension.convertDate(map["updated_at"])
+          ? HMSDateExtension.optionalConvertDate(map["updated_at"])
           : null,
     );
   }

@@ -19,8 +19,8 @@ class  HMSPeerExtension {
             "is_hand_raised": peer.isHandRaised,
             "customer_description": peer.metadata ?? "",
             "customer_user_id": peer.customerUserID ?? "",
-            "joined_at": "\(peer.joinedAt.timeIntervalSince1970)",
-            "updated_at": "\(peer.updatedAt)"
+            "joined_at": peer.joinedAt.timeIntervalSince1970,
+            "updated_at": peer.updatedAt.timeIntervalSince1970
         ] as [String: Any]
 
         if let metadata = peer.metadata {
