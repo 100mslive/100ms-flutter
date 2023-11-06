@@ -21,6 +21,10 @@
 
 - Auto simulcast in `HMSVideoView` correctly picks the layers based on the size of the view.
 
+Updated to Android SDK 2.8.0 & iOS SDK 1.2.0
+
+**Full Changelog**: [1.9.1...1.9.2](https://github.com/100mslive/100ms-flutter/compare/1.9.1...1.9.2)
+
 ## 1.9.1 - 2023-11-02
 
 ### Fixed
