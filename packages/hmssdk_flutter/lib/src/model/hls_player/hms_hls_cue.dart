@@ -22,10 +22,10 @@ class HMSHLSCue {
 
   factory HMSHLSCue.fromMap(Map map) {
     return HMSHLSCue(
-        startDate: HMSDateExtension.convertDate(map["start_date"]),
+        startDate: HMSDateExtension.convertDateFromString(map["start_date"]),
         endDate: map["end_date"] == null
             ? null
-            : HMSDateExtension.convertDate(map["end_date"]),
+            : HMSDateExtension.convertDateFromString(map["end_date"]),
         id: map["id"],
         payload: map["payload"]);
   }

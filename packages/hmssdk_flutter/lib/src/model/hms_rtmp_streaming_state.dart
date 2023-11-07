@@ -17,7 +17,7 @@ class HMSRtmpStreamingState {
         error: map["error"] != null ? HMSException.fromMap(map) : null,
         running: map['running'],
         startedAt: map['started_at'] != null
-            ? HMSDateExtension.convertDate(map['started_at'])
+            ? HMSDateExtension.convertDateFromString(map['started_at'])
             : null);
   }
 }
