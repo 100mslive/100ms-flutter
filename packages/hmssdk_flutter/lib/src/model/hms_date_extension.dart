@@ -1,11 +1,12 @@
-import 'dart:developer';
-
 ///100ms HMSDateExtension
 ///
 ///[HMSDateExtension] is used to convert android and ios native time format to DateTime type
 ///in local time zone format.
-class HMSDateExtension {
 
+///Dart imports
+import 'dart:developer';
+
+class HMSDateExtension {
   ///Returns DateTime object from String
   static DateTime convertDateFromString(String date) {
     DateTime _dateTime = DateTime.parse(date).toLocal();
