@@ -825,7 +825,6 @@ class MeetingStore extends ChangeNotifier
       roles.removeWhere((element) => element.name == "__internal_recorder");
       setParticipantsList(roles);
     }
-    Utilities.saveStringData(key: "meetingLink", value: meetingUrl);
     getCurrentAudioDevice();
     getAudioDevicesList();
     notifyListeners();

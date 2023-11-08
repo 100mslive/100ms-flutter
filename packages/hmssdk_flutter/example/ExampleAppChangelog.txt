@@ -1,18 +1,15 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 
-Disabled chat from the dashboard but can see chat cta and send message
-- https://100ms.atlassian.net/browse/FLUT-97
+Implement sending of Subscriber Stats
+- https://100ms.atlassian.net/browse/FLUT-134
 
-Disconnect error message in toast
-- https://100ms.atlassian.net/browse/FLUT-136
+Upgrade Android SDK to fix Auto simulcast issue in HmsVideoView
+- https://100ms.atlassian.net/browse/FLUT-145
 
-The application is crashing while joining a room with server recording ON
-- https://100ms.atlassian.net/browse/FLUT-138
-
-Unable to hide header and footer
-- https://100ms.atlassian.net/browse/FLUT-44
+Remove default usage of Software Echo Cancellation
+- https://100ms.atlassian.net/browse/FLUT-146
 
 Room Kit: 1.0.3
-Core SDK: 1.9.1
-Android SDK: 2.7.9
-iOS SDK: 1.1.0
+Core SDK: 1.9.2
+Android SDK: 2.8.0
+iOS SDK: 1.2.0
