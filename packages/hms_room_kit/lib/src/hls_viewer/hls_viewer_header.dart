@@ -46,7 +46,7 @@ class HLSViewerHeader extends StatelessWidget {
                         : Image.network(
                             HMSRoomLayout.roleLayoutData!.logo!.url!,
                             errorBuilder: (context, exception, _) {
-                                log('Error is $exception');
+                              log('Error is $exception');
                               return const SizedBox(
                                 width: 30,
                                 height: 30,
