@@ -1,4 +1,5 @@
 ///Dart imports
+import 'dart:developer';
 import 'dart:io';
 
 ///Package imports
@@ -60,6 +61,14 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                                     )
                                   : Image.network(
                                       HMSRoomLayout.roleLayoutData!.logo!.url!,
+                                      errorBuilder:
+                                          (context, exception, _) {
+                                        log('Error is $exception');
+                                        return const SizedBox(
+                                          width: 30,
+                                          height: 30,
+                                        );
+                                      },
                                       height: 30,
                                       width: 30,
                                     ),

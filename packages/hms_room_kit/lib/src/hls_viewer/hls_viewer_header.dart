@@ -1,4 +1,5 @@
 ///Dart imports
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -44,6 +45,13 @@ class HLSViewerHeader extends StatelessWidget {
                             HMSRoomLayout.roleLayoutData!.logo!.url!)
                         : Image.network(
                             HMSRoomLayout.roleLayoutData!.logo!.url!,
+                            errorBuilder: (context, exception, _) {
+                                log('Error is $exception');
+                              return const SizedBox(
+                                width: 30,
+                                height: 30,
+                              );
+                            },
                             height: 30,
                             width: 30,
                           ),
