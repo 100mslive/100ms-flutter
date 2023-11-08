@@ -2236,7 +2236,6 @@ class MeetingStore extends ChangeNotifier
         toggleCameraMuteState();
         lastVideoStatus = false;
       }
-
     } else if (state == AppLifecycleState.paused) {
       HMSLocalPeer? localPeer = await getLocalPeer();
       if (localPeer != null &&
