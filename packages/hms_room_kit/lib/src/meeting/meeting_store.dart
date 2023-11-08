@@ -2237,18 +2237,6 @@ class MeetingStore extends ChangeNotifier
         lastVideoStatus = false;
       }
 
-      List<HMSPeer>? peersList = await getPeers();
-
-      peersList?.forEach((element) {
-        if (!element.isLocal && (Platform.isAndroid)) {
-          (element.audioTrack as HMSRemoteAudioTrack?)?.setVolume(10.0);
-          element.auxiliaryTracks?.forEach((element) {
-            if (element.kind == HMSTrackKind.kHMSTrackKindAudio) {
-              (element as HMSRemoteAudioTrack?)?.setVolume(10.0);
-            }
-          });
-        }
-      });
     } else if (state == AppLifecycleState.paused) {
       HMSLocalPeer? localPeer = await getLocalPeer();
       if (localPeer != null &&

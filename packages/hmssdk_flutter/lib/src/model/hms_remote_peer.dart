@@ -63,7 +63,6 @@ class HMSRemotePeer extends HMSPeer {
 
   factory HMSRemotePeer.fromMap(Map map) {
     HMSRole role = HMSRole.fromMap(map['role']);
-    // TODO: add auxiliary tracks
     HMSRemotePeer peer = HMSRemotePeer(
       peerId: map['peer_id'],
       name: map['name'],
@@ -76,10 +75,10 @@ class HMSRemotePeer extends HMSPeer {
           ? HMSNetworkQuality.fromMap(map["network_quality"])
           : null,
       joinedAt: map.containsKey("joined_at")
-          ? HMSDateExtension.convertDate(map["joined_at"])
+          ? HMSDateExtension.convertDateFromEpoch(map["joined_at"])
           : null,
       updatedAt: map.containsKey("updated_at")
-          ? HMSDateExtension.convertDate(map["updated_at"])
+          ? HMSDateExtension.convertDateFromEpoch(map["updated_at"])
           : null,
     );
 

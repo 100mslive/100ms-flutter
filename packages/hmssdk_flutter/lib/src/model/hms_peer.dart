@@ -1,6 +1,5 @@
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/model/hms_date_extension.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 ///100ms HMSPeer.
@@ -80,61 +79,9 @@ class HMSPeer {
   int get hashCode => peerId.hashCode;
 
   factory HMSPeer.fromMap(Map map) {
-    HMSRole role = HMSRole.fromMap(map['role']);
-
-    // TODO: add auxiliary tracks
-
-    HMSPeer peer = (map['is_local'] == true)
-        ? HMSLocalPeer(
-            peerId: map['peer_id'],
-            name: map['name'],
-            isLocal: map['is_local'],
-            isHandRaised: map['is_hand_raised'],
-            role: role,
-            metadata: map['metadata'],
-            customerUserId: map['customer_user_id'],
-            networkQuality: map['network_quality'] == null
-                ? null
-                : HMSNetworkQuality.fromMap(
-                    map['network_quality'],
-                  ),
-            joinedAt: map.containsKey("joined_at")
-                ? HMSDateExtension.convertDate(map["joined_at"])
-                : null,
-            updatedAt: map.containsKey("updated_at")
-                ? HMSDateExtension.convertDate(map["updated_at"])
-                : null,
-          )
-        : HMSRemotePeer(
-            peerId: map['peer_id'],
-            name: map['name'],
-            isLocal: map['is_local'],
-            isHandRaised: map['is_hand_raised'],
-            role: role,
-            metadata: map['metadata'],
-            customerUserId: map['customer_user_id'],
-            networkQuality: map['network_quality'] == null
-                ? null
-                : HMSNetworkQuality.fromMap(map['network_quality']),
-            joinedAt: map.containsKey("joined_at")
-                ? HMSDateExtension.convertDate(map["joined_at"])
-                : null,
-            updatedAt: map.containsKey("updated_at")
-                ? HMSDateExtension.convertDate(map["updated_at"])
-                : null,
-          );
-
-    if (map['audio_track'] != null) {
-      peer.audioTrack = HMSAudioTrack.fromMap(
-          map: map['audio_track']!, isLocal: peer.isLocal);
-    }
-
-    if (map['video_track'] != null) {
-      peer.videoTrack = HMSVideoTrack.fromMap(
-          map: map['video_track']!, isLocal: peer.isLocal);
-    }
-
-    return peer;
+    return (map['is_local'] == true)
+        ? HMSLocalPeer.fromMap(map)
+        : HMSRemotePeer.fromMap(map);
   }
 
   @override
