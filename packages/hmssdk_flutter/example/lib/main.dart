@@ -181,7 +181,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
       themeMode: _themeMode,
     );
   }
-
 }
 
 class HomePage extends StatefulWidget {
