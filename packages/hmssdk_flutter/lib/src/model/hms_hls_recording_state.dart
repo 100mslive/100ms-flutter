@@ -19,7 +19,7 @@ class HMSHLSRecordingState {
             : null,
         running: map['running'],
         startedAt: map['started_at'] != null
-            ? HMSDateExtension.convertDate(map['started_at'])
+            ? HMSDateExtension.convertDateFromString(map['started_at'])
             : null);
   }
 }
