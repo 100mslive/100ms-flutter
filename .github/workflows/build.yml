@@ -46,9 +46,6 @@ jobs:
       - name: Get Flutter dependencies in Core SDK
         run: flutter pub get
         working-directory: packages/hmssdk_flutter
-      - name: Get Flutter dependencies in Room Kit
-        run: flutter pub get
-        working-directory: packages/hms_room_kit
       - name: Dart Format
         run: dart format .
       - name: Dart Fix
@@ -57,10 +54,6 @@ jobs:
         uses: invertase/github-action-dart-analyzer@v1
         with:
           working-directory: packages/hmssdk_flutter
-      - name: Flutter Analyze in Room Kit
-        uses: invertase/github-action-dart-analyzer@v1
-        with:
-            working-directory: packages/hms_room_kit
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
