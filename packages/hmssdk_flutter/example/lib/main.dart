@@ -60,8 +60,6 @@ class HMSExampleApp extends StatefulWidget {
 class _HMSExampleAppState extends State<HMSExampleApp> {
   ThemeMode _themeMode = ThemeMode.dark;
   Uri? _currentURI;
-  bool isDarkMode =
-      WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
 
   ThemeData _darkTheme = ThemeData(
       bottomSheetTheme: BottomSheetThemeData(
@@ -90,7 +88,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     _initURIHandler();
     _incomingLinkHandler();
     initDynamicLinks();
-    setThemeMode();
   }
 
   Future<void> _initURIHandler() async {
@@ -167,15 +164,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     }
   }
 
-  void setThemeMode() async {
-    _themeMode = await Utilities.getBoolData(key: "dark-mode") ?? true
-        ? ThemeMode.dark
-        : ThemeMode.light;
-    if (_themeMode == ThemeMode.light) {
-      changeTheme(_themeMode);
-    }
-  }
-
   @override
   void dispose() {
     _streamSubscription?.cancel();
@@ -194,13 +182,6 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     );
   }
 
-  void changeTheme(ThemeMode themeMode) {
-    setState(() {
-      _themeMode = themeMode;
-      isDarkMode = themeMode == ThemeMode.dark;
-      updateColor(_themeMode);
-    });
-  }
 }
 
 class HomePage extends StatefulWidget {
