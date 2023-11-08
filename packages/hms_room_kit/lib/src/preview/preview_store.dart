@@ -100,7 +100,6 @@ class PreviewStore extends ChangeNotifier
       }
     }
     this.localTracks = videoTracks;
-    Utilities.saveStringData(key: "meetingLink", value: meetingUrl);
     getRoles();
     getCurrentAudioDevice();
     getAudioDevicesList();
