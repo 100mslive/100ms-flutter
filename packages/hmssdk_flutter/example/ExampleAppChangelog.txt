@@ -12,6 +12,12 @@ Remove default usage of Software Echo Cancellation
 Post call interruption fix
 - https://100ms.atlassian.net/browse/FLUT-143
 
+Persist Room meeting link after successfully joining the Room
+- https://100ms.atlassian.net/browse/FLUT-147
+
+Incorrect DateTime format on iOS prevents the user from Joining a Room
+- https://100ms.atlassian.net/browse/FLUT-144
+
 Room Kit: 1.0.3
 Core SDK: 1.9.2
 Android SDK: 2.8.0
