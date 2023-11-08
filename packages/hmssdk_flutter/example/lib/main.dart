@@ -301,6 +301,8 @@ class _HomePageState extends State<HomePage> {
       Constant.roomCode = meetingLinkController.text.trim();
     }
 
+    Utilities.saveStringData(
+        key: "meetingLink", value: meetingLinkController.text.trim());
     FocusManager.instance.primaryFocus?.unfocus();
     Navigator.push(
         context,
