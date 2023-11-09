@@ -5,21 +5,17 @@
 | hms_room_kit      | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)        |
 | hmssdk_flutter    | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)    |
 
-## 1.9.2 - 2023-11-06
-
-### Breaking 
-
-- Removed default usage of Software Echo Cancellation. Now, by default Hardware echo cancellation will be used. 
-
-  To use Software Echo Cancellation, you need to explicitly disable it by setting `useHardwareAcousticEchoCanceler` to `false` in `HMSAudioTrackSetting` while building the `HMSSDK` instance. Checkout the docs [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/configure-your-device/microphone/echo-cancellation)
+## 1.9.2 - 2023-11-09
 
 ### Added
 
 - Added `Subscriber Stats` for improved debugging of subscription issues.
 
-### Fixed
+### Changed
 
 - Auto simulcast in `HMSVideoView` correctly picks the layers based on the size of the view.
+
+- Removed default usage of Software Echo Cancellation. Now, by default Hardware echo cancellation will be used. More information is available [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/configure-your-device/microphone/echo-cancellation)
 
 Updated to Android SDK 2.8.0 & iOS SDK 1.2.0
 
