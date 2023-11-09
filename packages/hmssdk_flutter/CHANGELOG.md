@@ -11,6 +11,8 @@
 
 - Auto simulcast in `HMSVideoView` correctly picks the layers based on the size of the view.
 
+- Resolved an issue where after a Call Interruption the voices of users were robotic
+
 - Removed default usage of Software Echo Cancellation. Now, by default Hardware echo cancellation will be used. More information is available [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/configure-your-device/microphone/echo-cancellation)
 
 Updated to Android SDK 2.8.0 & iOS SDK 1.2.0
