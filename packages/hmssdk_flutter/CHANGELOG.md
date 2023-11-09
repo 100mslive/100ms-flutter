@@ -7,10 +7,6 @@
 
 ## 1.9.2 - 2023-11-09
 
-### Added
-
-- Added `Subscriber Stats` for improved debugging of subscription issues.
-
 ### Changed
 
 - Auto simulcast in `HMSVideoView` correctly picks the layers based on the size of the view.
