@@ -452,10 +452,10 @@ packages:
     dependency: "direct main"
     description:
       name: provider
-      sha256: cdbe7530b12ecd9eb455bdaa2fcb8d4dad22e80b8afb4798b41479d5ce26847f
+      sha256: "659adaefa8196fa2799d7ac3dca3c2e831e549dc40b082d07a599fe9150d75fc"
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.5"
+    version: "6.1.0"
   share_plus:
     dependency: "direct main"
     description:
