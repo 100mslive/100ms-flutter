@@ -28,8 +28,6 @@ class HMSTrackSettingsExtension {
             hmsVideoTrackHashMap: HashMap<String, Any?>?,
         ): HMSTrackSettings {
             var hmsAudioTrackSettings = HMSAudioTrackSettings.Builder()
-
-            hmsAudioTrackSettings.setUseHardwareAcousticEchoCanceler(false)
             hmsAudioTrackSettings.setPhoneCallMuteState(PhoneCallState.DISABLE_MUTE_ON_VOIP_PHONE_CALL_RING)
 
             hmsAudioTrackHashMap?.let { audioHashMap ->
