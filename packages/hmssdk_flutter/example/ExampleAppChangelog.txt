@@ -18,6 +18,9 @@ Persist Room meeting link after successfully joining the Room
 Incorrect DateTime format on iOS prevents the user from Joining a Room
 - https://100ms.atlassian.net/browse/FLUT-144
 
+To handle error in case the logo url returns error
+- https://100ms.atlassian.net/browse/FLUT-152
+
 Room Kit: 1.0.3
 Core SDK: 1.9.2
 Android SDK: 2.8.0
