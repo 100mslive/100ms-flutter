@@ -9,7 +9,6 @@ on:
   push:
     branches:
       - main
-      - develop
   pull_request:
     types:
       - opened
@@ -19,8 +18,6 @@ on:
     branches:
       - main
       - develop
-    paths:
-      - "**/*.dart"
     paths-ignore:
       - "**.md"
       - doc/**
@@ -56,10 +53,6 @@ jobs:
         uses: invertase/github-action-dart-analyzer@v1
         with:
           working-directory: packages/hmssdk_flutter
-      - name: Flutter Analyze in Room Kit
-        uses: invertase/github-action-dart-analyzer@v1
-        with:
-            working-directory: packages/hms_room_kit
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:

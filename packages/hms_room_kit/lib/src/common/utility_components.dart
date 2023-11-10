@@ -1087,7 +1087,7 @@ class UtilityComponents {
         color: HMSThemeColors.backgroundDefault.withOpacity(0.5),
         child: HMSDisconnectedToast(
           errorDescription:
-              "CODE: ${exception.code?.errorCode}, ${exception.message}",
+              "CODE: ${exception.code?.errorCode}, ${exception.description}",
           onLeavePressed: onLeavePressed,
         ));
   }

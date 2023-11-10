@@ -1,21 +1,27 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 
-- Fixed userid bug in prebuilt
-https://github.com/100mslive/100ms-flutter/pull/1601
+Implement sending of Subscriber Stats
+- https://100ms.atlassian.net/browse/FLUT-134
 
-- Added first class api for hand raise and peer list updates
-https://github.com/100mslive/100ms-flutter/pull/1600
+Upgrade Android SDK to fix Auto simulcast issue in HmsVideoView
+- https://100ms.atlassian.net/browse/FLUT-145
 
-- Added peer list iterator changes for large rooms
-https://github.com/100mslive/100ms-flutter/pull/1602
+Remove default usage of Software Echo Cancellation
+- https://100ms.atlassian.net/browse/FLUT-146
 
-Bug fixes:
+Post call interruption fix
+- https://100ms.atlassian.net/browse/FLUT-143
 
-- Fix for local tile inset when inset is disabled after role changed
+Persist Room meeting link after successfully joining the Room
+- https://100ms.atlassian.net/browse/FLUT-147
 
-- VoS joined from flutter cannot be removed from stage
+Incorrect DateTime format on iOS prevents the user from Joining a Room
+- https://100ms.atlassian.net/browse/FLUT-144
+
+To handle error in case the logo url returns error
+- https://100ms.atlassian.net/browse/FLUT-152
 
 Room Kit: 1.0.3
-Core SDK: 1.9.0
-Android SDK: 2.7.7
-iOS SDK: 1.1.0
+Core SDK: 1.9.2
+Android SDK: 2.8.0
+iOS SDK: 1.2.0

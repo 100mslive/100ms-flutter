@@ -92,37 +92,25 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                       builder: (_, hasHlsStarted, __) {
                                         _setStreamStatus(hasHlsStarted);
                                         return (hasHlsStarted)
-                                            ? Selector<HLSPlayerStore, bool>(
-                                                selector: (_, hlsPlayerStore) =>
-                                                    hlsPlayerStore
-                                                        .areStreamControlsVisible,
-                                                builder: (_,
-                                                    areStreamControlsVisible,
-                                                    __) {
-                                                  return SizedBox(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .height,
-                                                    child: HLSPlayer(
-                                                      key: Key(context
-                                                              .read<
-                                                                  MeetingStore>()
-                                                              .localPeer
-                                                              ?.peerId ??
-                                                          "HLS_PLAYER"),
-                                                      ratio: Utilities
-                                                          .getHLSPlayerDefaultRatio(
-                                                              MediaQuery.of(
-                                                                      context)
-                                                                  .size),
-                                                    ),
-                                                  );
-                                                })
+                                            ? SizedBox(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                height: MediaQuery.of(context)
+                                                    .size
+                                                    .height,
+                                                child: HLSPlayer(
+                                                  key: Key(context
+                                                          .read<MeetingStore>()
+                                                          .localPeer
+                                                          ?.peerId ??
+                                                      "HLS_PLAYER"),
+                                                  ratio: Utilities
+                                                      .getHLSPlayerDefaultRatio(
+                                                          MediaQuery.of(context)
+                                                              .size),
+                                                ),
+                                              )
                                             : SizedBox(
                                                 width: MediaQuery.of(context)
                                                     .size
@@ -146,9 +134,16 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                     .areStreamControlsVisible,
                                             builder: (_,
                                                 areStreamControlsVisible, __) {
-                                              return areStreamControlsVisible
-                                                  ? const HLSViewerHeader()
-                                                  : Container();
+                                              return AnimatedContainer(
+                                                duration: const Duration(
+                                                    milliseconds: 200),
+                                                height: areStreamControlsVisible
+                                                    ? 100
+                                                    : 0,
+                                                child: areStreamControlsVisible
+                                                    ? const HLSViewerHeader()
+                                                    : Container(),
+                                              );
                                             }),
                                         const HLSViewerBottomNavigationBar()
                                       ],

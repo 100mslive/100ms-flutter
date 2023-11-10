@@ -12,7 +12,9 @@ class HMSStreamingState {
             map["running"] = hmsRtmpStreamingState.running
             map["error"] = HMSExceptionExtension.toDictionary(hmsRtmpStreamingState.error)
             if (hmsRtmpStreamingState.running) {
-                map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(hmsRtmpStreamingState.startedAt).toString()
+                hmsRtmpStreamingState.startedAt?.let {
+                    map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(hmsRtmpStreamingState.startedAt).toString()
+                }
             }
             return map
         }
@@ -23,7 +25,9 @@ class HMSStreamingState {
             map["running"] = hmsServerRecordingState.running
             map["error"] = HMSExceptionExtension.toDictionary(hmsServerRecordingState.error)
             if (hmsServerRecordingState.running) {
-                map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(hmsServerRecordingState.startedAt).toString()
+                hmsServerRecordingState.startedAt?.let {
+                    map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(hmsServerRecordingState.startedAt).toString()
+                }
             }
             return map
         }
@@ -34,7 +38,9 @@ class HMSStreamingState {
             map["running"] = hmsBrowserRecordingState.running
             map["error"] = HMSExceptionExtension.toDictionary(hmsBrowserRecordingState.error)
             if (hmsBrowserRecordingState.running) {
-                map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(hmsBrowserRecordingState.startedAt).toString()
+                hmsBrowserRecordingState.startedAt?.let {
+                    map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(hmsBrowserRecordingState.startedAt).toString()
+                }
             }
             map["initialising"] = hmsBrowserRecordingState.initialising
             return map
@@ -57,7 +63,9 @@ class HMSStreamingState {
             if (hmsHlsRecordingState == null)return null
             map["running"] = hmsHlsRecordingState.running
             if (hmsHlsRecordingState.running == true) {
-                map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(hmsHlsRecordingState.startedAt).toString()
+                hmsHlsRecordingState.startedAt?.let {
+                    map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(hmsHlsRecordingState.startedAt).toString()
+                }
             }
             return map
         }
