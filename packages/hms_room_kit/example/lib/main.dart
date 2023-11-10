@@ -27,6 +27,5 @@ class MyApp extends StatelessWidget {
           primaryColor: const Color.fromARGB(255, 13, 107, 184),
           scaffoldBackgroundColor: Colors.black),
     );
-}
   }
-
+}

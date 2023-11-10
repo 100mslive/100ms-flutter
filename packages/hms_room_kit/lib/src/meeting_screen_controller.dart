@@ -69,7 +69,7 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
     Utilities.initForegroundTask();
   }
 
-  ///This function sets the HLSPlayerStore if the role is hls-viewer  
+  ///This function sets the HLSPlayerStore if the role is hls-viewer
   void _setHLSPlayerStore() {
     _hlsPlayerStore ??= HLSPlayerStore();
   }
