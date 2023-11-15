@@ -746,7 +746,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   void switchAudioOutput({required HMSAudioDevice audioDevice}) {
-    if(!isSpeakerOn){
+    if (!isSpeakerOn) {
       toggleSpeaker();
     }
     selfChangeAudioDevice = true;
@@ -930,15 +930,6 @@ class MeetingStore extends ChangeNotifier
       required HMSTrackUpdate trackUpdate,
       required HMSPeer peer}) {
     log("onTrackUpdate-> track: ${track.toString()} peer: ${peer.name} update: ${trackUpdate.name}");
-
-    if (!isSpeakerOn &&
-        track.kind == HMSTrackKind.kHMSTrackKindAudio &&
-        trackUpdate == HMSTrackUpdate.trackAdded) {
-      if (track.runtimeType == HMSRemoteAudioTrack) {
-        HMSRemoteAudioTrack currentTrack = track as HMSRemoteAudioTrack;
-        currentTrack.setPlaybackAllowed(false);
-      }
-    }
 
     if (peer.isLocal) {
       localPeer = peer;
@@ -1906,7 +1897,7 @@ class MeetingStore extends ChangeNotifier
   // }
 
   void switchAudioOutputUsingiOSUI() {
-    if(!isSpeakerOn){
+    if (!isSpeakerOn) {
       toggleSpeaker();
     }
     _hmsSDKInteractor.switchAudioOutputUsingiOSUI();

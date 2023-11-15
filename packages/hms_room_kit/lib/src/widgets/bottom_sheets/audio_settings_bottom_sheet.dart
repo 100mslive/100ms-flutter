@@ -96,9 +96,12 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
                                 child: ListView(
                                 children: [
                                   GestureDetector(
-                                    onTap: () => context
-                                            .read<MeetingStore>()
-                                            .switchAudioOutputUsingiOSUI(),
+                                    onTap: () => {
+                                      Navigator.pop(context),
+                                      context
+                                          .read<MeetingStore>()
+                                          .switchAudioOutputUsingiOSUI()
+                                    },
                                     child: ListTile(
                                       horizontalTitleGap: 2,
                                       enabled: false,
