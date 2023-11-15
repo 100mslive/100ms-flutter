@@ -252,19 +252,12 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                           ///This renders the audio device selection button
                           ///If the role is allowed to publish audio, we render the audio device selection button
                           ///else we render an empty SizedBox
-                          Selector<MeetingStore, HMSAudioDevice?>(
+                          Selector<MeetingStore, Tuple2<HMSAudioDevice?,bool>>(
                               selector: (_, meetingStore) =>
-                                  meetingStore.currentAudioDeviceMode,
-                              builder: (_, audioDevice, __) {
+                                  Tuple2(meetingStore.currentAudioDeviceMode,meetingStore.isSpeakerOn),
+                              builder: (_, data, __) {
                                 return HMSEmbeddedButton(
                                     onTap: () {
-                                      ///If the platform is iOS, we use the iOS UI to switch audio output
-                                      ///on Android we use the [AudioSettingsBottomSheet] to switch audio output
-                                      if (Platform.isIOS) {
-                                        context
-                                            .read<MeetingStore>()
-                                            .switchAudioOutputUsingiOSUI();
-                                      } else {
                                         showModalBottomSheet(
                                             isScrollControlled: true,
                                             backgroundColor: Colors.transparent,
@@ -275,12 +268,12 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                                                         .read<MeetingStore>(),
                                                     child:
                                                         const AudioSettingsBottomSheet()));
-                                      }
+                                      
                                     },
                                     onColor: HMSThemeColors.backgroundDim,
                                     isActive: true,
-                                    child: SvgPicture.asset(
-                                      'packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(audioDevice)}.svg',
+                                    child: 
+                                    SvgPicture.asset('packages/hms_room_kit/lib/src/assets/icons/${!data.item2?"speaker_state_off":Utilities.getAudioDeviceIconName(data.item1)}.svg',
                                       colorFilter: ColorFilter.mode(
                                           HMSThemeColors.onSurfaceHighEmphasis,
                                           BlendMode.srcIn),

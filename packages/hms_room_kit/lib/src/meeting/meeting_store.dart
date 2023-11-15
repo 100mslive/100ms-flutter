@@ -746,6 +746,9 @@ class MeetingStore extends ChangeNotifier
   }
 
   void switchAudioOutput({required HMSAudioDevice audioDevice}) {
+    if(!isSpeakerOn){
+      toggleSpeaker();
+    }
     selfChangeAudioDevice = true;
     currentAudioDeviceMode = audioDevice;
     _hmsSDKInteractor.switchAudioOutput(audioDevice: audioDevice);
@@ -1903,6 +1906,9 @@ class MeetingStore extends ChangeNotifier
   // }
 
   void switchAudioOutputUsingiOSUI() {
+    if(!isSpeakerOn){
+      toggleSpeaker();
+    }
     _hmsSDKInteractor.switchAudioOutputUsingiOSUI();
   }
 
