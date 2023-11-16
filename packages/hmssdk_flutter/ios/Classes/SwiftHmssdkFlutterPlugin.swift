@@ -1202,7 +1202,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         if room.hlsStreamingState.running {
             if !room.hlsStreamingState.variants.isEmpty {
-                hlsStreamUrl = room.hlsStreamingState.variants[0].url.absoluteString
+                hlsStreamUrl = room.hlsStreamingState.variants[0].url?.absoluteString
             }
         }
 
@@ -1227,7 +1227,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         if room.hlsStreamingState.running {
             if !room.hlsStreamingState.variants.isEmpty {
-                hlsStreamUrl = room.hlsStreamingState.variants[0].url.absoluteString
+                hlsStreamUrl = room.hlsStreamingState.variants[0].url?.absoluteString
             }
         }
 
