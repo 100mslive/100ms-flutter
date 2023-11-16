@@ -525,6 +525,7 @@ class HmssdkFlutterPlugin :
         HMSPipAction.disposePIP(activity)
         HMSPeerListIteratorAction.clearIteratorMap()
         removeAllKeyChangeListener()
+        setIsRoomAudioUnmutedLocally(true)
     }
 
     private fun destroy(result: Result) {
@@ -871,6 +872,7 @@ class HmssdkFlutterPlugin :
         HMSPipAction.disposePIP(activity)
         HMSPeerListIteratorAction.clearIteratorMap()
         removeAllKeyChangeListener()
+        setIsRoomAudioUnmutedLocally(true)
     }
 
     private fun isAllowedToEndMeeting(): Boolean? {
@@ -1124,6 +1126,7 @@ class HmssdkFlutterPlugin :
                     HMSPipAction.disposePIP(activity)
                     HMSPeerListIteratorAction.clearIteratorMap()
                     removeAllKeyChangeListener()
+                    setIsRoomAudioUnmutedLocally(true)
                 }
                 if (args["data"] != null) {
                     CoroutineScope(Dispatchers.Main).launch {

@@ -191,6 +191,8 @@ class _PreviewPageState extends State<PreviewPage> {
                         roomCode: Constant.roomCode,
                         localPeerNetworkQuality: null,
                         user: nameController.text,
+                        isRoomMute: previewStore.isRoomMute,
+                        currentAudioDeviceMode: previewStore.currentAudioDeviceMode
                       ),
                     )
                   : SingleChildScrollView(

@@ -1,6 +1,3 @@
-///Dart imports
-import 'dart:io';
-
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -111,25 +108,17 @@ class PreviewBottomButtonSection extends StatelessWidget {
                           .contains("audio"))
                     HMSEmbeddedButton(
                         onTap: () {
-                          ///For iOS, This will open the native audio device selection UI
-                          ///
-                          ///For Android, it will open a bottom sheet
-                          ///with the list of available audio devices
-                          if (Platform.isIOS) {
-                            previewStore.switchAudioOutputUsingiOSUI();
-                          } else {
-                            showModalBottomSheet(
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                context: context,
-                                builder: (ctx) => ChangeNotifierProvider.value(
-                                    value: previewStore,
-                                    child: const PreviewDeviceSettings()));
-                          }
+                          showModalBottomSheet(
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              builder: (ctx) => ChangeNotifierProvider.value(
+                                  value: previewStore,
+                                  child: const PreviewDeviceSettings()));
                         },
                         isActive: true,
                         child: SvgPicture.asset(
-                          'packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(previewStore.currentAudioOutputDevice)}.svg',
+                          'packages/hms_room_kit/lib/src/assets/icons/${previewStore.isRoomMute?"speaker_state_off":Utilities.getAudioDeviceIconName(previewStore.currentAudioOutputDevice)}.svg',
                           colorFilter: ColorFilter.mode(
                               HMSThemeColors.onSurfaceHighEmphasis,
                               BlendMode.srcIn),
