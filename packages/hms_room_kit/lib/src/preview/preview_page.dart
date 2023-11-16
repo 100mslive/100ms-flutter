@@ -187,13 +187,13 @@ class _PreviewPageState extends State<PreviewPage> {
                   ? ListenableProvider.value(
                       value: _meetingStore,
                       child: MeetingScreenController(
-                        role: previewStore.peer?.role,
-                        roomCode: Constant.roomCode,
-                        localPeerNetworkQuality: null,
-                        user: nameController.text,
-                        isRoomMute: previewStore.isRoomMute,
-                        currentAudioDeviceMode: previewStore.currentAudioDeviceMode
-                      ),
+                          role: previewStore.peer?.role,
+                          roomCode: Constant.roomCode,
+                          localPeerNetworkQuality: null,
+                          user: nameController.text,
+                          isRoomMute: previewStore.isRoomMute,
+                          currentAudioDeviceMode:
+                              previewStore.currentAudioDeviceMode),
                     )
                   : SingleChildScrollView(
                       ///We show circular progress indicator until the local peer is null

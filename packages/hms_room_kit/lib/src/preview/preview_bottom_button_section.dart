@@ -118,7 +118,7 @@ class PreviewBottomButtonSection extends StatelessWidget {
                         },
                         isActive: true,
                         child: SvgPicture.asset(
-                          'packages/hms_room_kit/lib/src/assets/icons/${previewStore.isRoomMute?"speaker_state_off":Utilities.getAudioDeviceIconName(previewStore.currentAudioOutputDevice)}.svg',
+                          'packages/hms_room_kit/lib/src/assets/icons/${previewStore.isRoomMute ? "speaker_state_off" : Utilities.getAudioDeviceIconName(previewStore.currentAudioOutputDevice)}.svg',
                           colorFilter: ColorFilter.mode(
                               HMSThemeColors.onSurfaceHighEmphasis,
                               BlendMode.srcIn),
