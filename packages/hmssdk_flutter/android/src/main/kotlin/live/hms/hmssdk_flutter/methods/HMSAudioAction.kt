@@ -22,10 +22,10 @@ class HMSAudioAction {
                     result.success(isAudioMute(call, hmssdk))
                 }
                 "mute_room_audio_locally" -> {
-                    toggleAudioMuteAll(true, result, hmssdk,hmssdkFlutterPlugin)
+                    toggleAudioMuteAll(true, result, hmssdk, hmssdkFlutterPlugin)
                 }
                 "un_mute_room_audio_locally" -> {
-                    toggleAudioMuteAll(false, result, hmssdk,hmssdkFlutterPlugin)
+                    toggleAudioMuteAll(false, result, hmssdk, hmssdkFlutterPlugin)
                 }
                 "set_volume" -> {
                     setVolume(call, result, hmssdk)
@@ -81,7 +81,7 @@ class HMSAudioAction {
             shouldMute: Boolean,
             result: Result,
             hmssdk: HMSSDK,
-            hmssdkFlutterPlugin: HmssdkFlutterPlugin?
+            hmssdkFlutterPlugin: HmssdkFlutterPlugin?,
         ) {
             val room: HMSRoom? = hmssdk.getRoom()
             if (room != null) {

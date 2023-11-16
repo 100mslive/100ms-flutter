@@ -23,10 +23,11 @@
 ### 🚀 Added
 
 - Large Room Support
+
   - Enhanced Participants list to accommodate up to 20,000 peers in a room.
 
 - Added recording state indicator: showcasing "initializing" and "running" states.
-- Added `Lower Hand` Capability in Participant list 
+- Added `Lower Hand` Capability in Participant list
 
 ### Fixed
 
