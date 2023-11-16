@@ -34,15 +34,15 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
     return DraggableScrollableSheet(
         maxChildSize:
             (context.read<MeetingStore>().availableAudioOutputDevices.length +
-                    1.4) *
+                    2.2) *
                 0.1,
         minChildSize:
             (context.read<MeetingStore>().availableAudioOutputDevices.length +
-                    1.2) *
+                    2) *
                 0.1,
         initialChildSize:
             (context.read<MeetingStore>().availableAudioOutputDevices.length +
-                    1.2) *
+                    2) *
                 0.1,
         builder: (context, ScrollController scrollController) {
           return Container(
