@@ -1575,5 +1575,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         removeAllKeyChangeListener()
         removeHMSLogger()
         HMSPeerListIteratorAction.clearIteratorMap()
+        setIsRoomAudioUnmutedLocally(isRoomAudioUnmuted: true)
     }
 }

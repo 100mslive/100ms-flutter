@@ -3,25 +3,10 @@ Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 Implement sending of Subscriber Stats
 - https://100ms.atlassian.net/browse/FLUT-134
 
-Upgrade Android SDK to fix Auto simulcast issue in HmsVideoView
-- https://100ms.atlassian.net/browse/FLUT-145
+Prebuilt: Add options to Mute Session or change Audio Output
+- https://100ms.atlassian.net/browse/FLUT-155
 
-Remove default usage of Software Echo Cancellation
-- https://100ms.atlassian.net/browse/FLUT-146
-
-Post call interruption fix
-- https://100ms.atlassian.net/browse/FLUT-143
-
-Persist Room meeting link after successfully joining the Room
-- https://100ms.atlassian.net/browse/FLUT-147
-
-Incorrect DateTime format on iOS prevents the user from Joining a Room
-- https://100ms.atlassian.net/browse/FLUT-144
-
-To handle error in case the logo url returns error
-- https://100ms.atlassian.net/browse/FLUT-152
-
-Room Kit: 1.0.3
-Core SDK: 1.9.2
+Room Kit: 1.0.4
+Core SDK: 1.9.3
 Android SDK: 2.8.0
-iOS SDK: 1.2.0
+iOS SDK: 1.2.1

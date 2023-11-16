@@ -284,12 +284,18 @@ class PreviewStore extends ChangeNotifier
   }
 
   void switchAudioOutput({required HMSAudioDevice audioDevice}) {
+    if (isRoomMute) {
+      toggleSpeaker();
+    }
     currentAudioDeviceMode = audioDevice;
     hmsSDKInteractor.switchAudioOutput(audioDevice: audioDevice);
     notifyListeners();
   }
 
   void switchAudioOutputUsingiOSUI() {
+    if (isRoomMute) {
+      toggleSpeaker();
+    }
     hmsSDKInteractor.switchAudioOutputUsingiOSUI();
   }
 
