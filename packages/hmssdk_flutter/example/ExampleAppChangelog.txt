@@ -1,4 +1,5 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
+Release: https://100ms.atlassian.net/projects/FLUT/versions/10598/
 
 Implement sending of Subscriber Stats
 - https://100ms.atlassian.net/browse/FLUT-134
@@ -8,5 +9,5 @@ Prebuilt: Add options to Mute Session or change Audio Output
 
 Room Kit: 1.0.4
 Core SDK: 1.9.3
-Android SDK: 2.8.0
-iOS SDK: 1.2.1
+Android SDK: 2.8.1
+iOS SDK: 1.3.0
