@@ -77,6 +77,7 @@ class HmssdkFlutterPlugin :
     private var hmsKeyChangeObserverList = ArrayList<HMSKeyChangeObserver>()
     var hlsStreamUrl: String? = null
     private var isRoomAudioUnmutedLocally = true
+
     override fun onAttachedToEngine(
         @NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
     ) {
@@ -922,7 +923,7 @@ class HmssdkFlutterPlugin :
     /**
      * This acts as a setter for [isRoomAudioUnmutedLocally] variable
      */
-    fun setIsRoomAudioUnmutedLocally(isRoomAudioUnmuted:Boolean){
+    fun setIsRoomAudioUnmutedLocally(isRoomAudioUnmuted: Boolean) {
         isRoomAudioUnmutedLocally = isRoomAudioUnmuted
     }
 
@@ -1101,7 +1102,7 @@ class HmssdkFlutterPlugin :
                 /**
                  * Here we set the playback of the audio to false if the room is muted locally
                  */
-                if(track is HMSRemoteAudioTrack  && type == HMSTrackUpdate.TRACK_ADDED && !isRoomAudioUnmutedLocally){
+                if (track is HMSRemoteAudioTrack && type == HMSTrackUpdate.TRACK_ADDED && !isRoomAudioUnmutedLocally) {
                     track.isPlaybackAllowed = false
                 }
 

@@ -18,10 +18,10 @@ class HMSAudioAction {
             isAudioMute(call, result, hmsSDK)
 
         case "mute_room_audio_locally":
-            toggleAudioMuteAll(result, hmsSDK, shouldMute: true,swiftHmssdkFlutterPlugin)
+            toggleAudioMuteAll(result, hmsSDK, shouldMute: true, swiftHmssdkFlutterPlugin)
 
         case "un_mute_room_audio_locally":
-            toggleAudioMuteAll(result, hmsSDK, shouldMute: false,swiftHmssdkFlutterPlugin)
+            toggleAudioMuteAll(result, hmsSDK, shouldMute: false, swiftHmssdkFlutterPlugin)
 
         case "set_volume":
             setVolume(call, result, hmsSDK)
