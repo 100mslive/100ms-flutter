@@ -39,6 +39,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private var sessionStoreChangeObservers = [HMSSessionStoreKeyChangeListener]()
 
     var hlsStreamUrl: String?
+    
+    private var isRoomAudioUnmutedLocally = true
 
     // MARK: - Flutter Setup
 
@@ -1046,6 +1048,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
         }
     }
+    
+    
+    /**
+     * This acts as a setter for [isRoomAudioUnmutedLocally] variable
+     */
+    func setIsRoomAudioUnmutedLocally(isRoomAudioUnmuted:Bool){
+        isRoomAudioUnmutedLocally = isRoomAudioUnmuted
+    }
+    
     // MARK: - Logging
 
     private var logLevel = HMSLogLevel.off
@@ -1256,6 +1267,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
     public func on(track: HMSTrack, update: HMSTrackUpdate, for peer: HMSPeer) {
 
+        /**
+         * Here we set the playback of the audio to false if the room is muted locally
+         */
+        if(track is HMSRemoteAudioTrack  && update == .trackAdded && !isRoomAudioUnmutedLocally){
+            (track as! HMSRemoteAudioTrack).setPlaybackAllowed(false)
+        }
+        
         let data = [
             "event_name": "on_track_update",
             "data": [

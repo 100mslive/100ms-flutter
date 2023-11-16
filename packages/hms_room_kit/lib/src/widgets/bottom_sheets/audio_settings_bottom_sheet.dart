@@ -1,4 +1,6 @@
 ///Package imports
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -32,15 +34,15 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
     return DraggableScrollableSheet(
         maxChildSize:
             (context.read<MeetingStore>().availableAudioOutputDevices.length +
-                    1.2) *
+                    1.4) *
                 0.1,
         minChildSize:
             (context.read<MeetingStore>().availableAudioOutputDevices.length +
-                    1) *
+                    1.2) *
                 0.1,
         initialChildSize:
             (context.read<MeetingStore>().availableAudioOutputDevices.length +
-                    1) *
+                    1.2) *
                 0.1,
         builder: (context, ScrollController scrollController) {
           return Container(
@@ -89,133 +91,310 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
                             height: 5,
                           ),
                         ),
-                        Expanded(
-                          child: ListView.builder(
-                              controller: scrollController,
-                              itemCount: data.item2,
-                              itemBuilder: (context, index) {
-                                return Column(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        context
-                                            .read<MeetingStore>()
-                                            .switchAudioOutput(
-                                                audioDevice: data.item1[index]);
-                                        Navigator.pop(context);
-                                      },
-
-                                      ///Here we are checking if the current audio device is automatic or not
-                                      ///If it is automatic then we render the automatic icon
-                                      ///else we render the audio device icon
-                                      ///
-                                      ///If the current audio device is the selected audio device then we render the tick icon
-                                      ///else we render an empty container
-                                      child: data.item1[index] ==
-                                              HMSAudioDevice.AUTOMATIC
-                                          ? ListTile(
-                                              horizontalTitleGap: 2,
-                                              enabled: false,
-                                              contentPadding: EdgeInsets.zero,
-                                              leading: SvgPicture.asset(
-                                                "packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(data.item3)}.svg",
+                        Platform.isIOS
+                            ? Expanded(
+                                child: ListView(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () => {
+                                      Navigator.pop(context),
+                                      context
+                                          .read<MeetingStore>()
+                                          .switchAudioOutputUsingiOSUI()
+                                    },
+                                    child: ListTile(
+                                      horizontalTitleGap: 2,
+                                      enabled: false,
+                                      contentPadding: EdgeInsets.zero,
+                                      leading: SvgPicture.asset(
+                                        "packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(data.item3)}.svg",
+                                        fit: BoxFit.scaleDown,
+                                        colorFilter: ColorFilter.mode(
+                                            HMSThemeColors
+                                                .onSurfaceHighEmphasis,
+                                            BlendMode.srcIn),
+                                      ),
+                                      title: HMSSubtitleText(
+                                        text: "Auto",
+                                        fontSize: 14,
+                                        lineHeight: 20,
+                                        letterSpacing: 0.10,
+                                        fontWeight: FontWeight.w600,
+                                        textColor: HMSThemeColors
+                                            .onSurfaceHighEmphasis,
+                                      ),
+                                      trailing: (context
+                                              .read<MeetingStore>()
+                                              .isSpeakerOn)
+                                          ? SizedBox(
+                                              height: 24,
+                                              width: 24,
+                                              child: SvgPicture.asset(
+                                                "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
                                                 fit: BoxFit.scaleDown,
                                                 colorFilter: ColorFilter.mode(
                                                     HMSThemeColors
                                                         .onSurfaceHighEmphasis,
                                                     BlendMode.srcIn),
                                               ),
-                                              title: HMSSubtitleText(
-                                                fontSize: 14,
-                                                lineHeight: 20,
-                                                letterSpacing: 0.10,
-                                                fontWeight: FontWeight.w600,
-                                                text:
-                                                    "${Utilities.getAudioDeviceName(data.item1[index])} (${Utilities.getAudioDeviceName(data.item3)})",
-                                                textColor: HMSThemeColors
-                                                    .onSurfaceHighEmphasis,
-                                              ),
-                                              trailing: context
-                                                          .read<MeetingStore>()
-                                                          .currentAudioDeviceMode ==
-                                                      HMSAudioDevice.AUTOMATIC
-                                                  ? SizedBox(
-                                                      height: 24,
-                                                      width: 24,
-                                                      child: SvgPicture.asset(
-                                                        "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
-                                                        fit: BoxFit.scaleDown,
-                                                        colorFilter:
-                                                            ColorFilter.mode(
-                                                                HMSThemeColors
-                                                                    .onSurfaceHighEmphasis,
-                                                                BlendMode
-                                                                    .srcIn),
-                                                      ),
-                                                    )
-                                                  : const SizedBox(
-                                                      height: 24,
-                                                      width: 24,
-                                                    ),
                                             )
-                                          : ListTile(
-                                              horizontalTitleGap: 2,
-                                              enabled: false,
-                                              contentPadding: EdgeInsets.zero,
-                                              leading: SvgPicture.asset(
-                                                "packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(data.item1[index])}.svg",
-                                                fit: BoxFit.scaleDown,
-                                                colorFilter: ColorFilter.mode(
-                                                    HMSThemeColors
-                                                        .onSurfaceHighEmphasis,
-                                                    BlendMode.srcIn),
-                                              ),
-                                              title: HMSSubtitleText(
-                                                text: Utilities
-                                                    .getAudioDeviceName(
-                                                        data.item1[index]),
-                                                fontSize: 14,
-                                                lineHeight: 20,
-                                                letterSpacing: 0.10,
-                                                fontWeight: FontWeight.w600,
-                                                textColor: HMSThemeColors
-                                                    .onSurfaceHighEmphasis,
-                                              ),
-                                              trailing: data.item1[index] ==
-                                                      context
-                                                          .read<MeetingStore>()
-                                                          .currentAudioDeviceMode
-                                                  ? SizedBox(
-                                                      height: 24,
-                                                      width: 24,
-                                                      child: SvgPicture.asset(
-                                                        "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
-                                                        fit: BoxFit.scaleDown,
-                                                        colorFilter:
-                                                            ColorFilter.mode(
-                                                                HMSThemeColors
-                                                                    .onSurfaceHighEmphasis,
-                                                                BlendMode
-                                                                    .srcIn),
-                                                      ),
-                                                    )
-                                                  : const SizedBox(
-                                                      height: 24,
-                                                      width: 24,
-                                                    ),
+                                          : const SizedBox(
+                                              height: 24,
+                                              width: 24,
                                             ),
                                     ),
-                                    Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 5),
-                                        child: Divider(
-                                          color: HMSThemeColors.borderDefault,
-                                          height: 5,
-                                        )),
-                                  ],
-                                );
-                              }),
-                        )
+                                  ),
+                                  GestureDetector(
+                                    onTap: () => {
+                                      context
+                                          .read<MeetingStore>()
+                                          .toggleSpeaker(),
+                                      Navigator.pop(context)
+                                    },
+                                    child: ListTile(
+                                      horizontalTitleGap: 2,
+                                      enabled: false,
+                                      contentPadding: EdgeInsets.zero,
+                                      leading: SvgPicture.asset(
+                                        "packages/hms_room_kit/lib/src/assets/icons/speaker_state_off.svg",
+                                        fit: BoxFit.scaleDown,
+                                        colorFilter: ColorFilter.mode(
+                                            HMSThemeColors
+                                                .onSurfaceHighEmphasis,
+                                            BlendMode.srcIn),
+                                      ),
+                                      title: HMSSubtitleText(
+                                        text: "Mute Audio",
+                                        fontSize: 14,
+                                        lineHeight: 20,
+                                        letterSpacing: 0.10,
+                                        fontWeight: FontWeight.w600,
+                                        textColor: HMSThemeColors
+                                            .onSurfaceHighEmphasis,
+                                      ),
+                                      trailing: !context
+                                              .read<MeetingStore>()
+                                              .isSpeakerOn
+                                          ? SizedBox(
+                                              height: 24,
+                                              width: 24,
+                                              child: SvgPicture.asset(
+                                                "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
+                                                fit: BoxFit.scaleDown,
+                                                colorFilter: ColorFilter.mode(
+                                                    HMSThemeColors
+                                                        .onSurfaceHighEmphasis,
+                                                    BlendMode.srcIn),
+                                              ),
+                                            )
+                                          : const SizedBox(
+                                              height: 24,
+                                              width: 24,
+                                            ),
+                                    ),
+                                  )
+                                ],
+                              ))
+                            : Expanded(
+                                child: ListView.builder(
+                                    controller: scrollController,
+                                    itemCount: data.item2 + 1,
+                                    itemBuilder: (context, index) {
+                                      if (index == data.item2) {
+                                        return GestureDetector(
+                                          onTap: () => {
+                                            context
+                                                .read<MeetingStore>()
+                                                .toggleSpeaker(),
+                                            Navigator.pop(context)
+                                          },
+                                          child: ListTile(
+                                            horizontalTitleGap: 2,
+                                            enabled: false,
+                                            contentPadding: EdgeInsets.zero,
+                                            leading: SvgPicture.asset(
+                                              "packages/hms_room_kit/lib/src/assets/icons/speaker_state_off.svg",
+                                              fit: BoxFit.scaleDown,
+                                              colorFilter: ColorFilter.mode(
+                                                  HMSThemeColors
+                                                      .onSurfaceHighEmphasis,
+                                                  BlendMode.srcIn),
+                                            ),
+                                            title: HMSSubtitleText(
+                                              text: "Mute Audio",
+                                              fontSize: 14,
+                                              lineHeight: 20,
+                                              letterSpacing: 0.10,
+                                              fontWeight: FontWeight.w600,
+                                              textColor: HMSThemeColors
+                                                  .onSurfaceHighEmphasis,
+                                            ),
+                                            trailing: !context
+                                                    .read<MeetingStore>()
+                                                    .isSpeakerOn
+                                                ? SizedBox(
+                                                    height: 24,
+                                                    width: 24,
+                                                    child: SvgPicture.asset(
+                                                      "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
+                                                      fit: BoxFit.scaleDown,
+                                                      colorFilter: ColorFilter.mode(
+                                                          HMSThemeColors
+                                                              .onSurfaceHighEmphasis,
+                                                          BlendMode.srcIn),
+                                                    ),
+                                                  )
+                                                : const SizedBox(
+                                                    height: 24,
+                                                    width: 24,
+                                                  ),
+                                          ),
+                                        );
+                                      }
+                                      return Column(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              context
+                                                  .read<MeetingStore>()
+                                                  .switchAudioOutput(
+                                                      audioDevice:
+                                                          data.item1[index]);
+                                              Navigator.pop(context);
+                                            },
+
+                                            ///Here we are checking if the current audio device is automatic or not
+                                            ///If it is automatic then we render the automatic icon
+                                            ///else we render the audio device icon
+                                            ///
+                                            ///If the current audio device is the selected audio device then we render the tick icon
+                                            ///else we render an empty container
+                                            child: data.item1[index] ==
+                                                    HMSAudioDevice.AUTOMATIC
+                                                ? ListTile(
+                                                    horizontalTitleGap: 2,
+                                                    enabled: false,
+                                                    contentPadding:
+                                                        EdgeInsets.zero,
+                                                    leading: SvgPicture.asset(
+                                                      "packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(data.item3)}.svg",
+                                                      fit: BoxFit.scaleDown,
+                                                      colorFilter: ColorFilter.mode(
+                                                          HMSThemeColors
+                                                              .onSurfaceHighEmphasis,
+                                                          BlendMode.srcIn),
+                                                    ),
+                                                    title: HMSSubtitleText(
+                                                      fontSize: 14,
+                                                      lineHeight: 20,
+                                                      letterSpacing: 0.10,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      text:
+                                                          "${Utilities.getAudioDeviceName(data.item1[index])} (${Utilities.getAudioDeviceName(data.item3)})",
+                                                      textColor: HMSThemeColors
+                                                          .onSurfaceHighEmphasis,
+                                                    ),
+                                                    trailing: (context
+                                                                    .read<
+                                                                        MeetingStore>()
+                                                                    .currentAudioDeviceMode ==
+                                                                HMSAudioDevice
+                                                                    .AUTOMATIC &&
+                                                            context
+                                                                .read<
+                                                                    MeetingStore>()
+                                                                .isSpeakerOn)
+                                                        ? SizedBox(
+                                                            height: 24,
+                                                            width: 24,
+                                                            child: SvgPicture
+                                                                .asset(
+                                                              "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
+                                                              fit: BoxFit
+                                                                  .scaleDown,
+                                                              colorFilter: ColorFilter.mode(
+                                                                  HMSThemeColors
+                                                                      .onSurfaceHighEmphasis,
+                                                                  BlendMode
+                                                                      .srcIn),
+                                                            ),
+                                                          )
+                                                        : const SizedBox(
+                                                            height: 24,
+                                                            width: 24,
+                                                          ),
+                                                  )
+                                                : ListTile(
+                                                    horizontalTitleGap: 2,
+                                                    enabled: false,
+                                                    contentPadding:
+                                                        EdgeInsets.zero,
+                                                    leading: SvgPicture.asset(
+                                                      "packages/hms_room_kit/lib/src/assets/icons/${Utilities.getAudioDeviceIconName(data.item1[index])}.svg",
+                                                      fit: BoxFit.scaleDown,
+                                                      colorFilter: ColorFilter.mode(
+                                                          HMSThemeColors
+                                                              .onSurfaceHighEmphasis,
+                                                          BlendMode.srcIn),
+                                                    ),
+                                                    title: HMSSubtitleText(
+                                                      text: Utilities
+                                                          .getAudioDeviceName(
+                                                              data.item1[
+                                                                  index]),
+                                                      fontSize: 14,
+                                                      lineHeight: 20,
+                                                      letterSpacing: 0.10,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      textColor: HMSThemeColors
+                                                          .onSurfaceHighEmphasis,
+                                                    ),
+                                                    trailing: (data.item1[
+                                                                    index] ==
+                                                                context
+                                                                    .read<
+                                                                        MeetingStore>()
+                                                                    .currentAudioDeviceMode &&
+                                                            context
+                                                                .read<
+                                                                    MeetingStore>()
+                                                                .isSpeakerOn)
+                                                        ? SizedBox(
+                                                            height: 24,
+                                                            width: 24,
+                                                            child: SvgPicture
+                                                                .asset(
+                                                              "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
+                                                              fit: BoxFit
+                                                                  .scaleDown,
+                                                              colorFilter: ColorFilter.mode(
+                                                                  HMSThemeColors
+                                                                      .onSurfaceHighEmphasis,
+                                                                  BlendMode
+                                                                      .srcIn),
+                                                            ),
+                                                          )
+                                                        : const SizedBox(
+                                                            height: 24,
+                                                            width: 24,
+                                                          ),
+                                                  ),
+                                          ),
+                                          Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 5),
+                                              child: Divider(
+                                                color: HMSThemeColors
+                                                    .borderDefault,
+                                                height: 5,
+                                              )),
+                                        ],
+                                      );
+                                    }),
+                              )
                       ],
                     ),
                   );
