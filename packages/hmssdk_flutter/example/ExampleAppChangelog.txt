@@ -7,7 +7,7 @@ Implement sending of Subscriber Stats
 Prebuilt: Add options to Mute Session or change Audio Output
 - https://100ms.atlassian.net/browse/FLUT-155
 
-Room Kit: 1.0.4
+Room Kit: 1.0.6
 Core SDK: 1.9.3
 Android SDK: 2.8.1
 iOS SDK: 1.3.0
