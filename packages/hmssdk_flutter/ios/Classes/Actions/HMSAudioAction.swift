@@ -18,10 +18,10 @@ class HMSAudioAction {
             isAudioMute(call, result, hmsSDK)
 
         case "mute_room_audio_locally":
-            toggleAudioMuteAll(result, hmsSDK, shouldMute: true)
+            toggleAudioMuteAll(result, hmsSDK, shouldMute: true, swiftHmssdkFlutterPlugin)
 
         case "un_mute_room_audio_locally":
-            toggleAudioMuteAll(result, hmsSDK, shouldMute: false)
+            toggleAudioMuteAll(result, hmsSDK, shouldMute: false, swiftHmssdkFlutterPlugin)
 
         case "set_volume":
             setVolume(call, result, hmsSDK)
@@ -86,7 +86,7 @@ class HMSAudioAction {
         result(false)
     }
 
-    static private func toggleAudioMuteAll(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?, shouldMute: Bool) {
+    static private func toggleAudioMuteAll(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?, shouldMute: Bool, _  swiftHmssdkFlutterPlugin: SwiftHmssdkFlutterPlugin) {
 
         let room = hmsSDK?.room
         if room != nil {
@@ -97,6 +97,7 @@ class HMSAudioAction {
                     (track as! HMSRemoteAudioTrack).setPlaybackAllowed(!shouldMute)
                 }
             }
+            swiftHmssdkFlutterPlugin.setIsRoomAudioUnmutedLocally(isRoomAudioUnmuted: !shouldMute)
         }
         result(nil)
     }
