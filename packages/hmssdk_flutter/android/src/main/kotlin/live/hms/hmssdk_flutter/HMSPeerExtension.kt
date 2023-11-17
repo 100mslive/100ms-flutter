@@ -2,7 +2,6 @@ package live.hms.hmssdk_flutter
 
 import live.hms.video.sdk.models.HMSPeer
 import live.hms.video.sdk.models.enums.HMSPeerUpdate
-import java.text.SimpleDateFormat
 
 class HMSPeerExtension {
     companion object {

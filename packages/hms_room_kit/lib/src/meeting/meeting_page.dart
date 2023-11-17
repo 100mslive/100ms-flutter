@@ -40,8 +40,13 @@ import 'package:hms_room_kit/src/widgets/toasts/hms_recording_error_toast.dart';
 class MeetingPage extends StatefulWidget {
   final String meetingLink;
   final bool isRoomMute;
+  final HMSAudioDevice currentAudioDeviceMode;
+
   const MeetingPage(
-      {Key? key, required this.meetingLink, this.isRoomMute = true})
+      {Key? key,
+      required this.meetingLink,
+      this.isRoomMute = true,
+      required this.currentAudioDeviceMode})
       : super(key: key);
 
   @override
@@ -65,6 +70,8 @@ class _MeetingPageState extends State<MeetingPage> {
         context.read<MeetingStore>().toggleSpeaker();
       });
     }
+    context.read<MeetingStore>().currentAudioDeviceMode =
+        widget.currentAudioDeviceMode;
   }
 
   void _enableForegroundService() {
