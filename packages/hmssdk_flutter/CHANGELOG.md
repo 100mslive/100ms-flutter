@@ -5,6 +5,16 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+## 1.9.3 - 2023-11-17
+
+### Added
+
+- Added `Subscriber Stats` for improved debugging of subscription issues.
+
+Updated to Android SDK 2.8.1 & iOS SDK 1.3.0
+
+**Full Changelog**: [1.9.2...1.9.3](https://github.com/100mslive/100ms-flutter/compare/1.9.2...1.9.3)
+
 ## 1.9.2 - 2023-11-09
 
 ### Changed

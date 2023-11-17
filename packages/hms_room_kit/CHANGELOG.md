@@ -5,6 +5,12 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+## 1.0.6 - 2023-11-17
+
+### 🚀 Added
+
+- Added options to Mute Session or Change Audio Output
+
 ## 1.0.5 - 2023-11-09
 
 ### 🚀 Fixed
