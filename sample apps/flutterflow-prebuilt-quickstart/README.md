@@ -51,6 +51,8 @@ For detailed information on how to use FlutterFlow and integrate HMS Room Kit fe
 
 1. Solving dependency conflicts:
 
+<img width="526" alt="Screenshot 2023-11-20 at 11 00 18 AM" src="https://github.com/100mslive/100ms-flutter/assets/93931528/810b96ca-d268-4681-b073-56b4df35de51">
+
 There are several packages which are common in both `flutterflow` and `hms_room_kit`, but with different versions. So, we need to make sure that the versions of these packages are same in both `pubspec.yaml` files. For conflict in packages you will get error like this:
 
 ```bash
