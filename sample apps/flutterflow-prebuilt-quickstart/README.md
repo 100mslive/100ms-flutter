@@ -1,5 +1,7 @@
 # FlutterFlow & HMS Room Kit App Starter
 
+https://github.com/100mslive/100ms-flutter/assets/93931528/63a04b40-cdab-4712-9eb3-9e92b23c2f09
+
 Welcome to the FlutterFlow and HMS Room Kit App Starter project! This Flutter template provides a solid foundation for building feature-rich mobile applications by combining the power of FlutterFlow for UI design and HMS Room Kit for real-time communication capabilities.
 
 ## Features
