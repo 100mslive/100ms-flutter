@@ -62,4 +62,5 @@ class _PrebuiltPageWidgetState extends State<PrebuiltPageWidget> {
         body: custom_widgets.TestPrebuilt(),
       ),
     );
-  }}
+  }
+}

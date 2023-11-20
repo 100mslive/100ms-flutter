@@ -78,7 +78,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   alignment: AlignmentDirectional(0.00, 0.00),
                   child: FFButtonWidget(
                     onPressed: () async {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const PrebuiltPageWidget()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const PrebuiltPageWidget()));
                     },
                     text: 'Join',
                     options: FFButtonOptions(
