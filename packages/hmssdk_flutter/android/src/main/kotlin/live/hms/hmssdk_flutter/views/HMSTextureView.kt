@@ -6,24 +6,44 @@ import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.view.TextureRegistry
 import live.hms.video.media.tracks.HMSVideoTrack
+import live.hms.videoview.VideoViewStateChangeListener
 import live.hms.videoview.textureview.HMSTextureRenderer
 
 class HMSTextureView(
     texture: SurfaceTexture,
-    var entry: TextureRegistry.SurfaceTextureEntry?
+    private var entry: TextureRegistry.SurfaceTextureEntry?
 ):EventChannel.StreamHandler{
 
-    var eventChannel: EventChannel? = null
-    var eventSink: EventSink? = null
+    private var eventChannel: EventChannel? = null
+    private var eventSink: EventSink? = null
     private var hmsTextureRenderer: HMSTextureRenderer? = null
-    var uid: Long? = null
+    private var uid: Long? = null
     init {
         hmsTextureRenderer = HMSTextureRenderer(texture)
         uid = entry?.id()
     }
 
-    fun addTrack(track: HMSVideoTrack){
+    private val videoViewStateChangeListener = object : VideoViewStateChangeListener{
+        override fun onResolutionChange(newWidth: kotlin.Int, newHeight: kotlin.Int) {
+
+        }
+
+        override fun onFirstFrameRendered() {
+            super.onFirstFrameRendered()
+        }
+    }
+
+    fun addTrack(track: HMSVideoTrack, disableAutoSimulcastLayerSelect: Boolean, height: Int?, width: Int?){
         Log.i("HMSTextureView","Add Track called for track: ${track.trackId}")
+        hmsTextureRenderer?.addVideoViewStateChangeListener(videoViewStateChangeListener)
+        hmsTextureRenderer?.disableAutoSimulcastLayerSelect(disableAutoSimulcastLayerSelect)
+        if(!disableAutoSimulcastLayerSelect){
+            height?.let { videoHeight ->
+                width?.let { videoWidth ->
+                    hmsTextureRenderer?.displayResolution(videoWidth,videoHeight)
+                }
+            }
+        }
         hmsTextureRenderer?.addTrack(track)
         eventSink?.success("Hey there addTrack Called")
     }

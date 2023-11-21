@@ -180,28 +180,32 @@ class _PlatformViewState extends State<_PlatformView> {
       return viewController?.textureId == null
           ? SizedBox()
           : LayoutBuilder(
-              builder: (context, constraints) => Center(
-                child: FittedBox(
-                  clipBehavior: Clip.hardEdge,
-                  fit: widget.scaleType == ScaleType.SCALE_ASPECT_FIT
-                      ? BoxFit.contain
-                      : BoxFit.cover,
-                  child: SizedBox(
-                    width: widget.scaleType == ScaleType.SCALE_ASPECT_FIT
-                        ? (constraints.maxHeight * (16 / 9))
-                        : constraints.maxWidth,
-                    height: constraints.maxHeight,
-                    child: Center(
-                      child: Transform(
-                          transform: Matrix4.identity()
-                            ..rotateY(widget.setMirror ? -pi : 0.0),
-                          alignment: FractionalOffset.center,
-                          child:
-                              Texture(textureId: viewController!.textureId!)),
+              builder: (context, constraints) {
+                viewController?.setHeightWidth(
+                    constraints.maxHeight, constraints.maxWidth);
+                return Center(
+                  child: FittedBox(
+                    clipBehavior: Clip.hardEdge,
+                    fit: widget.scaleType == ScaleType.SCALE_ASPECT_FIT
+                        ? BoxFit.contain
+                        : BoxFit.cover,
+                    child: SizedBox(
+                      width: widget.scaleType == ScaleType.SCALE_ASPECT_FIT
+                          ? (constraints.maxHeight * (16 / 9))
+                          : constraints.maxWidth,
+                      height: constraints.maxHeight,
+                      child: Center(
+                        child: Transform(
+                            transform: Matrix4.identity()
+                              ..rotateY(widget.setMirror ? -pi : 0.0),
+                            alignment: FractionalOffset.center,
+                            child:
+                                Texture(textureId: viewController!.textureId!)),
+                      ),
                     ),
                   ),
-                ),
-              ),
+                );
+              },
             );
     } else if (Platform.isIOS) {
       ///UIKitView for ios it uses VideoView provided by 100ms ios_sdk internally.

@@ -615,6 +615,9 @@ class HmssdkFlutterPlugin :
 
         val trackId = call.argument<String?>("track_id")
         val addTrackByDefault = call.argument<Boolean?>("add_track_by_def")?:false
+        val disableAutoSimulcastLayerSelect = call.argument<Boolean?>("disable_auto_simulcast_layer_select")?:false
+        val height = call.argument<Int?>("height")
+        val width = call.argument<Int?>("width")
 
         val entry: SurfaceTextureEntry? = hmsTextureRegistry?.createSurfaceTexture()
         entry?.let { surfaceTextureEntry ->
@@ -627,7 +630,7 @@ class HmssdkFlutterPlugin :
                         val track = HmsUtilities.getVideoTrack(currentTrackId,currentRoom)
                         track?.let { videoTrack ->
                             Log.i("HMSTextureView","Init Add Track called for track: ${track.trackId}")
-                            renderer.addTrack(videoTrack)
+                            renderer.addTrack(videoTrack,disableAutoSimulcastLayerSelect,height,width)
                         }?: run {
                             HMSErrorLogger.returnHMSException("createTextureView","No track with $trackId found","Track not found error",result)
                             return
@@ -682,6 +685,9 @@ class HmssdkFlutterPlugin :
     private fun addTrack(call: MethodCall, result: Result){
         val trackId = call.argument<String?>("track_id")
         val textureId = call.argument<String?>("texture_id")
+        val disableAutoSimulcastLayerSelect = call.argument<Boolean?>("disable_auto_simulcast_layer_select")?:false
+        val height = call.argument<Int?>("height")
+        val width = call.argument<Int?>("width")
 
         textureId?.let {texture ->
             trackId?.let {
@@ -691,7 +697,7 @@ class HmssdkFlutterPlugin :
                     room?.let { currentRoom ->
                         val track = HmsUtilities.getVideoTrack(trackId,currentRoom)
                         track?.let {videoTrack ->
-                            textureRenderer.addTrack(videoTrack)
+                            textureRenderer.addTrack(videoTrack,disableAutoSimulcastLayerSelect,height,width)
                             result.success(null)
                         }?: run {
                             HMSErrorLogger.returnHMSException(

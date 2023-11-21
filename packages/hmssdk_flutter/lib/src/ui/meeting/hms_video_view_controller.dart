@@ -11,28 +11,42 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 ///[HMSVideoViewController] is used to control the video view. It helps in controlling addTrack, removeTrack functionalities manually.
 ///It is useful in custom usecases where you wish to control the addTrack and removeTrack functionalities on your own.
 class HMSVideoViewController {
-
   ///[_textureId] is the unique id of the texture view
   int? _textureId;
 
   ///getter for [_textureId]
   int? get textureId => _textureId;
 
+  int? _height;
+  int? _width;
+
   HMSVideoViewController(
       {HMSVideoTrack? track,
       bool addTrackByDefault = true,
-      Function? callback}) {
-    createTextureView(track, addTrackByDefault, callback);
+      Function? callback,
+      bool? disableAutoSimulcastLayerSelect = false}) {
+    createTextureView(
+        track: track,
+        addTrackByDefault: addTrackByDefault,
+        callback: callback,
+        disableAutoSimulcastLayerSelect: disableAutoSimulcastLayerSelect);
   }
 
   void createTextureView(
-      HMSTrack? track, bool addTrackByDefault, Function? callback) async {
-    log("HMSVideoViewController createTextureView called");
+      {HMSTrack? track,
+      bool addTrackByDefault = true,
+      Function? callback,
+      bool? disableAutoSimulcastLayerSelect}) async {
+    log("VKohli Calling createTextureView -> disableAutoSimulcastLayerSelect:$disableAutoSimulcastLayerSelect height: $_height, width: $_width");
     var result = await PlatformService.invokeMethod(
         PlatformMethod.createTextureView,
         arguments: {
           "track_id": track?.trackId,
-          "add_track_by_def": addTrackByDefault
+          "add_track_by_def": addTrackByDefault,
+          "disable_auto_simulcast_layer_select":
+              disableAutoSimulcastLayerSelect ?? false,
+          "width": _width,
+          "height": _height
         });
     if (result["success"]) {
       _textureId = result["data"]["texture_id"];
@@ -46,7 +60,7 @@ class HMSVideoViewController {
   }
 
   void disposeTextureView({Function? callback}) async {
-    log("HMSVideoViewController dispose video track");
+    log("VKohli Calling disposeTextureView");
     var result = await PlatformService.invokeMethod(
         PlatformMethod.disposeTextureView,
         arguments: {"texture_id": textureId.toString()});
@@ -58,16 +72,30 @@ class HMSVideoViewController {
     }
   }
 
-  void addTrack({required HMSVideoTrack track}) async {
+  void addTrack(
+      {required HMSVideoTrack track,
+      bool? disableAutoSimulcastLayerSelect}) async {
+    log("VKohli Calling addTrack -> height: $_height, width: $_width");
     await PlatformService.invokeMethod(PlatformMethod.addTrack, arguments: {
       "track_id": track.trackId,
-      "texture_id": textureId.toString()
+      "texture_id": textureId.toString(),
+      "disable_auto_simulcast_layer_select":
+          disableAutoSimulcastLayerSelect ?? false,
+      "height": _height,
+      "width": _width
     });
   }
 
   void removeTrack() async {
+    log("VKohli Calling removeTrack");
     await PlatformService.invokeMethod(PlatformMethod.removeTrack,
         arguments: {"texture_id": textureId.toString()});
+  }
+
+  void setHeightWidth(double height, double width) {
+    log("VKohli Calling setHeightWidth-> height: $height, width: $width");
+    _height = height.toInt();
+    _width = width.toInt();
   }
 
   void _eventListener(dynamic event) {
