@@ -269,6 +269,10 @@ class HmssdkFlutterPlugin :
                 removeTrack(call,result)
             }
 
+            "set_display_resolution" -> {
+                setDisplayResolution(call,result)
+            }
+
             "get_peer_list_iterator", "peer_list_iterator_has_next", "peer_list_iterator_next" -> {
                 HMSPeerListIteratorAction.peerListIteratorAction(call, result, hmssdk!!)
             }
@@ -616,8 +620,6 @@ class HmssdkFlutterPlugin :
         val trackId = call.argument<String?>("track_id")
         val addTrackByDefault = call.argument<Boolean?>("add_track_by_def")?:false
         val disableAutoSimulcastLayerSelect = call.argument<Boolean?>("disable_auto_simulcast_layer_select")?:false
-        val height = call.argument<Int?>("height")
-        val width = call.argument<Int?>("width")
 
         val entry: SurfaceTextureEntry? = hmsTextureRegistry?.createSurfaceTexture()
         entry?.let { surfaceTextureEntry ->
@@ -630,7 +632,7 @@ class HmssdkFlutterPlugin :
                         val track = HmsUtilities.getVideoTrack(currentTrackId,currentRoom)
                         track?.let { videoTrack ->
                             Log.i("HMSTextureView","Init Add Track called for track: ${track.trackId}")
-                            renderer.addTrack(videoTrack,disableAutoSimulcastLayerSelect,height,width)
+                            renderer.addTrack(videoTrack,disableAutoSimulcastLayerSelect)
                         }?: run {
                             HMSErrorLogger.returnHMSException("createTextureView","No track with $trackId found","Track not found error",result)
                             return
@@ -748,6 +750,20 @@ class HmssdkFlutterPlugin :
         renderer?.removeTrack()
         result.success(null)
 
+    }
+
+    private fun setDisplayResolution(call: MethodCall, result: Result){
+        val textureId = call.argument<String?>("texture_id")
+        val height = call.argument<Int?>("height")
+        val width = call.argument<Int?>("width")
+        val renderer = renderers[textureId]
+
+        height?.let { videoViewHeight ->
+            width?.let { videoViewWidth ->
+                renderer?.setDisplayResolution(videoViewWidth,videoViewHeight)
+            }
+        }
+        result.success(null)
     }
 
     private fun getAllTracks(): ArrayList<HMSTrack> {

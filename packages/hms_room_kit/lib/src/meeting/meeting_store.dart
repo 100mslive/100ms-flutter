@@ -234,6 +234,9 @@ class MeetingStore extends ChangeNotifier
   ///Pool of video views
   List<HMSVideoViewController> viewControllers = [];
 
+  ///Video View for screenshare
+  HMSVideoViewController? screenshareViewController;
+
   Future<HMSException?> join(String userName, String roomCode,
       {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
@@ -1281,7 +1284,9 @@ class MeetingStore extends ChangeNotifier
     for (var element in viewControllers) {
       element.disposeTextureView();
     }
+    screenshareViewController?.disposeTextureView();
     viewControllers.clear();
+    screenshareViewController = null;
 
     ///Here we call the method passed by the user in HMSPrebuilt as a callback
     if (Constant.onLeave != null) {

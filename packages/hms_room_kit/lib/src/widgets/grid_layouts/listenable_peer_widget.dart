@@ -26,14 +26,22 @@ class ListenablePeerWidget extends StatelessWidget {
         key: ValueKey("${peerTracks[index].uid}video_view"),
         value: peerTracks[index],
         child: Selector<MeetingStore, HMSVideoViewController>(
-            selector: (_, meetingStore) =>
-                meetingStore.viewControllers[index % 6],
-            builder: (_, viewController, __) {
-              return PeerTile(
-                videoViewController: viewController,
-                key: ValueKey("${peerTracks[index].uid}audio_view"),
-                scaleType: scaleType,
-              );
-            }));
+            selector: (_, meetingStore) {
+          
+          ///Here we check if the track is of a screenshare 
+          ///we render it using screenshareViewController
+          ///while for other tracks we render it using viewControllers list
+          if (peerTracks[index].track?.source == "SCREEN") {
+            meetingStore.screenshareViewController ??= HMSVideoViewController(addTrackByDefault: false);
+            return meetingStore.screenshareViewController!;
+          }
+          return meetingStore.viewControllers[index % 6];
+        }, builder: (_, viewController, __) {
+          return PeerTile(
+            videoViewController: viewController,
+            key: ValueKey("${peerTracks[index].uid}audio_view"),
+            scaleType: scaleType,
+          );
+        }));
   }
 }

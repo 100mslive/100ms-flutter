@@ -77,7 +77,7 @@ class _PeerTileState extends State<PeerTile> {
           Provider.of<PeerTrackNode>(context, listen: false)
               .setOffScreenStatus(false);
           if (context.read<PeerTrackNode>().track != null) {
-            log("HMSVideoViewController add video track ${context.read<PeerTrackNode>().peer.name}");
+            log("HMSVideoViewController add video track ${context.read<PeerTrackNode>().peer.name} trackType: ${context.read<PeerTrackNode>().track?.source}");
             widget.videoViewController
                 ?.addTrack(track: context.read<PeerTrackNode>().track!);
           }

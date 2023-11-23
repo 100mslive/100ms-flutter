@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 ///Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/enum/hms_video_view_event.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 ///[HMSVideoViewController] is used to control the video view. It helps in controlling addTrack, removeTrack functionalities manually.
@@ -19,23 +20,22 @@ class HMSVideoViewController {
 
   int? _height;
   int? _width;
+  Function? _updateViewCallback;
+  double aspectRatio = 1;
 
   HMSVideoViewController(
       {HMSVideoTrack? track,
       bool addTrackByDefault = true,
-      Function? callback,
       bool? disableAutoSimulcastLayerSelect = false}) {
     createTextureView(
         track: track,
         addTrackByDefault: addTrackByDefault,
-        callback: callback,
         disableAutoSimulcastLayerSelect: disableAutoSimulcastLayerSelect);
   }
 
   void createTextureView(
       {HMSTrack? track,
       bool addTrackByDefault = true,
-      Function? callback,
       bool? disableAutoSimulcastLayerSelect}) async {
     log("VKohli Calling createTextureView -> disableAutoSimulcastLayerSelect:$disableAutoSimulcastLayerSelect height: $_height, width: $_width");
     var result = await PlatformService.invokeMethod(
@@ -44,31 +44,31 @@ class HMSVideoViewController {
           "track_id": track?.trackId,
           "add_track_by_def": addTrackByDefault,
           "disable_auto_simulcast_layer_select":
-              disableAutoSimulcastLayerSelect ?? false,
-          "width": _width,
-          "height": _height
+              disableAutoSimulcastLayerSelect ?? false
         });
     if (result["success"]) {
       _textureId = result["data"]["texture_id"];
       EventChannel('HMSTextureView/Texture/$textureId')
           .receiveBroadcastStream()
           .listen(_eventListener);
-      if (callback != null) {
-        callback();
+      if (_updateViewCallback != null) {
+        _updateViewCallback!();
       }
     }
   }
 
-  void disposeTextureView({Function? callback}) async {
+  void setCallbackMethod(Function callback) {
+    log("VKohli Calling setCallbackMethod -> $callback");
+    _updateViewCallback = callback;
+  }
+
+  void disposeTextureView() async {
     log("VKohli Calling disposeTextureView");
     var result = await PlatformService.invokeMethod(
         PlatformMethod.disposeTextureView,
         arguments: {"texture_id": textureId.toString()});
     if (result["success"]) {
       _textureId = null;
-      if (callback != null) {
-        callback();
-      }
     }
   }
 
@@ -86,19 +86,49 @@ class HMSVideoViewController {
     });
   }
 
-  void removeTrack() async {
-    log("VKohli Calling removeTrack");
-    await PlatformService.invokeMethod(PlatformMethod.removeTrack,
+  void _setDisplayResolution({required int height, required int width}) {
+    PlatformService.invokeMethod(PlatformMethod.setDisplayResolution,
+        arguments: {
+          "texture_id": textureId.toString(),
+          "height": height,
+          "width": width
+        });
+  }
+
+  void removeTrack() {
+    PlatformService.invokeMethod(PlatformMethod.removeTrack,
         arguments: {"texture_id": textureId.toString()});
   }
 
-  void setHeightWidth(double height, double width) {
-    log("VKohli Calling setHeightWidth-> height: $height, width: $width");
-    _height = height.toInt();
-    _width = width.toInt();
+  void setHeightWidth({required double height, required double width}) {
+    if (_height != height.toInt() || _width != width.toInt()) {
+      log("VKohli Calling setHeightWidth-> height: $height, width: $width");
+      _height = height.toInt();
+      _width = width.toInt();
+      _setDisplayResolution(height: _height!, width: _width!);
+    }
   }
 
   void _eventListener(dynamic event) {
-    log("HMSVideoView Event Fired $event");
+    log("VKohli HMSVideoView Event Fired $event");
+
+    HMSVideoViewEvent videoViewEvent =
+        HMSVideoViewValues.getHMSVideoViewEventFromString(event['event_name']);
+    switch (videoViewEvent) {
+      case HMSVideoViewEvent.onResolutionChanged:
+        int width = event['data']?['width'];
+        int height = event['data']?['height'];
+
+        if (width == 0.0 || height == 0.0) {
+          aspectRatio = 1.0;
+        }
+        aspectRatio = width / height;
+        if (_updateViewCallback != null) {
+          _updateViewCallback!();
+        }
+        break;
+      case HMSVideoViewEvent.unknown:
+        break;
+    }
   }
 }

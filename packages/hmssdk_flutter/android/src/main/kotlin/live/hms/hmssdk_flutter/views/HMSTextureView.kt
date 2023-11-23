@@ -5,6 +5,10 @@ import android.util.Log
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.view.TextureRegistry
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import live.hms.hmssdk_flutter.HMSTrackUpdateExtension
 import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.videoview.VideoViewStateChangeListener
 import live.hms.videoview.textureview.HMSTextureRenderer
@@ -25,7 +29,18 @@ class HMSTextureView(
 
     private val videoViewStateChangeListener = object : VideoViewStateChangeListener{
         override fun onResolutionChange(newWidth: kotlin.Int, newHeight: kotlin.Int) {
-
+            Log.i("Vkohli", "onResolutionChange -> newWidth:$newWidth, newHeight-> $newHeight")
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_resolution_changed"
+            val data = HashMap<String,Int>()
+            data["height"] = newHeight
+            data["width"] = newWidth
+            args["data"] = data
+            if (args["data"] != null) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    eventSink?.success(args)
+                }
+            }
         }
 
         override fun onFirstFrameRendered() {
@@ -33,25 +48,27 @@ class HMSTextureView(
         }
     }
 
-    fun addTrack(track: HMSVideoTrack, disableAutoSimulcastLayerSelect: Boolean, height: Int?, width: Int?){
+    fun addTrack(track: HMSVideoTrack, disableAutoSimulcastLayerSelect: Boolean, height: Int? = null, width: Int? = null){
         Log.i("HMSTextureView","Add Track called for track: ${track.trackId}")
         hmsTextureRenderer?.addVideoViewStateChangeListener(videoViewStateChangeListener)
         hmsTextureRenderer?.disableAutoSimulcastLayerSelect(disableAutoSimulcastLayerSelect)
         if(!disableAutoSimulcastLayerSelect){
-            height?.let { videoHeight ->
-                width?.let { videoWidth ->
-                    hmsTextureRenderer?.displayResolution(videoWidth,videoHeight)
+            height?.let { videoViewHeight ->
+                width?.let { videoViewWidth ->
+                    hmsTextureRenderer?.displayResolution(videoViewWidth,videoViewHeight)
                 }
             }
         }
-        hmsTextureRenderer?.addTrack(track)
-        eventSink?.success("Hey there addTrack Called")
+        hmsTextureRenderer?.addTrack(track,true)
+    }
+
+    fun setDisplayResolution(width: Int, height: Int){
+       hmsTextureRenderer?.displayResolution(width,height)
     }
 
     fun removeTrack(){
         Log.i("HMSTextureView","Remove Track called")
         hmsTextureRenderer?.removeTrack()
-        eventSink?.success("Hey there removeTrack called")
     }
 
     fun disposeTextureView(){

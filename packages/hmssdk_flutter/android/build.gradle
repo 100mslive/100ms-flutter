@@ -46,9 +46,9 @@ dependencies {
 //    implementation "live.100ms:android-sdk:${sdkVersions['android']}"
 //    implementation "live.100ms:video-view:${sdkVersions['android']}"
 //    implementation "live.100ms:hls-player:${sdkVersions['android']}"
-    implementation "com.github.100mslive.android-sdk:videoview:flutterTextureView-SNAPSHOT"
-    implementation "com.github.100mslive.android-sdk:hls-player:flutterTextureView-SNAPSHOT"
-    implementation "com.github.100mslive.android-sdk:lib:flutterTextureView-SNAPSHOT"
+    implementation "com.github.100mslive.android-sdk:videoview:flutter-blframe-SNAPSHOT"
+    implementation "com.github.100mslive.android-sdk:hls-player:flutter-blframe-SNAPSHOT"
+    implementation "com.github.100mslive.android-sdk:lib:flutter-blframe-SNAPSHOT"
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'

@@ -151,11 +151,12 @@ class _PlatformViewState extends State<_PlatformView> {
   @override
   void initState() {
     if (widget.controller == null) {
-      viewController = HMSVideoViewController(
-          track: widget.track as HMSVideoTrack, callback: setView);
+      viewController =
+          HMSVideoViewController(track: widget.track as HMSVideoTrack);
     } else {
       viewController = widget.controller;
     }
+    viewController?.setCallbackMethod(setView);
     super.initState();
   }
 
@@ -168,7 +169,7 @@ class _PlatformViewState extends State<_PlatformView> {
   @override
   void dispose() {
     if (widget.controller == null) {
-      viewController?.disposeTextureView(callback: setView);
+      viewController?.disposeTextureView();
     }
     super.dispose();
   }
@@ -182,28 +183,25 @@ class _PlatformViewState extends State<_PlatformView> {
           : LayoutBuilder(
               builder: (context, constraints) {
                 viewController?.setHeightWidth(
-                    constraints.maxHeight, constraints.maxWidth);
+                    height: constraints.maxHeight, width: constraints.maxWidth);
                 return Center(
-                  child: FittedBox(
-                    clipBehavior: Clip.hardEdge,
-                    fit: widget.scaleType == ScaleType.SCALE_ASPECT_FIT
-                        ? BoxFit.contain
-                        : BoxFit.cover,
-                    child: SizedBox(
-                      width: widget.scaleType == ScaleType.SCALE_ASPECT_FIT
-                          ? (constraints.maxHeight * (16 / 9))
-                          : constraints.maxWidth,
-                      height: constraints.maxHeight,
-                      child: Center(
-                        child: Transform(
-                            transform: Matrix4.identity()
-                              ..rotateY(widget.setMirror ? -pi : 0.0),
-                            alignment: FractionalOffset.center,
-                            child:
-                                Texture(textureId: viewController!.textureId!)),
-                      ),
-                    ),
-                  ),
+                  child: widget.scaleType != ScaleType.SCALE_ASPECT_FIT
+                      ? Container(
+                          width: constraints.maxWidth,
+                          height: constraints.maxHeight,
+                          child: HMSTextureView(
+                            scaleType: widget.scaleType,
+                            viewController: viewController,
+                            constraints: constraints,
+                            setMirror: widget.setMirror,
+                          ),
+                        )
+                      : HMSTextureView(
+                          scaleType: widget.scaleType,
+                          viewController: viewController,
+                          constraints: constraints,
+                          setMirror: widget.setMirror,
+                        ),
                 );
               },
             );
@@ -228,5 +226,41 @@ class _PlatformViewState extends State<_PlatformView> {
       throw UnimplementedError(
           'Video View is not implemented for this platform ${Platform.localHostname}');
     }
+  }
+}
+
+class HMSTextureView extends StatelessWidget {
+  const HMSTextureView(
+      {Key? key,
+      required this.scaleType,
+      required this.viewController,
+      required this.constraints,
+      required this.setMirror})
+      : super(key: key);
+
+  final ScaleType scaleType;
+  final HMSVideoViewController? viewController;
+  final BoxConstraints constraints;
+  final bool setMirror;
+
+  @override
+  Widget build(BuildContext context) {
+    return FittedBox(
+      clipBehavior: Clip.hardEdge,
+      fit: scaleType == ScaleType.SCALE_ASPECT_FIT
+          ? BoxFit.contain
+          : BoxFit.cover,
+      child: SizedBox(
+        width: (constraints.maxHeight *
+            ((viewController != null) ? viewController!.aspectRatio : 1)),
+        height: constraints.maxHeight,
+        child: Center(
+          child: Transform(
+              transform: Matrix4.identity()..rotateY(setMirror ? -pi : 0.0),
+              alignment: FractionalOffset.center,
+              child: Texture(textureId: viewController!.textureId!)),
+        ),
+      ),
+    );
   }
 }

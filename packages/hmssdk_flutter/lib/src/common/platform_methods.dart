@@ -199,7 +199,8 @@ enum PlatformMethod {
   createTextureView,
   disposeTextureView,
   addTrack,
-  removeTrack
+  removeTrack,
+  setDisplayResolution
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -500,6 +501,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "add_track";
       case PlatformMethod.removeTrack:
         return "remove_track";
+      case PlatformMethod.setDisplayResolution:
+        return "set_display_resolution";
       default:
         return 'unknown';
     }
@@ -802,6 +805,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.addTrack;
       case "remove_track":
         return PlatformMethod.removeTrack;
+      case "set_display_resolution":
+        return PlatformMethod.setDisplayResolution;
       default:
         return PlatformMethod.unknown;
     }
