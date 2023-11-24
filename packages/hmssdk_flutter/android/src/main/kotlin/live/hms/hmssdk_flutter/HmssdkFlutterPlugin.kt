@@ -80,6 +80,7 @@ class HmssdkFlutterPlugin :
     private var hmsSessionStore: HmsSessionStore? = null
     private var hmsKeyChangeObserverList = ArrayList<HMSKeyChangeObserver>()
     var hlsStreamUrl: String? = null
+    private var isRoomAudioUnmutedLocally = true
 
     private val renderers = HashMap<String,HMSTextureView>()
     private var hmsTextureRegistry: TextureRegistry? = null
@@ -560,6 +561,7 @@ class HmssdkFlutterPlugin :
         HMSPipAction.disposePIP(activity)
         HMSPeerListIteratorAction.clearIteratorMap()
         removeAllKeyChangeListener()
+        setIsRoomAudioUnmutedLocally(true)
     }
 
     private fun destroy(result: Result) {
@@ -1057,6 +1059,7 @@ class HmssdkFlutterPlugin :
         HMSPipAction.disposePIP(activity)
         HMSPeerListIteratorAction.clearIteratorMap()
         removeAllKeyChangeListener()
+        setIsRoomAudioUnmutedLocally(true)
     }
 
     private fun isAllowedToEndMeeting(): Boolean? {
@@ -1103,6 +1106,13 @@ class HmssdkFlutterPlugin :
             ofRoles = ofRoles,
             hmsActionResultListener = HMSCommonAction.getActionListener(result),
         )
+    }
+
+    /**
+     * This acts as a setter for [isRoomAudioUnmutedLocally] variable
+     */
+    fun setIsRoomAudioUnmutedLocally(isRoomAudioUnmuted: Boolean) {
+        isRoomAudioUnmutedLocally = isRoomAudioUnmuted
     }
 
     fun build(
@@ -1277,6 +1287,13 @@ class HmssdkFlutterPlugin :
                 track: HMSTrack,
                 peer: HMSPeer,
             ) {
+                /**
+                 * Here we set the playback of the audio to false if the room is muted locally
+                 */
+                if (track is HMSRemoteAudioTrack && type == HMSTrackUpdate.TRACK_ADDED && !isRoomAudioUnmutedLocally) {
+                    track.isPlaybackAllowed = false
+                }
+
                 val args = HashMap<String, Any?>()
                 args.put("event_name", "on_track_update")
                 args.put("data", HMSTrackUpdateExtension.toDictionary(peer, track, type))
@@ -1296,6 +1313,7 @@ class HmssdkFlutterPlugin :
                     HMSPipAction.disposePIP(activity)
                     HMSPeerListIteratorAction.clearIteratorMap()
                     removeAllKeyChangeListener()
+                    setIsRoomAudioUnmutedLocally(true)
                 }
                 if (args["data"] != null) {
                     CoroutineScope(Dispatchers.Main).launch {

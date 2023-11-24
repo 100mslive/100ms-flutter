@@ -10,9 +10,12 @@ import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
-import 'package:hms_room_kit/src/common/utility_functions.dart';
-import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/enums/meeting_mode.dart';
+import 'package:hms_room_kit/src/model/peer_track_node.dart';
+import 'package:hms_room_kit/src/widgets/meeting_modes/custom_one_to_one_grid.dart';
+import 'package:hms_room_kit/src/widgets/meeting_modes/one_to_one_mode.dart';
+import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
 import 'package:hms_room_kit/src/meeting/meeting_bottom_navigation_bar.dart';
 import 'package:hms_room_kit/src/meeting/meeting_header.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_bring_on_stage_toast.dart';
@@ -21,17 +24,13 @@ import 'package:hms_room_kit/src/widgets/toasts/hms_role_change_decline_toast.da
 import 'package:hms_room_kit/src/widgets/toasts/hms_toast_model.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
-import 'package:hms_room_kit/src/enums/meeting_mode.dart';
-import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/app_dialogs/audio_device_change_dialog.dart';
-import 'package:hms_room_kit/src/widgets/meeting_modes/one_to_one_mode.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/meeting/pip_view.dart';
 import 'package:hms_room_kit/src/preview_for_role/preview_for_role_bottom_sheet.dart';
 import 'package:hms_room_kit/src/preview_for_role/preview_for_role_header.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_left_room_screen.dart';
-import 'package:hms_room_kit/src/widgets/meeting_modes/custom_one_to_one_grid.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_recording_error_toast.dart';
 
 ///[MeetingPage] is the main page of the meeting
@@ -41,8 +40,13 @@ import 'package:hms_room_kit/src/widgets/toasts/hms_recording_error_toast.dart';
 class MeetingPage extends StatefulWidget {
   final String meetingLink;
   final bool isRoomMute;
+  final HMSAudioDevice currentAudioDeviceMode;
+
   const MeetingPage(
-      {Key? key, required this.meetingLink, this.isRoomMute = true})
+      {Key? key,
+      required this.meetingLink,
+      this.isRoomMute = true,
+      required this.currentAudioDeviceMode})
       : super(key: key);
 
   @override
@@ -50,11 +54,14 @@ class MeetingPage extends StatefulWidget {
 }
 
 class _MeetingPageState extends State<MeetingPage> {
+  MeetingNavigationVisibilityController? _visibilityController;
+
   @override
   void initState() {
     super.initState();
     checkAudioState();
     _enableForegroundService();
+    _visibilityController = MeetingNavigationVisibilityController();
   }
 
   void checkAudioState() async {
@@ -63,6 +70,8 @@ class _MeetingPageState extends State<MeetingPage> {
         context.read<MeetingStore>().toggleSpeaker();
       });
     }
+    context.read<MeetingStore>().currentAudioDeviceMode =
+        widget.currentAudioDeviceMode;
   }
 
   void _enableForegroundService() {
@@ -258,58 +267,63 @@ class _MeetingPageState extends State<MeetingPage> {
                                                            * - As the peer count increases the mode is switched back to active speaker view in case of default mode
                                                            * - Remaining as the mode from bottom sheet is selected corresponding grid layout is rendered
                                                           */
-                                                          child: (modeData.item1 ==
-                                                                      MeetingMode
-                                                                          .activeSpeakerWithInset &&
-                                                                  (context.read<MeetingStore>().localPeer?.audioTrack !=
-                                                                          null ||
-                                                                      context
-                                                                              .read<
-                                                                                  MeetingStore>()
-                                                                              .localPeer
-                                                                              ?.videoTrack !=
-                                                                          null))
-                                                              ? OneToOneMode(
-                                                                  bottomMargin:
-                                                                      225,
-                                                                  peerTracks:
-                                                                      data
-                                                                          .item1,
-                                                                  screenShareCount:
-                                                                      data
-                                                                          .item4,
-                                                                  context:
-                                                                      context,
-                                                                  size: size)
-                                                              : (modeData.item1 ==
-                                                                      MeetingMode
-                                                                          .activeSpeakerWithoutInset)
-                                                                  ? const CustomOneToOneGrid(
-                                                                      isLocalInsetPresent:
-                                                                          false,
-                                                                    )
-                                                                  : const CustomOneToOneGrid(
-                                                                      isLocalInsetPresent:
-                                                                          false,
-                                                                    ));
+                                                          child:
+                                                              GestureDetector(
+                                                            onTap: () =>
+                                                                _visibilityController
+                                                                    ?.toggleControlsVisibility(),
+                                                            child: (modeData
+                                                                            .item1 ==
+                                                                        MeetingMode
+                                                                            .activeSpeakerWithInset &&
+                                                                    (context.read<MeetingStore>().localPeer?.audioTrack !=
+                                                                            null ||
+                                                                        context.read<MeetingStore>().localPeer?.videoTrack !=
+                                                                            null))
+                                                                ? OneToOneMode(
+                                                                    bottomMargin:
+                                                                        225,
+                                                                    peerTracks:
+                                                                        data
+                                                                            .item1,
+                                                                    screenShareCount:
+                                                                        data
+                                                                            .item4,
+                                                                    context:
+                                                                        context,
+                                                                    size: size)
+                                                                : const CustomOneToOneGrid(
+                                                                    isLocalInsetPresent:
+                                                                        false,
+                                                                  ),
+                                                          ));
                                                     });
                                               }),
-                                          const Column(
+                                          Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 15,
-                                                      right: 15,
-                                                      top: 5,
-                                                      bottom: 2),
-                                                  child: MeetingHeader()),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 15,
+                                                          right: 15,
+                                                          top: 5,
+                                                          bottom: 2),
+                                                  child: ChangeNotifierProvider.value(
+                                                      value:
+                                                          _visibilityController,
+                                                      child:
+                                                          const MeetingHeader())),
                                               Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 8.0),
-                                                  child:
-                                                      MeetingBottomNavigationBar())
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 8.0),
+                                                  child: ChangeNotifierProvider.value(
+                                                      value:
+                                                          _visibilityController,
+                                                      child:
+                                                          const MeetingBottomNavigationBar())),
                                             ],
                                           ),
 

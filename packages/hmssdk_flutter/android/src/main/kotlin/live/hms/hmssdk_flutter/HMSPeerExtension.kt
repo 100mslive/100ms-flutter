@@ -2,7 +2,6 @@ package live.hms.hmssdk_flutter
 
 import live.hms.video.sdk.models.HMSPeer
 import live.hms.video.sdk.models.enums.HMSPeerUpdate
-import java.text.SimpleDateFormat
 
 class HMSPeerExtension {
     companion object {
@@ -20,7 +19,7 @@ class HMSPeerExtension {
             args["audio_track"] = HMSTrackExtension.toDictionary(peer.audioTrack)
             args["video_track"] = HMSTrackExtension.toDictionary(peer.videoTrack)
             args["network_quality"] = HMSNetworkQualityExtension.toDictionary(peer.networkQuality)
-            args["joined_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(peer.joinedAt).toString()
+            args["joined_at"] = peer.joinedAt
 
             val auxTrackList = ArrayList<Any>()
             peer.auxiliaryTracks.forEach {

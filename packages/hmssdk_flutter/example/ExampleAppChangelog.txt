@@ -3,7 +3,7 @@ Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 - Added TextureView in place of SurfaceView for better performance
 https://100ms.atlassian.net/browse/FLUT-121
 
-Room Kit: 1.0.6
-Core SDK: 1.9.3
+Room Kit: 1.0.7
+Core SDK: 1.9.4
 Android SDK: 2.8.1
 iOS SDK: 1.3.0

@@ -1,18 +1,53 @@
 # Latest Versions
 
-| Package           | Version                                                                                                   |
-| ------------------| --------------------------------------------------------------------------------------------------------- |
-| hms_room_kit      | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)        |
-| hmssdk_flutter    | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)    |
+| Package        | Version                                                                                                |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
+| hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
+
+## 1.9.3 - 2023-11-17
+
+### Added
+
+- Added `Subscriber Stats` for improved debugging of subscription issues.
+
+Updated to Android SDK 2.8.1 & iOS SDK 1.3.0
+
+**Full Changelog**: [1.9.2...1.9.3](https://github.com/100mslive/100ms-flutter/compare/1.9.2...1.9.3)
+
+## 1.9.2 - 2023-11-09
+
+### Changed
+
+- Auto simulcast in `HMSVideoView` correctly picks the layers based on the size of the view.
+
+- Resolved an issue where after a Call Interruption the voices of users were robotic
+
+- Removed default usage of Software Echo Cancellation. Now, by default Hardware echo cancellation will be used. More information is available [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/configure-your-device/microphone/echo-cancellation)
+
+Updated to Android SDK 2.8.0 & iOS SDK 1.2.0
+
+**Full Changelog**: [1.9.1...1.9.2](https://github.com/100mslive/100ms-flutter/compare/1.9.1...1.9.2)
+
+## 1.9.1 - 2023-11-02
+
+### Fixed
+
+- Fixed a bug where `peerLeft` was not getting fired even in case of a broadcaster.
+
+Updated to Android SDK 2.7.9 & iOS SDK 1.1.0
+
+**Full Changelog**: [1.9.0...1.9.1](https://github.com/100mslive/100ms-flutter/compare/1.9.0...1.9.1)
 
 ## 1.9.0 - 2023-10-16
 
 ### Added
 
 - Large Room Support
-    - Added first class "Hand Raise" apis: `raiseLocalPeerHand`, `lowerLocalPeerHand`, `lowerRemotePeerHand`
-    - Added `onPeerListUpdate` event on `HMSUpdateListener`, This requires overriding the `onPeerListUpdate` method in all implementations of HMSUpdateListener.
-    - Added "Peer List Iterator" APIs - `getPeerListIterator`
+
+  - Added first class "Hand Raise" apis: `raiseLocalPeerHand`, `lowerLocalPeerHand`, `lowerRemotePeerHand`
+  - Added `onPeerListUpdate` event on `HMSUpdateListener`, This requires overriding the `onPeerListUpdate` method in all implementations of HMSUpdateListener.
+  - Added "Peer List Iterator" APIs - `getPeerListIterator`
 
   For more details refer [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/peer/large-room)
 
@@ -29,6 +64,7 @@ Updated to Android SDK 2.7.7 & iOS SDK 1.1.0
 ### Added
 
 - Added `previewForRole` & `cancelPreview` APIs to preview the audio / video of a particular role before changing into the new Role.
+
   ```dart
   // preview video of a particular role
   await hmsSDK.previewForRole(role: "viewer-on-stage");
@@ -51,7 +87,6 @@ Updated to Android SDK 2.7.7 & iOS SDK 1.1.0
 Updated to Android SDK 2.7.6 & iOS SDK 0.9.12
 
 **Full Changelog**: [1.7.5...1.8.0](https://github.com/100mslive/100ms-flutter/compare/1.7.5...1.8.0)
-
 
 ## 1.7.5 - 2023-08-18
 

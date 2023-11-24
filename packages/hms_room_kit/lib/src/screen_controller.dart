@@ -97,9 +97,11 @@ class _ScreenControllerState extends State<ScreenController> {
   ///  - If successful we show the preview page
   void _initPreview() async {
     Constant.roomCode = widget.roomCode;
-    setState(() {
-      isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
     _hmsSDKInteractor = HMSSDKInteractor(
         iOSScreenshareConfig: widget.options?.iOSScreenshareConfig,
         joinWithMutedAudio: AppDebugConfig.joinWithMutedAudio,

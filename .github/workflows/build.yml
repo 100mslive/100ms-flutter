@@ -9,7 +9,6 @@ on:
   push:
     branches:
       - main
-      - develop
   pull_request:
     types:
       - opened
@@ -27,23 +26,38 @@ on:
       - "**.txt"
 
 jobs:
-  build_appbundle:
+  check_build:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - uses: actions/setup-java@v3
         with:
           distribution: zulu
           java-version: 12.x
-      - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
+      - name: Get Flutter dependencies in Core SDK
+        run: flutter pub get
+        working-directory: packages/hmssdk_flutter
+      - name: Dart Format
+        run: dart format .
+      - name: Dart Fix
+        run: cd packages/hmssdk_flutter; dart fix --apply
+      - name: Flutter Analyze in HMSSDK
+        uses: invertase/github-action-dart-analyzer@v1
+        with:
+          working-directory: packages/hmssdk_flutter
+      - name: Commit and Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 🤖 Automated Format and Fix
+          commit_user_name: 🤖 100ms Flutter Bot
       - name: Build Android App Bundle
         env:
           FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}

@@ -1,3 +1,6 @@
+///Dart imports
+import 'dart:developer';
+
 ///Package imports
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -37,6 +40,13 @@ class _PreviewForRoleHeaderState extends State<PreviewForRoleHeader> {
                           HMSRoomLayout.roleLayoutData!.logo!.url!)
                       : Image.network(
                           HMSRoomLayout.roleLayoutData!.logo!.url!,
+                          errorBuilder: (context, exception, _) {
+                            log('Error is $exception');
+                            return const SizedBox(
+                              width: 30,
+                              height: 30,
+                            );
+                          },
                           height: 30,
                           width: 30,
                         ),

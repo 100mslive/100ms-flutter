@@ -43,6 +43,9 @@ class MeetingScreenController extends StatefulWidget {
   ///For more details checkout the [HMSConfig] class
   final HMSConfig? config;
 
+  ///[currentAudioDeviceMode] is the current audio device mode
+  final HMSAudioDevice currentAudioDeviceMode;
+
   const MeetingScreenController(
       {Key? key,
       required this.roomCode,
@@ -52,7 +55,8 @@ class MeetingScreenController extends StatefulWidget {
       this.showStats = false,
       this.mirrorCamera = true,
       this.role,
-      this.config})
+      this.config,
+      this.currentAudioDeviceMode = HMSAudioDevice.AUTOMATIC})
       : super(key: key);
 
   @override
@@ -95,6 +99,7 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
           return MeetingPage(
             meetingLink: widget.roomCode,
             isRoomMute: widget.isRoomMute,
+            currentAudioDeviceMode: widget.currentAudioDeviceMode,
           );
         },
         selector: (_, meetingStore) => meetingStore.localPeer?.role.name);
