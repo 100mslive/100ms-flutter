@@ -232,10 +232,10 @@ class MeetingStore extends ChangeNotifier
   bool isRecordingInInitialisingState = false;
 
   ///Pool of video views
-  List<HMSVideoViewController> viewControllers = [];
+  List<HMSTextureViewController> viewControllers = [];
 
   ///Video View for screenshare
-  HMSVideoViewController? screenshareViewController;
+  HMSTextureViewController? screenshareViewController;
 
   Future<HMSException?> join(String userName, String roomCode,
       {HMSConfig? roomConfig}) async {
@@ -850,7 +850,7 @@ class MeetingStore extends ChangeNotifier
 
   void setViewControllers() {
     for (var i = 0; i < 6; i++) {
-      viewControllers.add(HMSVideoViewController(addTrackByDefault: false));
+      viewControllers.add(HMSTextureViewController(addTrackByDefault: false));
     }
   }
 

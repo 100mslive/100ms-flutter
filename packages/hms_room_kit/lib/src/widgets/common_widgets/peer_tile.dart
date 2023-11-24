@@ -37,7 +37,7 @@ class PeerTile extends StatefulWidget {
   final double avatarRadius;
   final double avatarTitleFontSize;
   final double avatarTitleTextLineHeight;
-  final HMSVideoViewController? videoViewController;
+  final HMSTextureViewController? videoViewController;
   const PeerTile(
       {Key? key,
       this.scaleType = ScaleType.SCALE_ASPECT_FILL,

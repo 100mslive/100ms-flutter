@@ -33,7 +33,7 @@ class VideoView extends StatefulWidget {
   final double avatarRadius;
   final double avatarTitleFontSize;
   final double avatarTitleTextLineHeight;
-  final HMSVideoViewController? videoViewController;
+  final HMSTextureViewController? videoViewController;
 
   const VideoView(
       {Key? key,
@@ -81,7 +81,7 @@ class _VideoViewState extends State<VideoView> {
                 ? InteractiveViewer(
                     // [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
                     // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
-                    child: HMSVideoView(
+                    child: HMSTextureView(
                       controller: widget.videoViewController,
                       addTrackByDefault:
                           !context.read<PeerTrackNode>().isOffscreen,
@@ -96,7 +96,7 @@ class _VideoViewState extends State<VideoView> {
                 : SizedBox(
                     // [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
                     // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
-                    child: HMSVideoView(
+                    child: HMSTextureView(
                       controller: widget.videoViewController,
                       addTrackByDefault:
                           !context.read<PeerTrackNode>().isOffscreen,

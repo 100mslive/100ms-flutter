@@ -102,6 +102,7 @@ export 'src/model/hms_peer_list_iterator.dart';
 export 'src/model/peer_list_iterator_options.dart';
 
 //Views
+export 'src/ui/meeting/hms_texture_view.dart';
 export 'src/ui/meeting/hms_video_view.dart';
 export 'src/ui/meeting/hms_hls_player.dart';
-export 'src/ui/meeting/hms_video_view_controller.dart';
+export 'src/ui/meeting/hms_texture_view_controller.dart';
