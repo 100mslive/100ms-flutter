@@ -111,13 +111,16 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
                             selector: (_, meetingStore) =>
                                 meetingStore.currentPage,
                             builder: (_, currentPage, __) {
-                              return DotsIndicator(
-                                dotsCount: pageCount,
-                                position: currentPage,
-                                decorator: DotsDecorator(
-                                    activeColor:
-                                        HMSThemeColors.onSurfaceHighEmphasis,
-                                    color: HMSThemeColors.onSurfaceLowEmphasis),
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: DotsIndicator(
+                                  dotsCount: pageCount,
+                                  position: currentPage,
+                                  decorator: DotsDecorator(
+                                      activeColor:
+                                          HMSThemeColors.onSurfaceHighEmphasis,
+                                      color: HMSThemeColors.onSurfaceLowEmphasis),
+                                ),
                               );
                             }),
                       )

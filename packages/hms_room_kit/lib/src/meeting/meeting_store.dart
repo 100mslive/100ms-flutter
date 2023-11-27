@@ -1611,6 +1611,9 @@ class MeetingStore extends ChangeNotifier
             int peerIndex = peerTracks.indexWhere(
                 (element) => element.uid == peer.peerId + track.trackId);
             if (peerIndex != -1) {
+              if ((screenShareCount - 1) == currentScreenSharePage) {
+                currentScreenSharePage--;
+              }
               screenShareCount--;
               peerTracks.removeAt(peerIndex);
               notifyListeners();

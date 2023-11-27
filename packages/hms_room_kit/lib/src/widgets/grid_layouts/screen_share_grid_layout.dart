@@ -73,13 +73,16 @@ class _ScreenshareGridLayoutState extends State<ScreenshareGridLayout> {
                         selector: (_, meetingStore) =>
                             meetingStore.currentScreenSharePage,
                         builder: (_, currentScreenSharePage, __) {
-                          return DotsIndicator(
-                            dotsCount: widget.screenshareCount,
-                            position: currentScreenSharePage,
-                            decorator: DotsDecorator(
-                                activeColor:
-                                    HMSThemeColors.onSurfaceHighEmphasis,
-                                color: HMSThemeColors.onSurfaceLowEmphasis),
+                          return SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: DotsIndicator(
+                              dotsCount: widget.screenshareCount,
+                              position: currentScreenSharePage,
+                              decorator: DotsDecorator(
+                                  activeColor:
+                                      HMSThemeColors.onSurfaceHighEmphasis,
+                                  color: HMSThemeColors.onSurfaceLowEmphasis),
+                            ),
                           );
                         }),
                   )
@@ -131,18 +134,22 @@ class _ScreenshareGridLayoutState extends State<ScreenshareGridLayout> {
                         builder: (_, currentPage, __) {
                           return Padding(
                             padding: const EdgeInsets.only(top: 8.0),
-                            child: DotsIndicator(
-                              dotsCount: (((widget.peerTracks.length -
-                                          widget.screenshareCount) ~/
-                                      2) +
-                                  (widget.peerTracks.length -
-                                          widget.screenshareCount) %
-                                      2),
-                              position: currentPage,
-                              decorator: DotsDecorator(
-                                  activeColor:
-                                      HMSThemeColors.onSurfaceHighEmphasis,
-                                  color: HMSThemeColors.onSurfaceLowEmphasis),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: DotsIndicator(
+                                mainAxisSize: MainAxisSize.min,
+                                dotsCount: (((widget.peerTracks.length -
+                                            widget.screenshareCount) ~/
+                                        2) +
+                                    (widget.peerTracks.length -
+                                            widget.screenshareCount) %
+                                        2),
+                                position: currentPage,
+                                decorator: DotsDecorator(
+                                    activeColor:
+                                        HMSThemeColors.onSurfaceHighEmphasis,
+                                    color: HMSThemeColors.onSurfaceLowEmphasis),
+                              ),
                             ),
                           );
                         })
