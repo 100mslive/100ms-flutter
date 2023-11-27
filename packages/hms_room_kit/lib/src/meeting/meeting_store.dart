@@ -1074,8 +1074,7 @@ class MeetingStore extends ChangeNotifier
       notifyListeners();
     }
 
-    //This is to handle the borders around the tiles of peers who are currently speaking
-    //Reseting the borders of the tile everytime the update is received
+    //This is to handle the audio level ui on the tiles of peers who are currently speaking
     if (activeSpeakerIds.isNotEmpty) {
       for (var key in activeSpeakerIds) {
         int index = peerTracks.indexWhere((element) => element.uid == key);
@@ -1086,7 +1085,6 @@ class MeetingStore extends ChangeNotifier
       activeSpeakerIds.clear();
     }
 
-    //Setting the border for peers who are speaking
     for (var element in updateSpeakers) {
       activeSpeakerIds.add("${element.peer.peerId}mainVideo");
       int index = peerTracks
