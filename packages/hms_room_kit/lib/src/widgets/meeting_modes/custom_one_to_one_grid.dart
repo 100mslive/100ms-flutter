@@ -119,7 +119,8 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
                                   decorator: DotsDecorator(
                                       activeColor:
                                           HMSThemeColors.onSurfaceHighEmphasis,
-                                      color: HMSThemeColors.onSurfaceLowEmphasis),
+                                      color:
+                                          HMSThemeColors.onSurfaceLowEmphasis),
                                 ),
                               );
                             }),

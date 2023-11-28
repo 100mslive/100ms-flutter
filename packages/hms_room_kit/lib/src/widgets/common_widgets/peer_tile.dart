@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/audio_level_avatar.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -94,14 +93,18 @@ class _PeerTileState extends State<PeerTile> {
                         "fl_${context.read<PeerTrackNode>().peer.name}_video_on",
                     child: Stack(
                       children: [
-                        VideoView(
-                          uid: context.read<PeerTrackNode>().uid,
-                          scaleType: widget.scaleType,
-                          avatarTitleFontSize: widget.avatarTitleFontSize,
-                          avatarRadius: widget.avatarRadius,
-                          avatarTitleTextLineHeight:
-                              widget.avatarTitleTextLineHeight,
-                          videoViewController: widget.videoViewController,
+                        ///ClipRRect is used to round the video edges
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: VideoView(
+                            uid: context.read<PeerTrackNode>().uid,
+                            scaleType: widget.scaleType,
+                            avatarTitleFontSize: widget.avatarTitleFontSize,
+                            avatarRadius: widget.avatarRadius,
+                            avatarTitleTextLineHeight:
+                                widget.avatarTitleTextLineHeight,
+                            videoViewController: widget.videoViewController,
+                          ),
                         ),
                         Semantics(
                           label:
@@ -110,28 +113,6 @@ class _PeerTileState extends State<PeerTile> {
                             constraints: constraints,
                           ),
                         ),
-                        Selector<PeerTrackNode, bool>(
-                            selector: (_, peerTrackNode) =>
-                                peerTrackNode.isOffscreen,
-                            builder: (_, isOffScreen, __) {
-                              return isOffScreen
-                                  ? Semantics(
-                                      label: "fl_video_off",
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color:
-                                              HMSThemeColors.backgroundDefault,
-                                        ),
-                                        child: AudioLevelAvatar(
-                                          avatarRadius: widget.avatarRadius,
-                                          avatarTitleFontSize:
-                                              widget.avatarTitleFontSize,
-                                          avatarTitleTextLineHeight:
-                                              widget.avatarTitleTextLineHeight,
-                                        ),
-                                      ))
-                                  : const SizedBox();
-                            }),
                         NameAndNetwork(maxWidth: constraints.maxWidth),
                         const HandRaise(), //top left
                         const BRBTag(), //top left
