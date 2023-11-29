@@ -56,11 +56,11 @@ class _VideoViewState extends State<VideoView> {
   @override
   Widget build(BuildContext context) {
     ///We use the [Selector] widget to rebuild the widget when the peer track node changes
-    return Selector<PeerTrackNode, Tuple2<HMSVideoTrack?, bool>>(
+    return Selector<PeerTrackNode, Tuple3<HMSVideoTrack?, bool, bool>>(
         builder: (_, data, __) {
           ///If the peer track node is null or the peer is muted or the peer is offscreen
           ///We render the avatar
-          if ((data.item1 == null) || data.item2) {
+          if ((data.item1 == null) || data.item2 || data.item3) {
             return Semantics(
                 label: "fl_video_off",
                 child: AudioLevelAvatar(
@@ -110,7 +110,7 @@ class _VideoViewState extends State<VideoView> {
                   );
           }
         },
-        selector: (_, peerTrackNode) =>
-            Tuple2(peerTrackNode.track, (peerTrackNode.track?.isMute ?? true)));
+        selector: (_, peerTrackNode) => Tuple3(peerTrackNode.track,
+            peerTrackNode.isOffscreen, (peerTrackNode.track?.isMute ?? true)));
   }
 }
