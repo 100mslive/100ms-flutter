@@ -1,6 +1,3 @@
-///Dart imports
-import 'dart:developer';
-
 ///Package imports
 import 'package:flutter/services.dart';
 
@@ -51,7 +48,6 @@ class HMSTextureViewController {
       {HMSTrack? track,
       bool addTrackByDefault = true,
       bool? disableAutoSimulcastLayerSelect}) async {
-    log("VKohli Calling createTextureView -> disableAutoSimulcastLayerSelect:$disableAutoSimulcastLayerSelect height: $_height, width: $_width");
     var result = await PlatformService.invokeMethod(
         PlatformMethod.createTextureView,
         arguments: {
@@ -74,15 +70,13 @@ class HMSTextureViewController {
   ///[setCallbackMethod] is used to set the callback method for the texture view.
   ///This callback method is used to refresh the view when certain properties of the view changes.
   void setCallbackMethod(Function callback) {
-    log("VKohli Calling setCallbackMethod -> $callback");
-    _updateViewCallback = callback;
+   _updateViewCallback = callback;
   }
 
   ///[disposeTextureView] is used to dispose the texture view.
   ///It is the responsibility of the application to dispose the texture view if the controller is created
   ///by the application.
   void disposeTextureView() async {
-    log("VKohli Calling disposeTextureView");
     var result = await PlatformService.invokeMethod(
         PlatformMethod.disposeTextureView,
         arguments: {"texture_id": textureId.toString()});
@@ -96,7 +90,6 @@ class HMSTextureViewController {
   void addTrack(
       {required HMSVideoTrack track,
       bool? disableAutoSimulcastLayerSelect}) async {
-    log("VKohli Calling addTrack -> height: $_height, width: $_width");
     await PlatformService.invokeMethod(PlatformMethod.addTrack, arguments: {
       "track_id": track.trackId,
       "texture_id": textureId.toString(),
@@ -127,7 +120,6 @@ class HMSTextureViewController {
   ///[setHeightWidth] is used to set the height and width of the texture view.
   void setHeightWidth({required double height, required double width}) {
     if (_height != height.toInt() || _width != width.toInt()) {
-      log("VKohli Calling setHeightWidth-> height: $height, width: $width");
       _height = height.toInt();
       _width = width.toInt();
       _setDisplayResolution(height: _height!, width: _width!);
@@ -137,8 +129,7 @@ class HMSTextureViewController {
   ///[_eventListener] is the callback method for the texture view.
   ///We get the native callbacks like [onResolutionChanged] from the texture view.
   void _eventListener(dynamic event) {
-    log("VKohli HMSVideoView Event Fired $event");
-
+    
     HMSVideoViewEvent videoViewEvent =
         HMSVideoViewValues.getHMSVideoViewEventFromString(event['event_name']);
     switch (videoViewEvent) {

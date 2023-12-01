@@ -9,7 +9,9 @@ https://100ms.atlassian.net/browse/FLUT-167
 - when swiping page, there’s tile colored line between tiles.
 https://100ms.atlassian.net/browse/FLUT-166
 
+RC build
+
 Room Kit: 1.0.7
 Core SDK: 1.9.4
-Android SDK: 2.8.1
+Android SDK: 2.8.2
 iOS SDK: 1.3.0

@@ -11,7 +11,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///100ms HMSTextureView
 ///
-///HMSTextureView used to render video in ios and android devices
+///HMSTextureView is used to render video tracks
 ///
 ///In android devices, [HMSTextureView] uses texture to render videos while [HMSVideoView] uses surfaceView to render videos.
 ///In iOS there is no difference between [HMSTextureView] and [HMSVideoView].
@@ -38,7 +38,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 /// **controller** - To control the video view, this is useful for custom usecases when you wish to control the addTrack and removeTrack
 /// track functionalities on your own.
 ///
-/// Refer [HMSVideoView guide here](https://www.100ms.live/docs/flutter/v2/features/render-video)
+/// Refer [HMSTextureView guide here](https://www.100ms.live/docs/flutter/v2/features/render-video)
 class HMSTextureView extends StatelessWidget {
   /// This will render video with trackId present in the track
   /// [track] - the video track to be displayed
