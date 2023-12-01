@@ -70,7 +70,7 @@ class HMSTextureViewController {
   ///[setCallbackMethod] is used to set the callback method for the texture view.
   ///This callback method is used to refresh the view when certain properties of the view changes.
   void setCallbackMethod(Function callback) {
-   _updateViewCallback = callback;
+    _updateViewCallback = callback;
   }
 
   ///[disposeTextureView] is used to dispose the texture view.
@@ -129,7 +129,6 @@ class HMSTextureViewController {
   ///[_eventListener] is the callback method for the texture view.
   ///We get the native callbacks like [onResolutionChanged] from the texture view.
   void _eventListener(dynamic event) {
-    
     HMSVideoViewEvent videoViewEvent =
         HMSVideoViewValues.getHMSVideoViewEventFromString(event['event_name']);
     switch (videoViewEvent) {
