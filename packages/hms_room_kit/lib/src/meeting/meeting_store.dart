@@ -1005,7 +1005,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onHMSError({required HMSException error}) {
-    log("onHMSError-> error: ${error.code} ${error.message}");
+    log("onHMSError-> error: ${error.code?.errorCode} ${error.message}");
     hmsException = error;
     Utilities.showNotification(error.message ?? "", "error");
     notifyListeners();

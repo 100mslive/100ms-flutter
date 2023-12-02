@@ -132,19 +132,21 @@ class _ScreenshareGridLayoutState extends State<ScreenshareGridLayout> {
                     Selector<MeetingStore, int>(
                         selector: (_, meetingStore) => meetingStore.currentPage,
                         builder: (_, currentPage, __) {
+                          int dotsCount = (((widget.peerTracks.length -
+                                      widget.screenshareCount) ~/
+                                  2) +
+                              (widget.peerTracks.length -
+                                      widget.screenshareCount) %
+                                  2);
                           return Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: DotsIndicator(
                                 mainAxisSize: MainAxisSize.min,
-                                dotsCount: (((widget.peerTracks.length -
-                                            widget.screenshareCount) ~/
-                                        2) +
-                                    (widget.peerTracks.length -
-                                            widget.screenshareCount) %
-                                        2),
-                                position: currentPage,
+                                dotsCount: dotsCount,
+                                position:
+                                    currentPage > dotsCount ? 0 : currentPage,
                                 decorator: DotsDecorator(
                                     activeColor:
                                         HMSThemeColors.onSurfaceHighEmphasis,
