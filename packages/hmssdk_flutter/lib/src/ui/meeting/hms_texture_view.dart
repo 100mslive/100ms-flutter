@@ -116,15 +116,18 @@ class _PlatformViewState extends State<_PlatformView> {
   void initState() {
     ///If controller is null, then we create a new controller
     ///else we use the controller provided by the app.
-    if (widget.controller == null) {
-      viewController =
-          HMSTextureViewController(track: widget.track as HMSVideoTrack);
-    } else {
-      viewController = widget.controller;
-    }
+    /// (Android Only)
+    if (Platform.isAndroid) {
+      if (widget.controller == null) {
+        viewController =
+            HMSTextureViewController(track: widget.track as HMSVideoTrack);
+      } else {
+        viewController = widget.controller;
+      }
 
-    ///Here we set the callback method which gets called to set the view
-    viewController?.setCallbackMethod(setView);
+      ///Here we set the callback method which gets called to set the view
+      viewController?.setCallbackMethod(setView);
+    }
     super.initState();
   }
 
@@ -141,8 +144,11 @@ class _PlatformViewState extends State<_PlatformView> {
     ///
     ///Note that if the controller is created from app
     ///then the application needs to call this method explicitly.
-    if (widget.controller == null) {
-      viewController?.disposeTextureView();
+    /// (Android Only)
+    if (Platform.isAndroid) {
+      if (widget.controller == null) {
+        viewController?.disposeTextureView();
+      }
     }
     super.dispose();
   }

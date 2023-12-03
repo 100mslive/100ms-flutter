@@ -115,7 +115,8 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
                                 scrollDirection: Axis.horizontal,
                                 child: DotsIndicator(
                                   dotsCount: pageCount,
-                                  position: currentPage,
+                                  position:
+                                      currentPage > pageCount ? 0 : currentPage,
                                   decorator: DotsDecorator(
                                       activeColor:
                                           HMSThemeColors.onSurfaceHighEmphasis,
