@@ -33,6 +33,8 @@ class VideoView extends StatefulWidget {
   final double avatarRadius;
   final double avatarTitleFontSize;
   final double avatarTitleTextLineHeight;
+  final HMSTextureViewController? videoViewController;
+
   const VideoView(
       {Key? key,
       this.viewSize,
@@ -42,7 +44,8 @@ class VideoView extends StatefulWidget {
       this.scaleType = ScaleType.SCALE_ASPECT_FILL,
       this.avatarRadius = 34,
       this.avatarTitleFontSize = 34,
-      this.avatarTitleTextLineHeight = 32})
+      this.avatarTitleTextLineHeight = 32,
+      this.videoViewController})
       : super(key: key);
 
   @override
@@ -75,43 +78,39 @@ class _VideoViewState extends State<VideoView> {
             ///If the video track source is REGULAR i.e. it is a camera video track
             ///we set the scaletype as FILL
             return (data.item1?.source != "REGULAR")
-                ? ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: InteractiveViewer(
-                      // [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
-                      // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
-                      child: HMSVideoView(
-                        key: Key(data.item1!.trackId),
-                        scaleType: widget.scaleType,
-                        track: data.item1!,
-                        setMirror: false,
-                        disableAutoSimulcastLayerSelect:
-                            !(context.read<MeetingStore>().isAutoSimulcast),
-                      ),
+                ? InteractiveViewer(
+                    // [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
+                    // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
+                    child: HMSTextureView(
+                      controller: widget.videoViewController,
+                      addTrackByDefault:
+                          !context.read<PeerTrackNode>().isOffscreen,
+                      key: Key(data.item1!.trackId),
+                      scaleType: ScaleType.SCALE_ASPECT_FIT,
+                      track: data.item1!,
+                      setMirror: false,
+                      disableAutoSimulcastLayerSelect:
+                          !(context.read<MeetingStore>().isAutoSimulcast),
                     ),
                   )
-                : ClipRRect(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                    child: SizedBox(
-                      // [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
-                      // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
-                      child: HMSVideoView(
-                        key: Key(data.item1!.trackId),
-                        scaleType: ScaleType.SCALE_ASPECT_FILL,
-                        track: data.item1!,
-                        setMirror: data.item1.runtimeType == HMSLocalVideoTrack,
-                        disableAutoSimulcastLayerSelect:
-                            !(context.read<MeetingStore>().isAutoSimulcast),
-                      ),
+                : SizedBox(
+                    // [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
+                    // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
+                    child: HMSTextureView(
+                      controller: widget.videoViewController,
+                      addTrackByDefault:
+                          !context.read<PeerTrackNode>().isOffscreen,
+                      key: Key(data.item1!.trackId),
+                      scaleType: ScaleType.SCALE_ASPECT_FILL,
+                      track: data.item1!,
+                      setMirror: data.item1.runtimeType == HMSLocalVideoTrack,
+                      disableAutoSimulcastLayerSelect:
+                          !(context.read<MeetingStore>().isAutoSimulcast),
                     ),
                   );
           }
         },
-        selector: (_, peerTrackNode) => Tuple3(
-            peerTrackNode.track,
-            (peerTrackNode.isOffscreen),
-            (peerTrackNode.track?.isMute ?? true)));
+        selector: (_, peerTrackNode) => Tuple3(peerTrackNode.track,
+            peerTrackNode.isOffscreen, (peerTrackNode.track?.isMute ?? true)));
   }
 }

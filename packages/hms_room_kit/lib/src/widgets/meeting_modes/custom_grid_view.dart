@@ -37,7 +37,6 @@ class _CustomGridViewState extends State<CustomGridView> {
             children: [
               Expanded(
                 child: PageView.builder(
-                    clipBehavior: Clip.none,
                     physics: const PageScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     controller: controller,
