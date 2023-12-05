@@ -18,7 +18,9 @@ import 'package:hms_room_kit/src/widgets/grid_layouts/screen_share_grid_layout.d
 ///[isLocalInsetPresent] is used to check if the local inset tile is present or not
 class CustomOneToOneGrid extends StatefulWidget {
   final bool isLocalInsetPresent;
-  const CustomOneToOneGrid({super.key, this.isLocalInsetPresent = true});
+  final List<PeerTrackNode>? peerTracks;
+  const CustomOneToOneGrid(
+      {super.key, this.isLocalInsetPresent = true, this.peerTracks});
 
   @override
   State<CustomOneToOneGrid> createState() => _CustomOneToOneGridState();
@@ -64,14 +66,6 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
               Column(
                   children: [
                     Expanded(
-                      // child: TextureViewGrid(
-                      //     peerTracks: widget.isLocalInsetPresent
-                      //         ? data.item1
-                      //             .where((element) =>
-                      //                 !(element.peer.isLocal) ||
-                      //                 element.track?.source == "SCREEN")
-                      //             .toList()
-                      //         : data.item1),
                       child: PageView.builder(
                           physics: const PageScrollPhysics(),
                           controller: controller,
