@@ -1,13 +1,12 @@
-//Package imports
+///Dart imports
 import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:bot_toast/bot_toast.dart';
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hms_room_kit/src/common/animated_text.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -266,16 +265,16 @@ class Utilities {
 
   static void showTimedMetadata(String message,
       {int time = 1, Alignment align = const Alignment(0, 0.8)}) {
-    BotToast.showText(
-        align: align,
-        wrapToastAnimation: (controller, cancelFunc, widget) =>
-            AnimatedTextWidget(
-                text: message, duration: Duration(seconds: time)),
-        onlyOne: false,
-        textStyle: HMSTextStyle.setTextStyle(fontSize: 14),
-        text: message,
-        contentColor: Colors.black87,
-        duration: Duration(seconds: time));
+    // BotToast.showText(
+    //     align: align,
+    //     wrapToastAnimation: (controller, cancelFunc, widget) =>
+    //         AnimatedTextWidget(
+    //             text: message, duration: Duration(seconds: time)),
+    //     onlyOne: false,
+    //     textStyle: HMSTextStyle.setTextStyle(fontSize: 14),
+    //     text: message,
+    //     contentColor: Colors.black87,
+    //     duration: Duration(seconds: time));
   }
 
   static Future<String> getStringData({required String key}) async {
