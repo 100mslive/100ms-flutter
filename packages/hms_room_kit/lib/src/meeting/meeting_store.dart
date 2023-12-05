@@ -1355,7 +1355,9 @@ class MeetingStore extends ChangeNotifier
   }
 
   void addMessage(HMSMessage message) {
-    messages.add(message);
+    if (message.type == "chat") {
+      messages.add(message);
+    }
   }
 
   void updatePeerAt(HMSPeer peer) {
