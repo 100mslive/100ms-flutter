@@ -47,7 +47,7 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width * 0.78,
+                          width: MediaQuery.of(context).size.width * 0.76,
                           height: 36,
                           decoration: BoxDecoration(
                               color: HMSThemeColors.surfaceDefault,
