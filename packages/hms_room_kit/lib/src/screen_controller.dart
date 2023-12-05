@@ -158,7 +158,7 @@ class _ScreenControllerState extends State<ScreenController> {
                   value: _previewStore,
                   child: PreviewPage(
                     roomCode: Constant.roomCode,
-                    name: widget.options?.userName ?? "",
+                    name: widget.options?.userName?.trim() ?? "",
                     options: widget.options,
                   ))
               : PreviewPermissions(
