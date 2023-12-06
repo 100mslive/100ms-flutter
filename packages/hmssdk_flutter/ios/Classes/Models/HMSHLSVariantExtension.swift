@@ -18,10 +18,9 @@ class HMSHLSVariantExtension {
 
         dict["metadata"] = hmshlsVariant.metadata
 
-        if let url = hmshlsVariant.url{
+        if let url = hmshlsVariant.url {
             dict["hls_stream_url"] = url.absoluteString
-        }
-        else{
+        } else {
             dict["hls_stream_url"]  = nil
         }
 

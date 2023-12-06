@@ -14,12 +14,10 @@
 A powerful prebuilt UI library for audio/video conferencing, live streaming, and one-to-one calls.
 This package provides developers with a comprehensive set of tools and components to quickly integrate high-quality audio and video communication features into their Flutter applications.
 
-
 | Package        | Version                                                                                                |
 | -------------- | ------------------------------------------------------------------------------------------------------ |
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
-
 
 📖 Read the Complete Documentation here: https://www.100ms.live/docs/flutter/v2/guides/quickstart
 
