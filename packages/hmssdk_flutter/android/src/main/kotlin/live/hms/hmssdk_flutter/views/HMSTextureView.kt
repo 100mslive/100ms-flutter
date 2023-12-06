@@ -29,7 +29,6 @@ class HMSTextureView(
 
     private val videoViewStateChangeListener = object : VideoViewStateChangeListener{
         override fun onResolutionChange(newWidth: kotlin.Int, newHeight: kotlin.Int) {
-            Log.i("Vkohli", "onResolutionChange -> newWidth:$newWidth, newHeight-> $newHeight")
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_resolution_changed"
             val data = HashMap<String,Int>()
