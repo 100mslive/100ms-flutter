@@ -1051,10 +1051,21 @@ class MeetingStore extends ChangeNotifier
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     //To handle the active speaker mode scenario
+
+    ///This is to handle whether to bring the user to first index
+    ///In case of normal layout if the user is on the first page i.e
+    ///index < 6 we don't move the peer to first page. Similarly, if
+    ///screenshare is on and index < 2 we don't update the position
+    ///of the peer
+    int peersInActiveSpeakerLayout = 6;
+    if (screenShareCount > 0) {
+      peersInActiveSpeakerLayout = 2;
+    }
+
     if ((currentPage == 0) &&
         (meetingMode == MeetingMode.activeSpeakerWithInset ||
             meetingMode == MeetingMode.activeSpeakerWithoutInset) &&
-        peerTracks.length > 6) {
+        peerTracks.length > peersInActiveSpeakerLayout) {
       /* Here we iterate through the updateSpeakers list
        * and do the following:
        * Find the index of the peer
@@ -1064,7 +1075,7 @@ class MeetingStore extends ChangeNotifier
       for (var speaker in updateSpeakers) {
         int index = peerTracks.indexWhere((previousSpeaker) =>
             previousSpeaker.uid == "${speaker.peer.peerId}mainVideo");
-        if (index > 5) {
+        if (index > (peersInActiveSpeakerLayout - 1)) {
           PeerTrackNode activeSpeaker = peerTracks[index];
           peerTracks.removeAt(index);
           peerTracks.insert(screenShareCount, activeSpeaker);
@@ -1344,7 +1355,9 @@ class MeetingStore extends ChangeNotifier
   }
 
   void addMessage(HMSMessage message) {
-    messages.add(message);
+    if (message.type == "chat") {
+      messages.add(message);
+    }
   }
 
   void updatePeerAt(HMSPeer peer) {

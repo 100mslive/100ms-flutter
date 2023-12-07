@@ -33,7 +33,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 /// **key** - [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
 /// Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
 ///
-/// **addTrackByDefault** - To call addTrack by default as HMSVideoView is attached to the tree. Default value is [true]
+/// **addTrackByDefault** - To call addTrack by default as HMSTextureView is attached to the tree. Default value is [true]
 ///
 /// **controller** - To control the video view, this is useful for custom usecases when you wish to control the addTrack and removeTrack
 /// track functionalities on your own.
