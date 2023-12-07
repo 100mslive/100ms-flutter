@@ -64,12 +64,6 @@ class _PeerTileState extends State<PeerTile> {
           if (mounted) {
             Provider.of<PeerTrackNode>(context, listen: false)
                 .setOffScreenStatus(true);
-            if (context.read<PeerTrackNode>().track != null) {
-              // log("HMSVideoViewController remove video track ${context.read<PeerTrackNode>().peer.name}");
-
-              ///Avoiding remove track
-              // widget.videoViewController?.removeTrack();
-            }
           }
         },
         onFocusGained: () {

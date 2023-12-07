@@ -109,7 +109,7 @@ Please follow the below instructions to test the app for the Android Platform:
 
 1. Add minimum SDK version (`minSdkVersion 21`) in `android/app/build.gradle` file (inside `defaultConfig`).
 
-```json
+```
 ...
 defaultConfig {
     ...
@@ -121,7 +121,7 @@ defaultConfig {
 
 2. To add PIP support in your app manifest files, add:
 
-```xml
+```
 <activity
     ....
     android:supportsPictureInPicture="true"
@@ -157,7 +157,7 @@ super.onActivityResult(requestCode, resultCode, data)
 
 5. Add the `FOREGROUND_SERVICE` permission in `AndroidManifest.xml`:
 
-```xml
+```
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 ```
 
@@ -167,11 +167,44 @@ Please follow the below instructions to test the app for iOS Platform
 
 1. Add the target platform version as (`platform :ios, '12.0'`) in `ios/Podfile`
 
-```json
+```
 platform :ios, '12.0'
 ```
+2. Allow camera, recording audio and internet permissions by adding the below snippet to the `ios/Runner/info.plist` file.
 
-2. To add PIP support in your iOS app:
+    ```
+    <key>NSMicrophoneUsageDescription</key>
+    <string>{YourAppName} wants to use your microphone</string>
+
+    <key>NSCameraUsageDescription</key>
+    <string>{YourAppName} wants to use your camera</string>
+
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>{YourAppName} App wants to use your local network</string>
+
+    <key>NSBluetoothAlwaysUsageDescription</key>
+	<string>{YourAppName} needs access to bluetooth to connect to nearby devices.</string>
+    ```
+
+3. Add the below snippet to the `ios/Podfile` in post_install section:
+
+    ```
+    target.build_configurations.each do |config|
+    config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
+        '$(inherited)',
+        ## dart: PermissionGroup.camera
+        'PERMISSION_CAMERA=1',
+
+        ## dart: PermissionGroup.microphone
+        'PERMISSION_MICROPHONE=1',
+
+        ## dart: PermissionGroup.bluetooth
+        'PERMISSION_BLUETOOTH=1',
+    ]
+    end
+    ```
+
+4. To add PIP support in your iOS app:
 
 - Minimum Requirements:
   - Minimum iOS version required to support PiP is iOS 15
@@ -184,9 +217,9 @@ After you receive permission from Apple, add the Entitlement to your app by open
 
 ![Entitlements](https://www.100ms.live/docs/docs/v2/flutter-multitasking-camera-entitlement.png)
 
-3. To add screen share support in iOS app, checkout the docs [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/screen-share#ios-setup)
+5. To add screen share support in iOS app, checkout the docs [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/screen-share#ios-setup)
 
-4. Pass the `iOSScreenshareConfig` in `HMSPrebuiltOptions` parameter of `HMSPrebuilt` widget to enable screen share in your app.
+6. Pass the `iOSScreenshareConfig` in `HMSPrebuiltOptions` parameter of `HMSPrebuilt` widget to enable screen share in your app.
 
 ```dart
 // Pass the correct App Group & Preferred Extension parameters in HMSIOSScreenshareConfig class.

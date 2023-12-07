@@ -3,15 +3,19 @@ Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 - Added TextureView in place of SurfaceView for better performance
 https://100ms.atlassian.net/browse/FLUT-121
 
-- Video on preview is stretched.
-https://100ms.atlassian.net/browse/FLUT-167
+- Disable editing username in preview screen if username is passed to prebuilt in options config
+https://100ms.atlassian.net/browse/FLUT-158
 
-- when swiping page, there’s tile colored line between tiles.
-https://100ms.atlassian.net/browse/FLUT-166
+- Getting 3 blank messages for flutter on stage user if declined 3 invite before
+https://100ms.atlassian.net/browse/FLUT-172
 
-RC build
+- Active Speaker should come within first 2 tiles when doing Screenshare
+https://100ms.atlassian.net/browse/FLUT-161
+
+- Flutter iOS VNRT to stage, app crash.
+https://100ms.atlassian.net/browse/FLUT-173
 
 Room Kit: 1.0.7
 Core SDK: 1.9.4
-Android SDK: 2.8.2
-iOS SDK: 1.3.0
+Android SDK: 2.8.3
+iOS SDK: 1.3.1

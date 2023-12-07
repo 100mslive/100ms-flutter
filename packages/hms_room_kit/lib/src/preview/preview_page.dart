@@ -322,6 +322,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         height: 48,
                                                         width: width * 0.50,
                                                         child: TextField(
+                                                          enabled: widget.name
+                                                              .trim()
+                                                              .isEmpty,
                                                           cursorColor:
                                                               HMSThemeColors
                                                                   .onSurfaceHighEmphasis,

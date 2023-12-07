@@ -82,8 +82,9 @@ class _OneToOneModeState extends State<OneToOneMode> {
             ///
             ///This is the case when the local peer is null or it doesn't have audio or videotrack
             (oneToOnePeer == null)
-                ? const CustomOneToOneGrid(
+                ? CustomOneToOneGrid(
                     isLocalInsetPresent: false,
+                    peerTracks: widget.peerTracks,
                   )
 
                 ///This handles the case where local peer is the only peer in the room with audio or video track
@@ -97,7 +98,9 @@ class _OneToOneModeState extends State<OneToOneMode> {
                     ///i.e. this handles the normal flow
                     : Stack(
                         children: [
-                          const CustomOneToOneGrid(),
+                          CustomOneToOneGrid(
+                            peerTracks: widget.peerTracks,
+                          ),
                           DraggableWidget(
                               dragAnimationScale: 1,
                               topMargin: 10,

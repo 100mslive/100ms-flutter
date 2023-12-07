@@ -5,6 +5,22 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+## 1.0.7 - 2023-12-07
+
+### 🚀 Added
+
+- If `userName` is specified in `HMSPrebuiltOptions`, username editing on the preview screen will be disabled.
+
+### 🛠️ Fixed
+
+- Active speaker not updating on first page with active screenshare.
+
+- Improved overall performance of the application.
+
+### 🔄 Changed
+
+- `hms_room_kit` now uses `HMSTextureView` instead of `HMSVideoView` for rendering video.
+
 ## 1.0.6 - 2023-11-17
 
 ### 🚀 Added

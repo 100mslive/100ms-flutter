@@ -292,9 +292,11 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                     context:
                                                                         context,
                                                                     size: size)
-                                                                : const CustomOneToOneGrid(
+                                                                : CustomOneToOneGrid(
                                                                     isLocalInsetPresent:
                                                                         false,
+                                                                    peerTracks:
+                                                                        data.item1,
                                                                   ),
                                                           ));
                                                     });
