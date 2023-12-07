@@ -111,7 +111,7 @@ Please follow the below instructions to test the app for the Android Platform:
 
 1. Add minimum SDK version (`minSdkVersion 21`) in `android/app/build.gradle` file (inside `defaultConfig`).
 
-```json
+```
 ...
 defaultConfig {
     ...
@@ -123,7 +123,7 @@ defaultConfig {
 
 2. To add PIP support in your app manifest files, add:
 
-```xml
+```
 <activity
     ....
     android:supportsPictureInPicture="true"
@@ -159,7 +159,7 @@ super.onActivityResult(requestCode, resultCode, data)
 
 5. Add the `FOREGROUND_SERVICE` permission in `AndroidManifest.xml`:
 
-```xml
+```
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 ```
 
@@ -169,13 +169,12 @@ Please follow the below instructions to test the app for iOS Platform
 
 1. Add the target platform version as (`platform :ios, '12.0'`) in `ios/Podfile`
 
-```json
+```
 platform :ios, '12.0'
 ```
 2. Allow camera, recording audio and internet permissions by adding the below snippet to the `ios/Runner/info.plist` file.
 
-    <br />
-    ```xml section=iosPermissions
+    ```
     <key>NSMicrophoneUsageDescription</key>
     <string>{YourAppName} wants to use your microphone</string>
 
@@ -191,7 +190,7 @@ platform :ios, '12.0'
 
 3. Add the below snippet to the `ios/Podfile` in post_install section:
 
-    ```json
+    ```
     target.build_configurations.each do |config|
     config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
         '$(inherited)',
