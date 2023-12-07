@@ -1,5 +1,6 @@
 // Project imports:
 import 'package:hmssdk_flutter/src/model/hms_date_extension.dart';
+import 'package:hmssdk_flutter/src/model/hms_recording_state.dart';
 
 import '../../hmssdk_flutter.dart';
 
@@ -10,8 +11,12 @@ class HMSServerRecordingState {
   final HMSException? error;
   final bool running;
   DateTime? startedAt;
+  HMSRecordingState state;
   HMSServerRecordingState(
-      {required this.error, required this.running, this.startedAt});
+      {required this.error,
+      required this.running,
+      this.startedAt,
+      required this.state});
 
   factory HMSServerRecordingState.fromMap(Map map) {
     return HMSServerRecordingState(
@@ -19,6 +24,8 @@ class HMSServerRecordingState {
         running: map['running'],
         startedAt: map['started_at'] != null
             ? HMSDateExtension.convertDateFromString(map['started_at'])
-            : null);
+            : null,
+        state: HMSRecordingStateValues.getRecordingStateFromName(
+            map['state'] ?? 'NONE'));
   }
 }

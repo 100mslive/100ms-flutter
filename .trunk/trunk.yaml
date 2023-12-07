@@ -1,6 +1,6 @@
 version: 0.1
 cli:
-  version: 1.17.2
+  version: 1.18.0
 plugins:
   sources:
     - id: trunk
@@ -10,7 +10,7 @@ lint:
   enabled:
     - actionlint@1.6.26
     - checkov@3.1.9
-    - osv-scanner@1.4.3
+    - osv-scanner@1.5.0
     - trivy@0.48.0
     - trufflehog@3.63.2
     - oxipng@9.0.0
