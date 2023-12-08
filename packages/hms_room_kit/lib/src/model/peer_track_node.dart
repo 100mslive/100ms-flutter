@@ -10,18 +10,17 @@ class PeerTrackNode extends ChangeNotifier {
   String uid;
   HMSVideoTrack? track;
   HMSAudioTrack? audioTrack;
-  bool isOffscreen;
   int? networkQuality;
   RTCStats? stats;
   int audioLevel;
   bool pinTile;
+  bool isOffscreen = true;
 
   PeerTrackNode(
       {required this.peer,
       this.track,
       this.audioTrack,
       required this.uid,
-      this.isOffscreen = true,
       this.networkQuality = -1,
       this.stats,
       this.audioLevel = -1,
@@ -29,7 +28,7 @@ class PeerTrackNode extends ChangeNotifier {
 
   @override
   String toString() {
-    return 'PeerTrackNode{peerId: ${peer.peerId}, name: ${peer.name}, track: $track}, isVideoOn: $isOffscreen }';
+    return 'PeerTrackNode{peerId: ${peer.peerId}, name: ${peer.name}, track: $track} }';
   }
 
   void notify() {

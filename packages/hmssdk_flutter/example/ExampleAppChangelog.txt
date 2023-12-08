@@ -1,13 +1,21 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
-Release: https://100ms.atlassian.net/projects/FLUT/versions/10598/
 
-Implement sending of Subscriber Stats
-- https://100ms.atlassian.net/browse/FLUT-134
+- Added TextureView in place of SurfaceView for better performance
+https://100ms.atlassian.net/browse/FLUT-121
 
-Prebuilt: Add options to Mute Session or change Audio Output
-- https://100ms.atlassian.net/browse/FLUT-155
+- Disable editing username in preview screen if username is passed to prebuilt in options config
+https://100ms.atlassian.net/browse/FLUT-158
 
-Room Kit: 1.0.6
-Core SDK: 1.9.3
-Android SDK: 2.8.1
-iOS SDK: 1.3.0
+- Getting 3 blank messages for flutter on stage user if declined 3 invite before
+https://100ms.atlassian.net/browse/FLUT-172
+
+- Active Speaker should come within first 2 tiles when doing Screenshare
+https://100ms.atlassian.net/browse/FLUT-161
+
+- Flutter iOS VNRT to stage, app crash.
+https://100ms.atlassian.net/browse/FLUT-173
+
+Room Kit: 1.0.7
+Core SDK: 1.9.4
+Android SDK: 2.8.3
+iOS SDK: 1.3.1

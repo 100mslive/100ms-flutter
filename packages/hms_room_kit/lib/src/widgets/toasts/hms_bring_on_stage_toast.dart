@@ -83,7 +83,7 @@ class HMSBringOnStageToast extends StatelessWidget {
           }
         },
         height: 36,
-        width: 135,
+        width: 128,
         buttonColor: HMSThemeColors.secondaryDefault,
         textColor: HMSThemeColors.onSecondaryHighEmphasis,
       ),

@@ -231,6 +231,12 @@ class MeetingStore extends ChangeNotifier
   ///Check whether recording is in intialising state
   bool isRecordingInInitialisingState = false;
 
+  ///Pool of video views
+  List<HMSTextureViewController> viewControllers = [];
+
+  ///Video View for screenshare
+  HMSTextureViewController? screenshareViewController;
+
   Future<HMSException?> join(String userName, String roomCode,
       {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
@@ -831,7 +837,7 @@ class MeetingStore extends ChangeNotifier
     getCurrentAudioDevice();
     getAudioDevicesList();
     notifyListeners();
-
+    setViewControllers();
     // if (Platform.isIOS &&
     //     HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf !=
     //         null) {
@@ -842,6 +848,12 @@ class MeetingStore extends ChangeNotifier
     // } else if (Platform.isAndroid) {
     //   HMSAndroidPIPController.setup();
     // }
+  }
+
+  void setViewControllers() {
+    for (var i = 0; i < 6; i++) {
+      viewControllers.add(HMSTextureViewController(addTrackByDefault: false));
+    }
   }
 
   void setParticipantsList(List<HMSRole> roles) {
@@ -993,7 +1005,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onHMSError({required HMSException error}) {
-    log("onHMSError-> error: ${error.code} ${error.message}");
+    log("onHMSError-> error: ${error.code?.errorCode} ${error.message}");
     hmsException = error;
     Utilities.showNotification(error.message ?? "", "error");
     notifyListeners();
@@ -1039,10 +1051,21 @@ class MeetingStore extends ChangeNotifier
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     //To handle the active speaker mode scenario
+
+    ///This is to handle whether to bring the user to first index
+    ///In case of normal layout if the user is on the first page i.e
+    ///index < 6 we don't move the peer to first page. Similarly, if
+    ///screenshare is on and index < 2 we don't update the position
+    ///of the peer
+    int peersInActiveSpeakerLayout = 6;
+    if (screenShareCount > 0) {
+      peersInActiveSpeakerLayout = 2;
+    }
+
     if ((currentPage == 0) &&
         (meetingMode == MeetingMode.activeSpeakerWithInset ||
             meetingMode == MeetingMode.activeSpeakerWithoutInset) &&
-        peerTracks.length > 6) {
+        peerTracks.length > peersInActiveSpeakerLayout) {
       /* Here we iterate through the updateSpeakers list
        * and do the following:
        * Find the index of the peer
@@ -1052,7 +1075,7 @@ class MeetingStore extends ChangeNotifier
       for (var speaker in updateSpeakers) {
         int index = peerTracks.indexWhere((previousSpeaker) =>
             previousSpeaker.uid == "${speaker.peer.peerId}mainVideo");
-        if (index > 5) {
+        if (index > (peersInActiveSpeakerLayout - 1)) {
           PeerTrackNode activeSpeaker = peerTracks[index];
           peerTracks.removeAt(index);
           peerTracks.insert(screenShareCount, activeSpeaker);
@@ -1062,8 +1085,7 @@ class MeetingStore extends ChangeNotifier
       notifyListeners();
     }
 
-    //This is to handle the borders around the tiles of peers who are currently speaking
-    //Reseting the borders of the tile everytime the update is received
+    //This is to handle the audio level ui on the tiles of peers who are currently speaking
     if (activeSpeakerIds.isNotEmpty) {
       for (var key in activeSpeakerIds) {
         int index = peerTracks.indexWhere((element) => element.uid == key);
@@ -1074,7 +1096,6 @@ class MeetingStore extends ChangeNotifier
       activeSpeakerIds.clear();
     }
 
-    //Setting the border for peers who are speaking
     for (var element in updateSpeakers) {
       activeSpeakerIds.add("${element.peer.peerId}mainVideo");
       int index = peerTracks
@@ -1262,6 +1283,13 @@ class MeetingStore extends ChangeNotifier
     isRoomEnded = true;
     resetForegroundTaskAndOrientation();
 
+    for (var element in viewControllers) {
+      element.disposeTextureView();
+    }
+    screenshareViewController?.disposeTextureView();
+    viewControllers.clear();
+    screenshareViewController = null;
+
     ///Here we call the method passed by the user in HMSPrebuilt as a callback
     if (Constant.onLeave != null) {
       Constant.onLeave!();
@@ -1327,7 +1355,9 @@ class MeetingStore extends ChangeNotifier
   }
 
   void addMessage(HMSMessage message) {
-    messages.add(message);
+    if (message.type == "chat") {
+      messages.add(message);
+    }
   }
 
   void updatePeerAt(HMSPeer peer) {
@@ -1592,6 +1622,9 @@ class MeetingStore extends ChangeNotifier
             int peerIndex = peerTracks.indexWhere(
                 (element) => element.uid == peer.peerId + track.trackId);
             if (peerIndex != -1) {
+              if ((screenShareCount - 1) == currentScreenSharePage) {
+                currentScreenSharePage--;
+              }
               screenShareCount--;
               peerTracks.removeAt(peerIndex);
               notifyListeners();

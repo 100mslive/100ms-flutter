@@ -67,22 +67,25 @@ class _ScreenshareGridLayoutState extends State<ScreenshareGridLayout> {
                 ///The active dot is the current page
                 ///The inactive dots are the pages other than the current page
                 if (widget.screenshareCount > 1)
-                  Selector<MeetingStore, int>(
-                      selector: (_, meetingStore) =>
-                          meetingStore.currentScreenSharePage,
-                      builder: (_, currentScreenSharePage, __) {
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: DotsIndicator(
-                            dotsCount: widget.screenshareCount,
-                            position: currentScreenSharePage,
-                            decorator: DotsDecorator(
-                                activeColor:
-                                    HMSThemeColors.onSurfaceHighEmphasis,
-                                color: HMSThemeColors.onSurfaceLowEmphasis),
-                          ),
-                        );
-                      })
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Selector<MeetingStore, int>(
+                        selector: (_, meetingStore) =>
+                            meetingStore.currentScreenSharePage,
+                        builder: (_, currentScreenSharePage, __) {
+                          return SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: DotsIndicator(
+                              dotsCount: widget.screenshareCount,
+                              position: currentScreenSharePage,
+                              decorator: DotsDecorator(
+                                  activeColor:
+                                      HMSThemeColors.onSurfaceHighEmphasis,
+                                  color: HMSThemeColors.onSurfaceLowEmphasis),
+                            ),
+                          );
+                        }),
+                  )
               ],
             )),
 
@@ -129,20 +132,26 @@ class _ScreenshareGridLayoutState extends State<ScreenshareGridLayout> {
                     Selector<MeetingStore, int>(
                         selector: (_, meetingStore) => meetingStore.currentPage,
                         builder: (_, currentPage, __) {
+                          int dotsCount = (((widget.peerTracks.length -
+                                      widget.screenshareCount) ~/
+                                  2) +
+                              (widget.peerTracks.length -
+                                      widget.screenshareCount) %
+                                  2);
                           return Padding(
                             padding: const EdgeInsets.only(top: 8.0),
-                            child: DotsIndicator(
-                              dotsCount: (((widget.peerTracks.length -
-                                          widget.screenshareCount) ~/
-                                      2) +
-                                  (widget.peerTracks.length -
-                                          widget.screenshareCount) %
-                                      2),
-                              position: currentPage,
-                              decorator: DotsDecorator(
-                                  activeColor:
-                                      HMSThemeColors.onSurfaceHighEmphasis,
-                                  color: HMSThemeColors.onSurfaceLowEmphasis),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: DotsIndicator(
+                                mainAxisSize: MainAxisSize.min,
+                                dotsCount: dotsCount,
+                                position:
+                                    currentPage > dotsCount ? 0 : currentPage,
+                                decorator: DotsDecorator(
+                                    activeColor:
+                                        HMSThemeColors.onSurfaceHighEmphasis,
+                                    color: HMSThemeColors.onSurfaceLowEmphasis),
+                              ),
                             ),
                           );
                         })

@@ -5,6 +5,23 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+# 1.9.4 - 2023-12-08
+
+| Package        | Version                                                                                                |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| hms_room_kit   | 1.0.7     |
+| hmssdk_flutter | 1.9.4     |
+
+### Added
+
+- Added `HMSTextureView` for improved performance of video rendering on Android devices. This is an alternative to `HMSVideoView` which is based on `SurfaceView`.
+
+  Learn more about `HMSTextureView` [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/render-video/hms-texture-view).
+
+Updated to Android SDK 2.8.3 & iOS SDK 1.3.1
+
+**Full Changelog**: [1.9.3...1.9.4](https://github.com/100mslive/100ms-flutter/compare/1.9.3...1.9.4)
+
 ## 1.9.3 - 2023-11-17
 
 ### Added

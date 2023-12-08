@@ -195,7 +195,12 @@ enum PlatformMethod {
   peerListIteratorNext,
   lowerLocalPeerHand,
   lowerRemotePeerHand,
-  raiseLocalPeerHand
+  raiseLocalPeerHand,
+  createTextureView,
+  disposeTextureView,
+  addTrack,
+  removeTrack,
+  setDisplayResolution
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -488,6 +493,16 @@ extension PlatformMethodValues on PlatformMethod {
         return "lower_remote_peer_hand";
       case PlatformMethod.raiseLocalPeerHand:
         return "raise_local_peer_hand";
+      case PlatformMethod.createTextureView:
+        return "create_texture_view";
+      case PlatformMethod.disposeTextureView:
+        return "dispose_texture_view";
+      case PlatformMethod.addTrack:
+        return "add_track";
+      case PlatformMethod.removeTrack:
+        return "remove_track";
+      case PlatformMethod.setDisplayResolution:
+        return "set_display_resolution";
       default:
         return 'unknown';
     }
@@ -782,6 +797,16 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.lowerRemotePeerHand;
       case "raise_local_peer_hand":
         return PlatformMethod.raiseLocalPeerHand;
+      case "create_texture_view":
+        return PlatformMethod.createTextureView;
+      case "dispose_texture_view":
+        return PlatformMethod.disposeTextureView;
+      case "add_track":
+        return PlatformMethod.addTrack;
+      case "remove_track":
+        return PlatformMethod.removeTrack;
+      case "set_display_resolution":
+        return PlatformMethod.setDisplayResolution;
       default:
         return PlatformMethod.unknown;
     }

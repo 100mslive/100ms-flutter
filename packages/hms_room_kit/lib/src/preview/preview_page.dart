@@ -228,7 +228,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                             ///Otherwise it will render the circular avatar
                                             child: (previewStore.isVideoOn)
                                                 ? Center(
-                                                    child: HMSVideoView(
+                                                    child: HMSTextureView(
                                                       scaleType: ScaleType
                                                           .SCALE_ASPECT_FILL,
                                                       track: previewStore
@@ -322,6 +322,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                                         height: 48,
                                                         width: width * 0.50,
                                                         child: TextField(
+                                                          enabled: widget.name
+                                                              .trim()
+                                                              .isEmpty,
                                                           cursorColor:
                                                               HMSThemeColors
                                                                   .onSurfaceHighEmphasis,
