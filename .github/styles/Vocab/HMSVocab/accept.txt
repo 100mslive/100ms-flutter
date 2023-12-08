@@ -169,3 +169,5 @@ answer_max_len
 answer_min_len
 userid
 peerid
+ios
+android
