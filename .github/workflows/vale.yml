@@ -1,10 +1,7 @@
 name: Vale linter
 
-# vale linter important docs
-# https://vale.sh/docs/vale-cli/overview/
-
-# run this workflow only
 on:
+    workflow_dispatch:
     pull_request:
         branches:
             - develop
