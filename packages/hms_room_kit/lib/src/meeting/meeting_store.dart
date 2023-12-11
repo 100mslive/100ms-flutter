@@ -1075,7 +1075,7 @@ class MeetingStore extends ChangeNotifier
       for (var speaker in updateSpeakers) {
         int index = peerTracks.indexWhere((previousSpeaker) =>
             previousSpeaker.uid == "${speaker.peer.peerId}mainVideo");
-        if (index > (peersInActiveSpeakerLayout - 1)) {
+        if (index > ((peersInActiveSpeakerLayout + screenShareCount) - 1)) {
           PeerTrackNode activeSpeaker = peerTracks[index];
           peerTracks.removeAt(index);
           peerTracks.insert(screenShareCount, activeSpeaker);
