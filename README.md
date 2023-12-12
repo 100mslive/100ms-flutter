@@ -47,7 +47,7 @@ With support for HLS and RTMP Live Streaming and Recording, Picture-in-Picture (
 
 ## 🏃♀️ How to run the Example App
 
-The fully fledged Example app is [available here](https://github.com/100mslive/100ms-flutter/tree/main/example).
+The full featured Example app is [available here](https://github.com/100mslive/100ms-flutter/tree/main/example).
 
 🚀 We have added explanations & recommended usage guide for different features, UI Layouts, Data Store, etc in [Example app ReadMe](https://github.com/100mslive/100ms-flutter/blob/main/example/README.md).
 
@@ -89,17 +89,15 @@ The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/e
 - iOS 16 or above
 - Xcode 14 or above
 
-> Users of iOS devices running Flutter versions 3.10.xx or earlier might experience crashes due to a known issue reported on GitHub [here](https://github.com/flutter/flutter/issues/127489).
-
 ## 📱 Supported Devices
 
 - The Android SDK supports Android API level 21 and above. It is built for armeabi-v7a, arm64-v8a, x86, and x86_64 architectures. Devices running Android OS 12 or above is recommended.
 
 - iPhone & iPads with iOS version 12 or above are supported. Devices running iOS 16 or above is recommended.
 
-## 🤖 [Android Permissions](https://www.100ms.live/docs/flutter/v2/features/integration#android)
+## 🤖 [Android Permissions](https://www.100ms.live/docs/flutter/v2/how-to-guides/install-the-sdk/integration#android)
 
-Complete Permissions Guide is [available here](https://www.100ms.live/docs/flutter/v2/features/integration).
+Complete Permissions Guide is [available here](https://www.100ms.live/docs/flutter/v2/how-to-guides/install-the-sdk/integration).
 
 Add the following permissions in the Android's `AndroidManifest.xml` file -
 
@@ -125,9 +123,13 @@ Add the following permissions in the Android's `AndroidManifest.xml` file -
 <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
 
 <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
+<uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
 ```
 
-## 🍎 [iOS Permissions](https://www.100ms.live/docs/flutter/v2/features/integration#i-os)
+## 🍎 [iOS Permissions](https://www.100ms.live/docs/flutter/v2/how-to-guides/install-the-sdk/integration#ios)
 
 Add following permissions in iOS Info.plist file
 
@@ -142,7 +144,7 @@ Add following permissions in iOS Info.plist file
 <string>{YourAppName} App wants to use your local network</string>
 ```
 
-## 🧐 [Key Concepts](https://www.100ms.live/docs/flutter/v2/foundation/basics)
+## 🧐 [Key Concepts](https://www.100ms.live/docs/get-started/v2/get-started/concepts/basics)
 
 - `Room` A room is the basic object that 100ms SDKs return on successful connection. This contains references to peers, tracks and everything you need to render a live a/v or live streaming app.
 
@@ -152,9 +154,11 @@ Add following permissions in iOS Info.plist file
 
 - `Role` A role defines who can a peer see/hear, the quality at which they publish their video, whether they have permissions to publish video/screenshare, mute someone, change someone's role.
 
-## ♻️ [Setup Update Listeners](https://www.100ms.live/docs/flutter/v2/features/update-listeners)
+## ♻️ [Setup Update Listeners](https://www.100ms.live/docs/flutter/v2/how-to-guides/listen-to-room-updates/update-listeners)
 
-100ms SDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing `HMSUpdateListener`. These updates can be used to render the video on the screen or to display other info regarding the room.
+100ms SDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing `HMSUpdateListener`. These updates can be used to render the video on the screen or to display other info regarding the room. Let's take a look at the flowchart.
+
+![Update Listeners Flowchart](https://www.100ms.live/docs/docs/v2/flutter-update-listener.png)
 
 ```dart
 
@@ -265,6 +269,13 @@ abstract class HMSUpdateListener {
   ///   - hmsSessionStore: An instance of HMSSessionStore which will be used to call session metadata methods
   void onSessionStoreAvailable(
       {HMSSessionStore? hmsSessionStore});
+
+
+  /// Upon joining a room with existing peers, onPeerListUpdated will be called with the list of peers present
+  /// in the room instead of getting onPeerUpdate for each peer in the room.
+  /// Subsequent peer joins/leaves would be notified via both onPeerUpdate and onPeerListUpdated
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers, required List<HMSPeer> removedPeers});
 }
 ```
 
