@@ -276,8 +276,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                           },
                           isActive: ((meetingStore.recordingType["hls"] ??
                                   false) ||
-                              (meetingStore.recordingType["browser"] ??
-                                  false)),
+                              (meetingStore.recordingType["browser"] ?? false)),
                           optionIcon: SvgPicture.asset(
                             "packages/hms_room_kit/lib/src/ass ets/icons/record.svg",
                             height: 20,

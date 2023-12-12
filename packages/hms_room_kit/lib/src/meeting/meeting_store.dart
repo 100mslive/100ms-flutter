@@ -906,15 +906,19 @@ class MeetingStore extends ChangeNotifier
             room.hmsServerRecordingState?.state == HMSRecordingState.started;
         break;
       case HMSRoomUpdate.hlsRecordingStateUpdated:
-        recordingType["hls"] = room.hmshlsRecordingState?.state == HMSRecordingState.started;
+        recordingType["hls"] =
+            room.hmshlsRecordingState?.state == HMSRecordingState.started;
         break;
       case HMSRoomUpdate.rtmpStreamingStateUpdated:
-        streamingType["rtmp"] = room.hmsRtmpStreamingState?.state == HMSStreamingState.started;
+        streamingType["rtmp"] =
+            room.hmsRtmpStreamingState?.state == HMSStreamingState.started;
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         isHLSLoading = false;
-        streamingType["hls"] = room.hmshlsStreamingState?.state == HMSStreamingState.started;
-        hasHlsStarted = room.hmshlsStreamingState?.state == HMSStreamingState.started;
+        streamingType["hls"] =
+            room.hmshlsStreamingState?.state == HMSStreamingState.started;
+        hasHlsStarted =
+            room.hmshlsStreamingState?.state == HMSStreamingState.started;
         streamUrl = hasHlsStarted
             ? room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl
             : null;
