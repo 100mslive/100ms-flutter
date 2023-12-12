@@ -116,13 +116,13 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                           ///
                           ///For recording status we use the recordingType map from the [MeetingStore]
                           Selector<MeetingStore,
-                                  Tuple4<bool, bool, bool, bool>>(
+                                  Tuple4<bool, bool, bool, HMSRecordingState>>(
                               selector: (_, meetingStore) => Tuple4(
                                   meetingStore.recordingType["browser"] ??
                                       false,
                                   meetingStore.recordingType["server"] ?? false,
                                   meetingStore.recordingType["hls"] ?? false,
-                                  meetingStore.isRecordingInInitialisingState),
+                                  meetingStore.hmsRecordingState),
                               builder: (_, data, __) {
                                 return (data.item1 || data.item2 || data.item3)
                                     ? SvgPicture.asset(
@@ -133,16 +133,26 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                                             HMSThemeColors.alertErrorDefault,
                                             BlendMode.srcIn),
                                       )
-                                    : data.item4
+                                    : data.item4 == HMSRecordingState.starting
                                         ? SizedBox(
-                                            height: 24,
-                                            width: 24,
+                                            height: 20,
+                                            width: 20,
                                             child: CircularProgressIndicator(
                                               strokeWidth: 2,
                                               color: HMSThemeColors
                                                   .onSurfaceHighEmphasis,
                                             ))
-                                        : Container();
+                                        : data.item4 == HMSRecordingState.paused
+                                            ? SvgPicture.asset(
+                                                "packages/hms_room_kit/lib/src/assets/icons/recording_paused.svg",
+                                                height: 24,
+                                                width: 24,
+                                                colorFilter: ColorFilter.mode(
+                                                    HMSThemeColors
+                                                        .alertErrorDefault,
+                                                    BlendMode.srcIn),
+                                              )
+                                            : Container();
                               }),
                           const SizedBox(
                             width: 8,

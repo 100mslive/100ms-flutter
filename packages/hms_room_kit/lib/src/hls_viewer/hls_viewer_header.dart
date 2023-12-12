@@ -2,9 +2,10 @@
 import 'dart:developer';
 import 'dart:io';
 
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/src/common/utility_functions.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -13,6 +14,7 @@ import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
+import 'package:hms_room_kit/src/common/utility_functions.dart';
 
 ///[HLSViewerHeader] is the header of the HLS Viewer screen
 class HLSViewerHeader extends StatelessWidget {
@@ -97,12 +99,13 @@ class HLSViewerHeader extends StatelessWidget {
                 ///If the recording is not started we show nothing
                 ///
                 ///If recording initialising state is true we show the loader
-                Selector<MeetingStore, Tuple4<bool, bool, bool, bool>>(
+                Selector<MeetingStore,
+                        Tuple4<bool, bool, bool, HMSRecordingState>>(
                     selector: (_, meetingStore) => Tuple4(
                         meetingStore.recordingType["browser"] ?? false,
                         meetingStore.recordingType["server"] ?? false,
                         meetingStore.recordingType["hls"] ?? false,
-                        meetingStore.isRecordingInInitialisingState),
+                        meetingStore.hmsRecordingState),
                     builder: (_, data, __) {
                       return (data.item1 || data.item2 || data.item3)
                           ? SvgPicture.asset(
@@ -113,7 +116,7 @@ class HLSViewerHeader extends StatelessWidget {
                                   HMSThemeColors.alertErrorDefault,
                                   BlendMode.srcIn),
                             )
-                          : data.item4
+                          : data.item4 == HMSRecordingState.starting
                               ? SizedBox(
                                   height: 24,
                                   width: 24,
@@ -121,7 +124,16 @@ class HLSViewerHeader extends StatelessWidget {
                                     strokeWidth: 1,
                                     color: HMSThemeColors.onSurfaceHighEmphasis,
                                   ))
-                              : Container();
+                              : data.item4 == HMSRecordingState.paused
+                                  ? SvgPicture.asset(
+                                      "packages/hms_room_kit/lib/src/assets/icons/recording_paused.svg",
+                                      height: 24,
+                                      width: 24,
+                                      colorFilter: ColorFilter.mode(
+                                          HMSThemeColors.onSurfaceHighEmphasis,
+                                          BlendMode.srcIn),
+                                    )
+                                  : Container();
                     }),
                 const SizedBox(
                   width: 8,
