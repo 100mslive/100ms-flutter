@@ -1,6 +1,6 @@
 // Project imports
 import 'package:hmssdk_flutter/src/model/hms_hls_variant.dart';
-import 'package:hmssdk_flutter/src/model/hms_streaming_state.dart';
+import 'package:hmssdk_flutter/src/enum/hms_streaming_state.dart';
 
 ///100ms HMSHLSStreamingState
 ///

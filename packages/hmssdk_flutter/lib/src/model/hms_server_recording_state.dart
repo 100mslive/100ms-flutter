@@ -1,6 +1,6 @@
 // Project imports:
 import 'package:hmssdk_flutter/src/model/hms_date_extension.dart';
-import 'package:hmssdk_flutter/src/model/hms_recording_state.dart';
+import 'package:hmssdk_flutter/src/enum/hms_recording_state.dart';
 
 import '../../hmssdk_flutter.dart';
 

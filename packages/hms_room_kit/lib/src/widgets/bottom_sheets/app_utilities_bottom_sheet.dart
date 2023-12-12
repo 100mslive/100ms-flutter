@@ -219,7 +219,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                 HMSThemeColors.onSurfaceLowEmphasis,
                                 BlendMode.srcIn),
                           ),
-                          optionText: "Start Recording",
+                          optionText: "Record",
                           optionTextColor: HMSThemeColors.onSurfaceLowEmphasis,
                         )
                       : MoreOptionItem(
@@ -227,8 +227,6 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                             bool isRecordingRunning =
                                 ((meetingStore.recordingType["hls"] ?? false) ||
                                     (meetingStore.recordingType["browser"] ??
-                                        false) ||
-                                    (meetingStore.recordingType["server"] ??
                                         false));
                             if (isRecordingRunning) {
                               Navigator.pop(context);
@@ -279,10 +277,9 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                           isActive: ((meetingStore.recordingType["hls"] ??
                                   false) ||
                               (meetingStore.recordingType["browser"] ??
-                                  false) ||
-                              (meetingStore.recordingType["server"] ?? false)),
+                                  false)),
                           optionIcon: SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/record.svg",
+                            "packages/hms_room_kit/lib/src/ass ets/icons/record.svg",
                             height: 20,
                             width: 20,
                             colorFilter: ColorFilter.mode(
@@ -292,11 +289,9 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                           optionText:
                               ((meetingStore.recordingType["hls"] ?? false) ||
                                       (meetingStore.recordingType["browser"] ??
-                                          false) ||
-                                      (meetingStore.recordingType["server"] ??
                                           false))
-                                  ? "Stop Recording"
-                                  : "Start Recording",
+                                  ? "Recording"
+                                  : "Record",
                         )
               ],
             ),
