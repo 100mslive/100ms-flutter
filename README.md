@@ -154,6 +154,8 @@ Add following permissions in iOS Info.plist file
 
 - `Role` A role defines who can a peer see/hear, the quality at which they publish their video, whether they have permissions to publish video/screenshare, mute someone, change someone's role.
 
+![HMSSDK lifecycle](https://www.100ms.live/docs/docs/v2/flutter-hmssdk-lifecycle.png)
+
 ## ♻️ [Setup Update Listeners](https://www.100ms.live/docs/flutter/v2/how-to-guides/listen-to-room-updates/update-listeners)
 
 100ms SDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing `HMSUpdateListener`. These updates can be used to render the video on the screen or to display other info regarding the room. Let's take a look at the flowchart.
