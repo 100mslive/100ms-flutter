@@ -12,7 +12,7 @@ class HMSHLSVariantExtension {
             args["meeting_url"] = hmshlsVariant.meetingUrl ?: ""
             args["metadata"] = hmshlsVariant.metadata ?: ""
             hmshlsVariant.startedAt?.let {
-                args["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(it).toString()
+                args["started_at"] = it
             }
             return args
         }

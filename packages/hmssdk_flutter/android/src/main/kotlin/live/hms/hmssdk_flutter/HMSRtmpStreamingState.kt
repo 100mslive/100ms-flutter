@@ -15,7 +15,7 @@ class HMSStreamingState {
             map["error"] = HMSExceptionExtension.toDictionary(rtmpStreamingState.error)
 
             rtmpStreamingState.startedAt?.let {
-                map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(rtmpStreamingState.startedAt).toString()
+                map["started_at"] = it
             }
 
             map["state"] = rtmpStreamingState.state.name
@@ -32,7 +32,7 @@ class HMSStreamingState {
             map["error"] = HMSExceptionExtension.toDictionary(serverRecordingState.error)
 
             serverRecordingState.startedAt?.let {
-                map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(serverRecordingState.startedAt).toString()
+                map["started_at"] = it
             }
 
             map["state"] = serverRecordingState.state.name
@@ -49,7 +49,7 @@ class HMSStreamingState {
             map["error"] = HMSExceptionExtension.toDictionary(browserRecordingState.error)
 
             browserRecordingState.startedAt?.let {
-                map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(browserRecordingState.startedAt).toString()
+                map["started_at"] = it
             }
 
             map["initialising"] = browserRecordingState.initialising
@@ -84,7 +84,7 @@ class HMSStreamingState {
             map["running"] = hlsRecordingState.running
 
             hlsRecordingState.startedAt?.let {
-                map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(hlsRecordingState.startedAt).toString()
+                map["started_at"] = it
             }
 
             map["state"] = hlsRecordingState.state.name
