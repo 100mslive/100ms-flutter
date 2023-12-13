@@ -125,10 +125,6 @@ Add the following permissions in the Android's `AndroidManifest.xml` file -
 <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
 
 <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-
-<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-
-<uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
 ```
 
 ## 🍎 [iOS Permissions](https://www.100ms.live/docs/flutter/v2/how-to-guides/install-the-sdk/integration#ios)
