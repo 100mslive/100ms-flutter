@@ -4,6 +4,7 @@ import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart' show StandardMessageCodec;
 
 // Project imports:
@@ -191,6 +192,7 @@ class _PlatformViewState extends State<_PlatformView> {
     } else if (Platform.isIOS) {
       ///UIKitView for ios it uses VideoView provided by 100ms ios_sdk internally.
       return UiKitView(
+        hitTestBehavior: PlatformViewHitTestBehavior.transparent,
         viewType: 'HMSFlutterPlatformView',
         creationParamsCodec: StandardMessageCodec(),
         creationParams: {
