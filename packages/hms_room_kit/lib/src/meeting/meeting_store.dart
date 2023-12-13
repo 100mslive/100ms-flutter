@@ -87,13 +87,16 @@ class MeetingStore extends ChangeNotifier
 
   List<HMSToastModel> toasts = [];
 
-  Map<String, bool> recordingType = {
-    "browser": false,
-    "server": false,
-    "hls": false
+  Map<String, HMSRecordingState> recordingType = {
+    "browser": HMSRecordingState.none,
+    "server": HMSRecordingState.none,
+    "hls": HMSRecordingState.none
   };
 
-  Map<String, bool> streamingType = {"rtmp": false, "hls": false};
+  Map<String, HMSStreamingState> streamingType = {
+    "rtmp": HMSStreamingState.none,
+    "hls": HMSStreamingState.none
+  };
 
   String description = "Meeting Ended";
 
@@ -227,9 +230,6 @@ class MeetingStore extends ChangeNotifier
 
   ///This stores the number of peers in the room
   int peersInRoom = 0;
-
-  ///Check whether recording is in intialising state
-  HMSRecordingState hmsRecordingState = HMSRecordingState.none;
 
   ///Pool of video views
   List<HMSTextureViewController> viewControllers = [];
@@ -529,7 +529,8 @@ class MeetingStore extends ChangeNotifier
         meetingUrl: meetingUrl, toRecord: toRecord, rtmpUrls: rtmpUrls);
 
     _hmsSDKInteractor.startRtmpOrRecording(hmsRecordingConfig, this);
-    hmsRecordingState = HMSRecordingState.starting;
+    recordingType["browser"] = HMSRecordingState.starting;
+
     notifyListeners();
   }
 
@@ -774,21 +775,19 @@ class MeetingStore extends ChangeNotifier
     } else {
       hasHlsStarted = false;
     }
-    if (room.hmsBrowserRecordingState?.state == HMSRecordingState.started) {
-      recordingType["browser"] = true;
-    }
-    if (room.hmsServerRecordingState?.state == HMSRecordingState.started) {
-      recordingType["server"] = true;
-    }
-    if (room.hmshlsRecordingState?.state == HMSRecordingState.started) {
-      recordingType["hls"] = true;
-    }
-    if (room.hmsRtmpStreamingState?.state == HMSStreamingState.started) {
-      streamingType["rtmp"] = true;
-    }
-    if (room.hmshlsStreamingState?.state == HMSStreamingState.started) {
-      streamingType["hls"] = true;
-    }
+
+    recordingType["browser"] =
+        room.hmsBrowserRecordingState?.state ?? HMSRecordingState.none;
+    recordingType["server"] =
+        room.hmsServerRecordingState?.state ?? HMSRecordingState.none;
+    recordingType["hls"] =
+        room.hmshlsRecordingState?.state ?? HMSRecordingState.none;
+
+    streamingType["rtmp"] =
+        room.hmsRtmpStreamingState?.state ?? HMSStreamingState.none;
+    streamingType["hls"] =
+        room.hmshlsStreamingState?.state ?? HMSStreamingState.none;
+
     setParticipantsList(roles);
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
@@ -897,26 +896,24 @@ class MeetingStore extends ChangeNotifier
     switch (update) {
       case HMSRoomUpdate.browserRecordingStateUpdated:
         recordingType["browser"] =
-            room.hmsBrowserRecordingState?.state == HMSRecordingState.started;
-        hmsRecordingState =
             room.hmsBrowserRecordingState?.state ?? HMSRecordingState.none;
         break;
       case HMSRoomUpdate.serverRecordingStateUpdated:
         recordingType["server"] =
-            room.hmsServerRecordingState?.state == HMSRecordingState.started;
+            room.hmsServerRecordingState?.state ?? HMSRecordingState.none;
         break;
       case HMSRoomUpdate.hlsRecordingStateUpdated:
         recordingType["hls"] =
-            room.hmshlsRecordingState?.state == HMSRecordingState.started;
+            room.hmshlsRecordingState?.state ?? HMSRecordingState.none;
         break;
       case HMSRoomUpdate.rtmpStreamingStateUpdated:
         streamingType["rtmp"] =
-            room.hmsRtmpStreamingState?.state == HMSStreamingState.started;
+            room.hmsRtmpStreamingState?.state ?? HMSStreamingState.none;
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         isHLSLoading = false;
         streamingType["hls"] =
-            room.hmshlsStreamingState?.state == HMSStreamingState.started;
+            room.hmshlsStreamingState?.state ?? HMSStreamingState.none;
         hasHlsStarted =
             room.hmshlsStreamingState?.state == HMSStreamingState.started;
         streamUrl = hasHlsStarted
@@ -2193,7 +2190,7 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         toasts.add(HMSToastModel(hmsException,
             hmsToastType: HMSToastsType.errorToast));
-        hmsRecordingState = HMSRecordingState.failed;
+        recordingType["browser"] = HMSRecordingState.failed;
         notifyListeners();
         break;
       case HMSActionResultListenerMethod.stopRtmpAndRecording:

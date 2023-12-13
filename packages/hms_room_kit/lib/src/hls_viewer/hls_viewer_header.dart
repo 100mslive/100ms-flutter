@@ -69,7 +69,10 @@ class HLSViewerHeader extends StatelessWidget {
                 ///If the HLS streaming is not started we show nothing
                 Selector<MeetingStore, bool>(
                     selector: (_, meetingStore) =>
-                        meetingStore.streamingType['hls'] ?? false,
+                        (meetingStore.streamingType['hls'] ==
+                                HMSStreamingState.started ||
+                            meetingStore.streamingType['rtmp'] ==
+                                HMSStreamingState.started),
                     builder: (_, isHLSStarted, __) {
                       return isHLSStarted
                           ? Container(
@@ -99,15 +102,24 @@ class HLSViewerHeader extends StatelessWidget {
                 ///If the recording is not started we show nothing
                 ///
                 ///If recording initialising state is true we show the loader
-                Selector<MeetingStore,
-                        Tuple4<bool, bool, bool, HMSRecordingState>>(
-                    selector: (_, meetingStore) => Tuple4(
-                        meetingStore.recordingType["browser"] ?? false,
-                        meetingStore.recordingType["server"] ?? false,
-                        meetingStore.recordingType["hls"] ?? false,
-                        meetingStore.hmsRecordingState),
+                Selector<
+                        MeetingStore,
+                        Tuple3<HMSRecordingState, HMSRecordingState,
+                            HMSRecordingState>>(
+                    selector: (_, meetingStore) => Tuple3(
+                        meetingStore.recordingType["browser"] ??
+                            HMSRecordingState.none,
+                        meetingStore.recordingType["server"] ??
+                            HMSRecordingState.none,
+                        meetingStore.recordingType["hls"] ??
+                            HMSRecordingState.none),
                     builder: (_, data, __) {
-                      return (data.item1 || data.item2 || data.item3)
+                      return (data.item1 == HMSRecordingState.started ||
+                              data.item1 == HMSRecordingState.resumed ||
+                              data.item2 == HMSRecordingState.started ||
+                              data.item2 == HMSRecordingState.resumed ||
+                              data.item3 == HMSRecordingState.started ||
+                              data.item3 == HMSRecordingState.resumed)
                           ? SvgPicture.asset(
                               "packages/hms_room_kit/lib/src/assets/icons/record.svg",
                               height: 24,
@@ -116,7 +128,9 @@ class HLSViewerHeader extends StatelessWidget {
                                   HMSThemeColors.alertErrorDefault,
                                   BlendMode.srcIn),
                             )
-                          : data.item4 == HMSRecordingState.starting
+                          : (data.item1 == HMSRecordingState.starting ||
+                                  data.item2 == HMSRecordingState.starting ||
+                                  data.item3 == HMSRecordingState.starting)
                               ? SizedBox(
                                   height: 24,
                                   width: 24,
@@ -124,7 +138,9 @@ class HLSViewerHeader extends StatelessWidget {
                                     strokeWidth: 1,
                                     color: HMSThemeColors.onSurfaceHighEmphasis,
                                   ))
-                              : data.item4 == HMSRecordingState.paused
+                              : (data.item1 == HMSRecordingState.paused ||
+                                      data.item2 == HMSRecordingState.paused ||
+                                      data.item3 == HMSRecordingState.paused)
                                   ? SvgPicture.asset(
                                       "packages/hms_room_kit/lib/src/assets/icons/recording_paused.svg",
                                       height: 24,
@@ -140,11 +156,14 @@ class HLSViewerHeader extends StatelessWidget {
                 ),
 
                 ///This renders the number of peers
-                ///If the HLS streaming is started, we render the number of peers
+                ///If the HLS or RTMP streaming is started, we render the number of peers
                 ///else we render an empty Container
                 Selector<MeetingStore, Tuple2<bool, int>>(
                     selector: (_, meetingStore) => Tuple2(
-                        meetingStore.streamingType['hls'] ?? false,
+                        meetingStore.streamingType['hls'] ==
+                                HMSStreamingState.started ||
+                            meetingStore.streamingType['rtmp'] ==
+                                HMSStreamingState.started,
                         meetingStore.peersInRoom),
                     builder: (_, data, __) {
                       return data.item1
