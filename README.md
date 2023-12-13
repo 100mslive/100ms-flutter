@@ -319,7 +319,7 @@ HMSRoomUpdate
   .hlsRecordingStateUpdated: When HLS recording state is updated
 ```
 
-## 🙏 [Join a Room](https://www.100ms.live/docs/flutter/v2/features/join)
+## 🙏 [Join a Room](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/join)
 
 To join and interact with others in audio or video call, the user needs to `join` a `room`.
 
