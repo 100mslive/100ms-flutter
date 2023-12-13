@@ -22,7 +22,7 @@ class HMSRtmpStreamingState {
         error: map["error"] != null ? HMSException.fromMap(map) : null,
         running: map['running'],
         startedAt: map['started_at'] != null
-            ? HMSDateExtension.convertDateFromString(map['started_at'])
+            ? HMSDateExtension.convertDateFromEpoch(map['started_at'])
             : null,
         state: HMSStreamingStateValues.getStreamingStateFromName(
             map['state'] ?? 'NONE'));

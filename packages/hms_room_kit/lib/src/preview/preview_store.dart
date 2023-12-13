@@ -171,7 +171,7 @@ class PreviewStore extends ChangeNotifier
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
     this.room = room;
-    log("onRoomUpdate-> room: ${room.toString()} update: ${update.name}");
+    log("onRoomUpdate-> room: ${room.toString()} update: ${update.name} streamingState: ${room.hmshlsStreamingState?.state.name}");
     switch (update) {
       case HMSRoomUpdate.browserRecordingStateUpdated:
         isRecordingStarted =
@@ -194,10 +194,8 @@ class PreviewStore extends ChangeNotifier
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         isHLSStreamingStarted =
             room.hmshlsStreamingState?.state == HMSStreamingState.started;
-        if (!isMeetingJoined && isRoomJoined) {
-          isRoomJoinedAndHLSStarted =
-              (room.hmshlsStreamingState?.state == HMSStreamingState.started) &&
-                  isRoomJoined;
+        if (!isMeetingJoined && isRoomJoined && isHLSStreamingStarted) {
+          isRoomJoinedAndHLSStarted = true;
           isMeetingJoined = true;
         }
         break;

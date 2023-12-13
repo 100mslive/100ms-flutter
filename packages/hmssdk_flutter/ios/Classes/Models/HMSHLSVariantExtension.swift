@@ -25,7 +25,7 @@ class HMSHLSVariantExtension {
         }
 
         if let startedAt = hmshlsVariant.startedAt {
-            dict["started_at"] = "\(startedAt)"
+            dict["started_at"] =  Int(startedAt.timeIntervalSince1970 * 1000)
         }
 
         return dict

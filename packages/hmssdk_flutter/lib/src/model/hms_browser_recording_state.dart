@@ -24,7 +24,7 @@ class HMSBrowserRecordingState {
         error: map["error"] != null ? HMSException.fromMap(map) : null,
         running: map['running'],
         startedAt: map['started_at'] != null
-            ? HMSDateExtension.convertDateFromString(map['started_at'])
+            ? HMSDateExtension.convertDateFromEpoch(map['started_at'])
             : null,
         initialising: map['initialising'],
         state: HMSRecordingStateValues.getRecordingStateFromName(
