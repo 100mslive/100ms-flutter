@@ -58,7 +58,7 @@ import 'package:hms_room_kit/hmssdk_uikit.dart';
 
 ```dart
 HMSPrebuilt(
-    roomCode: "abc-lmno-xyz",
+    roomCode: "xvm-wxwo-gbl",
     hmsConfig: HMSPrebuiltOptions(userName: "John Appleseed"),
 );
 ```
@@ -272,7 +272,7 @@ onPressed: () async => {
         await Navigator.push(
             context,
             MaterialPageRoute(
-            builder: (context) => const HMSPrebuilt(roomCode: "abc-lmno-xyz")
+            builder: (context) => const HMSPrebuilt(roomCode: "xvm-wxwo-gbl")
         ),
     ),
 }
