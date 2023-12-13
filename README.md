@@ -21,6 +21,8 @@ With support for HLS and RTMP Live Streaming and Recording, Picture-in-Picture (
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+🧱 The Prebuilt QuickStart Guide is [available here](https://www.100ms.live/docs/flutter/v2/quickstart/prebuilt).
+
 📖 Read the Complete Documentation here: https://www.100ms.live/docs/flutter/v2/guides/quickstart
 
 📲 Download the Sample iOS app here: <https://testflight.apple.com/join/Uhzebmut>
@@ -47,9 +49,9 @@ With support for HLS and RTMP Live Streaming and Recording, Picture-in-Picture (
 
 ## 🏃♀️ How to run the Example App
 
-The fully fledged Example app is [available here](https://github.com/100mslive/100ms-flutter/tree/main/example).
+The full featured Example app is [available here](https://github.com/100mslive/100ms-flutter/tree/main/packages/hmssdk_flutter/example).
 
-🚀 We have added explanations & recommended usage guide for different features, UI Layouts, Data Store, etc in [Example app ReadMe](https://github.com/100mslive/100ms-flutter/blob/main/example/README.md).
+🚀 We have added explanations & recommended usage guide for different features, UI Layouts, Data Store, etc in [Example app ReadMe](https://github.com/100mslive/100ms-flutter/tree/main/packages/hmssdk_flutter/example).
 
 To run the Example App on your system follow these steps -
 
@@ -60,13 +62,18 @@ To run the Example App on your system follow these steps -
 4. Now, to run the app, simply execute the `flutter run` command to run the app on a connected device, or iOS simulator, or Android Emulator.
 5. For running on an iOS Device (iPhone or iPad), ensure you have set the Correct Development Team in Xcode Signing & Capabilities section.
 
-The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/example) uses Provider State Management library. For other implementations please check out -
+The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/packages/hmssdk_flutter/example) uses Provider State Management library. For other implementations please check out -
 
-- [Bloc](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/bloc)
-- [Getx](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/getx)
-- [Riverpod](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/riverpod)
-- [Mobx](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/mobx)
-- [Simple QuickStart](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/flutter-quickstart-app)
+1. [Simple QuickStart](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/flutter-quickstart-app)
+2. [Bloc](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/bloc)
+3. [Getx](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/getx)
+4. [Mobx](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/mobx)
+5. [Riverpod](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/riverpod)
+6. [Audio Room App](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/flutter-audio-room-quickstart)
+7. [CallKit & VoIP](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/hms-callkit-app)
+8. [Flutterflow with Prebuilt](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/flutterflow-prebuilt-quickstart)
+9. [Live Stream with HLS](https://github.com/100mslive/100ms-flutter/tree/main/sample%20apps/flutter-hls-quickstart)
+10. [Full featured App](https://github.com/100mslive/100ms-flutter/tree/main/packages/hmssdk_flutter/example)
 
 ## ☝️ Minimum Configuration
 
@@ -84,17 +91,15 @@ The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/e
 - iOS 16 or above
 - Xcode 14 or above
 
-> Users of iOS devices running Flutter versions 3.10.xx or earlier might experience crashes due to a known issue reported on GitHub [here](https://github.com/flutter/flutter/issues/127489).
-
 ## 📱 Supported Devices
 
 - The Android SDK supports Android API level 21 and above. It is built for armeabi-v7a, arm64-v8a, x86, and x86_64 architectures. Devices running Android OS 12 or above is recommended.
 
 - iPhone & iPads with iOS version 12 or above are supported. Devices running iOS 16 or above is recommended.
 
-## 🤖 [Android Permissions](https://www.100ms.live/docs/flutter/v2/features/integration#android)
+## 🤖 [Android Permissions](https://www.100ms.live/docs/flutter/v2/how-to-guides/install-the-sdk/integration#android)
 
-Complete Permissions Guide is [available here](https://www.100ms.live/docs/flutter/v2/features/integration).
+Complete Permissions Guide is [available here](https://www.100ms.live/docs/flutter/v2/how-to-guides/install-the-sdk/integration).
 
 Add the following permissions in the Android's `AndroidManifest.xml` file -
 
@@ -122,7 +127,7 @@ Add the following permissions in the Android's `AndroidManifest.xml` file -
 <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 ```
 
-## 🍎 [iOS Permissions](https://www.100ms.live/docs/flutter/v2/features/integration#i-os)
+## 🍎 [iOS Permissions](https://www.100ms.live/docs/flutter/v2/how-to-guides/install-the-sdk/integration#ios)
 
 Add following permissions in iOS Info.plist file
 
@@ -137,7 +142,7 @@ Add following permissions in iOS Info.plist file
 <string>{YourAppName} App wants to use your local network</string>
 ```
 
-## 🧐 [Key Concepts](https://www.100ms.live/docs/flutter/v2/foundation/basics)
+## 🧐 [Key Concepts](https://www.100ms.live/docs/get-started/v2/get-started/concepts/basics)
 
 - `Room` A room is the basic object that 100ms SDKs return on successful connection. This contains references to peers, tracks and everything you need to render a live a/v or live streaming app.
 
@@ -147,9 +152,13 @@ Add following permissions in iOS Info.plist file
 
 - `Role` A role defines who can a peer see/hear, the quality at which they publish their video, whether they have permissions to publish video/screenshare, mute someone, change someone's role.
 
-## ♻️ [Setup Update Listeners](https://www.100ms.live/docs/flutter/v2/features/update-listeners)
+![HMSSDK lifecycle](https://www.100ms.live/docs/docs/v2/flutter-hmssdk-lifecycle.png)
 
-100ms SDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing `HMSUpdateListener`. These updates can be used to render the video on the screen or to display other info regarding the room.
+## ♻️ [Setup Update Listeners](https://www.100ms.live/docs/flutter/v2/how-to-guides/listen-to-room-updates/update-listeners)
+
+100ms SDK provides callbacks to the client app about any change or update happening in the room after a user has joined by implementing `HMSUpdateListener`. These updates can be used to render the video on the screen or to display other info regarding the room. Let's take a look at the flowchart.
+
+![Update Listeners Flowchart](https://www.100ms.live/docs/docs/v2/flutter-update-listener.png)
 
 ```dart
 
@@ -260,6 +269,13 @@ abstract class HMSUpdateListener {
   ///   - hmsSessionStore: An instance of HMSSessionStore which will be used to call session metadata methods
   void onSessionStoreAvailable(
       {HMSSessionStore? hmsSessionStore});
+
+
+  /// Upon joining a room with existing peers, onPeerListUpdated will be called with the list of peers present
+  /// in the room instead of getting onPeerUpdate for each peer in the room.
+  /// Subsequent peer joins/leaves would be notified via both onPeerUpdate and onPeerListUpdated
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers, required List<HMSPeer> removedPeers});
 }
 ```
 
@@ -301,16 +317,16 @@ HMSRoomUpdate
   .hlsRecordingStateUpdated: When HLS recording state is updated
 ```
 
-## 🙏 [Join a Room](https://www.100ms.live/docs/flutter/v2/features/join)
+## 🙏 [Join a Room](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/join)
 
 To join and interact with others in audio or video call, the user needs to `join` a `room`.
 
 To join a Room, your app should have -
 
 1. User Name - The name which should be displayed to other peers in the room.
-2. [Authentication Token](https://www.100ms.live/docs/flutter/v2/foundation/security-and-tokens) - The Client side Authentication Token generated by the Token Service.
+2. [Authentication Token](https://www.100ms.live/docs/get-started/v2/get-started/security-and-tokens) - The Client side Authentication Token generated by the Token Service.
 
-### 🔑 [Get Authentication token](https://www.100ms.live/docs/flutter/v2/get-started/quickstart#fetch-token-to-join-the-room)
+### 🔑 [Get Authentication token](https://www.100ms.live/docs/flutter/v2/quickstart/quickstart#fetch-token-to-join-the-room)
 
 To join a room we need an authentication token as mentioned above. There are two methods to get the token:
 
@@ -319,12 +335,12 @@ To join a room we need an authentication token as mentioned above. There are two
 We can get the authentication token using room-code from meeting URL.
 
 Let's understand the subdomain and code from the sample URL
-In this URL: `http://100ms-rocks.app.100ms.live/meeting/abc-defg-hij`
+In this URL: `https://public.app.100ms.live/meeting/xvm-wxwo-gbl`
 
-- Subdomain is `100ms-rocks`
-- Room code is `abc-defg-ghi`
+- Subdomain is `public`
+- Room code is `xvm-wxwo-gbl`
 
-Now to get the room-code from meeting URL we can write our own logic or use the `getCode` method from [here](https://github.com/100mslive/100ms-flutter/blob/main/example/lib/service/room_service.dart)
+Now to get the room-code from meeting URL we can write our own logic or use the `getCode` method from [here](https://github.com/100mslive/100ms-flutter/blob/main/packages/hmssdk_flutter/example/lib/room_service.dart)
 
 To generate token we will be using `getAuthTokenByRoomCode` method of `HMSSDK`. This method has `roomCode` as a required
 parameter, `userId` & `endPoint` as optional parameter.
@@ -367,11 +383,11 @@ To test audio/video functionality, you need to connect to a 100ms room; please c
 
 You can also optionally pass these fields in the HMSSDK constructor -
 
-1. Track Settings - Such as joining a Room with Muted Audio or Video using the `HMSTrackSetting` object. More information is [available here](https://www.100ms.live/docs/flutter/v2/features/join#join-with-muted-audio-video).
+1. Track Settings - Such as joining a Room with Muted Audio or Video using the `HMSTrackSetting` object. More information is [available here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/join#join-with-muted-audio-video).
 
-2. User Metadata - This can be used to pass any additional metadata associated with the user using `metadata` of `HMSConfig` object. For Eg: user-id mapping at the application side. More information is available [here](https://www.100ms.live/docs/flutter/v2/advanced-features/peer-metadata-update).
+2. User Metadata - This can be used to pass any additional metadata associated with the user using `metadata` of `HMSConfig` object. For Eg: user-id mapping at the application side. More information is available [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/peer/peer-metadata-update).
 
-More information about Joining a Room is [available here](https://www.100ms.live/docs/flutter/v2/features/join).
+More information about Joining a Room is [available here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/join).
 
 ```dart
 // create a class that implements `HMSUpdateListener` and acts as a data source for our UI
@@ -396,7 +412,7 @@ class Meeting implements HMSUpdateListener {
 }
 ```
 
-## 🎞 [Display a Track](https://www.100ms.live/docs/flutter/v2/features/render-video)
+## 🎞 [Display a Track](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/render-video/overview)
 
 It all comes down to this. All the setup so far has been done so that we can show live-streaming videos in our beautiful app.
 
@@ -413,9 +429,9 @@ HMSVideoView(
 ),
 ```
 
-More information about displaying a Video is [available here](https://www.100ms.live/docs/react-native/v2/features/render-video).
+More information about displaying a Video is [available here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/render-video/overview).
 
-## 👋 [Leave Room](https://www.100ms.live/docs/flutter/v2/features/leave)
+## 👋 [Leave Room](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/leave)
 
 Once you're done with the meeting and want to exit, call leave on the HMSSDK instance that you created to join the room.
 
@@ -429,7 +445,7 @@ hmsSDK.removeUpdateListener(updateListener);
 To leave the meeting, call the `leave` method of `HMSSDK` and pass the `hmsActionResultListener` parameter to get a success callback from SDK in the `onSuccess` override method as follow.
 
 > You will need to implement the `HMSActionResultListener` interface in a class to get `onSuccess` and `onException` callback.
-> To know about how to implement `HMSActionResultListener` check the docs [here](https://www.100ms.live/docs/flutter/v2/features/action-result-listeners)
+> To know about how to implement `HMSActionResultListener` check the docs [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/listen-to-room-updates/action-result-listeners)
 
 ```dart
 class Meeting implements HMSActionResultListener{
@@ -450,7 +466,7 @@ await hmsSDK.leave(hmsActionResultListener: this);
 }
 ```
 
-More information about Leaving a Room is [available here](https://www.100ms.live/docs/flutter/v2/features/leave).
+More information about Leaving a Room is [available here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/leave).
 
 ## 🛤 HMSTracks Explained
 
@@ -478,7 +494,7 @@ HMSTrack contains a field called source which denotes the source of the Track.
 
 To know the type of track, check the value of type which would be one of the enum values - `AUDIO` or `VIDEO`
 
-## 📨 [Chat Messaging](https://www.100ms.live/docs/flutter/v2/features/chat)
+## 📨 [Chat Messaging](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/chat)
 
 You can send a chat or any other kind of message from a local peer to all remote peers in the room.
 
@@ -490,7 +506,7 @@ Then use the `sendBroadcastMessage` function on the instance of HMSSDK for broad
 
 When you(the local peer) receives a message from others(any remote peer), `void onMessage({required HMSMessage message})` function of `HMSUpdateListener` is invoked.
 
-More information about Chat Messaging is [available here](https://www.100ms.live/docs/flutter/v2/features/chat).
+More information about Chat Messaging is [available here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/chat).
 
 ```dart
 // onMessage is HMSUpdateListener method called when a new message is received
@@ -585,11 +601,13 @@ void onException(
   }
 ```
 
+🧱 The Prebuilt QuickStart Guide is [available here](https://www.100ms.live/docs/flutter/v2/quickstart/prebuilt).
+
 📖 Do refer the Complete Documentation Guide [available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart).
 
 🏃♀️ Checkout the Example app implementation [available here](https://github.com/100mslive/100ms-flutter/tree/main/example).
 
-🚀 We have added explanations & recommended usage guide for different features, UI Layouts, Data Store, etc in [Example app ReadMe](https://github.com/100mslive/100ms-flutter/blob/main/example/README.md).
+🚀 We have added explanations & recommended usage guide for different features, UI Layouts, Data Store, etc in [Example app ReadMe](https://github.com/100mslive/100ms-flutter/tree/main/packages/hmssdk_flutter/example).
 
 100ms Flutter apps are released on the App Stores, you can download them here:
 
