@@ -2,6 +2,7 @@
 import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -207,7 +208,8 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                   ///If streaming is on or in initialising state disable the button
                   ((meetingStore.streamingType["hls"] ?? false) ||
                           (meetingStore.streamingType["rtmp"] ?? false) ||
-                          meetingStore.isRecordingInInitialisingState)
+                          meetingStore.hmsRecordingState ==
+                              HMSRecordingState.starting)
                       ? MoreOptionItem(
                           onTap: () {},
                           isActive: false,
@@ -274,19 +276,22 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                   rtmpUrls: null);
                             }
                           },
-                          isActive: ((meetingStore.recordingType["hls"] ??
-                                  false) ||
-                              (meetingStore.recordingType["browser"] ?? false)),
+                          isActive: false,
                           optionIcon: SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/ass ets/icons/record.svg",
+                            "packages/hms_room_kit/lib/src/assets/icons/${meetingStore.hmsRecordingState == HMSRecordingState.paused ? "recording_paused" : "record"}.svg",
                             height: 20,
                             width: 20,
                             colorFilter: ColorFilter.mode(
-                                HMSThemeColors.onSurfaceHighEmphasis,
+                                meetingStore.hmsRecordingState ==
+                                        HMSRecordingState.started
+                                    ? HMSThemeColors.alertErrorDefault
+                                    : HMSThemeColors.onSurfaceHighEmphasis,
                                 BlendMode.srcIn),
                           ),
-                          optionText:
-                              ((meetingStore.recordingType["hls"] ?? false) ||
+                          optionText: meetingStore.hmsRecordingState ==
+                                  HMSRecordingState.paused
+                              ? "Recording Paused"
+                              : ((meetingStore.recordingType["hls"] ?? false) ||
                                       (meetingStore.recordingType["browser"] ??
                                           false))
                                   ? "Recording"

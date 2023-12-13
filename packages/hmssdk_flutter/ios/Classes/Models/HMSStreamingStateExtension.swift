@@ -20,6 +20,8 @@ class HMSStreamingStateExtension {
         if let error = rtmp.error {
             dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
         }
+        
+        dict["state"] = rtmp.state.displayString().uppercased()
         return dict
     }
 
@@ -34,7 +36,8 @@ class HMSStreamingStateExtension {
         if let error = server.error {
             dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
         }
-
+        
+        dict["state"] = server.state.displayString().uppercased()
         return dict
     }
 
@@ -52,6 +55,7 @@ class HMSStreamingStateExtension {
             dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
         }
 
+        dict["state"] = browser.state.displayString().uppercased()
         return dict
     }
 
@@ -65,6 +69,7 @@ class HMSStreamingStateExtension {
         }
         dict["variants"]=args
 
+        dict["state"] = hlsStreaming.state.displayString().uppercased()
         return dict
     }
 
@@ -79,6 +84,7 @@ class HMSStreamingStateExtension {
             dict.merge(HMSErrorExtension.toDictionary(error)) { (_, new) in new }
         }
 
+        dict["state"] = hlsRecording.state.displayString().uppercased()
         return dict
     }
 }
