@@ -20,6 +20,7 @@ This package provides developers with a comprehensive set of tools and component
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+🧱 The Prebuilt QuickStart Guide is [available here](https://www.100ms.live/docs/flutter/v2/quickstart/prebuilt).
 
 📖 Read the Complete Documentation here: https://www.100ms.live/docs/flutter/v2/guides/quickstart
 
@@ -85,9 +86,9 @@ Once you have the prerequisites, follow the steps below to create a Flutter app.
 
 - Create a Flutter app using the terminal; you can get the [Flutter SDK](https://docs.flutter.dev/get-started/install/macos#get-sdk) and use the below command:
 
-  ```bash section=createFlutterApp
-  flutter create my_app
-  ```
+    ```bash section=createFlutterApp
+    flutter create my_app
+    ```
 
 - Once the app is created, open it in VS code.
 
@@ -209,9 +210,9 @@ platform :ios, '12.0'
 4. To add PIP support in your iOS app:
 
 - Minimum Requirements:
-  - Minimum iOS version required to support PiP is iOS 15
-  - Minimum `hmssdk_flutter` SDK version required is 1.3.0
-  - Your app should have [com.apple.developer.avfoundation.multitasking-camera-access)(https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_avfoundation_multitasking-camera-access) Entitlement to use PiP Mode.
+    - Minimum iOS version required to support PiP is iOS 15
+    - Minimum `hmssdk_flutter` SDK version required is 1.3.0
+    - Your app should have [com.apple.developer.avfoundation.multitasking-camera-access)(https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_avfoundation_multitasking-camera-access) Entitlement to use PiP Mode.
 
 Your app needs to run on iOS 13.5 or later to use the entitlement. Without the entitlement, the system disables the camera access for your app. When your app enters PIP mode, it needs this entitlement to continue using the camera.
 
@@ -278,6 +279,8 @@ onPressed: () async => {
 ```
 
 That's it. You can now use the amazing Prebuilt UI in your application.
+
+🧱 The Prebuilt QuickStart Guide is [available here](https://www.100ms.live/docs/flutter/v2/quickstart/prebuilt).
 
 📖 Do refer the Complete Documentation Guide [available here](https://www.100ms.live/docs/flutter/v2/guides/quickstart).
 
