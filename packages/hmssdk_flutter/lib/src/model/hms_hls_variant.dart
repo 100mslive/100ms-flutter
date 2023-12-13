@@ -38,7 +38,7 @@ class HMSHLSVariant {
       meetingUrl: map['meeting_url'] as String?,
       metadata: map['metadata'] as String?,
       startedAt: map['started_at'] != null
-          ? HMSDateExtension.convertDateFromString(map['started_at'])
+          ? HMSDateExtension.convertDateFromEpoch(map['started_at'])
           : null,
     );
   }

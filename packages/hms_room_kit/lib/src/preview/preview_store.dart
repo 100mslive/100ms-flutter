@@ -171,28 +171,31 @@ class PreviewStore extends ChangeNotifier
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
     this.room = room;
-    log("onRoomUpdate-> room: ${room.toString()} update: ${update.name}");
+    log("onRoomUpdate-> room: ${room.toString()} update: ${update.name} streamingState: ${room.hmshlsStreamingState?.state.name}");
     switch (update) {
       case HMSRoomUpdate.browserRecordingStateUpdated:
-        isRecordingStarted = room.hmsBrowserRecordingState?.running ?? false;
+        isRecordingStarted =
+            room.hmsBrowserRecordingState?.state == HMSRecordingState.started;
         break;
 
       case HMSRoomUpdate.serverRecordingStateUpdated:
-        isRecordingStarted = room.hmsServerRecordingState?.running ?? false;
-        break;
+        isRecordingStarted =
+            room.hmsServerRecordingState?.state == HMSRecordingState.started;
 
       case HMSRoomUpdate.hlsRecordingStateUpdated:
-        isRecordingStarted = room.hmshlsRecordingState?.running ?? false;
+        isRecordingStarted =
+            room.hmshlsRecordingState?.state == HMSRecordingState.started;
         break;
 
       case HMSRoomUpdate.rtmpStreamingStateUpdated:
-        isRTMPStreamingStarted = room.hmsRtmpStreamingState?.running ?? false;
+        isRTMPStreamingStarted =
+            room.hmsRtmpStreamingState?.state == HMSStreamingState.started;
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
-        isHLSStreamingStarted = room.hmshlsStreamingState?.running ?? false;
-        if (!isMeetingJoined && isRoomJoined) {
-          isRoomJoinedAndHLSStarted =
-              (room.hmshlsStreamingState?.running ?? false) && isRoomJoined;
+        isHLSStreamingStarted =
+            room.hmshlsStreamingState?.state == HMSStreamingState.started;
+        if (!isMeetingJoined && isRoomJoined && isHLSStreamingStarted) {
+          isRoomJoinedAndHLSStarted = true;
           isMeetingJoined = true;
         }
         break;

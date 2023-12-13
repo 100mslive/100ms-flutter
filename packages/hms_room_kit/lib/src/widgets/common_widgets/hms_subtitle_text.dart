@@ -23,6 +23,7 @@ class HMSSubtitleText extends StatelessWidget {
   final FontWeight? fontWeight;
   final TextOverflow? textOverflow;
   final TextAlign? textAlign;
+  final int? maxLines;
 
   const HMSSubtitleText(
       {Key? key,
@@ -33,7 +34,8 @@ class HMSSubtitleText extends StatelessWidget {
       this.fontSize = 12,
       this.fontWeight = FontWeight.w400,
       this.textOverflow = TextOverflow.ellipsis,
-      this.textAlign})
+      this.textAlign,
+      this.maxLines = 1})
       : super(key: key);
 
   @override
@@ -41,12 +43,14 @@ class HMSSubtitleText extends StatelessWidget {
     return Text(text,
         overflow: textOverflow,
         softWrap: true,
+        maxLines: maxLines,
         textAlign: textAlign,
         style: HMSTextStyle.setTextStyle(
-            height: lineHeight! / fontSize!,
-            fontSize: fontSize,
-            letterSpacing: letterSpacing,
-            color: textColor,
-            fontWeight: fontWeight));
+          height: lineHeight! / fontSize!,
+          fontSize: fontSize,
+          letterSpacing: letterSpacing,
+          color: textColor,
+          fontWeight: fontWeight,
+        ));
   }
 }
