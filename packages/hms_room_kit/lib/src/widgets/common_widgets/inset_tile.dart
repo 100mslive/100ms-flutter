@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 ///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/inset_tile_more_option.dart';
+import 'package:hms_room_kit/src/widgets/peer_widgets/local_peer_more_option.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/video_view.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/audio_mute_status.dart';

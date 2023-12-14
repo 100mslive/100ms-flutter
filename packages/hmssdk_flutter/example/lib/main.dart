@@ -290,6 +290,9 @@ class _HomePageState extends State<HomePage> {
             builder: (_) => HMSPrebuilt(
                 roomCode: Constant.roomCode,
                 options: HMSPrebuiltOptions(
+                    userName: AppDebugConfig.nameChangeOnPreview
+                        ? null
+                        : "Flutter User",
                     endPoints: endPoints,
                     userId:
                         "user_flutter", // pass your custom unique user identifier here
