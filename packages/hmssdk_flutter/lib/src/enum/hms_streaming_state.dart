@@ -1,3 +1,4 @@
+///Enum for the streaming state in room
 enum HMSStreamingState {
   none,
 

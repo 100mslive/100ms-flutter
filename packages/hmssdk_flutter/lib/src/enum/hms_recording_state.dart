@@ -1,3 +1,4 @@
+///Enum for the recording state in room
 enum HMSRecordingState {
   none,
 
