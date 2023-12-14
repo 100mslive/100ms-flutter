@@ -102,8 +102,11 @@ class _PreviewForRoleHeaderState extends State<PreviewForRoleHeader> {
                       ),
                   builder: (_, data, __) {
                     return (data.item1 == HMSRecordingState.started ||
+                            data.item1 == HMSRecordingState.resumed ||
                             data.item2 == HMSRecordingState.started ||
-                            data.item3 == HMSRecordingState.started)
+                            data.item2 == HMSRecordingState.resumed ||
+                            data.item3 == HMSRecordingState.started ||
+                            data.item3 == HMSRecordingState.resumed)
                         ? SvgPicture.asset(
                             "packages/hms_room_kit/lib/src/assets/icons/record.svg",
                             height: 24,

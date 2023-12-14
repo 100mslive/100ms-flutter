@@ -230,9 +230,13 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                           onTap: () async {
                             bool isRecordingRunning =
                                 ((meetingStore.recordingType["hls"] ==
-                                        HMSRecordingState.started) ||
+                                            HMSRecordingState.started) ||
+                                        meetingStore.recordingType["hls"] ==
+                                            HMSRecordingState.resumed) ||
                                     (meetingStore.recordingType["browser"] ==
-                                        HMSRecordingState.started));
+                                            HMSRecordingState.started ||
+                                        meetingStore.recordingType["browser"] ==
+                                            HMSRecordingState.resumed);
                             if (isRecordingRunning) {
                               Navigator.pop(context);
                               showModalBottomSheet(
