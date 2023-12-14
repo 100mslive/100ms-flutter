@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -59,7 +60,8 @@ class _PreviewForRoleHeaderState extends State<PreviewForRoleHeader> {
               ///If the HLS streaming is not started we show nothing
               Selector<MeetingStore, bool>(
                   selector: (_, meetingStore) =>
-                      meetingStore.streamingType['hls'] ?? false,
+                      meetingStore.streamingType['hls'] ==
+                      HMSStreamingState.started,
                   builder: (_, isHLSStrted, __) {
                     return isHLSStrted
                         ? Container(
@@ -86,14 +88,25 @@ class _PreviewForRoleHeaderState extends State<PreviewForRoleHeader> {
               ///We render the recording icon based on the recording status
               ///If the recording is started we show the recording icon
               ///If the recording is not started we show nothing
-              Selector<MeetingStore, Tuple3<bool, bool, bool>>(
+              Selector<
+                      MeetingStore,
+                      Tuple3<HMSRecordingState, HMSRecordingState,
+                          HMSRecordingState>>(
                   selector: (_, meetingStore) => Tuple3(
-                        meetingStore.recordingType["browser"] ?? false,
-                        meetingStore.recordingType["server"] ?? false,
-                        meetingStore.recordingType["hls"] ?? false,
+                        meetingStore.recordingType["browser"] ??
+                            HMSRecordingState.none,
+                        meetingStore.recordingType["server"] ??
+                            HMSRecordingState.none,
+                        meetingStore.recordingType["hls"] ??
+                            HMSRecordingState.none,
                       ),
                   builder: (_, data, __) {
-                    return (data.item1 || data.item2 || data.item3)
+                    return (data.item1 == HMSRecordingState.started ||
+                            data.item1 == HMSRecordingState.resumed ||
+                            data.item2 == HMSRecordingState.started ||
+                            data.item2 == HMSRecordingState.resumed ||
+                            data.item3 == HMSRecordingState.started ||
+                            data.item3 == HMSRecordingState.resumed)
                         ? SvgPicture.asset(
                             "packages/hms_room_kit/lib/src/assets/icons/record.svg",
                             height: 24,
@@ -109,11 +122,14 @@ class _PreviewForRoleHeaderState extends State<PreviewForRoleHeader> {
               ),
 
               ///This renders the number of peers
-              ///If the HLS streaming is started, we render the number of peers
+              ///If the HLS or RTMP streaming is started, we render the number of peers
               ///else we render an empty Container
               Selector<MeetingStore, Tuple2<bool, int>>(
                   selector: (_, meetingStore) => Tuple2(
-                      meetingStore.streamingType['hls'] ?? false,
+                      meetingStore.streamingType['hls'] ==
+                              HMSStreamingState.started ||
+                          meetingStore.streamingType['rtmp'] ==
+                              HMSStreamingState.started,
                       meetingStore.peersInRoom),
                   builder: (_, data, __) {
                     return data.item1

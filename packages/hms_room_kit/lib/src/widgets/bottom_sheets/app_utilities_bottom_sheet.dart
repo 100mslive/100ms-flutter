@@ -206,9 +206,11 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                     false)
 
                   ///If streaming is on or in initialising state disable the button
-                  ((meetingStore.streamingType["hls"] ?? false) ||
-                          (meetingStore.streamingType["rtmp"] ?? false) ||
-                          meetingStore.hmsRecordingState ==
+                  ((meetingStore.streamingType["hls"] ==
+                              HMSStreamingState.started) ||
+                          (meetingStore.streamingType["rtmp"] ==
+                              HMSStreamingState.started) ||
+                          meetingStore.recordingType["browser"] ==
                               HMSRecordingState.starting)
                       ? MoreOptionItem(
                           onTap: () {},
@@ -227,9 +229,14 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       : MoreOptionItem(
                           onTap: () async {
                             bool isRecordingRunning =
-                                ((meetingStore.recordingType["hls"] ?? false) ||
-                                    (meetingStore.recordingType["browser"] ??
-                                        false));
+                                ((meetingStore.recordingType["hls"] ==
+                                            HMSRecordingState.started) ||
+                                        meetingStore.recordingType["hls"] ==
+                                            HMSRecordingState.resumed) ||
+                                    (meetingStore.recordingType["browser"] ==
+                                            HMSRecordingState.started ||
+                                        meetingStore.recordingType["browser"] ==
+                                            HMSRecordingState.resumed);
                             if (isRecordingRunning) {
                               Navigator.pop(context);
                               showModalBottomSheet(
@@ -278,22 +285,23 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                           },
                           isActive: false,
                           optionIcon: SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/${meetingStore.hmsRecordingState == HMSRecordingState.paused ? "recording_paused" : "record"}.svg",
+                            "packages/hms_room_kit/lib/src/assets/icons/${meetingStore.recordingType["browser"] == HMSRecordingState.paused ? "recording_paused" : "record"}.svg",
                             height: 20,
                             width: 20,
                             colorFilter: ColorFilter.mode(
-                                meetingStore.hmsRecordingState ==
+                                meetingStore.recordingType["browser"] ==
                                         HMSRecordingState.started
                                     ? HMSThemeColors.alertErrorDefault
                                     : HMSThemeColors.onSurfaceHighEmphasis,
                                 BlendMode.srcIn),
                           ),
-                          optionText: meetingStore.hmsRecordingState ==
+                          optionText: meetingStore.recordingType["browser"] ==
                                   HMSRecordingState.paused
                               ? "Recording Paused"
-                              : ((meetingStore.recordingType["hls"] ?? false) ||
-                                      (meetingStore.recordingType["browser"] ??
-                                          false))
+                              : ((meetingStore.recordingType["hls"] ==
+                                          HMSRecordingState.started) ||
+                                      (meetingStore.recordingType["browser"] ==
+                                          HMSRecordingState.started))
                                   ? "Recording"
                                   : "Record",
                         )
