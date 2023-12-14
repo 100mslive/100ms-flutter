@@ -38,10 +38,7 @@ import live.hms.video.events.AgentType
 import live.hms.video.media.tracks.*
 import live.hms.video.sdk.*
 import live.hms.video.sdk.models.*
-import live.hms.video.sdk.models.enums.AudioMixingMode
-import live.hms.video.sdk.models.enums.HMSPeerUpdate
-import live.hms.video.sdk.models.enums.HMSRoomUpdate
-import live.hms.video.sdk.models.enums.HMSTrackUpdate
+import live.hms.video.sdk.models.enums.*
 import live.hms.video.sdk.models.role.HMSRole
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
 import live.hms.video.sessionstore.HMSKeyChangeListener
@@ -1205,7 +1202,7 @@ class HmssdkFlutterPlugin :
                  * the stream URL.
                  */
                 room.hlsStreamingState?.let { streamingState ->
-                    if (streamingState.running) {
+                    if (streamingState.state == HMSStreamingState.STARTED) {
                         streamingState.variants?.let { variants ->
                             if (variants.isNotEmpty()) {
                                 hlsStreamUrl = variants[0].hlsStreamUrl
@@ -1274,7 +1271,7 @@ class HmssdkFlutterPlugin :
                  */
                 if (type == HMSRoomUpdate.HLS_STREAMING_STATE_UPDATED) {
                     hmsRoom.hlsStreamingState?.let { streamingState ->
-                        if (streamingState.running) {
+                        if (streamingState.state == HMSStreamingState.STARTED) {
                             streamingState.variants?.let { variants ->
                                 if (variants.isNotEmpty()) {
                                     hlsStreamUrl = variants[0].hlsStreamUrl
