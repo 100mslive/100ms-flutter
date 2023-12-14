@@ -32,7 +32,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 /// **disableAutoSimulcastLayerSelect** -  To disable auto simulcast (Adaptive Bitrate)
 ///
 /// **key** - [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
-/// Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
+/// Similarly to avoid rebuilding the key should be kept the same for particular HMSTextureView.
 ///
 /// **controller** - To control the video view, this is useful for custom usecases when you wish to control the addTrack and removeTrack
 /// track functionalities on your own.
@@ -72,6 +72,7 @@ class HMSTextureView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _PlatformView(
+      key: key,
       track: track,
       setMirror: setMirror,
       scaleType: this.scaleType,
@@ -112,7 +113,7 @@ class _PlatformViewState extends State<_PlatformView> {
     if (Platform.isAndroid) {
       if (widget.controller == null) {
         viewController =
-            HMSTextureViewController(track: widget.track as HMSVideoTrack);
+            HMSTextureViewController(track: widget.track as HMSVideoTrack,disableAutoSimulcastLayerSelect: widget.disableAutoSimulcastLayerSelect);
       } else {
         viewController = widget.controller;
       }
