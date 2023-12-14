@@ -112,8 +112,10 @@ class _PlatformViewState extends State<_PlatformView> {
     /// (Android Only)
     if (Platform.isAndroid) {
       if (widget.controller == null) {
-        viewController =
-            HMSTextureViewController(track: widget.track as HMSVideoTrack,disableAutoSimulcastLayerSelect: widget.disableAutoSimulcastLayerSelect);
+        viewController = HMSTextureViewController(
+            track: widget.track as HMSVideoTrack,
+            disableAutoSimulcastLayerSelect:
+                widget.disableAutoSimulcastLayerSelect);
       } else {
         viewController = widget.controller;
       }
