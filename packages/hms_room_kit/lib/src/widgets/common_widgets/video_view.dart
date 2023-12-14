@@ -83,8 +83,6 @@ class _VideoViewState extends State<VideoView> {
                     // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
                     child: HMSTextureView(
                       controller: widget.videoViewController,
-                      addTrackByDefault:
-                          !context.read<PeerTrackNode>().isOffscreen,
                       key: Key(data.item1!.trackId),
                       scaleType: ScaleType.SCALE_ASPECT_FIT,
                       track: data.item1!,
@@ -98,8 +96,6 @@ class _VideoViewState extends State<VideoView> {
                     // Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
                     child: HMSTextureView(
                       controller: widget.videoViewController,
-                      addTrackByDefault:
-                          !context.read<PeerTrackNode>().isOffscreen,
                       key: Key(data.item1!.trackId),
                       scaleType: ScaleType.SCALE_ASPECT_FILL,
                       track: data.item1!,
