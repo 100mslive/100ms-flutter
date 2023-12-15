@@ -1,5 +1,6 @@
 // Project imports
 import 'package:hmssdk_flutter/src/model/hms_hls_variant.dart';
+import 'package:hmssdk_flutter/src/enum/hms_streaming_state.dart';
 
 ///100ms HMSHLSStreamingState
 ///
@@ -7,7 +8,9 @@ import 'package:hmssdk_flutter/src/model/hms_hls_variant.dart';
 class HMSHLSStreamingState {
   final bool running;
   final List<HMSHLSVariant?> variants;
-  HMSHLSStreamingState({required this.running, required this.variants});
+  HMSStreamingState state;
+  HMSHLSStreamingState(
+      {required this.running, required this.variants, required this.state});
 
   factory HMSHLSStreamingState.fromMap(Map map) {
     List<HMSHLSVariant?> variants = [];
@@ -24,9 +27,13 @@ class HMSHLSStreamingState {
       }
     }
 
+    HMSStreamingState state = HMSStreamingStateValues.getStreamingStateFromName(
+        map['state'] ?? 'NONE');
+
     return HMSHLSStreamingState(
       running: map['running'],
       variants: variants,
+      state: state,
     );
   }
 }

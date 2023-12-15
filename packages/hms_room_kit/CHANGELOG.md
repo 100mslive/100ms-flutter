@@ -5,6 +5,17 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+## 1.0.8 - 2023-12-15
+
+| Package        | Version                                                                                                |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| hms_room_kit   | 1.0.8     |
+| hmssdk_flutter | 1.9.5     |
+
+### 🔄 Changed
+
+- Updated Streaming and Recording UI
+
 ## 1.0.7 - 2023-12-08
 
 | Package        | Version                                                                                                |

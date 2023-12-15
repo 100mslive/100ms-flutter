@@ -83,7 +83,10 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                           ///If recording initialising state is true we show the loader
                           Selector<MeetingStore, bool>(
                               selector: (_, meetingStore) =>
-                                  meetingStore.streamingType['hls'] ?? false,
+                                  (meetingStore.streamingType['hls'] ==
+                                          HMSStreamingState.started ||
+                                      meetingStore.streamingType['rtmp'] ==
+                                          HMSStreamingState.started),
                               builder: (_, isHLSStarted, __) {
                                 return isHLSStarted
                                     ? Container(
@@ -115,16 +118,29 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                           ///else we render an empty Container
                           ///
                           ///For recording status we use the recordingType map from the [MeetingStore]
-                          Selector<MeetingStore,
-                                  Tuple4<bool, bool, bool, bool>>(
-                              selector: (_, meetingStore) => Tuple4(
+                          Selector<
+                                  MeetingStore,
+                                  Tuple3<HMSRecordingState, HMSRecordingState,
+                                      HMSRecordingState>>(
+                              selector: (_, meetingStore) => Tuple3(
                                   meetingStore.recordingType["browser"] ??
-                                      false,
-                                  meetingStore.recordingType["server"] ?? false,
-                                  meetingStore.recordingType["hls"] ?? false,
-                                  meetingStore.isRecordingInInitialisingState),
+                                      HMSRecordingState.none,
+                                  meetingStore.recordingType["server"] ??
+                                      HMSRecordingState.none,
+                                  meetingStore.recordingType["hls"] ??
+                                      HMSRecordingState.none),
                               builder: (_, data, __) {
-                                return (data.item1 || data.item2 || data.item3)
+                                return (data.item1 ==
+                                            HMSRecordingState.started ||
+                                        data.item1 ==
+                                            HMSRecordingState.resumed ||
+                                        data.item2 ==
+                                            HMSRecordingState.started ||
+                                        data.item2 ==
+                                            HMSRecordingState.resumed ||
+                                        data.item3 ==
+                                            HMSRecordingState.started ||
+                                        data.item3 == HMSRecordingState.resumed)
                                     ? SvgPicture.asset(
                                         "packages/hms_room_kit/lib/src/assets/icons/record.svg",
                                         height: 24,
@@ -133,16 +149,36 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                                             HMSThemeColors.alertErrorDefault,
                                             BlendMode.srcIn),
                                       )
-                                    : data.item4
+                                    : (data.item1 ==
+                                                HMSRecordingState.starting ||
+                                            data.item2 ==
+                                                HMSRecordingState.starting ||
+                                            data.item3 ==
+                                                HMSRecordingState.starting)
                                         ? SizedBox(
-                                            height: 24,
-                                            width: 24,
+                                            height: 20,
+                                            width: 20,
                                             child: CircularProgressIndicator(
                                               strokeWidth: 2,
                                               color: HMSThemeColors
                                                   .onSurfaceHighEmphasis,
                                             ))
-                                        : Container();
+                                        : (data.item1 ==
+                                                    HMSRecordingState.paused ||
+                                                data.item2 ==
+                                                    HMSRecordingState.paused ||
+                                                data.item3 ==
+                                                    HMSRecordingState.paused)
+                                            ? SvgPicture.asset(
+                                                "packages/hms_room_kit/lib/src/assets/icons/recording_paused.svg",
+                                                height: 24,
+                                                width: 24,
+                                                colorFilter: ColorFilter.mode(
+                                                    HMSThemeColors
+                                                        .onSurfaceHighEmphasis,
+                                                    BlendMode.srcIn),
+                                              )
+                                            : Container();
                               }),
                           const SizedBox(
                             width: 8,
@@ -153,7 +189,10 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                           ///else we render an empty Container
                           Selector<MeetingStore, Tuple2<bool, int>>(
                               selector: (_, meetingStore) => Tuple2(
-                                  meetingStore.streamingType['hls'] ?? false,
+                                  ((meetingStore.streamingType['hls'] ==
+                                          HMSStreamingState.started) ||
+                                      (meetingStore.streamingType['rtmp'] ==
+                                          HMSStreamingState.started)),
                                   meetingStore.peersInRoom),
                               builder: (_, data, __) {
                                 return data.item1

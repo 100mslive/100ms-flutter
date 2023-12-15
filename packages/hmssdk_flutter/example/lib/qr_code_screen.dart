@@ -78,6 +78,9 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
             builder: (_) => HMSPrebuilt(
                 roomCode: Constant.roomCode,
                 options: HMSPrebuiltOptions(
+                    userName: AppDebugConfig.nameChangeOnPreview
+                        ? null
+                        : "Flutter User",
                     endPoints: endPoints,
                     iOSScreenshareConfig: HMSIOSScreenshareConfig(
                         appGroup: "group.flutterhms",

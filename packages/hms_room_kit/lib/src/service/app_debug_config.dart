@@ -14,6 +14,7 @@ class AppDebugConfig {
   static bool isSoftwareDecoderDisabled = true;
   static bool isAudioMixerDisabled = true;
   static bool isAutoSimulcast = true;
+  static bool nameChangeOnPreview = true;
 
   static bool isDebugMode = false;
   static bool isProdRoom = true;
@@ -32,5 +33,6 @@ class AppDebugConfig {
     isAudioMixerDisabled = true;
     isAutoSimulcast = true;
     isProdRoom = true;
+    nameChangeOnPreview = true;
   }
 }

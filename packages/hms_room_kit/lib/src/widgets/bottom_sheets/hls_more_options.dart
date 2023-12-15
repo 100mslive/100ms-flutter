@@ -128,37 +128,38 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                         ),
                       ),
                       optionText: "Participants"),
-                MoreOptionItem(
-                    onTap: () async {
-                      var meetingStore = context.read<MeetingStore>();
-                      Navigator.pop(context);
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        backgroundColor: HMSThemeColors.surfaceDim,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(16),
-                              topRight: Radius.circular(16)),
-                        ),
-                        context: context,
-                        builder: (ctx) => ChangeNotifierProvider.value(
-                            value: meetingStore,
-                            child: Padding(
-                                padding: EdgeInsets.only(
-                                    bottom:
-                                        MediaQuery.of(ctx).viewInsets.bottom),
-                                child: const ChangeNameBottomSheet())),
-                      );
-                    },
-                    optionIcon: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
-                      height: 20,
-                      width: 20,
-                      colorFilter: ColorFilter.mode(
-                          HMSThemeColors.onSurfaceHighEmphasis,
-                          BlendMode.srcIn),
-                    ),
-                    optionText: "Change Name")
+                if (Constant.prebuiltOptions?.userName == null)
+                  MoreOptionItem(
+                      onTap: () async {
+                        var meetingStore = context.read<MeetingStore>();
+                        Navigator.pop(context);
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: HMSThemeColors.surfaceDim,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16)),
+                          ),
+                          context: context,
+                          builder: (ctx) => ChangeNotifierProvider.value(
+                              value: meetingStore,
+                              child: Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom:
+                                          MediaQuery.of(ctx).viewInsets.bottom),
+                                  child: const ChangeNameBottomSheet())),
+                        );
+                      },
+                      optionIcon: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
+                        height: 20,
+                        width: 20,
+                        colorFilter: ColorFilter.mode(
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
+                      ),
+                      optionText: "Change Name")
               ],
             ),
           ],

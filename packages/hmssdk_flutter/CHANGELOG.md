@@ -5,6 +5,30 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+# 1.9.5 - 2023-12-15
+
+| Package                                | Version                                                                                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| hms_room_kit                | 1.0.8  |
+| hmssdk_flutter              | 1.9.5  |
+
+### Added 
+
+- Added `state` property to recording and streaming classes to get the current state of recording and streaming.
+
+  Learn more about `HMSStreamingState` and `HMSRecordingState` [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/recording#current-room-status).
+
+### Changed
+
+- Removed `addTrackByDefault` property from `HMSTextureView`. 
+
+  This should not affect any existing implementation as `addTrackByDefault` was set to `true` by default.
+  Learn more about `HMSTextureView` [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/render-video/hms-texture-view).
+
+Updated to Android SDK 2.8.3 & iOS SDK 1.4.0
+
+**Full Changelog**: [1.9.4...1.9.5](https://github.com/100mslive/100ms-flutter/compare/1.9.4...1.9.5)
+
 # 1.9.4 - 2023-12-08
 
 | Package        | Version                                                                                                |

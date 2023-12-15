@@ -4,6 +4,7 @@ import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart' show StandardMessageCodec;
 
 // Project imports:
@@ -31,9 +32,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 /// **disableAutoSimulcastLayerSelect** -  To disable auto simulcast (Adaptive Bitrate)
 ///
 /// **key** - [key] property can be used to forcefully rebuild the video widget by setting a unique key everytime.
-/// Similarly to avoid rebuilding the key should be kept the same for particular HMSVideoView.
-///
-/// **addTrackByDefault** - To call addTrack by default as HMSTextureView is attached to the tree. Default value is [true]
+/// Similarly to avoid rebuilding the key should be kept the same for particular HMSTextureView.
 ///
 /// **controller** - To control the video view, this is useful for custom usecases when you wish to control the addTrack and removeTrack
 /// track functionalities on your own.
@@ -57,9 +56,6 @@ class HMSTextureView extends StatelessWidget {
   /// Default is [false]
   final bool disableAutoSimulcastLayerSelect;
 
-  /// [addTrackByDefault] - To call addTrack by default as HMSVideoView is attached to the tree. Default value is [true]
-  final bool addTrackByDefault;
-
   /// [controller] - To control the video view, this is useful for custom usecases when you wish to control the addTrack and removeTrack
   /// track functionalities on your own.
   final HMSTextureViewController? controller;
@@ -70,18 +66,17 @@ class HMSTextureView extends StatelessWidget {
       this.setMirror = false,
       this.scaleType = ScaleType.SCALE_ASPECT_FIT,
       this.disableAutoSimulcastLayerSelect = false,
-      this.addTrackByDefault = true,
       this.controller})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return _PlatformView(
+      key: key,
       track: track,
       setMirror: setMirror,
       scaleType: this.scaleType,
       disableAutoSimulcastLayerSelect: disableAutoSimulcastLayerSelect,
-      addTrackByDefault: addTrackByDefault,
       controller: controller,
     );
   }
@@ -92,7 +87,6 @@ class _PlatformView extends StatefulWidget {
   final bool setMirror;
   final ScaleType scaleType;
   final bool disableAutoSimulcastLayerSelect;
-  final bool addTrackByDefault;
   final HMSTextureViewController? controller;
 
   _PlatformView(
@@ -101,7 +95,6 @@ class _PlatformView extends StatefulWidget {
       this.setMirror = false,
       required this.scaleType,
       this.disableAutoSimulcastLayerSelect = false,
-      this.addTrackByDefault = true,
       this.controller})
       : super(key: key);
 
@@ -119,8 +112,10 @@ class _PlatformViewState extends State<_PlatformView> {
     /// (Android Only)
     if (Platform.isAndroid) {
       if (widget.controller == null) {
-        viewController =
-            HMSTextureViewController(track: widget.track as HMSVideoTrack);
+        viewController = HMSTextureViewController(
+            track: widget.track as HMSVideoTrack,
+            disableAutoSimulcastLayerSelect:
+                widget.disableAutoSimulcastLayerSelect);
       } else {
         viewController = widget.controller;
       }
@@ -191,6 +186,7 @@ class _PlatformViewState extends State<_PlatformView> {
     } else if (Platform.isIOS) {
       ///UIKitView for ios it uses VideoView provided by 100ms ios_sdk internally.
       return UiKitView(
+        hitTestBehavior: PlatformViewHitTestBehavior.transparent,
         viewType: 'HMSFlutterPlatformView',
         creationParamsCodec: StandardMessageCodec(),
         creationParams: {

@@ -2,6 +2,7 @@
 import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -205,9 +206,12 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                     false)
 
                   ///If streaming is on or in initialising state disable the button
-                  ((meetingStore.streamingType["hls"] ?? false) ||
-                          (meetingStore.streamingType["rtmp"] ?? false) ||
-                          meetingStore.isRecordingInInitialisingState)
+                  ((meetingStore.streamingType["hls"] ==
+                              HMSStreamingState.started) ||
+                          (meetingStore.streamingType["rtmp"] ==
+                              HMSStreamingState.started) ||
+                          meetingStore.recordingType["browser"] ==
+                              HMSRecordingState.starting)
                       ? MoreOptionItem(
                           onTap: () {},
                           isActive: false,
@@ -219,17 +223,20 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                 HMSThemeColors.onSurfaceLowEmphasis,
                                 BlendMode.srcIn),
                           ),
-                          optionText: "Start Recording",
+                          optionText: "Record",
                           optionTextColor: HMSThemeColors.onSurfaceLowEmphasis,
                         )
                       : MoreOptionItem(
                           onTap: () async {
                             bool isRecordingRunning =
-                                ((meetingStore.recordingType["hls"] ?? false) ||
-                                    (meetingStore.recordingType["browser"] ??
-                                        false) ||
-                                    (meetingStore.recordingType["server"] ??
-                                        false));
+                                ((meetingStore.recordingType["hls"] ==
+                                            HMSRecordingState.started) ||
+                                        meetingStore.recordingType["hls"] ==
+                                            HMSRecordingState.resumed) ||
+                                    (meetingStore.recordingType["browser"] ==
+                                            HMSRecordingState.started ||
+                                        meetingStore.recordingType["browser"] ==
+                                            HMSRecordingState.resumed);
                             if (isRecordingRunning) {
                               Navigator.pop(context);
                               showModalBottomSheet(
@@ -276,27 +283,27 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                   rtmpUrls: null);
                             }
                           },
-                          isActive: ((meetingStore.recordingType["hls"] ??
-                                  false) ||
-                              (meetingStore.recordingType["browser"] ??
-                                  false) ||
-                              (meetingStore.recordingType["server"] ?? false)),
+                          isActive: false,
                           optionIcon: SvgPicture.asset(
-                            "packages/hms_room_kit/lib/src/assets/icons/record.svg",
+                            "packages/hms_room_kit/lib/src/assets/icons/${meetingStore.recordingType["browser"] == HMSRecordingState.paused ? "recording_paused" : "record"}.svg",
                             height: 20,
                             width: 20,
                             colorFilter: ColorFilter.mode(
-                                HMSThemeColors.onSurfaceHighEmphasis,
+                                meetingStore.recordingType["browser"] ==
+                                        HMSRecordingState.started
+                                    ? HMSThemeColors.alertErrorDefault
+                                    : HMSThemeColors.onSurfaceHighEmphasis,
                                 BlendMode.srcIn),
                           ),
-                          optionText:
-                              ((meetingStore.recordingType["hls"] ?? false) ||
-                                      (meetingStore.recordingType["browser"] ??
-                                          false) ||
-                                      (meetingStore.recordingType["server"] ??
-                                          false))
-                                  ? "Stop Recording"
-                                  : "Start Recording",
+                          optionText: meetingStore.recordingType["browser"] ==
+                                  HMSRecordingState.paused
+                              ? "Recording Paused"
+                              : ((meetingStore.recordingType["hls"] ==
+                                          HMSRecordingState.started) ||
+                                      (meetingStore.recordingType["browser"] ==
+                                          HMSRecordingState.started))
+                                  ? "Recording"
+                                  : "Record",
                         )
               ],
             ),

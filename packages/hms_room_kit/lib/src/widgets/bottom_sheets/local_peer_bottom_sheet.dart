@@ -148,44 +148,45 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                     //     title: HMSSubheadingText(
                     //         text: "Spotlight Tile for Everyone",
                     //         textColor: HMSThemeColors.onSurfaceHighEmphasis)),
-                    ListTile(
-                        horizontalTitleGap: 2,
-                        onTap: () async {
-                          Navigator.pop(context);
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: HMSThemeColors.surfaceDim,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(16),
-                                  topRight: Radius.circular(16)),
-                            ),
-                            context: context,
-                            builder: (ctx) => ChangeNotifierProvider.value(
-                                value: widget.meetingStore,
-                                child: Padding(
-                                    padding: EdgeInsets.only(
-                                        bottom: MediaQuery.of(ctx)
-                                            .viewInsets
-                                            .bottom),
-                                    child: const ChangeNameBottomSheet(
-                                      showPrivacyInfo: false,
-                                    ))),
-                          );
-                        },
-                        contentPadding: EdgeInsets.zero,
-                        leading: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
-                          semanticsLabel: "fl_local_pin_tile",
-                          height: 20,
-                          width: 20,
-                          colorFilter: ColorFilter.mode(
-                              HMSThemeColors.onSurfaceHighEmphasis,
-                              BlendMode.srcIn),
-                        ),
-                        title: HMSSubheadingText(
-                            text: "Change Name",
-                            textColor: HMSThemeColors.onSurfaceHighEmphasis)),
+                    if (Constant.prebuiltOptions?.userName == null)
+                      ListTile(
+                          horizontalTitleGap: 2,
+                          onTap: () async {
+                            Navigator.pop(context);
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              backgroundColor: HMSThemeColors.surfaceDim,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(16),
+                                    topRight: Radius.circular(16)),
+                              ),
+                              context: context,
+                              builder: (ctx) => ChangeNotifierProvider.value(
+                                  value: widget.meetingStore,
+                                  child: Padding(
+                                      padding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(ctx)
+                                              .viewInsets
+                                              .bottom),
+                                      child: const ChangeNameBottomSheet(
+                                        showPrivacyInfo: false,
+                                      ))),
+                            );
+                          },
+                          contentPadding: EdgeInsets.zero,
+                          leading: SvgPicture.asset(
+                            "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
+                            semanticsLabel: "fl_local_pin_tile",
+                            height: 20,
+                            width: 20,
+                            colorFilter: ColorFilter.mode(
+                                HMSThemeColors.onSurfaceHighEmphasis,
+                                BlendMode.srcIn),
+                          ),
+                          title: HMSSubheadingText(
+                              text: "Change Name",
+                              textColor: HMSThemeColors.onSurfaceHighEmphasis)),
                     if (widget.isInsetTile)
                       ListTile(
                           horizontalTitleGap: 2,

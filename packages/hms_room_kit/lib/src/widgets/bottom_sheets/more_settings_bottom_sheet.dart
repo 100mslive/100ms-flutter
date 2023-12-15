@@ -436,7 +436,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         false)
                       Selector<MeetingStore, bool>(
                           selector: (_, meetingStore) =>
-                              meetingStore.streamingType["rtmp"] ?? false,
+                              meetingStore.streamingType["rtmp"] ==
+                              HMSStreamingState.started,
                           builder: (_, isRTMPRunning, __) {
                             return ListTile(
                               horizontalTitleGap: 2,
@@ -453,7 +454,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                               "Enter Comma separated RTMP Urls",
                                           isRecordingEnabled: meetingStore
                                                   .recordingType["browser"] ==
-                                              true);
+                                              HMSRecordingState.started);
                                   List<String>? urls;
                                   if (data["url"]!.isNotEmpty) {
                                     urls = data["url"]!.split(",");
@@ -499,7 +500,8 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         false)
                       Selector<MeetingStore, bool>(
                           selector: (_, meetingStore) =>
-                              meetingStore.recordingType["browser"] ?? false,
+                              meetingStore.recordingType["browser"] ==
+                              HMSRecordingState.started,
                           builder: (_, isBrowserRecording, __) {
                             return ListTile(
                               horizontalTitleGap: 2,

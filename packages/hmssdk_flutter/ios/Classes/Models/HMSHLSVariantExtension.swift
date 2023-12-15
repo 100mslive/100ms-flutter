@@ -18,15 +18,14 @@ class HMSHLSVariantExtension {
 
         dict["metadata"] = hmshlsVariant.metadata
 
-        if let url = hmshlsVariant.url{
+        if let url = hmshlsVariant.url {
             dict["hls_stream_url"] = url.absoluteString
-        }
-        else{
+        } else {
             dict["hls_stream_url"]  = nil
         }
 
         if let startedAt = hmshlsVariant.startedAt {
-            dict["started_at"] = "\(startedAt)"
+            dict["started_at"] =  Int(startedAt.timeIntervalSince1970 * 1000)
         }
 
         return dict

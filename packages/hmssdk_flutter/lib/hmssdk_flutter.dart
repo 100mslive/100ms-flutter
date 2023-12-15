@@ -100,6 +100,8 @@ export 'src/model/hls_player/hms_hls_cue.dart';
 export 'src/model/hls_player/hms_hls_timed_metadata.dart';
 export 'src/model/hms_peer_list_iterator.dart';
 export 'src/model/peer_list_iterator_options.dart';
+export 'src/enum/hms_recording_state.dart';
+export 'src/enum/hms_streaming_state.dart';
 
 //Views
 export 'src/ui/meeting/hms_texture_view.dart';

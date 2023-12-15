@@ -10,15 +10,21 @@ class HMSServerRecordingState {
   final HMSException? error;
   final bool running;
   DateTime? startedAt;
+  HMSRecordingState state;
   HMSServerRecordingState(
-      {required this.error, required this.running, this.startedAt});
+      {required this.error,
+      required this.running,
+      this.startedAt,
+      required this.state});
 
   factory HMSServerRecordingState.fromMap(Map map) {
     return HMSServerRecordingState(
         error: map["error"] != null ? HMSException.fromMap(map) : null,
         running: map['running'],
         startedAt: map['started_at'] != null
-            ? HMSDateExtension.convertDateFromString(map['started_at'])
-            : null);
+            ? HMSDateExtension.convertDateFromEpoch(map['started_at'])
+            : null,
+        state: HMSRecordingStateValues.getRecordingStateFromName(
+            map['state'] ?? 'NONE'));
   }
 }

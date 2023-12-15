@@ -40,7 +40,9 @@ class MoreOptionItem extends StatelessWidget {
             optionIcon,
             const SizedBox(height: 8),
             HMSSubtitleText(
+              maxLines: 2,
               text: optionText,
+              textAlign: TextAlign.center,
               textColor:
                   optionTextColor ?? HMSThemeColors.onSurfaceHighEmphasis,
               fontWeight: FontWeight.w600,

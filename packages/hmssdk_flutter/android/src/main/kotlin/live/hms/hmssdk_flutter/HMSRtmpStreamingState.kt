@@ -6,67 +6,89 @@ import java.text.SimpleDateFormat
 
 class HMSStreamingState {
     companion object {
-        fun toDictionary(hmsRtmpStreamingState: HMSRtmpStreamingState?): HashMap<String, Any?>? {
+        fun toDictionary(rtmpStreamingState: HMSRtmpStreamingState?): HashMap<String, Any?>? {
             val map = HashMap<String, Any?>()
-            if (hmsRtmpStreamingState == null)return null
-            map["running"] = hmsRtmpStreamingState.running
-            map["error"] = HMSExceptionExtension.toDictionary(hmsRtmpStreamingState.error)
-            if (hmsRtmpStreamingState.running) {
-                hmsRtmpStreamingState.startedAt?.let {
-                    map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(hmsRtmpStreamingState.startedAt).toString()
-                }
+            if (rtmpStreamingState == null) return null
+
+            map["running"] = rtmpStreamingState.running
+
+            map["error"] = HMSExceptionExtension.toDictionary(rtmpStreamingState.error)
+
+            rtmpStreamingState.startedAt?.let {
+                map["started_at"] = it
             }
+
+            map["state"] = rtmpStreamingState.state.name
+
             return map
         }
 
-        fun toDictionary(hmsServerRecordingState: HMSServerRecordingState?): HashMap<String, Any?>? {
+        fun toDictionary(serverRecordingState: HMSServerRecordingState?): HashMap<String, Any?>? {
             val map = HashMap<String, Any?>()
-            if (hmsServerRecordingState == null)return null
-            map["running"] = hmsServerRecordingState.running
-            map["error"] = HMSExceptionExtension.toDictionary(hmsServerRecordingState.error)
-            if (hmsServerRecordingState.running) {
-                hmsServerRecordingState.startedAt?.let {
-                    map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(hmsServerRecordingState.startedAt).toString()
-                }
+            if (serverRecordingState == null) return null
+
+            map["running"] = serverRecordingState.running
+
+            map["error"] = HMSExceptionExtension.toDictionary(serverRecordingState.error)
+
+            serverRecordingState.startedAt?.let {
+                map["started_at"] = it
             }
+
+            map["state"] = serverRecordingState.state.name
+
             return map
         }
 
-        fun toDictionary(hmsBrowserRecordingState: HMSBrowserRecordingState?): HashMap<String, Any?>? {
+        fun toDictionary(browserRecordingState: HMSBrowserRecordingState?): HashMap<String, Any?>? {
             val map = HashMap<String, Any?>()
-            if (hmsBrowserRecordingState == null)return null
-            map["running"] = hmsBrowserRecordingState.running
-            map["error"] = HMSExceptionExtension.toDictionary(hmsBrowserRecordingState.error)
-            if (hmsBrowserRecordingState.running) {
-                hmsBrowserRecordingState.startedAt?.let {
-                    map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(hmsBrowserRecordingState.startedAt).toString()
-                }
+            if (browserRecordingState == null) return null
+
+            map["running"] = browserRecordingState.running
+
+            map["error"] = HMSExceptionExtension.toDictionary(browserRecordingState.error)
+
+            browserRecordingState.startedAt?.let {
+                map["started_at"] = it
             }
-            map["initialising"] = hmsBrowserRecordingState.initialising
+
+            map["initialising"] = browserRecordingState.initialising
+
+            map["state"] = browserRecordingState.state.name
+
             return map
         }
 
-        fun toDictionary(hmsHlsStreamingState: HMSHLSStreamingState?): HashMap<String, Any?>? {
+        fun toDictionary(hlsStreamingState: HMSHLSStreamingState?): HashMap<String, Any?>? {
             val map = HashMap<String, Any?>()
-            if (hmsHlsStreamingState == null)return null
-            map["running"] = hmsHlsStreamingState.running
+            if (hlsStreamingState == null) return null
+
+            map["running"] = hlsStreamingState.running
+
             val args = ArrayList<Any>()
-            hmsHlsStreamingState.variants?.forEach {
+            hlsStreamingState.variants?.forEach {
                 args.add(HMSHLSVariantExtension.toDictionary(it)!!)
             }
+
             map["variants"] = args
+
+            map["state"] = hlsStreamingState.state.name
+
             return map
         }
 
-        fun toDictionary(hmsHlsRecordingState: HmsHlsRecordingState?): HashMap<String, Any?>? {
+        fun toDictionary(hlsRecordingState: HmsHlsRecordingState?): HashMap<String, Any?>? {
             val map = HashMap<String, Any?>()
-            if (hmsHlsRecordingState == null)return null
-            map["running"] = hmsHlsRecordingState.running
-            if (hmsHlsRecordingState.running == true) {
-                hmsHlsRecordingState.startedAt?.let {
-                    map["started_at"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(hmsHlsRecordingState.startedAt).toString()
-                }
+            if (hlsRecordingState == null) return null
+
+            map["running"] = hlsRecordingState.running
+
+            hlsRecordingState.startedAt?.let {
+                map["started_at"] = it
             }
+
+            map["state"] = hlsRecordingState.state.name
+
             return map
         }
     }

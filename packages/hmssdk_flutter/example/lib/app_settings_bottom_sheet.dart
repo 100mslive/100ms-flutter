@@ -28,6 +28,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
   bool isDebugMode = false;
   HMSAudioMode currentAudioMode = HMSAudioMode.VOICE;
   bool isStreamingFlow = true;
+  bool nameChangeOnPreview = true;
 
   var versions = {};
 
@@ -72,6 +73,9 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     isStreamingFlow =
         await Utilities.getBoolData(key: 'is_streaming_flow') ?? true;
 
+    nameChangeOnPreview =
+        await Utilities.getBoolData(key: 'name-change-on-preview') ?? true;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
     });
@@ -89,6 +93,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     AppDebugConfig.showStats = showStats;
     AppDebugConfig.skipPreview = skipPreview;
     AppDebugConfig.isDebugMode = isDebugMode;
+    AppDebugConfig.nameChangeOnPreview = true;
   }
 
   Future<void> _launchUrl() async {
@@ -333,6 +338,36 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               Utilities.saveBoolData(
                                   key: 'mirror-camera', value: value),
                               AppDebugConfig.mirrorCamera = value,
+                              setState(() {})
+                            }),
+                  ),
+                  ListTile(
+                    horizontalTitleGap: 2,
+                    enabled: false,
+                    contentPadding: EdgeInsets.zero,
+                    leading: SvgPicture.asset(
+                      "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
+                      fit: BoxFit.scaleDown,
+                      colorFilter:
+                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
+                    ),
+                    title: Text(
+                      "Name Change On Preview",
+                      semanticsLabel: "fl_disable_name_change_on_preview",
+                      style: HMSTextStyle.setTextStyle(
+                          fontSize: 14,
+                          color: themeDefaultColor,
+                          letterSpacing: 0.25,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    trailing: CupertinoSwitch(
+                        activeColor: hmsdefaultColor,
+                        value: nameChangeOnPreview,
+                        onChanged: (value) => {
+                              nameChangeOnPreview = value,
+                              Utilities.saveBoolData(
+                                  key: 'name-change-on-preview', value: value),
+                              AppDebugConfig.nameChangeOnPreview = value,
                               setState(() {})
                             }),
                   ),
