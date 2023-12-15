@@ -454,7 +454,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                               "Enter Comma separated RTMP Urls",
                                           isRecordingEnabled: meetingStore
                                                   .recordingType["browser"] ==
-                                              true);
+                                              HMSRecordingState.started);
                                   List<String>? urls;
                                   if (data["url"]!.isNotEmpty) {
                                     urls = data["url"]!.split(",");

@@ -4,6 +4,7 @@ import 'dart:io';
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -14,7 +15,6 @@ import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_chat_component.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/hls_more_options.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
-import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
 
@@ -223,38 +223,45 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                 ),
 
                               ///Menu Button
-                              HMSEmbeddedButton(
-                                onTap: () async => {
-                                  showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    backgroundColor: HMSThemeColors.surfaceDim,
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(16),
-                                          topRight: Radius.circular(16)),
-                                    ),
-                                    context: context,
-                                    builder: (ctx) => ChangeNotifierProvider.value(
-                                        value: context.read<MeetingStore>(),
-                                        child:
-                                            const HLSMoreOptionsBottomSheet()),
-                                  )
-                                },
-                                enabledBorderColor:
-                                    HMSThemeColors.backgroundDim.withAlpha(64),
-                                onColor:
-                                    HMSThemeColors.backgroundDim.withAlpha(64),
-                                isActive: true,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SvgPicture.asset(
-                                      "packages/hms_room_kit/lib/src/assets/icons/menu.svg",
-                                      colorFilter: ColorFilter.mode(
-                                          HMSThemeColors.onSurfaceHighEmphasis,
-                                          BlendMode.srcIn),
-                                      semanticsLabel: "more_button"),
+                              if (HMSRoomLayout.isParticipantsListEnabled ||
+                                  Constant.prebuiltOptions?.userName == null)
+                                HMSEmbeddedButton(
+                                  onTap: () async => {
+                                    showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor:
+                                          HMSThemeColors.surfaceDim,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(16),
+                                            topRight: Radius.circular(16)),
+                                      ),
+                                      context: context,
+                                      builder: (ctx) =>
+                                          ChangeNotifierProvider.value(
+                                              value:
+                                                  context.read<MeetingStore>(),
+                                              child:
+                                                  const HLSMoreOptionsBottomSheet()),
+                                    )
+                                  },
+                                  enabledBorderColor: HMSThemeColors
+                                      .backgroundDim
+                                      .withAlpha(64),
+                                  onColor: HMSThemeColors.backgroundDim
+                                      .withAlpha(64),
+                                  isActive: true,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: SvgPicture.asset(
+                                        "packages/hms_room_kit/lib/src/assets/icons/menu.svg",
+                                        colorFilter: ColorFilter.mode(
+                                            HMSThemeColors
+                                                .onSurfaceHighEmphasis,
+                                            BlendMode.srcIn),
+                                        semanticsLabel: "more_button"),
+                                  ),
                                 ),
-                              ),
                             ],
                           )
                         : Container(),
