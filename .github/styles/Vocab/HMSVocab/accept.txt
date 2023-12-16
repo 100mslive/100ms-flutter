@@ -171,3 +171,5 @@ userid
 peerid
 ios
 android
+iOS
+authToken
