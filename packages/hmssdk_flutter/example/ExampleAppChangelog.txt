@@ -1,7 +1,7 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 
-- Beam Intermediate State Updates
-https://100ms.atlassian.net/browse/FLUT-135
+- Add app launch animation for Prebuilt
+https://100ms.atlassian.net/browse/FLUT-180
 
 Room Kit: 1.0.8
 Core SDK: 1.9.5
