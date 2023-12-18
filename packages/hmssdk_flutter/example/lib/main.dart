@@ -13,6 +13,7 @@ import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter_example/app_settings_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:hmssdk_flutter_example/room_service.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uni_links/uni_links.dart';
@@ -57,9 +58,11 @@ class HMSExampleApp extends StatefulWidget {
       context.findAncestorStateOfType<_HMSExampleAppState>()!;
 }
 
-class _HMSExampleAppState extends State<HMSExampleApp> {
+class _HMSExampleAppState extends State<HMSExampleApp>
+    with TickerProviderStateMixin {
   ThemeMode _themeMode = ThemeMode.dark;
   Uri? _currentURI;
+  late AnimationController _controller;
 
   ThemeData _darkTheme = ThemeData(
       bottomSheetTheme: BottomSheetThemeData(
@@ -88,6 +91,10 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     _initURIHandler();
     _incomingLinkHandler();
     initDynamicLinks();
+    _controller = AnimationController(
+      duration: Duration(seconds: (5)),
+      vsync: this,
+    );
   }
 
   Future<void> _initURIHandler() async {
@@ -173,9 +180,27 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomePage(
-        deepLinkURL: _currentURI == null ? null : _currentURI.toString(),
-      ),
+      home: Builder(builder: (context) {
+        return Lottie.asset(
+          'assets/splash_asset.json',
+          controller: _controller,
+          fit: BoxFit.fill,
+          animate: true,
+          onLoaded: (composition) {
+            _controller
+              ..duration = composition.duration
+              ..forward().whenComplete(() => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomePage(
+                              deepLinkURL: _currentURI == null
+                                  ? null
+                                  : _currentURI.toString(),
+                            )),
+                  ));
+          },
+        );
+      }),
       theme: _lightTheme,
       darkTheme: _darkTheme,
       themeMode: _themeMode,
