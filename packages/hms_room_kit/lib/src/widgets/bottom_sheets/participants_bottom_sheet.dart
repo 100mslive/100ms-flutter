@@ -125,8 +125,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                             meetingStore.changeRoleOfPeer(
                                 peer: peer,
                                 roleName: offStageRole,
-                                forceChange: meetingStore
-                                    .shouldSkipPreviewForRoleChange());
+                                forceChange: true);
                             return;
                           } catch (e) {
                             log(e.toString());
