@@ -175,3 +175,12 @@ iOS
 authToken
 issue_tracker
 publish_to
+bool
+prominentRoles
+isOverlay
+roleName
+forceChange
+previousRole
+peerMetadata
+toRole
+forPeer
