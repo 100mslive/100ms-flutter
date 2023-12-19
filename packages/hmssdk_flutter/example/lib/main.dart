@@ -184,7 +184,6 @@ class _HMSExampleAppState extends State<HMSExampleApp>
         return Lottie.asset(
           'assets/splash_asset.json',
           controller: _controller,
-          fit: BoxFit.fill,
           animate: true,
           onLoaded: (composition) {
             _controller
