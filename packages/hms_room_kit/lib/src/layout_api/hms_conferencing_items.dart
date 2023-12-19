@@ -218,14 +218,24 @@ class Chat {
   bool? isOpenInitially;
   bool? isOverlay;
   bool? allowPinningMessages;
+  String? chatTitle;
+  String? messagePlaceholder;
+  bool? isPrivateChatEnabled;
+  bool? isPublicChatEnabled;
+  List<String> rolesAllowedToSendMessage = [];
 
-  Chat({this.isOpenInitially, this.isOverlay, this.allowPinningMessages});
+  Chat({this.isOpenInitially, this.isOverlay, this.allowPinningMessages, this.chatTitle, this.messagePlaceholder, this.isPrivateChatEnabled, this.isPublicChatEnabled, this.rolesAllowedToSendMessage = const []});
 
   Chat.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       isOpenInitially = null;
       isOverlay = null;
       allowPinningMessages = null;
+      chatTitle = "Chat";
+      messagePlaceholder = "Send a message...";
+      isPrivateChatEnabled = false;
+      isPublicChatEnabled = false;
+      rolesAllowedToSendMessage = [];
       return;
     }
     isOpenInitially = json.containsKey('initial_state')
@@ -237,6 +247,13 @@ class Chat {
     allowPinningMessages = json.containsKey('allow_pinning_messages')
         ? json['allow_pinning_messages']
         : null;
+    chatTitle = json.containsKey('chat_title') ? json['chat_title'] : "Chat";
+    messagePlaceholder = json.containsKey('message_placeholder')
+        ? json['message_placeholder']
+        : "Send a message...";
+    isPrivateChatEnabled = json.containsKey('is_private_chat_enabled')? json['is_private_chat_enabled']:false;
+    isPublicChatEnabled = json.containsKey('is_public_chat_enabled')? json['is_public_chat_enabled']:false;
+    rolesAllowedToSendMessage = json.containsKey('roles_allowed_to_send_message') && json['roles_allowed_to_send_message'] is List ? List<String>.from(json['roles_allowed_to_send_message']):[];
   }
 
   Map<String, dynamic> toJson() {
@@ -249,6 +266,21 @@ class Chat {
     }
     if (allowPinningMessages != null) {
       data['allow_pinning_messages'] = allowPinningMessages;
+    }
+    if (chatTitle != null) {
+      data['chat_title'] = chatTitle;
+    }
+    if (messagePlaceholder != null) {
+      data['message_placeholder'] = messagePlaceholder;
+    }
+    if (isPrivateChatEnabled != null) {
+      data['is_private_chat_enabled'] = isPrivateChatEnabled;
+    }
+    if (isPublicChatEnabled != null) {
+      data['is_public_chat_enabled'] = isPublicChatEnabled;
+    }
+    if (rolesAllowedToSendMessage.isNotEmpty) {
+      data['roles_allowed_to_send_message'] = rolesAllowedToSendMessage;
     }
     return data;
   }

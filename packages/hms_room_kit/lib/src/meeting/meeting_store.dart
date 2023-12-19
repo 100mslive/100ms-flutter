@@ -1721,6 +1721,14 @@ class MeetingStore extends ChangeNotifier
       case SessionStoreKey.spotlight:
         setPeerToSpotlight(value);
         break;
+      case SessionStoreKey.chatState:
+        
+      case SessionStoreKey.chatPeerBlacklist:
+        // TODO: Handle this case.
+      case SessionStoreKey.chatMessageBlacklist:
+        // TODO: Handle this case.
+      case SessionStoreKey.pinnedMessages:
+        // TODO: Handle this case.
       case SessionStoreKey.unknown:
         break;
     }
@@ -1874,7 +1882,7 @@ class MeetingStore extends ChangeNotifier
     audioPlayerVolume = volume;
   }
 
-  void setSessionMetadataForKey({required String key, String? metadata}) {
+  void setSessionMetadataForKey({required String key, dynamic metadata}) {
     _hmsSessionStore?.setSessionMetadataForKey(
         key: key, data: metadata, hmsActionResultListener: this);
   }

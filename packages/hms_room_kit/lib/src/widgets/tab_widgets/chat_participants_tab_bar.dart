@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/enums/session_store_keys.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/chat_bottom_sheet.dart';
@@ -47,7 +51,7 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width * 0.76,
+                          width: MediaQuery.of(context).size.width * 0.69,
                           height: 36,
                           decoration: BoxDecoration(
                               color: HMSThemeColors.surfaceDefault,
@@ -57,7 +61,8 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                             tabs: [
                               Tab(
                                 child: HMSSubheadingText(
-                                    text: "Chat",
+                                    text: HMSRoomLayout.chatData?.chatTitle ??
+                                        "Chat",
                                     fontWeight: FontWeight.w600,
                                     textColor: _controller.index == 0
                                         ? HMSThemeColors.onSurfaceHighEmphasis
@@ -81,8 +86,75 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                       ],
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        PopupMenuButton(
+                            padding: EdgeInsets.zero,
+                            position: PopupMenuPosition.under,
+                            color: HMSThemeColors.surfaceDefault,
+                            child: SvgPicture.asset(
+                                "packages/hms_room_kit/lib/src/assets/icons/settings.svg",
+                                width: 24,
+                                height: 24,
+                                colorFilter: ColorFilter.mode(
+                                    HMSThemeColors.onSurfaceLowEmphasis,
+                                    BlendMode.srcIn)),
+                            itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    value: 1,
+                                      child: Row(children: [
+                                    SvgPicture.asset(
+                                        "packages/hms_room_kit/lib/src/assets/icons/recording_paused.svg",
+                                        width: 20,
+                                        height: 20,
+                                        colorFilter: ColorFilter.mode(
+                                            HMSThemeColors
+                                                .onSurfaceHighEmphasis,
+                                            BlendMode.srcIn)),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    HMSTitleText(
+                                      text: "Pause Chat",
+                                      textColor:
+                                          HMSThemeColors.onSurfaceHighEmphasis,
+                                      fontSize: 14,
+                                      lineHeight: 20,
+                                      letterSpacing: 0.1,
+                                    ),
+                                  ]))
+                                ],
+                            onSelected: (value) {
+                              switch (value) {
+                                case 1:
+                                  context
+                                      .read<MeetingStore>()
+                                      .setSessionMetadataForKey(
+                                          key: SessionStoreKeyValues
+                                              .getNameFromMethod(
+                                                  SessionStoreKey.chatState),
+                                          metadata: {
+                                        "enabled": true,
+                                        "updatedBy": {
+                                          "peerID": context
+                                              .read<MeetingStore>()
+                                              .localPeer
+                                              ?.peerId,
+                                          "userID": context
+                                              .read<MeetingStore>()
+                                              .localPeer
+                                              ?.customerUserId,
+                                          "userName": context
+                                              .read<MeetingStore>()
+                                              .localPeer
+                                              ?.name
+                                        },
+                                        "updatedAt": DateTime.now()
+                                            .millisecondsSinceEpoch //unix timestamp in miliseconds
+                                      });
+                                  break;
+                              }
+                            }),
                         HMSCrossButton(
                           onPressed: () =>
                               context.read<MeetingStore>().setNewMessageFalse(),
