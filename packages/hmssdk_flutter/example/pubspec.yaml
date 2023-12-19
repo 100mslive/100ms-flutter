@@ -15,6 +15,7 @@ dependencies:
   hms_room_kit:
     path: ../../hms_room_kit
 
+  lottie: ^2.7.0
   firebase_crashlytics: 3.3.2
   firebase_core: 2.13.1
   firebase_performance: 0.9.2+2
