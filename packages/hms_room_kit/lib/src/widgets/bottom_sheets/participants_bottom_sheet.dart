@@ -125,7 +125,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                             meetingStore.changeRoleOfPeer(
                                 peer: peer,
                                 roleName: offStageRole,
-                                forceChange: true);
+                                forceChange: meetingStore
+                                    .shouldSkipPreviewForRoleChange());
                             return;
                           } catch (e) {
                             log(e.toString());
@@ -138,7 +139,10 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                   HMSRole? onStageRole = meetingStore.getOnStageRole();
                   if (onStageRole != null) {
                     meetingStore.changeRoleOfPeer(
-                        peer: peer, roleName: onStageRole, forceChange: false);
+                        peer: peer,
+                        roleName: onStageRole,
+                        forceChange:
+                            meetingStore.shouldSkipPreviewForRoleChange());
                     meetingStore.removeToast(HMSToastsType.roleChangeToast,
                         data: peer);
                   }

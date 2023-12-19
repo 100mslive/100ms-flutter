@@ -513,6 +513,25 @@ class MeetingStore extends ChangeNotifier
     return false;
   }
 
+  bool shouldSkipPreviewForRoleChange() {
+    if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
+      return HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf
+              ?.elements?.onStageExp?.skipPreviewForRoleChange ??
+          false;
+    } else if (HMSRoomLayout.peerType == PeerRoleType.hlsViewer) {
+      return HMSRoomLayout
+              .roleLayoutData
+              ?.screens
+              ?.conferencing
+              ?.hlsLiveStreaming
+              ?.elements
+              ?.onStageExp
+              ?.skipPreviewForRoleChange ??
+          false;
+    }
+    return false;
+  }
+
   void changeTrackState(HMSTrack track, bool mute) {
     return _hmsSDKInteractor.changeTrackState(track, mute, this);
   }
