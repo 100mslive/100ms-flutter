@@ -133,8 +133,7 @@ class _ParticipantsViewAllBottomSheetState
                     meetingStore.changeRoleOfPeer(
                         peer: peer,
                         roleName: onStageRole,
-                        forceChange:
-                            HMSRoomLayout.skipPreviewForRole);
+                        forceChange: HMSRoomLayout.skipPreviewForRole);
                     meetingStore.setPreviousRole(peer.role.name);
                     meetingStore.removeToast(HMSToastsType.roleChangeToast,
                         data: peer);

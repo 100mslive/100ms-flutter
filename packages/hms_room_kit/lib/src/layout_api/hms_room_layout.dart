@@ -278,8 +278,13 @@ class HMSRoomLayout {
           null;
       offStageRoles = roleLayoutData?.screens?.conferencing?.hlsLiveStreaming
           ?.elements?.onStageExp?.offStageRoles;
-      skipPreviewForRole = roleLayoutData?.screens?.conferencing?.hlsLiveStreaming
-              ?.elements?.onStageExp?.skipPreviewForRoleChange ??
+      skipPreviewForRole = roleLayoutData
+              ?.screens
+              ?.conferencing
+              ?.hlsLiveStreaming
+              ?.elements
+              ?.onStageExp
+              ?.skipPreviewForRoleChange ??
           false;
     }
   }
