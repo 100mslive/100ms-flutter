@@ -222,9 +222,18 @@ class Chat {
   String? messagePlaceholder;
   bool? isPrivateChatEnabled;
   bool? isPublicChatEnabled;
-  List<String> rolesAllowedToSendMessage = [];
+  List<String> rolesWhitelist = [];
+  RealTimeControls? realTimeControls;
 
-  Chat({this.isOpenInitially, this.isOverlay, this.allowPinningMessages, this.chatTitle, this.messagePlaceholder, this.isPrivateChatEnabled, this.isPublicChatEnabled, this.rolesAllowedToSendMessage = const []});
+  Chat(
+      {this.isOpenInitially,
+      this.isOverlay,
+      this.allowPinningMessages,
+      this.chatTitle,
+      this.messagePlaceholder,
+      this.isPrivateChatEnabled,
+      this.isPublicChatEnabled,
+      this.rolesWhitelist = const []});
 
   Chat.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
@@ -235,7 +244,8 @@ class Chat {
       messagePlaceholder = "Send a message...";
       isPrivateChatEnabled = false;
       isPublicChatEnabled = false;
-      rolesAllowedToSendMessage = [];
+      rolesWhitelist = [];
+      realTimeControls = null;
       return;
     }
     isOpenInitially = json.containsKey('initial_state')
@@ -251,9 +261,19 @@ class Chat {
     messagePlaceholder = json.containsKey('message_placeholder')
         ? json['message_placeholder']
         : "Send a message...";
-    isPrivateChatEnabled = json.containsKey('is_private_chat_enabled')? json['is_private_chat_enabled']:false;
-    isPublicChatEnabled = json.containsKey('is_public_chat_enabled')? json['is_public_chat_enabled']:false;
-    rolesAllowedToSendMessage = json.containsKey('roles_allowed_to_send_message') && json['roles_allowed_to_send_message'] is List ? List<String>.from(json['roles_allowed_to_send_message']):[];
+    isPrivateChatEnabled = json.containsKey('private_chat_enabled')
+        ? json['private_chat_enabled']
+        : false;
+    isPublicChatEnabled = json.containsKey('public_chat_enabled')
+        ? json['public_chat_enabled']
+        : false;
+    rolesWhitelist =
+        json.containsKey('roles_whitelist') && json['roles_whitelist'] is List
+            ? List<String>.from(json['roles_whitelist'])
+            : [];
+    realTimeControls = json.containsKey('real_time_controls')
+        ? RealTimeControls.fromJson(json['real_time_controls'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -274,13 +294,54 @@ class Chat {
       data['message_placeholder'] = messagePlaceholder;
     }
     if (isPrivateChatEnabled != null) {
-      data['is_private_chat_enabled'] = isPrivateChatEnabled;
+      data['private_chat_enabled'] = isPrivateChatEnabled;
     }
     if (isPublicChatEnabled != null) {
-      data['is_public_chat_enabled'] = isPublicChatEnabled;
+      data['public_chat_enabled'] = isPublicChatEnabled;
     }
-    if (rolesAllowedToSendMessage.isNotEmpty) {
-      data['roles_allowed_to_send_message'] = rolesAllowedToSendMessage;
+    if (rolesWhitelist.isNotEmpty) {
+      data['roles_whitelist'] = rolesWhitelist;
+    }
+    if(realTimeControls != null){
+      data['real_time_controls'] = realTimeControls!.toJson();
+    }
+    return data;
+  }
+}
+
+class RealTimeControls {
+  bool? canBlockUser;
+  bool? canDisableChat;
+  bool? canHideMessage;
+
+  RealTimeControls(
+      {this.canBlockUser, this.canDisableChat, this.canHideMessage});
+
+  RealTimeControls.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      canBlockUser = null;
+      canDisableChat = null;
+      canHideMessage = null;
+      return;
+    }
+    canBlockUser =
+        json.containsKey("can_block_user") ? json["can_block_user"] : false;
+    canDisableChat =
+        json.containsKey("can_disable_chat") ? json["can_disable_chat"] : false;
+    canHideMessage =
+        json.containsKey("can_hide_message") ? json["can_hide_message"] : false;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (canBlockUser != null) {
+      data["can_block_user"] = canBlockUser;
+    }
+    if (canDisableChat != null) {
+      data["can_disable_chat"] = canDisableChat;
+    }
+    if (canHideMessage != null) {
+      data["can_hide_message"] = canHideMessage;
     }
     return data;
   }
