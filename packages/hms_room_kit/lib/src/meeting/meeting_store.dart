@@ -470,6 +470,14 @@ class MeetingStore extends ChangeNotifier
         hmsActionResultListener: this);
   }
 
+  void setPreviousRole(String oldRole) {
+    if (HMSRoomLayout.skipPreviewForRole) {
+      _hmsSDKInteractor.changeMetadata(
+          metadata: "{\"isBRBOn\":false,\"prevRole\":\"$oldRole\"}",
+          hmsActionResultListener: this);
+    }
+  }
+
   Future<List<HMSRole>> getRoles() async {
     return await _hmsSDKInteractor.getRoles();
   }
@@ -509,25 +517,6 @@ class MeetingStore extends ChangeNotifier
       if (roleIndex != -1) {
         return true;
       }
-    }
-    return false;
-  }
-
-  bool shouldSkipPreviewForRoleChange() {
-    if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
-      return HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf
-              ?.elements?.onStageExp?.skipPreviewForRoleChange ??
-          false;
-    } else if (HMSRoomLayout.peerType == PeerRoleType.hlsViewer) {
-      return HMSRoomLayout
-              .roleLayoutData
-              ?.screens
-              ?.conferencing
-              ?.hlsLiveStreaming
-              ?.elements
-              ?.onStageExp
-              ?.skipPreviewForRoleChange ??
-          false;
     }
     return false;
   }

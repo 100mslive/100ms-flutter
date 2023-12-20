@@ -134,7 +134,8 @@ class _ParticipantsViewAllBottomSheetState
                         peer: peer,
                         roleName: onStageRole,
                         forceChange:
-                            meetingStore.shouldSkipPreviewForRoleChange());
+                            HMSRoomLayout.skipPreviewForRole);
+                    meetingStore.setPreviousRole(peer.role.name);
                     meetingStore.removeToast(HMSToastsType.roleChangeToast,
                         data: peer);
                   }
