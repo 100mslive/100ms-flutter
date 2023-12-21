@@ -3,6 +3,9 @@ Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 - Add app launch animation for Prebuilt
 https://100ms.atlassian.net/browse/FLUT-180
 
+- Real time chat controls
+https://100ms.atlassian.net/browse/FLUT-153
+
 Room Kit: 1.0.8
 Core SDK: 1.9.5
 Android SDK: 2.8.4
