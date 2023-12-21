@@ -476,6 +476,14 @@ class MeetingStore extends ChangeNotifier
         hmsActionResultListener: this);
   }
 
+  void setPreviousRole(String oldRole) {
+    if (HMSRoomLayout.skipPreviewForRole) {
+      _hmsSDKInteractor.changeMetadata(
+          metadata: "{\"isBRBOn\":false,\"prevRole\":\"$oldRole\"}",
+          hmsActionResultListener: this);
+    }
+  }
+
   Future<List<HMSRole>> getRoles() async {
     return await _hmsSDKInteractor.getRoles();
   }
@@ -1403,6 +1411,8 @@ class MeetingStore extends ChangeNotifier
           participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
         }
         notifyListeners();
+      } else if (peerUpdate == HMSPeerUpdate.metadataChanged) {
+        participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
       }
     } else {
       if (peerUpdate == HMSPeerUpdate.roleUpdated) {

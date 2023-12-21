@@ -140,12 +140,14 @@ class OnStageExp {
   String? removeFromStageLabel;
   String? onStageRole;
   List<String>? offStageRoles;
+  bool? skipPreviewForRoleChange;
 
   OnStageExp({
     this.bringToStageLabel,
     this.removeFromStageLabel,
     this.onStageRole,
     this.offStageRoles,
+    this.skipPreviewForRoleChange,
   });
 
   OnStageExp.fromJson(Map<String, dynamic>? json) {
@@ -154,6 +156,7 @@ class OnStageExp {
       removeFromStageLabel = null;
       onStageRole = null;
       offStageRoles = null;
+      skipPreviewForRoleChange = null;
       return;
     }
     bringToStageLabel = json['bring_to_stage_label'];
@@ -163,6 +166,9 @@ class OnStageExp {
         json.containsKey('off_stage_roles') && json['off_stage_roles'] is List
             ? List<String>.from(json['off_stage_roles'])
             : null;
+    skipPreviewForRoleChange = json.containsKey('skip_preview_for_role_change')
+        ? json['skip_preview_for_role_change']
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -173,6 +179,7 @@ class OnStageExp {
     if (offStageRoles != null && offStageRoles!.isNotEmpty) {
       data['off_stage_roles'] = offStageRoles;
     }
+    data['skip_preview_for_role_change'] = skipPreviewForRoleChange;
     return data;
   }
 }

@@ -138,7 +138,10 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                   HMSRole? onStageRole = meetingStore.getOnStageRole();
                   if (onStageRole != null) {
                     meetingStore.changeRoleOfPeer(
-                        peer: peer, roleName: onStageRole, forceChange: false);
+                        peer: peer,
+                        roleName: onStageRole,
+                        forceChange: HMSRoomLayout.skipPreviewForRole);
+                    meetingStore.setPreviousRole(peer.role.name);
                     meetingStore.removeToast(HMSToastsType.roleChangeToast,
                         data: peer);
                   }
