@@ -184,3 +184,13 @@ previousRole
 peerMetadata
 toRole
 forPeer
+Enum
+rolesWhitelist
+messagePlaceholder
+chatTitle
+isOverlay
+bool
+permission_handler
+intl
+chatState
+pinnedMessages

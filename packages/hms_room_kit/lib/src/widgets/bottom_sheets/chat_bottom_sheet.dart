@@ -1,3 +1,6 @@
+//Dart imports
+import 'dart:math' as math;
+
 //Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
@@ -14,6 +17,10 @@ import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/widgets/chat_widgets/hms_empty_chat_widget.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/message_container.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_toast_button.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_toast.dart';
 
 class ChatBottomSheet extends StatefulWidget {
   const ChatBottomSheet({super.key});
@@ -261,124 +268,226 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                 },
               ),
 
-              ///Will be added later
-              ///
+              /// This draws the chip to select the roles or peers to send message to
               // Padding(
-              //   padding: const EdgeInsets.only(bottom: 8.0, left: 16,top: 16),
+              //   padding: const EdgeInsets.only(bottom: 8.0, top: 16),
               //   child: Row(
               //     children: [
-              //       HMSTitleText(
-              //         text: "SEND TO ",
-              //         textColor: HMSThemeColors.onSurfaceMediumEmphasis,
-              //         fontSize: 10,
-              //         lineHeight: 16,
-              //         letterSpacing: 1.5,
+              //       Padding(
+              //         padding: const EdgeInsets.only(right: 8.0),
+              //         child: HMSTitleText(
+              //           text: "TO",
+              //           textColor: HMSThemeColors.onSurfaceMediumEmphasis,
+              //           fontSize: 12,
+              //           fontWeight: FontWeight.w400,
+              //           lineHeight: 16,
+              //           letterSpacing: 0.4,
+              //         ),
               //       ),
               //       Container(
-              //           width: 96,
               //           height: 24,
               //           decoration: BoxDecoration(
-              //               border: Border.all(
-              //                   color: HMSThemeColors.borderBright, width: 1),
               //               borderRadius:
               //                   const BorderRadius.all(Radius.circular(4)),
-              //               color:
-              //                   HMSThemeColors.surfaceDim),
-              //           child: Row(
-              //             mainAxisAlignment: MainAxisAlignment.center,
-              //             children: [
-              //               HMSTitleText(
-              //                   text: "EVERYONE",
-              //                   fontSize: 10,
-              //                   lineHeight: 16,
-              //                   letterSpacing: 1.5,
-              //                   textColor:
-              //                       HMSThemeColors.onSurfaceHighEmphasis),
-              //               Icon(Icons.keyboard_arrow_down,color: HMSThemeColors.onSurfaceMediumEmphasis,size: 16,),
-              //             ],
+              //               color: HMSThemeColors.primaryDefault),
+              //           child: Padding(
+              //             padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              //             child: Row(
+              //               mainAxisAlignment: MainAxisAlignment.center,
+              //               children: [
+              //                 Padding(
+              //                   padding: const EdgeInsets.only(right: 4.0),
+              //                   child: SvgPicture.asset(
+              //                     "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
+              //                     height: 16,
+              //                     width: 16,
+              //                     colorFilter: ColorFilter.mode(
+              //                         HMSThemeColors.onSurfaceMediumEmphasis,
+              //                         BlendMode.srcIn),
+              //                   ),
+              //                 ),
+              //                 HMSTitleText(
+              //                     text: valueChoose,
+              //                     fontSize: 12,
+              //                     lineHeight: 16,
+              //                     letterSpacing: 0.4,
+              //                     fontWeight: FontWeight.w400,
+              //                     textColor:
+              //                         HMSThemeColors.onPrimaryHighEmphasis),
+              //                 Padding(
+              //                   padding: const EdgeInsets.only(left: 4.0),
+              //                   child: Icon(
+              //                     Icons.keyboard_arrow_down,
+              //                     color: HMSThemeColors.onPrimaryHighEmphasis,
+              //                     size: 12,
+              //                   ),
+              //                 ),
+              //               ],
+              //             ),
               //           ))
               //     ],
               //   ),
               // ),
+
               ///Text Field
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: HMSThemeColors.surfaceDefault),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          textCapitalization: TextCapitalization.sentences,
-                          textInputAction: TextInputAction.send,
-                          onTapOutside: (event) =>
-                              FocusManager.instance.primaryFocus?.unfocus(),
-                          onSubmitted: (value) {
-                            sendMessage();
-                          },
-                          onChanged: (value) {
-                            setState(() {});
-                          },
-                          style: HMSTextStyle.setTextStyle(
-                              color: HMSThemeColors.onSurfaceHighEmphasis,
-                              fontWeight: FontWeight.w400,
-                              height: 20 / 14,
-                              fontSize: 14,
-                              letterSpacing: 0.25),
-                          controller: messageTextController,
-                          decoration: InputDecoration(
-                              suffixIcon: IconButton(
-                                  onPressed: () {
-                                    if (messageTextController.text
-                                        .trim()
-                                        .isEmpty) {
-                                      Utilities.showToast(
-                                          "Message can't be empty");
-                                    }
-                                    sendMessage();
-                                  },
-                                  icon: SvgPicture.asset(
-                                    "packages/hms_room_kit/lib/src/assets/icons/send_message.svg",
-                                    height: 24,
-                                    width: 24,
-                                    colorFilter: ColorFilter.mode(
-                                        messageTextController
-                                                .text
-                                                .trim()
-                                                .isEmpty
-                                            ? HMSThemeColors
-                                                .onSurfaceLowEmphasis
-                                            : HMSThemeColors
-                                                .onSurfaceHighEmphasis,
-                                        BlendMode.srcIn),
-                                  )),
-                              border: InputBorder.none,
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      width: 2,
-                                      color: HMSThemeColors.primaryDefault),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(8))),
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              hintStyle: HMSTextStyle.setTextStyle(
-                                  color: HMSThemeColors.onSurfaceLowEmphasis,
-                                  fontSize: 14,
-                                  height: 20 / 14,
-                                  letterSpacing: 0.25,
-                                  fontWeight: FontWeight.w400),
-                              contentPadding: const EdgeInsets.only(
-                                  left: 16, bottom: 8, top: 12, right: 8),
-                              hintText: "Send a message..."),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              Selector<MeetingStore, bool>(
+                  selector: (_, meetingStore) =>
+                      meetingStore.chatControls["enabled"],
+                  builder: (_, isChatEnabled, __) {
+                    return isChatEnabled
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: HMSThemeColors.surfaceDefault),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
+                                      textInputAction: TextInputAction.send,
+                                      onTapOutside: (event) => FocusManager
+                                          .instance.primaryFocus
+                                          ?.unfocus(),
+                                      onSubmitted: (value) {
+                                        sendMessage();
+                                      },
+                                      onChanged: (value) {
+                                        setState(() {});
+                                      },
+                                      style: HMSTextStyle.setTextStyle(
+                                          color: HMSThemeColors
+                                              .onSurfaceHighEmphasis,
+                                          fontWeight: FontWeight.w400,
+                                          height: 20 / 14,
+                                          fontSize: 14,
+                                          letterSpacing: 0.25),
+                                      controller: messageTextController,
+                                      decoration: InputDecoration(
+                                          suffixIcon: IconButton(
+                                              onPressed: () {
+                                                if (messageTextController.text
+                                                    .trim()
+                                                    .isEmpty) {
+                                                  Utilities.showToast(
+                                                      "Message can't be empty");
+                                                }
+                                                sendMessage();
+                                              },
+                                              icon: SvgPicture.asset(
+                                                "packages/hms_room_kit/lib/src/assets/icons/send_message.svg",
+                                                height: 24,
+                                                width: 24,
+                                                colorFilter: ColorFilter.mode(
+                                                    messageTextController.text
+                                                            .trim()
+                                                            .isEmpty
+                                                        ? HMSThemeColors
+                                                            .onSurfaceLowEmphasis
+                                                        : HMSThemeColors
+                                                            .onSurfaceHighEmphasis,
+                                                    BlendMode.srcIn),
+                                              )),
+                                          border: InputBorder.none,
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  width: 2,
+                                                  color: HMSThemeColors
+                                                      .primaryDefault),
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(8))),
+                                          enabledBorder: InputBorder.none,
+                                          errorBorder: InputBorder.none,
+                                          disabledBorder: InputBorder.none,
+                                          hintStyle: HMSTextStyle.setTextStyle(
+                                              color: HMSThemeColors
+                                                  .onSurfaceLowEmphasis,
+                                              fontSize: 14,
+                                              height: 20 / 14,
+                                              letterSpacing: 0.25,
+                                              fontWeight: FontWeight.w400),
+                                          contentPadding: const EdgeInsets.only(
+                                              left: 16,
+                                              bottom: 8,
+                                              top: 12,
+                                              right: 8),
+                                          hintText: HMSRoomLayout.chatData
+                                                  ?.messagePlaceholder ??
+                                              "Send a message..."),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        : HMSToast(
+                            toastColor: HMSThemeColors.surfaceDefault,
+                            toastPosition: 0,
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                HMSSubheadingText(
+                                  text: "Chat paused",
+                                  textColor:
+                                      HMSThemeColors.onSurfaceHighEmphasis,
+                                  lineHeight: 20,
+                                  letterSpacing: 0.1,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                HMSSubtitleText(
+                                  text:
+                                      "Chat has been paused by ${context.read<MeetingStore>().chatControls["updatedBy"].toString().substring(0, math.min(10, context.read<MeetingStore>().chatControls["updatedBy"].toString().length))}",
+                                  textColor:
+                                      HMSThemeColors.onSurfaceMediumEmphasis,
+                                )
+                              ],
+                            ),
+                            action: (HMSRoomLayout.chatData?.realTimeControls
+                                        ?.canDisableChat ??
+                                    false)
+                                ? HMSToastButton(
+                                    buttonTitle: "Resume",
+                                    action: () {
+                                      context
+                                          .read<MeetingStore>()
+                                          .setSessionMetadataForKey(
+                                              key: SessionStoreKeyValues
+                                                  .getNameFromMethod(
+                                                      SessionStoreKey
+                                                          .chatState),
+                                              metadata: {
+                                            "enabled": true,
+                                            "updatedBy": {
+                                              "peerID": context
+                                                  .read<MeetingStore>()
+                                                  .localPeer
+                                                  ?.peerId,
+                                              "userID": context
+                                                  .read<MeetingStore>()
+                                                  .localPeer
+                                                  ?.customerUserId,
+                                              "userName": context
+                                                  .read<MeetingStore>()
+                                                  .localPeer
+                                                  ?.name
+                                            },
+                                            "updatedAt": DateTime.now()
+                                                .millisecondsSinceEpoch //unix timestamp in miliseconds
+                                          });
+                                    },
+                                    height: 36,
+                                    width: 88,
+                                    buttonColor: HMSThemeColors.primaryDefault,
+                                    textColor:
+                                        HMSThemeColors.onPrimaryHighEmphasis,
+                                  )
+                                : null,
+                          );
+                  }),
             ],
           ),
         ),

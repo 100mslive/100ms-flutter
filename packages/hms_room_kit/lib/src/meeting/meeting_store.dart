@@ -237,6 +237,9 @@ class MeetingStore extends ChangeNotifier
   ///Video View for screenshare
   HMSTextureViewController? screenshareViewController;
 
+  ///Stores whether Chat State
+  Map<String, dynamic> chatControls = {"enabled": true, "updatedBy": null};
+
   Future<HMSException?> join(String userName, String roomCode,
       {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
@@ -434,6 +437,9 @@ class MeetingStore extends ChangeNotifier
             toast.hmsToastType == HMSToastsType.roleChangeDeclineToast &&
             data.peerId == toast.toastData.peerId);
         break;
+      case HMSToastsType.chatPauseResumeToast:
+        toasts.removeWhere((toast) =>
+            toast.hmsToastType == HMSToastsType.chatPauseResumeToast);
     }
     notifyListeners();
   }
@@ -1729,6 +1735,24 @@ class MeetingStore extends ChangeNotifier
       case SessionStoreKey.spotlight:
         setPeerToSpotlight(value);
         break;
+      case SessionStoreKey.chatState:
+        if (value != null) {
+          ///Here we set the chat pause/resume state
+          var data = jsonDecode(value);
+          chatControls["enabled"] = data["enabled"];
+          chatControls["updatedBy"] = data["updatedBy"]["userName"];
+          toasts.add(HMSToastModel(chatControls,
+              hmsToastType: HMSToastsType.chatPauseResumeToast));
+          notifyListeners();
+        }
+
+        break;
+      case SessionStoreKey.chatPeerBlacklist:
+        break;
+      case SessionStoreKey.chatMessageBlacklist:
+        break;
+      case SessionStoreKey.pinnedMessages:
+        break;
       case SessionStoreKey.unknown:
         break;
     }
@@ -1882,7 +1906,7 @@ class MeetingStore extends ChangeNotifier
     audioPlayerVolume = volume;
   }
 
-  void setSessionMetadataForKey({required String key, String? metadata}) {
+  void setSessionMetadataForKey({required String key, dynamic metadata}) {
     _hmsSessionStore?.setSessionMetadataForKey(
         key: key, data: metadata, hmsActionResultListener: this);
   }

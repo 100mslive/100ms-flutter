@@ -544,10 +544,37 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             var dict: [String: Any] = ["key": key]
 
-            if value is String? || value is NSNull {
-                dict["value"] = value
-            } else {
-                HMSErrorLogger.logError(#function, "Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error")
+            do{
+                let isValid = try JSONSerialization.isValidJSONObject(value)
+                if(isValid){
+                    let jsonData = try JSONSerialization.data(withJSONObject: value, options: [])
+                    if let jsonString = String(data: jsonData, encoding: .utf8){
+                        dict["value"] = jsonString
+                    }else{
+                        HMSErrorLogger.logError(#function, "Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error")
+                        dict["value"] = nil
+                    }
+                }
+                else{
+                    if let intValue = value as? Int{
+                        let stringValue = String(intValue)
+                        dict["value"] = stringValue
+                    } else if let doubleValue = value as? Double{
+                        let doubleValue = String(doubleValue)
+                        dict["value"] = doubleValue
+                    } else if let stringValue = value as? String{
+                        dict["value"] = stringValue
+                    } else if let boolValue = value as? Bool{
+                        dict["value"] = String(boolValue)
+                    }
+                    else{
+                        HMSErrorLogger.logError(#function, "Session metadata type is not compatible, Please use compatible type while setting metadata", "Type Incompatibility Error")
+                        dict["value"] = nil
+                    }
+                }
+            }
+            catch{
+                HMSErrorLogger.logError(#function, "Session metadata type is not compatible, JSON parsing failed", "Type Incompatibility Error")
                 dict["value"] = nil
             }
 
