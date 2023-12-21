@@ -129,7 +129,6 @@ class _OverlayChatComponentState extends State<OverlayChatComponent> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-
                               ///This will be added in future versions
                               ///
                               // Row(
@@ -197,110 +196,112 @@ class _OverlayChatComponentState extends State<OverlayChatComponent> {
                               //   ],
                               // ),
                               const SizedBox(),
-                              if (HMSRoomLayout
-                                .chatData?.realTimeControls?.canDisableChat ??
-                            false)
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  PopupMenuButton(
-                                    padding: EdgeInsets.zero,
-                                    position: PopupMenuPosition.over,
-                                    color: HMSThemeColors.surfaceDefault,
-                                    itemBuilder: (context) => [
-                                      PopupMenuItem(
-                                          value: 1,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(50)),
-                                            child: Row(children: [
-                                              SvgPicture.asset(
-                                                  "packages/hms_room_kit/lib/src/assets/icons/${context.read<MeetingStore>().chatControls["enabled"] ? "recording_paused" : "resume"}.svg",
-                                                  width: 20,
-                                                  height: 20,
-                                                  colorFilter: ColorFilter.mode(
-                                                      HMSThemeColors
-                                                          .onSurfaceHighEmphasis,
-                                                      BlendMode.srcIn)),
-                                              const SizedBox(
-                                                width: 8,
-                                              ),
-                                              HMSTitleText(
-                                                text: context
+                              if (HMSRoomLayout.chatData?.realTimeControls
+                                      ?.canDisableChat ??
+                                  false)
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    PopupMenuButton(
+                                      padding: EdgeInsets.zero,
+                                      position: PopupMenuPosition.over,
+                                      color: HMSThemeColors.surfaceDefault,
+                                      itemBuilder: (context) => [
+                                        PopupMenuItem(
+                                            value: 1,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          50)),
+                                              child: Row(children: [
+                                                SvgPicture.asset(
+                                                    "packages/hms_room_kit/lib/src/assets/icons/${context.read<MeetingStore>().chatControls["enabled"] ? "recording_paused" : "resume"}.svg",
+                                                    width: 20,
+                                                    height: 20,
+                                                    colorFilter: ColorFilter.mode(
+                                                        HMSThemeColors
+                                                            .onSurfaceHighEmphasis,
+                                                        BlendMode.srcIn)),
+                                                const SizedBox(
+                                                  width: 8,
+                                                ),
+                                                HMSTitleText(
+                                                  text: context
+                                                          .read<MeetingStore>()
+                                                          .chatControls["enabled"]
+                                                      ? "Pause Chat"
+                                                      : "Resume Chat",
+                                                  textColor: HMSThemeColors
+                                                      .onSurfaceHighEmphasis,
+                                                  fontSize: 14,
+                                                  lineHeight: 20,
+                                                  letterSpacing: 0.1,
+                                                ),
+                                              ]),
+                                            ))
+                                      ],
+                                      onSelected: (value) {
+                                        switch (value) {
+                                          case 1:
+                                            context
+                                                .read<MeetingStore>()
+                                                .setSessionMetadataForKey(
+                                                    key: SessionStoreKeyValues
+                                                        .getNameFromMethod(
+                                                            SessionStoreKey
+                                                                .chatState),
+                                                    metadata: {
+                                                  "enabled": context
+                                                          .read<MeetingStore>()
+                                                          .chatControls["enabled"]
+                                                      ? false
+                                                      : true,
+                                                  "updatedBy": {
+                                                    "peerID": context
                                                         .read<MeetingStore>()
-                                                        .chatControls["enabled"]
-                                                    ? "Pause Chat"
-                                                    : "Resume Chat",
-                                                textColor: HMSThemeColors
-                                                    .onSurfaceHighEmphasis,
-                                                fontSize: 14,
-                                                lineHeight: 20,
-                                                letterSpacing: 0.1,
-                                              ),
-                                            ]),
-                                          ))
-                                    ],
-                                    onSelected: (value) {
-                                      switch (value) {
-                                        case 1:
-                                          context
-                                              .read<MeetingStore>()
-                                              .setSessionMetadataForKey(
-                                                  key: SessionStoreKeyValues
-                                                      .getNameFromMethod(
-                                                          SessionStoreKey
-                                                              .chatState),
-                                                  metadata: {
-                                                "enabled": context
+                                                        .localPeer
+                                                        ?.peerId,
+                                                    "userID": context
                                                         .read<MeetingStore>()
-                                                        .chatControls["enabled"]
-                                                    ? false
-                                                    : true,
-                                                "updatedBy": {
-                                                  "peerID": context
-                                                      .read<MeetingStore>()
-                                                      .localPeer
-                                                      ?.peerId,
-                                                  "userID": context
-                                                      .read<MeetingStore>()
-                                                      .localPeer
-                                                      ?.customerUserId,
-                                                  "userName": context
-                                                      .read<MeetingStore>()
-                                                      .localPeer
-                                                      ?.name
-                                                },
-                                                "updatedAt": DateTime.now()
-                                                    .millisecondsSinceEpoch //unix timestamp in miliseconds
-                                              });
-                                          break;
-                                      }
-                                    },
-                                    child: Container(
-                                      height: 24,
-                                      width: 24,
-                                      decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(4)),
-                                          color: HMSThemeColors.backgroundDim
-                                              .withOpacity(0.64)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: SvgPicture.asset(
-                                          "packages/hms_room_kit/lib/src/assets/icons/more.svg",
-                                          height: 16,
-                                          width: 16,
-                                          colorFilter: ColorFilter.mode(
-                                              HMSThemeColors
-                                                  .onSurfaceLowEmphasis,
-                                              BlendMode.srcIn),
+                                                        .localPeer
+                                                        ?.customerUserId,
+                                                    "userName": context
+                                                        .read<MeetingStore>()
+                                                        .localPeer
+                                                        ?.name
+                                                  },
+                                                  "updatedAt": DateTime.now()
+                                                      .millisecondsSinceEpoch //unix timestamp in miliseconds
+                                                });
+                                            break;
+                                        }
+                                      },
+                                      child: Container(
+                                        height: 24,
+                                        width: 24,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(4)),
+                                            color: HMSThemeColors.backgroundDim
+                                                .withOpacity(0.64)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: SvgPicture.asset(
+                                            "packages/hms_room_kit/lib/src/assets/icons/more.svg",
+                                            height: 16,
+                                            width: 16,
+                                            colorFilter: ColorFilter.mode(
+                                                HMSThemeColors
+                                                    .onSurfaceLowEmphasis,
+                                                BlendMode.srcIn),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  )
-                                ],
-                              )
+                                    )
+                                  ],
+                                )
                             ],
                           ),
                         )

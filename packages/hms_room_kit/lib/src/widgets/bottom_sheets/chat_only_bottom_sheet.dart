@@ -85,10 +85,11 @@ class ChatOnlyBottomSheet extends StatelessWidget {
                                         SessionStoreKeyValues.getNameFromMethod(
                                             SessionStoreKey.chatState),
                                     metadata: {
-                                  "enabled":
-                                      context.read<MeetingStore>().chatControls["enabled"]
-                                          ? false
-                                          : true,
+                                  "enabled": context
+                                          .read<MeetingStore>()
+                                          .chatControls["enabled"]
+                                      ? false
+                                      : true,
                                   "updatedBy": {
                                     "peerID": context
                                         .read<MeetingStore>()

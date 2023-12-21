@@ -302,7 +302,7 @@ class Chat {
     if (rolesWhitelist.isNotEmpty) {
       data['roles_whitelist'] = rolesWhitelist;
     }
-    if(realTimeControls != null){
+    if (realTimeControls != null) {
       data['real_time_controls'] = realTimeControls!.toJson();
     }
     return data;
