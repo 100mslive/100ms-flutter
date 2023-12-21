@@ -19,7 +19,10 @@ class HMSChatPauseResumeToast extends StatelessWidget {
   final MeetingStore meetingStore;
 
   const HMSChatPauseResumeToast(
-      {Key? key, required this.isChatEnabled, required this.userName, required this.meetingStore})
+      {Key? key,
+      required this.isChatEnabled,
+      required this.userName,
+      required this.meetingStore})
       : super(key: key);
 
   @override
@@ -32,7 +35,7 @@ class HMSChatPauseResumeToast extends StatelessWidget {
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           HMSSubheadingText(
             text: "Chat ${isChatEnabled ? "resumed" : "paused"}",

@@ -1,7 +1,15 @@
 //Enum to store the session metadata keys
 // PINNED_MESSAGE_SESSION_KEY: for pinning messages
 // SPOTLIGHT: for adding spotlight feature in application
-enum SessionStoreKey { pinnedMessageSessionKey, spotlight, chatState, chatPeerBlacklist, chatMessageBlacklist, pinnedMessages, unknown }
+enum SessionStoreKey {
+  pinnedMessageSessionKey,
+  spotlight,
+  chatState,
+  chatPeerBlacklist,
+  chatMessageBlacklist,
+  pinnedMessages,
+  unknown
+}
 
 extension SessionStoreKeyValues on SessionStoreKey {
   static String getNameFromMethod(SessionStoreKey method) {

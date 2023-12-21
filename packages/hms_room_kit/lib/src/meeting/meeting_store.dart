@@ -1729,7 +1729,6 @@ class MeetingStore extends ChangeNotifier
         break;
       case SessionStoreKey.chatState:
         if (value != null) {
-          
           ///Here we set the chat pause/resume state
           var data = jsonDecode(value);
           chatControls["enabled"] = data["enabled"];
