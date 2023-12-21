@@ -6,7 +6,7 @@ import 'package:tuple/tuple.dart';
 
 ///Project imports
 import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_chat_component.dart';
+import 'package:hms_room_kit/src/hls_viewer/overlay_chat_component.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/chat_only_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
@@ -54,7 +54,7 @@ class _MeetingBottomNavigationBarState
                           padding: EdgeInsets.only(
                               bottom: MediaQuery.of(context).viewInsets.bottom +
                                   15),
-                          child: HLSChatComponent(
+                          child: OverlayChatComponent(
                             height: MediaQuery.of(context).size.height * 0.3,
                           ),
                         ))

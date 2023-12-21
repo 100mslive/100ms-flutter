@@ -4,15 +4,15 @@ import 'dart:io';
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/chat_only_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_chat_component.dart';
+import 'package:hms_room_kit/src/hls_viewer/overlay_chat_component.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/hls_more_options.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
@@ -47,7 +47,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                           .isNewMessageReceived = false;
                     }
                     return isChatOpened
-                        ? const HLSChatComponent()
+                        ? const OverlayChatComponent()
                         : Container();
                   }),
 

@@ -175,3 +175,13 @@ iOS
 authToken
 issue_tracker
 publish_to
+Enum
+rolesWhitelist
+messagePlaceholder
+chatTitle
+isOverlay
+bool
+permission_handler
+intl
+chatState
+pinnedMessages
