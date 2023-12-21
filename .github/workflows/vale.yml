@@ -1,4 +1,4 @@
-name: Vale linter
+name: Vale Linter
 
 on:
     workflow_dispatch:

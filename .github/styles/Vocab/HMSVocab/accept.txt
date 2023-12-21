@@ -171,3 +171,7 @@ userid
 peerid
 ios
 android
+iOS
+authToken
+issue_tracker
+publish_to
