@@ -1424,6 +1424,8 @@ class MeetingStore extends ChangeNotifier
           participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
         }
         notifyListeners();
+      } else if (peerUpdate == HMSPeerUpdate.metadataChanged) {
+        participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
       }
       else if(peerUpdate == HMSPeerUpdate.metadataChanged){
         participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);

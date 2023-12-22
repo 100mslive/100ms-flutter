@@ -141,8 +141,6 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                         peer: peer,
                         roleName: onStageRole,
                         forceChange: HMSRoomLayout.skipPreviewForRole);
-
-                    ///TODO: ADD this in onSuccess for HMSActionResultListener
                     meetingStore.removeToast(HMSToastsType.roleChangeToast,
                         data: peer);
                   }
