@@ -103,6 +103,8 @@ class PreviewStore extends ChangeNotifier
     getRoles();
     getCurrentAudioDevice();
     getAudioDevicesList();
+    toggleCameraMuteState();
+    toggleMicMuteState();
     notifyListeners();
   }
 
