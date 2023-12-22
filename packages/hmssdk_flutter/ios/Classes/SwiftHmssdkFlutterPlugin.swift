@@ -743,6 +743,16 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             result(true)
         }
+        
+        NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification,
+                                               object: nil,
+                                               queue: .main) { [weak self] notification in
+            if self?.hmsSDK?.room != nil {
+                self?.hmsSDK?.leave { success, error in
+                    print(#function, "leave invoked", success, error as Any)
+                }
+            }
+        }
     }
 
     private func preview(_ call: FlutterMethodCall, _ result: FlutterResult) {
@@ -828,13 +838,13 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     private func destroy(_ result: @escaping FlutterResult) {
+        NotificationCenter.default.removeObserver(self, name: UIApplication.willTerminateNotification, object: nil)
         hmsSDK = nil
         result(nil)
     }
 
     /**
-                [toggleAlwaysScreenOn] provides a way to keep the screen always ON
-                when enabled.
+    [toggleAlwaysScreenOn] provides a way to keep the screen always ON when enabled.
      */
     private func toggleAlwaysScreenOn(_ result: @escaping FlutterResult) {
         UIApplication.shared.isIdleTimerDisabled = !UIApplication.shared.isIdleTimerDisabled
