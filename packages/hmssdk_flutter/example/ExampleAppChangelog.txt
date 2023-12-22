@@ -9,7 +9,7 @@ https://100ms.atlassian.net/browse/FLUT-153
 - Skip Preview for Role Change
 https://100ms.atlassian.net/browse/FLUT-162
 
-Room Kit: 1.0.8
-Core SDK: 1.9.5
+Room Kit: 1.0.9
+Core SDK: 1.9.6
 Android SDK: 2.8.4
 iOS SDK: 1.4.1
