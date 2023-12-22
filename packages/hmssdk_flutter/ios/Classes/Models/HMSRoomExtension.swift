@@ -17,7 +17,7 @@ class  HMSRoomExtension {
         if let roomID = room.roomID {
             dict["id"] = roomID
         }
-
+        
         if let name = room.name {
             dict["name"] = name
         }
@@ -34,6 +34,7 @@ class  HMSRoomExtension {
             dict["peer_count"] = peerCount
         }
 
+        dict["is_large"] = room.isLarge
         var peers = [[String: Any]]()
         room.peers.forEach { peers.append(HMSPeerExtension.toDictionary($0)) }
         dict["peers"] = peers

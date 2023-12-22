@@ -33,12 +33,17 @@ class ParticipantsBottomSheet extends StatefulWidget {
 
 class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
   Timer? timer;
+  bool isLargeRoom = false;
 
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(const Duration(seconds: 5),
-        (Timer t) => context.read<MeetingStore>().refreshPeerList());
+
+    isLargeRoom = context.read<MeetingStore>().hmsRoom?.isLarge ?? false;
+    if (isLargeRoom) {
+      timer = Timer.periodic(const Duration(seconds: 5),
+          (Timer t) => context.read<MeetingStore>().refreshPeerList());
+    }
   }
 
   @override
@@ -389,7 +394,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                             .onSurfaceHighEmphasis,
                                         title: HMSSubheadingText(
                                           text:
-                                              "${context.read<MeetingStore>().participantsInMeetingMap.keys.elementAt(index)} (${(HMSRoomLayout.offStageRoles?.contains(role) ?? false) ? context.read<MeetingStore>().peerListIterators[role]?.totalCount ?? 0 : participantsPerRole.item1}) ",
+                                              "${context.read<MeetingStore>().participantsInMeetingMap.keys.elementAt(index)} (${((HMSRoomLayout.offStageRoles?.contains(role) ?? false) && isLargeRoom) ? context.read<MeetingStore>().peerListIterators[role]?.totalCount ?? 0 : participantsPerRole.item1}) ",
                                           textColor: HMSThemeColors
                                               .onSurfaceMediumEmphasis,
                                           letterSpacing: 0.1,

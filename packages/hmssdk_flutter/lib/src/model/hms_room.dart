@@ -21,6 +21,7 @@ class HMSRoom {
   String id;
   String? name;
   String? metaData;
+  bool isLarge;
   HMSBrowserRecordingState? hmsBrowserRecordingState;
   HMSRtmpStreamingState? hmsRtmpStreamingState;
   HMSServerRecordingState? hmsServerRecordingState;
@@ -37,6 +38,7 @@ class HMSRoom {
       {required this.id,
       this.name,
       required this.peers,
+      required this.isLarge,
       this.metaData,
       this.hmsServerRecordingState,
       this.hmsRtmpStreamingState,
@@ -76,6 +78,7 @@ class HMSRoom {
         hmshlsRecordingState: map["hls_recording_state"] != null
             ? HMSHLSRecordingState.fromMap(map["hls_recording_state"] as Map)
             : null,
+        isLarge: map["is_large"],
         id: map['id'],
         name: map['name'],
         peers: peers,
