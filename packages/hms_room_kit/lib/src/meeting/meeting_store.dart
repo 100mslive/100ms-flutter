@@ -477,10 +477,11 @@ class MeetingStore extends ChangeNotifier
   }
 
   void setPreviousRole(String oldRole) {
-    if (HMSRoomLayout.skipPreviewForRole) {
-      _hmsSDKInteractor.changeMetadata(
-          metadata: "{\"isBRBOn\":false,\"prevRole\":\"$oldRole\"}",
-          hmsActionResultListener: this);
+    _hmsSDKInteractor.changeMetadata(
+        metadata: "{\"isBRBOn\":false,\"prevRole\":\"$oldRole\"}",
+        hmsActionResultListener: this);
+    if (isRaisedHand) {
+      toggleLocalPeerHandRaise();
     }
   }
 
@@ -588,14 +589,14 @@ class MeetingStore extends ChangeNotifier
       if (indexForVideoTrack != -1) {
         previewForRoleVideoTrack =
             result[indexForVideoTrack] as HMSLocalVideoTrack;
-        isVideoOn = true;
+        isVideoOn = !(previewForRoleVideoTrack?.isMute ?? true);
       }
       var indexForAudioTrack = result.indexWhere(
           (element) => element.kind == HMSTrackKind.kHMSTrackKindAudio);
       if (indexForAudioTrack != -1) {
         previewForRoleAudioTrack =
             result[indexForAudioTrack] as HMSLocalAudioTrack;
-        isMicOn = true;
+        isMicOn = !(previewForRoleAudioTrack?.isMute ?? true);
       }
       notifyListeners();
     }
@@ -729,19 +730,31 @@ class MeetingStore extends ChangeNotifier
     }
     log("Calling refresh PeerList Method $peerListIterators");
     peerListIterators.clear();
+
+    ///Here we get off stage roles
     List<String>? offStageRoles = HMSRoomLayout.roleLayoutData?.screens
         ?.conferencing?.defaultConf?.elements?.onStageExp?.offStageRoles;
+
+    ///For each off stage role we get the peer list iterator
     offStageRoles?.forEach((role) async {
       var peerListIterator = await _hmsSDKInteractor.getPeerListIterator(
           peerListIteratorOptions:
               PeerListIteratorOptions(limit: 10, byRoleName: role));
+
+      ///If the peerListIterator is not null then we add it to the map
       if (peerListIterator != null && peerListIterator is HMSPeerListIterator) {
         peerListIterators[role] = peerListIterator;
+
+        ///Here we subtract the number of participants in meeting with the number of participants in the iterator
         participantsInMeeting -= participantsInMeetingMap[role]?.length ?? 0;
         participantsInMeetingMap[role]?.clear();
+
+        ///Here we get the first set of peers from the iterator
         dynamic nonRealTimePeers = await peerListIterator.next();
         if (nonRealTimePeers is List<HMSPeer>) {
-          log("Calling refresh PeerList Method $nonRealTimePeers");
+          log("Calling refresh PeerList Method here $nonRealTimePeers");
+
+          ///Here we add the peers to the participantsInMeetingMap
           if (nonRealTimePeers.isNotEmpty) {
             for (var peer in nonRealTimePeers) {
               addPeer(peer);
@@ -1413,6 +1426,8 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
       } else if (peerUpdate == HMSPeerUpdate.metadataChanged) {
         participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
+      } else if (peerUpdate == HMSPeerUpdate.metadataChanged) {
+        participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
       }
     } else {
       if (peerUpdate == HMSPeerUpdate.roleUpdated) {
@@ -1472,6 +1487,7 @@ class MeetingStore extends ChangeNotifier
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
           getSpotlightPeer();
+          setPreviousRole(localPeer?.role.name ?? "");
           resetLayout(peer.role.name);
           localPeer = peer;
         }

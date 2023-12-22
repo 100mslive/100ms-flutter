@@ -74,6 +74,8 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
         } else {
           Constant.roomCode = scanData.code!.trim();
         }
+        Utilities.saveStringData(
+            key: "meetingLink", value: scanData.code!.trim());
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (_) => HMSPrebuilt(
                 roomCode: Constant.roomCode,
