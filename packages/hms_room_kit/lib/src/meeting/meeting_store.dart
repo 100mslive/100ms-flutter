@@ -477,12 +477,10 @@ class MeetingStore extends ChangeNotifier
   }
 
   void setPreviousRole(String oldRole) {
-    if (HMSRoomLayout.skipPreviewForRole) {
-      _hmsSDKInteractor.changeMetadata(
-          metadata: "{\"isBRBOn\":false,\"prevRole\":\"$oldRole\"}",
-          hmsActionResultListener: this);
-    }
-    if(isRaisedHand){
+    _hmsSDKInteractor.changeMetadata(
+        metadata: "{\"isBRBOn\":false,\"prevRole\":\"$oldRole\"}",
+        hmsActionResultListener: this);
+    if (isRaisedHand) {
       toggleLocalPeerHandRaise();
     }
   }
@@ -591,14 +589,14 @@ class MeetingStore extends ChangeNotifier
       if (indexForVideoTrack != -1) {
         previewForRoleVideoTrack =
             result[indexForVideoTrack] as HMSLocalVideoTrack;
-        isVideoOn = true;
+        isVideoOn = !(previewForRoleVideoTrack?.isMute ?? true);
       }
       var indexForAudioTrack = result.indexWhere(
           (element) => element.kind == HMSTrackKind.kHMSTrackKindAudio);
       if (indexForAudioTrack != -1) {
         previewForRoleAudioTrack =
             result[indexForAudioTrack] as HMSLocalAudioTrack;
-        isMicOn = true;
+        isMicOn = !(previewForRoleAudioTrack?.isMute ?? true);
       }
       notifyListeners();
     }
@@ -1488,7 +1486,7 @@ class MeetingStore extends ChangeNotifier
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
           getSpotlightPeer();
-          setPreviousRole(peer.role.name);
+          setPreviousRole(localPeer?.role.name ?? "");
           resetLayout(peer.role.name);
           localPeer = peer;
         }

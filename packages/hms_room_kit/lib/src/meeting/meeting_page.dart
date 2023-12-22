@@ -411,7 +411,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                               color: HMSThemeColors.backgroundDim,
                                                                               child: (isVideoOn && previewForRoleTracks.item1 != null)
                                                                                   ? Center(
-                                                                                      child: HMSVideoView(
+                                                                                      child: HMSTextureView(
                                                                                         scaleType: ScaleType.SCALE_ASPECT_FILL,
                                                                                         track: previewForRoleTracks.item1!,
                                                                                         setMirror: true,
