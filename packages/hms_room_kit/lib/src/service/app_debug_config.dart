@@ -21,7 +21,7 @@ class AppDebugConfig {
   static HMSIOSScreenshareConfig? iOSScreenshareConfig;
 
   /// Resets the debug configuration to default values
-  static void resetToDefault() {  
+  static void resetToDefault() {
     skipPreview = false;
     mirrorCamera = true;
     showStats = false;

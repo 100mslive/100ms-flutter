@@ -17,7 +17,6 @@ class AppSettingsBottomSheet extends StatefulWidget {
 }
 
 class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
-
   bool skipPreview = false;
   bool mirrorCamera = true;
   bool showStats = false;

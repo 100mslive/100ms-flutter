@@ -351,9 +351,13 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                         .participantsInMeetingMap
                         .keys
                         .elementAt(index);
-                    return Selector<MeetingStore, Tuple2<int,List<ParticipantsStore>?>>(
-                        selector: (_, meetingStore) =>
-                            Tuple2(meetingStore.participantsInMeetingMap[role]?.length??0,meetingStore.participantsInMeetingMap[role]),
+                    return Selector<MeetingStore,
+                            Tuple2<int, List<ParticipantsStore>?>>(
+                        selector: (_, meetingStore) => Tuple2(
+                            meetingStore
+                                    .participantsInMeetingMap[role]?.length ??
+                                0,
+                            meetingStore.participantsInMeetingMap[role]),
                         builder: (_, participantsPerRole, __) {
                           return (participantsPerRole.item2?.isNotEmpty ??
                                   false)
@@ -385,14 +389,15 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                             .onSurfaceHighEmphasis,
                                         title: HMSSubheadingText(
                                           text:
-                                              "${context.read<MeetingStore>().participantsInMeetingMap.keys.elementAt(index)} (${(HMSRoomLayout.offStageRoles?.contains(role) ?? false) ? context.read<MeetingStore>().peerListIterators[role]?.totalCount ?? 0 :participantsPerRole.item1}) ",
+                                              "${context.read<MeetingStore>().participantsInMeetingMap.keys.elementAt(index)} (${(HMSRoomLayout.offStageRoles?.contains(role) ?? false) ? context.read<MeetingStore>().peerListIterators[role]?.totalCount ?? 0 : participantsPerRole.item1}) ",
                                           textColor: HMSThemeColors
                                               .onSurfaceMediumEmphasis,
                                           letterSpacing: 0.1,
                                         ),
                                         children: [
                                           SizedBox(
-                                            height: participantsPerRole.item2 == null
+                                            height: participantsPerRole.item2 ==
+                                                    null
                                                 ? 0
                                                 : (participantsPerRole.item1) *
                                                     54,
@@ -400,14 +405,14 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                               child: ListView.builder(
                                                   physics:
                                                       const NeverScrollableScrollPhysics(),
-                                                  itemCount: participantsPerRole
-                                                          .item1,
+                                                  itemCount:
+                                                      participantsPerRole.item1,
                                                   itemBuilder:
                                                       (context, peerIndex) {
                                                     ParticipantsStore
                                                         currentPeer =
-                                                        participantsPerRole.item2![
-                                                            peerIndex];
+                                                        participantsPerRole
+                                                            .item2![peerIndex];
                                                     return Padding(
                                                       padding:
                                                           const EdgeInsets.only(
