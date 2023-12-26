@@ -1754,7 +1754,7 @@ class MeetingStore extends ChangeNotifier
       case SessionStoreKey.pinnedMessageSessionKey:
         pinnedMessages.clear();
         if (value != null) {
-          var data = jsonDecode(value ?? "");
+          var data = jsonDecode(value);
           if (data != null && data.isNotEmpty) {
             data.forEach((element) => pinnedMessages.add({
                   "id": element["id"],
