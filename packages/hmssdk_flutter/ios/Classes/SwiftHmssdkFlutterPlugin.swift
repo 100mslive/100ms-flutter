@@ -838,7 +838,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     }
 
     private func destroy(_ result: @escaping FlutterResult) {
-        NotificationCenter.default.removeObserver(self, name: UIApplication.willTerminateNotification, object: nil)
         hmsSDK = nil
         result(nil)
     }
