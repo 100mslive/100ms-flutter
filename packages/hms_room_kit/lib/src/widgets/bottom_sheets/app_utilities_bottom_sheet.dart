@@ -133,6 +133,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       optionText: "Participants"),
 
                 ///This renders the screen share option
+                if(meetingStore.localPeer?.role.publishSettings?.allowed.contains("screen") ?? false)
                 MoreOptionItem(
                   onTap: () async {
                     Navigator.pop(context);
