@@ -133,27 +133,31 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       optionText: "Participants"),
 
                 ///This renders the screen share option
-                MoreOptionItem(
-                  onTap: () async {
-                    Navigator.pop(context);
-                    if (meetingStore.isScreenShareOn) {
-                      meetingStore.stopScreenShare();
-                    } else {
-                      meetingStore.startScreenShare();
-                    }
-                  },
-                  isActive: meetingStore.isScreenShareOn,
-                  optionIcon: SvgPicture.asset(
-                    "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
-                    height: 20,
-                    width: 20,
-                    colorFilter: ColorFilter.mode(
-                        HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
+                if (meetingStore.localPeer?.role.publishSettings?.allowed
+                        .contains("screen") ??
+                    false)
+                  MoreOptionItem(
+                    onTap: () async {
+                      Navigator.pop(context);
+                      if (meetingStore.isScreenShareOn) {
+                        meetingStore.stopScreenShare();
+                      } else {
+                        meetingStore.startScreenShare();
+                      }
+                    },
+                    isActive: meetingStore.isScreenShareOn,
+                    optionIcon: SvgPicture.asset(
+                      "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
+                      height: 20,
+                      width: 20,
+                      colorFilter: ColorFilter.mode(
+                          HMSThemeColors.onSurfaceHighEmphasis,
+                          BlendMode.srcIn),
+                    ),
+                    optionText: meetingStore.isScreenShareOn
+                        ? "Sharing Screen"
+                        : "Share Screen",
                   ),
-                  optionText: meetingStore.isScreenShareOn
-                      ? "Sharing Screen"
-                      : "Share Screen",
-                ),
 
                 ///This renders the brb option
                 if (HMSRoomLayout.isBRBEnabled)
