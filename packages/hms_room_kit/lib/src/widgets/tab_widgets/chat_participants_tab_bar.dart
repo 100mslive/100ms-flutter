@@ -13,7 +13,6 @@ import 'package:hms_room_kit/src/widgets/bottom_sheets/participants_bottom_sheet
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 
-
 ///[ChatParticipantsTabBar] is a tab bar that is used to render the tab bar for chat and participants
 ///This is only rendered when both chat and participants list are enabled.
 class ChatParticipantsTabBar extends StatefulWidget {
