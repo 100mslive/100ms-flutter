@@ -179,7 +179,11 @@ class MeetingStore extends ChangeNotifier
 
   bool retryHLS = true;
 
-  String? sessionMetadata;
+  ///[pinnedMessages] is the list of pinned messages
+  List<dynamic> pinnedMessages = [];
+
+  ///[blackListedUserIds] is the list of user ids which are blacklisted from chat
+  List<String> blackListedUserIds = [];
 
   bool isPipActive = false;
 
@@ -1748,7 +1752,17 @@ class MeetingStore extends ChangeNotifier
     SessionStoreKey keyType = SessionStoreKeyValues.getMethodFromName(key);
     switch (keyType) {
       case SessionStoreKey.pinnedMessageSessionKey:
-        sessionMetadata = value;
+        pinnedMessages.clear();
+        if (value != null) {
+          var data = jsonDecode(value ?? "");
+          if (data != null && data.isNotEmpty) {
+            data.forEach((element) => pinnedMessages.add({
+                  "id": element["id"],
+                  "text": element["text"],
+                }));
+          }
+        }
+        notifyListeners();
         break;
       case SessionStoreKey.spotlight:
         setPeerToSpotlight(value);
@@ -1766,10 +1780,18 @@ class MeetingStore extends ChangeNotifier
 
         break;
       case SessionStoreKey.chatPeerBlacklist:
+        blackListedUserIds.clear();
+        if (value != null) {
+          var data = jsonDecode(value);
+          if (data != null && data.isNotEmpty) {
+            data.forEach((element) {
+              blackListedUserIds.add(element);
+            });
+          }
+          notifyListeners();
+        }
         break;
       case SessionStoreKey.chatMessageBlacklist:
-        break;
-      case SessionStoreKey.pinnedMessages:
         break;
       case SessionStoreKey.unknown:
         break;
@@ -1929,6 +1951,16 @@ class MeetingStore extends ChangeNotifier
         key: key, data: metadata, hmsActionResultListener: this);
   }
 
+  void togglePeerBlock({required String peerId, bool isBlocked = false}) {
+    if (!isBlocked) {
+      blackListedUserIds.add(peerId);
+    }
+    setSessionMetadataForKey(
+        key: SessionStoreKeyValues.getNameFromMethod(
+            SessionStoreKey.chatPeerBlacklist),
+        metadata: isBlocked ? null : blackListedUserIds);
+  }
+
   void getSessionMetadata(String key) async {
     dynamic result = await _hmsSessionStore?.getSessionMetadataForKey(key: key);
     if (result is HMSException) {
@@ -1938,7 +1970,7 @@ class MeetingStore extends ChangeNotifier
       return;
     }
     if (result != null) {
-      sessionMetadata = result as String;
+      log(result);
     }
     notifyListeners();
   }

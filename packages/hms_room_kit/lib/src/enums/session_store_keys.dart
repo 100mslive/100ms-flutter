@@ -7,7 +7,6 @@ enum SessionStoreKey {
   chatState,
   chatPeerBlacklist,
   chatMessageBlacklist,
-  pinnedMessages,
   unknown
 }
 
@@ -15,7 +14,7 @@ extension SessionStoreKeyValues on SessionStoreKey {
   static String getNameFromMethod(SessionStoreKey method) {
     switch (method) {
       case SessionStoreKey.pinnedMessageSessionKey:
-        return "pinnedMessage";
+        return "pinnedMessages";
       case SessionStoreKey.spotlight:
         return "spotlight";
       case SessionStoreKey.chatState:
@@ -24,8 +23,6 @@ extension SessionStoreKeyValues on SessionStoreKey {
         return "chatPeerBlacklist";
       case SessionStoreKey.chatMessageBlacklist:
         return "chatMessageBlacklist";
-      case SessionStoreKey.pinnedMessages:
-        return "pinnedMessages";
       default:
         return "";
     }
@@ -33,7 +30,7 @@ extension SessionStoreKeyValues on SessionStoreKey {
 
   static SessionStoreKey getMethodFromName(String key) {
     switch (key) {
-      case "pinnedMessage":
+      case "pinnedMessages":
         return SessionStoreKey.pinnedMessageSessionKey;
       case "spotlight":
         return SessionStoreKey.spotlight;
@@ -43,8 +40,6 @@ extension SessionStoreKeyValues on SessionStoreKey {
         return SessionStoreKey.chatPeerBlacklist;
       case "chatMessageBlacklist":
         return SessionStoreKey.chatMessageBlacklist;
-      case "pinnedMessages":
-        return SessionStoreKey.pinnedMessages;
       default:
         return SessionStoreKey.unknown;
     }
