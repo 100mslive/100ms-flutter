@@ -743,16 +743,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             result(true)
         }
-        
-        NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification,
-                                               object: nil,
-                                               queue: .main) { [weak self] notification in
-            if self?.hmsSDK?.room != nil {
-                self?.hmsSDK?.leave { success, error in
-                    print(#function, "leave invoked", success, error as Any)
-                }
-            }
-        }
     }
 
     private func preview(_ call: FlutterMethodCall, _ result: FlutterResult) {
