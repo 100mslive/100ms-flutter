@@ -17,6 +17,7 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uni_links/uni_links.dart';
+import 'package:uuid/uuid.dart';
 
 bool _initialURILinkHandled = false;
 StreamSubscription? _streamSubscription;
@@ -220,6 +221,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController meetingLinkController = TextEditingController();
+  Uuid? uuid;
+  String uuidString = "";
 
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -238,6 +241,12 @@ class _HomePageState extends State<HomePage> {
 
   void getData() async {
     String savedMeetingUrl = await Utilities.getStringData(key: 'meetingLink');
+    uuidString = await Utilities.getStringData(key: "uuid");
+    if (uuidString.isEmpty) {
+      uuid = Uuid();
+      uuidString = uuid!.v4();
+      Utilities.saveStringData(key: "uuid", value: uuidString);
+    }
     if (widget.deepLinkURL == null && savedMeetingUrl.isNotEmpty) {
       meetingLinkController.text = savedMeetingUrl;
     } else {
@@ -319,7 +328,7 @@ class _HomePageState extends State<HomePage> {
                         : "Flutter User",
                     endPoints: endPoints,
                     userId:
-                        "user_flutter", // pass your custom unique user identifier here
+                        uuidString, // pass your custom unique user identifier here
                     iOSScreenshareConfig: HMSIOSScreenshareConfig(
                         appGroup: "group.flutterhms",
                         preferredExtension:
@@ -553,8 +562,12 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () async {
                       bool res = await Utilities.getCameraPermissions();
                       if (res) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => QRCodeScreen()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => QRCodeScreen(
+                                      uuidString: uuidString,
+                                    )));
                       }
                     },
                     child: Container(

@@ -2,30 +2,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 ///Project imports
+import 'package:hms_room_kit/src/widgets/bottom_sheets/chat_utilities_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
-import 'package:hms_room_kit/src/enums/session_store_keys.dart';
-import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 
 class MessageContainer extends StatelessWidget {
-  final String message;
-  final String? senderName;
-  final String date;
-  final String role;
-  const MessageContainer({
+  final HMSMessage message;
+  final DateFormat formatter = DateFormat('hh:mm a');
+
+  MessageContainer({
     Key? key,
     required this.message,
-    required this.senderName,
-    required this.date,
-    required this.role,
   }) : super(key: key);
+
+  String sender(HMSMessageRecipient? hmsMessageRecipient) {
+    if (hmsMessageRecipient == null) return "";
+    if ((hmsMessageRecipient.recipientPeer != null) &&
+        (hmsMessageRecipient.recipientRoles == null)) {
+      return "PRIVATE";
+    } else if ((hmsMessageRecipient.recipientPeer == null) &&
+        (hmsMessageRecipient.recipientRoles != null)) {
+      return hmsMessageRecipient.recipientRoles![0].name;
+    }
+    return "";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +52,11 @@ class MessageContainer extends StatelessWidget {
                 children: [
                   Container(
                     constraints: BoxConstraints(
-                        maxWidth: role != "" ? width * 0.25 : width * 0.5),
+                        maxWidth: sender(message.hmsMessageRecipient) == ""
+                            ? width * 0.25
+                            : width * 0.5),
                     child: HMSTitleText(
-                      text: senderName ?? "Anonymous",
+                      text: message.sender?.name ?? "Anonymous",
                       fontSize: 14,
                       letterSpacing: 0.1,
                       lineHeight: 20,
@@ -56,75 +67,49 @@ class MessageContainer extends StatelessWidget {
                     width: 4,
                   ),
                   HMSSubtitleText(
-                    text: date,
+                    text: formatter.format(message.time),
                     textColor: HMSThemeColors.onSurfaceMediumEmphasis,
                   ),
                 ],
               ),
-              if (HMSRoomLayout.chatData?.allowPinningMessages ?? true)
-                Row(
-                  children: [
-                    if (role == "")
-                      PopupMenuButton(
-                        position: PopupMenuPosition.under,
-                        color: HMSThemeColors.surfaceDefault,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        itemBuilder: (context) {
-                          return List.generate(1, (index) {
-                            return PopupMenuItem(
-                              height: 52,
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    "packages/hms_room_kit/lib/src/assets/icons/pin.svg",
-                                    height: 20,
-                                    width: 20,
-                                    colorFilter: ColorFilter.mode(
-                                        HMSThemeColors.onSurfaceMediumEmphasis,
-                                        BlendMode.srcIn),
-                                  ),
-                                  const SizedBox(
-                                    width: 8,
-                                  ),
-                                  HMSTitleText(
-                                    text: "Pin Message",
-                                    fontSize: 14,
-                                    lineHeight: 20,
-                                    letterSpacing: 0.1,
-                                    textColor:
-                                        HMSThemeColors.onSurfaceHighEmphasis,
-                                  )
-                                ],
-                              ),
-                              onTap: () => context
-                                  .read<MeetingStore>()
-                                  .setSessionMetadataForKey(
-                                      key: SessionStoreKeyValues
-                                          .getNameFromMethod(SessionStoreKey
-                                              .pinnedMessageSessionKey),
-                                      metadata: "${senderName!}: $message"),
-                            );
-                          });
-                        },
-                        child: SvgPicture.asset(
-                          "packages/hms_room_kit/lib/src/assets/icons/more.svg",
-                          height: 20,
-                          width: 20,
-                          colorFilter: ColorFilter.mode(
-                              HMSThemeColors.onSurfaceMediumEmphasis,
-                              BlendMode.srcIn),
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        backgroundColor: HMSThemeColors.surfaceDim,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(16),
+                              topRight: Radius.circular(16)),
                         ),
-                      )
-                  ],
-                )
+                        context: context,
+                        builder: (ctx) => ChangeNotifierProvider.value(
+                            value: context.read<MeetingStore>(),
+                            child: ChatUtilitiesBottomSheet(
+                              message: message,
+                            )),
+                      );
+                    },
+                    child: SvgPicture.asset(
+                      "packages/hms_room_kit/lib/src/assets/icons/more.svg",
+                      height: 20,
+                      width: 20,
+                      colorFilter: ColorFilter.mode(
+                          HMSThemeColors.onSurfaceMediumEmphasis,
+                          BlendMode.srcIn),
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
           const SizedBox(
             height: 8,
           ),
           SelectableLinkify(
-            text: message,
+            text: message.message.trim().toString(),
             onOpen: (link) async {
               Uri url = Uri.parse(link.url);
               if (await canLaunchUrl(url)) {

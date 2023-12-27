@@ -1,16 +1,20 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
-import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/chat_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/participants_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
-import 'package:provider/provider.dart';
 
+///[ChatParticipantsTabBar] is a tab bar that is used to render the tab bar for chat and participants
+///This is only rendered when both chat and participants list are enabled.
 class ChatParticipantsTabBar extends StatefulWidget {
   final int tabIndex;
   const ChatParticipantsTabBar({super.key, this.tabIndex = 0});
