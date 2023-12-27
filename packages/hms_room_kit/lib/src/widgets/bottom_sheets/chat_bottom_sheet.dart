@@ -132,16 +132,6 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                             children: [
                                               Row(
                                                 children: [
-                                                  SvgPicture.asset(
-                                                    "packages/hms_room_kit/lib/src/assets/icons/pin.svg",
-                                                    height: 20,
-                                                    width: 20,
-                                                    colorFilter: ColorFilter.mode(
-                                                        HMSThemeColors
-                                                            .onSurfaceMediumEmphasis,
-                                                        BlendMode.srcIn),
-                                                  ),
-                                                  const SizedBox(width: 8),
                                                   SizedBox(
                                                     width:
                                                         MediaQuery.of(context)
@@ -185,6 +175,16 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                                   FontWeight
                                                                       .w400),
                                                     ),
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  SvgPicture.asset(
+                                                    "packages/hms_room_kit/lib/src/assets/icons/unpin.svg",
+                                                    height: 20,
+                                                    width: 20,
+                                                    colorFilter: ColorFilter.mode(
+                                                        HMSThemeColors
+                                                            .onSurfaceMediumEmphasis,
+                                                        BlendMode.srcIn),
                                                   ),
                                                 ],
                                               ),
