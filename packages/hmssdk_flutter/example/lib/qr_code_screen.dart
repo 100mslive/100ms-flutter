@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter_example/room_service.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:uuid/uuid.dart';
 
 class QRCodeScreen extends StatefulWidget {
-  final Uuid uuid;
-  QRCodeScreen({Key? key, required this.uuid}) : super(key: key);
+  final String uuidString;
+  QRCodeScreen({Key? key, required this.uuidString}) : super(key: key);
 
   @override
   State<QRCodeScreen> createState() => _QRCodeScreenState();
@@ -85,7 +84,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                     userName: AppDebugConfig.nameChangeOnPreview
                         ? null
                         : "Flutter User",
-                    userId: widget.uuid.v4(),
+                    userId: widget.uuidString,
                     endPoints: endPoints,
                     iOSScreenshareConfig: HMSIOSScreenshareConfig(
                         appGroup: "group.flutterhms",

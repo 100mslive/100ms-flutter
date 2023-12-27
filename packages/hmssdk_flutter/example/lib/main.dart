@@ -221,7 +221,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController meetingLinkController = TextEditingController();
-  late Uuid uuid;
+  Uuid? uuid;
+  String uuidString = "";
 
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -235,12 +236,17 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _initPackageInfo();
-    uuid = Uuid();
     getData();
   }
 
   void getData() async {
     String savedMeetingUrl = await Utilities.getStringData(key: 'meetingLink');
+    uuidString = await Utilities.getStringData(key: "uuid");
+    if (uuidString.isEmpty) {
+      uuid = Uuid();
+      uuidString = uuid!.v4();
+      Utilities.saveStringData(key: "uuid", value: uuidString);
+    }
     if (widget.deepLinkURL == null && savedMeetingUrl.isNotEmpty) {
       meetingLinkController.text = savedMeetingUrl;
     } else {
@@ -321,8 +327,8 @@ class _HomePageState extends State<HomePage> {
                         ? null
                         : "Flutter User",
                     endPoints: endPoints,
-                    userId: uuid
-                        .v4(), // pass your custom unique user identifier here
+                    userId:
+                        uuidString, // pass your custom unique user identifier here
                     iOSScreenshareConfig: HMSIOSScreenshareConfig(
                         appGroup: "group.flutterhms",
                         preferredExtension:
@@ -560,7 +566,7 @@ class _HomePageState extends State<HomePage> {
                             context,
                             MaterialPageRoute(
                                 builder: (_) => QRCodeScreen(
-                                      uuid: uuid,
+                                      uuidString: uuidString,
                                     )));
                       }
                     },
