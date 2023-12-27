@@ -1951,14 +1951,17 @@ class MeetingStore extends ChangeNotifier
         key: key, data: metadata, hmsActionResultListener: this);
   }
 
-  void togglePeerBlock({required String peerId, bool isBlocked = false}) {
+  ///[togglePeerBlock] method is used to block/unblock a peer from chat
+  void togglePeerBlock({required String userId, bool isBlocked = false}) {
     if (!isBlocked) {
-      blackListedUserIds.add(peerId);
+      blackListedUserIds.add(userId);
+    } else {
+      blackListedUserIds.remove(userId);
     }
     setSessionMetadataForKey(
         key: SessionStoreKeyValues.getNameFromMethod(
             SessionStoreKey.chatPeerBlacklist),
-        metadata: isBlocked ? null : blackListedUserIds);
+        metadata: blackListedUserIds);
   }
 
   void getSessionMetadata(String key) async {

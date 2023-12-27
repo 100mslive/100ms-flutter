@@ -17,6 +17,7 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uni_links/uni_links.dart';
+import 'package:uuid/uuid.dart';
 
 bool _initialURILinkHandled = false;
 StreamSubscription? _streamSubscription;
@@ -220,6 +221,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController meetingLinkController = TextEditingController();
+  late Uuid uuid;
 
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -233,6 +235,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _initPackageInfo();
+    uuid = Uuid();
     getData();
   }
 
@@ -318,8 +321,8 @@ class _HomePageState extends State<HomePage> {
                         ? null
                         : "Flutter User",
                     endPoints: endPoints,
-                    userId:
-                        "user_flutter", // pass your custom unique user identifier here
+                    userId: uuid
+                        .v4(), // pass your custom unique user identifier here
                     iOSScreenshareConfig: HMSIOSScreenshareConfig(
                         appGroup: "group.flutterhms",
                         preferredExtension:
@@ -553,8 +556,12 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () async {
                       bool res = await Utilities.getCameraPermissions();
                       if (res) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => QRCodeScreen()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => QRCodeScreen(
+                                      uuid: uuid,
+                                    )));
                       }
                     },
                     child: Container(

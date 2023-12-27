@@ -107,7 +107,7 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
 
                     if (widget.message.sender?.customerUserId != null) {
                       context.read<MeetingStore>().togglePeerBlock(
-                          peerId: widget.message.sender!.customerUserId!,
+                          userId: widget.message.sender!.customerUserId!,
                           isBlocked: isBlocked);
                     }
                   },

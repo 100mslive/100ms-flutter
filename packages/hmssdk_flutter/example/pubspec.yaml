@@ -25,6 +25,7 @@ dependencies:
   url_launcher:
   qr_code_scanner:
   uni_links:
+  uuid: 
 
 dev_dependencies:
   flutter_test:
