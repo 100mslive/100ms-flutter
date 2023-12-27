@@ -1972,9 +1972,7 @@ class MeetingStore extends ChangeNotifier
           time: 5);
       return;
     }
-    if (result != null) {
-      log(result);
-    }
+    ///Add pinned message here
     notifyListeners();
   }
 
