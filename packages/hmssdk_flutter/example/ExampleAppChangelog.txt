@@ -12,6 +12,9 @@ https://100ms.atlassian.net/browse/FLUT-162
 - Even if screenshare is disabled, UI still shows screenshare option
 https://100ms.atlassian.net/browse/LIVE-1981
 
+- Multi pin Chat
+https://100ms.atlassian.net/browse/FLUT-154
+
 - Block Peer From Chat
 https://100ms.atlassian.net/browse/FLUT-157
 
