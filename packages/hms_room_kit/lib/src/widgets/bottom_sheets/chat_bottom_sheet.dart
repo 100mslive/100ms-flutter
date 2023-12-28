@@ -14,7 +14,9 @@ import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/widgets/chat_widgets/hms_empty_chat_widget.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/message_container.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
+import 'package:hms_room_kit/src/widgets/chat_widgets/chat_text_field.dart';
 
+///[ChatBottomSheet] is a bottom sheet that is used to render the bottom sheet for chat
 class ChatBottomSheet extends StatefulWidget {
   const ChatBottomSheet({super.key});
 
@@ -24,13 +26,11 @@ class ChatBottomSheet extends StatefulWidget {
 
 class _ChatBottomSheetState extends State<ChatBottomSheet> {
   late double widthOfScreen;
-  TextEditingController messageTextController = TextEditingController();
   String valueChoose = "Everyone";
   final ScrollController _scrollController = ScrollController();
   final DateFormat formatter = DateFormat('hh:mm a');
   @override
   void dispose() {
-    messageTextController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -44,18 +44,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
     }
   }
 
-  String sender(HMSMessageRecipient hmsMessageRecipient) {
-    if ((hmsMessageRecipient.recipientPeer != null) &&
-        (hmsMessageRecipient.recipientRoles == null)) {
-      return "PRIVATE";
-    } else if ((hmsMessageRecipient.recipientPeer == null) &&
-        (hmsMessageRecipient.recipientRoles != null)) {
-      return hmsMessageRecipient.recipientRoles![0].name;
-    }
-    return "";
-  }
-
-  void sendMessage() async {
+  void sendMessage(TextEditingController messageTextController) async {
     MeetingStore meetingStore = context.read<MeetingStore>();
     List<HMSRole> hmsRoles = meetingStore.roles;
     String message = messageTextController.text.trim();
@@ -77,7 +66,6 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
       var peer = await meetingStore.getPeer(peerId: valueChoose);
       meetingStore.sendDirectMessage(message, peer!);
     }
-    messageTextController.clear();
   }
 
   @override
@@ -99,21 +87,25 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
               const SizedBox(
                 height: 15,
               ),
-              Selector<MeetingStore, Tuple3<List<HMSMessage>, int, String?>>(
-                selector: (_, meetingStore) => Tuple3(meetingStore.messages,
-                    meetingStore.messages.length, meetingStore.sessionMetadata),
+              Selector<MeetingStore,
+                  Tuple4<List<HMSMessage>, int, List<dynamic>, int>>(
+                selector: (_, meetingStore) => Tuple4(
+                    meetingStore.messages,
+                    meetingStore.messages.length,
+                    meetingStore.pinnedMessages,
+                    meetingStore.pinnedMessages.length),
                 builder: (context, data, _) {
                   _scrollToEnd();
                   return
 
                       ///If there are no chats and no pinned messages
-                      (data.item2 == 0 && data.item3 == null)
+                      (data.item2 == 0 && data.item3.isEmpty)
                           ? const Expanded(
                               child: Center(child: HMSEmptyChatWidget()))
                           : Expanded(
                               child: Column(children: [
                                 ///If there is a pinned chat
-                                if (data.item3 != null && data.item3 != "")
+                                if (data.item3.isNotEmpty)
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 8.0),
                                     child: Container(
@@ -139,7 +131,8 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                                                 .width *
                                                             0.75,
                                                     child: SelectableLinkify(
-                                                      text: data.item3!,
+                                                      text: data.item3[0]
+                                                          ["text"],
                                                       onOpen: (link) async {
                                                         Uri url =
                                                             Uri.parse(link.url);
@@ -235,21 +228,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                             itemCount: data.item1.length,
                                             itemBuilder: (_, index) {
                                               return MessageContainer(
-                                                message: data
-                                                    .item1[index].message
-                                                    .trim()
-                                                    .toString(),
-                                                senderName: data.item1[index]
-                                                        .sender?.name ??
-                                                    "Anonymous",
-                                                date: formatter.format(
-                                                    data.item1[index].time),
-                                                role: data.item1[index]
-                                                            .hmsMessageRecipient ==
-                                                        null
-                                                    ? ""
-                                                    : sender(data.item1[index]
-                                                        .hmsMessageRecipient!),
+                                                message: data.item1[index],
                                               );
                                             }),
                                       ],
@@ -261,124 +240,69 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                 },
               ),
 
-              ///Will be added later
-              ///
+              /// This draws the chip to select the roles or peers to send message to
               // Padding(
-              //   padding: const EdgeInsets.only(bottom: 8.0, left: 16,top: 16),
+              //   padding: const EdgeInsets.only(bottom: 8.0, top: 16),
               //   child: Row(
               //     children: [
-              //       HMSTitleText(
-              //         text: "SEND TO ",
-              //         textColor: HMSThemeColors.onSurfaceMediumEmphasis,
-              //         fontSize: 10,
-              //         lineHeight: 16,
-              //         letterSpacing: 1.5,
+              //       Padding(
+              //         padding: const EdgeInsets.only(right: 8.0),
+              //         child: HMSTitleText(
+              //           text: "TO",
+              //           textColor: HMSThemeColors.onSurfaceMediumEmphasis,
+              //           fontSize: 12,
+              //           fontWeight: FontWeight.w400,
+              //           lineHeight: 16,
+              //           letterSpacing: 0.4,
+              //         ),
               //       ),
               //       Container(
-              //           width: 96,
               //           height: 24,
               //           decoration: BoxDecoration(
-              //               border: Border.all(
-              //                   color: HMSThemeColors.borderBright, width: 1),
               //               borderRadius:
               //                   const BorderRadius.all(Radius.circular(4)),
-              //               color:
-              //                   HMSThemeColors.surfaceDim),
-              //           child: Row(
-              //             mainAxisAlignment: MainAxisAlignment.center,
-              //             children: [
-              //               HMSTitleText(
-              //                   text: "EVERYONE",
-              //                   fontSize: 10,
-              //                   lineHeight: 16,
-              //                   letterSpacing: 1.5,
-              //                   textColor:
-              //                       HMSThemeColors.onSurfaceHighEmphasis),
-              //               Icon(Icons.keyboard_arrow_down,color: HMSThemeColors.onSurfaceMediumEmphasis,size: 16,),
-              //             ],
+              //               color: HMSThemeColors.primaryDefault),
+              //           child: Padding(
+              //             padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              //             child: Row(
+              //               mainAxisAlignment: MainAxisAlignment.center,
+              //               children: [
+              //                 Padding(
+              //                   padding: const EdgeInsets.only(right: 4.0),
+              //                   child: SvgPicture.asset(
+              //                     "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
+              //                     height: 16,
+              //                     width: 16,
+              //                     colorFilter: ColorFilter.mode(
+              //                         HMSThemeColors.onSurfaceMediumEmphasis,
+              //                         BlendMode.srcIn),
+              //                   ),
+              //                 ),
+              //                 HMSTitleText(
+              //                     text: valueChoose,
+              //                     fontSize: 12,
+              //                     lineHeight: 16,
+              //                     letterSpacing: 0.4,
+              //                     fontWeight: FontWeight.w400,
+              //                     textColor:
+              //                         HMSThemeColors.onPrimaryHighEmphasis),
+              //                 Padding(
+              //                   padding: const EdgeInsets.only(left: 4.0),
+              //                   child: Icon(
+              //                     Icons.keyboard_arrow_down,
+              //                     color: HMSThemeColors.onPrimaryHighEmphasis,
+              //                     size: 12,
+              //                   ),
+              //                 ),
+              //               ],
+              //             ),
               //           ))
               //     ],
               //   ),
               // ),
+
               ///Text Field
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: HMSThemeColors.surfaceDefault),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          textCapitalization: TextCapitalization.sentences,
-                          textInputAction: TextInputAction.send,
-                          onTapOutside: (event) =>
-                              FocusManager.instance.primaryFocus?.unfocus(),
-                          onSubmitted: (value) {
-                            sendMessage();
-                          },
-                          onChanged: (value) {
-                            setState(() {});
-                          },
-                          style: HMSTextStyle.setTextStyle(
-                              color: HMSThemeColors.onSurfaceHighEmphasis,
-                              fontWeight: FontWeight.w400,
-                              height: 20 / 14,
-                              fontSize: 14,
-                              letterSpacing: 0.25),
-                          controller: messageTextController,
-                          decoration: InputDecoration(
-                              suffixIcon: IconButton(
-                                  onPressed: () {
-                                    if (messageTextController.text
-                                        .trim()
-                                        .isEmpty) {
-                                      Utilities.showToast(
-                                          "Message can't be empty");
-                                    }
-                                    sendMessage();
-                                  },
-                                  icon: SvgPicture.asset(
-                                    "packages/hms_room_kit/lib/src/assets/icons/send_message.svg",
-                                    height: 24,
-                                    width: 24,
-                                    colorFilter: ColorFilter.mode(
-                                        messageTextController
-                                                .text
-                                                .trim()
-                                                .isEmpty
-                                            ? HMSThemeColors
-                                                .onSurfaceLowEmphasis
-                                            : HMSThemeColors
-                                                .onSurfaceHighEmphasis,
-                                        BlendMode.srcIn),
-                                  )),
-                              border: InputBorder.none,
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      width: 2,
-                                      color: HMSThemeColors.primaryDefault),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(8))),
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              hintStyle: HMSTextStyle.setTextStyle(
-                                  color: HMSThemeColors.onSurfaceLowEmphasis,
-                                  fontSize: 14,
-                                  height: 20 / 14,
-                                  letterSpacing: 0.25,
-                                  fontWeight: FontWeight.w400),
-                              contentPadding: const EdgeInsets.only(
-                                  left: 16, bottom: 8, top: 12, right: 8),
-                              hintText: "Send a message..."),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              ChatTextField(sendMessage: sendMessage)
             ],
           ),
         ),

@@ -6,7 +6,8 @@ import 'package:hmssdk_flutter_example/room_service.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRCodeScreen extends StatefulWidget {
-  QRCodeScreen({Key? key}) : super(key: key);
+  final String uuidString;
+  QRCodeScreen({Key? key, required this.uuidString}) : super(key: key);
 
   @override
   State<QRCodeScreen> createState() => _QRCodeScreenState();
@@ -74,6 +75,8 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
         } else {
           Constant.roomCode = scanData.code!.trim();
         }
+        Utilities.saveStringData(
+            key: "meetingLink", value: scanData.code!.trim());
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (_) => HMSPrebuilt(
                 roomCode: Constant.roomCode,
@@ -81,6 +84,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                     userName: AppDebugConfig.nameChangeOnPreview
                         ? null
                         : "Flutter User",
+                    userId: widget.uuidString,
                     endPoints: endPoints,
                     iOSScreenshareConfig: HMSIOSScreenshareConfig(
                         appGroup: "group.flutterhms",

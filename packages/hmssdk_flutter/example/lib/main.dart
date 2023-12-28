@@ -13,9 +13,11 @@ import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter_example/app_settings_bottom_sheet.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:hmssdk_flutter_example/room_service.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uni_links/uni_links.dart';
+import 'package:uuid/uuid.dart';
 
 bool _initialURILinkHandled = false;
 StreamSubscription? _streamSubscription;
@@ -57,9 +59,11 @@ class HMSExampleApp extends StatefulWidget {
       context.findAncestorStateOfType<_HMSExampleAppState>()!;
 }
 
-class _HMSExampleAppState extends State<HMSExampleApp> {
+class _HMSExampleAppState extends State<HMSExampleApp>
+    with TickerProviderStateMixin {
   ThemeMode _themeMode = ThemeMode.dark;
   Uri? _currentURI;
+  late AnimationController _controller;
 
   ThemeData _darkTheme = ThemeData(
       bottomSheetTheme: BottomSheetThemeData(
@@ -88,6 +92,10 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
     _initURIHandler();
     _incomingLinkHandler();
     initDynamicLinks();
+    _controller = AnimationController(
+      duration: Duration(seconds: (5)),
+      vsync: this,
+    );
   }
 
   Future<void> _initURIHandler() async {
@@ -173,9 +181,26 @@ class _HMSExampleAppState extends State<HMSExampleApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomePage(
-        deepLinkURL: _currentURI == null ? null : _currentURI.toString(),
-      ),
+      home: Builder(builder: (context) {
+        return Lottie.asset(
+          'assets/splash_asset.json',
+          controller: _controller,
+          animate: true,
+          onLoaded: (composition) {
+            _controller
+              ..duration = composition.duration
+              ..forward().whenComplete(() => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomePage(
+                              deepLinkURL: _currentURI == null
+                                  ? null
+                                  : _currentURI.toString(),
+                            )),
+                  ));
+          },
+        );
+      }),
       theme: _lightTheme,
       darkTheme: _darkTheme,
       themeMode: _themeMode,
@@ -196,6 +221,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController meetingLinkController = TextEditingController();
+  Uuid? uuid;
+  String uuidString = "";
 
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -214,6 +241,12 @@ class _HomePageState extends State<HomePage> {
 
   void getData() async {
     String savedMeetingUrl = await Utilities.getStringData(key: 'meetingLink');
+    uuidString = await Utilities.getStringData(key: "uuid");
+    if (uuidString.isEmpty) {
+      uuid = Uuid();
+      uuidString = uuid!.v4();
+      Utilities.saveStringData(key: "uuid", value: uuidString);
+    }
     if (widget.deepLinkURL == null && savedMeetingUrl.isNotEmpty) {
       meetingLinkController.text = savedMeetingUrl;
     } else {
@@ -295,7 +328,7 @@ class _HomePageState extends State<HomePage> {
                         : "Flutter User",
                     endPoints: endPoints,
                     userId:
-                        "user_flutter", // pass your custom unique user identifier here
+                        uuidString, // pass your custom unique user identifier here
                     iOSScreenshareConfig: HMSIOSScreenshareConfig(
                         appGroup: "group.flutterhms",
                         preferredExtension:
@@ -529,8 +562,12 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () async {
                       bool res = await Utilities.getCameraPermissions();
                       if (res) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => QRCodeScreen()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => QRCodeScreen(
+                                      uuidString: uuidString,
+                                    )));
                       }
                     },
                     child: Container(

@@ -217,6 +217,7 @@ class HMSRoomLayout {
   static bool isParticipantsListEnabled = true;
   static bool isBRBEnabled = true;
   static List<String>? offStageRoles = [];
+  static bool skipPreviewForRole = false;
 
   static Future<void> getRoomLayout(
       {required HMSSDKInteractor hmsSDKInteractor,
@@ -263,6 +264,9 @@ class HMSRoomLayout {
               null;
       offStageRoles = roleLayoutData?.screens?.conferencing?.defaultConf
           ?.elements?.onStageExp?.offStageRoles;
+      skipPreviewForRole = roleLayoutData?.screens?.conferencing?.defaultConf
+              ?.elements?.onStageExp?.skipPreviewForRoleChange ??
+          false;
     } else {
       chatData = roleLayoutData
           ?.screens?.conferencing?.hlsLiveStreaming?.elements?.chat;
@@ -274,6 +278,14 @@ class HMSRoomLayout {
           null;
       offStageRoles = roleLayoutData?.screens?.conferencing?.hlsLiveStreaming
           ?.elements?.onStageExp?.offStageRoles;
+      skipPreviewForRole = roleLayoutData
+              ?.screens
+              ?.conferencing
+              ?.hlsLiveStreaming
+              ?.elements
+              ?.onStageExp
+              ?.skipPreviewForRoleChange ??
+          false;
     }
   }
 

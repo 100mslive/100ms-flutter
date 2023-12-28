@@ -33,12 +33,17 @@ class ParticipantsBottomSheet extends StatefulWidget {
 
 class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
   Timer? timer;
+  bool isLargeRoom = false;
 
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(const Duration(seconds: 5),
-        (Timer t) => context.read<MeetingStore>().refreshPeerList());
+
+    isLargeRoom = context.read<MeetingStore>().hmsRoom?.isLarge ?? false;
+    if (isLargeRoom) {
+      timer = Timer.periodic(const Duration(seconds: 5),
+          (Timer t) => context.read<MeetingStore>().refreshPeerList());
+    }
   }
 
   @override
@@ -138,7 +143,9 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                   HMSRole? onStageRole = meetingStore.getOnStageRole();
                   if (onStageRole != null) {
                     meetingStore.changeRoleOfPeer(
-                        peer: peer, roleName: onStageRole, forceChange: false);
+                        peer: peer,
+                        roleName: onStageRole,
+                        forceChange: HMSRoomLayout.skipPreviewForRole);
                     meetingStore.removeToast(HMSToastsType.roleChangeToast,
                         data: peer);
                   }
@@ -335,19 +342,30 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
               //     child: TextField(),
               //   ),
               // ),
-              Selector<MeetingStore,
-                      Tuple2<Map<String, List<ParticipantsStore>>, int>>(
-                  selector: (_, meetingStore) => Tuple2(
-                      meetingStore.participantsInMeetingMap,
-                      meetingStore.participantsInMeeting),
-                  builder: (_, data, __) {
-                    return ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: data.item1.keys.length,
-                        itemBuilder: (context, index) {
-                          String role = data.item1.keys.elementAt(index);
-                          return (data.item1[role]?.isNotEmpty ?? false)
+              ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: context
+                      .read<MeetingStore>()
+                      .participantsInMeetingMap
+                      .keys
+                      .length,
+                  itemBuilder: (context, index) {
+                    String role = context
+                        .read<MeetingStore>()
+                        .participantsInMeetingMap
+                        .keys
+                        .elementAt(index);
+                    return Selector<MeetingStore,
+                            Tuple2<int, List<ParticipantsStore>?>>(
+                        selector: (_, meetingStore) => Tuple2(
+                            meetingStore
+                                    .participantsInMeetingMap[role]?.length ??
+                                0,
+                            meetingStore.participantsInMeetingMap[role]),
+                        builder: (_, participantsPerRole, __) {
+                          return (participantsPerRole.item2?.isNotEmpty ??
+                                  false)
                               ? Column(
                                   children: [
                                     ClipRRect(
@@ -376,30 +394,30 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                             .onSurfaceHighEmphasis,
                                         title: HMSSubheadingText(
                                           text:
-                                              "${data.item1.keys.elementAt(index)} (${(HMSRoomLayout.offStageRoles?.contains(role) ?? false) ? context.read<MeetingStore>().peerListIterators[role]?.totalCount ?? 0 : data.item1[role]?.length}) ",
+                                              "${context.read<MeetingStore>().participantsInMeetingMap.keys.elementAt(index)} (${((HMSRoomLayout.offStageRoles?.contains(role) ?? false) && isLargeRoom) ? context.read<MeetingStore>().peerListIterators[role]?.totalCount ?? 0 : participantsPerRole.item1}) ",
                                           textColor: HMSThemeColors
                                               .onSurfaceMediumEmphasis,
                                           letterSpacing: 0.1,
                                         ),
                                         children: [
                                           SizedBox(
-                                            height: data.item1[role] == null
+                                            height: participantsPerRole.item2 ==
+                                                    null
                                                 ? 0
-                                                : (data.item1[role]!.length) *
+                                                : (participantsPerRole.item1) *
                                                     54,
                                             child: Center(
                                               child: ListView.builder(
                                                   physics:
                                                       const NeverScrollableScrollPhysics(),
-                                                  itemCount: data.item1[role]
-                                                          ?.length ??
-                                                      0,
+                                                  itemCount:
+                                                      participantsPerRole.item1,
                                                   itemBuilder:
                                                       (context, peerIndex) {
                                                     ParticipantsStore
                                                         currentPeer =
-                                                        data.item1[role]![
-                                                            peerIndex];
+                                                        participantsPerRole
+                                                            .item2![peerIndex];
                                                     return Padding(
                                                       padding:
                                                           const EdgeInsets.only(
@@ -447,7 +465,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                                           __) {
                                                                         return HMSTitleText(
                                                                             text:
-                                                                                peerName + ((data.item1[role]![peerIndex].peer.isLocal) ? " (You)" : ""),
+                                                                                peerName + ((participantsPerRole.item2![peerIndex].peer.isLocal) ? " (You)" : ""),
                                                                             fontSize: 14,
                                                                             lineHeight: 20,
                                                                             letterSpacing: 0.1,
