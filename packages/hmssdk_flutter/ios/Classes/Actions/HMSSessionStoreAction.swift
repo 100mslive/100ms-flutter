@@ -112,7 +112,7 @@ class HMSSessionStoreAction {
 
             if let error = error {
                 HMSErrorLogger.logError(#function, "Error in setting data: \(data ?? "null") for key: \(key) to the Session Store. Error: \(error.localizedDescription)", "Key Error")
-                result(HMSErrorExtension.getError("Error in setting data: \(data ?? "null") for key: \(key) to the Session Store. Error: \(error.localizedDescription)"))
+                result(HMSErrorExtension.toDictionary(error))
                 return
             }
             result(nil)

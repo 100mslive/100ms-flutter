@@ -32,7 +32,7 @@ class HMSErrorToast extends StatelessWidget {
       toastPosition: toastPosition,
       subtitle: HMSSubheadingText(
         text: error.description
-            .substring(0, math.min(50, error.description.length)),
+            .substring(0, math.min(30, error.description.length)),
         textColor: HMSThemeColors.onSurfaceHighEmphasis,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.1,
