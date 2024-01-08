@@ -566,6 +566,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                         dict["value"] = stringValue
                     } else if let boolValue = value as? Bool{
                         dict["value"] = String(boolValue)
+                    } else if (value == nil || value is NSNull) {
+                        dict["value"] = nil
                     }
                     else{
                         HMSErrorLogger.logError(#function, "Session metadata type is not compatible, Please use compatible type while setting metadata", "Type Incompatibility Error")

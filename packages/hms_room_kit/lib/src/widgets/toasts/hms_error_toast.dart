@@ -1,3 +1,6 @@
+///Dart imports
+import 'dart:math' as math;
+
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -28,7 +31,8 @@ class HMSErrorToast extends StatelessWidget {
       toastColor: toastColor,
       toastPosition: toastPosition,
       subtitle: HMSSubheadingText(
-        text: error.description,
+        text: error.description
+            .substring(0, math.min(50, error.description.length)),
         textColor: HMSThemeColors.onSurfaceHighEmphasis,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.1,

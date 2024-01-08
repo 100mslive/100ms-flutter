@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/chat_utilities_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/chat_widgets/chat_text_field.dart';
 import 'package:hms_room_kit/src/widgets/chat_widgets/pin_chat_widget.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -74,39 +75,78 @@ class _OverlayChatComponentState extends State<OverlayChatComponent> {
                         shrinkWrap: true,
                         itemCount: data.item1.length,
                         itemBuilder: (_, index) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              HMSTitleText(
-                                text: data.item1[index].sender?.name ??
-                                    "Anonymous",
-                                textColor: Colors.white,
-                                fontSize: 14,
-                                lineHeight: 20,
-                                letterSpacing: 0.1,
-                              ),
-                              const SizedBox(
-                                height: 2,
-                              ),
-                              SelectableLinkify(
-                                text: data.item1[index].message,
-                                onOpen: (link) async {
-                                  Uri url = Uri.parse(link.url);
-                                  if (await canLaunchUrl(url)) {
-                                    await launchUrl(url,
-                                        mode: LaunchMode.externalApplication);
-                                  }
-                                },
-                                options: const LinkifyOptions(humanize: false),
-                                style: HMSTextStyle.setTextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  height: 20 / 14,
-                                  letterSpacing: 0.25,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    HMSTitleText(
+                                      text: data.item1[index].sender?.name ??
+                                          "Anonymous",
+                                      textColor: Colors.white,
+                                      fontSize: 14,
+                                      lineHeight: 20,
+                                      letterSpacing: 0.1,
+                                    ),
+                                    const SizedBox(
+                                      height: 2,
+                                    ),
+                                    SelectableLinkify(
+                                      text: data.item1[index].message,
+                                      onOpen: (link) async {
+                                        Uri url = Uri.parse(link.url);
+                                        if (await canLaunchUrl(url)) {
+                                          await launchUrl(url,
+                                              mode: LaunchMode
+                                                  .externalApplication);
+                                        }
+                                      },
+                                      scrollPhysics:
+                                          const NeverScrollableScrollPhysics(),
+                                      options:
+                                          const LinkifyOptions(humanize: false),
+                                      style: HMSTextStyle.setTextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        height: 20 / 14,
+                                        letterSpacing: 0.25,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 8,
+                                    )
+                                  ],
                                 ),
                               ),
-                              const SizedBox(
-                                height: 8,
+                              GestureDetector(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    backgroundColor: HMSThemeColors.surfaceDim,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(16),
+                                          topRight: Radius.circular(16)),
+                                    ),
+                                    context: context,
+                                    builder: (ctx) =>
+                                        ChangeNotifierProvider.value(
+                                            value: context.read<MeetingStore>(),
+                                            child: ChatUtilitiesBottomSheet(
+                                              message: data.item1[index],
+                                            )),
+                                  );
+                                },
+                                child: SvgPicture.asset(
+                                  "packages/hms_room_kit/lib/src/assets/icons/more.svg",
+                                  height: 20,
+                                  width: 20,
+                                  colorFilter: ColorFilter.mode(
+                                      HMSThemeColors.onSurfaceMediumEmphasis,
+                                      BlendMode.srcIn),
+                                ),
                               )
                             ],
                           );
@@ -124,7 +164,7 @@ class _OverlayChatComponentState extends State<OverlayChatComponent> {
                     meetingStore.pinnedMessages.length),
                 builder: (_, data, __) {
                   return PinChatWidget(
-                    pinnedMessage: data.item1,
+                    pinnedMessage: data.item1.reversed.toList(),
                     backgroundColor: HMSThemeColors.backgroundDim.withAlpha(64),
                   );
                 }),

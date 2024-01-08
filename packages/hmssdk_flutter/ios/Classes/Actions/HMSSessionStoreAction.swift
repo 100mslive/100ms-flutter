@@ -71,6 +71,8 @@ class HMSSessionStoreAction {
                        } else if let boolValue = value as? Bool{
                            let stringValue = String(boolValue)
                            result(HMSResultExtension.toDictionary(true, stringValue))
+                       } else if (value == nil || value is NSNull){
+                           result(HMSResultExtension.toDictionary(true, nil))
                        }
                        else{
                            HMSErrorLogger.logError(#function, "Session metadata type is not compatible, Please use compatible type while setting metadata", "Type Incompatibility Error")

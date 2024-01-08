@@ -57,109 +57,118 @@ class _PinChatWidgetState extends State<PinChatWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => toggleExpand(),
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: Row(
-          children: [
-            AnimatedContainer(
-              height: MediaQuery.of(context).size.height *
-                  (isExpanded ? 0.13 : 0.07),
-              width: (HMSRoomLayout.chatData?.allowPinningMessages ?? false)
-                  ? MediaQuery.of(context).size.width * 0.85
-                  : MediaQuery.of(context).size.width * 0.9,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color:
-                      widget.backgroundColor ?? HMSThemeColors.surfaceDefault),
-              duration: const Duration(milliseconds: 0),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    if (widget.pinnedMessage.length > 1)
-                      DotsIndicator(
-                        axis: Axis.vertical,
-                        mainAxisSize: MainAxisSize.min,
-                        dotsCount: widget.pinnedMessage.length,
-                        position: currentPage > widget.pinnedMessage.length
-                            ? 0
-                            : currentPage,
-                        decorator: DotsDecorator(
-                          spacing: const EdgeInsets.only(bottom: 3.0, right: 8),
-                          size: Size(2.0, isExpanded ? 24 : 9.0),
-                          activeSize: Size(2.0, isExpanded ? 24 : 9.0),
-                          color: HMSThemeColors.onSurfaceLowEmphasis,
-                          activeColor: HMSThemeColors.onSurfaceHighEmphasis,
-                          activeShape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16.0)),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16.0)),
-                        ),
-                        onTap: (position) => setCurrentPage(position),
-                      ),
-                    Expanded(
-                      child: PageView.builder(
-                        scrollDirection: Axis.vertical,
-                        controller: _pageController,
-                        itemCount: widget.pinnedMessage.length,
-                        physics: const PageScrollPhysics(),
-                        onPageChanged: (value) => setCurrentPage(value),
-                        itemBuilder: (context, index) => SelectableLinkify(
-                          maxLines: 2,
-                          scrollPhysics: isExpanded
-                              ? const BouncingScrollPhysics()
-                              : const NeverScrollableScrollPhysics(),
-                          text: widget.pinnedMessage[index]["text"],
-                          onOpen: (link) async {
-                            Uri url = Uri.parse(link.url);
-                            if (await canLaunchUrl(url)) {
-                              await launchUrl(url,
-                                  mode: LaunchMode.externalApplication);
-                            }
-                          },
-                          onTap: () => toggleExpand(),
-                          options: const LinkifyOptions(humanize: false),
-                          style: HMSTextStyle.setTextStyle(
-                            fontSize: 14.0,
-                            color: HMSThemeColors.onSurfaceHighEmphasis,
-                            letterSpacing: 0.25,
-                            height: 20 / 14,
-                            fontWeight: FontWeight.w400,
+    ///If there are no pinnedMessage we render an empty SizedBox
+    ///else we render the pinned message widget
+    return widget.pinnedMessage.isEmpty
+        ? const SizedBox()
+        : GestureDetector(
+            onTap: () => toggleExpand(),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Row(
+                children: [
+                  AnimatedContainer(
+                    height: MediaQuery.of(context).size.height *
+                        (isExpanded ? 0.13 : 0.07),
+                    width:
+                        (HMSRoomLayout.chatData?.allowPinningMessages ?? false)
+                            ? MediaQuery.of(context).size.width * 0.85
+                            : MediaQuery.of(context).size.width * 0.9,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: widget.backgroundColor ??
+                            HMSThemeColors.surfaceDefault),
+                    duration: const Duration(milliseconds: 0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          if (widget.pinnedMessage.length > 1)
+                            DotsIndicator(
+                              axis: Axis.vertical,
+                              mainAxisSize: MainAxisSize.min,
+                              dotsCount: widget.pinnedMessage.length,
+                              position:
+                                  currentPage > widget.pinnedMessage.length
+                                      ? 0
+                                      : currentPage,
+                              decorator: DotsDecorator(
+                                spacing: const EdgeInsets.only(
+                                    bottom: 3.0, right: 8),
+                                size: Size(2.0, isExpanded ? 24 : 9.0),
+                                activeSize: Size(2.0, isExpanded ? 24 : 9.0),
+                                color: HMSThemeColors.onSurfaceLowEmphasis,
+                                activeColor:
+                                    HMSThemeColors.onSurfaceHighEmphasis,
+                                activeShape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16.0)),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16.0)),
+                              ),
+                              onTap: (position) => setCurrentPage(position),
+                            ),
+                          Expanded(
+                            child: PageView.builder(
+                              scrollDirection: Axis.vertical,
+                              controller: _pageController,
+                              itemCount: widget.pinnedMessage.length,
+                              physics: const PageScrollPhysics(),
+                              onPageChanged: (value) => setCurrentPage(value),
+                              itemBuilder: (context, index) =>
+                                  SelectableLinkify(
+                                maxLines: 2,
+                                scrollPhysics: isExpanded
+                                    ? const BouncingScrollPhysics()
+                                    : const NeverScrollableScrollPhysics(),
+                                text: widget.pinnedMessage[index]["text"],
+                                onOpen: (link) async {
+                                  Uri url = Uri.parse(link.url);
+                                  if (await canLaunchUrl(url)) {
+                                    await launchUrl(url,
+                                        mode: LaunchMode.externalApplication);
+                                  }
+                                },
+                                onTap: () => toggleExpand(),
+                                options: const LinkifyOptions(humanize: false),
+                                style: HMSTextStyle.setTextStyle(
+                                  fontSize: 14.0,
+                                  color: HMSThemeColors.onSurfaceHighEmphasis,
+                                  letterSpacing: 0.25,
+                                  height: 20 / 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                linkStyle: HMSTextStyle.setTextStyle(
+                                    fontSize: 14.0,
+                                    color: HMSThemeColors.primaryDefault,
+                                    letterSpacing: 0.25,
+                                    height: 20 / 14,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ),
                           ),
-                          linkStyle: HMSTextStyle.setTextStyle(
-                              fontSize: 14.0,
-                              color: HMSThemeColors.primaryDefault,
-                              letterSpacing: 0.25,
-                              height: 20 / 14,
-                              fontWeight: FontWeight.w400),
-                        ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 8),
+                  if (HMSRoomLayout.chatData?.allowPinningMessages ?? false)
+                    GestureDetector(
+                      onTap: () => context.read<MeetingStore>().unpinMessage(
+                          widget.pinnedMessage[currentPage]["id"]),
+                      child: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/src/assets/icons/unpin.svg",
+                        height: 20,
+                        width: 20,
+                        colorFilter: ColorFilter.mode(
+                            HMSThemeColors.onSurfaceMediumEmphasis,
+                            BlendMode.srcIn),
+                      ),
+                    ),
+                ],
               ),
             ),
-            const SizedBox(width: 8),
-            if (HMSRoomLayout.chatData?.allowPinningMessages ?? false)
-              GestureDetector(
-                onTap: () => context
-                    .read<MeetingStore>()
-                    .unpinMessage(widget.pinnedMessage[currentPage]["id"]),
-                child: SvgPicture.asset(
-                  "packages/hms_room_kit/lib/src/assets/icons/unpin.svg",
-                  height: 20,
-                  width: 20,
-                  colorFilter: ColorFilter.mode(
-                      HMSThemeColors.onSurfaceMediumEmphasis, BlendMode.srcIn),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 }

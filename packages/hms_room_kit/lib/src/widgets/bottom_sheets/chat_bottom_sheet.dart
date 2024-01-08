@@ -100,9 +100,9 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                               child: Center(child: HMSEmptyChatWidget()))
                           : Expanded(
                               child: Column(children: [
-                                ///If there is a pinned chat
-                                if (data.item3.isNotEmpty)
-                                  PinChatWidget(pinnedMessage: data.item3),
+                                PinChatWidget(
+                                    pinnedMessage:
+                                        data.item3.reversed.toList()),
 
                                 /// List containing chats
                                 Expanded(
