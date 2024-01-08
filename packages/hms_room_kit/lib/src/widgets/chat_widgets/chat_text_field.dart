@@ -20,8 +20,10 @@ import 'package:hms_room_kit/src/widgets/toasts/hms_toast_button.dart';
 ///It renders the text field or relevant UI based on chat State
 class ChatTextField extends StatefulWidget {
   final Function sendMessage;
-
-  const ChatTextField({Key? key, required this.sendMessage}) : super(key: key);
+  final Color? toastBackgroundColor;
+  const ChatTextField(
+      {Key? key, required this.sendMessage, this.toastBackgroundColor})
+      : super(key: key);
 
   @override
   State<ChatTextField> createState() => _ChatTextFieldState();
@@ -59,8 +61,8 @@ class _ChatTextFieldState extends State<ChatTextField> {
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Container(
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: HMSThemeColors.surfaceDefault),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                       child: chatControls.item3.contains(context
                               .read<MeetingStore>()
                               .localPeer
@@ -68,7 +70,9 @@ class _ChatTextFieldState extends State<ChatTextField> {
                           ? Row(
                               children: [
                                 Expanded(
-                                  child: SizedBox(
+                                  child: Container(
+                                    color: widget.toastBackgroundColor ??
+                                        HMSThemeColors.surfaceDefault,
                                     height: 36,
                                     child: Center(
                                       child: HMSSubheadingText(
@@ -84,90 +88,94 @@ class _ChatTextFieldState extends State<ChatTextField> {
                           : Row(
                               children: [
                                 Expanded(
-                                  child: TextField(
-                                    textCapitalization:
-                                        TextCapitalization.sentences,
-                                    textInputAction: TextInputAction.send,
-                                    onTapOutside: (event) => FocusManager
-                                        .instance.primaryFocus
-                                        ?.unfocus(),
-                                    onSubmitted: (value) {
-                                      widget.sendMessage(messageTextController);
-                                      messageTextController.clear();
-                                    },
-                                    onChanged: (value) {
-                                      setState(() {});
-                                    },
-                                    style: HMSTextStyle.setTextStyle(
-                                        color: HMSThemeColors
-                                            .onSurfaceHighEmphasis,
-                                        fontWeight: FontWeight.w400,
-                                        height: 20 / 14,
-                                        fontSize: 14,
-                                        letterSpacing: 0.25),
-                                    controller: messageTextController,
-                                    decoration: InputDecoration(
-                                        suffixIcon: IconButton(
-                                            splashRadius: 1,
-                                            onPressed: () {
-                                              if (messageTextController.text
-                                                  .trim()
-                                                  .isEmpty) {
-                                                Utilities.showToast(
-                                                    "Message can't be empty");
-                                              }
-                                              widget.sendMessage(
-                                                  messageTextController);
-                                              messageTextController.clear();
-                                            },
-                                            icon: SvgPicture.asset(
-                                              "packages/hms_room_kit/lib/src/assets/icons/send_message.svg",
-                                              height: 24,
-                                              width: 24,
-                                              colorFilter: ColorFilter.mode(
-                                                  messageTextController
-                                                          .text
-                                                          .trim()
-                                                          .isEmpty
-                                                      ? HMSThemeColors
-                                                          .onSurfaceLowEmphasis
-                                                      : HMSThemeColors
-                                                          .onSurfaceHighEmphasis,
-                                                  BlendMode.srcIn),
-                                            )),
-                                        border: InputBorder.none,
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                width: 2,
-                                                color: HMSThemeColors
-                                                    .primaryDefault),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(8))),
-                                        enabledBorder: InputBorder.none,
-                                        errorBorder: InputBorder.none,
-                                        disabledBorder: InputBorder.none,
-                                        hintStyle: HMSTextStyle.setTextStyle(
-                                            color: HMSThemeColors
-                                                .onSurfaceLowEmphasis,
-                                            fontSize: 14,
-                                            height: 20 / 14,
-                                            letterSpacing: 0.25,
-                                            fontWeight: FontWeight.w400),
-                                        contentPadding: const EdgeInsets.only(
-                                            left: 16,
-                                            bottom: 8,
-                                            top: 12,
-                                            right: 8),
-                                        hintText: HMSRoomLayout
-                                                .chatData?.messagePlaceholder ??
-                                            "Send a message..."),
+                                  child: Container(
+                                    color: HMSThemeColors.surfaceDefault,
+                                    child: TextField(
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
+                                      textInputAction: TextInputAction.send,
+                                      onTapOutside: (event) => FocusManager
+                                          .instance.primaryFocus
+                                          ?.unfocus(),
+                                      onSubmitted: (value) {
+                                        widget
+                                            .sendMessage(messageTextController);
+                                        messageTextController.clear();
+                                      },
+                                      onChanged: (value) {
+                                        setState(() {});
+                                      },
+                                      style: HMSTextStyle.setTextStyle(
+                                          color: HMSThemeColors
+                                              .onSurfaceHighEmphasis,
+                                          fontWeight: FontWeight.w400,
+                                          height: 20 / 14,
+                                          fontSize: 14,
+                                          letterSpacing: 0.25),
+                                      controller: messageTextController,
+                                      decoration: InputDecoration(
+                                          suffixIcon: IconButton(
+                                              splashRadius: 1,
+                                              onPressed: () {
+                                                if (messageTextController.text
+                                                    .trim()
+                                                    .isEmpty) {
+                                                  Utilities.showToast(
+                                                      "Message can't be empty");
+                                                }
+                                                widget.sendMessage(
+                                                    messageTextController);
+                                                messageTextController.clear();
+                                              },
+                                              icon: SvgPicture.asset(
+                                                "packages/hms_room_kit/lib/src/assets/icons/send_message.svg",
+                                                height: 24,
+                                                width: 24,
+                                                colorFilter: ColorFilter.mode(
+                                                    messageTextController.text
+                                                            .trim()
+                                                            .isEmpty
+                                                        ? HMSThemeColors
+                                                            .onSurfaceLowEmphasis
+                                                        : HMSThemeColors
+                                                            .onSurfaceHighEmphasis,
+                                                    BlendMode.srcIn),
+                                              )),
+                                          border: InputBorder.none,
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  width: 2,
+                                                  color: HMSThemeColors
+                                                      .primaryDefault),
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(8))),
+                                          enabledBorder: InputBorder.none,
+                                          errorBorder: InputBorder.none,
+                                          disabledBorder: InputBorder.none,
+                                          hintStyle: HMSTextStyle.setTextStyle(
+                                              color: HMSThemeColors
+                                                  .onSurfaceLowEmphasis,
+                                              fontSize: 14,
+                                              height: 20 / 14,
+                                              letterSpacing: 0.25,
+                                              fontWeight: FontWeight.w400),
+                                          contentPadding: const EdgeInsets.only(
+                                              left: 16,
+                                              bottom: 8,
+                                              top: 12,
+                                              right: 8),
+                                          hintText: HMSRoomLayout.chatData
+                                                  ?.messagePlaceholder ??
+                                              "Send a message..."),
+                                    ),
                                   ),
                                 )
                               ],
                             )))
               : HMSToast(
-                  toastColor: HMSThemeColors.surfaceDefault,
+                  toastColor: widget.toastBackgroundColor ??
+                      HMSThemeColors.surfaceDefault,
                   toastPosition: 0,
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

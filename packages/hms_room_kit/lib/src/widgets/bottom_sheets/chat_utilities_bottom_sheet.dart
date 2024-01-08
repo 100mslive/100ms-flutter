@@ -1,5 +1,6 @@
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
@@ -76,13 +77,7 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
                   horizontalTitleGap: 2,
                   onTap: () async {
                     Navigator.pop(context);
-                    // context
-                    //                 .read<MeetingStore>()
-                    //                 .setSessionMetadataForKey(
-                    //                     key: SessionStoreKeyValues
-                    //                         .getNameFromMethod(SessionStoreKey
-                    //                             .pinnedMessageSessionKey),
-                    //                     metadata: "${senderName!}: $message")
+                    context.read<MeetingStore>().pinMessage(widget.message);
                   },
                   contentPadding: EdgeInsets.zero,
                   leading: SvgPicture.asset(
@@ -98,6 +93,28 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
                       letterSpacing: 0.1,
                       fontWeight: FontWeight.w600,
                       textColor: HMSThemeColors.onSurfaceHighEmphasis)),
+
+            ListTile(
+                horizontalTitleGap: 2,
+                onTap: () async {
+                  Navigator.pop(context);
+                  await Clipboard.setData(
+                      ClipboardData(text: widget.message.message));
+                },
+                contentPadding: EdgeInsets.zero,
+                leading: SvgPicture.asset(
+                  "packages/hms_room_kit/lib/src/assets/icons/copy.svg",
+                  semanticsLabel: "fl_copy_message_icon",
+                  height: 20,
+                  width: 20,
+                  colorFilter: ColorFilter.mode(
+                      HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
+                ),
+                title: HMSSubheadingText(
+                    text: "Copy Text",
+                    letterSpacing: 0.1,
+                    fontWeight: FontWeight.w600,
+                    textColor: HMSThemeColors.onSurfaceHighEmphasis)),
 
             if (HMSRoomLayout.chatData?.realTimeControls?.canBlockUser ?? false)
               ListTile(

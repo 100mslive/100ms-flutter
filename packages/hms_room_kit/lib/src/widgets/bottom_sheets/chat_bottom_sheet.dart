@@ -1,20 +1,16 @@
 //Package imports
 import 'package:flutter/material.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 //Project imports
-import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/widgets/chat_widgets/hms_empty_chat_widget.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/message_container.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/chat_widgets/chat_text_field.dart';
+import 'package:hms_room_kit/src/widgets/chat_widgets/pin_chat_widget.dart';
 
 ///[ChatBottomSheet] is a bottom sheet that is used to render the bottom sheet for chat
 class ChatBottomSheet extends StatefulWidget {
@@ -106,114 +102,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                               child: Column(children: [
                                 ///If there is a pinned chat
                                 if (data.item3.isNotEmpty)
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 8.0),
-                                    child: Container(
-                                      constraints:
-                                          const BoxConstraints(maxHeight: 150),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          color: HMSThemeColors.surfaceDefault),
-                                      child: SingleChildScrollView(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  SizedBox(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.75,
-                                                    child: SelectableLinkify(
-                                                      text: data.item3[0]
-                                                          ["text"],
-                                                      onOpen: (link) async {
-                                                        Uri url =
-                                                            Uri.parse(link.url);
-                                                        if (await canLaunchUrl(
-                                                            url)) {
-                                                          await launchUrl(url,
-                                                              mode: LaunchMode
-                                                                  .externalApplication);
-                                                        }
-                                                      },
-                                                      options:
-                                                          const LinkifyOptions(
-                                                              humanize: false),
-                                                      style: HMSTextStyle
-                                                          .setTextStyle(
-                                                        fontSize: 14.0,
-                                                        color: HMSThemeColors
-                                                            .onSurfaceHighEmphasis,
-                                                        letterSpacing: 0.25,
-                                                        height: 20 / 14,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                      ),
-                                                      linkStyle: HMSTextStyle
-                                                          .setTextStyle(
-                                                              fontSize: 14.0,
-                                                              color: HMSThemeColors
-                                                                  .primaryDefault,
-                                                              letterSpacing:
-                                                                  0.25,
-                                                              height: 20 / 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 8),
-                                                  SvgPicture.asset(
-                                                    "packages/hms_room_kit/lib/src/assets/icons/unpin.svg",
-                                                    height: 20,
-                                                    width: 20,
-                                                    colorFilter: ColorFilter.mode(
-                                                        HMSThemeColors
-                                                            .onSurfaceMediumEmphasis,
-                                                        BlendMode.srcIn),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  GestureDetector(
-                                                      onTap: () {
-                                                        context
-                                                            .read<
-                                                                MeetingStore>()
-                                                            .setSessionMetadataForKey(
-                                                                key: SessionStoreKeyValues
-                                                                    .getNameFromMethod(
-                                                                        SessionStoreKey
-                                                                            .pinnedMessageSessionKey),
-                                                                metadata: null);
-                                                      },
-                                                      child: SvgPicture.asset(
-                                                        "packages/hms_room_kit/lib/src/assets/icons/close.svg",
-                                                        height: 20,
-                                                        width: 20,
-                                                        colorFilter:
-                                                            ColorFilter.mode(
-                                                                HMSThemeColors
-                                                                    .onSurfaceMediumEmphasis,
-                                                                BlendMode
-                                                                    .srcIn),
-                                                      )),
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                  PinChatWidget(pinnedMessage: data.item3),
 
                                 /// List containing chats
                                 Expanded(

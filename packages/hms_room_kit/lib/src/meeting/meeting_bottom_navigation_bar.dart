@@ -13,7 +13,6 @@ import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.d
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
-import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/app_utilities_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
@@ -190,13 +189,6 @@ class _MeetingBottomNavigationBarState
                                         }
                                       else
                                         {
-                                          context
-                                              .read<MeetingStore>()
-                                              .getSessionMetadata(
-                                                  SessionStoreKeyValues
-                                                      .getNameFromMethod(
-                                                          SessionStoreKey
-                                                              .pinnedMessageSessionKey)),
                                           context
                                               .read<MeetingStore>()
                                               .setNewMessageFalse(),
