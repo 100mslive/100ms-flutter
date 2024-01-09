@@ -428,9 +428,9 @@ class MeetingStore extends ChangeNotifier
             toast.hmsToastType == HMSToastsType.roleChangeToast &&
             data.peerId == toast.toastData.peerId);
         break;
-      case HMSToastsType.errorToast:
+      case HMSToastsType.recordingErrorToast:
         toasts.removeWhere(
-            (toast) => toast.hmsToastType == HMSToastsType.errorToast);
+            (toast) => toast.hmsToastType == HMSToastsType.recordingErrorToast);
         break;
       case HMSToastsType.localScreenshareToast:
         toasts.removeWhere((toast) =>
@@ -444,6 +444,9 @@ class MeetingStore extends ChangeNotifier
       case HMSToastsType.chatPauseResumeToast:
         toasts.removeWhere((toast) =>
             toast.hmsToastType == HMSToastsType.chatPauseResumeToast);
+      case HMSToastsType.errorToast:
+        toasts.removeWhere(
+            (toast) => toast.hmsToastType == HMSToastsType.errorToast);
     }
     notifyListeners();
   }
@@ -1759,6 +1762,7 @@ class MeetingStore extends ChangeNotifier
             data.forEach((element) => pinnedMessages.add({
                   "id": element["id"],
                   "text": element["text"],
+                  "pinnedBy": element["pinnedBy"]
                 }));
           }
         }
@@ -1962,6 +1966,32 @@ class MeetingStore extends ChangeNotifier
         key: SessionStoreKeyValues.getNameFromMethod(
             SessionStoreKey.chatPeerBlacklist),
         metadata: blackListedUserIds);
+  }
+
+  ///[unpinMessage] method is used to unpin a message in the session
+  void unpinMessage(String messageId) {
+    pinnedMessages.removeWhere((element) => element["id"] == messageId);
+    setSessionMetadataForKey(
+        key: SessionStoreKeyValues.getNameFromMethod(
+            SessionStoreKey.pinnedMessageSessionKey),
+        metadata: pinnedMessages);
+  }
+
+  ///[pinMessage] method is used to pin a message for the session
+  void pinMessage(HMSMessage message) {
+    if (pinnedMessages.length == 3) {
+      pinnedMessages.removeAt(0);
+    }
+    var data = List.from(pinnedMessages);
+    data.add({
+      "id": message.messageId,
+      "text": "${message.sender?.name}: ${message.message}",
+      "pinnedBy": localPeer?.name,
+    });
+    setSessionMetadataForKey(
+        key: SessionStoreKeyValues.getNameFromMethod(
+            SessionStoreKey.pinnedMessageSessionKey),
+        metadata: data);
   }
 
   void getSessionMetadata(String key) async {
@@ -2273,7 +2303,7 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         toasts.add(HMSToastModel(hmsException,
-            hmsToastType: HMSToastsType.errorToast));
+            hmsToastType: HMSToastsType.recordingErrorToast));
         recordingType["browser"] = HMSRecordingState.failed;
         notifyListeners();
         break;
@@ -2312,7 +2342,9 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("Change role failed");
         break;
       case HMSActionResultListenerMethod.setSessionMetadataForKey:
-        Utilities.showToast("Set session metadata failed");
+        toasts.add(HMSToastModel(hmsException,
+            hmsToastType: HMSToastsType.errorToast));
+        notifyListeners();
         break;
       case HMSActionResultListenerMethod.sendHLSTimedMetadata:
         // TODO: Handle this case.

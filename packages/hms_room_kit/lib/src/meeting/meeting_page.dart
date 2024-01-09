@@ -33,6 +33,7 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_left_room_screen.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_recording_error_toast.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_chat_pause_resume_toast.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_error_toast.dart';
 
 ///[MeetingPage] is the main page of the meeting
 ///It takes the following parameters:
@@ -88,7 +89,7 @@ class _MeetingPageState extends State<MeetingPage> {
           peer: toast.toastData,
           meetingStore: context.read<MeetingStore>(),
         );
-      case HMSToastsType.errorToast:
+      case HMSToastsType.recordingErrorToast:
         return HMSRecordingErrorToast(
             recordingError: toast.toastData,
             meetingStore: context.read<MeetingStore>());
@@ -109,6 +110,11 @@ class _MeetingPageState extends State<MeetingPage> {
             isChatEnabled: toast.toastData["enabled"],
             userName: toast.toastData["updatedBy"],
             meetingStore: context.read<MeetingStore>());
+      case HMSToastsType.errorToast:
+        return HMSErrorToast(
+            error: toast.toastData, meetingStore: context.read<MeetingStore>());
+      default:
+        return const SizedBox();
     }
   }
 

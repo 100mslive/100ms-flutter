@@ -37,6 +37,7 @@ class _HMSToastState extends State<HMSToast> {
     return Padding(
       padding: EdgeInsets.only(bottom: widget.toastPosition ?? 68),
       child: AlertDialog(
+        backgroundColor: widget.toastColor,
         insetPadding: const EdgeInsets.all(0),
         alignment: Alignment.bottomCenter,
         contentPadding: const EdgeInsets.all(0),
