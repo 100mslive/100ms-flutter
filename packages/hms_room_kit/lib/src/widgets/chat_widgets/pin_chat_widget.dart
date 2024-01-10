@@ -42,10 +42,12 @@ class _PinChatWidgetState extends State<PinChatWidget> {
   }
 
   void setCurrentPage(int page) {
-    _pageController?.animateToPage(page,
-        duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+    if (page >= 3) {
+      page = 0;
+    }
     setState(() {
       currentPage = page;
+      _pageController?.jumpToPage(currentPage);
     });
   }
 
@@ -69,7 +71,7 @@ class _PinChatWidgetState extends State<PinChatWidget> {
                 children: [
                   AnimatedContainer(
                     height: MediaQuery.of(context).size.height *
-                        (isExpanded ? 0.13 : 0.07),
+                        (isExpanded ? 0.13 : 0.09),
                     width:
                         (HMSRoomLayout.chatData?.allowPinningMessages ?? false)
                             ? MediaQuery.of(context).size.width * 0.85
@@ -91,7 +93,7 @@ class _PinChatWidgetState extends State<PinChatWidget> {
                               mainAxisSize: MainAxisSize.min,
                               dotsCount: widget.pinnedMessage.length,
                               position:
-                                  currentPage > widget.pinnedMessage.length
+                                  currentPage >= widget.pinnedMessage.length
                                       ? 0
                                       : currentPage,
                               decorator: DotsDecorator(
@@ -118,7 +120,7 @@ class _PinChatWidgetState extends State<PinChatWidget> {
                               onPageChanged: (value) => setCurrentPage(value),
                               itemBuilder: (context, index) =>
                                   SelectableLinkify(
-                                maxLines: 2,
+                                maxLines: 3,
                                 scrollPhysics: isExpanded
                                     ? const BouncingScrollPhysics()
                                     : const NeverScrollableScrollPhysics(),

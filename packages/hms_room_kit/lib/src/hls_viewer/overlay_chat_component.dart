@@ -28,12 +28,10 @@ class OverlayChatComponent extends StatefulWidget {
 }
 
 class _OverlayChatComponentState extends State<OverlayChatComponent> {
-  TextEditingController messageTextController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
   @override
   void dispose() {
-    messageTextController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -47,7 +45,7 @@ class _OverlayChatComponentState extends State<OverlayChatComponent> {
   }
 
   ///This function sends the message
-  void _sendMessage() async {
+  void _sendMessage(TextEditingController messageTextController) async {
     MeetingStore meetingStore = context.read<MeetingStore>();
     String message = messageTextController.text.trim();
     if (message.isEmpty) return;

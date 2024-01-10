@@ -1775,13 +1775,19 @@ class MeetingStore extends ChangeNotifier
         if (value != null) {
           ///Here we set the chat pause/resume state
           var data = jsonDecode(value);
+
+          ///If current and previous state is same we return
+          if (chatControls["enabled"] == data["enabled"]) break;
           chatControls["enabled"] = data["enabled"];
           chatControls["updatedBy"] = data["updatedBy"]["userName"];
-          toasts.add(HMSToastModel(chatControls,
-              hmsToastType: HMSToastsType.chatPauseResumeToast));
+          if ((HMSRoomLayout.chatData?.isPrivateChatEnabled ?? false) ||
+              (HMSRoomLayout.chatData?.isPublicChatEnabled ?? false) ||
+              (HMSRoomLayout.chatData?.rolesWhitelist.isNotEmpty ?? false)) {
+            toasts.add(HMSToastModel(chatControls,
+                hmsToastType: HMSToastsType.chatPauseResumeToast));
+          }
           notifyListeners();
         }
-
         break;
       case SessionStoreKey.chatPeerBlacklist:
         blackListedUserIds.clear();
@@ -1981,6 +1987,7 @@ class MeetingStore extends ChangeNotifier
   void pinMessage(HMSMessage message) {
     if (pinnedMessages.length == 3) {
       pinnedMessages.removeAt(0);
+      notifyListeners();
     }
     var data = List.from(pinnedMessages);
     data.add({

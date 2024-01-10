@@ -77,7 +77,13 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
                   horizontalTitleGap: 2,
                   onTap: () async {
                     Navigator.pop(context);
-                    context.read<MeetingStore>().pinMessage(widget.message);
+                    if (isPinned) {
+                      context
+                          .read<MeetingStore>()
+                          .unpinMessage(widget.message.messageId);
+                    } else {
+                      context.read<MeetingStore>().pinMessage(widget.message);
+                    }
                   },
                   contentPadding: EdgeInsets.zero,
                   leading: SvgPicture.asset(
@@ -121,7 +127,6 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
                   horizontalTitleGap: 2,
                   onTap: () async {
                     Navigator.pop(context);
-
                     if (widget.message.sender?.customerUserId != null) {
                       context.read<MeetingStore>().togglePeerBlock(
                           userId: widget.message.sender!.customerUserId!,
