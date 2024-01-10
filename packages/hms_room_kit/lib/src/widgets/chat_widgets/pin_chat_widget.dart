@@ -47,6 +47,7 @@ class _PinChatWidgetState extends State<PinChatWidget> {
     }
     setState(() {
       currentPage = page;
+      _pageController?.jumpToPage(currentPage);
     });
   }
 
