@@ -110,9 +110,6 @@ class _MeetingPageState extends State<MeetingPage> {
             isChatEnabled: toast.toastData["enabled"],
             userName: toast.toastData["updatedBy"],
             meetingStore: context.read<MeetingStore>());
-      case HMSToastsType.errorToast:
-        return HMSErrorToast(
-            error: toast.toastData, meetingStore: context.read<MeetingStore>());
       default:
         return const SizedBox();
     }

@@ -42,8 +42,9 @@ class _PinChatWidgetState extends State<PinChatWidget> {
   }
 
   void setCurrentPage(int page) {
-    _pageController?.animateToPage(page,
-        duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
+    if (page >= 3) {
+      page = 0;
+    }
     setState(() {
       currentPage = page;
     });
@@ -91,7 +92,7 @@ class _PinChatWidgetState extends State<PinChatWidget> {
                               mainAxisSize: MainAxisSize.min,
                               dotsCount: widget.pinnedMessage.length,
                               position:
-                                  currentPage > widget.pinnedMessage.length
+                                  currentPage >= widget.pinnedMessage.length
                                       ? 0
                                       : currentPage,
                               decorator: DotsDecorator(

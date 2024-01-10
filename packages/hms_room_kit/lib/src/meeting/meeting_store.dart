@@ -1981,6 +1981,7 @@ class MeetingStore extends ChangeNotifier
   void pinMessage(HMSMessage message) {
     if (pinnedMessages.length == 3) {
       pinnedMessages.removeAt(0);
+      notifyListeners();
     }
     var data = List.from(pinnedMessages);
     data.add({

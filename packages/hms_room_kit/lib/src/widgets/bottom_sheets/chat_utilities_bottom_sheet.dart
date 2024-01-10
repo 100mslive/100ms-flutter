@@ -48,101 +48,118 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
         child: SingleChildScrollView(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                HMSTitleText(
-                    text: "Message Options",
-                    textColor: HMSThemeColors.onSurfaceHighEmphasis),
-                const HMSCrossButton()
-              ],
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: Divider(
-                color: HMSThemeColors.borderDefault,
-                height: 5,
-              ),
-            ),
-
-            ///This renders the option to pin the message
-            ///This is only rendered if the user has the permission to pin messages
-            ///If the message is already pinned it renders the option to unpin the message
-            ///If the message is not pinned it renders the option to pin the message
-            if (HMSRoomLayout.chatData?.allowPinningMessages ?? true)
-              ListTile(
-                  horizontalTitleGap: 2,
-                  onTap: () async {
-                    Navigator.pop(context);
-                    context.read<MeetingStore>().pinMessage(widget.message);
-                  },
-                  contentPadding: EdgeInsets.zero,
-                  leading: SvgPicture.asset(
-                    "packages/hms_room_kit/lib/src/assets/icons/pin.svg",
-                    semanticsLabel: "fl_pin_message_icon",
-                    height: 20,
-                    width: 20,
-                    colorFilter: ColorFilter.mode(
-                        HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
-                  ),
-                  title: HMSSubheadingText(
-                      text: isPinned ? "Unpin" : "Pin",
-                      letterSpacing: 0.1,
-                      fontWeight: FontWeight.w600,
-                      textColor: HMSThemeColors.onSurfaceHighEmphasis)),
-
-            ListTile(
-                horizontalTitleGap: 2,
-                onTap: () async {
-                  Navigator.pop(context);
-                  await Clipboard.setData(
-                      ClipboardData(text: widget.message.message));
-                },
-                contentPadding: EdgeInsets.zero,
-                leading: SvgPicture.asset(
-                  "packages/hms_room_kit/lib/src/assets/icons/copy.svg",
-                  semanticsLabel: "fl_copy_message_icon",
-                  height: 20,
-                  width: 20,
-                  colorFilter: ColorFilter.mode(
-                      HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    HMSTitleText(
+                        text: "Message Options",
+                        textColor: HMSThemeColors.onSurfaceHighEmphasis),
+                    const HMSCrossButton()
+                  ],
                 ),
-                title: HMSSubheadingText(
-                    text: "Copy Text",
-                    letterSpacing: 0.1,
-                    fontWeight: FontWeight.w600,
-                    textColor: HMSThemeColors.onSurfaceHighEmphasis)),
 
-            if (HMSRoomLayout.chatData?.realTimeControls?.canBlockUser ?? false)
-              ListTile(
-                  horizontalTitleGap: 2,
-                  onTap: () async {
-                    Navigator.pop(context);
-
-                    if (widget.message.sender?.customerUserId != null) {
-                      context.read<MeetingStore>().togglePeerBlock(
-                          userId: widget.message.sender!.customerUserId!,
-                          isBlocked: isBlocked);
-                    }
-                  },
-                  contentPadding: EdgeInsets.zero,
-                  leading: SvgPicture.asset(
-                    "packages/hms_room_kit/lib/src/assets/icons/block.svg",
-                    semanticsLabel: "fl_block_peer_icon",
-                    height: 20,
-                    width: 20,
-                    colorFilter: ColorFilter.mode(
-                        HMSThemeColors.alertErrorDefault, BlendMode.srcIn),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8, bottom: 8),
+                  child: Divider(
+                    color: HMSThemeColors.borderDefault,
+                    height: 5,
                   ),
-                  title: HMSSubheadingText(
-                      text: isBlocked ? "Unblock from Chat" : "Block from Chat",
-                      letterSpacing: 0.1,
-                      fontWeight: FontWeight.w600,
-                      textColor: HMSThemeColors.alertErrorDefault)),
-          ]),
+                ),
+
+                ///This renders the option to pin the message
+                ///This is only rendered if the user has the permission to pin messages
+                ///If the message is already pinned it renders the option to unpin the message
+                ///If the message is not pinned it renders the option to pin the message
+                if (HMSRoomLayout.chatData?.allowPinningMessages ?? true)
+                  ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        Navigator.pop(context);
+                        if (isPinned) {
+                          context
+                              .read<MeetingStore>()
+                              .unpinMessage(widget.message.messageId);
+                        } else {
+                          context
+                              .read<MeetingStore>()
+                              .pinMessage(widget.message);
+                        }
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/src/assets/icons/pin.svg",
+                        semanticsLabel: "fl_pin_message_icon",
+                        height: 20,
+                        width: 20,
+                        colorFilter: ColorFilter.mode(
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
+                      ),
+                      title: HMSSubheadingText(
+                          text: isPinned ? "Unpin" : "Pin",
+                          letterSpacing: 0.1,
+                          fontWeight: FontWeight.w600,
+                          textColor: HMSThemeColors.onSurfaceHighEmphasis)),
+
+                ListTile(
+                    horizontalTitleGap: 2,
+                    onTap: () async {
+                      Navigator.pop(context);
+                      await Clipboard.setData(
+                          ClipboardData(text: widget.message.message));
+                    },
+                    contentPadding: EdgeInsets.zero,
+                    leading: SvgPicture.asset(
+                      "packages/hms_room_kit/lib/src/assets/icons/copy.svg",
+                      semanticsLabel: "fl_copy_message_icon",
+                      height: 20,
+                      width: 20,
+                      colorFilter: ColorFilter.mode(
+                          HMSThemeColors.onSurfaceHighEmphasis,
+                          BlendMode.srcIn),
+                    ),
+                    title: HMSSubheadingText(
+                        text: "Copy Text",
+                        letterSpacing: 0.1,
+                        fontWeight: FontWeight.w600,
+                        textColor: HMSThemeColors.onSurfaceHighEmphasis)),
+
+                if (HMSRoomLayout
+                        .chatData?.realTimeControls?.canBlockUser ??
+                    false)
+                  ListTile(
+                      horizontalTitleGap: 2,
+                      onTap: () async {
+                        Navigator.pop(context);
+
+                        if (widget.message.sender?.customerUserId != null) {
+                          context.read<MeetingStore>().togglePeerBlock(
+                              userId:
+                                  widget.message.sender!.customerUserId!,
+                              isBlocked: isBlocked);
+                        }
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      leading: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/src/assets/icons/block.svg",
+                        semanticsLabel: "fl_block_peer_icon",
+                        height: 20,
+                        width: 20,
+                        colorFilter: ColorFilter.mode(
+                            HMSThemeColors.alertErrorDefault,
+                            BlendMode.srcIn),
+                      ),
+                      title: HMSSubheadingText(
+                          text: isBlocked
+                              ? "Unblock from Chat"
+                              : "Block from Chat",
+                          letterSpacing: 0.1,
+                          fontWeight: FontWeight.w600,
+                          textColor: HMSThemeColors.alertErrorDefault)),
+              ]),
         ),
       ),
     );
