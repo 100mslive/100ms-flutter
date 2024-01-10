@@ -213,7 +213,8 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                       ? HMSErrorToast(
                           error: data.item1[errorToastIndex].toastData,
                           meetingStore: context.read<MeetingStore>(),
-                          toastColor: HMSThemeColors.surfaceDefault,)
+                          toastColor: HMSThemeColors.surfaceDefault,
+                        )
                       : const SizedBox();
                 })
           ],

@@ -70,7 +70,7 @@ class _PinChatWidgetState extends State<PinChatWidget> {
                 children: [
                   AnimatedContainer(
                     height: MediaQuery.of(context).size.height *
-                        (isExpanded ? 0.13 : 0.07),
+                        (isExpanded ? 0.13 : 0.09),
                     width:
                         (HMSRoomLayout.chatData?.allowPinningMessages ?? false)
                             ? MediaQuery.of(context).size.width * 0.85
@@ -119,7 +119,7 @@ class _PinChatWidgetState extends State<PinChatWidget> {
                               onPageChanged: (value) => setCurrentPage(value),
                               itemBuilder: (context, index) =>
                                   SelectableLinkify(
-                                maxLines: 2,
+                                maxLines: 3,
                                 scrollPhysics: isExpanded
                                     ? const BouncingScrollPhysics()
                                     : const NeverScrollableScrollPhysics(),
