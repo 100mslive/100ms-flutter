@@ -1,5 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -11,6 +12,9 @@ import 'package:hms_room_kit/src/widgets/common_widgets/message_container.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/chat_widgets/chat_text_field.dart';
 import 'package:hms_room_kit/src/widgets/chat_widgets/pin_chat_widget.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
+import 'package:hms_room_kit/src/widgets/chat_widgets/recipient_selector_widget.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 
 ///[ChatBottomSheet] is a bottom sheet that is used to render the bottom sheet for chat
 class ChatBottomSheet extends StatefulWidget {
@@ -130,65 +134,75 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
               ),
 
               /// This draws the chip to select the roles or peers to send message to
-              // Padding(
-              //   padding: const EdgeInsets.only(bottom: 8.0, top: 16),
-              //   child: Row(
-              //     children: [
-              //       Padding(
-              //         padding: const EdgeInsets.only(right: 8.0),
-              //         child: HMSTitleText(
-              //           text: "TO",
-              //           textColor: HMSThemeColors.onSurfaceMediumEmphasis,
-              //           fontSize: 12,
-              //           fontWeight: FontWeight.w400,
-              //           lineHeight: 16,
-              //           letterSpacing: 0.4,
-              //         ),
-              //       ),
-              //       Container(
-              //           height: 24,
-              //           decoration: BoxDecoration(
-              //               borderRadius:
-              //                   const BorderRadius.all(Radius.circular(4)),
-              //               color: HMSThemeColors.primaryDefault),
-              //           child: Padding(
-              //             padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              //             child: Row(
-              //               mainAxisAlignment: MainAxisAlignment.center,
-              //               children: [
-              //                 Padding(
-              //                   padding: const EdgeInsets.only(right: 4.0),
-              //                   child: SvgPicture.asset(
-              //                     "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
-              //                     height: 16,
-              //                     width: 16,
-              //                     colorFilter: ColorFilter.mode(
-              //                         HMSThemeColors.onSurfaceMediumEmphasis,
-              //                         BlendMode.srcIn),
-              //                   ),
-              //                 ),
-              //                 HMSTitleText(
-              //                     text: valueChoose,
-              //                     fontSize: 12,
-              //                     lineHeight: 16,
-              //                     letterSpacing: 0.4,
-              //                     fontWeight: FontWeight.w400,
-              //                     textColor:
-              //                         HMSThemeColors.onPrimaryHighEmphasis),
-              //                 Padding(
-              //                   padding: const EdgeInsets.only(left: 4.0),
-              //                   child: Icon(
-              //                     Icons.keyboard_arrow_down,
-              //                     color: HMSThemeColors.onPrimaryHighEmphasis,
-              //                     size: 12,
-              //                   ),
-              //                 ),
-              //               ],
-              //             ),
-              //           ))
-              //     ],
-              //   ),
-              // ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0, top: 16),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: HMSTitleText(
+                        text: "TO",
+                        textColor: HMSThemeColors.onSurfaceMediumEmphasis,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        lineHeight: 16,
+                        letterSpacing: 0.4,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          context: context,
+                          builder: (ctx) => ChangeNotifierProvider.value(
+                              value: context.read<MeetingStore>(),
+                              child: const RecipientSelectorWidget())),
+                      child: Container(
+                          height: 24,
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(4)),
+                              color: HMSThemeColors.primaryDefault),
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 4.0),
+                                  child: SvgPicture.asset(
+                                    "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
+                                    height: 16,
+                                    width: 16,
+                                    colorFilter: ColorFilter.mode(
+                                        HMSThemeColors.onSurfaceMediumEmphasis,
+                                        BlendMode.srcIn),
+                                  ),
+                                ),
+                                HMSTitleText(
+                                    text: valueChoose,
+                                    fontSize: 12,
+                                    lineHeight: 16,
+                                    letterSpacing: 0.4,
+                                    fontWeight: FontWeight.w400,
+                                    textColor:
+                                        HMSThemeColors.onPrimaryHighEmphasis),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 4.0),
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: HMSThemeColors.onPrimaryHighEmphasis,
+                                    size: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                    )
+                  ],
+                ),
+              ),
 
               ///Text Field
               ChatTextField(sendMessage: sendMessage)
