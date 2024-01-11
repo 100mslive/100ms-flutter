@@ -184,7 +184,7 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                   ],
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.78,
+                  height: MediaQuery.of(context).size.height * 0.76,
                   child: TabBarView(controller: _controller, children: const [
                     ChatBottomSheet(),
                     ParticipantsBottomSheet()

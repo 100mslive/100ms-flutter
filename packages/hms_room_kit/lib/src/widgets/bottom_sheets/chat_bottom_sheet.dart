@@ -134,8 +134,18 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
 
                           ///If there are no chats and no pinned messages
                           (data.item2 == 0 && data.item3.isEmpty)
-                              ? const Expanded(
-                                  child: Center(child: HMSEmptyChatWidget()))
+                              ? Expanded(
+                                  child: SingleChildScrollView(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      child: ConstrainedBox(
+                                          constraints: BoxConstraints(
+                                            minHeight: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.6,
+                                          ),
+                                          child: const HMSEmptyChatWidget())))
                               : Expanded(
                                   child: Column(children: [
                                     PinChatWidget(

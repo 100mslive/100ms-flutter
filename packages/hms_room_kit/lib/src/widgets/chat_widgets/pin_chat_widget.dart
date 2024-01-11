@@ -74,7 +74,7 @@ class _PinChatWidgetState extends State<PinChatWidget> {
                         (isExpanded ? 0.13 : 0.09),
                     width:
                         (HMSRoomLayout.chatData?.allowPinningMessages ?? false)
-                            ? MediaQuery.of(context).size.width * 0.85
+                            ? MediaQuery.of(context).size.width * 0.83
                             : MediaQuery.of(context).size.width * 0.9,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
