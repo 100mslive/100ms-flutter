@@ -2017,12 +2017,10 @@ class MeetingStore extends ChangeNotifier
       recipientSelectorValue = "Everyone";
       return;
     } else if (HMSRoomLayout.chatData?.rolesWhitelist.isNotEmpty ?? false) {
-      if (localPeer != null) {
-        recipientSelectorValue = HMSRoomLayout.chatData?.rolesWhitelist
-                .firstWhere((role) => role != localPeer?.role.name) ??
-            localPeer!.role.name;
-        return;
-      }
+      recipientSelectorValue = HMSRoomLayout.chatData?.rolesWhitelist
+              .firstWhere(
+                  (role) => role != HMSRoomLayout.roleLayoutData?.role) ??
+          "Choose a Recipient";
     } else if (HMSRoomLayout.chatData?.isPrivateChatEnabled ?? false) {
       if (peers.length > 1) {
         recipientSelectorValue = peers[1];
