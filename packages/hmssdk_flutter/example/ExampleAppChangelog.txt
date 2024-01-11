@@ -21,6 +21,9 @@ https://100ms.atlassian.net/browse/FLUT-154
 - can't see pinned chat(by remote peer) on Flutter
 https://100ms.atlassian.net/browse/FLUT-187
 
+- Send to picker based on layout API
+https://100ms.atlassian.net/browse/FLUT-156
+
 Room Kit: 1.0.9
 Core SDK: 1.9.6
 Android SDK: 2.8.4
