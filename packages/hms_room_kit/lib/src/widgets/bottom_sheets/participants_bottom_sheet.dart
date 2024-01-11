@@ -463,13 +463,16 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                                       builder: (_,
                                                                           peerName,
                                                                           __) {
-                                                                        return HMSTitleText(
-                                                                            text:
-                                                                                peerName + ((participantsPerRole.item2![peerIndex].peer.isLocal) ? " (You)" : ""),
-                                                                            fontSize: 14,
-                                                                            lineHeight: 20,
-                                                                            letterSpacing: 0.1,
-                                                                            textColor: HMSThemeColors.onSurfaceHighEmphasis);
+                                                                        return Container(
+                                                                          constraints:
+                                                                              BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+                                                                          child: HMSTitleText(
+                                                                              text: peerName + ((participantsPerRole.item2![peerIndex].peer.isLocal) ? " (You)" : ""),
+                                                                              fontSize: 14,
+                                                                              lineHeight: 20,
+                                                                              letterSpacing: 0.1,
+                                                                              textColor: HMSThemeColors.onSurfaceHighEmphasis),
+                                                                        );
                                                                       }),
 
                                                                   ///This contains the network quality, hand raise icon and kebab menu

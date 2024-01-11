@@ -1,9 +1,5 @@
 //Package imports
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_error_toast.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_toast_model.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -15,6 +11,11 @@ import 'package:hms_room_kit/src/widgets/common_widgets/message_container.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/chat_widgets/chat_text_field.dart';
 import 'package:hms_room_kit/src/widgets/chat_widgets/pin_chat_widget.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/widgets/chat_widgets/recipient_selector_chip.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_error_toast.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_toast_model.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
 
 ///[ChatBottomSheet] is a bottom sheet that is used to render the bottom sheet for chat
 class ChatBottomSheet extends StatefulWidget {
@@ -26,9 +27,12 @@ class ChatBottomSheet extends StatefulWidget {
 
 class _ChatBottomSheetState extends State<ChatBottomSheet> {
   late double widthOfScreen;
-  String valueChoose = "Everyone";
+  String currentlySelectedValue = "Choose a Recipient";
+  String? currentlySelectedpeerId;
+
   final ScrollController _scrollController = ScrollController();
   final DateFormat formatter = DateFormat('hh:mm a');
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -44,6 +48,25 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    setRecipientChipValue();
+  }
+
+  ///This function sets the value of the recipient chip
+  void setRecipientChipValue() {
+    dynamic currentValue = context.read<MeetingStore>().recipientSelectorValue;
+    if (currentValue is HMSPeer) {
+      currentlySelectedValue = currentValue.name;
+      currentlySelectedpeerId = currentValue.peerId;
+    } else if (currentValue is HMSRole) {
+      currentlySelectedValue = currentValue.name;
+    } else if (currentValue is String) {
+      currentlySelectedValue = currentValue;
+    }
+  }
+
   void sendMessage(TextEditingController messageTextController) async {
     MeetingStore meetingStore = context.read<MeetingStore>();
     List<HMSRole> hmsRoles = meetingStore.roles;
@@ -55,17 +78,25 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
       rolesName.add(hmsRoles[i].name);
     }
 
-    if (valueChoose == "Everyone") {
+    if (currentlySelectedValue == "Everyone") {
       meetingStore.sendBroadcastMessage(message);
-    } else if (rolesName.contains(valueChoose)) {
+    } else if (rolesName.contains(currentlySelectedValue)) {
       List<HMSRole> selectedRoles = [];
-      selectedRoles
-          .add(hmsRoles.firstWhere((role) => role.name == valueChoose));
+      selectedRoles.add(
+          hmsRoles.firstWhere((role) => role.name == currentlySelectedValue));
       meetingStore.sendGroupMessage(message, selectedRoles);
-    } else if (meetingStore.localPeer!.peerId != valueChoose) {
-      var peer = await meetingStore.getPeer(peerId: valueChoose);
-      meetingStore.sendDirectMessage(message, peer!);
+    } else if (currentlySelectedpeerId != null &&
+        meetingStore.localPeer!.peerId != currentlySelectedpeerId) {
+      var peer = await meetingStore.getPeer(peerId: currentlySelectedpeerId!);
+      if (peer != null) {
+        meetingStore.sendDirectMessage(message, peer);
+      }
     }
+  }
+
+  void _updateValueChoose(String newValue, String? peerId) {
+    currentlySelectedValue = newValue;
+    currentlySelectedpeerId = peerId;
   }
 
   @override
@@ -137,65 +168,9 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                   ),
 
                   /// This draws the chip to select the roles or peers to send message to
-                  // Padding(
-                  //   padding: const EdgeInsets.only(bottom: 8.0, top: 16),
-                  //   child: Row(
-                  //     children: [
-                  //       Padding(
-                  //         padding: const EdgeInsets.only(right: 8.0),
-                  //         child: HMSTitleText(
-                  //           text: "TO",
-                  //           textColor: HMSThemeColors.onSurfaceMediumEmphasis,
-                  //           fontSize: 12,
-                  //           fontWeight: FontWeight.w400,
-                  //           lineHeight: 16,
-                  //           letterSpacing: 0.4,
-                  //         ),
-                  //       ),
-                  //       Container(
-                  //           height: 24,
-                  //           decoration: BoxDecoration(
-                  //               borderRadius:
-                  //                   const BorderRadius.all(Radius.circular(4)),
-                  //               color: HMSThemeColors.primaryDefault),
-                  //           child: Padding(
-                  //             padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                  //             child: Row(
-                  //               mainAxisAlignment: MainAxisAlignment.center,
-                  //               children: [
-                  //                 Padding(
-                  //                   padding: const EdgeInsets.only(right: 4.0),
-                  //                   child: SvgPicture.asset(
-                  //                     "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
-                  //                     height: 16,
-                  //                     width: 16,
-                  //                     colorFilter: ColorFilter.mode(
-                  //                         HMSThemeColors.onSurfaceMediumEmphasis,
-                  //                         BlendMode.srcIn),
-                  //                   ),
-                  //                 ),
-                  //                 HMSTitleText(
-                  //                     text: valueChoose,
-                  //                     fontSize: 12,
-                  //                     lineHeight: 16,
-                  //                     letterSpacing: 0.4,
-                  //                     fontWeight: FontWeight.w400,
-                  //                     textColor:
-                  //                         HMSThemeColors.onPrimaryHighEmphasis),
-                  //                 Padding(
-                  //                   padding: const EdgeInsets.only(left: 4.0),
-                  //                   child: Icon(
-                  //                     Icons.keyboard_arrow_down,
-                  //                     color: HMSThemeColors.onPrimaryHighEmphasis,
-                  //                     size: 12,
-                  //                   ),
-                  //                 ),
-                  //               ],
-                  //             ),
-                  //           ))
-                  //     ],
-                  //   ),
-                  // ),
+                  ReceipientSelectorChip(
+                      currentlySelectedValue: currentlySelectedValue,
+                      updateSelectedValue: _updateValueChoose),
 
                   ///Text Field
                   ChatTextField(sendMessage: sendMessage)
