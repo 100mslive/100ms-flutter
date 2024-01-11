@@ -182,6 +182,9 @@ class MeetingStore extends ChangeNotifier
   ///[pinnedMessages] is the list of pinned messages
   List<dynamic> pinnedMessages = [];
 
+  ///[hiddenMessages] is the list of hidden messages
+  List<String> hiddenMessages = [];
+
   ///[blackListedUserIds] is the list of user ids which are blacklisted from chat
   List<String> blackListedUserIds = [];
 
@@ -1812,6 +1815,16 @@ class MeetingStore extends ChangeNotifier
         }
         break;
       case SessionStoreKey.chatMessageBlacklist:
+        hiddenMessages.clear();
+        if (value != null) {
+          var data = jsonDecode(value);
+          if (data != null && data.isNotEmpty) {
+            data.forEach((element) {
+              hiddenMessages.add(element);
+              messages.removeWhere((message) => message.messageId == element);
+            });
+          }
+        }
         break;
       case SessionStoreKey.unknown:
         break;
@@ -2009,6 +2022,16 @@ class MeetingStore extends ChangeNotifier
         key: SessionStoreKeyValues.getNameFromMethod(
             SessionStoreKey.pinnedMessageSessionKey),
         metadata: data);
+  }
+
+  void hideMessage(HMSMessage message) {
+    hiddenMessages.add(message.messageId);
+    unpinMessage(message.messageId);
+    setSessionMetadataForKey(
+        key: SessionStoreKeyValues.getNameFromMethod(
+            SessionStoreKey.chatMessageBlacklist),
+        metadata: hiddenMessages);
+    notifyListeners();
   }
 
   ///[setReipientSelectorValue] method is used to set the value of recipient selector

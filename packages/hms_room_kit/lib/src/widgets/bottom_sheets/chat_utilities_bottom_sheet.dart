@@ -122,6 +122,30 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
                     fontWeight: FontWeight.w600,
                     textColor: HMSThemeColors.onSurfaceHighEmphasis)),
 
+            if ((HMSRoomLayout.chatData?.realTimeControls?.canHideMessage ??
+                    false) &&
+                (widget.message.sender?.isLocal ?? false))
+              ListTile(
+                  horizontalTitleGap: 2,
+                  onTap: () async {
+                    Navigator.pop(context);
+                    context.read<MeetingStore>().hideMessage(widget.message);
+                  },
+                  contentPadding: EdgeInsets.zero,
+                  leading: SvgPicture.asset(
+                    "packages/hms_room_kit/lib/src/assets/icons/hide.svg",
+                    semanticsLabel: "fl_copy_message_icon",
+                    height: 20,
+                    width: 20,
+                    colorFilter: ColorFilter.mode(
+                        HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
+                  ),
+                  title: HMSSubheadingText(
+                      text: "Hide for Everyone",
+                      letterSpacing: 0.1,
+                      fontWeight: FontWeight.w600,
+                      textColor: HMSThemeColors.onSurfaceHighEmphasis)),
+
             if (HMSRoomLayout.chatData?.realTimeControls?.canBlockUser ?? false)
               ListTile(
                   horizontalTitleGap: 2,

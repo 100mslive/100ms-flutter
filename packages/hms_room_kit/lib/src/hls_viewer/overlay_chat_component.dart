@@ -58,10 +58,12 @@ class _OverlayChatComponentState extends State<OverlayChatComponent> {
 
   ///This function scrolls to the end of the list
   void _scrollToEnd() {
-    WidgetsBinding.instance.addPostFrameCallback((_) =>
-        _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeInOut));
+    if (_scrollController.hasClients) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollController
+          .animateTo(_scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut));
+    }
   }
 
   ///This function updates the selected value
