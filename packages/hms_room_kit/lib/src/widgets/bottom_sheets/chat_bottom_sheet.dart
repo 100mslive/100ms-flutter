@@ -136,13 +136,14 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                           (data.item2 == 0 && data.item3.isEmpty)
                               ? Expanded(
                                   child: SingleChildScrollView(
-                                      physics: const NeverScrollableScrollPhysics(),
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
                                       child: ConstrainedBox(
                                           constraints: BoxConstraints(
-                                            minHeight:
-                                                MediaQuery.of(context)
+                                            minHeight: MediaQuery.of(context)
                                                     .size
-                                                    .height * 0.6,
+                                                    .height *
+                                                0.6,
                                           ),
                                           child: const HMSEmptyChatWidget())))
                               : Expanded(
