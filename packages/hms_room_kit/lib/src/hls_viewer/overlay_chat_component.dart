@@ -267,12 +267,22 @@ class _OverlayChatComponentState extends State<OverlayChatComponent> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              ReceipientSelectorChip(
-                                currentlySelectedValue: currentlySelectedValue,
-                                updateSelectedValue: _updateValueChoose,
-                                chipColor:
-                                    HMSThemeColors.backgroundDim.withAlpha(64),
-                              ),
+                              if ((HMSRoomLayout
+                                          .chatData?.isPrivateChatEnabled ??
+                                      false) ||
+                                  (HMSRoomLayout
+                                          .chatData?.isPublicChatEnabled ??
+                                      false) ||
+                                  (HMSRoomLayout.chatData?.rolesWhitelist
+                                          .isNotEmpty ??
+                                      false))
+                                ReceipientSelectorChip(
+                                  currentlySelectedValue:
+                                      currentlySelectedValue,
+                                  updateSelectedValue: _updateValueChoose,
+                                  chipColor: HMSThemeColors.backgroundDim
+                                      .withAlpha(64),
+                                ),
                               const SizedBox(),
                               if (HMSRoomLayout.chatData?.realTimeControls
                                       ?.canDisableChat ??

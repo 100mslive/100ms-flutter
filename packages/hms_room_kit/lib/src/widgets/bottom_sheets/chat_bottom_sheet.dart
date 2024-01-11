@@ -1,5 +1,6 @@
 //Package imports
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -168,9 +169,13 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                   ),
 
                   /// This draws the chip to select the roles or peers to send message to
-                  ReceipientSelectorChip(
-                      currentlySelectedValue: currentlySelectedValue,
-                      updateSelectedValue: _updateValueChoose),
+                  if ((HMSRoomLayout.chatData?.isPrivateChatEnabled ?? false) ||
+                      (HMSRoomLayout.chatData?.isPublicChatEnabled ?? false) ||
+                      (HMSRoomLayout.chatData?.rolesWhitelist.isNotEmpty ??
+                          false))
+                    ReceipientSelectorChip(
+                        currentlySelectedValue: currentlySelectedValue,
+                        updateSelectedValue: _updateValueChoose),
 
                   ///Text Field
                   ChatTextField(sendMessage: sendMessage)

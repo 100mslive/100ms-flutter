@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/chat_widgets/recipient_selector_widget.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 
 ///[ReceipientSelectorChip] is a widget that is used to render the receipient selector chip
 class ReceipientSelectorChip extends StatefulWidget {
@@ -48,16 +49,25 @@ class _ReceipientSelectorChipState extends State<ReceipientSelectorChip> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => showModalBottomSheet(
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          context: context,
-          builder: (ctx) => ChangeNotifierProvider.value(
-              value: context.read<MeetingStore>(),
-              child: RecipientSelectorWidget(
-                updateUI: _updateValueChoose,
-                selectedValue: currentlySelectedValue,
-              ))),
+      onTap: () => {
+        if (!(HMSRoomLayout.chatData?.isPrivateChatEnabled ?? true) &&
+                (HMSRoomLayout.chatData?.isPublicChatEnabled ?? false) ||
+            (HMSRoomLayout.chatData?.rolesWhitelist.isEmpty ?? false))
+          {() {}}
+        else
+          {
+            showModalBottomSheet(
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                context: context,
+                builder: (ctx) => ChangeNotifierProvider.value(
+                    value: context.read<MeetingStore>(),
+                    child: RecipientSelectorWidget(
+                      updateUI: _updateValueChoose,
+                      selectedValue: currentlySelectedValue,
+                    )))
+          }
+      },
       child: Padding(
         padding: const EdgeInsets.only(bottom: 8.0, top: 16),
         child: Row(

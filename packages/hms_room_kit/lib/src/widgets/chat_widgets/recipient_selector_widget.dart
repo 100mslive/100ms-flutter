@@ -130,13 +130,15 @@ class _RecipientSelectorWidgetState extends State<RecipientSelectorWidget> {
                             ),
                           ),
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6.0),
-                          child: Divider(
-                            height: 1,
-                            color: HMSThemeColors.borderBright,
+                        if (HMSRoomLayout.chatData?.isPublicChatEnabled ??
+                            false)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6.0),
+                            child: Divider(
+                              height: 1,
+                              color: HMSThemeColors.borderBright,
+                            ),
                           ),
-                        ),
 
                         ///Group based selection
                         if (HMSRoomLayout.chatData?.rolesWhitelist.isNotEmpty ??
@@ -277,7 +279,24 @@ class _RecipientSelectorWidgetState extends State<RecipientSelectorWidget> {
                                   meetingStore.peers.length),
                               builder: (_, data, __) {
                                 return data.item2 <= 1
-                                    ? const SizedBox()
+                                    ? ((HMSRoomLayout.chatData
+                                                    ?.isPrivateChatEnabled ??
+                                                false) &&
+                                            !(HMSRoomLayout.chatData
+                                                    ?.isPublicChatEnabled ??
+                                                true) &&
+                                            (HMSRoomLayout.chatData
+                                                    ?.rolesWhitelist.isEmpty ??
+                                                false))
+                                        ? HMSTitleText(
+                                            text: "No recipients yet",
+                                            textColor: HMSThemeColors
+                                                .onSurfaceMediumEmphasis,
+                                            fontSize: 14,
+                                            letterSpacing: 0.1,
+                                            lineHeight: 20,
+                                          )
+                                        : const SizedBox()
                                     : Padding(
                                         padding: const EdgeInsets.only(
                                             left: 10.0, right: 10),
