@@ -15,6 +15,7 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 
+///[MessageContainer] is a widget that is used to render the message container
 class MessageContainer extends StatelessWidget {
   final HMSMessage message;
   final DateFormat formatter = DateFormat('hh:mm a');
@@ -28,10 +29,14 @@ class MessageContainer extends StatelessWidget {
     if (hmsMessageRecipient == null) return "";
     if ((hmsMessageRecipient.recipientPeer != null) &&
         (hmsMessageRecipient.recipientRoles == null)) {
-      return "PRIVATE";
+      if (hmsMessageRecipient.recipientPeer is HMSLocalPeer) {
+        return "to You (DM)";
+      } else {
+        return "to ${hmsMessageRecipient.recipientPeer?.name} (DM)";
+      }
     } else if ((hmsMessageRecipient.recipientPeer == null) &&
         (hmsMessageRecipient.recipientRoles != null)) {
-      return hmsMessageRecipient.recipientRoles![0].name;
+      return "to ${hmsMessageRecipient.recipientRoles?.first.name} (Group)";
     }
     return "";
   }
@@ -40,97 +45,118 @@ class MessageContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: sender(message.hmsMessageRecipient) != ""
+              ? HMSThemeColors.surfaceDefault
+              : HMSThemeColors.surfaceDim,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    constraints: BoxConstraints(
-                        maxWidth: sender(message.hmsMessageRecipient) == ""
-                            ? width * 0.25
-                            : width * 0.5),
-                    child: HMSTitleText(
-                      text: message.sender?.name ?? "Anonymous",
-                      fontSize: 14,
-                      letterSpacing: 0.1,
-                      lineHeight: 20,
-                      textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                    ),
+                  Row(
+                    children: [
+                      Container(
+                        constraints: BoxConstraints(
+                            maxWidth: sender(message.hmsMessageRecipient) == ""
+                                ? width * 0.25
+                                : width * 0.5),
+                        child: HMSTitleText(
+                          text: message.sender?.name ?? "Anonymous",
+                          fontSize: 14,
+                          letterSpacing: 0.1,
+                          lineHeight: 20,
+                          textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      Container(
+                        constraints: BoxConstraints(maxWidth: width * 0.5),
+                        child: HMSSubtitleText(
+                            text: sender(message.hmsMessageRecipient),
+                            textColor: HMSThemeColors.onSurfaceMediumEmphasis),
+                      ),
+                    ],
                   ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                  HMSSubtitleText(
-                    text: formatter.format(message.time),
-                    textColor: HMSThemeColors.onSurfaceMediumEmphasis,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      HMSSubtitleText(
+                        text: formatter.format(message.time),
+                        textColor: HMSThemeColors.onSurfaceMediumEmphasis,
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: HMSThemeColors.surfaceDim,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  topRight: Radius.circular(16)),
+                            ),
+                            context: context,
+                            builder: (ctx) => ChangeNotifierProvider.value(
+                                value: context.read<MeetingStore>(),
+                                child: ChatUtilitiesBottomSheet(
+                                  message: message,
+                                )),
+                          );
+                        },
+                        child: SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/more.svg",
+                          height: 20,
+                          width: 20,
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.onSurfaceMediumEmphasis,
+                              BlendMode.srcIn),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        backgroundColor: HMSThemeColors.surfaceDim,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(16),
-                              topRight: Radius.circular(16)),
-                        ),
-                        context: context,
-                        builder: (ctx) => ChangeNotifierProvider.value(
-                            value: context.read<MeetingStore>(),
-                            child: ChatUtilitiesBottomSheet(
-                              message: message,
-                            )),
-                      );
-                    },
-                    child: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/src/assets/icons/more.svg",
-                      height: 20,
-                      width: 20,
-                      colorFilter: ColorFilter.mode(
-                          HMSThemeColors.onSurfaceMediumEmphasis,
-                          BlendMode.srcIn),
-                    ),
-                  ),
-                ],
-              )
+              const SizedBox(
+                height: 8,
+              ),
+              SelectableLinkify(
+                text: message.message.trim().toString(),
+                onOpen: (link) async {
+                  Uri url = Uri.parse(link.url);
+                  if (await canLaunchUrl(url)) {
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
+                  }
+                },
+                options: const LinkifyOptions(humanize: false),
+                style: HMSTextStyle.setTextStyle(
+                    fontSize: 14.0,
+                    color: HMSThemeColors.onSurfaceHighEmphasis,
+                    height: 20 / 14,
+                    letterSpacing: 0.25,
+                    fontWeight: FontWeight.w400),
+                linkStyle: HMSTextStyle.setTextStyle(
+                    fontSize: 14.0,
+                    color: HMSThemeColors.primaryDefault,
+                    letterSpacing: 0.25,
+                    height: 20 / 14,
+                    fontWeight: FontWeight.w400),
+              ),
             ],
           ),
-          const SizedBox(
-            height: 8,
-          ),
-          SelectableLinkify(
-            text: message.message.trim().toString(),
-            onOpen: (link) async {
-              Uri url = Uri.parse(link.url);
-              if (await canLaunchUrl(url)) {
-                await launchUrl(url, mode: LaunchMode.externalApplication);
-              }
-            },
-            options: const LinkifyOptions(humanize: false),
-            style: HMSTextStyle.setTextStyle(
-                fontSize: 14.0,
-                color: HMSThemeColors.onSurfaceHighEmphasis,
-                height: 20 / 14,
-                letterSpacing: 0.25,
-                fontWeight: FontWeight.w400),
-            linkStyle: HMSTextStyle.setTextStyle(
-                fontSize: 14.0,
-                color: HMSThemeColors.primaryDefault,
-                letterSpacing: 0.25,
-                height: 20 / 14,
-                fontWeight: FontWeight.w400),
-          ),
-        ],
+        ),
       ),
     );
   }

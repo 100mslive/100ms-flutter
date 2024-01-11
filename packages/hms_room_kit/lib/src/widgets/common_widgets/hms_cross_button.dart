@@ -15,7 +15,7 @@ class HMSCrossButton extends StatelessWidget {
     return IconButton(
       icon: Icon(
         Icons.close,
-        color: iconColor??HMSThemeColors.onSurfaceHighEmphasis,
+        color: iconColor ?? HMSThemeColors.onSurfaceHighEmphasis,
         size: 24,
       ),
       onPressed: () {

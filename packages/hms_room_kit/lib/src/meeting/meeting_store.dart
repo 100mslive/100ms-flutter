@@ -185,6 +185,9 @@ class MeetingStore extends ChangeNotifier
   ///[blackListedUserIds] is the list of user ids which are blacklisted from chat
   List<String> blackListedUserIds = [];
 
+  ///[recipientSelectorValue] is the value of the recipient selector chip
+  dynamic recipientSelectorValue = "Choose a Recipient";
+
   bool isPipActive = false;
 
   // bool isPipAutoEnabled = true;
@@ -279,6 +282,7 @@ class MeetingStore extends ChangeNotifier
     WidgetsBinding.instance.addObserver(this);
     setMeetingModeUsingLayoutApi();
     _hmsSDKInteractor.join(config: roomConfig);
+    setRecipientSelectorValue();
     meetingUrl = roomCode;
     return null;
   }
@@ -1367,6 +1371,12 @@ class MeetingStore extends ChangeNotifier
       participantsInMeetingMap["Hand Raised"]
           ?.removeWhere((oldPeer) => oldPeer.peer.peerId == peer.peerId);
     }
+
+    ///If peer is removed from room but selected in the recipient selector
+    ///we reset it to "Choose a Recipient"
+    if (recipientSelectorValue == peer) {
+      recipientSelectorValue = "Choose a Recipient";
+    }
     notifyListeners();
   }
 
@@ -1999,6 +2009,26 @@ class MeetingStore extends ChangeNotifier
         key: SessionStoreKeyValues.getNameFromMethod(
             SessionStoreKey.pinnedMessageSessionKey),
         metadata: data);
+  }
+
+  ///[setReipientSelectorValue] method is used to set the value of recipient selector
+  void setRecipientSelectorValue() {
+    if (HMSRoomLayout.chatData?.isPublicChatEnabled ?? false) {
+      recipientSelectorValue = "Everyone";
+      return;
+    } else if (HMSRoomLayout.chatData?.rolesWhitelist.isNotEmpty ?? false) {
+      if (localPeer != null) {
+        recipientSelectorValue = HMSRoomLayout.chatData?.rolesWhitelist
+                .firstWhere((role) => role != localPeer?.role.name) ??
+            localPeer!.role.name;
+        return;
+      }
+    } else if (HMSRoomLayout.chatData?.isPrivateChatEnabled ?? false) {
+      if (peers.length > 1) {
+        recipientSelectorValue = peers[1];
+      }
+    }
+    notifyListeners();
   }
 
   void getSessionMetadata(String key) async {
