@@ -148,9 +148,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                           child: const HMSEmptyChatWidget())))
                               : Expanded(
                                   child: Column(children: [
-                                    PinChatWidget(
-                                        pinnedMessage:
-                                            data.item3.reversed.toList()),
+                                    const PinChatWidget(),
 
                                     /// List containing chats
                                     Expanded(
