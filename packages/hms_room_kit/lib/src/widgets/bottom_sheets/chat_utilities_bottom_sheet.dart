@@ -146,7 +146,9 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
                       fontWeight: FontWeight.w600,
                       textColor: HMSThemeColors.onSurfaceHighEmphasis)),
 
-            if (HMSRoomLayout.chatData?.realTimeControls?.canBlockUser ?? false)
+            if ((HMSRoomLayout.chatData?.realTimeControls?.canBlockUser ??
+                    false) &&
+                !(widget.message.sender?.isLocal ?? true))
               ListTile(
                   horizontalTitleGap: 2,
                   onTap: () async {
@@ -168,6 +170,39 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
                   ),
                   title: HMSSubheadingText(
                       text: isBlocked ? "Unblock from Chat" : "Block from Chat",
+                      letterSpacing: 0.1,
+                      fontWeight: FontWeight.w600,
+                      textColor: HMSThemeColors.alertErrorDefault)),
+
+            if ((context
+                        .read<MeetingStore>()
+                        .localPeer
+                        ?.role
+                        .permissions
+                        .removeOthers ??
+                    false) &&
+                !(widget.message.sender?.isLocal ?? true))
+              ListTile(
+                  horizontalTitleGap: 2,
+                  onTap: () async {
+                    Navigator.pop(context);
+                    if (widget.message.sender != null) {
+                      context
+                          .read<MeetingStore>()
+                          .removePeerFromRoom(widget.message.sender!);
+                    }
+                  },
+                  contentPadding: EdgeInsets.zero,
+                  leading: SvgPicture.asset(
+                    "packages/hms_room_kit/lib/src/assets/icons/peer_remove.svg",
+                    semanticsLabel: "fl_remove_peer",
+                    height: 20,
+                    width: 20,
+                    colorFilter: ColorFilter.mode(
+                        HMSThemeColors.alertErrorDefault, BlendMode.srcIn),
+                  ),
+                  title: HMSSubheadingText(
+                      text: "Remove Participant",
                       letterSpacing: 0.1,
                       fontWeight: FontWeight.w600,
                       textColor: HMSThemeColors.alertErrorDefault)),
