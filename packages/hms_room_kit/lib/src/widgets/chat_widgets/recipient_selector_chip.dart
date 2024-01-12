@@ -51,7 +51,7 @@ class _ReceipientSelectorChipState extends State<ReceipientSelectorChip> {
     return GestureDetector(
       onTap: () => {
         if (!(HMSRoomLayout.chatData?.isPrivateChatEnabled ?? true) &&
-                (HMSRoomLayout.chatData?.isPublicChatEnabled ?? false) ||
+            (HMSRoomLayout.chatData?.isPublicChatEnabled ?? false) &&
             (HMSRoomLayout.chatData?.rolesWhitelist.isEmpty ?? false))
           {() {}}
         else
