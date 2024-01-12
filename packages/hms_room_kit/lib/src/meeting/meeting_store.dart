@@ -1772,11 +1772,13 @@ class MeetingStore extends ChangeNotifier
         if (value != null) {
           var data = jsonDecode(value);
           if (data != null && data.isNotEmpty) {
-            data.forEach((element) => pinnedMessages.add({
-                  "id": element["id"],
-                  "text": element["text"],
-                  "pinnedBy": element["pinnedBy"]
-                }));
+            data.forEach((element) {
+              pinnedMessages.add({
+                "id": element["id"],
+                "text": element["text"],
+                "pinnedBy": element["pinnedBy"]
+              });
+            });
           }
         }
         notifyListeners();

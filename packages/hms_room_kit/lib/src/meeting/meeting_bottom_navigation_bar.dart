@@ -53,9 +53,7 @@ class _MeetingBottomNavigationBarState
                           padding: EdgeInsets.only(
                               bottom: MediaQuery.of(context).viewInsets.bottom +
                                   15),
-                          child: OverlayChatComponent(
-                            height: MediaQuery.of(context).size.height * 0.3,
-                          ),
+                          child: const OverlayChatComponent(),
                         ))
                     : const SizedBox();
               }),
