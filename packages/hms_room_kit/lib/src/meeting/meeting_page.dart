@@ -256,7 +256,6 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                   .localPeer),
                                                       builder:
                                                           (_, modeData, __) {
-
                                                         ///This renders the video grid based on whether the controls are visible or not
                                                         return Selector<
                                                                 MeetingNavigationVisibilityController,
@@ -275,7 +274,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                       milliseconds:
                                                                           200),
 
-                                                                  ///If the controls are visible we reduce the 
+                                                                  ///If the controls are visible we reduce the
                                                                   ///height of video grid by 140 else it covers the whole screen
                                                                   height: showControls
                                                                       ? MediaQuery.of(context).size.height -
@@ -303,7 +302,6 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                             (context.read<MeetingStore>().localPeer?.audioTrack != null ||
                                                                                 context.read<MeetingStore>().localPeer?.videoTrack != null))
                                                                         ? OneToOneMode(
-
                                                                             ///This is done to keep the inset tile
                                                                             ///at correct position when controls are hidden
                                                                             bottomMargin: showControls
