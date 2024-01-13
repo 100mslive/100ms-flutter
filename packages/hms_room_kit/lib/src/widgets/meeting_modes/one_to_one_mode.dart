@@ -17,14 +17,12 @@ import 'package:hms_room_kit/src/widgets/peer_widgets/inset_collapsed_view.dart'
 class OneToOneMode extends StatefulWidget {
   final List<PeerTrackNode> peerTracks;
   final BuildContext context;
-  final Size size;
   final int screenShareCount;
   final double bottomMargin;
   const OneToOneMode(
       {Key? key,
       required this.peerTracks,
       required this.context,
-      required this.size,
       required this.screenShareCount,
       this.bottomMargin = 272})
       : super(key: key);
