@@ -73,14 +73,15 @@ This guide will walk you through simple instructions to create a video conferenc
 
 <table>
     <tr>
-        <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/f292bf26-3061-4c9c-925a-981e7dd6c86b"></td>
+        <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/02f7181e-ef73-48fc-b8cd-ed977b3bc28c"></td>
         <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/7875bc6d-597c-4213-98f4-7333a660e689"></td>
         <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/cf10216a-93cb-41c9-b0fd-15b2d05611a0"></td>
     </tr>
     <tr>
+        <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/e4ba9546-56b6-42ee-bea1-c7733053b2b6"></td>
         <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/43263ecf-57e8-4b8d-9bdc-68a72b4ce7fa"></td>
-                <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/e4ba9546-56b6-42ee-bea1-c7733053b2b6"></td>
-        <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/cf10216a-93cb-41c9-b0fd-15b2d05611a0"></td>
+        <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/f292bf26-3061-4c9c-925a-981e7dd6c86b"></td>
+
     </tr>
 </table>
 
