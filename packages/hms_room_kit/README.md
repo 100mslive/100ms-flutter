@@ -11,7 +11,7 @@
 
 # 100ms Room Kit 🎉
 
-<img width="1749" alt="Prebuilt - Edtech" src="https://github.com/100mslive/100ms-flutter/assets/93931528/de8008f7-1fa7-4329-84b4-ce6fedc0833f">
+<img width="500" height="500" alt="Prebuilt - Edtech" src="https://github.com/100mslive/100ms-flutter/assets/93931528/de8008f7-1fa7-4329-84b4-ce6fedc0833f">
 
 A powerful prebuilt UI library for audio/video conferencing, live streaming, and one-to-one calls.
 This package provides developers with a comprehensive set of tools and components to quickly integrate high-quality audio and video communication features into their Flutter applications.
