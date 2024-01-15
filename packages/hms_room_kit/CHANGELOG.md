@@ -5,6 +5,42 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+## 1.0.9 - 2024-01-15
+
+| Package        | Version                                                                                                |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| hms_room_kit   | 1.0.9     |
+| hmssdk_flutter | 1.9.6     |
+
+### 🚀 Added
+
+- Added: Enhanced Chat Controls
+
+  - 📌 Pin and Hide Messages
+
+      Elevate your chat experience with our new room kit feature. Effortlessly pin messages to keep them visible at the top of your chat, or hide messages to remove them from view.
+
+  - 🔒 Chat Moderation
+
+      Gain more control over your chat environment. You can now temporarily block peers within a session, preventing them from sending messages.
+
+  - 👥 Recipient Selector
+
+      Communication tailored to your needs. Send broadcast messages, reach specific groups or roles, and initiate direct messages (DMs) to particular peers with ease.
+
+  - 📋 Copy Messages
+
+      Simplify your interactions. Copy any message quickly with just a single tap, enhancing your chat efficiency.
+
+- Added Skip Preview functionality
+
+  100ms Prebuilt now supports skipping preview screen, while changing roles. This can be configured from 100ms dashboard.
+  If preview screen is skipped, then mic and camera will be muted by default.
+
+### 🛠️ Fixed
+
+- Fixed participants list bugs
+
 ## 1.0.8 - 2023-12-15
 
 | Package        | Version                                                                                                |
