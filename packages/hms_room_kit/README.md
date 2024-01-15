@@ -1,4 +1,4 @@
-[![100ms-svg](https://user-images.githubusercontent.com/93931528/205858417-8c0a0d1b-2d46-4710-9316-7418092fd3d6.svg)](https://100ms.live/)
+# 100ms Room Kit 🎉
 
 [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)
 [![License](https://img.shields.io/github/license/100mslive/100ms-flutter)](https://www.100ms.live/)
@@ -8,8 +8,6 @@
 [![TestFlight](https://img.shields.io/badge/Download%20iOS-TestFlight-blue)](https://testflight.apple.com/join/Uhzebmut)
 [![Activity](https://img.shields.io/github/commit-activity/m/100mslive/100ms-flutter.svg)](https://github.com/100mslive/100ms-flutter/projects/1)
 [![Register](https://img.shields.io/badge/Contact-Know%20More-blue)](https://dashboard.100ms.live/register)
-
-# 100ms Room Kit 🎉
 
 <p align="center" width="100%">
 <img width="600" height="500" alt="Prebuilt - Edtech" src="https://github.com/100mslive/100ms-flutter/assets/93931528/de8008f7-1fa7-4329-84b4-ce6fedc0833f">
