@@ -13,7 +13,7 @@
 # 100ms Flutter SDK 🎉
 
 <p align="center" width="100%">
-<img width="600" height="500" alt="Prebuilt - Edtech" src="https://github.com/100mslive/100ms-flutter/assets/93931528/2bee8810-fe0b-44de-ab4f-35d0998581d3">
+<img alt="Prebuilt - Edtech" src="https://github.com/100mslive/100ms-flutter/assets/93931528/2bee8810-fe0b-44de-ab4f-35d0998581d3">
 </p>
 
 Integrate Real Time Audio and Video conferencing, Interactive Live Streaming, and Chat in your apps with 100ms Flutter SDK.
