@@ -1,3 +1,5 @@
+# 100ms Flutter SDK 🎉
+
 [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)
 [![Build](https://github.com/100mslive/100ms-flutter/actions/workflows/build.yml/badge.svg?branch=develop)](https://github.com/100mslive/100ms-flutter/actions/workflows/build.yml)
 [![License](https://img.shields.io/github/license/100mslive/100ms-flutter)](https://www.100ms.live/)
@@ -7,8 +9,6 @@
 [![TestFlight](https://img.shields.io/badge/Download%20iOS-TestFlight-blue)](https://testflight.apple.com/join/Uhzebmut)
 [![Activity](https://img.shields.io/github/commit-activity/m/100mslive/100ms-flutter.svg)](https://github.com/100mslive/100ms-flutter/projects?type=classic)
 [![Register](https://img.shields.io/badge/Contact-Know%20More-blue)](https://dashboard.100ms.live/register)
-
-# 100ms Flutter SDK 🎉
 
 Integrate Real Time Audio and Video conferencing, Interactive Live Streaming, and Chat in your apps with 100ms Flutter SDK.
 
