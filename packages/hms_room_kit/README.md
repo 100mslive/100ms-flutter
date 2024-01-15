@@ -81,7 +81,6 @@ This guide will walk you through simple instructions to create a video conferenc
         <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/e4ba9546-56b6-42ee-bea1-c7733053b2b6"></td>
         <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/8a0a5a8c-024f-4128-b607-c3ee5957bb17"></td>
         <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/f292bf26-3061-4c9c-925a-981e7dd6c86b"></td>
-
     </tr>
 </table>
 
