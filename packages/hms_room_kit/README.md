@@ -71,11 +71,7 @@ HMSPrebuilt(
 
 This guide will walk you through simple instructions to create a video conferencing app using 100ms Prebuilt and and test it using an emulator or your mobile phone. 100ms prebuilt is completely customizable from 100ms dashboard. Following images portray what you get with 100ms prebuilt
 
-<table>
-
-</table>
-
-<span >
+<span>
     ![Prebuilt iOS - 3](https://github.com/100mslive/100ms-flutter/assets/93931528/f292bf26-3061-4c9c-925a-981e7dd6c86b)  ![3](https://github.com/100mslive/100ms-flutter/assets/93931528/7875bc6d-597c-4213-98f4-7333a660e689)
 </span>
 
