@@ -5,6 +5,27 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+# 1.9.6 - 2024-01-15
+
+| Package                                | Version                                                                                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| hms_room_kit                | 1.0.9  |
+| hmssdk_flutter              | 1.9.6  |
+
+### ✨ Added
+
+- Added `isLargeRoom` property in `HMSRoom` class to check whether the current room is a large room or not
+
+### 🔄 Changed
+
+- `setSessionMetadataForKey` method now supports `dynamic` type for `data` parameter instead of `String?` type.
+
+  Learn more about Session Store [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store#setting-a-value-for-a-specific-key).
+
+Updated to Android SDK 2.8.5 & iOS SDK 1.4.1
+
+**Full Changelog**: [1.9.5...1.9.6](https://github.com/100mslive/100ms-flutter/compare/1.9.5...1.9.6)
+
 # 1.9.5 - 2023-12-15
 
 | Package                                | Version                                                                                                                                  |
