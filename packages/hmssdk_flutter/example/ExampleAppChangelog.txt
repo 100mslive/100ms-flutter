@@ -31,5 +31,5 @@ https://100ms.atlassian.net/browse/FLUT-183
 
 Room Kit: 1.0.9
 Core SDK: 1.9.6
-Android SDK: 2.8.4
+Android SDK: 2.8.5
 iOS SDK: 1.4.1
