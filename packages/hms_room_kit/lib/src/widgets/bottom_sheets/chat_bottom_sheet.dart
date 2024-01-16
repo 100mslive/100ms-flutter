@@ -186,10 +186,11 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                         updateSelectedValue: _updateValueChoose),
 
                   ///Text Field
-                  if((HMSRoomLayout.chatData?.isPrivateChatEnabled??false) ||
-                          (HMSRoomLayout.chatData?.isPublicChatEnabled??false) ||
-                           (HMSRoomLayout.chatData?.rolesWhitelist.isNotEmpty??false))
-                  ChatTextField(sendMessage: sendMessage)
+                  if ((HMSRoomLayout.chatData?.isPrivateChatEnabled ?? false) ||
+                      (HMSRoomLayout.chatData?.isPublicChatEnabled ?? false) ||
+                      (HMSRoomLayout.chatData?.rolesWhitelist.isNotEmpty ??
+                          false))
+                    ChatTextField(sendMessage: sendMessage)
                 ],
               ),
             ),
