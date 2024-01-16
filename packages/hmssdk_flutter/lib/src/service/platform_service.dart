@@ -17,8 +17,9 @@ import 'package:hmssdk_flutter/src/enum/hms_hls_playback_event_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_key_change_listener_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
 import 'package:hmssdk_flutter/src/model/hms_key_change_observer.dart';
+import 'package:hmssdk_flutter/src/model/hms_poll_listener.dart';
 
-class PlatformService {
+abstract class PlatformService {
   ///used to pass data to platform using methods
   static const MethodChannel _channel = const MethodChannel('hmssdk_flutter');
 
@@ -56,6 +57,8 @@ class PlatformService {
   static List<HMSKeyChangeObserver> keyChangeObservers = [];
 
   static List<HMSHLSPlaybackEventsListener> hlsPlaybackEventListener = [];
+
+  static HMSPollListener? _pollListener;
 
   ///List for event Listener
   static List<HMSStatsListener> statsListeners = [];
@@ -95,6 +98,14 @@ class PlatformService {
       statsListeners.remove(listener);
       PlatformService.invokeMethod(PlatformMethod.removeStatsListener);
     }
+  }
+
+  static void addPollUpdateListener(HMSPollListener listener) {
+    _pollListener = listener;
+  }
+
+  static void removePollUpdateListener() {
+    _pollListener = null;
   }
 
   static void addLogsListener(

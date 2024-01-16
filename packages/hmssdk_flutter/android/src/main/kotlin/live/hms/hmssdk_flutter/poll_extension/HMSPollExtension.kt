@@ -1,9 +1,8 @@
 package live.hms.hmssdk_flutter.poll_extension
 
 import live.hms.hmssdk_flutter.HMSPeerExtension
-import live.hms.video.polls.models.HmsPoll
-import live.hms.video.polls.models.HmsPollCategory
-import live.hms.video.polls.models.HmsPollUserTrackingMode
+import live.hms.hmssdk_flutter.HMSRoleExtension
+import live.hms.video.polls.models.*
 
 class HMSPollExtension {
 
@@ -20,13 +19,31 @@ class HMSPollExtension {
             map["poll_id"] = poll.pollId
             map["question_count"] = poll.questionCount
 
-            map["questions"] = poll.questions?.let {
-                poll.questions?.forEach{HMSPollQuestionExtension.toDictionary(it)}
-            }?:run {
-                null
+            val questions = ArrayList<HashMap<String,Any?>?>()
+            poll.questions?.forEach{
+                questions.add(HMSPollQuestionExtension.toDictionary(it))
             }
+            map["questions"] = questions
 
-            map["answers"]
+            map["result"] = HMSPollResultDisplayExtension.toDictionary(poll.result)
+
+            val rolesThatCanViewResponses = ArrayList<HashMap<String,Any?>?>()
+            poll.rolesThatCanViewResponses.forEach{
+                rolesThatCanViewResponses.add(HMSRoleExtension.toDictionary(it))
+            }
+            map["roles_that_can_view_responses"] = rolesThatCanViewResponses
+
+            val rolesThatCanVote = ArrayList<HashMap<String,Any?>?>()
+            poll.rolesThatCanVote.forEach{
+                rolesThatCanVote.add(HMSRoleExtension.toDictionary(it))
+            }
+            map["roles_that_can_vote"] = rolesThatCanVote
+
+            map["started_at"] = poll.startedAt
+            map["started_by"] = HMSPeerExtension.toDictionary(poll.startedBy)
+            map["state"] = getPollState(poll.state)
+            map["stopped_at"] = poll.stoppedAt
+            map["title"] = poll.title
 
             return map
         }
@@ -44,6 +61,24 @@ class HMSPollExtension {
                 HmsPollUserTrackingMode.USER_ID -> "user_id"
                 HmsPollUserTrackingMode.PEER_ID -> "peer_id"
                 HmsPollUserTrackingMode.USERNAME -> "username"
+                else -> null
+            }
+        }
+
+        private fun getPollState(pollState: HmsPollState):String?{
+            return when(pollState){
+                HmsPollState.CREATED -> "created"
+                HmsPollState.STARTED -> "started"
+                HmsPollState.STOPPED -> "stopped"
+                else -> null
+            }
+        }
+
+        fun getPollUpdateType(hmsPollUpdateType: HMSPollUpdateType):String?{
+            return when(hmsPollUpdateType){
+                HMSPollUpdateType.started -> "started"
+                HMSPollUpdateType.stopped -> "stopped"
+                HMSPollUpdateType.resultsupdated -> "results_updated"
                 else -> null
             }
         }

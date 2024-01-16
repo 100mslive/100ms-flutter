@@ -193,9 +193,13 @@ enum PlatformMethod {
   getPeerListIterator,
   peerListIteratorHasNext,
   peerListIteratorNext,
+
+  ///Raise/Lower Hand
   lowerLocalPeerHand,
   lowerRemotePeerHand,
   raiseLocalPeerHand,
+
+  ///TextureView methods
   createTextureView,
   disposeTextureView,
   addTrack,
@@ -487,12 +491,15 @@ extension PlatformMethodValues on PlatformMethod {
       case PlatformMethod.peerListIteratorNext:
         return "peer_list_iterator_next";
 
+      ///Raise/Lower Hand
       case PlatformMethod.lowerLocalPeerHand:
         return "lower_local_peer_hand";
       case PlatformMethod.lowerRemotePeerHand:
         return "lower_remote_peer_hand";
       case PlatformMethod.raiseLocalPeerHand:
         return "raise_local_peer_hand";
+
+      ///TextureView methods
       case PlatformMethod.createTextureView:
         return "create_texture_view";
       case PlatformMethod.disposeTextureView:
@@ -503,6 +510,7 @@ extension PlatformMethodValues on PlatformMethod {
         return "remove_track";
       case PlatformMethod.setDisplayResolution:
         return "set_display_resolution";
+
       default:
         return 'unknown';
     }
@@ -791,12 +799,15 @@ extension PlatformMethodValues on PlatformMethod {
       case "peer_list_iterator_next":
         return PlatformMethod.peerListIteratorNext;
 
+      ///raise/lower hand
       case "lower_local_peer_hand":
         return PlatformMethod.lowerLocalPeerHand;
       case "lower_remote_peer_hand":
         return PlatformMethod.lowerRemotePeerHand;
       case "raise_local_peer_hand":
         return PlatformMethod.raiseLocalPeerHand;
+
+      ///TextureView methods
       case "create_texture_view":
         return PlatformMethod.createTextureView;
       case "dispose_texture_view":
@@ -807,6 +818,11 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.removeTrack;
       case "set_display_resolution":
         return PlatformMethod.setDisplayResolution;
+
+      ///Poll methods
+
+
+
       default:
         return PlatformMethod.unknown;
     }

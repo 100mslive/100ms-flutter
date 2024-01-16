@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.Constants.Companion.METHOD_CALL
 import live.hms.hmssdk_flutter.hls_player.HMSHLSPlayerAction
 import live.hms.hmssdk_flutter.methods.*
+import live.hms.hmssdk_flutter.poll_extension.HMSPollExtension
 import live.hms.hmssdk_flutter.views.HMSHLSPlayerFactory
 import live.hms.hmssdk_flutter.views.HMSTextureView
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
@@ -35,7 +36,11 @@ import live.hms.video.audio.HMSAudioManager.*
 import live.hms.video.connection.stats.*
 import live.hms.video.error.HMSException
 import live.hms.video.events.AgentType
+import live.hms.video.interactivity.HmsPollUpdateListener
 import live.hms.video.media.tracks.*
+import live.hms.video.polls.HMSPollBuilder
+import live.hms.video.polls.models.HMSPollUpdateType
+import live.hms.video.polls.models.HmsPoll
 import live.hms.video.sdk.*
 import live.hms.video.sdk.models.*
 import live.hms.video.sdk.models.enums.*
@@ -66,6 +71,7 @@ class HmssdkFlutterPlugin :
     private var rtcSink: EventChannel.EventSink? = null
     private var sessionStoreSink: EventChannel.EventSink? = null
     var hlsPlayerSink: EventChannel.EventSink? = null
+    private var pollsSink: EventChannel.EventSink? = null
     private lateinit var activity: Activity
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
@@ -469,6 +475,7 @@ class HmssdkFlutterPlugin :
             logsSink = null
             sessionStoreSink = null
             hlsPlayerSink = null
+            pollsSink = null
             hmssdkFlutterPlugin = null
             hmsBinaryMessenger = null
             hmsTextureRegistry = null
@@ -599,6 +606,8 @@ class HmssdkFlutterPlugin :
             this.sessionStoreSink = events
         } else if (nameOfEventSink == "hls_player") {
             this.hlsPlayerSink = events
+        } else if(nameOfEventSink == "polls") {
+            this.pollsSink = events
         }
     }
 
@@ -2077,4 +2086,26 @@ class HmssdkFlutterPlugin :
                 }
             }
         }
+
+    private val hmsPollListener = object : HmsPollUpdateListener{
+        override fun onPollUpdate(hmsPoll: HmsPoll, hmsPollUpdateType: HMSPollUpdateType) {
+            val hashMap: HashMap<String, Any?> = HashMap()
+            hashMap["event_name"] = "on_poll_update"
+
+            val pollHashMap = HashMap<String, Any?>()
+            pollHashMap["poll"] = HMSPollExtension.toDictionary(hmsPoll)
+            pollHashMap["poll_update_type"] = HMSPollExtension.getPollUpdateType(hmsPollUpdateType)
+            hashMap["data"] = pollHashMap
+
+            CoroutineScope(Dispatchers.Main).launch {
+                pollsSink?.success(hashMap)
+            }
+        }
+    }
+
+    fun test(){
+        hmssdk?.getHmsInteractivityCenter()?.pollUpdateListener = hmsPollListener
+        HMSPollBuilder.Builder().questionId
+    }
+
 }
