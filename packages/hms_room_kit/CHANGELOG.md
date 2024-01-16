@@ -32,7 +32,7 @@
 
       Simplify your interactions. Copy any message quickly with just a single tap, enhancing your chat efficiency.
 
-- Added Skip Preview functionality
+- Added Skip Preview for Role Change functionality
 
   100ms Prebuilt now supports skipping preview screen, while changing roles. This can be configured from 100ms dashboard.
   If preview screen is skipped, then mic and camera will be muted by default.
