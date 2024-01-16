@@ -420,6 +420,10 @@ class _OverlayChatComponentState extends State<OverlayChatComponent> {
                               )
                             : const SizedBox();
                       }),
+                  if ((HMSRoomLayout.chatData?.isPrivateChatEnabled ?? false) ||
+                      (HMSRoomLayout.chatData?.isPublicChatEnabled ?? false) ||
+                      (HMSRoomLayout.chatData?.rolesWhitelist.isNotEmpty ??
+                          false))
                   ChatTextField(
                     sendMessage: _sendMessage,
                     toastBackgroundColor:
