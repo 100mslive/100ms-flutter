@@ -14,7 +14,7 @@
 
 ### 🚀 Added
 
-- Added: Enhanced Chat Controls
+- Enhanced Chat Controls
 
   - 📌 Pin and Hide Messages
 
@@ -37,9 +37,6 @@
   100ms Prebuilt now supports skipping preview screen, while changing roles. This can be configured from 100ms dashboard.
   If preview screen is skipped, then mic and camera will be muted by default.
 
-### 🛠️ Fixed
-
-- Fixed participants list bugs
 
 ## 1.0.8 - 2023-12-15
 
