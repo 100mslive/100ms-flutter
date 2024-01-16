@@ -32,6 +32,7 @@ import 'package:hms_room_kit/src/preview_for_role/preview_for_role_header.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_left_room_screen.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_recording_error_toast.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_chat_pause_resume_toast.dart';
 
 ///[MeetingPage] is the main page of the meeting
 ///It takes the following parameters:
@@ -87,7 +88,7 @@ class _MeetingPageState extends State<MeetingPage> {
           peer: toast.toastData,
           meetingStore: context.read<MeetingStore>(),
         );
-      case HMSToastsType.errorToast:
+      case HMSToastsType.recordingErrorToast:
         return HMSRecordingErrorToast(
             recordingError: toast.toastData,
             meetingStore: context.read<MeetingStore>());
@@ -103,6 +104,13 @@ class _MeetingPageState extends State<MeetingPage> {
           toastColor: Utilities.getToastColor(index, toastsCount),
           meetingStore: context.read<MeetingStore>(),
         );
+      case HMSToastsType.chatPauseResumeToast:
+        return HMSChatPauseResumeToast(
+            isChatEnabled: toast.toastData["enabled"],
+            userName: toast.toastData["updatedBy"],
+            meetingStore: context.read<MeetingStore>());
+      default:
+        return const SizedBox();
     }
   }
 
@@ -405,7 +413,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                               color: HMSThemeColors.backgroundDim,
                                                                               child: (isVideoOn && previewForRoleTracks.item1 != null)
                                                                                   ? Center(
-                                                                                      child: HMSVideoView(
+                                                                                      child: HMSTextureView(
                                                                                         scaleType: ScaleType.SCALE_ASPECT_FILL,
                                                                                         track: previewForRoleTracks.item1!,
                                                                                         setMirror: true,

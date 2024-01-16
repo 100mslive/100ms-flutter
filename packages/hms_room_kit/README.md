@@ -1,4 +1,4 @@
-[![100ms-svg](https://user-images.githubusercontent.com/93931528/205858417-8c0a0d1b-2d46-4710-9316-7418092fd3d6.svg)](https://100ms.live/)
+# 100ms Room Kit 🎉
 
 [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)
 [![License](https://img.shields.io/github/license/100mslive/100ms-flutter)](https://www.100ms.live/)
@@ -9,7 +9,9 @@
 [![Activity](https://img.shields.io/github/commit-activity/m/100mslive/100ms-flutter.svg)](https://github.com/100mslive/100ms-flutter/projects/1)
 [![Register](https://img.shields.io/badge/Contact-Know%20More-blue)](https://dashboard.100ms.live/register)
 
-# 100ms Room Kit 🎉
+<p align="center" width="100%">
+<img width="600" height="500" alt="Prebuilt - Edtech" src="https://github.com/100mslive/100ms-flutter/assets/93931528/de8008f7-1fa7-4329-84b4-ce6fedc0833f">
+</p>
 
 A powerful prebuilt UI library for audio/video conferencing, live streaming, and one-to-one calls.
 This package provides developers with a comprehensive set of tools and components to quickly integrate high-quality audio and video communication features into their Flutter applications.
@@ -65,7 +67,23 @@ HMSPrebuilt(
 
 ## Overview
 
-This guide will walk you through simple instructions to create a video conferencing app using 100ms Prebuilt and and test it using an emulator or your mobile phone.
+This guide will walk you through simple instructions to create a video conferencing app using 100ms Prebuilt and and test it using an emulator or your mobile phone. 100ms prebuilt is completely customizable from 100ms dashboard. Following images portray what you get with 100ms prebuilt
+
+<table>
+    <tr>
+        <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/02f7181e-ef73-48fc-b8cd-ed977b3bc28c"></td>
+        <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/7875bc6d-597c-4213-98f4-7333a660e689"></td>
+        <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/cf10216a-93cb-41c9-b0fd-15b2d05611a0"></td>
+    </tr>
+    <tr>
+        <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/e4ba9546-56b6-42ee-bea1-c7733053b2b6"></td>
+        <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/8a0a5a8c-024f-4128-b607-c3ee5957bb17"></td>
+        <td><img src="https://github.com/100mslive/100ms-flutter/assets/93931528/f292bf26-3061-4c9c-925a-981e7dd6c86b"></td>
+    </tr>
+</table>
+
+<!-- |  ![Prebuilt iOS - 3](https://github.com/100mslive/100ms-flutter/assets/93931528/f292bf26-3061-4c9c-925a-981e7dd6c86b) | ![3](https://github.com/100mslive/100ms-flutter/assets/93931528/7875bc6d-597c-4213-98f4-7333a660e689) | 
+|![Prebuilt Flutter - 1](https://github.com/100mslive/100ms-flutter/assets/93931528/cf10216a-93cb-41c9-b0fd-15b2d05611a0) | ![4](https://github.com/100mslive/100ms-flutter/assets/93931528/43263ecf-57e8-4b8d-9bdc-68a72b4ce7fa) | -->
 
 ## Create a sample app
 

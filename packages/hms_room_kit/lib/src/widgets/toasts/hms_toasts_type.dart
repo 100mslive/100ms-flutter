@@ -1,7 +1,9 @@
 ///[HMSToastsType] is used to define the type of toast to be shown.
 enum HMSToastsType {
   roleChangeToast,
-  errorToast,
+  recordingErrorToast,
   localScreenshareToast,
-  roleChangeDeclineToast
+  roleChangeDeclineToast,
+  chatPauseResumeToast,
+  errorToast
 }

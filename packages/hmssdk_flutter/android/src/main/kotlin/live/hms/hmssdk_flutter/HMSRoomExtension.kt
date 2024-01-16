@@ -17,6 +17,8 @@ class HMSRoomExtension {
             room.peerList.forEach {
                 args.add(HMSPeerExtension.toDictionary(it)!!)
             }
+
+            hashMap["is_large"] = room.isLargeRoom
             hashMap["local_peer"] = HMSPeerExtension.toDictionary(room.localPeer)
             hashMap["peers"] = args
             hashMap["rtmp_streaming_state"] = HMSStreamingState.toDictionary(room.rtmpHMSRtmpStreamingState)

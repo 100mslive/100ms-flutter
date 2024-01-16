@@ -6,8 +6,6 @@ class AppDebugConfig {
   Setting these values to defaults and can be toggled from the application
   This will not be shipped with the ui_kit package and only used for internal testing
   */
-  static bool joinWithMutedAudio = false;
-  static bool joinWithMutedVideo = false;
   static bool skipPreview = false;
   static bool mirrorCamera = true;
   static bool showStats = false;
@@ -24,8 +22,6 @@ class AppDebugConfig {
 
   /// Resets the debug configuration to default values
   static void resetToDefault() {
-    joinWithMutedAudio = true;
-    joinWithMutedVideo = true;
     skipPreview = false;
     mirrorCamera = true;
     showStats = false;

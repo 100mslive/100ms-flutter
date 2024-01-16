@@ -104,8 +104,8 @@ class _ScreenControllerState extends State<ScreenController> {
     }
     _hmsSDKInteractor = HMSSDKInteractor(
         iOSScreenshareConfig: widget.options?.iOSScreenshareConfig,
-        joinWithMutedAudio: AppDebugConfig.joinWithMutedAudio,
-        joinWithMutedVideo: AppDebugConfig.joinWithMutedVideo,
+        joinWithMutedAudio: true,
+        joinWithMutedVideo: true,
         isSoftwareDecoderDisabled: AppDebugConfig.isSoftwareDecoderDisabled,
         isAudioMixerDisabled: AppDebugConfig.isAudioMixerDisabled,
         isPrebuilt: true);
@@ -125,9 +125,11 @@ class _ScreenControllerState extends State<ScreenController> {
           });
     } else {
       _hmsSDKInteractor.toggleAlwaysScreenOn();
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
       Constant.debugMode = AppDebugConfig.isDebugMode;
     }
   }

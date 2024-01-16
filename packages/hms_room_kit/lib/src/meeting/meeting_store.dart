@@ -179,7 +179,17 @@ class MeetingStore extends ChangeNotifier
 
   bool retryHLS = true;
 
-  String? sessionMetadata;
+  ///[pinnedMessages] is the list of pinned messages
+  List<dynamic> pinnedMessages = [];
+
+  ///[hiddenMessages] is the list of hidden messages
+  List<String> hiddenMessages = [];
+
+  ///[blackListedUserIds] is the list of user ids which are blacklisted from chat
+  List<String> blackListedUserIds = [];
+
+  ///[recipientSelectorValue] is the value of the recipient selector chip
+  dynamic recipientSelectorValue = "Choose a Recipient";
 
   bool isPipActive = false;
 
@@ -237,6 +247,9 @@ class MeetingStore extends ChangeNotifier
   ///Video View for screenshare
   HMSTextureViewController? screenshareViewController;
 
+  ///Stores whether Chat State
+  Map<String, dynamic> chatControls = {"enabled": true, "updatedBy": null};
+
   Future<HMSException?> join(String userName, String roomCode,
       {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
@@ -272,6 +285,7 @@ class MeetingStore extends ChangeNotifier
     WidgetsBinding.instance.addObserver(this);
     setMeetingModeUsingLayoutApi();
     _hmsSDKInteractor.join(config: roomConfig);
+    setRecipientSelectorValue();
     meetingUrl = roomCode;
     return null;
   }
@@ -421,9 +435,9 @@ class MeetingStore extends ChangeNotifier
             toast.hmsToastType == HMSToastsType.roleChangeToast &&
             data.peerId == toast.toastData.peerId);
         break;
-      case HMSToastsType.errorToast:
+      case HMSToastsType.recordingErrorToast:
         toasts.removeWhere(
-            (toast) => toast.hmsToastType == HMSToastsType.errorToast);
+            (toast) => toast.hmsToastType == HMSToastsType.recordingErrorToast);
         break;
       case HMSToastsType.localScreenshareToast:
         toasts.removeWhere((toast) =>
@@ -434,6 +448,12 @@ class MeetingStore extends ChangeNotifier
             toast.hmsToastType == HMSToastsType.roleChangeDeclineToast &&
             data.peerId == toast.toastData.peerId);
         break;
+      case HMSToastsType.chatPauseResumeToast:
+        toasts.removeWhere((toast) =>
+            toast.hmsToastType == HMSToastsType.chatPauseResumeToast);
+      case HMSToastsType.errorToast:
+        toasts.removeWhere(
+            (toast) => toast.hmsToastType == HMSToastsType.errorToast);
     }
     notifyListeners();
   }
@@ -468,6 +488,15 @@ class MeetingStore extends ChangeNotifier
         forPeer: peer,
         force: forceChange,
         hmsActionResultListener: this);
+  }
+
+  void setPreviousRole(String oldRole) {
+    _hmsSDKInteractor.changeMetadata(
+        metadata: "{\"isBRBOn\":false,\"prevRole\":\"$oldRole\"}",
+        hmsActionResultListener: this);
+    if (isRaisedHand) {
+      toggleLocalPeerHandRaise();
+    }
   }
 
   Future<List<HMSRole>> getRoles() async {
@@ -574,14 +603,14 @@ class MeetingStore extends ChangeNotifier
       if (indexForVideoTrack != -1) {
         previewForRoleVideoTrack =
             result[indexForVideoTrack] as HMSLocalVideoTrack;
-        isVideoOn = true;
+        isVideoOn = !(previewForRoleVideoTrack?.isMute ?? true);
       }
       var indexForAudioTrack = result.indexWhere(
           (element) => element.kind == HMSTrackKind.kHMSTrackKindAudio);
       if (indexForAudioTrack != -1) {
         previewForRoleAudioTrack =
             result[indexForAudioTrack] as HMSLocalAudioTrack;
-        isMicOn = true;
+        isMicOn = !(previewForRoleAudioTrack?.isMute ?? true);
       }
       notifyListeners();
     }
@@ -715,19 +744,31 @@ class MeetingStore extends ChangeNotifier
     }
     log("Calling refresh PeerList Method $peerListIterators");
     peerListIterators.clear();
+
+    ///Here we get off stage roles
     List<String>? offStageRoles = HMSRoomLayout.roleLayoutData?.screens
         ?.conferencing?.defaultConf?.elements?.onStageExp?.offStageRoles;
+
+    ///For each off stage role we get the peer list iterator
     offStageRoles?.forEach((role) async {
       var peerListIterator = await _hmsSDKInteractor.getPeerListIterator(
           peerListIteratorOptions:
               PeerListIteratorOptions(limit: 10, byRoleName: role));
+
+      ///If the peerListIterator is not null then we add it to the map
       if (peerListIterator != null && peerListIterator is HMSPeerListIterator) {
         peerListIterators[role] = peerListIterator;
+
+        ///Here we subtract the number of participants in meeting with the number of participants in the iterator
         participantsInMeeting -= participantsInMeetingMap[role]?.length ?? 0;
         participantsInMeetingMap[role]?.clear();
+
+        ///Here we get the first set of peers from the iterator
         dynamic nonRealTimePeers = await peerListIterator.next();
         if (nonRealTimePeers is List<HMSPeer>) {
-          log("Calling refresh PeerList Method $nonRealTimePeers");
+          log("Calling refresh PeerList Method here $nonRealTimePeers");
+
+          ///Here we add the peers to the participantsInMeetingMap
           if (nonRealTimePeers.isNotEmpty) {
             for (var peer in nonRealTimePeers) {
               addPeer(peer);
@@ -1333,6 +1374,12 @@ class MeetingStore extends ChangeNotifier
       participantsInMeetingMap["Hand Raised"]
           ?.removeWhere((oldPeer) => oldPeer.peer.peerId == peer.peerId);
     }
+
+    ///If peer is removed from room but selected in the recipient selector
+    ///we reset it to "Choose a Recipient"
+    if (recipientSelectorValue == peer) {
+      recipientSelectorValue = "Choose a Recipient";
+    }
     notifyListeners();
   }
 
@@ -1397,6 +1444,10 @@ class MeetingStore extends ChangeNotifier
           participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
         }
         notifyListeners();
+      } else if (peerUpdate == HMSPeerUpdate.metadataChanged) {
+        participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
+      } else if (peerUpdate == HMSPeerUpdate.metadataChanged) {
+        participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
       }
     } else {
       if (peerUpdate == HMSPeerUpdate.roleUpdated) {
@@ -1456,6 +1507,7 @@ class MeetingStore extends ChangeNotifier
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
           getSpotlightPeer();
+          setPreviousRole(localPeer?.role.name ?? "");
           resetLayout(peer.role.name);
           localPeer = peer;
         }
@@ -1716,10 +1768,65 @@ class MeetingStore extends ChangeNotifier
     SessionStoreKey keyType = SessionStoreKeyValues.getMethodFromName(key);
     switch (keyType) {
       case SessionStoreKey.pinnedMessageSessionKey:
-        sessionMetadata = value;
+        pinnedMessages.clear();
+        if (value != null) {
+          var data = jsonDecode(value);
+          if (data != null && data.isNotEmpty) {
+            data.forEach((element) {
+              pinnedMessages.add({
+                "id": element["id"],
+                "text": element["text"],
+                "pinnedBy": element["pinnedBy"]
+              });
+            });
+          }
+        }
+        notifyListeners();
         break;
       case SessionStoreKey.spotlight:
         setPeerToSpotlight(value);
+        break;
+      case SessionStoreKey.chatState:
+        if (value != null) {
+          ///Here we set the chat pause/resume state
+          var data = jsonDecode(value);
+
+          ///If current and previous state is same we return
+          if (chatControls["enabled"] == data["enabled"]) break;
+          chatControls["enabled"] = data["enabled"];
+          chatControls["updatedBy"] = data["updatedBy"]["userName"];
+          if ((HMSRoomLayout.chatData?.isPrivateChatEnabled ?? false) ||
+              (HMSRoomLayout.chatData?.isPublicChatEnabled ?? false) ||
+              (HMSRoomLayout.chatData?.rolesWhitelist.isNotEmpty ?? false)) {
+            toasts.add(HMSToastModel(chatControls,
+                hmsToastType: HMSToastsType.chatPauseResumeToast));
+          }
+          notifyListeners();
+        }
+        break;
+      case SessionStoreKey.chatPeerBlacklist:
+        blackListedUserIds.clear();
+        if (value != null) {
+          var data = jsonDecode(value);
+          if (data != null && data.isNotEmpty) {
+            data.forEach((element) {
+              blackListedUserIds.add(element);
+            });
+          }
+          notifyListeners();
+        }
+        break;
+      case SessionStoreKey.chatMessageBlacklist:
+        hiddenMessages.clear();
+        if (value != null) {
+          var data = jsonDecode(value);
+          if (data != null && data.isNotEmpty) {
+            data.forEach((element) {
+              hiddenMessages.add(element);
+              messages.removeWhere((message) => message.messageId == element);
+            });
+          }
+        }
         break;
       case SessionStoreKey.unknown:
         break;
@@ -1874,9 +1981,77 @@ class MeetingStore extends ChangeNotifier
     audioPlayerVolume = volume;
   }
 
-  void setSessionMetadataForKey({required String key, String? metadata}) {
+  void setSessionMetadataForKey({required String key, dynamic metadata}) {
     _hmsSessionStore?.setSessionMetadataForKey(
         key: key, data: metadata, hmsActionResultListener: this);
+  }
+
+  ///[togglePeerBlock] method is used to block/unblock a peer from chat
+  void togglePeerBlock({required String userId, bool isBlocked = false}) {
+    if (!isBlocked) {
+      blackListedUserIds.add(userId);
+    } else {
+      blackListedUserIds.remove(userId);
+    }
+    setSessionMetadataForKey(
+        key: SessionStoreKeyValues.getNameFromMethod(
+            SessionStoreKey.chatPeerBlacklist),
+        metadata: blackListedUserIds);
+  }
+
+  ///[unpinMessage] method is used to unpin a message in the session
+  void unpinMessage(String messageId) {
+    pinnedMessages.removeWhere((element) => element["id"] == messageId);
+    setSessionMetadataForKey(
+        key: SessionStoreKeyValues.getNameFromMethod(
+            SessionStoreKey.pinnedMessageSessionKey),
+        metadata: pinnedMessages);
+  }
+
+  ///[pinMessage] method is used to pin a message for the session
+  void pinMessage(HMSMessage message) {
+    if (pinnedMessages.length == 3) {
+      pinnedMessages.removeAt(0);
+      notifyListeners();
+    }
+    var data = List.from(pinnedMessages);
+    data.add({
+      "id": message.messageId,
+      "text": "${message.sender?.name}: ${message.message}",
+      "pinnedBy": localPeer?.name,
+    });
+    setSessionMetadataForKey(
+        key: SessionStoreKeyValues.getNameFromMethod(
+            SessionStoreKey.pinnedMessageSessionKey),
+        metadata: data);
+  }
+
+  void hideMessage(HMSMessage message) {
+    hiddenMessages.add(message.messageId);
+    unpinMessage(message.messageId);
+    setSessionMetadataForKey(
+        key: SessionStoreKeyValues.getNameFromMethod(
+            SessionStoreKey.chatMessageBlacklist),
+        metadata: hiddenMessages);
+    notifyListeners();
+  }
+
+  ///[setReipientSelectorValue] method is used to set the value of recipient selector
+  void setRecipientSelectorValue() {
+    if (HMSRoomLayout.chatData?.isPublicChatEnabled ?? false) {
+      recipientSelectorValue = "Everyone";
+      return;
+    } else if (HMSRoomLayout.chatData?.rolesWhitelist.isNotEmpty ?? false) {
+      recipientSelectorValue = HMSRoomLayout.chatData?.rolesWhitelist
+              .firstWhere(
+                  (role) => role != HMSRoomLayout.roleLayoutData?.role) ??
+          "Choose a Recipient";
+    } else if (HMSRoomLayout.chatData?.isPrivateChatEnabled ?? false) {
+      if (peers.length > 1) {
+        recipientSelectorValue = peers[1];
+      }
+    }
+    notifyListeners();
   }
 
   void getSessionMetadata(String key) async {
@@ -1887,9 +2062,8 @@ class MeetingStore extends ChangeNotifier
           time: 5);
       return;
     }
-    if (result != null) {
-      sessionMetadata = result as String;
-    }
+
+    ///Add pinned message here
     notifyListeners();
   }
 
@@ -2189,7 +2363,7 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.startRtmpOrRecording:
         toasts.add(HMSToastModel(hmsException,
-            hmsToastType: HMSToastsType.errorToast));
+            hmsToastType: HMSToastsType.recordingErrorToast));
         recordingType["browser"] = HMSRecordingState.failed;
         notifyListeners();
         break;
@@ -2228,7 +2402,9 @@ class MeetingStore extends ChangeNotifier
         Utilities.showToast("Change role failed");
         break;
       case HMSActionResultListenerMethod.setSessionMetadataForKey:
-        Utilities.showToast("Set session metadata failed");
+        toasts.add(HMSToastModel(hmsException,
+            hmsToastType: HMSToastsType.errorToast));
+        notifyListeners();
         break;
       case HMSActionResultListenerMethod.sendHLSTimedMetadata:
         // TODO: Handle this case.

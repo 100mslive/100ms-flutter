@@ -47,11 +47,43 @@ class HMSSessionStoreAction {
                 return
             }
 
-            if value is String? || value is NSNull {
-                result(HMSResultExtension.toDictionary(true, value))
-            } else {
-                HMSErrorLogger.returnHMSException(#function, "Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error", result)
-            }
+            do{
+                   let isValid = try JSONSerialization.isValidJSONObject(value)
+                   
+                    if(isValid){
+                       let jsonData = try JSONSerialization.data(withJSONObject: value, options: [])
+                       if let jsonString = String(data: jsonData, encoding: .utf8){
+                           result(HMSResultExtension.toDictionary(true, jsonString))
+                       }else{
+                           HMSErrorLogger.logError(#function, "Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error")
+                           result(HMSResultExtension.toDictionary(true, nil))
+                       }
+                   }
+                   else{
+                       if let intValue = value as? Int{
+                           let stringValue = String(intValue)
+                           result(HMSResultExtension.toDictionary(true, stringValue))
+                       } else if let doubleValue = value as? Double{
+                           let stringValue = String(doubleValue)
+                           result(HMSResultExtension.toDictionary(true, stringValue))
+                       } else if let stringValue = value as? String{
+                           result(HMSResultExtension.toDictionary(true, stringValue))
+                       } else if let boolValue = value as? Bool{
+                           let stringValue = String(boolValue)
+                           result(HMSResultExtension.toDictionary(true, stringValue))
+                       } else if (value == nil || value is NSNull){
+                           result(HMSResultExtension.toDictionary(true, nil))
+                       }
+                       else{
+                           HMSErrorLogger.logError(#function, "Session metadata type is not compatible, Please use compatible type while setting metadata", "Type Incompatibility Error")
+                           result(HMSResultExtension.toDictionary(true, nil))
+                       }
+                   }
+               }
+               catch{
+                   HMSErrorLogger.logError(#function, "Session metadata type is not compatible, JSON parsing failed", "Type Incompatibility Error")
+                   result(HMSResultExtension.toDictionary(true, nil))
+               }
 
         }
 
@@ -80,7 +112,7 @@ class HMSSessionStoreAction {
 
             if let error = error {
                 HMSErrorLogger.logError(#function, "Error in setting data: \(data ?? "null") for key: \(key) to the Session Store. Error: \(error.localizedDescription)", "Key Error")
-                result(HMSErrorExtension.getError("Error in setting data: \(data ?? "null") for key: \(key) to the Session Store. Error: \(error.localizedDescription)"))
+                result(HMSErrorExtension.toDictionary(error))
                 return
             }
             result(nil)

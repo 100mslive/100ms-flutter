@@ -15,6 +15,7 @@
 ### Pre-launch Checklist
 
 - [ ] The [Documentation] is updated accordingly, or this PR doesn't require it.
+- [ ] The [ExampleAppChangelog] is updated with related tickets, or this PR doesn't require it.
 - [ ] I updated/added relevant documentation (doc comments with `///`).
 - [ ] I listed at least one issue that this PR fixes in the description above.
 - [ ] I read and followed the [Flutter Style Guide], including [Features we expect every widget to implement].
@@ -23,5 +24,6 @@
 
 <!-- Links -->
 [Documentation]: https://www.100ms.live/docs
+[ExampleAppChangelog]: https://github.com/100mslive/100ms-flutter/blob/main/packages/hmssdk_flutter/example/ExampleAppChangelog.txt
 [Flutter Style Guide]: https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo
 [Features we expect every widget to implement]: https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo#features-we-expect-every-widget-to-implement

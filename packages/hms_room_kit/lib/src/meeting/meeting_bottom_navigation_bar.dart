@@ -6,14 +6,13 @@ import 'package:tuple/tuple.dart';
 
 ///Project imports
 import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_chat_component.dart';
+import 'package:hms_room_kit/src/hls_viewer/overlay_chat_component.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/chat_only_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
-import 'package:hms_room_kit/src/enums/session_store_keys.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/app_utilities_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
@@ -54,9 +53,7 @@ class _MeetingBottomNavigationBarState
                           padding: EdgeInsets.only(
                               bottom: MediaQuery.of(context).viewInsets.bottom +
                                   15),
-                          child: HLSChatComponent(
-                            height: MediaQuery.of(context).size.height * 0.3,
-                          ),
+                          child: const OverlayChatComponent(),
                         ))
                     : const SizedBox();
               }),
@@ -190,13 +187,6 @@ class _MeetingBottomNavigationBarState
                                         }
                                       else
                                         {
-                                          context
-                                              .read<MeetingStore>()
-                                              .getSessionMetadata(
-                                                  SessionStoreKeyValues
-                                                      .getNameFromMethod(
-                                                          SessionStoreKey
-                                                              .pinnedMessageSessionKey)),
                                           context
                                               .read<MeetingStore>()
                                               .setNewMessageFalse(),

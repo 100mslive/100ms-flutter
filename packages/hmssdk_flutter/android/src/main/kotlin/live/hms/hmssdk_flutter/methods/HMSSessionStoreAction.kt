@@ -1,6 +1,9 @@
 package live.hms.hmssdk_flutter.methods
 
+import com.google.gson.JsonArray
 import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
 import live.hms.hmssdk_flutter.HMSCommonAction
@@ -101,7 +104,7 @@ class HMSSessionStoreAction {
                     HMSErrorLogger.returnArgumentsError("key is null")
                 }
 
-            val data = call.argument<String?>("data")
+            val data = call.argument<Any?>("data")
 
             key?.let {
                 key as String

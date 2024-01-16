@@ -46,7 +46,7 @@ class HMSRecordingErrorToast extends StatelessWidget {
         buttonTitle: "Retry",
         action: () {
           meetingStore.startRtmpOrRecording(toRecord: true);
-          meetingStore.removeToast(HMSToastsType.errorToast);
+          meetingStore.removeToast(HMSToastsType.recordingErrorToast);
         },
         height: 36,
         buttonColor: HMSThemeColors.secondaryDefault,
@@ -59,7 +59,7 @@ class HMSRecordingErrorToast extends StatelessWidget {
           size: 24,
         ),
         onPressed: () {
-          meetingStore.removeToast(HMSToastsType.errorToast);
+          meetingStore.removeToast(HMSToastsType.recordingErrorToast);
         },
       ),
     );

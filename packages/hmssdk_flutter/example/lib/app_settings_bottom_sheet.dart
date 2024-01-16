@@ -17,8 +17,6 @@ class AppSettingsBottomSheet extends StatefulWidget {
 }
 
 class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
-  bool joinWithMutedAudio = false;
-  bool joinWithMutedVideo = false;
   bool skipPreview = false;
   bool mirrorCamera = true;
   bool showStats = false;
@@ -51,10 +49,6 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     if (Platform.isAndroid && versions['android'] == null) {
       throw const FormatException("android version not found");
     }
-    joinWithMutedAudio =
-        await Utilities.getBoolData(key: 'join-with-muted-audio') ?? false;
-    joinWithMutedVideo =
-        await Utilities.getBoolData(key: 'join-with-muted-video') ?? false;
     skipPreview = await Utilities.getBoolData(key: 'skip-preview') ?? false;
     mirrorCamera = await Utilities.getBoolData(key: 'mirror-camera') ?? true;
     showStats = await Utilities.getBoolData(key: 'show-stats') ?? false;
@@ -87,8 +81,6 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     AppDebugConfig.isAudioMixerDisabled = isAudioMixerDisabled;
     AppDebugConfig.isAutoSimulcast = isAutoSimulcast;
     AppDebugConfig.isSoftwareDecoderDisabled = isSoftwareDecoderDisabled;
-    AppDebugConfig.joinWithMutedAudio = joinWithMutedAudio;
-    AppDebugConfig.joinWithMutedVideo = joinWithMutedVideo;
     AppDebugConfig.mirrorCamera = mirrorCamera;
     AppDebugConfig.showStats = showStats;
     AppDebugConfig.skipPreview = skipPreview;
@@ -222,66 +214,6 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               Utilities.saveBoolData(
                                   key: 'enable-debug-mode', value: value),
                               AppDebugConfig.isDebugMode = value,
-                              setState(() {})
-                            }),
-                  ),
-                  ListTile(
-                    horizontalTitleGap: 2,
-                    enabled: false,
-                    contentPadding: EdgeInsets.zero,
-                    leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
-                      fit: BoxFit.scaleDown,
-                      colorFilter:
-                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
-                    ),
-                    title: Text(
-                      "Join with muted audio",
-                      semanticsLabel: "fl_join_with_muted_audio",
-                      style: HMSTextStyle.setTextStyle(
-                          fontSize: 14,
-                          color: themeDefaultColor,
-                          letterSpacing: 0.25,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    trailing: CupertinoSwitch(
-                        activeColor: hmsdefaultColor,
-                        value: joinWithMutedAudio,
-                        onChanged: (value) => {
-                              joinWithMutedAudio = value,
-                              Utilities.saveBoolData(
-                                  key: 'join-with-muted-audio', value: value),
-                              AppDebugConfig.joinWithMutedAudio = value,
-                              setState(() {})
-                            }),
-                  ),
-                  ListTile(
-                    horizontalTitleGap: 2,
-                    enabled: false,
-                    contentPadding: EdgeInsets.zero,
-                    leading: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/src/assets/icons/cam_state_off.svg",
-                      fit: BoxFit.scaleDown,
-                      colorFilter:
-                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
-                    ),
-                    title: Text(
-                      "Join with muted video",
-                      semanticsLabel: "fl_join_with_muted_video",
-                      style: HMSTextStyle.setTextStyle(
-                          fontSize: 14,
-                          color: themeDefaultColor,
-                          letterSpacing: 0.25,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    trailing: CupertinoSwitch(
-                        activeColor: hmsdefaultColor,
-                        value: joinWithMutedVideo,
-                        onChanged: (value) => {
-                              joinWithMutedVideo = value,
-                              Utilities.saveBoolData(
-                                  key: 'join-with-muted-video', value: value),
-                              AppDebugConfig.joinWithMutedVideo = value,
                               setState(() {})
                             }),
                   ),

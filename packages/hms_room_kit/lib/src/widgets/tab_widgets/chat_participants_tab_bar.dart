@@ -1,12 +1,20 @@
+///Package imports
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
+import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/enums/session_store_keys.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/chat_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/participants_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
-import 'package:provider/provider.dart';
 
+///[ChatParticipantsTabBar] is a tab bar that is used to render the tab bar for chat and participants
+///This is only rendered when both chat and participants list are enabled.
 class ChatParticipantsTabBar extends StatefulWidget {
   final int tabIndex;
   const ChatParticipantsTabBar({super.key, this.tabIndex = 0});
@@ -47,7 +55,12 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width * 0.76,
+                          width: MediaQuery.of(context).size.width *
+                              ((HMSRoomLayout.chatData?.realTimeControls
+                                          ?.canDisableChat ??
+                                      false)
+                                  ? 0.69
+                                  : 0.76),
                           height: 36,
                           decoration: BoxDecoration(
                               color: HMSThemeColors.surfaceDefault,
@@ -57,7 +70,8 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                             tabs: [
                               Tab(
                                 child: HMSSubheadingText(
-                                    text: "Chat",
+                                    text: HMSRoomLayout.chatData?.chatTitle ??
+                                        "Chat",
                                     fontWeight: FontWeight.w600,
                                     textColor: _controller.index == 0
                                         ? HMSThemeColors.onSurfaceHighEmphasis
@@ -81,8 +95,86 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                       ],
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        if (HMSRoomLayout
+                                .chatData?.realTimeControls?.canDisableChat ??
+                            false)
+                          PopupMenuButton(
+                              padding: EdgeInsets.zero,
+                              position: PopupMenuPosition.under,
+                              color: HMSThemeColors.surfaceDefault,
+                              child: SvgPicture.asset(
+                                  "packages/hms_room_kit/lib/src/assets/icons/settings.svg",
+                                  width: 24,
+                                  height: 24,
+                                  colorFilter: ColorFilter.mode(
+                                      HMSThemeColors.onSurfaceLowEmphasis,
+                                      BlendMode.srcIn)),
+                              itemBuilder: (context) => [
+                                    PopupMenuItem(
+                                        value: 1,
+                                        child: Row(children: [
+                                          SvgPicture.asset(
+                                              "packages/hms_room_kit/lib/src/assets/icons/${context.read<MeetingStore>().chatControls["enabled"] ? "recording_paused" : "resume"}.svg",
+                                              width: 20,
+                                              height: 20,
+                                              colorFilter: ColorFilter.mode(
+                                                  HMSThemeColors
+                                                      .onSurfaceHighEmphasis,
+                                                  BlendMode.srcIn)),
+                                          const SizedBox(
+                                            width: 8,
+                                          ),
+                                          HMSTitleText(
+                                            text: context
+                                                    .read<MeetingStore>()
+                                                    .chatControls["enabled"]
+                                                ? "Pause Chat"
+                                                : "Resume Chat",
+                                            textColor: HMSThemeColors
+                                                .onSurfaceHighEmphasis,
+                                            fontSize: 14,
+                                            lineHeight: 20,
+                                            letterSpacing: 0.1,
+                                          ),
+                                        ]))
+                                  ],
+                              onSelected: (value) {
+                                switch (value) {
+                                  case 1:
+                                    context
+                                        .read<MeetingStore>()
+                                        .setSessionMetadataForKey(
+                                            key: SessionStoreKeyValues
+                                                .getNameFromMethod(
+                                                    SessionStoreKey.chatState),
+                                            metadata: {
+                                          "enabled": context
+                                                  .read<MeetingStore>()
+                                                  .chatControls["enabled"]
+                                              ? false
+                                              : true,
+                                          "updatedBy": {
+                                            "peerID": context
+                                                .read<MeetingStore>()
+                                                .localPeer
+                                                ?.peerId,
+                                            "userID": context
+                                                .read<MeetingStore>()
+                                                .localPeer
+                                                ?.customerUserId,
+                                            "userName": context
+                                                .read<MeetingStore>()
+                                                .localPeer
+                                                ?.name
+                                          },
+                                          "updatedAt": DateTime.now()
+                                              .millisecondsSinceEpoch //unix timestamp in miliseconds
+                                        });
+                                    break;
+                                }
+                              }),
                         HMSCrossButton(
                           onPressed: () =>
                               context.read<MeetingStore>().setNewMessageFalse(),
@@ -92,7 +184,7 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                   ],
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.78,
+                  height: MediaQuery.of(context).size.height * 0.76,
                   child: TabBarView(controller: _controller, children: const [
                     ChatBottomSheet(),
                     ParticipantsBottomSheet()

@@ -77,9 +77,9 @@ class HMSSessionStore {
   ///Refer: Read more about setSessionMetadataForKey [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store#setting-a-value-for-a-specific-key)
   Future<void> setSessionMetadataForKey(
       {required String key,
-      required String? data,
+      required dynamic data,
       HMSActionResultListener? hmsActionResultListener}) async {
-    Map<String, String?> arguments = {
+    Map<String, dynamic> arguments = {
       "key": key,
       "data": data,
     };

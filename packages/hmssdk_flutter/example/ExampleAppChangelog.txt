@@ -1,9 +1,35 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 
-- Beam Intermediate State Updates
-https://100ms.atlassian.net/browse/FLUT-135
+- Add app launch animation for Prebuilt
+https://100ms.atlassian.net/browse/FLUT-180
 
-Room Kit: 1.0.8
-Core SDK: 1.9.5
-Android SDK: 2.8.3
-iOS SDK: 1.4.0
+- Real time chat controls
+https://100ms.atlassian.net/browse/FLUT-153
+
+- Skip Preview for Role Change
+https://100ms.atlassian.net/browse/FLUT-162
+
+- Even if screenshare is disabled, UI still shows screenshare option
+https://100ms.atlassian.net/browse/LIVE-1981
+
+- Block Peer From Chat
+https://100ms.atlassian.net/browse/FLUT-157
+
+- Multi Pin Chat
+https://100ms.atlassian.net/browse/FLUT-154
+
+- can't see pinned chat(by remote peer) on Flutter
+https://100ms.atlassian.net/browse/FLUT-187
+
+- Send to picker based on layout API
+https://100ms.atlassian.net/browse/FLUT-156
+
+- Added hide message functionality
+
+- Add Remove peer option in message context menu
+https://100ms.atlassian.net/browse/FLUT-183
+
+Room Kit: 1.0.9
+Core SDK: 1.9.6
+Android SDK: 2.8.5
+iOS SDK: 1.4.1
