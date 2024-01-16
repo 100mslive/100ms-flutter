@@ -123,8 +123,7 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
                     textColor: HMSThemeColors.onSurfaceHighEmphasis)),
 
             if ((HMSRoomLayout.chatData?.realTimeControls?.canHideMessage ??
-                    false) &&
-                (widget.message.sender?.isLocal ?? false))
+                    false))
               ListTile(
                   horizontalTitleGap: 2,
                   onTap: () async {
