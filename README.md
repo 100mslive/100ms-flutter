@@ -21,6 +21,10 @@ With support for HLS and RTMP Live Streaming and Recording, Picture-in-Picture (
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+Checkout the 100ms Flutter SDK [here](https://github.com/100mslive/100ms-flutter/tree/main/packages/hmssdk_flutter)
+
+Checkout the 100ms Prebuilt [here](https://github.com/100mslive/100ms-flutter/tree/main/packages/hms_room_kit)
+
 🧱 The Prebuilt QuickStart Guide is [available here](https://www.100ms.live/docs/flutter/v2/quickstart/prebuilt).
 
 📖 Read the Complete Documentation here: https://www.100ms.live/docs/flutter/v2/guides/quickstart
