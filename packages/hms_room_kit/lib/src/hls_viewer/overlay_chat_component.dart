@@ -424,11 +424,11 @@ class _OverlayChatComponentState extends State<OverlayChatComponent> {
                       (HMSRoomLayout.chatData?.isPublicChatEnabled ?? false) ||
                       (HMSRoomLayout.chatData?.rolesWhitelist.isNotEmpty ??
                           false))
-                  ChatTextField(
-                    sendMessage: _sendMessage,
-                    toastBackgroundColor:
-                        HMSThemeColors.backgroundDim.withAlpha(64),
-                  )
+                    ChatTextField(
+                      sendMessage: _sendMessage,
+                      toastBackgroundColor:
+                          HMSThemeColors.backgroundDim.withAlpha(64),
+                    )
                 ],
               ),
             );
