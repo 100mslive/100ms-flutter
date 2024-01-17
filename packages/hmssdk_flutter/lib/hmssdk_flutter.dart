@@ -102,6 +102,8 @@ export 'src/model/hms_peer_list_iterator.dart';
 export 'src/model/peer_list_iterator_options.dart';
 export 'src/enum/hms_recording_state.dart';
 export 'src/enum/hms_streaming_state.dart';
+export 'src/model/hms_poll_interactivity_center.dart';
+export 'src/model/hms_poll_listener.dart';
 
 //Views
 export 'src/ui/meeting/hms_texture_view.dart';

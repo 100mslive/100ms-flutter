@@ -65,6 +65,7 @@ class HmssdkFlutterPlugin :
     private var rtcStatsChannel: EventChannel? = null
     private var sessionStoreChannel: EventChannel? = null
     var hlsPlayerChannel: EventChannel? = null
+    private var pollsEventChannel : EventChannel? = null
     private var eventSink: EventChannel.EventSink? = null
     private var previewSink: EventChannel.EventSink? = null
     private var logsSink: EventChannel.EventSink? = null
@@ -111,6 +112,9 @@ class HmssdkFlutterPlugin :
             this.hlsPlayerChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "hls_player_channel")
 
+            this.pollsEventChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger, "polls_event_channel")
+
             this.meetingEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Meeting event channel not found")
             this.channel?.setMethodCallHandler(this) ?: Log.e("Channel Error", "Event channel not found")
             this.previewChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Preview channel not found")
@@ -118,6 +122,7 @@ class HmssdkFlutterPlugin :
             this.rtcStatsChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "RTC Stats channel not found")
             this.sessionStoreChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Session Store channel not found")
             this.hlsPlayerChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "HLS Player channel not found")
+            this.pollsEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error","polls events channel not found")
             this.hmsVideoFactory = HMSVideoViewFactory(this)
             this.hmsHLSPlayerFactory = HMSHLSPlayerFactory(this)
 
@@ -279,6 +284,10 @@ class HmssdkFlutterPlugin :
 
             "get_peer_list_iterator", "peer_list_iterator_has_next", "peer_list_iterator_next" -> {
                 HMSPeerListIteratorAction.peerListIteratorAction(call, result, hmssdk!!)
+            }
+
+            "add_poll_update_listener", "remove_poll_update_listener" -> {
+                pollActions(call)
             }
 
             else -> {
@@ -458,6 +467,17 @@ class HmssdkFlutterPlugin :
         }
     }
 
+    private fun pollActions(call: MethodCall){
+        when(call.method){
+            "add_poll_update_listener" -> {
+                hmssdk?.getHmsInteractivityCenter()?.pollUpdateListener = hmsPollListener
+            }
+            "remove_poll_update_listener" -> {
+                hmssdk?.getHmsInteractivityCenter()?.pollUpdateListener = null
+            }
+        }
+    }
+
     override fun onDetachedFromEngine(
         @NonNull binding: FlutterPlugin.FlutterPluginBinding,
     ) {
@@ -469,6 +489,7 @@ class HmssdkFlutterPlugin :
             rtcStatsChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "RTC Stats channel not found")
             sessionStoreChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Session Store channel not found")
             hlsPlayerChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "HLS Player channel not found")
+            pollsEventChannel?.setStreamHandler(null)?: Log.e("Channel Error", "polls event  channel not found")
             eventSink = null
             previewSink = null
             rtcSink = null
@@ -2089,23 +2110,19 @@ class HmssdkFlutterPlugin :
 
     private val hmsPollListener = object : HmsPollUpdateListener{
         override fun onPollUpdate(hmsPoll: HmsPoll, hmsPollUpdateType: HMSPollUpdateType) {
-            val hashMap: HashMap<String, Any?> = HashMap()
-            hashMap["event_name"] = "on_poll_update"
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_poll_update"
 
             val pollHashMap = HashMap<String, Any?>()
             pollHashMap["poll"] = HMSPollExtension.toDictionary(hmsPoll)
             pollHashMap["poll_update_type"] = HMSPollExtension.getPollUpdateType(hmsPollUpdateType)
-            hashMap["data"] = pollHashMap
+            args["data"] = pollHashMap
 
             CoroutineScope(Dispatchers.Main).launch {
-                pollsSink?.success(hashMap)
+                pollsSink?.success(args)
             }
         }
     }
 
-    fun test(){
-        hmssdk?.getHmsInteractivityCenter()?.pollUpdateListener = hmsPollListener
-        HMSPollBuilder.Builder().questionId
-    }
 
 }

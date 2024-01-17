@@ -9,6 +9,8 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:hmssdk_flutter/src/enum/hms_poll_enum.dart';
+import 'package:hmssdk_flutter/src/model/hms_poll.dart';
 import 'package:intl/intl.dart';
 
 //Project imports
@@ -34,7 +36,8 @@ class MeetingStore extends ChangeNotifier
         HMSStatsListener,
         HMSLogListener,
         HMSKeyChangeListener,
-        HMSHLSPlaybackEventsListener {
+        HMSHLSPlaybackEventsListener,
+        HMSPollListener {
   late HMSSDKInteractor _hmsSDKInteractor;
 
   MeetingStore({required HMSSDKInteractor hmsSDKInteractor}) {
@@ -281,6 +284,7 @@ class MeetingStore extends ChangeNotifier
 
     _hmsSDKInteractor.addUpdateListener(this);
     _hmsSDKInteractor.addLogsListener(this);
+    HMSPollInteractivityCenter.addPollUpdateListener(listener: this);
     HMSHLSPlayerController.addHMSHLSPlaybackEventsListener(this);
     WidgetsBinding.instance.addObserver(this);
     setMeetingModeUsingLayoutApi();
@@ -2572,5 +2576,10 @@ class MeetingStore extends ChangeNotifier
     for (var peer in addedPeers) {
       addPeer(peer);
     }
+  }
+
+  @override
+  void onPollUpdate({required HMSPoll poll, required HMSPollUpdateType pollUpdateType}) {
+    // TODO: implement onPollCreated
   }
 }

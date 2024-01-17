@@ -15,6 +15,7 @@ class HMSPollQuestionOptionExtension {
                 map["text"] = it.text
                 map["trim"] = it.trim
                 map["vote_count"] = it.voteCount
+                map["weight"] = it.weight
                 return map
             }?:run {
                 return null

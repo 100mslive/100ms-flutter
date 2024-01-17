@@ -3,6 +3,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_hls_playback_event_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_key_change_listener_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
+import 'package:hmssdk_flutter/src/enum/hms_poll_enum.dart';
 
 ///PlatformMethodResponse contains all the responses sent back from the platform
 ///
@@ -81,4 +82,14 @@ class HMSHLSPlayerPlaybackEventResponse {
   final Map<dynamic, dynamic> data;
 
   HMSHLSPlayerPlaybackEventResponse({required this.method, required this.data});
+}
+
+///HMSPollListenerMethodResponse contains all the responses sent from the poll channel
+///
+/// Checkout different responses in [HMSPollListenerMethod] enum
+class HMSPollListenerMethodResponse {
+  final HMSPollListenerMethod method;
+  final Map<dynamic, dynamic> data;
+
+  HMSPollListenerMethodResponse({required this.method, required this.data});
 }

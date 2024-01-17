@@ -1,3 +1,6 @@
+import 'package:hmssdk_flutter/src/enum/hms_poll_enum.dart';
+import 'package:hmssdk_flutter/src/model/hms_poll.dart';
+
 abstract class HMSPollListener{
-    void onPollCreated({required HMSPoll poll, required HMSPollUpdateType pollUpdateType});
+    void onPollUpdate({required HMSPoll poll, required HMSPollUpdateType pollUpdateType});
 }

@@ -62,3 +62,116 @@ extension HMSPollCategoryValues on HMSPollCategory{
     }
   }
 }
+
+enum HMSPollQuestionType{
+  singleChoice,
+  multiChoice,
+  shortAnswer,
+  longAnswer
+}
+
+extension HMSPollQuestionTypeValues on HMSPollQuestionType{
+
+    static HMSPollQuestionType getHMSPollQuestionTypeFromString(String pollQuestionType){
+      switch(pollQuestionType){
+        case "single_choice":
+          return HMSPollQuestionType.singleChoice;
+        case "multi_choice":
+          return HMSPollQuestionType.multiChoice;
+        case "short_answer":
+          return HMSPollQuestionType.shortAnswer;
+        case "long_answer":
+          return HMSPollQuestionType.longAnswer;
+        default:
+          return HMSPollQuestionType.singleChoice;
+      }
+    }
+
+    static String getStringFromHMSPollQuestionType(HMSPollQuestionType hmsPollQuestionType){
+      switch(hmsPollQuestionType){
+        case HMSPollQuestionType.singleChoice:
+          return "single_choice";
+        case HMSPollQuestionType.multiChoice:
+          return "multi_choice";
+        case HMSPollQuestionType.shortAnswer:
+          return "short_answer";
+        case HMSPollQuestionType.longAnswer:
+          return "long_answer";
+        default:
+          return "single_choice";
+      }
+    }
+}
+
+enum HMSPollState{
+  started,
+  stopped,
+  created
+}
+
+extension HMSPollStateValues on HMSPollState{
+
+    static HMSPollState getHMSPollStateFromString(String pollState){
+      switch(pollState){
+        case "started":
+          return HMSPollState.started;
+        case "stopped":
+          return HMSPollState.stopped;
+        case "created":
+          return HMSPollState.created;
+        default:
+          return HMSPollState.created;
+      }
+    }
+
+    static String getStringFromHMSPollState(HMSPollState hmsPollState){
+      switch(hmsPollState){
+        case HMSPollState.started:
+          return "started";
+        case HMSPollState.stopped:
+          return "stopped";
+        case HMSPollState.created:
+          return "created";
+        default:
+          return "created";
+      }
+    }
+}
+
+enum HMSPollUpdateType{
+    started,
+    stopped,
+    resultsupdated
+}
+
+extension HMSPollUpdateTypeValues on HMSPollUpdateType{
+
+    static HMSPollUpdateType getHMSPollUpdateTypeFromString(String pollUpdateType){
+      switch(pollUpdateType){
+        case "started":
+          return HMSPollUpdateType.started;
+        case "stopped":
+          return HMSPollUpdateType.stopped;
+        case "results_updated":
+          return HMSPollUpdateType.resultsupdated;
+        default:
+          return HMSPollUpdateType.resultsupdated;
+      }
+    }
+}
+
+enum HMSPollListenerMethod{
+  onPollUpdate,
+  unknown
+}
+
+extension HMSPollListenerMethodValues on HMSPollListenerMethod{
+  static HMSPollListenerMethod getMethodFromName(String name) {
+    switch (name) {
+      case 'on_poll_update':
+        return HMSPollListenerMethod.onPollUpdate;
+      default:
+        return HMSPollListenerMethod.unknown;
+    }
+  }
+}

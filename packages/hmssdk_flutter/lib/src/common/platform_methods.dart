@@ -204,7 +204,12 @@ enum PlatformMethod {
   disposeTextureView,
   addTrack,
   removeTrack,
-  setDisplayResolution
+  setDisplayResolution,
+
+  ///Poll methods
+  addPollUpdateListener,
+  removePollUpdateListener,
+  quickStartPoll
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -510,6 +515,14 @@ extension PlatformMethodValues on PlatformMethod {
         return "remove_track";
       case PlatformMethod.setDisplayResolution:
         return "set_display_resolution";
+
+      ///Poll Methods
+      case PlatformMethod.addPollUpdateListener:
+        return "add_poll_update_listener";
+      case PlatformMethod.removePollUpdateListener:
+        return "remove_poll_update_listener";
+      case PlatformMethod.quickStartPoll:
+        return "quick_start_poll";
 
       default:
         return 'unknown';
@@ -820,8 +833,12 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.setDisplayResolution;
 
       ///Poll methods
-
-
+      case "add_poll_update_listener":
+        return PlatformMethod.addPollUpdateListener;
+      case "remove_poll_update_listener":
+        return PlatformMethod.removePollUpdateListener;
+      case "quick_start_poll":
+        return PlatformMethod.quickStartPoll;
 
       default:
         return PlatformMethod.unknown;

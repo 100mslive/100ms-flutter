@@ -13,7 +13,7 @@ class HMSPollExtension {
 
             map["anonymous"] = poll.anonymous
             map["category"] = getPollCategory(poll.category)
-            map["createdBy"] = HMSPeerExtension.toDictionary(poll.createdBy)
+            map["created_by"] = HMSPeerExtension.toDictionary(poll.createdBy)
             map["duration"] = poll.duration
             map["mode"] = getPollUserTrackingMode(poll.mode)
             map["poll_id"] = poll.pollId
