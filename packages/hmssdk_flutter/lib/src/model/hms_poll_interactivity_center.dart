@@ -2,6 +2,7 @@
 
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_poll_enum.dart';
+import 'package:hmssdk_flutter/src/model/hms_poll_question.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 abstract class HMSPollInteractivityCenter {
@@ -17,85 +18,72 @@ abstract class HMSPollInteractivityCenter {
       {required HMSPollBuilder pollBuilder,
       required HMSActionResultListener hmsActionResultListener}) async {
     PlatformService.invokeMethod(PlatformMethod.quickStartPoll,
-        arguments: {"poll_builder": pollBuilder.toMap(pollBuilder)});
+        arguments: {"poll_builder": pollBuilder.toMap()});
   }
 }
 
 class HMSPollBuilder {
-  late bool _answerHidden;
-  late bool _canBeSkipped;
-  late bool _canChangeResponse;
+  late bool _anonymous;
   late Duration _duration;
-  late int _maxLength;
-  late int _minLength;
-  late bool _negativeMarking;
-  late Map<String, bool?> _options;
+  late HMSPollUserTrackingMode _mode;
+  late HMSPollCategory _pollCategory;
+  late String _pollId;
+  late String _questionId;
+  late List<HMSPollQuestion> _questions;
+  late List<String>? _rolesThatCanViewResponses;
+  late List<String>? _rolesThatCanVote;
   late String _title;
-  late HMSPollQuestionType _type;
-  late int _weight;
 
-  set addOption(String option) {
-    _options[option] = null;
-  }
-
-  set withAnswerHidden(bool answerHidden) {
-    _answerHidden = answerHidden;
-  }
-
-  set withCanBeSkipped(bool canBeSkipped) {
-    _canBeSkipped = canBeSkipped;
-  }
-
-  set withCanChangeResponse(bool canChangeResponse) {
-    _canChangeResponse = canChangeResponse;
+  set withAnonymous(bool anonymous) {
+    _anonymous = anonymous;
   }
 
   set withDuration(Duration duration) {
     _duration = duration;
   }
 
-  set withMaxLength(int maxLength) {
-    _maxLength = maxLength;
+  set withUserTrackingMode(HMSPollUserTrackingMode mode) {
+    _mode = mode;
   }
 
-  set withMinLength(int minLength) {
-    _minLength = minLength;
+  set withCategory(HMSPollCategory pollCategory) {
+    _pollCategory = pollCategory;
+  }
+
+  set withPollId(String pollId) {
+    _pollId = pollId;
+  }
+
+  set withRolesThatCanViewResponses(List<String> rolesThatCanViewResponses) {
+    _rolesThatCanViewResponses = rolesThatCanViewResponses;
+  }
+
+  set withRolesThatCanVote(List<String> rolesThatCanVote) {
+    _rolesThatCanVote = rolesThatCanVote;
   }
 
   set withTitle(String title) {
     _title = title;
   }
 
-  set withWeight(int weight) {
-    _weight = weight;
-  }
+  Map<String, dynamic> toMap() {
+    return {
+      'anonymous': _anonymous,
 
-  HMSPollBuilder addQuizOption(
-      {required String option, required bool isCorrect}) {
-    _options[option] = isCorrect;
-    return this;
-  }
+      ///TODO: Complete duration mapping
+      ///Check duration type
+      'duration': _duration.inMilliseconds,
 
-  HMSPollBuilder build() {
-    return this;
-  }
-
-  Map<String, dynamic> toMap(HMSPollBuilder pollBuilder) {
-    Map<String, dynamic> data = {};
-
-    data["answer_hidden"] = pollBuilder._answerHidden;
-    data["can_be_skipped"] = pollBuilder._canBeSkipped;
-    data["can_change_response"] = pollBuilder._canChangeResponse;
-    data["duration"] = pollBuilder._duration.inMilliseconds;
-    data["max_length"] = pollBuilder._maxLength;
-    data["min_length"] = pollBuilder._minLength;
-    data["negative_marking"] = pollBuilder._negativeMarking;
-    data["options"] = pollBuilder._options;
-    data["title"] = pollBuilder._title;
-    data["type"] = HMSPollQuestionTypeValues.getStringFromHMSPollQuestionType(
-        pollBuilder._type);
-    data["weight"] = pollBuilder._weight;
-
-    return data;
+      'mode':
+          HMSPollUserTrackingModeValues.getStringFromHMSPollUserTrackingMode(
+              _mode),
+      'poll_category':
+          HMSPollCategoryValues.getStringFromHMSPollCategory(_pollCategory),
+      'poll_id': _pollId,
+      'questions': _questions.map((e) => e.toMap()).toList(),
+      'roles_that_can_view_responses': _rolesThatCanViewResponses,
+      'roles_that_can_vote': _rolesThatCanVote,
+      'title': _title
+    };
   }
 }

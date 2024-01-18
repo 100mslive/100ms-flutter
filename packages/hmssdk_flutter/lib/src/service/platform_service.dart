@@ -8,7 +8,6 @@
 ///
 ///[hmssdk_flutter] will send updates to all the listeners when there is any change in anything.
 import 'dart:async';
-import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/services.dart';

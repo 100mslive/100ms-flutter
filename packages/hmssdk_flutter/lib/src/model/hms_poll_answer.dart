@@ -23,8 +23,8 @@ class HMSPollAnswer {
 
   factory HMSPollAnswer.fromMap(Map map) {
     return HMSPollAnswer(
-      answerText: map['answer_text'],
-      duration: Duration(milliseconds: map['duration']),
+      answerText: map['answer'],
+      duration: Duration(seconds: map['duration']),
       questionId: map['question_id'],
       questionType:
           HMSPollQuestionTypeValues.getHMSPollQuestionTypeFromString(map['question_type']),
@@ -33,5 +33,18 @@ class HMSPollAnswer {
       skipped: map['skipped'],
       update: map['update'],
     );
+  }
+
+  Map<String,dynamic> toMap() {
+    return {
+      'answer': answerText,
+      'duration': duration.inSeconds,
+      'question_id': questionId,
+      'question_type': questionType.toString(),
+      'selected_option': selectedOption,
+      'selected_options': selectedOptions,
+      'skipped': skipped,
+      'update': update,
+    };
   }
 }

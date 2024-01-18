@@ -12,7 +12,7 @@ class HMSPollAnswerExtension {
             answer?.let {
                 val map = HashMap<String, Any?>()
                 map["answer"] = it.answerText
-                map["duration_millis"] = it.durationMillis
+                map["duration"] = it.durationMillis
                 map["question_id"] = it.questionId
                 map["question_type"] = getPollQuestionType(it.questionType)
                 map["selected_option"] = it.selectedOption

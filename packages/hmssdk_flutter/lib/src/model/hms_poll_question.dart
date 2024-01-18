@@ -49,7 +49,8 @@ class HMSPollQuestion {
           : null,
       
       ///TODO: Complete duration mapping
-      duration: Duration(milliseconds: map['duration']),
+      ///Check duration units.
+      duration: Duration(seconds: map['duration']),
       myResponses: map['my_responses'] != null
           ? (map['my_responses'] as List)
               .map((e) => HMSPollAnswer.fromMap(e))
@@ -70,4 +71,25 @@ class HMSPollQuestion {
       voted: map['voted'],
     );
   }
+
+  Map<String,dynamic> toMap() {
+    return {
+      'answer_long_min_length': answerLongMinLength,
+      'answer_short_min_length': answerShortMinLength,
+      'can_change_response': canChangeResponse,
+      'can_skip': canSkip,
+      'correct_answer': correctAnswer?.toMap(),
+      'duration': duration.inMilliseconds,
+      'my_responses': myResponses.map((e) => e.toMap()).toList(),
+      'negative': negative,
+      'options': options.map((e) => e.toMap()).toList(),
+      'question_id': questionId,
+      'text': text,
+      'total': total,
+      'type': HMSPollQuestionTypeValues.getStringFromHMSPollQuestionType(type),
+      'weight': weight,
+      'voted': voted,
+    };
+  }
+  
 }

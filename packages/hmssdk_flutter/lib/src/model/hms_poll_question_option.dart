@@ -24,4 +24,15 @@ class HMSPollQuestionOption {
       weight: map['weight'],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'case': optionCase,
+      'index': index,
+      'text': text,
+      'trim': trim,
+      'vote_count': voteCount,
+      'weight': weight,
+    };
+  }
 }
