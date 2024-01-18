@@ -5,6 +5,17 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+# 1.9.7 - 2024-01-18
+
+| Package                                | Version                                                                                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| hms_room_kit                | 1.0.10  |
+| hmssdk_flutter              | 1.9.7   |
+
+Updated to Android SDK 2.8.8 & iOS SDK 1.4.2
+
+**Full Changelog**: [1.9.6...1.9.7](https://github.com/100mslive/100ms-flutter/compare/1.9.6...1.9.7)
+
 # 1.9.6 - 2024-01-15
 
 | Package                                | Version                                                                                                                                  |

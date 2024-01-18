@@ -11,10 +11,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/enums/meeting_mode.dart';
-import 'package:hms_room_kit/src/model/peer_track_node.dart';
-import 'package:hms_room_kit/src/widgets/meeting_modes/custom_one_to_one_grid.dart';
-import 'package:hms_room_kit/src/widgets/meeting_modes/one_to_one_mode.dart';
+import 'package:hms_room_kit/src/meeting/meeting_grid_component.dart';
 import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
 import 'package:hms_room_kit/src/meeting/meeting_bottom_navigation_bar.dart';
 import 'package:hms_room_kit/src/meeting/meeting_header.dart';
@@ -63,6 +60,7 @@ class _MeetingPageState extends State<MeetingPage> {
     checkAudioState();
     _enableForegroundService();
     _visibilityController = MeetingNavigationVisibilityController();
+    _visibilityController!.startTimerToHideButtons();
   }
 
   void checkAudioState() async {
@@ -185,130 +183,11 @@ class _MeetingPageState extends State<MeetingPage> {
                                           MediaQuery.of(context).padding.bottom,
                                       child: Stack(
                                         children: [
-                                          Selector<
-                                                  MeetingStore,
-                                                  Tuple6<
-                                                      List<PeerTrackNode>,
-                                                      bool,
-                                                      int,
-                                                      int,
-                                                      MeetingMode,
-                                                      PeerTrackNode?>>(
-                                              selector: (_, meetingStore) => Tuple6(
-                                                  meetingStore.peerTracks,
-                                                  meetingStore.isHLSLink,
-                                                  meetingStore
-                                                      .peerTracks.length,
-                                                  meetingStore.screenShareCount,
-                                                  meetingStore.meetingMode,
-                                                  meetingStore
-                                                          .peerTracks.isNotEmpty
-                                                      ? meetingStore.peerTracks[
-                                                          meetingStore
-                                                              .screenShareCount]
-                                                      : null),
-                                              builder: (_, data, __) {
-                                                if (data.item3 == 0) {
-                                                  return Center(
-                                                      child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      CircularProgressIndicator(
-                                                        strokeWidth: 2,
-                                                        color: HMSThemeColors
-                                                            .primaryDefault,
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      if (context
-                                                          .read<MeetingStore>()
-                                                          .peers
-                                                          .isNotEmpty)
-                                                        HMSTitleText(
-                                                            text:
-                                                                "Please wait for broadcaster to join",
-                                                            textColor:
-                                                                HMSThemeColors
-                                                                    .onSurfaceHighEmphasis)
-                                                    ],
-                                                  ));
-                                                }
-                                                return Selector<
-                                                        MeetingStore,
-                                                        Tuple2<MeetingMode,
-                                                            HMSPeer?>>(
-                                                    selector: (_,
-                                                            meetingStore) =>
-                                                        Tuple2(
-                                                            meetingStore
-                                                                .meetingMode,
-                                                            meetingStore
-                                                                .localPeer),
-                                                    builder: (_, modeData, __) {
-                                                      Size size = Size(
-                                                          MediaQuery.of(context)
-                                                              .size
-                                                              .width,
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height -
-                                                              122 -
-                                                              MediaQuery.of(
-                                                                      context)
-                                                                  .padding
-                                                                  .bottom -
-                                                              MediaQuery.of(
-                                                                      context)
-                                                                  .padding
-                                                                  .top);
-                                                      return Positioned(
-                                                          top: 55,
-                                                          left: 0,
-                                                          right: 0,
-                                                          bottom: 68,
-                                                          /***
-                                                           * The logic for gridview is as follows:
-                                                           * - Default mode is Active Speaker mode which displays only 4 tiles on screen without scroll and updates the tile according to who is currently speaking
-                                                           * - If there are only 2 peers in the room in which one is local peer then automatically the mode is switched to oneToOne mode
-                                                           * - As the peer count increases the mode is switched back to active speaker view in case of default mode
-                                                           * - Remaining as the mode from bottom sheet is selected corresponding grid layout is rendered
-                                                          */
-                                                          child:
-                                                              GestureDetector(
-                                                            onTap: () =>
-                                                                _visibilityController
-                                                                    ?.toggleControlsVisibility(),
-                                                            child: (modeData
-                                                                            .item1 ==
-                                                                        MeetingMode
-                                                                            .activeSpeakerWithInset &&
-                                                                    (context.read<MeetingStore>().localPeer?.audioTrack !=
-                                                                            null ||
-                                                                        context.read<MeetingStore>().localPeer?.videoTrack !=
-                                                                            null))
-                                                                ? OneToOneMode(
-                                                                    bottomMargin:
-                                                                        225,
-                                                                    peerTracks:
-                                                                        data
-                                                                            .item1,
-                                                                    screenShareCount:
-                                                                        data
-                                                                            .item4,
-                                                                    context:
-                                                                        context,
-                                                                    size: size)
-                                                                : CustomOneToOneGrid(
-                                                                    isLocalInsetPresent:
-                                                                        false,
-                                                                    peerTracks:
-                                                                        data.item1,
-                                                                  ),
-                                                          ));
-                                                    });
-                                              }),
+                                          ChangeNotifierProvider.value(
+                                              value: _visibilityController,
+                                              child: MeetingGridComponent(
+                                                  visibilityController:
+                                                      _visibilityController)),
                                           Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -396,7 +275,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                                                   child: Stack(
                                                                     children: [
                                                                       ///This renders the video component
-                                                                      ///[HMSVideoView] is only rendered if video is ON
+                                                                      ///[HMSTextureView] is only rendered if video is ON
                                                                       ///
                                                                       ///else we render the [HMSCircularAvatar]
                                                                       Selector<
