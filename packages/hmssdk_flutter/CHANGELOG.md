@@ -14,7 +14,7 @@
 
 Updated to Android SDK 2.8.8 & iOS SDK 1.4.2
 
-**Full Changelog**: [1.9.5...1.9.6](https://github.com/100mslive/100ms-flutter/compare/1.9.6...1.9.7)
+**Full Changelog**: [1.9.6...1.9.7](https://github.com/100mslive/100ms-flutter/compare/1.9.6...1.9.7)
 
 # 1.9.6 - 2024-01-15
 
