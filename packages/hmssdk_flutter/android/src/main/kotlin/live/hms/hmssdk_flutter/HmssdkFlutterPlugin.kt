@@ -2006,10 +2006,8 @@ class HmssdkFlutterPlugin :
                 val dict = HashMap<String, Any?>()
                 dict["current_audio_device"] = selectedAudioDevice.name
                 val audioDevicesList = ArrayList<String>()
-                hmssdk?.getAudioDevicesList()?.let { audioDevices ->
-                    audioDevices.forEach { device ->
-                        audioDevicesList.add(device.name)
-                    }
+                availableAudioDevices.forEach { device ->
+                    audioDevicesList.add(device.name)
                 }
                 dict["available_audio_device"] = audioDevicesList
                 args["data"] = dict
@@ -2045,12 +2043,10 @@ class HmssdkFlutterPlugin :
                 val dict = HashMap<String, Any?>()
                     dict["current_audio_device"] = selectedAudioDevice.name
                     val audioDevicesList = ArrayList<String>()
-                    hmssdk?.getAudioDevicesList()?.let { audioDevices ->
-                        audioDevices.forEach { device ->
-                            audioDevicesList.add(device.name)
-                        }
+                    availableAudioDevices.forEach { device ->
+                        audioDevicesList.add(device.name)
+                    }
                     dict["available_audio_device"] = audioDevicesList
-                }
                 args["data"] = dict
                 if (args["data"] != null) {
                     CoroutineScope(Dispatchers.Main).launch {
