@@ -32,7 +32,9 @@ class HMSPollExtension {
         let questions = poll.questions?.map { HMSPollQuestionExtension.toDictionary(question: $0) }
         map["questions"] = questions
 
-        map["result"] = HMSPollResultDisplayExtension.toDictionary(result: poll.result)
+        if let result = poll.result{
+            map["result"] = HMSPollResultExtension.toDictionary(pollResult: result)
+        }
 
         let rolesThatCanViewResponses = poll.rolesThatCanViewResponses.map { HMSRoleExtension.toDictionary($0) }
         map["roles_that_can_view_responses"] = rolesThatCanViewResponses

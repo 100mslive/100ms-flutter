@@ -10,10 +10,8 @@ class HMSPollQuestionOptionExtension {
 
             pollOptions?.let {
                 val map = HashMap<String,Any?>()
-                map["case"] = it.case
                 map["index"] = it.index
                 map["text"] = it.text
-                map["trim"] = it.trim
                 map["vote_count"] = it.voteCount
                 map["weight"] = it.weight
                 return map

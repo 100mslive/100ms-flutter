@@ -12,7 +12,6 @@ class HMSPollStatsQuestionsExtension {
                 val map = HashMap<String,Any?>()
                 map["attempted_times"] = pollStatsQuestions.attemptedTimes
                 map["correct"] = pollStatsQuestions.correct
-                map["index"] = pollStatsQuestions.index
                 map["options"] = pollStatsQuestions.options
                 map["question_type"] = HMSPollQuestionExtension.getPollQuestionType(pollStatsQuestions.questionType)
                 map["skipped"] = pollStatsQuestions.skipped

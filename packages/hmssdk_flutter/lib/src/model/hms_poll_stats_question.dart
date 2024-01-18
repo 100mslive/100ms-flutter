@@ -3,7 +3,6 @@ import 'package:hmssdk_flutter/src/enum/hms_poll_enum.dart';
 class HMSPollStatsQuestion {
   final int attemptedTimes;
   final int? correct;
-  final int index;
   final List<int> options;
   final HMSPollQuestionType type;
   final int skipped;
@@ -11,7 +10,6 @@ class HMSPollStatsQuestion {
   HMSPollStatsQuestion({
     required this.attemptedTimes,
     this.correct,
-    required this.index,
     required this.options,
     required this.type,
     required this.skipped,
@@ -21,7 +19,6 @@ class HMSPollStatsQuestion {
     return HMSPollStatsQuestion(
       attemptedTimes: map['attempted_times'],
       correct: map['correct'],
-      index: map['index'],
       options: map['options'] != null ? (map['options'] as List).map((e) => e as int).toList() : [],
       type: HMSPollQuestionTypeValues.getHMSPollQuestionTypeFromString(map['question_type']),
       skipped: map['skipped'],

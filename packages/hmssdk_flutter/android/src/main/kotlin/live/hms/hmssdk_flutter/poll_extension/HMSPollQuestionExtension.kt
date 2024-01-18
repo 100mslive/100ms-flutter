@@ -9,9 +9,6 @@ class HMSPollQuestionExtension {
 
                 question?.let {
                     val map = HashMap<String,Any?>()
-                    map["answer_long_min_length"] = it.answerLongMinLength
-                    map["answer_short_min_length"] = it.answerShortMinLength
-                    map["can_change_response"] = it.canChangeResponse
                     map["can_skip"] = it.canSkip
                     map["correct_answer"] = HMSPollQuestionAnswerExtension.toDictionary(it.correctAnswer)
                     map["duration"] = it.duration
@@ -22,17 +19,13 @@ class HMSPollQuestionExtension {
                     }
                     map["my_responses"] = responses
 
-                    map["negative"] = it.negative
-
                     val options = ArrayList<HashMap<String,Any?>?>()
                     it.options?.forEach{
                             option -> options.add(HMSPollQuestionOptionExtension.toDictionary(option))
                     }
                     map["options"] = options
 
-                    map["question_id"] = it.questionID
                     map["text"] = it.text
-                    map["total"] =  it.total
                     map["type"] = getPollQuestionType(it.type)
                     map["voted"] = it.voted
                     map["weight"] = it.weight
