@@ -292,7 +292,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                           ///else we render an empty SizedBox
                           Selector<MeetingStore, Tuple2<HMSAudioDevice?, bool>>(
                               selector: (_, meetingStore) => Tuple2(
-                                  meetingStore.currentAudioDeviceMode,
+                                  meetingStore.currentAudioOutputDevice,
                                   meetingStore.isSpeakerOn),
                               builder: (_, data, __) {
                                 return HMSEmbeddedButton(
