@@ -1,35 +1,18 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 
-- Add app launch animation for Prebuilt
-https://100ms.atlassian.net/browse/FLUT-180
+- Prebuilt: Auto-Hide Top & Bottom Bars after 5 seconds
+https://100ms.atlassian.net/browse/FLUT-139
 
-- Real time chat controls
-https://100ms.atlassian.net/browse/FLUT-153
+- iOS: end session from dashboard not kicking iOS user intermittently
+https://100ms.atlassian.net/browse/FLUT-201
 
-- Skip Preview for Role Change
-https://100ms.atlassian.net/browse/FLUT-162
+- Wrong device list on top right when BT is connected
+https://100ms.atlassian.net/browse/FLUT-215
 
-- Even if screenshare is disabled, UI still shows screenshare option
-https://100ms.atlassian.net/browse/LIVE-1981
+- Hide BT and notificatin permission on Flutter Android for platform parity
+https://100ms.atlassian.net/browse/FLUT-216
 
-- Block Peer From Chat
-https://100ms.atlassian.net/browse/FLUT-157
-
-- Multi Pin Chat
-https://100ms.atlassian.net/browse/FLUT-154
-
-- can't see pinned chat(by remote peer) on Flutter
-https://100ms.atlassian.net/browse/FLUT-187
-
-- Send to picker based on layout API
-https://100ms.atlassian.net/browse/FLUT-156
-
-- Added hide message functionality
-
-- Add Remove peer option in message context menu
-https://100ms.atlassian.net/browse/FLUT-183
-
-Room Kit: 1.0.9
-Core SDK: 1.9.6
-Android SDK: 2.8.5
-iOS SDK: 1.4.1
+Room Kit: 1.0.10
+Core SDK: 1.9.7
+Android SDK: 2.8.8
+iOS SDK: 1.4.2
