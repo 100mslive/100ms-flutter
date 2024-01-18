@@ -74,7 +74,7 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                   MoreOptionItem(
                       onTap: () async {
                         Navigator.pop(context);
-                        var meetingStore= context.read<MeetingStore>();
+                        var meetingStore = context.read<MeetingStore>();
                         showModalBottomSheet(
                           isScrollControlled: true,
                           backgroundColor: HMSThemeColors.surfaceDim,
