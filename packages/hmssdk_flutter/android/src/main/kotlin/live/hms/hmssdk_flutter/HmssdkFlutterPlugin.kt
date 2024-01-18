@@ -1996,25 +1996,22 @@ class HmssdkFlutterPlugin :
 
     private val audioPreviewDeviceChangeListener =
         object : AudioManagerDeviceChangeListener {
+
             override fun onAudioDeviceChanged(
-                p0: AudioDevice?,
-                p1: Set<AudioDevice>?,
+                selectedAudioDevice: AudioDevice,
+                availableAudioDevices: Set<AudioDevice>,
             ) {
                 val args = HashMap<String, Any?>()
                 args["event_name"] = "on_audio_device_changed"
                 val dict = HashMap<String, Any?>()
-                if (p0 != null) {
-                    dict["current_audio_device"] = p0.name
-                }
-                if (p1 != null) {
-                    val audioDevicesList = ArrayList<String>()
-                    hmssdk?.getAudioDevicesList()?.let { audioDevices ->
-                        audioDevices.forEach { device ->
-                            audioDevicesList.add(device.name)
-                        }
+                dict["current_audio_device"] = selectedAudioDevice.name
+                val audioDevicesList = ArrayList<String>()
+                hmssdk?.getAudioDevicesList()?.let { audioDevices ->
+                    audioDevices.forEach { device ->
+                        audioDevicesList.add(device.name)
                     }
-                    dict["available_audio_device"] = audioDevicesList
                 }
+                dict["available_audio_device"] = audioDevicesList
                 args["data"] = dict
                 if (args["data"] != null) {
                     CoroutineScope(Dispatchers.Main).launch {
@@ -2023,10 +2020,10 @@ class HmssdkFlutterPlugin :
                 }
             }
 
-            override fun onError(e: HMSException?) {
+            override fun onError(e: HMSException) {
                 val args = HashMap<String, Any?>()
-                args.put("event_name", "on_error")
-                args.put("data", HMSExceptionExtension.toDictionary(e))
+                args["event_name"] = "on_error"
+                args["data"] = HMSExceptionExtension.toDictionary(e)
 
                 if (args["data"] != null) {
                     CoroutineScope(Dispatchers.Main).launch {
@@ -2034,27 +2031,24 @@ class HmssdkFlutterPlugin :
                     }
                 }
             }
+
         }
 
     private val audioDeviceChangeListener =
         object : AudioManagerDeviceChangeListener {
             override fun onAudioDeviceChanged(
-                p0: AudioDevice?,
-                p1: Set<AudioDevice>?,
+                selectedAudioDevice: AudioDevice,
+                availableAudioDevices: Set<AudioDevice>,
             ) {
                 val args = HashMap<String, Any?>()
                 args["event_name"] = "on_audio_device_changed"
                 val dict = HashMap<String, Any?>()
-                if (p0 != null) {
-                    dict["current_audio_device"] = p0.name
-                }
-                if (p1 != null) {
+                    dict["current_audio_device"] = selectedAudioDevice.name
                     val audioDevicesList = ArrayList<String>()
                     hmssdk?.getAudioDevicesList()?.let { audioDevices ->
                         audioDevices.forEach { device ->
                             audioDevicesList.add(device.name)
                         }
-                    }
                     dict["available_audio_device"] = audioDevicesList
                 }
                 args["data"] = dict
@@ -2065,10 +2059,10 @@ class HmssdkFlutterPlugin :
                 }
             }
 
-            override fun onError(e: HMSException?) {
+            override fun onError(e: HMSException) {
                 val args = HashMap<String, Any?>()
-                args.put("event_name", "on_error")
-                args.put("data", HMSExceptionExtension.toDictionary(e))
+                args["event_name"] = "on_error"
+                args["data"] = HMSExceptionExtension.toDictionary(e)
 
                 if (args["data"] != null) {
                     CoroutineScope(Dispatchers.Main).launch {
