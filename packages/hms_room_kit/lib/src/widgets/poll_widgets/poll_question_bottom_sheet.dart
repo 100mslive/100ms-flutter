@@ -25,48 +25,50 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
       heightFactor: 0.87,
       child: Padding(
         padding: const EdgeInsets.only(top: 12.0, left: 16, right: 16),
-        child: Column(
-          children: [
-            ///Top bar
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_back_ios_new,
-                        size: 16,
-                        color: HMSThemeColors.onSurfaceHighEmphasis,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              ///Top bar
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.arrow_back_ios_new,
+                          size: 16,
+                          color: HMSThemeColors.onSurfaceHighEmphasis,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    HMSTitleText(
-                      text: widget.pollName,
-                      fontSize: 20,
-                      textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                    ),
-                  ],
-                ),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    HMSCrossButton(),
-                  ],
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10, bottom: 16),
-              child: Divider(
-                color: HMSThemeColors.borderDefault,
-                height: 5,
+                      HMSTitleText(
+                        text: widget.pollName,
+                        fontSize: 20,
+                        textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                      ),
+                    ],
+                  ),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      HMSCrossButton(),
+                    ],
+                  ),
+                ],
               ),
-            ),
-            const CreatePollForm(questionNumber: 1, totalQuestions: 2, questionType: HMSPollQuestionType.singleChoice)
-          ],
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 16),
+                child: Divider(
+                  color: HMSThemeColors.borderDefault,
+                  height: 5,
+                ),
+              ),
+              CreatePollForm(questionNumber: 1, totalQuestions: 2, questionType: HMSPollQuestionType.singleChoice, optionsTextController: [TextEditingController(),TextEditingController()],)
+            ],
+          ),
         ),
       ),
     );
