@@ -28,7 +28,12 @@ class HMSException {
       this.params,
       this.canRetry});
 
-  factory HMSException.fromMap(Map map) {
+  factory HMSException.fromMap(Map? map) {
+    
+    if(map == null){
+      return HMSException(message: 'Unknown Error', description: 'getRoomLayout API failed', action: 'Unknown Error', isTerminal: false);
+    }
+
     HMSExceptionCode? code;
 
     if (map.containsKey('code')) {

@@ -913,6 +913,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         hmsSDK?.getRoomLayout(using: authToken!) { layout, error in
             if let error = error {
+                HMSErrorLogger.logError(#function, error.localizedDescription, "getRoomLayout")
                 result(HMSResultExtension.toDictionary(false, HMSErrorExtension.toDictionary(error)))
             } else {
                 if let rawData = layout?.rawData {
