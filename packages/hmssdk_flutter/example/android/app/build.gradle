@@ -22,7 +22,6 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     compileSdkVersion 33
-
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -42,6 +41,8 @@ android {
             keyPassword keystoreProperties['keyPassword']
             storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
             storePassword keystoreProperties['storePassword']
+            enableV1Signing false
+            enableV2Signing true
         }
     }
     buildTypes {
