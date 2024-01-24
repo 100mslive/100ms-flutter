@@ -556,7 +556,7 @@ abstract class PlatformService {
         case HMSPollListenerMethod.onPollUpdate:
           _pollListener?.onPollUpdate(
               poll: HMSPoll.fromMap(event.data["poll"]),
-              pollUpdateType: event.data["poll_update_type"]);
+              pollUpdateType: HMSPollUpdateTypeValues.getHMSPollUpdateTypeFromString(event.data["poll_update_type"]));
           return;
         case HMSPollListenerMethod.unknown:
           break;

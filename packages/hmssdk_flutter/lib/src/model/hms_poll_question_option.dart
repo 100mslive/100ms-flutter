@@ -2,7 +2,7 @@ class HMSPollQuestionOption {
   final int index;
   final String? text;
   final int voteCount;
-  final int weight;
+  final int? weight;
 
   HMSPollQuestionOption(
       {required this.index,

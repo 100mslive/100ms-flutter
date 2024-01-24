@@ -57,7 +57,7 @@ class HMSPoll {
       questions: (map['questions'] as List).map((e) => HMSPollQuestion.fromMap(e)).toList(),
       result: map['result']!=null?HMSPollResultDisplay.fromMap(map['result']):null,
       rolesThatCanViewResponses: (map['roles_that_can_view_responses'] as List).map((e) => HMSRole.fromMap(e)).toList(),
-      rolesThatCanVote: map['roles_that_can_vote'](map['roles_that_can_vote'] as List).map((e) => HMSRole.fromMap(e)).toList(),
+      rolesThatCanVote: (map['roles_that_can_vote'] as List).map((e) => HMSRole.fromMap(e)).toList(),
       startedAt: DateTime.fromMillisecondsSinceEpoch(map['started_at']),
       startedBy: map['started_by']!=null?HMSPeer.fromMap(map['started_by']):null,
       state: HMSPollStateValues.getHMSPollStateFromString(map['state']),

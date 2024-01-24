@@ -2202,6 +2202,15 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
+  void quickStartPoll(HMSPollBuilder pollBuilder) {
+
+    var pollQuestionBuilder = HMSPollQuestionBuilder();
+
+    pollBuilder.addQuestion(pollQuestionBuilder);
+    _hmsSDKInteractor.quickStartPoll(
+        pollBuilder: pollBuilder, hmsActionResultListener: this);
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
   @override
   void onSuccess(
@@ -2579,7 +2588,9 @@ class MeetingStore extends ChangeNotifier
   }
 
   @override
-  void onPollUpdate({required HMSPoll poll, required HMSPollUpdateType pollUpdateType}) {
+  void onPollUpdate(
+      {required HMSPoll poll, required HMSPollUpdateType pollUpdateType}) {
     // TODO: implement onPollCreated
+    log("onPollUpdate -> poll: $poll pollUpdateType: $pollUpdateType");
   }
 }

@@ -42,14 +42,20 @@ class HMSPollExtension {
         let rolesThatCanVote = poll.rolesThatCanVote.map { HMSRoleExtension.toDictionary($0) }
         map["roles_that_can_vote"] = rolesThatCanVote
 
-        map["started_at"] = poll.startedAt
+        if let startedAt = poll.startedAt{
+            map["started_at"] = Int(startedAt.timeIntervalSince1970 * 1000)
+        }
         
         if let startedBy = poll.startedBy{
             map["started_by"] = HMSPeerExtension.toDictionary(startedBy)
         }
         
         map["state"] = getPollState(state: poll.state)
-        map["stopped_at"] = poll.stoppedAt
+        
+        if let stoppedAt = poll.stoppedAt{
+            map["stopped_at"] = Int(stoppedAt.timeIntervalSince1970 * 1000)
+        }
+        
         map["title"] = poll.title
 
         return map

@@ -22,6 +22,7 @@ export 'src/enum/hms_Quality_limitation_reason.dart';
 export 'src/enum/hms_simulcast_layer.dart';
 export 'src/enum/hms_audio_mode.dart';
 export 'src/enum/hms_hls_playback_state.dart';
+export 'src/enum/hms_poll_enum.dart';
 
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';
@@ -104,6 +105,7 @@ export 'src/enum/hms_recording_state.dart';
 export 'src/enum/hms_streaming_state.dart';
 export 'src/model/hms_poll_interactivity_center.dart';
 export 'src/model/hms_poll_listener.dart';
+export 'src/model/hms_poll_question_builder.dart';
 
 //Views
 export 'src/ui/meeting/hms_texture_view.dart';

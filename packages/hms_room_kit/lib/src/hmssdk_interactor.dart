@@ -413,4 +413,8 @@ class HMSSDKInteractor {
     hmsSDK.lowerRemotePeerHand(
         forPeer: forPeer, hmsActionResultListener: hmsActionResultListener);
   }
+
+  void quickStartPoll({required HMSPollBuilder pollBuilder, HMSActionResultListener? hmsActionResultListener}) {
+    HMSPollInteractivityCenter.quickStartPoll(pollBuilder: pollBuilder, hmsActionResultListener: hmsActionResultListener);
+  }
 }

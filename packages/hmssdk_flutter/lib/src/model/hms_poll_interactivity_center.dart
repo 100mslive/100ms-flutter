@@ -2,7 +2,7 @@
 
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_poll_enum.dart';
-import 'package:hmssdk_flutter/src/model/hms_poll_question.dart';
+import 'package:hmssdk_flutter/src/model/hms_poll_question_builder.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 abstract class HMSPollInteractivityCenter {
@@ -16,10 +16,12 @@ abstract class HMSPollInteractivityCenter {
 
   static void quickStartPoll(
       {required HMSPollBuilder pollBuilder,
-      required HMSActionResultListener hmsActionResultListener}) async {
+      required HMSActionResultListener? hmsActionResultListener}) async {
     PlatformService.invokeMethod(PlatformMethod.quickStartPoll,
         arguments: {"poll_builder": pollBuilder.toMap()});
   }
+
+
 }
 
 class HMSPollBuilder {
@@ -29,7 +31,7 @@ class HMSPollBuilder {
   late HMSPollCategory _pollCategory;
   late String _pollId;
   late String _questionId;
-  late List<HMSPollQuestion> _questions;
+  late HMSPollQuestionBuilder _questions;
   late List<String>? _rolesThatCanViewResponses;
   late List<String>? _rolesThatCanVote;
   late String _title;
@@ -66,21 +68,22 @@ class HMSPollBuilder {
     _title = title;
   }
 
+  HMSPollBuilder addQuestion(HMSPollQuestionBuilder question) {
+    _questions = question;
+    return this;
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'anonymous': _anonymous,
-
-      ///TODO: Complete duration mapping
-      ///Check duration type
       'duration': _duration.inMilliseconds,
-
       'mode':
           HMSPollUserTrackingModeValues.getStringFromHMSPollUserTrackingMode(
               _mode),
       'poll_category':
           HMSPollCategoryValues.getStringFromHMSPollCategory(_pollCategory),
       'poll_id': _pollId,
-      'questions': _questions.map((e) => e.toMap()).toList(),
+      'questions': _questions.toMap(),
       'roles_that_can_view_responses': _rolesThatCanViewResponses,
       'roles_that_can_vote': _rolesThatCanVote,
       'title': _title

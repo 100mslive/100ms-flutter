@@ -4,6 +4,7 @@ import 'package:hmssdk_flutter/src/model/hms_poll_question_answer.dart';
 import 'package:hmssdk_flutter/src/model/hms_poll_question_option.dart';
 
 class HMSPollQuestion {
+  final int questionId;
   final bool canSkip;
   final HMSPollQuestionAnswer? correctAnswer;
   final Duration duration;
@@ -15,6 +16,7 @@ class HMSPollQuestion {
   final bool voted;
 
   HMSPollQuestion({
+    required this.questionId,
     required this.options,
     required this.text,
     required this.type,
@@ -28,14 +30,12 @@ class HMSPollQuestion {
 
   factory HMSPollQuestion.fromMap(Map map) {
     return HMSPollQuestion(
+      questionId: map['question_id'],
       canSkip: map['can_skip'],
       correctAnswer: map['correct_answer'] != null
           ? HMSPollQuestionAnswer.fromMap(map['correct_answer'])
           : null,
-      
-      ///TODO: Complete duration mapping
-      ///Check duration units.
-      duration: Duration(seconds: map['duration']),
+      duration: Duration(milliseconds: map['duration']),
       myResponses: map['my_responses'] != null
           ? (map['my_responses'] as List)
               .map((e) => HMSPollAnswer.fromMap(e))
@@ -54,8 +54,9 @@ class HMSPollQuestion {
     );
   }
 
-  Map<String,dynamic> toMap() {
+  Map<String, dynamic> toMap() {
     return {
+      'question_id': questionId,
       'can_skip': canSkip,
       'correct_answer': correctAnswer?.toMap(),
       'duration': duration.inMilliseconds,
@@ -67,5 +68,4 @@ class HMSPollQuestion {
       'voted': voted,
     };
   }
-  
 }

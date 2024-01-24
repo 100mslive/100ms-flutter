@@ -15,6 +15,8 @@ class PermissionParamsExtension {
             args["remove_others"] = permissionsParams.removeOthers
             args["rtmp_streaming"] = permissionsParams.rtmpStreaming
             args["un_mute"] = permissionsParams.unmute
+            args["poll_read"] = permissionsParams.pollRead
+            args["poll_write"] = permissionsParams.pollWrite
             return args
         }
     }

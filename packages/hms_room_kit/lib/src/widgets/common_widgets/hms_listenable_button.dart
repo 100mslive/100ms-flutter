@@ -45,7 +45,7 @@ class HMSListenableButton extends StatelessWidget {
                 style: ButtonStyle(
                     shadowColor: MaterialStateProperty.all(
                         shadowColor ?? HMSThemeColors.surfaceDim),
-                    backgroundColor: (textController.text.isEmpty || isDisabled)
+                    backgroundColor: (textController.text.trim().isEmpty || isDisabled)
                         ? MaterialStateProperty.all(
                             HMSThemeColors.primaryDisabled)
                         : MaterialStateProperty.all(

@@ -16,13 +16,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var rtcStatsEventChannel: FlutterEventChannel?
     var sessionEventChannel: FlutterEventChannel?
     var hlsPlayerChannel: FlutterEventChannel?
-
+    var pollsEventChannel: FlutterEventChannel?
+    
     var eventSink: FlutterEventSink?
     var previewSink: FlutterEventSink?
     var logsSink: FlutterEventSink?
     var rtcSink: FlutterEventSink?
     var sessionSink: FlutterEventSink?
     var hlsPlayerSink: FlutterEventSink?
+    var pollsEventSink: FlutterEventSink?
 
     var roleChangeRequest: HMSRoleChangeRequest?
 
@@ -54,14 +56,16 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let rtcChannel = FlutterEventChannel(name: "rtc_event_channel", binaryMessenger: registrar.messenger())
         let sessionChannel = FlutterEventChannel(name: "session_event_channel", binaryMessenger: registrar.messenger())
         let hlsChannel = FlutterEventChannel(name: "hls_player_channel", binaryMessenger: registrar.messenger())
-
+        let pollsChannel = FlutterEventChannel(name: "polls_event_channel",binaryMessenger: registrar.messenger())
+        
         let instance = SwiftHmssdkFlutterPlugin(channel: channel,
                                                 meetingEventChannel: eventChannel,
                                                 previewEventChannel: previewChannel,
                                                 logsEventChannel: logsChannel,
                                                 rtcStatsEventChannel: rtcChannel,
                                                 sessionEventChannel: sessionChannel,
-                                                hlsPlayerChannel: hlsChannel)
+                                                hlsPlayerChannel: hlsChannel,
+                                                pollsEventChannel: pollsChannel)
 
         let videoViewFactory = HMSFlutterPlatformViewFactory(plugin: instance)
         registrar.register(videoViewFactory, withId: "HMSFlutterPlatformView")
@@ -75,6 +79,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         rtcChannel.setStreamHandler(instance)
         sessionChannel.setStreamHandler(instance)
         hlsChannel.setStreamHandler(instance)
+        pollsChannel.setStreamHandler(instance)
 
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
@@ -85,7 +90,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 logsEventChannel: FlutterEventChannel,
                 rtcStatsEventChannel: FlutterEventChannel,
                 sessionEventChannel: FlutterEventChannel,
-                hlsPlayerChannel: FlutterEventChannel) {
+                hlsPlayerChannel: FlutterEventChannel,
+                pollsEventChannel: FlutterEventChannel) {
 
         self.channel = channel
         self.meetingEventChannel = meetingEventChannel
@@ -94,6 +100,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         self.rtcStatsEventChannel = rtcStatsEventChannel
         self.sessionEventChannel = sessionEventChannel
         self.hlsPlayerChannel = hlsPlayerChannel
+        self.pollsEventChannel = pollsEventChannel
     }
 
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
@@ -116,6 +123,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             sessionSink = events
         case "hls_player":
             hlsPlayerSink = events
+        case "polls":
+            pollsEventSink = events
         default:
             return FlutterError(code: #function, message: "invalid event sink name", details: arguments)
         }
@@ -163,6 +172,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             hlsPlayerSink = nil
         } else {
             print(#function, "hlsPlayerChannel not found")
+        }
+        if pollsEventChannel != nil {
+            pollsEventChannel!.setStreamHandler(nil)
+            pollsEventSink = nil
+        } else{
+            print(#function, "pollsEventChannel not found")
         }
     }
 
@@ -294,8 +309,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "get_room_layout":
             getRoomLayout(call, result)
 
+           // MARK: - Large room APIs
         case "get_peer_list_iterator", "peer_list_iterator_has_next", "peer_list_iterator_next":
             HMSPeerListIteratorAction.peerListIteratorAction(call, result, hmsSDK)
+
+           // MARK: - Polls
+            
+        case "add_poll_update_listener", "remove_poll_update_listener":
+            pollsAction(call, result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -397,6 +418,31 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "remove_stats_listener":
             isStatsActive = false
 
+        default:
+            result(FlutterMethodNotImplemented)
+        }
+    }
+    
+    private func pollsAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        switch call.method {
+        case "add_poll_update_listener":
+            var listener : HMSInteractivityCenter.HMSPollListener = { [weak self] hmsPoll, hmsPollUpdateType in
+                                
+                guard let self = self else { return }
+                
+                var map = ["event_name": "on_poll_update",
+                "data": [
+                    "poll": HMSPollExtension.toDictionary(poll: hmsPoll),
+                    "poll_update_type": HMSPollExtension.getPollUpdateType(updateType: hmsPollUpdateType)
+                    ]
+                ] as [String : Any]
+                
+                self.pollsEventSink?(map)
+            }
+            hmsSDK?.interactivityCenter.addPollUpdateListner(listener)
+            break
+        case "remove_poll_update_listener":
+            break
         default:
             result(FlutterMethodNotImplemented)
         }

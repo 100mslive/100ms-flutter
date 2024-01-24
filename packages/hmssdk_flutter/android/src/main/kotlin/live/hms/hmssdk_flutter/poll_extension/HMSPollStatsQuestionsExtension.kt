@@ -13,7 +13,7 @@ class HMSPollStatsQuestionsExtension {
                 map["attempted_times"] = pollStatsQuestions.attemptedTimes
                 map["correct"] = pollStatsQuestions.correct
                 map["options"] = pollStatsQuestions.options
-                map["question_type"] = HMSPollQuestionExtension.getPollQuestionType(pollStatsQuestions.questionType)
+                map["question_type"] = HMSPollQuestionExtension.getStringFromPollQuestionType(pollStatsQuestions.questionType)
                 map["skipped"] = pollStatsQuestions.skipped
                 return map
             }?:run {
