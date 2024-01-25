@@ -2,9 +2,11 @@ package live.hms.hmssdk_flutter.views
 
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Context.RECEIVER_EXPORTED
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
+import android.os.Build
 import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
@@ -106,7 +108,11 @@ class HMSVideoView(
             if (hmsVideoView != null) {
                 // delay addTrack
                 hmsVideoView?.addTrack(track)
-                context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId))
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId), RECEIVER_EXPORTED)
+                }else {
+                    context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId))
+                }
             } else {
                 Log.e("HMSVideoView Error", "onAttachedToWindow error hmsVideoView is null")
             }
