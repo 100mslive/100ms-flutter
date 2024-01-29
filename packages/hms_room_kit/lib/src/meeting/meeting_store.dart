@@ -9,11 +9,10 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:hmssdk_flutter/src/enum/hms_poll_enum.dart';
-import 'package:hmssdk_flutter/src/model/hms_poll.dart';
 import 'package:intl/intl.dart';
 
 //Project imports
+import 'package:hms_room_kit/src/model/poll_store.dart';
 import 'package:hms_room_kit/src/model/participant_store.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
@@ -255,7 +254,8 @@ class MeetingStore extends ChangeNotifier
 
   ///Polls
 
-  List<HMSPollQuestionBuilder> pollQuestions = [];
+  ///Stores the poll questions
+  List<HMSPollStore> pollQuestions = [];
 
   Future<HMSException?> join(String userName, String roomCode,
       {HMSConfig? roomConfig}) async {
@@ -2593,7 +2593,23 @@ class MeetingStore extends ChangeNotifier
   @override
   void onPollUpdate(
       {required HMSPoll poll, required HMSPollUpdateType pollUpdateType}) {
-    // TODO: implement onPollCreated
-    log("onPollUpdate -> poll: $poll pollUpdateType: $pollUpdateType");
+    log("onPollUpdate -> pollL $poll updateType: $pollUpdateType");
+    switch (pollUpdateType) {
+      ///If the poll is started we add the poll in questions list
+      case HMSPollUpdateType.started:
+        pollQuestions.add(HMSPollStore(poll: poll));
+        break;
+
+      ///In this case we just update the state of the poll
+      case HMSPollUpdateType.stopped:
+        int index = pollQuestions
+            .indexWhere((element) => element.poll.pollId == poll.pollId);
+        if (index != -1) {
+          pollQuestions[index].updateState(poll);
+        }
+        break;
+      case HMSPollUpdateType.resultsupdated:
+        break;
+    }
   }
 }

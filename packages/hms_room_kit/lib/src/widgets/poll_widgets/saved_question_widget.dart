@@ -1,8 +1,12 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///Project imports
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
+
+///[SavedQuestionWidget] widget renders the saved question UI
 class SavedQuestionWidget extends StatelessWidget {
   final int questionNumber;
   final int totalQuestions;
@@ -70,17 +74,19 @@ class SavedQuestionWidget extends StatelessWidget {
                   tilePadding: EdgeInsets.zero,
                   childrenPadding: EdgeInsets.zero,
                   title: HMSTitleText(
-                    text: pollQuestionBuilder.title,
+                    text: pollQuestionBuilder.text ?? "",
                     textColor: HMSThemeColors.onSurfaceHighEmphasis,
                     fontWeight: FontWeight.w400,
+                    maxLines: 3,
                   ),
                   children: pollQuestionBuilder.pollOptions
                       .map((e) => Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: HMSSubheadingText(
-                                text: e,
-                                textColor:
-                                    HMSThemeColors.onSurfaceMediumEmphasis),
+                              text: e,
+                              textColor: HMSThemeColors.onSurfaceMediumEmphasis,
+                              maxLines: 3,
+                            ),
                           ))
                       .toList()),
             ),

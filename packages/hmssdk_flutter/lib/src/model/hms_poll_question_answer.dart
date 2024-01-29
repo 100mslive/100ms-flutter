@@ -3,7 +3,6 @@ class HMSPollQuestionAnswer {
   final int? option;
   final List<int>? options;
 
-
   HMSPollQuestionAnswer({
     required this.hidden,
     this.option,

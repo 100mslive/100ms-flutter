@@ -3,7 +3,7 @@ import 'package:hmssdk_flutter/src/enum/hms_poll_enum.dart';
 class HMSPollQuestionBuilder {
   bool? _canSkip;
   bool? _canChangeResponse;
-  String _title = "";
+  String? _title;
   Duration? _duration;
   List<HMSPollQuizOption> _options = [];
   List<String> _pollOptions = [];
@@ -16,6 +16,10 @@ class HMSPollQuestionBuilder {
 
   set withCanSkip(bool canSkip) {
     _canSkip = canSkip;
+  }
+
+  set withText(String text) {
+    _text = text;
   }
 
   set withTitle(String title) {
@@ -60,7 +64,9 @@ class HMSPollQuestionBuilder {
 
   List<String> get pollOptions => _pollOptions;
 
-  String get title => _title;
+  String? get title => _title;
+
+  String? get text => _text;
 
   HMSPollQuestionType get type => _type;
 

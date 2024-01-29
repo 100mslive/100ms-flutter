@@ -26,8 +26,8 @@ class HMSPollAnswer {
       answerText: map['answer'],
       duration: Duration(seconds: map['duration']),
       questionId: map['question_id'],
-      questionType:
-          HMSPollQuestionTypeValues.getHMSPollQuestionTypeFromString(map['question_type']),
+      questionType: HMSPollQuestionTypeValues.getHMSPollQuestionTypeFromString(
+          map['question_type']),
       selectedOption: map['selected_option'],
       selectedOptions: map['selected_options'],
       skipped: map['skipped'],
@@ -35,7 +35,7 @@ class HMSPollAnswer {
     );
   }
 
-  Map<String,dynamic> toMap() {
+  Map<String, dynamic> toMap() {
     return {
       'answer': answerText,
       'duration': duration.inSeconds,

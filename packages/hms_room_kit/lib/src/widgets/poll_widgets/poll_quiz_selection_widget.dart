@@ -47,7 +47,7 @@ class _PollQuizSelectionWidgetState extends State<PollQuizSelectionWidget> {
             GestureDetector(
               onTap: () => updateSelection(1),
               child: PollQuizSelectionButton(
-                isSelected:  (index == 1),
+                isSelected: (index == 1),
                 iconName: "quiz",
                 text: "Quiz",
               ),

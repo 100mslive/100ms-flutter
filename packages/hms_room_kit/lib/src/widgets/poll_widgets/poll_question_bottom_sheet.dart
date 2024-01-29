@@ -1,17 +1,19 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_listenable_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/create_poll_form.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/saved_question_widget.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:provider/provider.dart';
 
+///[PollQuestionBottomSheet] renders the poll question form sheet
 class PollQuestionBottomSheet extends StatefulWidget {
   final String pollName;
 
@@ -30,12 +32,16 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
 
   @override
   void initState() {
+    ///Here we create a new poll builder object with single question
     pollBuilder = HMSPollBuilder();
     pollQuestionBuilders[HMSPollQuestionBuilder()] = false;
+
+    ///Setting the title of the poll
     pollBuilder.withTitle = widget.pollName;
     super.initState();
   }
 
+  ///This function adds a new question builder
   void _addQuestion() {
     pollQuestionBuilders[HMSPollQuestionBuilder()] = false;
     setState(() {});
@@ -81,24 +87,29 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.arrow_back_ios_new,
-                            size: 16,
-                            color: HMSThemeColors.onSurfaceHighEmphasis,
+                    Expanded(
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.arrow_back_ios_new,
+                              size: 16,
+                              color: HMSThemeColors.onSurfaceHighEmphasis,
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
                           ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                        HMSTitleText(
-                          text: widget.pollName,
-                          fontSize: 20,
-                          textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                        ),
-                      ],
+                          Expanded(
+                            child: HMSTitleText(
+                              text: widget.pollName,
+                              fontSize: 20,
+                              textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                              maxLines: 2,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -166,7 +177,7 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
                                       questionController: TextEditingController(
                                           text: pollQuestionBuilders.keys
                                               .elementAt(index)
-                                              .title),
+                                              .text),
                                       optionsTextController:
                                           pollQuestionBuilders.keys
                                               .elementAt(index)

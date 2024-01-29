@@ -1,12 +1,16 @@
+///Package imports
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_listenable_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/poll_question_bottom_sheet.dart';
-import 'package:provider/provider.dart';
 
+///[PollForm] widget renders the poll creation form with poll title.
 class PollForm extends StatefulWidget {
   const PollForm({super.key});
 
@@ -213,8 +217,6 @@ class _PollFormState extends State<PollForm> {
                     : HMSThemeColors.onPrimaryHighEmphasis,
               )),
         )
-
-        ///TODO: Add Previous polls section
       ],
     );
   }

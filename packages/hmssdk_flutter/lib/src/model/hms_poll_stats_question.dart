@@ -19,8 +19,11 @@ class HMSPollStatsQuestion {
     return HMSPollStatsQuestion(
       attemptedTimes: map['attempted_times'],
       correct: map['correct'],
-      options: map['options'] != null ? (map['options'] as List).map((e) => e as int).toList() : [],
-      type: HMSPollQuestionTypeValues.getHMSPollQuestionTypeFromString(map['question_type']),
+      options: map['options'] != null
+          ? (map['options'] as List).map((e) => e as int).toList()
+          : [],
+      type: HMSPollQuestionTypeValues.getHMSPollQuestionTypeFromString(
+          map['question_type']),
       skipped: map['skipped'],
     );
   }

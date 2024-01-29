@@ -42,28 +42,44 @@ class HMSPoll {
     required this.stoppedBy,
   });
 
-
-  factory HMSPoll.fromMap(Map map){
+  factory HMSPoll.fromMap(Map map) {
     return HMSPoll(
       pollId: map['poll_id'],
       title: map['title'],
       anonymous: map['anonymous'],
-      category: HMSPollCategoryValues.getHMSPollCategoryFromString(map['category']),
-      createdBy: map['created_by']!=null?HMSPeer.fromMap(map['created_by']):null,
-      duration: map['duration']!=null?Duration(milliseconds: map['duration']):null,
-      pollUserTrackingMode: map['mode']!=null?HMSPollUserTrackingModeValues.getHMSPollUserTrackingModeFromString(map['mode']):null,
+      category:
+          HMSPollCategoryValues.getHMSPollCategoryFromString(map['category']),
+      createdBy:
+          map['created_by'] != null ? HMSPeer.fromMap(map['created_by']) : null,
+      duration: map['duration'] != null
+          ? Duration(milliseconds: map['duration'])
+          : null,
+      pollUserTrackingMode: map['mode'] != null
+          ? HMSPollUserTrackingModeValues.getHMSPollUserTrackingModeFromString(
+              map['mode'])
+          : null,
       questionCount: map['question_count'],
-      
-      questions: (map['questions'] as List).map((e) => HMSPollQuestion.fromMap(e)).toList(),
-      result: map['result']!=null?HMSPollResultDisplay.fromMap(map['result']):null,
-      rolesThatCanViewResponses: (map['roles_that_can_view_responses'] as List).map((e) => HMSRole.fromMap(e)).toList(),
-      rolesThatCanVote: (map['roles_that_can_vote'] as List).map((e) => HMSRole.fromMap(e)).toList(),
+      questions: (map['questions'] as List)
+          .map((e) => HMSPollQuestion.fromMap(e))
+          .toList(),
+      result: map['result'] != null
+          ? HMSPollResultDisplay.fromMap(map['result'])
+          : null,
+      rolesThatCanViewResponses: (map['roles_that_can_view_responses'] as List)
+          .map((e) => HMSRole.fromMap(e))
+          .toList(),
+      rolesThatCanVote: (map['roles_that_can_vote'] as List)
+          .map((e) => HMSRole.fromMap(e))
+          .toList(),
       startedAt: DateTime.fromMillisecondsSinceEpoch(map['started_at']),
-      startedBy: map['started_by']!=null?HMSPeer.fromMap(map['started_by']):null,
+      startedBy:
+          map['started_by'] != null ? HMSPeer.fromMap(map['started_by']) : null,
       state: HMSPollStateValues.getHMSPollStateFromString(map['state']),
-      stoppedAt: map['stopped_at']!=null?DateTime.fromMillisecondsSinceEpoch(map['stopped_at']):null,
-      stoppedBy: map['stopped_by']!=null?HMSPeer.fromMap(map['stopped_by']):null,
-    ); 
+      stoppedAt: map['stopped_at'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['stopped_at'])
+          : null,
+      stoppedBy:
+          map['stopped_by'] != null ? HMSPeer.fromMap(map['stopped_by']) : null,
+    );
   }
-
 }

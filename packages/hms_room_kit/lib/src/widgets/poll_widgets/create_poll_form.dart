@@ -1,13 +1,17 @@
+///Package imports
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_dropdown.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:tuple/tuple.dart';
 
+///Project imports
+import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_dropdown.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
+
+///[CreatePollForm] widget renders the poll creation form
 class CreatePollForm extends StatefulWidget {
   final int questionNumber;
   final int totalQuestions;
@@ -47,7 +51,14 @@ class _CreatePollFormState extends State<CreatePollForm> {
 
   @override
   void initState() {
+    ///Here we initialise the quesetion controller with
+    ///the value passed from widget. It's empty when a fresh poll is created
+    ///while it has `text` value when it's being edited
     _questionController = widget.questionController;
+
+    ///Here options text controller gets initialised.
+    ///If controllers are passed on to the widget then we just
+    ///assign those controllers to _optionsTextController
     if (widget.optionsTextController.isEmpty) {
       _optionsTextController = [
         TextEditingController(),
@@ -61,6 +72,7 @@ class _CreatePollFormState extends State<CreatePollForm> {
 
   @override
   void dispose() {
+    ///Here we dispose the question and options controller
     _questionController.dispose();
     for (var element in _optionsTextController) {
       element.dispose();
@@ -68,6 +80,7 @@ class _CreatePollFormState extends State<CreatePollForm> {
     super.dispose();
   }
 
+  ///This function set's whether the question is skippable or not
   void setIsSkippable(value) {
     widget.questionBuilder.withCanSkip = value;
     setState(() {
@@ -75,6 +88,8 @@ class _CreatePollFormState extends State<CreatePollForm> {
     });
   }
 
+  ///This function set's [canChangeResponse] which decides can the answer be changed
+  ///once voted
   void setCanChangeResponse(value) {
     widget.questionBuilder.withCanChangeResponse = value;
     setState(() {
@@ -82,11 +97,14 @@ class _CreatePollFormState extends State<CreatePollForm> {
     });
   }
 
+  ///This adds a new option controller
   void _addOption() {
     _optionsTextController.add(TextEditingController());
     setState(() {});
   }
 
+  ///This function checks whether the poll is valid or not
+  ///This is checked before launching the poll
   bool _isPollValid() {
     bool areOptionsFilled = _optionsTextController.length >= 2;
     for (var optionController in _optionsTextController) {
@@ -95,21 +113,27 @@ class _CreatePollFormState extends State<CreatePollForm> {
     return (areOptionsFilled && _questionController.text.isNotEmpty);
   }
 
-  void _setTitle(String title) {
-    widget.questionBuilder.withTitle = title;
+  ///This function set's the text for the question
+  void _setText(String text) {
+    widget.questionBuilder.withText = text;
   }
 
+  ///This function save the poll option
   void _savePollOption(String option, int index) {
     _optionsTextController[index].text = option;
   }
 
+  ///This function saves the option and also fires a callback
+  ///to save the question
   void saveQuestion() {
-    widget.questionBuilder.withOption = _optionsTextController.map((e) => e.text).toList();
+    widget.questionBuilder.withOption =
+        _optionsTextController.map((e) => e.text).toList();
     if (_isPollValid()) {
       widget.savePollCallback(widget.questionBuilder);
     }
   }
 
+  ///This function updates the poll type selection
   void _updatePollType(HMSPollQuestionType questionType) {
     widget.questionBuilder.withType = questionType;
   }
@@ -145,6 +169,8 @@ class _CreatePollFormState extends State<CreatePollForm> {
             const SizedBox(
               height: 8,
             ),
+
+            ///Dropdown for poll type
             DropdownButtonHideUnderline(
                 child: HMSDropDown(
                     dropDownItems: getPollQuestionType()
@@ -186,6 +212,8 @@ class _CreatePollFormState extends State<CreatePollForm> {
             const SizedBox(
               height: 8,
             ),
+
+            ///Textfield for setting the question
             SizedBox(
               height: 48,
               child: TextField(
@@ -199,7 +227,7 @@ class _CreatePollFormState extends State<CreatePollForm> {
                 controller: _questionController,
                 keyboardType: TextInputType.text,
                 onChanged: (value) {
-                  _setTitle(value.trim());
+                  _setText(value.trim());
                   setState(() {});
                 },
                 decoration: InputDecoration(
@@ -246,6 +274,8 @@ class _CreatePollFormState extends State<CreatePollForm> {
             const SizedBox(
               height: 8,
             ),
+
+            ///Here we set the options
             ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -348,6 +378,7 @@ class _CreatePollFormState extends State<CreatePollForm> {
               ),
             ),
 
+            ///Switch for setting skippable and change response variables.
             ListTile(
               horizontalTitleGap: 1,
               enabled: false,
@@ -392,13 +423,14 @@ class _CreatePollFormState extends State<CreatePollForm> {
               ),
             ),
 
+            ///Save the question
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 // if (widget.totalQuestions > 1)
                 //   HMSEmbeddedButton(
-                //     onTap: () => {},
-                //     // widget.deleteQuestionCallback(widget.questionBuilder),
+                //     onTap: () =>
+                //     widget.deleteQuestionCallback(widget.questionBuilder),
                 //     isActive: true,
                 //     onColor: HMSThemeColors.surfaceDefault,
                 //     child: SvgPicture.asset(
@@ -409,9 +441,9 @@ class _CreatePollFormState extends State<CreatePollForm> {
                 //       fit: BoxFit.scaleDown,
                 //     ),
                 //   ),
-                const SizedBox(
-                  width: 8,
-                ),
+                // const SizedBox(
+                //   width: 8,
+                // ),
                 ElevatedButton(
                     style: ButtonStyle(
                         elevation: MaterialStateProperty.all(0),

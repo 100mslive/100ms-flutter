@@ -15,18 +15,17 @@ class HMSPollQuestion {
   final int weight;
   final bool voted;
 
-  HMSPollQuestion({
-    required this.options,
-    required this.text,
-    required this.type,
-    required this.weight,
-    required this.voted,
-    required this.canSkip,
-    this.correctAnswer,
-    required this.duration,
-    required this.myResponses,
-    required this.canChangeResponse
-  });
+  HMSPollQuestion(
+      {required this.options,
+      required this.text,
+      required this.type,
+      required this.weight,
+      required this.voted,
+      required this.canSkip,
+      this.correctAnswer,
+      required this.duration,
+      required this.myResponses,
+      required this.canChangeResponse});
 
   factory HMSPollQuestion.fromMap(Map map) {
     return HMSPollQuestion(
@@ -49,8 +48,8 @@ class HMSPollQuestion {
       type: HMSPollQuestionTypeValues.getHMSPollQuestionTypeFromString(
           map['type']),
       weight: map['weight'],
-      voted: map['voted'], canChangeResponse: map['can_change_response'],
-      
+      voted: map['voted'],
+      canChangeResponse: map['can_change_response'],
     );
   }
 

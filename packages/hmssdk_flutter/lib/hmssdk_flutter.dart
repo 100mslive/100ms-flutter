@@ -106,6 +106,7 @@ export 'src/enum/hms_streaming_state.dart';
 export 'src/model/hms_poll_interactivity_center.dart';
 export 'src/model/hms_poll_listener.dart';
 export 'src/model/hms_poll_question_builder.dart';
+export 'src/model/hms_poll.dart';
 
 //Views
 export 'src/ui/meeting/hms_texture_view.dart';

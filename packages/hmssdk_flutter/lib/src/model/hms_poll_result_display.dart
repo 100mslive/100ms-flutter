@@ -16,7 +16,9 @@ class HMSPollResultDisplay {
   factory HMSPollResultDisplay.fromMap(Map map) {
     return HMSPollResultDisplay(
       questions: map['questions'] != null
-          ? (map['questions'] as List).map((e) => HMSPollStatsQuestion.fromMap(e)).toList()
+          ? (map['questions'] as List)
+              .map((e) => HMSPollStatsQuestion.fromMap(e))
+              .toList()
           : [],
       totalDistinctUsers: map['total_distinct_users'],
       totalResponses: map['total_responses'],
