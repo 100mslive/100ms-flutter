@@ -127,32 +127,22 @@ class HMSPollBuilderExtension{
 
         if let canSkip = pollQuestion["can_skip"] as? Bool {
             pollQuestionBuilder.withCanBeSkipped(canSkip)
-        } else {
-            HMSErrorLogger.returnArgumentsError("canSkip should not be null")
         }
 
         if let text = pollQuestion["text"] as? String {
             pollQuestionBuilder.withTitle(text)
-        } else {
-            HMSErrorLogger.returnArgumentsError("text should not be null")
         }
 
         if let duration = pollQuestion["duration"] as? Int {
             pollQuestionBuilder.withDuration(duration)
-        } else {
-            HMSErrorLogger.returnArgumentsError("duration should not be null")
         }
 
         if let weight = pollQuestion["weight"] as? Int {
             pollQuestionBuilder.withWeight(weight: weight)
-        } else {
-            HMSErrorLogger.returnArgumentsError("weight should not be null")
         }
 
         if let answerHidden = pollQuestion["answer_hidden"] as? Bool {
             pollQuestionBuilder.withAnswerHidden(answerHidden: answerHidden)
-        } else {
-            HMSErrorLogger.returnArgumentsError("answerHidden should not be null")
         }
 
         if let maxLength = pollQuestion["max_length"] as? Int {
@@ -167,8 +157,6 @@ class HMSPollBuilderExtension{
             pollOptions.forEach { option in
                 pollQuestionBuilder.addOption(with: option)
             }
-        } else {
-            HMSErrorLogger.returnArgumentsError("pollOptions should not be null")
         }
 
         if let options = pollQuestion["options"] as? [[String: Bool]] {
@@ -177,15 +165,10 @@ class HMSPollBuilderExtension{
                     pollQuestionBuilder.addQuizOption(with: key, isCorrect: value)
                 }
             }
-        } else {
-            HMSErrorLogger.returnArgumentsError("options should not be null")
         }
 
         if let canChangeResponse = pollQuestion["can_change_response"] as? Bool{
             pollQuestionBuilder.withCanChangeResponse(canChangeResponse: canChangeResponse)
-        } else {
-            HMSErrorLogger.returnArgumentsError("canChangeResponse should not be null")
-            return nil
         }
 
         return pollQuestionBuilder

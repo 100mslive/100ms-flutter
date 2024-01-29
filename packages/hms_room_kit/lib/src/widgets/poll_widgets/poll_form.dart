@@ -207,7 +207,7 @@ class _PollFormState extends State<PollForm> {
                 );
               },
               childWidget: HMSTitleText(
-                text: 'Add Questions',
+                text: 'Create Poll',
                 textColor: _pollNameController.text.isEmpty
                     ? HMSThemeColors.onPrimaryLowEmphasis
                     : HMSThemeColors.onPrimaryHighEmphasis,

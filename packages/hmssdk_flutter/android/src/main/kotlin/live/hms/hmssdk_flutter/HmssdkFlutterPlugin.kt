@@ -286,8 +286,8 @@ class HmssdkFlutterPlugin :
                 HMSPeerListIteratorAction.peerListIteratorAction(call, result, hmssdk!!)
             }
 
-            "add_poll_update_listener", "remove_poll_update_listener" -> {
-                pollActions(call)
+            "add_poll_update_listener", "remove_poll_update_listener", "quick_start_poll" -> {
+                pollActions(call,result)
             }
 
             else -> {
@@ -467,13 +467,16 @@ class HmssdkFlutterPlugin :
         }
     }
 
-    private fun pollActions(call: MethodCall){
+    private fun pollActions(call: MethodCall, result: Result){
         when(call.method){
             "add_poll_update_listener" -> {
                 hmssdk?.getHmsInteractivityCenter()?.pollUpdateListener = hmsPollListener
             }
             "remove_poll_update_listener" -> {
                 hmssdk?.getHmsInteractivityCenter()?.pollUpdateListener = null
+            }
+            else -> hmssdk?.let {
+                HMSPollAction.pollActions(call,result, it)
             }
         }
     }

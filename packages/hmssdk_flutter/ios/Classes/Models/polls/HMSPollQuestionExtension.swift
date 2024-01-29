@@ -32,7 +32,7 @@ class HMSPollQuestionExtension{
         map["type"] = getPollQuestionType(pollQuestionType: question.type)
         map["voted"] = question.voted
         map["weight"] = question.weight
-        
+        map["can_change_response"] = question.once
         return map
         
     }

@@ -1,18 +1,18 @@
 import 'package:hmssdk_flutter/src/enum/hms_poll_enum.dart';
 
 class HMSPollQuestionBuilder {
-  late bool _canSkip;
-  late bool _withCanChangeResponse;
-  late String _title;
-  late Duration _duration;
-  late List<HMSPollQuizOption> _options;
-  late List<String> _pollOptions;
-  late String _text;
-  late HMSPollQuestionType _type;
-  late int _weight;
-  late bool _answerHidden;
-  late int _maxLength;
-  late int _minLength;
+  bool? _canSkip;
+  bool? _canChangeResponse;
+  String _title = "";
+  Duration? _duration;
+  List<HMSPollQuizOption> _options = [];
+  List<String> _pollOptions = [];
+  String? _text;
+  HMSPollQuestionType _type = HMSPollQuestionType.singleChoice;
+  int? _weight;
+  bool? _answerHidden;
+  int? _maxLength;
+  int? _minLength;
 
   set withCanSkip(bool canSkip) {
     _canSkip = canSkip;
@@ -38,7 +38,7 @@ class HMSPollQuestionBuilder {
     _maxLength = maxLength;
   }
 
-  set withMinLenght(int minLength) {
+  set withMinLength(int minLength) {
     _minLength = minLength;
   }
 
@@ -47,22 +47,28 @@ class HMSPollQuestionBuilder {
   }
 
   set withCanChangeResponse(bool canChangeResponse) {
-    _withCanChangeResponse = canChangeResponse;
+    _canChangeResponse = canChangeResponse;
   }
 
-  set addOption(List<String> options) {
-    _pollOptions.addAll(options);
+  set withOption(List<String> options) {
+    _pollOptions = options;
   }
 
   set addQuizOption(List<HMSPollQuizOption> options) {
     _options.addAll(options);
   }
 
-  Map<String,dynamic> toMap(){
+  List<String> get pollOptions => _pollOptions;
+
+  String get title => _title;
+
+  HMSPollQuestionType get type => _type;
+
+  Map<String, dynamic> toMap() {
     return {
       'can_skip': _canSkip,
       'title': _title,
-      'duration': _duration.inMilliseconds,
+      'duration': _duration?.inMilliseconds,
       'options': _options,
       'poll_options': _pollOptions,
       'text': _text,
@@ -71,18 +77,18 @@ class HMSPollQuestionBuilder {
       'answer_hidden': _answerHidden,
       'max_length': _maxLength,
       'min_length': _minLength,
-      'can_change_response': _withCanChangeResponse,
+      'can_change_response': _canChangeResponse,
     };
   }
 }
 
-class HMSPollQuizOption{
+class HMSPollQuizOption {
   final String text;
   final bool isCorrect;
 
   HMSPollQuizOption({required this.text, required this.isCorrect});
 
-  Map<String,dynamic> toMap(){
+  Map<String, dynamic> toMap() {
     return {
       'text': text,
       'is_correct': isCorrect,

@@ -315,9 +315,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
            // MARK: - Polls
             
-        case "add_poll_update_listener", "remove_poll_update_listener":
+        case "add_poll_update_listener", "remove_poll_update_listener","quick_start_poll":
             pollsAction(call, result)
-
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -444,7 +444,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "remove_poll_update_listener":
             break
         default:
-            result(FlutterMethodNotImplemented)
+            HMSPollAction.pollActions(call, result, hmsSDK)
         }
     }
 

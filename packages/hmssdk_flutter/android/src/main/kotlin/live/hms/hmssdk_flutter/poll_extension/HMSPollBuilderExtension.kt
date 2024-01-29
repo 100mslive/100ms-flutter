@@ -135,9 +135,6 @@ class HMSPollBuilderExtension {
 
                 val canSkip = pollQuestion["can_skip"]?.let {canSkipQuestion ->
                     canSkipQuestion as Boolean
-                }?:run {
-                    HMSErrorLogger.returnArgumentsError("canSkip should not be null")
-                    null
                 }
 
                 canSkip?.let { canSkipQuestion ->
@@ -146,9 +143,6 @@ class HMSPollBuilderExtension {
 
                 val text = pollQuestion["text"]?.let { text ->
                     text as String
-                }?:run {
-                    HMSErrorLogger.returnArgumentsError("text should not be null")
-                    null
                 }
 
                 text?.let {
@@ -157,9 +151,6 @@ class HMSPollBuilderExtension {
 
                 val duration = pollQuestion["duration"]?.let { duration ->
                     duration as Long
-                }?:run {
-                    HMSErrorLogger.returnArgumentsError("duration should not be null")
-                    null
                 }
 
                 duration?.let { duration ->
@@ -168,9 +159,6 @@ class HMSPollBuilderExtension {
 
                 val weight = pollQuestion["weight"]?.let {weight ->
                     weight as Int
-                }?:run {
-                    HMSErrorLogger.returnArgumentsError("weight should not be null")
-                    null
                 }
 
                 weight?.let {
@@ -179,9 +167,6 @@ class HMSPollBuilderExtension {
 
                 val answerHidden = pollQuestion["answer_hidden"]?.let {answerHidden ->
                     answerHidden as Boolean
-                }?:run {
-                    HMSErrorLogger.returnArgumentsError("answerHidden should not be null")
-                    null
                 }
 
                 answerHidden?.let {
@@ -190,8 +175,6 @@ class HMSPollBuilderExtension {
 
                 val maxLength = pollQuestion["max_length"]?.let { maxLength ->
                     maxLength as Long
-                }?:run {
-                    null
                 }
 
                 maxLength?.let {
@@ -201,8 +184,6 @@ class HMSPollBuilderExtension {
 
                 val minLength = pollQuestion["min_length"]?.let { minLength ->
                     minLength as Long
-                }?:run {
-                    null
                 }
 
                 minLength?.let {
@@ -244,12 +225,9 @@ class HMSPollBuilderExtension {
 
                 val canChangeResponse = pollQuestion["can_change_response"]?.let { canChangeResponse ->
                     canChangeResponse as Boolean
-                }?:run {
-                    HMSErrorLogger.returnArgumentsError("canChangeResponse should not be null")
-                    return null
                 }
 
-                canChangeResponse.let {
+                canChangeResponse?.let {
                     pollQuestionBuilder.withCanChangeResponse(it)
                 }
 

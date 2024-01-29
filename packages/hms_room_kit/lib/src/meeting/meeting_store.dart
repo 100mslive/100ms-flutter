@@ -253,6 +253,10 @@ class MeetingStore extends ChangeNotifier
   ///Stores whether Chat State
   Map<String, dynamic> chatControls = {"enabled": true, "updatedBy": null};
 
+  ///Polls
+
+  List<HMSPollQuestionBuilder> pollQuestions = [];
+
   Future<HMSException?> join(String userName, String roomCode,
       {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
@@ -2202,11 +2206,10 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
+  ///Polls and Quiz
+
+  ///Method to start poll
   void quickStartPoll(HMSPollBuilder pollBuilder) {
-
-    var pollQuestionBuilder = HMSPollQuestionBuilder();
-
-    pollBuilder.addQuestion(pollQuestionBuilder);
     _hmsSDKInteractor.quickStartPoll(
         pollBuilder: pollBuilder, hmsActionResultListener: this);
   }

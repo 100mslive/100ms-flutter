@@ -33,6 +33,7 @@ class HMSPollQuestionExtension {
                     map["type"] = getStringFromPollQuestionType(it.type)
                     map["voted"] = it.voted
                     map["weight"] = it.weight
+                    map["can_change_response"] = it.canChangeResponse
                     return map
                 }?:run {
                     return  null

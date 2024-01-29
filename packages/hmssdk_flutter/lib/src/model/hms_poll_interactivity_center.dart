@@ -1,8 +1,6 @@
 // ignore_for_file: unused_field
 
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/enum/hms_poll_enum.dart';
-import 'package:hmssdk_flutter/src/model/hms_poll_question_builder.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 abstract class HMSPollInteractivityCenter {
@@ -20,32 +18,29 @@ abstract class HMSPollInteractivityCenter {
     PlatformService.invokeMethod(PlatformMethod.quickStartPoll,
         arguments: {"poll_builder": pollBuilder.toMap()});
   }
-
-
 }
 
 class HMSPollBuilder {
-  late bool _anonymous;
-  late Duration _duration;
+  bool? _isAnonymous;
+  Duration? _duration;
   late HMSPollUserTrackingMode _mode;
   late HMSPollCategory _pollCategory;
-  late String _pollId;
-  late String _questionId;
-  late HMSPollQuestionBuilder _questions;
-  late List<String>? _rolesThatCanViewResponses;
-  late List<String>? _rolesThatCanVote;
+  String? _pollId;
+  List<HMSPollQuestionBuilder> _questions = [];
+  List<HMSRole>? _rolesThatCanViewResponse;
+  List<HMSRole>? _rolesThatCanVote;
   late String _title;
 
-  set withAnonymous(bool anonymous) {
-    _anonymous = anonymous;
+  set withAnonymous(bool isAnonymous) {
+    _isAnonymous = isAnonymous;
   }
 
   set withDuration(Duration duration) {
     _duration = duration;
   }
 
-  set withUserTrackingMode(HMSPollUserTrackingMode mode) {
-    _mode = mode;
+  set withMode(HMSPollUserTrackingMode userTrackingMode) {
+    _mode = userTrackingMode;
   }
 
   set withCategory(HMSPollCategory pollCategory) {
@@ -56,37 +51,50 @@ class HMSPollBuilder {
     _pollId = pollId;
   }
 
-  set withRolesThatCanViewResponses(List<String> rolesThatCanViewResponses) {
-    _rolesThatCanViewResponses = rolesThatCanViewResponses;
+  HMSPollBuilder addQuestion(HMSPollQuestionBuilder questionBuilder) {
+    _questions.add(questionBuilder);
+    return this;
   }
 
-  set withRolesThatCanVote(List<String> rolesThatCanVote) {
-    _rolesThatCanVote = rolesThatCanVote;
+  set withRolesThatCanViewResponses(List<HMSRole> rolesThatCanViewResponses) {
+    if (_rolesThatCanViewResponse == null) {
+      _rolesThatCanViewResponse = [];
+    }
+    _rolesThatCanViewResponse?.addAll(rolesThatCanViewResponses);
+  }
+
+  set withRolesThatCanVote(List<HMSRole> rolesThatCanVote) {
+    if (_rolesThatCanVote == null) {
+      _rolesThatCanVote = [];
+    }
+    _rolesThatCanVote?.addAll(rolesThatCanVote);
   }
 
   set withTitle(String title) {
     _title = title;
   }
 
-  HMSPollBuilder addQuestion(HMSPollQuestionBuilder question) {
-    _questions = question;
+  List<HMSPollQuestionBuilder> get questions => _questions;
+
+  HMSPollBuilder build() {
     return this;
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'anonymous': _anonymous,
-      'duration': _duration.inMilliseconds,
-      'mode':
+      "anonymous": _isAnonymous,
+      "duration": _duration?.inMilliseconds,
+      "mode":
           HMSPollUserTrackingModeValues.getStringFromHMSPollUserTrackingMode(
               _mode),
-      'poll_category':
+      "poll_category":
           HMSPollCategoryValues.getStringFromHMSPollCategory(_pollCategory),
-      'poll_id': _pollId,
-      'questions': _questions.toMap(),
-      'roles_that_can_view_responses': _rolesThatCanViewResponses,
-      'roles_that_can_vote': _rolesThatCanVote,
-      'title': _title
+      "poll_id": _pollId,
+      "questions": _questions.map((e) => e.toMap()).toList(),
+      "roles_that_can_view_responses":
+          _rolesThatCanViewResponse?.map((e) => e.name).toList(),
+      "roles_that_can_vote": _rolesThatCanVote?.map((e) => e.name).toList(),
+      "title": _title
     };
   }
 }
