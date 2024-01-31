@@ -421,4 +421,28 @@ class HMSSDKInteractor {
         pollBuilder: pollBuilder,
         hmsActionResultListener: hmsActionResultListener);
   }
+
+  Future<dynamic> addSingleChoicePollResponse(
+      {required HMSPoll poll,
+      required HMSPollQuestion question,
+      required HMSPollQuestionOption pollQuestionOption,
+      HMSPeer? peer}) {
+    return HMSPollInteractivityCenter.addSingleChoicePollResponse(
+        hmsPoll: poll,
+        pollQuestion: question,
+        optionSelected: pollQuestionOption,
+        peer: peer);
+  }
+
+  Future<dynamic> addMultiChoicePollResponse(
+      {required HMSPoll poll,
+      required HMSPollQuestion question,
+      required List<HMSPollQuestionOption> pollQuestionOption,
+      HMSPeer? peer}) {
+    return HMSPollInteractivityCenter.addMultiChoicePollResponse(
+        hmsPoll: poll,
+        pollQuestion: question,
+        optionsSelected: pollQuestionOption,
+        peer: peer);
+  }
 }

@@ -462,6 +462,10 @@ class MeetingStore extends ChangeNotifier
       case HMSToastsType.errorToast:
         toasts.removeWhere(
             (toast) => toast.hmsToastType == HMSToastsType.errorToast);
+      case HMSToastsType.pollStartedToast:
+        toasts.removeWhere((toast) =>
+            (toast.hmsToastType == HMSToastsType.pollStartedToast) &&
+            (toast.toastData.pollId == data));
     }
     notifyListeners();
   }
@@ -2214,6 +2218,25 @@ class MeetingStore extends ChangeNotifier
         pollBuilder: pollBuilder, hmsActionResultListener: this);
   }
 
+  ///Method to add Poll Response
+  void addSingleChoicePollResponse(HMSPoll poll, HMSPollQuestion question,
+      HMSPollQuestionOption pollQuestionOption) {
+    _hmsSDKInteractor.addSingleChoicePollResponse(
+        poll: poll,
+        question: question,
+        pollQuestionOption: pollQuestionOption,
+        peer: localPeer);
+  }
+
+  void addMultiChoicePollResponse(HMSPoll poll, HMSPollQuestion question,
+      List<HMSPollQuestionOption> pollQuestionOption) {
+    _hmsSDKInteractor.addMultiChoicePollResponse(
+        poll: poll,
+        question: question,
+        pollQuestionOption: pollQuestionOption,
+        peer: localPeer);
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
   @override
   void onSuccess(
@@ -2346,6 +2369,10 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.lowerRemotePeerHand:
         break;
+      case HMSActionResultListenerMethod.addSingleChoicePollResponse:
+        break;
+      case HMSActionResultListenerMethod.addMultiChoicePollResponse:
+        break;
       default:
         log("ActionResultListener onException-> method: ${methodType.toString()}Could not find a valid case while switching");
         break;
@@ -2430,6 +2457,10 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.raiseLocalPeerHand:
         break;
       case HMSActionResultListenerMethod.lowerRemotePeerHand:
+        break;
+      case HMSActionResultListenerMethod.addSingleChoicePollResponse:
+        break;
+      case HMSActionResultListenerMethod.addMultiChoicePollResponse:
         break;
       default:
         log("ActionResultListener onException-> method: ${methodType.toString()} Could not find a valid case while switching");
@@ -2593,22 +2624,27 @@ class MeetingStore extends ChangeNotifier
   @override
   void onPollUpdate(
       {required HMSPoll poll, required HMSPollUpdateType pollUpdateType}) {
-    log("onPollUpdate -> pollL $poll updateType: $pollUpdateType");
+    log("onPollUpdate -> poll $poll updateType: $pollUpdateType");
     switch (pollUpdateType) {
       ///If the poll is started we add the poll in questions list
       case HMSPollUpdateType.started:
-        pollQuestions.add(HMSPollStore(poll: poll));
+        if (localPeer?.role.permissions.pollRead ?? false) {
+          pollQuestions.add(HMSPollStore(poll: poll));
+          toasts.add(HMSToastModel(poll,
+              hmsToastType: HMSToastsType.pollStartedToast));
+          notifyListeners();
+        }
         break;
 
-      ///In this case we just update the state of the poll
-      case HMSPollUpdateType.stopped:
+      ///In other cases we just update the state of the poll
+      default:
         int index = pollQuestions
             .indexWhere((element) => element.poll.pollId == poll.pollId);
         if (index != -1) {
           pollQuestions[index].updateState(poll);
         }
-        break;
-      case HMSPollUpdateType.resultsupdated:
+        notifyListeners();
+
         break;
     }
   }

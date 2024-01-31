@@ -201,32 +201,36 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         : "Raise Hand"),
 
                 ///This renders the polls and quizzes option
-                MoreOptionItem(
-                    onTap: () {
-                      Navigator.pop(context);
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        backgroundColor: HMSThemeColors.surfaceDim,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(16),
-                              topRight: Radius.circular(16)),
-                        ),
-                        context: context,
-                        builder: (ctx) => ChangeNotifierProvider.value(
-                            value: meetingStore,
-                            child: const PollAndQuizBottomSheet()),
-                      );
-                    },
-                    optionIcon: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/src/assets/icons/polls.svg",
-                      height: 20,
-                      width: 20,
-                      colorFilter: ColorFilter.mode(
-                          HMSThemeColors.onSurfaceHighEmphasis,
-                          BlendMode.srcIn),
-                    ),
-                    optionText: "Polls and Quizzes"),
+                if ((meetingStore.localPeer?.role.permissions.pollRead ??
+                        false) ||
+                    (meetingStore.localPeer?.role.permissions.pollWrite ??
+                        false))
+                  MoreOptionItem(
+                      onTap: () {
+                        Navigator.pop(context);
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: HMSThemeColors.surfaceDim,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16)),
+                          ),
+                          context: context,
+                          builder: (ctx) => ChangeNotifierProvider.value(
+                              value: meetingStore,
+                              child: const PollAndQuizBottomSheet()),
+                        );
+                      },
+                      optionIcon: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/src/assets/icons/polls.svg",
+                        height: 20,
+                        width: 20,
+                        colorFilter: ColorFilter.mode(
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
+                      ),
+                      optionText: "Polls and Quizzes"),
 
                 ///This renders the recording option
                 ///This option is only rendered if the local peer has the permission to

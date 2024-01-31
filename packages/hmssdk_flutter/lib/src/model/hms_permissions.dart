@@ -10,6 +10,8 @@ class HMSPermissions {
   final bool? removeOthers;
   final bool? rtmpStreaming;
   final bool? unMute;
+  final bool? pollRead;
+  final bool? pollWrite;
 
   HMSPermissions(
       {this.endRoom,
@@ -19,7 +21,7 @@ class HMSPermissions {
       this.browserRecording,
       this.mute,
       this.unMute,
-      this.changeRole});
+      this.changeRole,this.pollRead, this.pollWrite});
 
   factory HMSPermissions.fromMap(Map map) {
     return HMSPermissions(
@@ -31,6 +33,8 @@ class HMSPermissions {
       removeOthers: map['remove_others'],
       rtmpStreaming: map['rtmp_streaming'],
       unMute: map['un_mute'],
+      pollRead: map['poll_read'],
+      pollWrite: map['poll_write']
     );
   }
 
@@ -43,7 +47,9 @@ class HMSPermissions {
       'un_mute': unMute,
       'hls_streaming': hlsStreaming,
       'rtmp_streaming': rtmpStreaming,
-      'change_role': changeRole
+      'change_role': changeRole,
+      'poll_read': pollRead,
+      'poll_write': pollWrite
     };
   }
 }

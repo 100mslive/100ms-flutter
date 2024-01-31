@@ -269,6 +269,17 @@ class Utilities {
     //     duration: Duration(seconds: time));
   }
 
+  static String getQuestionType(HMSPollQuestionType questionType) {
+    switch (questionType) {
+      case HMSPollQuestionType.singleChoice:
+        return "SINGLE CHOICE";
+      case HMSPollQuestionType.multiChoice:
+        return "MULTI CHOICE";
+      default:
+        return "SINGLE CHOICE";
+    }
+  }
+
   static Future<String> getStringData({required String key}) async {
     final prefs = await SharedPreferences.getInstance();
 

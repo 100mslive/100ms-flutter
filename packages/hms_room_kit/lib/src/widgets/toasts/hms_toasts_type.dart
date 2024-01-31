@@ -5,5 +5,6 @@ enum HMSToastsType {
   localScreenshareToast,
   roleChangeDeclineToast,
   chatPauseResumeToast,
-  errorToast
+  errorToast,
+  pollStartedToast
 }

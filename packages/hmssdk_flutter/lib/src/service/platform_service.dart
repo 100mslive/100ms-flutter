@@ -16,10 +16,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_hls_playback_event_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_key_change_listener_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
-import 'package:hmssdk_flutter/src/enum/hms_poll_enum.dart';
 import 'package:hmssdk_flutter/src/model/hms_key_change_observer.dart';
-import 'package:hmssdk_flutter/src/model/hms_poll.dart';
-import 'package:hmssdk_flutter/src/model/hms_poll_listener.dart';
 
 abstract class PlatformService {
   ///used to pass data to platform using methods

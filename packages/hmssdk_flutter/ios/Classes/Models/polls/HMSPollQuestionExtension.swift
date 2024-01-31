@@ -13,7 +13,7 @@ class HMSPollQuestionExtension{
     static func toDictionary(question: HMSPollQuestion) -> [String:Any?]{
         var map = [String: Any?]()
         
-        
+        map["question_id"] = question.index
         map["can_skip"] = question.skippable
         
         if let answer = question.answer{

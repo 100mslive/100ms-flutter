@@ -27,5 +27,7 @@ enum HMSActionResultListenerMethod {
   lowerRemotePeerHand,
   raiseLocalPeerHand,
   quickStartPoll,
+  addSingleChoicePollResponse,
+  addMultiChoicePollResponse,
   unknown
 }

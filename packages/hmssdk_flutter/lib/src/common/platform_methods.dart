@@ -209,7 +209,9 @@ enum PlatformMethod {
   ///Poll methods
   addPollUpdateListener,
   removePollUpdateListener,
-  quickStartPoll
+  quickStartPoll,
+  addSingleChoicePollResponse,
+  addMultiChoicePollResponse
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -523,7 +525,10 @@ extension PlatformMethodValues on PlatformMethod {
         return "remove_poll_update_listener";
       case PlatformMethod.quickStartPoll:
         return "quick_start_poll";
-
+      case PlatformMethod.addSingleChoicePollResponse:
+        return "add_single_choice_poll_response";
+      case PlatformMethod.addMultiChoicePollResponse:
+        return "add_multi_choice_poll_response";
       default:
         return 'unknown';
     }
@@ -839,7 +844,10 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.removePollUpdateListener;
       case "quick_start_poll":
         return PlatformMethod.quickStartPoll;
-
+      case "add_single_choice_poll_response":
+        return PlatformMethod.addSingleChoicePollResponse;
+      case "add_multi_choice_poll_response":
+        return PlatformMethod.addMultiChoicePollResponse;
       default:
         return PlatformMethod.unknown;
     }

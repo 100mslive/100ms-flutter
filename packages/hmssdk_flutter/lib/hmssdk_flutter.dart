@@ -103,10 +103,12 @@ export 'src/model/hms_peer_list_iterator.dart';
 export 'src/model/peer_list_iterator_options.dart';
 export 'src/enum/hms_recording_state.dart';
 export 'src/enum/hms_streaming_state.dart';
-export 'src/model/hms_poll_interactivity_center.dart';
-export 'src/model/hms_poll_listener.dart';
-export 'src/model/hms_poll_question_builder.dart';
-export 'src/model/hms_poll.dart';
+export 'src/model/polls/hms_poll_interactivity_center.dart';
+export 'src/model/polls/hms_poll_listener.dart';
+export 'src/model/polls/hms_poll_question_builder.dart';
+export 'src/model/polls/hms_poll.dart';
+export 'src/model/polls/hms_poll_question.dart';
+export 'src/model/polls/hms_poll_question_option.dart';
 
 //Views
 export 'src/ui/meeting/hms_texture_view.dart';

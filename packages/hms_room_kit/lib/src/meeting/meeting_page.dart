@@ -10,6 +10,7 @@ import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
+import 'package:hms_room_kit/src/widgets/toasts/hms_poll_start_toast.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_grid_component.dart';
 import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
@@ -107,6 +108,9 @@ class _MeetingPageState extends State<MeetingPage> {
             isChatEnabled: toast.toastData["enabled"],
             userName: toast.toastData["updatedBy"],
             meetingStore: context.read<MeetingStore>());
+      case HMSToastsType.pollStartedToast:
+        return HMSPollStartToast(
+            poll: toast.toastData, meetingStore: context.read<MeetingStore>());
       default:
         return const SizedBox();
     }
