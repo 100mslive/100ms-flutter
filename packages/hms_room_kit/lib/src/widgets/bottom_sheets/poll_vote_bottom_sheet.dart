@@ -9,15 +9,15 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/live_badge.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/voting_flow_widgets/poll_result_card.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/voting_flow_widgets/poll_vote_card.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 class PollVoteBottomSheet extends StatelessWidget {
   const PollVoteBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var hmsPollStore = context.read<HMSPollStore>();
+    var hmsPollStore = context.watch<HMSPollStore>();
     return FractionallySizedBox(
       heightFactor: 0.87,
       child: Padding(
@@ -54,7 +54,17 @@ class PollVoteBottomSheet extends StatelessWidget {
                       const SizedBox(
                         width: 12,
                       ),
-                      const LiveBadge(),
+                      Selector<HMSPollStore, HMSPollState>(
+                          selector: (_, hmsPollStore) =>
+                              hmsPollStore.poll.state,
+                          builder: (_, state, __) {
+                            return state == HMSPollState.started
+                                ? const LiveBadge()
+                                : LiveBadge(
+                                    badgeColor: HMSThemeColors.secondaryDefault,
+                                    text: "ENDED",
+                                  );
+                          }),
                     ],
                   ),
                   const Row(
@@ -81,23 +91,28 @@ class PollVoteBottomSheet extends StatelessWidget {
               const SizedBox(
                 height: 8,
               ),
-              ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: hmsPollStore.poll.questions?.length ?? 0,
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext context, index) {
-                    return hmsPollStore.poll.questions![index].voted
-                        ? PollResultCard(
-                            questionNumber: index,
-                            totalQuestions:
-                                hmsPollStore.poll.questions?.length ?? 0,
-                            question: hmsPollStore.poll.questions![index],
-                          )
-                        : PollVoteCard(
-                            questionNumber: index,
-                            totalQuestions:
-                                hmsPollStore.poll.questions?.length ?? 0,
-                            question: hmsPollStore.poll.questions![index]);
+              Selector<HMSPollStore, HMSPoll>(
+                  selector: (_, pollStore) => pollStore.poll,
+                  builder: (_, poll, __) {
+                    return ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: poll.questions?.length ?? 0,
+                        shrinkWrap: true,
+                        itemBuilder: (BuildContext context, index) {
+                          return (poll.questions![index].voted) || (poll.state==HMSPollState.stopped)
+                              ? PollResultCard(
+                                  questionNumber: index,
+                                  totalQuestions:
+                                     poll.questions?.length ?? 0,
+                                  question: poll.questions![index],
+                                )
+                              : PollVoteCard(
+                                  questionNumber: index,
+                                  totalQuestions:
+                                      poll.questions?.length ?? 0,
+                                  question:
+                                      poll.questions![index]);
+                        });
                   }),
               const SizedBox(
                 height: 8,

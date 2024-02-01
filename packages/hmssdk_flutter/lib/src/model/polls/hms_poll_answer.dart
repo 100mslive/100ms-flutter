@@ -29,7 +29,7 @@ class HMSPollAnswer {
       questionType: HMSPollQuestionTypeValues.getHMSPollQuestionTypeFromString(
           map['question_type']),
       selectedOption: map['selected_option'],
-      selectedOptions: map['selected_options'],
+      selectedOptions: List<int>.from(map['selected_options']),
       skipped: map['skipped'],
       update: map['update'],
     );

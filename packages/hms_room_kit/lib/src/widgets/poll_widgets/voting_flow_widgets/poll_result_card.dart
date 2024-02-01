@@ -72,43 +72,67 @@ class _PollResultCardState extends State<PollResultCard> {
                 maxLines: 3,
                 fontWeight: FontWeight.w400,
               ),
+              const SizedBox(
+                height: 16,
+              ),
               ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: widget.question.options.length,
                   itemBuilder: (BuildContext context, index) {
-                    return Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            HMSSubheadingText(
-                                text: widget.question.options[index].text ?? "",
-                                textColor:
-                                    HMSThemeColors.onSurfaceHighEmphasis),
-                            HMSSubheadingText(
-                                text: "4 votes",
-                                textColor:
-                                    HMSThemeColors.onSurfaceMediumEmphasis)
-                          ],
-                        ),
-                        Container(
-                          height: 8,
-                          child: Flex(
-                            direction: Axis.horizontal,
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Expanded(
-                                  flex: 8,
-                                  child: Container(
-                                    color: HMSThemeColors.primaryDefault,
-                                  )),
-                              const Expanded(flex: 2, child: SizedBox())
+                              HMSSubheadingText(
+                                  text:
+                                      widget.question.options[index].text ?? "",
+                                  textColor:
+                                      HMSThemeColors.onSurfaceHighEmphasis),
+                              HMSSubheadingText(
+                                  text:
+                                      "${widget.question.options[index].voteCount.toString()} vote${widget.question.options[index].voteCount > 1 ? "s" : ""}",
+                                  textColor:
+                                      HMSThemeColors.onSurfaceMediumEmphasis)
                             ],
                           ),
-                        )
-                      ],
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            height: 8,
+                            child: Flex(
+                              direction: Axis.horizontal,
+                              children: [
+                                Expanded(
+                                    flex: 5,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: HMSThemeColors.primaryDefault,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    )),
+                                Expanded(
+                                    flex: 5,
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                      color: HMSThemeColors.surfaceBright,
+                                      borderRadius: BorderRadius.circular(8),
+                                    )))
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     );
                   }),
+              if(widget.question.voted)
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
