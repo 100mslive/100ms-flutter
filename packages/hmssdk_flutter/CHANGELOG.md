@@ -5,6 +5,21 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+# 1.9.8 - 2024-02-01
+
+| Package                                | Version                                                                                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| hms_room_kit                | 1.0.11  |
+| hmssdk_flutter              | 1.9.8   |
+
+### 🛠️ Changed
+
+- Fixed broadcast receiver issues on android 14 devices
+
+  Learn more about this issue [here](https://developer.android.com/about/versions/14/behavior-changes-14#runtime-receivers-exported)
+
+**Full Changelog**: [1.9.7...1.9.8](https://github.com/100mslive/100ms-flutter/compare/1.9.7...1.9.8)
+
 # 1.9.7 - 2024-01-18
 
 | Package                                | Version                                                                                                                                  |
