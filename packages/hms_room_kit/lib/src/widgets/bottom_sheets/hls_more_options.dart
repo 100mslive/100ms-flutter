@@ -74,6 +74,7 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                   MoreOptionItem(
                       onTap: () async {
                         Navigator.pop(context);
+                        var meetingStore = context.read<MeetingStore>();
                         showModalBottomSheet(
                           isScrollControlled: true,
                           backgroundColor: HMSThemeColors.surfaceDim,
@@ -84,7 +85,7 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                           ),
                           context: context,
                           builder: (ctx) => ChangeNotifierProvider.value(
-                              value: context.read<MeetingStore>(),
+                              value: meetingStore,
                               child: (HMSRoomLayout.chatData == null ||
                                       (HMSRoomLayout.chatData?.isOverlay ??
                                           true))

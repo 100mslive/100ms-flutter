@@ -3,6 +3,7 @@ package live.hms.hmssdk_flutter
 import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Context.*
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.projection.MediaProjectionManager
@@ -1576,7 +1577,11 @@ class HmssdkFlutterPlugin :
 
     private fun startScreenShare(result: Result) {
         androidScreenshareResult = result
-        activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"), RECEIVER_EXPORTED)
+        }else {
+            activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"))
+        }
         val mediaProjectionManager: MediaProjectionManager =
             activity.getSystemService(
                 Context.MEDIA_PROJECTION_SERVICE,
@@ -1641,7 +1646,11 @@ class HmssdkFlutterPlugin :
     ) {
         androidAudioShareResult = result
         mode = call.argument<String>("audio_mixing_mode")
-        activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"), RECEIVER_EXPORTED)
+        }else {
+            activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"),)
+        }
         val mediaProjectionManager: MediaProjectionManager? =
             activity.getSystemService(
                 Context.MEDIA_PROJECTION_SERVICE,
