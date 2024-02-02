@@ -99,19 +99,17 @@ class PollVoteBottomSheet extends StatelessWidget {
                         itemCount: poll.questions?.length ?? 0,
                         shrinkWrap: true,
                         itemBuilder: (BuildContext context, index) {
-                          return (poll.questions![index].voted) || (poll.state==HMSPollState.stopped)
+                          return (poll.questions![index].voted) ||
+                                  (poll.state == HMSPollState.stopped)
                               ? PollResultCard(
                                   questionNumber: index,
-                                  totalQuestions:
-                                     poll.questions?.length ?? 0,
+                                  totalQuestions: poll.questions?.length ?? 0,
                                   question: poll.questions![index],
                                 )
                               : PollVoteCard(
                                   questionNumber: index,
-                                  totalQuestions:
-                                      poll.questions?.length ?? 0,
-                                  question:
-                                      poll.questions![index]);
+                                  totalQuestions: poll.questions?.length ?? 0,
+                                  question: poll.questions![index]);
                         });
                   }),
               const SizedBox(

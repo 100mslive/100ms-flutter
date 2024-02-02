@@ -21,21 +21,22 @@ class HMSPermissions {
       this.browserRecording,
       this.mute,
       this.unMute,
-      this.changeRole,this.pollRead, this.pollWrite});
+      this.changeRole,
+      this.pollRead,
+      this.pollWrite});
 
   factory HMSPermissions.fromMap(Map map) {
     return HMSPermissions(
-      browserRecording: map["browser_recording"],
-      changeRole: map['change_role'],
-      endRoom: map['end_room'],
-      hlsStreaming: map['hls_streaming'],
-      mute: map['mute'],
-      removeOthers: map['remove_others'],
-      rtmpStreaming: map['rtmp_streaming'],
-      unMute: map['un_mute'],
-      pollRead: map['poll_read'],
-      pollWrite: map['poll_write']
-    );
+        browserRecording: map["browser_recording"],
+        changeRole: map['change_role'],
+        endRoom: map['end_room'],
+        hlsStreaming: map['hls_streaming'],
+        mute: map['mute'],
+        removeOthers: map['remove_others'],
+        rtmpStreaming: map['rtmp_streaming'],
+        unMute: map['un_mute'],
+        pollRead: map['poll_read'],
+        pollWrite: map['poll_write']);
   }
 
   Map<String, dynamic> toJson() {

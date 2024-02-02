@@ -132,15 +132,15 @@ class _PollResultCardState extends State<PollResultCard> {
                       ),
                     );
                   }),
-              if(widget.question.voted)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  HMSTitleText(
-                      text: "Voted",
-                      textColor: HMSThemeColors.onSurfaceLowEmphasis)
-                ],
-              )
+              if (widget.question.voted)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    HMSTitleText(
+                        text: "Voted",
+                        textColor: HMSThemeColors.onSurfaceLowEmphasis)
+                  ],
+                )
             ],
           ),
         ),

@@ -3,7 +3,6 @@ import 'package:hmssdk_flutter/src/model/polls/hms_poll_answer_response.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 abstract class HMSPollInteractivityCenter {
-
   ///[addPollUpdateListener] adds the poll update listener to send
   ///the poll events to the application
   static void addPollUpdateListener({required HMSPollListener listener}) {
