@@ -5,7 +5,7 @@ class HMSPollAnswer {
   final Duration duration;
   final int questionId;
   final HMSPollQuestionType questionType;
-  final int selectedOption;
+  final int? selectedOption;
   final List<int>? selectedOptions;
   final bool skipped;
   final bool update;
@@ -15,7 +15,7 @@ class HMSPollAnswer {
     required this.duration,
     required this.questionId,
     required this.questionType,
-    required this.selectedOption,
+    this.selectedOption,
     this.selectedOptions,
     required this.skipped,
     required this.update,
@@ -29,7 +29,7 @@ class HMSPollAnswer {
       questionType: HMSPollQuestionTypeValues.getHMSPollQuestionTypeFromString(
           map['question_type']),
       selectedOption: map['selected_option'],
-      selectedOptions: List<int>.from(map['selected_options']),
+      selectedOptions: map["selected_options"]!= null?List<int>.from(map['selected_options']):null,
       skipped: map['skipped'],
       update: map['update'],
     );

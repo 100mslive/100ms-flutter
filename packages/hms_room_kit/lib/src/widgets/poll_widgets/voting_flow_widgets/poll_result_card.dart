@@ -25,9 +25,9 @@ class _PollResultCardState extends State<PollResultCard> {
   void initState() {
     super.initState();
 
-    // for (var element in context.read<HMSPollQuestionStore>().question.options) {
-    //   totalVotes += element.voteCount;
-    // }
+    for (var element in widget.question.options) {
+      totalVotes += element.voteCount;
+    }
     setState(() {});
   }
 
@@ -111,7 +111,7 @@ class _PollResultCardState extends State<PollResultCard> {
                               direction: Axis.horizontal,
                               children: [
                                 Expanded(
-                                    flex: 5,
+                                    flex:(widget.question.options[index].voteCount),
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color: HMSThemeColors.primaryDefault,
@@ -119,7 +119,7 @@ class _PollResultCardState extends State<PollResultCard> {
                                       ),
                                     )),
                                 Expanded(
-                                    flex: 5,
+                                    flex:  totalVotes - widget.question.options[index].voteCount,
                                     child: Container(
                                         decoration: BoxDecoration(
                                       color: HMSThemeColors.surfaceBright,

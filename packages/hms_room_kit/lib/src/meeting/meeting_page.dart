@@ -5,6 +5,7 @@ import 'dart:math';
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:hms_room_kit/src/model/poll_store.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -109,8 +110,11 @@ class _MeetingPageState extends State<MeetingPage> {
             userName: toast.toastData["updatedBy"],
             meetingStore: context.read<MeetingStore>());
       case HMSToastsType.pollStartedToast:
-        return HMSPollStartToast(
-            poll: toast.toastData, meetingStore: context.read<MeetingStore>());
+        return ChangeNotifierProvider.value(
+          value: toast.toastData! as HMSPollStore,
+          child: HMSPollStartToast(
+              poll: toast.toastData.poll, meetingStore: context.read<MeetingStore>()),
+        );
       default:
         return const SizedBox();
     }

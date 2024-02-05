@@ -63,6 +63,7 @@ class PollVoteBottomSheet extends StatelessWidget {
                                 : LiveBadge(
                                     badgeColor: HMSThemeColors.secondaryDefault,
                                     text: "ENDED",
+                                    width: 50,
                                   );
                           }),
                     ],
