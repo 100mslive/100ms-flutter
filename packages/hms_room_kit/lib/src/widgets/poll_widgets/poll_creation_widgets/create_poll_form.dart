@@ -416,7 +416,7 @@ class _CreatePollFormState extends State<CreatePollForm> {
                   fit: BoxFit.contain,
                   child: CupertinoSwitch(
                     value: _canChangeResponse,
-                    onChanged: (value) => setIsSkippable(value),
+                    onChanged: (value) => setCanChangeResponse(value),
                     activeColor: HMSThemeColors.primaryDefault,
                   ),
                 ),

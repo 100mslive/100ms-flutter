@@ -465,7 +465,7 @@ class MeetingStore extends ChangeNotifier
       case HMSToastsType.pollStartedToast:
         toasts.removeWhere((toast) =>
             (toast.hmsToastType == HMSToastsType.pollStartedToast) &&
-            (toast.toastData.pollId == data));
+            (toast.toastData.poll.pollId == data));
     }
     notifyListeners();
   }
@@ -2629,10 +2629,15 @@ class MeetingStore extends ChangeNotifier
       ///If the poll is started we add the poll in questions list
       case HMSPollUpdateType.started:
         if (localPeer?.role.permissions.pollRead ?? false) {
-          pollQuestions.add(HMSPollStore(poll: poll));
-          toasts.add(HMSToastModel(poll,
-              hmsToastType: HMSToastsType.pollStartedToast));
-          notifyListeners();
+          int index = pollQuestions
+              .indexWhere((element) => element.poll.pollId == poll.pollId);
+          if (index == -1) {
+            HMSPollStore store = HMSPollStore(poll: poll);
+            pollQuestions.add(store);
+            toasts.add(HMSToastModel(store,
+                hmsToastType: HMSToastsType.pollStartedToast));
+            notifyListeners();
+          }
         }
         break;
 

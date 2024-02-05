@@ -54,7 +54,7 @@ class HMSPollStartToast extends StatelessWidget {
               builder: (ctx) => ChangeNotifierProvider.value(
                   value: meetingStore,
                   child: ChangeNotifierProvider.value(
-                    value: HMSPollStore(poll: poll),
+                    value: context.read<HMSPollStore>(),
                     child: const PollVoteBottomSheet(),
                   )));
           meetingStore.removeToast(HMSToastsType.pollStartedToast,
