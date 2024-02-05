@@ -15,8 +15,8 @@ https://100ms.atlassian.net/browse/FLUT-197
 - Polls: Launch Poll Screen
 https://100ms.atlassian.net/browse/FLUT-202
 
-- Resolve issues reported by VAPT testing
-https://100ms.atlassian.net/browse/FLUT-218
+- Polls: Poll Panel with a live Poll Screen
+https://100ms.atlassian.net/browse/FLUT-204
 
 Room Kit: 1.0.10
 Core SDK: 1.9.7
