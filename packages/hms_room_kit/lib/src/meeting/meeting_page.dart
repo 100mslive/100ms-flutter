@@ -113,7 +113,8 @@ class _MeetingPageState extends State<MeetingPage> {
         return ChangeNotifierProvider.value(
           value: toast.toastData! as HMSPollStore,
           child: HMSPollStartToast(
-              poll: toast.toastData.poll, meetingStore: context.read<MeetingStore>()),
+              poll: toast.toastData.poll,
+              meetingStore: context.read<MeetingStore>()),
         );
       default:
         return const SizedBox();

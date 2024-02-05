@@ -111,7 +111,8 @@ class _PollResultCardState extends State<PollResultCard> {
                               direction: Axis.horizontal,
                               children: [
                                 Expanded(
-                                    flex:(widget.question.options[index].voteCount),
+                                    flex: (widget
+                                        .question.options[index].voteCount),
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color: HMSThemeColors.primaryDefault,
@@ -119,7 +120,9 @@ class _PollResultCardState extends State<PollResultCard> {
                                       ),
                                     )),
                                 Expanded(
-                                    flex:  totalVotes - widget.question.options[index].voteCount,
+                                    flex: totalVotes -
+                                        widget
+                                            .question.options[index].voteCount,
                                     child: Container(
                                         decoration: BoxDecoration(
                                       color: HMSThemeColors.surfaceBright,
