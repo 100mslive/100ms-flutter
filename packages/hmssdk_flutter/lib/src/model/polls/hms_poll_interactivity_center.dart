@@ -3,7 +3,6 @@ import 'package:hmssdk_flutter/src/model/polls/hms_poll_answer_response.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 abstract class HMSPollInteractivityCenter {
-
   ///[addPollUpdateListener] adds the poll update listener to send
   ///the poll events to the application
   static void addPollUpdateListener({required HMSPollListener listener}) {
@@ -64,6 +63,19 @@ abstract class HMSPollInteractivityCenter {
         if (result["data"]["error"] != null) {
           return HMSException.fromMap(result["data"]["error"]);
         }
+      }
+    }
+  }
+
+  static Future<dynamic> stopPoll({required HMSPoll poll}) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.stopPoll,
+        arguments: {"poll_id": poll.pollId});
+
+    if (result != null) {
+      if (result["error"] != null) {
+        return HMSException.fromMap(result["error"]);
+      } else {
+        return null;
       }
     }
   }

@@ -3,7 +3,9 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
+import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/poll_store.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/live_badge.dart';
@@ -100,24 +102,58 @@ class PollVoteBottomSheet extends StatelessWidget {
                         itemCount: poll.questions?.length ?? 0,
                         shrinkWrap: true,
                         itemBuilder: (BuildContext context, index) {
-                          return (poll.questions![index].voted) || (poll.state==HMSPollState.stopped)
-                              ? PollResultCard(
-                                  questionNumber: index,
-                                  totalQuestions:
-                                     poll.questions?.length ?? 0,
-                                  question: poll.questions![index],
-                                )
-                              : PollVoteCard(
-                                  questionNumber: index,
-                                  totalQuestions:
-                                      poll.questions?.length ?? 0,
-                                  question:
-                                      poll.questions![index]);
+                          if ((poll.questions![index].myResponses.isNotEmpty) ||
+                              (poll.state == HMSPollState.stopped)) {
+                            var totalVotes = 0;
+                            for (var element
+                                in poll.questions![index].options) {
+                              totalVotes += element.voteCount;
+                            }
+                            return PollResultCard(
+                              questionNumber: index,
+                              totalQuestions: poll.questions?.length ?? 0,
+                              question: poll.questions![index],
+                              totalVotes: totalVotes,
+                            );
+                          } else {
+                            return PollVoteCard(
+                                questionNumber: index,
+                                totalQuestions: poll.questions?.length ?? 0,
+                                question: poll.questions![index]);
+                          }
                         });
                   }),
-              const SizedBox(
-                height: 8,
-              ),
+              Selector<HMSPollStore, HMSPollState>(
+                  selector: (_, pollStore) => pollStore.poll.state,
+                  builder: (_, pollState, __) {
+                    ///End Poll is only shown when user has permission to end Poll and poll is not stopped.
+                    return (pollState != HMSPollState.stopped &&
+                            (context
+                                    .read<MeetingStore>()
+                                    .localPeer
+                                    ?.role
+                                    .permissions
+                                    .pollWrite ??
+                                false))
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              HMSButton(
+                                width: 100,
+                                onPressed: () {
+                                  context.read<MeetingStore>().stopPoll(hmsPollStore.poll);
+                                },
+                                childWidget: HMSTitleText(
+                                    text: "End Poll",
+                                    textColor:
+                                        HMSThemeColors.onPrimaryHighEmphasis),
+                                buttonBackgroundColor:
+                                    HMSThemeColors.alertErrorDefault,
+                              ),
+                            ],
+                          )
+                        : const SizedBox();
+                  })
             ],
           ),
         ),

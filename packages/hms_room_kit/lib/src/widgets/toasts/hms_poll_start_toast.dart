@@ -42,6 +42,7 @@ class HMSPollStartToast extends StatelessWidget {
       action: HMSToastButton(
         buttonTitle: "Vote",
         action: () {
+          var pollStore = context.read<HMSPollStore>();
           showModalBottomSheet(
               isScrollControlled: true,
               backgroundColor: HMSThemeColors.surfaceDim,
@@ -54,7 +55,7 @@ class HMSPollStartToast extends StatelessWidget {
               builder: (ctx) => ChangeNotifierProvider.value(
                   value: meetingStore,
                   child: ChangeNotifierProvider.value(
-                    value: context.read<HMSPollStore>(),
+                    value: pollStore,
                     child: const PollVoteBottomSheet(),
                   )));
           meetingStore.removeToast(HMSToastsType.pollStartedToast,

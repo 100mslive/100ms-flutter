@@ -122,7 +122,7 @@ class _PollVoteCardState extends State<PollVoteCard> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   HMSButton(
-                      width: 80,
+                      width: 88,
                       onPressed: () {
                         if (widget.question.type ==
                                 HMSPollQuestionType.singleChoice &&

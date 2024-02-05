@@ -315,7 +315,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
            // MARK: - Polls
             
-        case "add_poll_update_listener", "remove_poll_update_listener", "quick_start_poll", "add_single_choice_poll_response", "add_multi_choice_poll_response":
+        case "add_poll_update_listener", "remove_poll_update_listener", "quick_start_poll", "add_single_choice_poll_response", "add_multi_choice_poll_response", "stop_poll":
             pollsAction(call, result)
             
         default:
@@ -423,6 +423,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
     
+    var currentPolls = [HMSPoll]()
     private func pollsAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "add_poll_update_listener":
@@ -436,7 +437,18 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                     "poll_update_type": HMSPollExtension.getPollUpdateType(updateType: hmsPollUpdateType)
                     ]
                 ] as [String : Any]
-                
+                if(hmsPollUpdateType == .started){
+                    currentPolls.append(hmsPoll)
+                }else if(hmsPollUpdateType == .stopped){
+                    currentPolls.removeAll(where: {
+                        $0.pollID == hmsPoll.pollID
+                    })
+                }
+                else if(hmsPollUpdateType == .resultsUpdated){
+                    if let index = currentPolls.firstIndex(where: {$0.pollID == hmsPoll.pollID}){
+                        currentPolls[index] = hmsPoll
+                    }
+                }
                 self.pollsEventSink?(map)
             }
             hmsSDK?.interactivityCenter.addPollUpdateListner(listener)
@@ -444,7 +456,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "remove_poll_update_listener":
             break
         default:
-            HMSPollAction.pollActions(call, result, hmsSDK)
+            HMSPollAction.pollActions(call, result, hmsSDK, currentPolls)
         }
     }
 

@@ -63,6 +63,7 @@ class PollQuestionCard extends StatelessWidget {
                       width: 75,
                       onPressed: () {
                         var meetingStore = context.read<MeetingStore>();
+                        var pollStore = context.read<HMSPollStore>();
                         showModalBottomSheet(
                             isScrollControlled: true,
                             backgroundColor: HMSThemeColors.surfaceDim,
@@ -75,7 +76,7 @@ class PollQuestionCard extends StatelessWidget {
                             builder: (ctx) => ChangeNotifierProvider.value(
                                   value: meetingStore,
                                   child: ChangeNotifierProvider.value(
-                                    value: context.read<HMSPollStore>(),
+                                    value: pollStore,
                                     child: const PollVoteBottomSheet(),
                                   ),
                                 ));

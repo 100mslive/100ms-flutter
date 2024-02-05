@@ -3,34 +3,18 @@ import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
-class PollResultCard extends StatefulWidget {
+class PollResultCard extends StatelessWidget {
   final int questionNumber;
   final int totalQuestions;
   final HMSPollQuestion question;
+  final int totalVotes;
 
-  const PollResultCard({
-    super.key,
-    required this.questionNumber,
-    required this.totalQuestions,
-    required this.question,
-  });
-  @override
-  State<PollResultCard> createState() => _PollResultCardState();
-}
-
-class _PollResultCardState extends State<PollResultCard> {
-  int totalVotes = 0;
-
-  @override
-  void initState() {
-    super.initState();
-
-    for (var element in widget.question.options) {
-      totalVotes += element.voteCount;
-    }
-    setState(() {});
-  }
-
+  const PollResultCard(
+      {super.key,
+      required this.questionNumber,
+      required this.totalQuestions,
+      required this.question,
+      required this.totalVotes});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -50,7 +34,7 @@ class _PollResultCardState extends State<PollResultCard> {
                 children: [
                   HMSTitleText(
                       text:
-                          "QUESTION ${widget.questionNumber + 1} OF ${widget.totalQuestions}: ",
+                          "QUESTION ${questionNumber + 1} OF $totalQuestions: ",
                       textColor: HMSThemeColors.onSurfaceLowEmphasis,
                       fontSize: 10,
                       letterSpacing: 1.5,
@@ -59,7 +43,7 @@ class _PollResultCardState extends State<PollResultCard> {
                       fontSize: 10,
                       letterSpacing: 1.5,
                       lineHeight: 16,
-                      text: Utilities.getQuestionType(widget.question.type),
+                      text: Utilities.getQuestionType(question.type),
                       textColor: HMSThemeColors.onSurfaceLowEmphasis)
                 ],
               ),
@@ -67,7 +51,7 @@ class _PollResultCardState extends State<PollResultCard> {
                 height: 16,
               ),
               HMSTitleText(
-                text: widget.question.text,
+                text: question.text,
                 textColor: HMSThemeColors.onSurfaceHighEmphasis,
                 maxLines: 3,
                 fontWeight: FontWeight.w400,
@@ -78,7 +62,7 @@ class _PollResultCardState extends State<PollResultCard> {
               ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: widget.question.options.length,
+                  itemCount: question.options.length,
                   itemBuilder: (BuildContext context, index) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
@@ -88,13 +72,12 @@ class _PollResultCardState extends State<PollResultCard> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               HMSSubheadingText(
-                                  text:
-                                      widget.question.options[index].text ?? "",
+                                  text: question.options[index].text ?? "",
                                   textColor:
                                       HMSThemeColors.onSurfaceHighEmphasis),
                               HMSSubheadingText(
                                   text:
-                                      "${widget.question.options[index].voteCount.toString()} vote${widget.question.options[index].voteCount > 1 ? "s" : ""}",
+                                      "${question.options[index].voteCount.toString()} vote${question.options[index].voteCount > 1 ? "s" : ""}",
                                   textColor:
                                       HMSThemeColors.onSurfaceMediumEmphasis)
                             ],
@@ -111,7 +94,7 @@ class _PollResultCardState extends State<PollResultCard> {
                               direction: Axis.horizontal,
                               children: [
                                 Expanded(
-                                    flex:(widget.question.options[index].voteCount),
+                                    flex: (question.options[index].voteCount),
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color: HMSThemeColors.primaryDefault,
@@ -119,7 +102,8 @@ class _PollResultCardState extends State<PollResultCard> {
                                       ),
                                     )),
                                 Expanded(
-                                    flex:  totalVotes - widget.question.options[index].voteCount,
+                                    flex: totalVotes -
+                                        question.options[index].voteCount,
                                     child: Container(
                                         decoration: BoxDecoration(
                                       color: HMSThemeColors.surfaceBright,
@@ -132,15 +116,15 @@ class _PollResultCardState extends State<PollResultCard> {
                       ),
                     );
                   }),
-              if(widget.question.voted)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  HMSTitleText(
-                      text: "Voted",
-                      textColor: HMSThemeColors.onSurfaceLowEmphasis)
-                ],
-              )
+              if (question.voted)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    HMSTitleText(
+                        text: "Voted",
+                        textColor: HMSThemeColors.onSurfaceLowEmphasis)
+                  ],
+                )
             ],
           ),
         ),

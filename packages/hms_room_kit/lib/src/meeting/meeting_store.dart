@@ -2237,6 +2237,10 @@ class MeetingStore extends ChangeNotifier
         peer: localPeer);
   }
 
+  void stopPoll(HMSPoll poll) {
+    _hmsSDKInteractor.stopPoll(poll: poll);
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
   @override
   void onSuccess(

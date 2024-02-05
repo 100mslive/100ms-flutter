@@ -286,7 +286,7 @@ class HmssdkFlutterPlugin :
                 HMSPeerListIteratorAction.peerListIteratorAction(call, result, hmssdk!!)
             }
 
-            "add_poll_update_listener", "remove_poll_update_listener", "quick_start_poll", "add_single_choice_poll_response", "add_multi_choice_poll_response" -> {
+            "add_poll_update_listener", "remove_poll_update_listener", "quick_start_poll", "add_single_choice_poll_response", "add_multi_choice_poll_response", "stop_poll" -> {
                 pollActions(call,result)
             }
 
@@ -467,6 +467,7 @@ class HmssdkFlutterPlugin :
         }
     }
 
+    private var currentPolls = ArrayList<HmsPoll>()
     private fun pollActions(call: MethodCall, result: Result){
         when(call.method){
             "add_poll_update_listener" -> {
@@ -476,7 +477,7 @@ class HmssdkFlutterPlugin :
                 hmssdk?.getHmsInteractivityCenter()?.pollUpdateListener = null
             }
             else -> hmssdk?.let {
-                HMSPollAction.pollActions(call,result, it)
+                HMSPollAction.pollActions(call,result, it,currentPolls)
             }
         }
     }
@@ -2103,6 +2104,21 @@ class HmssdkFlutterPlugin :
 
     private val hmsPollListener = object : HmsPollUpdateListener{
         override fun onPollUpdate(hmsPoll: HmsPoll, hmsPollUpdateType: HMSPollUpdateType) {
+
+            if(hmsPollUpdateType == HMSPollUpdateType.started){
+                currentPolls.add(hmsPoll)
+            } else if(hmsPollUpdateType == HMSPollUpdateType.resultsupdated){
+                val index = currentPolls.indexOfFirst { it.pollId == hmsPoll.pollId }
+                if(index != -1){
+                    currentPolls[index] = hmsPoll
+                }
+            } else if(hmsPollUpdateType == HMSPollUpdateType.stopped){
+                val index = currentPolls.indexOfFirst { it.pollId == hmsPoll.pollId }
+                if(index != -1){
+                    currentPolls.removeAt(index)
+                }
+            }
+
             val args = HashMap<String, Any?>()
             args["event_name"] = "on_poll_update"
 
