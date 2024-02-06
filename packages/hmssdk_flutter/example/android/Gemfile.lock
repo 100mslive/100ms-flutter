@@ -168,7 +168,7 @@ GEM
     jwt (2.7.1)
     mini_magick (4.12.0)
     mini_mime (1.1.5)
-    minitest (5.21.2)
+    minitest (5.22.0)
     multi_json (1.15.0)
     multipart-post (2.3.0)
     nanaimo (0.3.0)
@@ -222,7 +222,6 @@ GEM
       xcpretty (~> 0.2, >= 0.0.7)
 
 PLATFORMS
-  arm64-darwin-22
   arm64-darwin-23
 
 DEPENDENCIES
@@ -231,4 +230,4 @@ DEPENDENCIES
   fastlane-plugin-firebase_app_distribution
 
 BUNDLED WITH
-   2.4.22
+   2.5.6
