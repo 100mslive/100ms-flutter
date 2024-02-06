@@ -138,7 +138,7 @@ class PollAndQuizBottomSheet extends StatelessWidget {
                           itemCount: data.item1,
                           itemBuilder: (BuildContext context, int index) {
                             return ChangeNotifierProvider.value(
-                                value: data.item2[index],
+                                value: data.item2[data.item1 - index - 1],
                                 child: const PollQuestionCard());
                           },
                         );
