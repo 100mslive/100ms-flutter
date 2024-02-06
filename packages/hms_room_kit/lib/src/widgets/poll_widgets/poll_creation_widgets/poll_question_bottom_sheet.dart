@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/create_poll_form.dart';
+import 'package:hms_room_kit/src/widgets/poll_widgets/quiz_creation_widgets/create_quiz_form.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -16,8 +17,10 @@ import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/save
 ///[PollQuestionBottomSheet] renders the poll question form sheet
 class PollQuestionBottomSheet extends StatefulWidget {
   final String pollName;
+  final bool isPoll;
 
-  const PollQuestionBottomSheet({Key? key, required this.pollName})
+  const PollQuestionBottomSheet(
+      {Key? key, required this.pollName, required this.isPoll})
       : super(key: key);
 
   @override
@@ -167,7 +170,9 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
                                           .elementAt(index),
                                       editPollCallback: _editPollCallback,
                                     )
-                                  : CreatePollForm(
+                                  : 
+                                  widget.isPoll?
+                                  CreatePollForm(
                                       questionNumber: index,
                                       totalQuestions:
                                           pollQuestionBuilders.length,
@@ -190,8 +195,31 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
                                       questionBuilder: pollQuestionBuilders.keys
                                           .elementAt(index),
                                       savePollCallback: _savePollCallback,
-                                    ),
+                                    ): CreateQuizForm(questionNumber: index,
+                                      totalQuestions:
+                                          pollQuestionBuilders.length,
+                                      questionType: pollQuestionBuilders.keys
+                                          .elementAt(index)
+                                          .type,
+                                      questionController: TextEditingController(
+                                          text: pollQuestionBuilders.keys
+                                              .elementAt(index)
+                                              .text),
+                                      optionsTextController:
+                                          pollQuestionBuilders.keys
+                                              .elementAt(index)
+                                              .pollOptions
+                                              .map((e) => TextEditingController(
+                                                  text: e))
+                                              .toList(),
+                                      deleteQuestionCallback:
+                                          _deleteQuestionCallback,
+                                      questionBuilder: pollQuestionBuilders.keys
+                                          .elementAt(index),
+                                      saveQuizCallback: _savePollCallback,),
                             )),
+                    
+                    
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: GestureDetector(

@@ -64,6 +64,8 @@ class HMSPollQuestionBuilder {
 
   List<String> get pollOptions => _pollOptions;
 
+  List<HMSPollQuizOption> get quizOptions => _options;
+
   String? get title => _title;
 
   String? get text => _text;

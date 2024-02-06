@@ -11,17 +11,19 @@ import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_dropdown.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 
-///[CreatePollForm] widget renders the poll creation form
-class CreatePollForm extends StatefulWidget {
+///[CreateQuizForm] widget renders the poll creation form
+class CreateQuizForm extends StatefulWidget {
   final int questionNumber;
   final int totalQuestions;
   final HMSPollQuestionType questionType;
   final TextEditingController questionController;
   final List<TextEditingController> optionsTextController;
+  final List<HMSPollQuizOption>? multiChoiceQuizAnswers;
+  final HMSPollQuizOption? singleChoiceQuizAnswer;
   final HMSPollQuestionBuilder questionBuilder;
   final Function deleteQuestionCallback;
-  final Function savePollCallback;
-  const CreatePollForm(
+  final Function saveQuizCallback;
+  const CreateQuizForm(
       {super.key,
       required this.questionNumber,
       required this.totalQuestions,
@@ -30,20 +32,22 @@ class CreatePollForm extends StatefulWidget {
       required this.questionController,
       required this.questionBuilder,
       required this.deleteQuestionCallback,
-      required this.savePollCallback});
+      required this.saveQuizCallback,
+      required this.multiChoiceQuizAnswers,
+      required this.singleChoiceQuizAnswer});
 
   @override
-  State<CreatePollForm> createState() => _CreatePollFormState();
+  State<CreateQuizForm> createState() => _CreatePollFormState();
 }
 
-class _CreatePollFormState extends State<CreatePollForm> {
+class _CreatePollFormState extends State<CreateQuizForm> {
   late TextEditingController _questionController;
   late List<TextEditingController> _optionsTextController;
   bool _isSkippable = false;
 
   ///Quiz variables
-  HMSPollQuizOption? correctOption;
-  List<HMSPollQuizOption> correctOptions = [];
+  HMSPollQuizOption? _correctOption;
+  List<HMSPollQuizOption>? _correctOptions;
 
   // bool _canChangeResponse = false;
 
@@ -71,6 +75,12 @@ class _CreatePollFormState extends State<CreatePollForm> {
       ];
     } else {
       _optionsTextController = widget.optionsTextController;
+    }
+    _correctOption = widget.singleChoiceQuizAnswer;
+    if (widget.multiChoiceQuizAnswers == null) {
+      _correctOptions = [];
+    } else {
+      _correctOptions = widget.multiChoiceQuizAnswers;
     }
     super.initState();
   }
@@ -134,7 +144,7 @@ class _CreatePollFormState extends State<CreatePollForm> {
     widget.questionBuilder.withOption =
         _optionsTextController.map((e) => e.text).toList();
     if (_isPollValid()) {
-      widget.savePollCallback(widget.questionBuilder);
+      widget.saveQuizCallback(widget.questionBuilder);
     }
   }
 
@@ -240,7 +250,7 @@ class _CreatePollFormState extends State<CreatePollForm> {
                         horizontal: 16, vertical: 12),
                     fillColor: HMSThemeColors.surfaceBright,
                     filled: true,
-                    hintText: "e.g. Who will win the match?",
+                    hintText: "e.g. Solve for 2x + ½ = 21",
                     hintStyle: HMSTextStyle.setTextStyle(
                         color: HMSThemeColors.onSurfaceLowEmphasis,
                         height: 1.5,
@@ -270,11 +280,12 @@ class _CreatePollFormState extends State<CreatePollForm> {
                 color: HMSThemeColors.borderBright,
               ),
             ),
- HMSSubheadingText(
-                    text: "Options",
-                    textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                  ),
 
+            HMSSubheadingText(
+              text: "Select one of the radio button to mark the correct answer",
+              textColor: HMSThemeColors.onSurfaceMediumEmphasis,
+              maxLines: 2,
+            ),
 
             const SizedBox(
               height: 8,
@@ -291,7 +302,52 @@ class _CreatePollFormState extends State<CreatePollForm> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                       SizedBox(
+                        Row(
+                          children: [
+                            Checkbox(
+                                activeColor:
+                                    HMSThemeColors.onSurfaceHighEmphasis,
+                                checkColor: HMSThemeColors.surfaceDefault,
+                                value: (widget.questionType ==
+                                        HMSPollQuestionType.singleChoice)
+                                    ? _correctOption ==
+                                        widget
+                                            .questionBuilder.quizOptions[index]
+                                    : _correctOptions?.contains(widget
+                                        .questionBuilder.quizOptions[index]),
+                                shape: widget.questionType ==
+                                        HMSPollQuestionType.singleChoice
+                                    ? const CircleBorder()
+                                    : const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(4))),
+                                onChanged: (value) {
+                                  if (value == true) {
+                                    if (widget.questionType ==
+                                        HMSPollQuestionType.singleChoice) {
+                                      _correctOption = widget
+                                          .questionBuilder.quizOptions[index];
+                                    } else if (widget.questionType ==
+                                        HMSPollQuestionType.multiChoice) {
+                                      _correctOptions?.add(widget
+                                          .questionBuilder.quizOptions[index]);
+                                    }
+                                  } else {
+                                    if (widget.questionType ==
+                                        HMSPollQuestionType.multiChoice) {
+                                      _correctOptions?.remove(widget
+                                          .questionBuilder.quizOptions[index]);
+                                    }
+                                  }
+
+                                  setState(() {});
+                                }),
+                            const SizedBox(
+                              width: 4,
+                            )
+                          ],
+                        ),
+                        SizedBox(
                           height: 48,
                           width: MediaQuery.of(context).size.width * 0.67,
                           child: TextField(

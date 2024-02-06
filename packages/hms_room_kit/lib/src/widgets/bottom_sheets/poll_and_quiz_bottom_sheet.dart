@@ -9,12 +9,28 @@ import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/poll_store.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/poll_quiz_selection_widget.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
-import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/poll_form.dart';
+import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/poll_quiz_form.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/poll_question_card.dart';
 
 ///[PollAndQuizBottomSheet] renders the poll and quiz creation UI
-class PollAndQuizBottomSheet extends StatelessWidget {
+class PollAndQuizBottomSheet extends StatefulWidget {
   const PollAndQuizBottomSheet({Key? key}) : super(key: key);
+
+  @override
+  State<PollAndQuizBottomSheet> createState() => _PollAndQuizBottomSheetState();
+}
+
+class _PollAndQuizBottomSheetState extends State<PollAndQuizBottomSheet> {
+  bool isPollSelected = true;
+
+  void _updatePollQuizSelection(int index) {
+    if (index == 0) {
+      isPollSelected = true;
+    } else {
+      isPollSelected = false;
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +71,9 @@ class PollAndQuizBottomSheet extends StatelessWidget {
                         .permissions
                         .pollWrite ??
                     false)
-                  const PollQuizSelectionWidget(),
+                  PollQuizSelectionWidget(
+                    updateSelectionCallback: _updatePollQuizSelection,
+                  ),
 
                 if (context
                         .read<MeetingStore>()
@@ -69,24 +87,25 @@ class PollAndQuizBottomSheet extends StatelessWidget {
                   ),
 
                 ///Poll or Quiz Section
-                if (context
+                if ((context
                         .read<MeetingStore>()
                         .localPeer
                         ?.role
                         .permissions
                         .pollWrite ??
-                    false)
-                  const PollForm(),
+                    false))
+                  PollQuizForm(isPoll: isPollSelected),
 
                 ///This section shows all the previous polls
                 ///which are either started or stopped
-                if (context
-                        .read<MeetingStore>()
-                        .localPeer
-                        ?.role
-                        .permissions
-                        .pollRead ??
-                    false)
+                if ((context
+                            .read<MeetingStore>()
+                            .localPeer
+                            ?.role
+                            .permissions
+                            .pollRead ??
+                        false) &&
+                    context.read<MeetingStore>().pollQuestions.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 24.0),
                     child: HMSTitleText(

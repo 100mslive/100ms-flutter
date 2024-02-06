@@ -10,15 +10,17 @@ import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_listenable_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 
-///[PollForm] widget renders the poll creation form with poll title.
-class PollForm extends StatefulWidget {
-  const PollForm({super.key});
+///[PollQuizForm] widget renders the poll creation form with poll title.
+class PollQuizForm extends StatefulWidget {
+  final bool isPoll;
+
+  const PollQuizForm({Key? key, required this.isPoll}):super(key: key);
 
   @override
-  State<PollForm> createState() => _PollFormState();
+  State<PollQuizForm> createState() => _PollQuizFormState();
 }
 
-class _PollFormState extends State<PollForm> {
+class _PollQuizFormState extends State<PollQuizForm> {
   late TextEditingController _pollNameController;
   bool _hideVoteCount = false;
   bool _isAnonymous = false;
@@ -55,7 +57,8 @@ class _PollFormState extends State<PollForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         HMSSubheadingText(
-            text: "Poll Name", textColor: HMSThemeColors.onSurfaceHighEmphasis),
+            text: "${widget.isPoll ? "Poll" : "Quiz"} Name",
+            textColor: HMSThemeColors.onSurfaceHighEmphasis),
         const SizedBox(
           height: 8,
         ),
@@ -81,7 +84,7 @@ class _PollFormState extends State<PollForm> {
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 fillColor: HMSThemeColors.surfaceDefault,
                 filled: true,
-                hintText: "Name this Poll",
+                hintText: "Name this ${widget.isPoll ? "Poll" : "Quiz"}",
                 hintStyle: HMSTextStyle.setTextStyle(
                     color: HMSThemeColors.onSurfaceLowEmphasis,
                     height: 1.5,
@@ -121,27 +124,28 @@ class _PollFormState extends State<PollForm> {
         ),
 
         ///Hide vote count switch
-        ListTile(
-          horizontalTitleGap: 1,
-          enabled: false,
-          dense: true,
-          contentPadding: EdgeInsets.zero,
-          title: HMSSubheadingText(
-              text: "Hide vote count",
-              textColor: HMSThemeColors.onSurfaceMediumEmphasis),
-          trailing: SizedBox(
-            height: 24,
-            width: 40,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: CupertinoSwitch(
-                value: _hideVoteCount,
-                onChanged: (value) => setHideVoteCount(value),
-                activeColor: HMSThemeColors.primaryDefault,
+        if (widget.isPoll)
+          ListTile(
+            horizontalTitleGap: 1,
+            enabled: false,
+            dense: true,
+            contentPadding: EdgeInsets.zero,
+            title: HMSSubheadingText(
+                text: "Hide vote count",
+                textColor: HMSThemeColors.onSurfaceMediumEmphasis),
+            trailing: SizedBox(
+              height: 24,
+              width: 40,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: CupertinoSwitch(
+                  value: _hideVoteCount,
+                  onChanged: (value) => setHideVoteCount(value),
+                  activeColor: HMSThemeColors.primaryDefault,
+                ),
               ),
             ),
           ),
-        ),
 
         ///Is the poll anonymous switch
         ListTile(
@@ -207,11 +211,12 @@ class _PollFormState extends State<PollForm> {
                       value: meetingStore,
                       child: PollQuestionBottomSheet(
                         pollName: _pollNameController.text.trim(),
+                        isPoll: widget.isPoll,
                       )),
                 );
               },
               childWidget: HMSTitleText(
-                text: 'Create Poll',
+                text: 'Create ${widget.isPoll?"Poll":"Quiz"}',
                 textColor: _pollNameController.text.isEmpty
                     ? HMSThemeColors.onPrimaryLowEmphasis
                     : HMSThemeColors.onPrimaryHighEmphasis,
