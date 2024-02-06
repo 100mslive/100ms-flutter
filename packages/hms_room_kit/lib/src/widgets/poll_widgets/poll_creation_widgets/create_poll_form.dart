@@ -39,8 +39,8 @@ class CreatePollForm extends StatefulWidget {
 class _CreatePollFormState extends State<CreatePollForm> {
   late TextEditingController _questionController;
   late List<TextEditingController> _optionsTextController;
-  bool _isSkippable = false;
-  bool _canChangeResponse = false;
+  // bool _isSkippable = false;
+  // bool _canChangeResponse = false;
 
   List<Tuple2<String, HMSPollQuestionType>> getPollQuestionType() {
     return const [
@@ -81,21 +81,21 @@ class _CreatePollFormState extends State<CreatePollForm> {
   }
 
   ///This function set's whether the question is skippable or not
-  void setIsSkippable(value) {
-    widget.questionBuilder.withCanSkip = value;
-    setState(() {
-      _isSkippable = value;
-    });
-  }
+  // void setIsSkippable(value) {
+  //   widget.questionBuilder.withCanSkip = value;
+  //   setState(() {
+  //     _isSkippable = value;
+  //   });
+  // }
 
   ///This function set's [canChangeResponse] which decides can the answer be changed
   ///once voted
-  void setCanChangeResponse(value) {
-    widget.questionBuilder.withCanChangeResponse = value;
-    setState(() {
-      _canChangeResponse = value;
-    });
-  }
+  // void setCanChangeResponse(value) {
+  //   widget.questionBuilder.withCanChangeResponse = value;
+  //   setState(() {
+  //     _canChangeResponse = value;
+  //   });
+  // }
 
   ///This adds a new option controller
   void _addOption() {
@@ -378,50 +378,52 @@ class _CreatePollFormState extends State<CreatePollForm> {
               ),
             ),
 
+            ///Not supported now
             ///Switch for setting skippable and change response variables.
-            ListTile(
-              horizontalTitleGap: 1,
-              enabled: false,
-              dense: true,
-              contentPadding: EdgeInsets.zero,
-              title: HMSSubheadingText(
-                  text: "Allow to skip",
-                  textColor: HMSThemeColors.onSurfaceMediumEmphasis),
-              trailing: SizedBox(
-                height: 24,
-                width: 40,
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: CupertinoSwitch(
-                    value: _isSkippable,
-                    onChanged: (value) => setIsSkippable(value),
-                    activeColor: HMSThemeColors.primaryDefault,
-                  ),
-                ),
-              ),
-            ),
+            // ListTile(
+            //   horizontalTitleGap: 1,
+            //   enabled: false,
+            //   dense: true,
+            //   contentPadding: EdgeInsets.zero,
+            //   title: HMSSubheadingText(
+            //       text: "Allow to skip",
+            //       textColor: HMSThemeColors.onSurfaceMediumEmphasis),
+            //   trailing: SizedBox(
+            //     height: 24,
+            //     width: 40,
+            //     child: FittedBox(
+            //       fit: BoxFit.contain,
+            //       child: CupertinoSwitch(
+            //         value: _isSkippable,
+            //         onChanged: (value) => setIsSkippable(value),
+            //         activeColor: HMSThemeColors.primaryDefault,
+            //       ),
+            //     ),
+            //   ),
+            // ),
 
-            ListTile(
-              horizontalTitleGap: 1,
-              enabled: false,
-              dense: true,
-              contentPadding: EdgeInsets.zero,
-              title: HMSSubheadingText(
-                  text: "Allow to vote again",
-                  textColor: HMSThemeColors.onSurfaceMediumEmphasis),
-              trailing: SizedBox(
-                height: 24,
-                width: 40,
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: CupertinoSwitch(
-                    value: _canChangeResponse,
-                    onChanged: (value) => setCanChangeResponse(value),
-                    activeColor: HMSThemeColors.primaryDefault,
-                  ),
-                ),
-              ),
-            ),
+            ///Not supported as of now
+            // ListTile(
+            //   horizontalTitleGap: 1,
+            //   enabled: false,
+            //   dense: true,
+            //   contentPadding: EdgeInsets.zero,
+            //   title: HMSSubheadingText(
+            //       text: "Allow to vote again",
+            //       textColor: HMSThemeColors.onSurfaceMediumEmphasis),
+            //   trailing: SizedBox(
+            //     height: 24,
+            //     width: 40,
+            //     child: FittedBox(
+            //       fit: BoxFit.contain,
+            //       child: CupertinoSwitch(
+            //         value: _canChangeResponse,
+            //         onChanged: (value) => setCanChangeResponse(value),
+            //         activeColor: HMSThemeColors.primaryDefault,
+            //       ),
+            //     ),
+            //   ),
+            // ),
 
             ///Save the question
             Row(

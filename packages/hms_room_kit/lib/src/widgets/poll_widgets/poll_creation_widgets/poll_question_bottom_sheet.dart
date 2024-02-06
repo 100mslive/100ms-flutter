@@ -261,6 +261,9 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
                           )),
                         )
                       ],
+                    ),
+                    const SizedBox(
+                      height: 64,
                     )
                   ],
                 ),

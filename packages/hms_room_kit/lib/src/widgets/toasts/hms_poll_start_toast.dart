@@ -34,7 +34,7 @@ class HMSPollStartToast extends StatelessWidget {
       ),
       subtitle: HMSSubheadingText(
         text:
-            "${poll.startedBy?.name.substring(0, math.min(10, poll.startedBy?.name.length ?? 0)) ?? ""} started a new poll",
+            "${poll.createdBy?.name.substring(0, math.min(10, poll.createdBy?.name.length ?? 0)) ?? ""} started a new poll",
         textColor: HMSThemeColors.onSurfaceHighEmphasis,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.1,

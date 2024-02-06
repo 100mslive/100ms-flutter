@@ -60,7 +60,7 @@ class PollQuestionCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   HMSButton(
-                      width: 75,
+                      width: MediaQuery.of(context).size.width * 0.23,
                       onPressed: () {
                         var meetingStore = context.read<MeetingStore>();
                         var pollStore = context.read<HMSPollStore>();

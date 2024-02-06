@@ -5,23 +5,17 @@ import 'dart:math';
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:hms_room_kit/src/model/poll_store.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
-import 'package:hms_room_kit/src/widgets/toasts/hms_poll_start_toast.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_grid_component.dart';
 import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
 import 'package:hms_room_kit/src/meeting/meeting_bottom_navigation_bar.dart';
 import 'package:hms_room_kit/src/meeting/meeting_header.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_bring_on_stage_toast.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_local_screen_share_toast.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_role_change_decline_toast.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toast_model.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/widgets/app_dialogs/audio_device_change_dialog.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
@@ -30,8 +24,6 @@ import 'package:hms_room_kit/src/preview_for_role/preview_for_role_bottom_sheet.
 import 'package:hms_room_kit/src/preview_for_role/preview_for_role_header.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_left_room_screen.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_recording_error_toast.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_chat_pause_resume_toast.dart';
 
 ///[MeetingPage] is the main page of the meeting
 ///It takes the following parameters:
@@ -77,66 +69,6 @@ class _MeetingPageState extends State<MeetingPage> {
 
   void _enableForegroundService() {
     context.read<MeetingStore>().initForegroundTask();
-  }
-
-  ///This method returns the toast according to the type of toast
-  Widget getToast(HMSToastModel toast, int index, int toastsCount) {
-    switch (toast.hmsToastType) {
-      case HMSToastsType.roleChangeToast:
-        return HMSBringOnStageToast(
-          toastColor: Utilities.getToastColor(index, toastsCount),
-          peer: toast.toastData,
-          meetingStore: context.read<MeetingStore>(),
-        );
-      case HMSToastsType.recordingErrorToast:
-        return HMSRecordingErrorToast(
-            recordingError: toast.toastData,
-            meetingStore: context.read<MeetingStore>());
-      case HMSToastsType.localScreenshareToast:
-        return HMSLocalScreenShareToast(
-          toastColor: Utilities.getToastColor(index, toastsCount),
-          meetingStore: context.read<MeetingStore>(),
-        );
-
-      case HMSToastsType.roleChangeDeclineToast:
-        return HMSRoleChangeDeclineToast(
-          peer: toast.toastData,
-          toastColor: Utilities.getToastColor(index, toastsCount),
-          meetingStore: context.read<MeetingStore>(),
-        );
-      case HMSToastsType.chatPauseResumeToast:
-        return HMSChatPauseResumeToast(
-            isChatEnabled: toast.toastData["enabled"],
-            userName: toast.toastData["updatedBy"],
-            meetingStore: context.read<MeetingStore>());
-      case HMSToastsType.pollStartedToast:
-        return ChangeNotifierProvider.value(
-          value: toast.toastData! as HMSPollStore,
-          child: HMSPollStartToast(
-              poll: toast.toastData.poll, meetingStore: context.read<MeetingStore>()),
-        );
-      default:
-        return const SizedBox();
-    }
-  }
-
-  ///This method returns the scale of the toast according to the index and the total number of toasts
-  double _getToastScale(int index, int toastsCount) {
-    if (toastsCount == 1) {
-      return 1;
-    } else if (toastsCount == 2) {
-      if (index == 0) {
-        return 0.95;
-      }
-      return 1;
-    } else {
-      if (index == 0) {
-        return 0.90;
-      } else if (index == 1) {
-        return 0.95;
-      }
-      return 1;
-    }
   }
 
   @override
@@ -432,13 +364,17 @@ class _MeetingPageState extends State<MeetingPage> {
                                                           48.0 + 8 * toasts.key,
                                                       left: 5,
                                                       child: Transform.scale(
-                                                        scale: _getToastScale(
-                                                            toasts.key,
-                                                            toastsItem.item2),
-                                                        child: getToast(
+                                                        scale: Utilities
+                                                            .getToastScale(
+                                                                toasts.key,
+                                                                toastsItem
+                                                                    .item2),
+                                                        child: Utilities.getToast(
                                                             toasts.value,
                                                             toasts.key,
-                                                            toastsItem.item2),
+                                                            toastsItem.item2,
+                                                            context.read<
+                                                                MeetingStore>()),
                                                       ));
                                                 }).toList());
                                               }),
