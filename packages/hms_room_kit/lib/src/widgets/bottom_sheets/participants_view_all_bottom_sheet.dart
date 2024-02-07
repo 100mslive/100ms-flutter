@@ -40,6 +40,7 @@ class _ParticipantsViewAllBottomSheetState
   void initState() {
     super.initState();
     context.read<MeetingStore>().disableRefresh();
+    context.read<MeetingStore>().addBottomSheet(context);
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
@@ -49,9 +50,9 @@ class _ParticipantsViewAllBottomSheetState
   }
 
   @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
   }
 
   Widget _kebabMenu(HMSPeer peer) {

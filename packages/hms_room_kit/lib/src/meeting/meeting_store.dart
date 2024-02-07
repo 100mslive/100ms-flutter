@@ -253,9 +253,11 @@ class MeetingStore extends ChangeNotifier
   Map<String, dynamic> chatControls = {"enabled": true, "updatedBy": null};
 
   ///Polls
-
   ///Stores the poll questions
   List<HMSPollStore> pollQuestions = [];
+
+  ///List of bottom sheets currently open
+  List<BuildContext> bottomSheets = [];
 
   Future<HMSException?> join(String userName, String roomCode,
       {HMSConfig? roomConfig}) async {
@@ -1377,6 +1379,26 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
+  ///Function to add bottomsheet context in the bottomsheets list
+  void addBottomSheet(BuildContext context) {
+    bottomSheets.add(context);
+  }
+
+  ///Function to remove bottomsheet context from bottomsheets list
+  void removeBottomSheet(BuildContext context) {
+    bottomSheets.remove(context);
+  }
+
+  ///Function to remove all bottomsheets from list
+  void removeAllBottomSheets() {
+    for (var bottomSheetContext in bottomSheets) {
+      if (bottomSheetContext.mounted) {
+        Navigator.pop(bottomSheetContext);
+      }
+    }
+    bottomSheets.clear();
+  }
+
   void removePeer(HMSPeer peer) {
     peers.remove(peer);
     participantsInMeetingMap[peer.role.name]
@@ -1518,6 +1540,7 @@ class MeetingStore extends ChangeNotifier
 
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
+          removeAllBottomSheets();
           getSpotlightPeer();
           setPreviousRole(localPeer?.role.name ?? "");
           resetLayout(peer.role.name);

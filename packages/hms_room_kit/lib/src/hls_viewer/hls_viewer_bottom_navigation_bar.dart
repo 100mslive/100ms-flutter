@@ -13,7 +13,7 @@ import 'package:hms_room_kit/src/widgets/bottom_sheets/chat_only_bottom_sheet.da
 import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/hls_viewer/overlay_chat_component.dart';
-import 'package:hms_room_kit/src/widgets/bottom_sheets/hls_more_options_bottom_sheet.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/hls_app_utilities_bottom_sheet.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
@@ -242,7 +242,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                               value:
                                                   context.read<MeetingStore>(),
                                               child:
-                                                  const HLSMoreOptionsBottomSheet()),
+                                                  const HLSAppUtilitiesBottomSheet()),
                                     )
                                   },
                                   enabledBorderColor: HMSThemeColors

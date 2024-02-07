@@ -13,8 +13,25 @@ import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/poll
 import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/poll_question_card.dart';
 
 ///[PollAndQuizBottomSheet] renders the poll and quiz creation UI
-class PollAndQuizBottomSheet extends StatelessWidget {
+class PollAndQuizBottomSheet extends StatefulWidget {
   const PollAndQuizBottomSheet({Key? key}) : super(key: key);
+
+  @override
+  State<PollAndQuizBottomSheet> createState() => _PollAndQuizBottomSheetState();
+}
+
+class _PollAndQuizBottomSheetState extends State<PollAndQuizBottomSheet> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<MeetingStore>().addBottomSheet(context);
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
+  }
 
   @override
   Widget build(BuildContext context) {

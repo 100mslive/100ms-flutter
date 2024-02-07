@@ -91,9 +91,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                             child: SingleChildScrollView(
                               child: SizedBox(
                                 width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height -
-                                    MediaQuery.of(context).padding.top -
-                                    MediaQuery.of(context).padding.bottom,
+                                height: MediaQuery.of(context).size.height,
                                 child: Stack(
                                   children: [
                                     Selector<MeetingStore, bool>(

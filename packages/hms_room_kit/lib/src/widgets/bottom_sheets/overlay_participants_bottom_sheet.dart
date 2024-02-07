@@ -6,8 +6,27 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:provider/provider.dart';
 
-class OverlayParticipantsBottomSheet extends StatelessWidget {
+class OverlayParticipantsBottomSheet extends StatefulWidget {
   const OverlayParticipantsBottomSheet({Key? key}) : super(key: key);
+
+  @override
+  State<OverlayParticipantsBottomSheet> createState() =>
+      _OverlayParticipantsBottomSheetState();
+}
+
+class _OverlayParticipantsBottomSheetState
+    extends State<OverlayParticipantsBottomSheet> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<MeetingStore>().addBottomSheet(context);
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
+  }
 
   @override
   Widget build(BuildContext context) {
