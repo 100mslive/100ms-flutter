@@ -87,7 +87,7 @@ class PollVoteBottomSheet extends StatelessWidget {
               ),
               HMSTitleText(
                 text:
-                    "${hmsPollStore.poll.startedBy?.name.substring(0, math.min(15, hmsPollStore.poll.startedBy?.name.length ?? 0)) ?? ""} started a poll",
+                    "${hmsPollStore.poll.createdBy?.name.substring(0, math.min(15, hmsPollStore.poll.createdBy?.name.length ?? 0)) ?? ""} started a poll",
                 textColor: HMSThemeColors.onSurfaceHighEmphasis,
                 letterSpacing: 0.15,
               ),
@@ -139,9 +139,11 @@ class PollVoteBottomSheet extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               HMSButton(
-                                width: 100,
+                                width: MediaQuery.of(context).size.width * 0.3,
                                 onPressed: () {
-                                  context.read<MeetingStore>().stopPoll(hmsPollStore.poll);
+                                  context
+                                      .read<MeetingStore>()
+                                      .stopPoll(hmsPollStore.poll);
                                 },
                                 childWidget: HMSTitleText(
                                     text: "End Poll",

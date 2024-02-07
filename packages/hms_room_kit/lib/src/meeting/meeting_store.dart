@@ -2646,14 +2646,23 @@ class MeetingStore extends ChangeNotifier
         break;
 
       ///In other cases we just update the state of the poll
-      default:
+      case HMSPollUpdateType.resultsupdated:
         int index = pollQuestions
             .indexWhere((element) => element.poll.pollId == poll.pollId);
         if (index != -1) {
           pollQuestions[index].updateState(poll);
         }
         notifyListeners();
+        break;
 
+      case HMSPollUpdateType.stopped:
+        removeToast(HMSToastsType.pollStartedToast, data: poll.pollId);
+        int index = pollQuestions
+            .indexWhere((element) => element.poll.pollId == poll.pollId);
+        if (index != -1) {
+          pollQuestions[index].updateState(poll);
+        }
+        notifyListeners();
         break;
     }
   }

@@ -71,15 +71,21 @@ class PollResultCard extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              HMSSubheadingText(
-                                  text: question.options[index].text ?? "",
-                                  textColor:
-                                      HMSThemeColors.onSurfaceHighEmphasis),
-                              HMSSubheadingText(
-                                  text:
-                                      "${question.options[index].voteCount.toString()} vote${question.options[index].voteCount > 1 ? "s" : ""}",
-                                  textColor:
-                                      HMSThemeColors.onSurfaceMediumEmphasis)
+                              Expanded(
+                                child: HMSSubheadingText(
+                                    text: question.options[index].text ?? "",
+                                    maxLines: 3,
+                                    textColor:
+                                        HMSThemeColors.onSurfaceHighEmphasis),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: HMSSubheadingText(
+                                    text:
+                                        "${question.options[index].voteCount.toString()} vote${question.options[index].voteCount > 1 ? "s" : ""}",
+                                    textColor:
+                                        HMSThemeColors.onSurfaceMediumEmphasis),
+                              )
                             ],
                           ),
                           const SizedBox(
