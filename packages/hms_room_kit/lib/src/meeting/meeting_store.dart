@@ -2,7 +2,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:math' as math;
 
 //Package imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -255,6 +254,8 @@ class MeetingStore extends ChangeNotifier
   ///Polls
   ///Stores the poll questions
   List<HMSPollStore> pollQuestions = [];
+
+  List<HMSPollStore> hlsViewerPolls = [];
 
   ///List of bottom sheets currently open
   List<BuildContext> bottomSheets = [];
@@ -2577,8 +2578,27 @@ class MeetingStore extends ChangeNotifier
      * Here we use a list of alignments and select an alignment at random and use it 
      * to position the toast for timed metadata
      */
-
     if (hlsCue.payload != null) {
+      /*
+       * Below code shows the poll for hls-viewer who are viewing stream at a delay.
+       * Here we get pollId from the payload and we find the poll object
+       * from `onPollUpdate` we use this object to show the toast for the poll.
+       * Mock payload for poll looks like "poll:{poll_id}"
+       */
+      if (hlsCue.payload!.startsWith("poll:")) {
+        var pollId = hlsCue.payload?.replaceFirst(RegExp(r'^poll:'), "");
+        int? index = hlsViewerPolls
+            .indexWhere((element) => element.poll.pollId == pollId);
+        if (index != -1) {
+          toasts.add(HMSToastModel(hlsViewerPolls[index],
+              hmsToastType: HMSToastsType.pollStartedToast));
+          pollQuestions.add(hlsViewerPolls[index]);
+          hlsViewerPolls.removeAt(index);
+          notifyListeners();
+        }
+      }
+
+      /*******************************This is the implementation for showing emoji's in HLS *******************/
       /**
        * Generally we are assuming that the timed metadata payload will be a JSON String
        * but if it's a normal string then this throws the format exception 
@@ -2586,23 +2606,24 @@ class MeetingStore extends ChangeNotifier
        * The toast is displayed for the time duration hlsCue.endDate - hlsCue.startDate
        * If endDate is null then toast is displayed for 2 seconds by default
        */
-      try {
-        final Map<String, dynamic> data = jsonDecode(hlsCue.payload!);
-        Utilities.showTimedMetadata(
-            Utilities.getTimedMetadataEmojiFromId(data["emojiId"]),
-            time: hlsCue.endDate == null
-                ? 2
-                : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds,
-            align: Utilities.timedMetadataAlignment[math.Random()
-                .nextInt(Utilities.timedMetadataAlignment.length)]);
-      } catch (e) {
-        Utilities.showTimedMetadata(hlsCue.payload!,
-            time: hlsCue.endDate == null
-                ? 2
-                : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds,
-            align: Utilities.timedMetadataAlignment[math.Random()
-                .nextInt(Utilities.timedMetadataAlignment.length)]);
-      }
+      // try {
+      //   final Map<String, dynamic> data = jsonDecode(hlsCue.payload!);
+      //   Utilities.showTimedMetadata(
+      //       Utilities.getTimedMetadataEmojiFromId(data["emojiId"]),
+      //       time: hlsCue.endDate == null
+      //           ? 2
+      //           : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds,
+      //       align: Utilities.timedMetadataAlignment[math.Random()
+      //           .nextInt(Utilities.timedMetadataAlignment.length)]);
+      // } catch (e) {
+      //   Utilities.showTimedMetadata(hlsCue.payload!,
+      //       time: hlsCue.endDate == null
+      //           ? 2
+      //           : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds,
+      //       align: Utilities.timedMetadataAlignment[math.Random()
+      //           .nextInt(Utilities.timedMetadataAlignment.length)]);
+      // }
+      /************************************************************************************************************/
     }
   }
 
@@ -2655,15 +2676,26 @@ class MeetingStore extends ChangeNotifier
     switch (pollUpdateType) {
       ///If the poll is started we add the poll in questions list
       case HMSPollUpdateType.started:
+
+        /*
+         * Here we check whether the peer has permission to view polls
+         * Then if the user is a realtime user we show the poll immediately 
+         * while for hls viewer we show the poll based on the `onCue` event i.e.
+         * timed metadata event for poll
+        */
         if (localPeer?.role.permissions.pollRead ?? false) {
           int index = pollQuestions
               .indexWhere((element) => element.poll.pollId == poll.pollId);
           if (index == -1) {
             HMSPollStore store = HMSPollStore(poll: poll);
-            pollQuestions.add(store);
-            toasts.add(HMSToastModel(store,
-                hmsToastType: HMSToastsType.pollStartedToast));
-            notifyListeners();
+            if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
+              pollQuestions.add(store);
+              toasts.add(HMSToastModel(store,
+                  hmsToastType: HMSToastsType.pollStartedToast));
+              notifyListeners();
+            } else {
+              hlsViewerPolls.add(store);
+            }
           }
         }
         break;
