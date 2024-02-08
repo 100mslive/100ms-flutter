@@ -126,11 +126,20 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                                 in poll.questions![index].options) {
                               totalVotes += element.voteCount;
                             }
+                            var isVoteCountHidden = false;
+                            if (poll.rolesThatCanViewResponses.isNotEmpty &&
+                                !poll.rolesThatCanViewResponses.contains(context
+                                    .read<MeetingStore>()
+                                    .localPeer
+                                    ?.role)) {
+                              isVoteCountHidden = true;
+                            }
                             return PollResultCard(
                               questionNumber: index,
                               totalQuestions: poll.questions?.length ?? 0,
                               question: poll.questions![index],
                               totalVotes: totalVotes,
+                              isVoteCountHidden: isVoteCountHidden,
                             );
                           } else {
                             return PollVoteCard(

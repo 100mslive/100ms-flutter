@@ -8,13 +8,25 @@ class PollResultCard extends StatelessWidget {
   final int totalQuestions;
   final HMSPollQuestion question;
   final int totalVotes;
+  final bool isVoteCountHidden;
 
   const PollResultCard(
       {super.key,
       required this.questionNumber,
       required this.totalQuestions,
       required this.question,
-      required this.totalVotes});
+      required this.totalVotes,
+      required this.isVoteCountHidden});
+
+  bool isSelectedOption(int index) {
+    for (var response in question.myResponses) {
+      if (index == response.selectedOption) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -78,46 +90,62 @@ class PollResultCard extends StatelessWidget {
                                     textColor:
                                         HMSThemeColors.onSurfaceHighEmphasis),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: HMSSubheadingText(
-                                    text:
-                                        "${question.options[index].voteCount.toString()} vote${question.options[index].voteCount > 1 ? "s" : ""}",
-                                    textColor:
-                                        HMSThemeColors.onSurfaceMediumEmphasis),
-                              )
+                              if (isVoteCountHidden && isSelectedOption(question.options[index].index))
+                                Checkbox(
+                                    activeColor:
+                                        HMSThemeColors.onSurfaceHighEmphasis,
+                                    checkColor: HMSThemeColors.surfaceDefault,
+                                    shape: question.type ==
+                                            HMSPollQuestionType.singleChoice
+                                        ? const CircleBorder()
+                                        : const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(4))),
+                                    value: true,
+                                    onChanged: (value) {}),
+                              if (!isVoteCountHidden)
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: HMSSubheadingText(
+                                      text:
+                                          "${question.options[index].voteCount.toString()} vote${question.options[index].voteCount > 1 ? "s" : ""}",
+                                      textColor: HMSThemeColors
+                                          .onSurfaceMediumEmphasis),
+                                )
                             ],
                           ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
+                          if (!isVoteCountHidden)
+                            const SizedBox(
+                              height: 8,
                             ),
-                            height: 8,
-                            child: Flex(
-                              direction: Axis.horizontal,
-                              children: [
-                                Expanded(
-                                    flex: (question.options[index].voteCount),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: HMSThemeColors.primaryDefault,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    )),
-                                Expanded(
-                                    flex: totalVotes -
-                                        question.options[index].voteCount,
-                                    child: Container(
+                          if (!isVoteCountHidden)
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              height: 8,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      flex: (question.options[index].voteCount),
+                                      child: Container(
                                         decoration: BoxDecoration(
-                                      color: HMSThemeColors.surfaceBright,
-                                      borderRadius: BorderRadius.circular(8),
-                                    )))
-                              ],
-                            ),
-                          )
+                                          color: HMSThemeColors.primaryDefault,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      )),
+                                  Expanded(
+                                      flex: totalVotes -
+                                          question.options[index].voteCount,
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                        color: HMSThemeColors.surfaceBright,
+                                        borderRadius: BorderRadius.circular(8),
+                                      )))
+                                ],
+                              ),
+                            )
                         ],
                       ),
                     );
