@@ -7,21 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 ///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/meeting/meeting_store.dart';
-import 'package:hms_room_kit/src/model/poll_store.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_bring_on_stage_toast.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_chat_pause_resume_toast.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_local_screen_share_toast.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_poll_start_toast.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_recording_error_toast.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_role_change_decline_toast.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_toast_model.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
 
 ///This class contains the utility functions used in the app
 class Utilities {
@@ -148,47 +137,6 @@ class Utilities {
         return 0.95;
       }
       return 1;
-    }
-  }
-
-  ///This method returns the toast according to the type of toast
-  static Widget getToast(HMSToastModel toast, int index, int toastsCount,
-      MeetingStore meetingStore) {
-    switch (toast.hmsToastType) {
-      case HMSToastsType.roleChangeToast:
-        return HMSBringOnStageToast(
-          toastColor: Utilities.getToastColor(index, toastsCount),
-          peer: toast.toastData,
-          meetingStore: meetingStore,
-        );
-      case HMSToastsType.recordingErrorToast:
-        return HMSRecordingErrorToast(
-            recordingError: toast.toastData, meetingStore: meetingStore);
-      case HMSToastsType.localScreenshareToast:
-        return HMSLocalScreenShareToast(
-          toastColor: Utilities.getToastColor(index, toastsCount),
-          meetingStore: meetingStore,
-        );
-
-      case HMSToastsType.roleChangeDeclineToast:
-        return HMSRoleChangeDeclineToast(
-          peer: toast.toastData,
-          toastColor: Utilities.getToastColor(index, toastsCount),
-          meetingStore: meetingStore,
-        );
-      case HMSToastsType.chatPauseResumeToast:
-        return HMSChatPauseResumeToast(
-            isChatEnabled: toast.toastData["enabled"],
-            userName: toast.toastData["updatedBy"],
-            meetingStore: meetingStore);
-      case HMSToastsType.pollStartedToast:
-        return ChangeNotifierProvider.value(
-          value: toast.toastData! as HMSPollStore,
-          child: HMSPollStartToast(
-              poll: toast.toastData.poll, meetingStore: meetingStore),
-        );
-      default:
-        return const SizedBox();
     }
   }
 
