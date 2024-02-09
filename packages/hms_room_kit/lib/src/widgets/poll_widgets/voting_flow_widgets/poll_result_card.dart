@@ -90,7 +90,9 @@ class PollResultCard extends StatelessWidget {
                                     textColor:
                                         HMSThemeColors.onSurfaceHighEmphasis),
                               ),
-                              if (isVoteCountHidden && isSelectedOption(question.options[index].index))
+                              if (isVoteCountHidden &&
+                                  isSelectedOption(
+                                      question.options[index].index))
                                 Checkbox(
                                     activeColor:
                                         HMSThemeColors.onSurfaceHighEmphasis,
