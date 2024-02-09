@@ -1,4 +1,5 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/model/hms_date_extension.dart';
 import 'package:hmssdk_flutter/src/model/polls/hms_poll_result_display.dart';
 
 class HMSPoll {
@@ -14,7 +15,7 @@ class HMSPoll {
   final HMSPollResultDisplay? result;
   final List<HMSRole> rolesThatCanViewResponses;
   final List<HMSRole> rolesThatCanVote;
-  final DateTime startedAt;
+  final DateTime? startedAt;
   final HMSPeer? startedBy;
   final HMSPollState state;
   final DateTime? stoppedAt;
@@ -69,12 +70,14 @@ class HMSPoll {
       rolesThatCanVote: (map['roles_that_can_vote'] as List)
           .map((e) => HMSRole.fromMap(e))
           .toList(),
-      startedAt: DateTime.fromMillisecondsSinceEpoch(map['started_at']),
+      startedAt: map.containsKey("started_at")
+          ? HMSDateExtension.convertDateFromEpoch(map['started_at'])
+          : null,
       startedBy:
           map['started_by'] != null ? HMSPeer.fromMap(map['started_by']) : null,
       state: HMSPollStateValues.getHMSPollStateFromString(map['state']),
       stoppedAt: map['stopped_at'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['stopped_at'])
+          ? HMSDateExtension.convertDateFromEpoch(map['stopped_at'])
           : null,
       stoppedBy:
           map['stopped_by'] != null ? HMSPeer.fromMap(map['stopped_by']) : null,

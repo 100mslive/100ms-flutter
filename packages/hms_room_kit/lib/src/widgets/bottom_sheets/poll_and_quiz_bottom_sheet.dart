@@ -65,14 +65,15 @@ class _PollAndQuizBottomSheetState extends State<PollAndQuizBottomSheet> {
                 ),
 
                 ///Poll and Quiz selection buttons
-                if (context
-                        .read<MeetingStore>()
-                        .localPeer
-                        ?.role
-                        .permissions
-                        .pollWrite ??
-                    false)
-                  const PollQuizSelectionWidget(),
+                ///Will be added in upcoming release
+                // if (context
+                //         .read<MeetingStore>()
+                //         .localPeer
+                //         ?.role
+                //         .permissions
+                //         .pollWrite ??
+                //     false)
+                //   const PollQuizSelectionWidget(),
 
                 if (context
                         .read<MeetingStore>()
@@ -97,13 +98,20 @@ class _PollAndQuizBottomSheetState extends State<PollAndQuizBottomSheet> {
 
                 ///This section shows all the previous polls
                 ///which are either started or stopped
-                if (context
-                        .read<MeetingStore>()
-                        .localPeer
-                        ?.role
-                        .permissions
-                        .pollRead ??
-                    false)
+                if ((context
+                            .read<MeetingStore>()
+                            .localPeer
+                            ?.role
+                            .permissions
+                            .pollRead ??
+                        false) ||
+                    (context
+                            .read<MeetingStore>()
+                            .localPeer
+                            ?.role
+                            .permissions
+                            .pollWrite ??
+                        false))
                   Selector<MeetingStore, int>(
                       selector: (_, meetingStore) =>
                           meetingStore.pollQuestions.length,
@@ -123,13 +131,20 @@ class _PollAndQuizBottomSheetState extends State<PollAndQuizBottomSheet> {
                             : const SizedBox();
                       }),
 
-                if (context
-                        .read<MeetingStore>()
-                        .localPeer
-                        ?.role
-                        .permissions
-                        .pollRead ??
-                    false)
+                if ((context
+                            .read<MeetingStore>()
+                            .localPeer
+                            ?.role
+                            .permissions
+                            .pollRead ??
+                        false) ||
+                    ((context
+                            .read<MeetingStore>()
+                            .localPeer
+                            ?.role
+                            .permissions
+                            .pollWrite ??
+                        false)))
                   Selector<MeetingStore, Tuple2<int, List<HMSPollStore>>>(
                     selector: (_, meetingStore) => Tuple2(
                         meetingStore.pollQuestions.length,
