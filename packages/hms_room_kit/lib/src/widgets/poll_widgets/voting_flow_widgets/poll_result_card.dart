@@ -19,9 +19,17 @@ class PollResultCard extends StatelessWidget {
       required this.isVoteCountHidden});
 
   bool isSelectedOption(int index) {
-    for (var response in question.myResponses) {
-      if (index == response.selectedOption) {
-        return true;
+    if (question.type == HMSPollQuestionType.singleChoice) {
+      for (var response in question.myResponses) {
+        if (index == response.selectedOption) {
+          return true;
+        }
+      }
+    } else if (question.type == HMSPollQuestionType.multiChoice) {
+      for (var response in question.myResponses) {
+        if (response.selectedOptions?.contains(index) ?? false) {
+          return true;
+        }
       }
     }
     return false;
@@ -97,12 +105,7 @@ class PollResultCard extends StatelessWidget {
                                     activeColor:
                                         HMSThemeColors.onSurfaceHighEmphasis,
                                     checkColor: HMSThemeColors.surfaceDefault,
-                                    shape: question.type ==
-                                            HMSPollQuestionType.singleChoice
-                                        ? const CircleBorder()
-                                        : const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(4))),
+                                    shape:const CircleBorder(),
                                     value: true,
                                     onChanged: (value) {}),
                               if (!isVoteCountHidden)
