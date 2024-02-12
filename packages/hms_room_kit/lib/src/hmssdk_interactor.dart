@@ -445,4 +445,8 @@ class HMSSDKInteractor {
         optionsSelected: pollQuestionOption,
         peer: peer);
   }
+
+  Future<dynamic> stopPoll({required HMSPoll poll}) {
+    return HMSPollInteractivityCenter.stopPoll(poll: poll);
+  }
 }

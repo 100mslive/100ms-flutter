@@ -13,8 +13,25 @@ import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/poll
 import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/poll_question_card.dart';
 
 ///[PollAndQuizBottomSheet] renders the poll and quiz creation UI
-class PollAndQuizBottomSheet extends StatelessWidget {
+class PollAndQuizBottomSheet extends StatefulWidget {
   const PollAndQuizBottomSheet({Key? key}) : super(key: key);
+
+  @override
+  State<PollAndQuizBottomSheet> createState() => _PollAndQuizBottomSheetState();
+}
+
+class _PollAndQuizBottomSheetState extends State<PollAndQuizBottomSheet> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<MeetingStore>().addBottomSheet(context);
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +65,15 @@ class PollAndQuizBottomSheet extends StatelessWidget {
                 ),
 
                 ///Poll and Quiz selection buttons
-                if (context
-                        .read<MeetingStore>()
-                        .localPeer
-                        ?.role
-                        .permissions
-                        .pollWrite ??
-                    false)
-                  const PollQuizSelectionWidget(),
+                ///Will be added in upcoming release
+                // if (context
+                //         .read<MeetingStore>()
+                //         .localPeer
+                //         ?.role
+                //         .permissions
+                //         .pollWrite ??
+                //     false)
+                //   const PollQuizSelectionWidget(),
 
                 if (context
                         .read<MeetingStore>()
@@ -80,45 +98,83 @@ class PollAndQuizBottomSheet extends StatelessWidget {
 
                 ///This section shows all the previous polls
                 ///which are either started or stopped
-                if (context
-                        .read<MeetingStore>()
-                        .localPeer
-                        ?.role
-                        .permissions
-                        .pollRead ??
-                    false)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 24.0),
-                    child: HMSTitleText(
-                      text: "Previous Polls and Quizzes",
-                      textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                      fontSize: 20,
-                      letterSpacing: 0.15,
-                    ),
-                  ),
+                if ((context
+                            .read<MeetingStore>()
+                            .localPeer
+                            ?.role
+                            .permissions
+                            .pollRead ??
+                        false) ||
+                    (context
+                            .read<MeetingStore>()
+                            .localPeer
+                            ?.role
+                            .permissions
+                            .pollWrite ??
+                        false))
+                  Selector<MeetingStore, int>(
+                      selector: (_, meetingStore) =>
+                          meetingStore.pollQuestions.length,
+                      builder: (_, data, __) {
+                        return data > 0
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 24.0),
+                                child: HMSTitleText(
+                                  text: "Previous Polls and Quizzes",
+                                  textColor:
+                                      HMSThemeColors.onSurfaceHighEmphasis,
+                                  fontSize: 20,
+                                  letterSpacing: 0.15,
+                                ),
+                              )
+                            : const SizedBox();
+                      }),
 
-                if (context
-                        .read<MeetingStore>()
-                        .localPeer
-                        ?.role
-                        .permissions
-                        .pollRead ??
-                    false)
+                if ((context
+                            .read<MeetingStore>()
+                            .localPeer
+                            ?.role
+                            .permissions
+                            .pollRead ??
+                        false) ||
+                    ((context
+                            .read<MeetingStore>()
+                            .localPeer
+                            ?.role
+                            .permissions
+                            .pollWrite ??
+                        false)))
                   Selector<MeetingStore, Tuple2<int, List<HMSPollStore>>>(
                     selector: (_, meetingStore) => Tuple2(
                         meetingStore.pollQuestions.length,
                         meetingStore.pollQuestions),
                     builder: (_, data, __) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: data.item1,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ChangeNotifierProvider.value(
-                              value: data.item2[index],
-                              child: const PollQuestionCard());
-                        },
-                      );
+                      if (data.item2.isEmpty &&
+                          (!(context
+                                  .read<MeetingStore>()
+                                  .localPeer
+                                  ?.role
+                                  .permissions
+                                  .pollWrite ??
+                              true))) {
+                        return Center(
+                          child: HMSTitleText(
+                              text: "No polls started in this session",
+                              textColor: HMSThemeColors.onPrimaryHighEmphasis),
+                        );
+                      } else {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: data.item1,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ChangeNotifierProvider.value(
+                                value: data.item2[data.item1 - index - 1],
+                                child: const PollQuestionCard());
+                          },
+                        );
+                      }
                     },
                   ),
                 const SizedBox(

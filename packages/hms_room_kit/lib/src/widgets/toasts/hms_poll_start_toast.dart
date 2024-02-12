@@ -32,16 +32,21 @@ class HMSPollStartToast extends StatelessWidget {
         colorFilter: ColorFilter.mode(
             HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
       ),
-      subtitle: HMSSubheadingText(
-        text:
-            "${poll.startedBy?.name.substring(0, math.min(10, poll.startedBy?.name.length ?? 0)) ?? ""} started a new poll",
-        textColor: HMSThemeColors.onSurfaceHighEmphasis,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.1,
+      subtitle: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.5,
+        child: HMSSubheadingText(
+          text:
+              "${poll.createdBy?.name.substring(0, math.min(8, poll.createdBy?.name.length ?? 0)) ?? ""}${(poll.createdBy?.name.length??0)>8?"...":""} started a new poll",
+          textColor: HMSThemeColors.onSurfaceHighEmphasis,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.1,
+          maxLines: 2,
+        ),
       ),
       action: HMSToastButton(
         buttonTitle: "Vote",
         action: () {
+          var pollStore = context.read<HMSPollStore>();
           showModalBottomSheet(
               isScrollControlled: true,
               backgroundColor: HMSThemeColors.surfaceDim,
@@ -54,7 +59,7 @@ class HMSPollStartToast extends StatelessWidget {
               builder: (ctx) => ChangeNotifierProvider.value(
                   value: meetingStore,
                   child: ChangeNotifierProvider.value(
-                    value: context.read<HMSPollStore>(),
+                    value: pollStore,
                     child: const PollVoteBottomSheet(),
                   )));
           meetingStore.removeToast(HMSToastsType.pollStartedToast,

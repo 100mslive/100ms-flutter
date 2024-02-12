@@ -21,7 +21,7 @@ class PollForm extends StatefulWidget {
 class _PollFormState extends State<PollForm> {
   late TextEditingController _pollNameController;
   bool _hideVoteCount = false;
-  bool _isAnonymous = false;
+  // bool _isAnonymous = false;
 
   @override
   void initState() {
@@ -43,11 +43,11 @@ class _PollFormState extends State<PollForm> {
   }
 
   ///This method sets the value of the is anonymous switch
-  void setIsAnonymous(bool value) {
-    setState(() {
-      _isAnonymous = value;
-    });
-  }
+  // void setIsAnonymous(bool value) {
+  //   setState(() {
+  //     _isAnonymous = value;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -144,41 +144,41 @@ class _PollFormState extends State<PollForm> {
         ),
 
         ///Is the poll anonymous switch
-        ListTile(
-          horizontalTitleGap: 1,
-          enabled: false,
-          dense: true,
-          contentPadding: EdgeInsets.zero,
-          title: Row(
-            children: [
-              HMSSubheadingText(
-                  text: "Make results anonymous",
-                  textColor: HMSThemeColors.onSurfaceMediumEmphasis),
-              // const SizedBox(
-              //   width: 8,
-              // ),
-              // SvgPicture.asset(
-              //   "packages/hms_room_kit/lib/src/assets/icons/info.svg",
-              //   height: 16,
-              //   width: 16,
-              //   colorFilter: ColorFilter.mode(
-              //       HMSThemeColors.onSurfaceLowEmphasis, BlendMode.srcIn),
-              // )
-            ],
-          ),
-          trailing: SizedBox(
-            height: 24,
-            width: 40,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: CupertinoSwitch(
-                value: _isAnonymous,
-                onChanged: (value) => setIsAnonymous(value),
-                activeColor: HMSThemeColors.primaryDefault,
-              ),
-            ),
-          ),
-        ),
+        // ListTile(
+        //   horizontalTitleGap: 1,
+        //   enabled: false,
+        //   dense: true,
+        //   contentPadding: EdgeInsets.zero,
+        //   title: Row(
+        //     children: [
+        //       HMSSubheadingText(
+        //           text: "Make results anonymous",
+        //           textColor: HMSThemeColors.onSurfaceMediumEmphasis),
+        //       // const SizedBox(
+        //       //   width: 8,
+        //       // ),
+        //       // SvgPicture.asset(
+        //       //   "packages/hms_room_kit/lib/src/assets/icons/info.svg",
+        //       //   height: 16,
+        //       //   width: 16,
+        //       //   colorFilter: ColorFilter.mode(
+        //       //       HMSThemeColors.onSurfaceLowEmphasis, BlendMode.srcIn),
+        //       // )
+        //     ],
+        //   ),
+        //   trailing: SizedBox(
+        //     height: 24,
+        //     width: 40,
+        //     child: FittedBox(
+        //       fit: BoxFit.contain,
+        //       child: CupertinoSwitch(
+        //         value: _isAnonymous,
+        //         onChanged: (value) => setIsAnonymous(value),
+        //         activeColor: HMSThemeColors.primaryDefault,
+        //       ),
+        //     ),
+        //   ),
+        // ),
 
         ///Padding
         const SizedBox(

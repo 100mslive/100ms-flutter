@@ -67,6 +67,19 @@ abstract class HMSPollInteractivityCenter {
     }
   }
 
+  static Future<dynamic> stopPoll({required HMSPoll poll}) async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.stopPoll,
+        arguments: {"poll_id": poll.pollId});
+
+    if (result != null) {
+      if (result["error"] != null) {
+        return HMSException.fromMap(result["error"]);
+      } else {
+        return null;
+      }
+    }
+  }
+
   static Future<dynamic> addMultiChoicePollResponse(
       {required HMSPoll hmsPoll,
       required HMSPollQuestion pollQuestion,

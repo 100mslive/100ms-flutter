@@ -21,11 +21,12 @@ import live.hms.video.sdk.HmsTypedActionResultListener
 class HMSPollAction {
 
     companion object{
-        fun pollActions(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK){
+        fun pollActions(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK, polls: ArrayList<HmsPoll>?){
             when(call.method){
                 "quick_start_poll" -> quickStartPoll(call,result,hmssdk)
-                "add_single_choice_poll_response" -> addSingleChoicePollResponse(call,result,hmssdk)
-                "add_multi_choice_poll_response" -> addMultiChoicePollResponse(call,result,hmssdk)
+                "add_single_choice_poll_response" -> addSingleChoicePollResponse(call,result,hmssdk,polls)
+                "add_multi_choice_poll_response" -> addMultiChoicePollResponse(call,result,hmssdk,polls)
+                "stop_poll" -> stopPoll(call,result,hmssdk,polls)
             }
         }
 
@@ -43,7 +44,7 @@ class HMSPollAction {
 
         }
 
-        private fun addSingleChoicePollResponse(call: MethodCall, methodChannelResult: MethodChannel.Result, hmssdk: HMSSDK){
+        private fun addSingleChoicePollResponse(call: MethodCall, methodChannelResult: MethodChannel.Result, hmssdk: HMSSDK, currentPolls: ArrayList<HmsPoll>?){
 
             val pollId = call.argument<String?>("poll_id")
             val index = call.argument<Int?>("question_index")
@@ -72,62 +73,42 @@ class HMSPollAction {
              *
              * If anywhere the sdk is unable to find the property we return the error
              */
-            var poll : HmsPoll?
-            hmssdk.getHmsInteractivityCenter().fetchPollList(HmsPollState.STARTED, object :
-                HmsTypedActionResultListener<List<HmsPoll>> {
-                    override fun onSuccess(result: List<HmsPoll>) {
-                        poll = result.find { it.pollId == pollId }
-                        poll?.let {
-                            hmssdk.getHmsInteractivityCenter().fetchPollQuestions(it, object :
-                                HmsTypedActionResultListener<List<HMSPollQuestion>>{
+                currentPolls?.find { it.pollId == pollId }?.let {poll ->
+                    index?.let {questionIndex ->
 
-                                override fun onError(error: HMSException) {
-                                    methodChannelResult.success(HMSResultExtension.toDictionary(false,HMSExceptionExtension.toDictionary(error)))
-                                }
-
-                                override fun onSuccess(result: List<HMSPollQuestion>) {
-                                    index?.let {questionIndex ->
-                                        val question = result[questionIndex]
-                                        question.let { currentQuestion ->
-                                            /*
-                                             * Here the index needs to be subtracted by 1
-                                             * since the HMSPollQuestionOption object has indexing with 1
-                                             */
-                                            val questionOption = currentQuestion.options?.get(optionIndex - 1)
-                                            questionOption?.let {selectedOption ->
-                                                val response = HMSPollResponseBuilder(it, userId).addResponse(currentQuestion,selectedOption)
-                                                hmssdk.getHmsInteractivityCenter().add(response, object : HmsTypedActionResultListener<PollAnswerResponse>{
-                                                    override fun onSuccess(result: PollAnswerResponse) {
-                                                        methodChannelResult.success(HMSResultExtension.toDictionary(true,HMSPollAnswerResponseExtension.toDictionary(result)))
-                                                    }
-                                                    override fun onError(error: HMSException) {
-                                                        methodChannelResult.success(HMSResultExtension.toDictionary(false,HMSExceptionExtension.toDictionary(error)))
-                                                    }
-                                                })
-                                            }
-
-                                        }?:run {
-                                            HMSErrorLogger.returnArgumentsError("Question not found")
-                                            return
-                                        }
+                        poll.questions?.get(questionIndex)?.let { currentQuestion ->
+                            /*
+                             * Here the index needs to be subtracted by 1
+                             * since the HMSPollQuestionOption object has indexing with 1
+                             */
+                            val questionOption = currentQuestion.options?.get(optionIndex - 1)
+                            questionOption?.let {selectedOption ->
+                                val response = HMSPollResponseBuilder(poll, userId).addResponse(currentQuestion,selectedOption)
+                                hmssdk.getHmsInteractivityCenter().add(response, object : HmsTypedActionResultListener<PollAnswerResponse>{
+                                    override fun onSuccess(result: PollAnswerResponse) {
+                                        methodChannelResult.success(HMSResultExtension.toDictionary(true,HMSPollAnswerResponseExtension.toDictionary(result)))
                                     }
+                                    override fun onError(error: HMSException) {
+                                        methodChannelResult.success(HMSResultExtension.toDictionary(false,HMSExceptionExtension.toDictionary(error)))
+                                    }
+                                })
+                            }
 
-                                }
-                            })
                         }?:run {
-                            HMSErrorLogger.returnArgumentsError("No poll with given pollId found")
+                            HMSErrorLogger.returnArgumentsError("Question not found")
                             return
                         }
+                    }?: run {
+                        HMSErrorLogger.returnArgumentsError("Incorrect question index")
+                        return
                     }
-
-                    override fun onError(error: HMSException) {
-                        methodChannelResult.success(HMSResultExtension.toDictionary(false,HMSExceptionExtension.toDictionary(error)))
-                    }
-
-            })
+            }?:run {
+                HMSErrorLogger.returnArgumentsError("No poll with given pollId found")
+                return
+            }
         }
 
-        private fun addMultiChoicePollResponse(call: MethodCall, methodChannelResult: MethodChannel.Result, hmssdk: HMSSDK){
+        private fun addMultiChoicePollResponse(call: MethodCall, methodChannelResult: MethodChannel.Result, hmssdk: HMSSDK, currentPolls: ArrayList<HmsPoll>?){
 
             val pollId = call.argument<String?>("poll_id")
             val index = call.argument<Int?>("question_index")
@@ -145,65 +126,61 @@ class HMSPollAction {
              *
              * If anywhere the sdk is unable to find the property we return the error
              */
-            var poll : HmsPoll?
-            hmssdk.getHmsInteractivityCenter().fetchPollList(HmsPollState.STARTED, object :
-                HmsTypedActionResultListener<List<HmsPoll>> {
-                override fun onSuccess(result: List<HmsPoll>) {
-                    poll = result.find { it.pollId == pollId }
-                    poll?.let {
-                        hmssdk.getHmsInteractivityCenter().fetchPollQuestions(it, object :
-                            HmsTypedActionResultListener<List<HMSPollQuestion>>{
+            currentPolls?.find { it.pollId == pollId }?.let { poll ->
+                index?.let {questionIndex ->
+                    poll.questions?.get(questionIndex)?.let { currentQuestion ->
+                        val questionOptions = ArrayList<HMSPollQuestionOption>()
+                        answer?.forEach { selectedOptions ->
+                            selectedOptions as HashMap<String,Any?>
+                            /*
+                             * Here the index needs to be subtracted by 1
+                             * since the HMSPollQuestionOption object has indexing with 1
+                             */
+                            selectedOptions["index"]?.let {
+                                    index ->  index as Int
+                                val questionOption = currentQuestion.options?.get(index - 1)
+                                questionOption?.let {option ->
+                                    questionOptions.add(option)
+                                }
+                            }
+                        }
 
+                        val response = HMSPollResponseBuilder(poll, userId).addResponse(currentQuestion,questionOptions)
+                        hmssdk.getHmsInteractivityCenter().add(response, object : HmsTypedActionResultListener<PollAnswerResponse>{
+                            override fun onSuccess(result: PollAnswerResponse) {
+                                methodChannelResult.success(HMSResultExtension.toDictionary(true,HMSPollAnswerResponseExtension.toDictionary(result)))
+                            }
                             override fun onError(error: HMSException) {
                                 methodChannelResult.success(HMSResultExtension.toDictionary(false,HMSExceptionExtension.toDictionary(error)))
                             }
-
-                            override fun onSuccess(result: List<HMSPollQuestion>) {
-                                index?.let {questionIndex ->
-                                    val question = result[questionIndex]
-                                    question.let { currentQuestion ->
-                                        val questionOptions = ArrayList<HMSPollQuestionOption>()
-                                        answer?.forEach { selectedOptions ->
-                                            selectedOptions as HashMap<String,Any?>
-                                            /*
-                                             * Here the index needs to be subtracted by 1
-                                             * since the HMSPollQuestionOption object has indexing with 1
-                                             */
-                                            selectedOptions["index"]?.let {
-                                                index ->  index as Int
-                                                val questionOption = currentQuestion.options?.get(index - 1)
-                                                questionOption?.let {option ->
-                                                    questionOptions.add(option)
-                                                }
-                                            }
-                                        }
-
-                                        val response = HMSPollResponseBuilder(it, userId).addResponse(currentQuestion,questionOptions)
-                                        hmssdk.getHmsInteractivityCenter().add(response, object : HmsTypedActionResultListener<PollAnswerResponse>{
-                                            override fun onSuccess(result: PollAnswerResponse) {
-                                                methodChannelResult.success(HMSResultExtension.toDictionary(true,HMSPollAnswerResponseExtension.toDictionary(result)))
-                                            }
-                                            override fun onError(error: HMSException) {
-                                                methodChannelResult.success(HMSResultExtension.toDictionary(false,HMSExceptionExtension.toDictionary(error)))
-                                            }
-                                        })
-
-                                    }
-                                }
-
-                            }
                         })
-                    }?:run {
-                        HMSErrorLogger.returnArgumentsError("No poll with given pollId found")
+
+                    }?: run {
+                        HMSErrorLogger.returnArgumentsError("Question not found")
                         return
                     }
+                }?:run{
+                    HMSErrorLogger.returnArgumentsError("Incorrect question index")
+                    return
                 }
 
-                override fun onError(error: HMSException) {
-                    methodChannelResult.success(HMSResultExtension.toDictionary(false,HMSExceptionExtension.toDictionary(error)))
-                }
+        }?:run {
+            HMSErrorLogger.returnArgumentsError("No poll with given pollId found")
+            return
+            }
+        }
 
-            })
+        private fun stopPoll(call: MethodCall, result: MethodChannel.Result, hmssdk: HMSSDK, currentPolls: ArrayList<HmsPoll>?){
+            val pollId = call.argument<String?>("poll_id")
+
+            val poll = currentPolls?.first{
+                it.pollId == pollId
+            }?:run {
+                HMSErrorLogger.returnArgumentsError("No Poll with given pollId found")
+                return
+            }
+            hmssdk.getHmsInteractivityCenter().stop(poll,HMSCommonAction.getActionListener(result))
+
         }
     }
 }

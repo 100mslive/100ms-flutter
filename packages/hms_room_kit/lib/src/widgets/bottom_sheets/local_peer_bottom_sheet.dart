@@ -35,6 +35,18 @@ class LocalPeerBottomSheet extends StatefulWidget {
 
 class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
   @override
+  void initState() {
+    super.initState();
+    context.read<MeetingStore>().addBottomSheet(context);
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
       heightFactor: widget.isInsetTile ? 0.26 : 0.2,

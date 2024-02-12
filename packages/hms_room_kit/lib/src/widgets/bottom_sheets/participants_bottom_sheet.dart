@@ -53,6 +53,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
   }
 
   void viewAll(String role) {
+    var meetingStore = context.read<MeetingStore>();
     showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: HMSThemeColors.surfaceDim,
@@ -61,7 +62,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
       ),
       context: context,
       builder: (ctx) => ChangeNotifierProvider.value(
-          value: context.read<MeetingStore>(),
+          value: meetingStore,
           child: ParticipantsViewAllBottomSheet(role: role)),
     );
   }
