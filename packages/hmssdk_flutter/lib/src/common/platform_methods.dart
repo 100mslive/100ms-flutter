@@ -193,14 +193,26 @@ enum PlatformMethod {
   getPeerListIterator,
   peerListIteratorHasNext,
   peerListIteratorNext,
+
+  ///Raise/Lower Hand
   lowerLocalPeerHand,
   lowerRemotePeerHand,
   raiseLocalPeerHand,
+
+  ///TextureView methods
   createTextureView,
   disposeTextureView,
   addTrack,
   removeTrack,
-  setDisplayResolution
+  setDisplayResolution,
+
+  ///Poll methods
+  addPollUpdateListener,
+  removePollUpdateListener,
+  quickStartPoll,
+  addSingleChoicePollResponse,
+  addMultiChoicePollResponse,
+  stopPoll
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -487,12 +499,15 @@ extension PlatformMethodValues on PlatformMethod {
       case PlatformMethod.peerListIteratorNext:
         return "peer_list_iterator_next";
 
+      ///Raise/Lower Hand
       case PlatformMethod.lowerLocalPeerHand:
         return "lower_local_peer_hand";
       case PlatformMethod.lowerRemotePeerHand:
         return "lower_remote_peer_hand";
       case PlatformMethod.raiseLocalPeerHand:
         return "raise_local_peer_hand";
+
+      ///TextureView methods
       case PlatformMethod.createTextureView:
         return "create_texture_view";
       case PlatformMethod.disposeTextureView:
@@ -503,6 +518,20 @@ extension PlatformMethodValues on PlatformMethod {
         return "remove_track";
       case PlatformMethod.setDisplayResolution:
         return "set_display_resolution";
+
+      ///Poll Methods
+      case PlatformMethod.addPollUpdateListener:
+        return "add_poll_update_listener";
+      case PlatformMethod.removePollUpdateListener:
+        return "remove_poll_update_listener";
+      case PlatformMethod.quickStartPoll:
+        return "quick_start_poll";
+      case PlatformMethod.addSingleChoicePollResponse:
+        return "add_single_choice_poll_response";
+      case PlatformMethod.addMultiChoicePollResponse:
+        return "add_multi_choice_poll_response";
+      case PlatformMethod.stopPoll:
+        return "stop_poll";
       default:
         return 'unknown';
     }
@@ -542,9 +571,6 @@ extension PlatformMethodValues on PlatformMethod {
 
       case 'on_re_connecting':
         return PlatformMethod.onReconnecting;
-
-      case 'on_re_connected':
-        return PlatformMethod.onReconnected;
 
       case 'on_re_connected':
         return PlatformMethod.onReconnected;
@@ -791,12 +817,15 @@ extension PlatformMethodValues on PlatformMethod {
       case "peer_list_iterator_next":
         return PlatformMethod.peerListIteratorNext;
 
+      ///raise/lower hand
       case "lower_local_peer_hand":
         return PlatformMethod.lowerLocalPeerHand;
       case "lower_remote_peer_hand":
         return PlatformMethod.lowerRemotePeerHand;
       case "raise_local_peer_hand":
         return PlatformMethod.raiseLocalPeerHand;
+
+      ///TextureView methods
       case "create_texture_view":
         return PlatformMethod.createTextureView;
       case "dispose_texture_view":
@@ -807,6 +836,20 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.removeTrack;
       case "set_display_resolution":
         return PlatformMethod.setDisplayResolution;
+
+      ///Poll methods
+      case "add_poll_update_listener":
+        return PlatformMethod.addPollUpdateListener;
+      case "remove_poll_update_listener":
+        return PlatformMethod.removePollUpdateListener;
+      case "quick_start_poll":
+        return PlatformMethod.quickStartPoll;
+      case "add_single_choice_poll_response":
+        return PlatformMethod.addSingleChoicePollResponse;
+      case "add_multi_choice_poll_response":
+        return PlatformMethod.addMultiChoicePollResponse;
+      case "stop_poll":
+        return PlatformMethod.stopPoll;
       default:
         return PlatformMethod.unknown;
     }

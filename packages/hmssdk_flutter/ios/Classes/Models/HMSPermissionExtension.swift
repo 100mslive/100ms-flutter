@@ -19,8 +19,10 @@ class  HMSPermissionExtension {
             "mute": permission.mute ?? false,
             "remove_others": permission.removeOthers ?? false,
             "rtmp_streaming": permission.rtmpStreaming ?? false,
-            "un_mute": permission.unmute ?? false
-
+            "un_mute": permission.unmute ?? false,
+            "poll_read": permission.pollRead ?? false,
+            "poll_write": permission.pollWrite ?? false
+ 
         ]
     }
 }

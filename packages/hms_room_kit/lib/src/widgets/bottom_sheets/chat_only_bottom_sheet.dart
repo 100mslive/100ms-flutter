@@ -14,9 +14,14 @@ import 'package:provider/provider.dart';
 
 ///[ChatOnlyBottomSheet] is a bottom sheet that is used to render the bottom sheet to show chat only when participants
 ///list is disabled from dashboard
-class ChatOnlyBottomSheet extends StatelessWidget {
+class ChatOnlyBottomSheet extends StatefulWidget {
   const ChatOnlyBottomSheet({Key? key}) : super(key: key);
 
+  @override
+  State<ChatOnlyBottomSheet> createState() => _ChatOnlyBottomSheetState();
+}
+
+class _ChatOnlyBottomSheetState extends State<ChatOnlyBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(

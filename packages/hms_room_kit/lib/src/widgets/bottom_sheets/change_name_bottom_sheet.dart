@@ -29,12 +29,19 @@ class _ChangeNameBottomSheetState extends State<ChangeNameBottomSheet> {
   void initState() {
     super.initState();
     nameController.text = context.read<MeetingStore>().localPeer?.name ?? "";
+    context.read<MeetingStore>().addBottomSheet(context);
   }
 
   @override
   void dispose() {
     nameController.dispose();
     super.dispose();
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
   }
 
   ///This function is called when the change name button is clicked

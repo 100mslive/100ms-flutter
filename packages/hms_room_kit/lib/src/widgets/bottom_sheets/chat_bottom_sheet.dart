@@ -35,6 +35,12 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
   final DateFormat formatter = DateFormat('hh:mm a');
 
   @override
+  void initState() {
+    super.initState();
+    setRecipientChipValue();
+  }
+
+  @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
@@ -47,12 +53,6 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
               duration: const Duration(milliseconds: 200),
               curve: Curves.easeInOut));
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    setRecipientChipValue();
   }
 
   ///This function sets the value of the recipient chip

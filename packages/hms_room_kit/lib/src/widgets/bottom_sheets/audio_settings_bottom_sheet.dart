@@ -27,6 +27,13 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
   @override
   void initState() {
     super.initState();
+    context.read<MeetingStore>().addBottomSheet(context);
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
   }
 
   @override

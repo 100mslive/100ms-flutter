@@ -18,7 +18,7 @@ import 'package:hmssdk_flutter/src/enum/hms_key_change_listener_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
 import 'package:hmssdk_flutter/src/model/hms_key_change_observer.dart';
 
-class PlatformService {
+abstract class PlatformService {
   ///used to pass data to platform using methods
   static const MethodChannel _channel = const MethodChannel('hmssdk_flutter');
 
@@ -45,6 +45,9 @@ class PlatformService {
   static const EventChannel _hlsPlayerChannel =
       const EventChannel("hls_player_channel");
 
+  static const EventChannel _pollsEventChannel =
+      const EventChannel("polls_event_channel");
+
   ///add meeting listeners.
   static List<HMSUpdateListener> updateListeners = [];
 
@@ -56,6 +59,8 @@ class PlatformService {
   static List<HMSKeyChangeObserver> keyChangeObservers = [];
 
   static List<HMSHLSPlaybackEventsListener> hlsPlaybackEventListener = [];
+
+  static HMSPollListener? _pollListener;
 
   ///List for event Listener
   static List<HMSStatsListener> statsListeners = [];
@@ -95,6 +100,16 @@ class PlatformService {
       statsListeners.remove(listener);
       PlatformService.invokeMethod(PlatformMethod.removeStatsListener);
     }
+  }
+
+  static void addPollUpdateListener(HMSPollListener listener) {
+    _pollListener = listener;
+    PlatformService.invokeMethod(PlatformMethod.addPollUpdateListener);
+  }
+
+  static void removePollUpdateListener() {
+    _pollListener = null;
+    PlatformService.invokeMethod(PlatformMethod.removePollUpdateListener);
   }
 
   static void addLogsListener(
@@ -525,6 +540,26 @@ class PlatformService {
       return HMSHLSPlayerPlaybackEventResponse(method: method, data: data);
     }).listen((event) {
       notifyHLSPlaybackEventListeners(event.method, event.data);
+    });
+
+    _pollsEventChannel.receiveBroadcastStream({'name': 'polls'}).map((event) {
+      HMSPollListenerMethod method =
+          HMSPollListenerMethodValues.getMethodFromName(event['event_name']);
+      Map data = event['data'];
+      return HMSPollListenerMethodResponse(method: method, data: data);
+    }).listen((event) {
+      HMSPollListenerMethod method = event.method;
+      switch (method) {
+        case HMSPollListenerMethod.onPollUpdate:
+          _pollListener?.onPollUpdate(
+              poll: HMSPoll.fromMap(event.data["poll"]),
+              pollUpdateType:
+                  HMSPollUpdateTypeValues.getHMSPollUpdateTypeFromString(
+                      event.data["poll_update_type"]));
+          return;
+        case HMSPollListenerMethod.unknown:
+          break;
+      }
     });
   }
 

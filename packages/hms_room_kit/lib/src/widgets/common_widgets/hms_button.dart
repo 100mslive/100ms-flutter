@@ -1,6 +1,8 @@
+///Package imports
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/src/common/app_color.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 
+///[HMSButton] is a button based on HMS theme colors
 class HMSButton extends StatelessWidget {
   final double width;
   final Color? shadowColor;
@@ -20,10 +22,8 @@ class HMSButton extends StatelessWidget {
         width: width,
         child: ElevatedButton(
           style: ButtonStyle(
-              shadowColor:
-                  MaterialStateProperty.all(shadowColor ?? themeSurfaceColor),
               backgroundColor: MaterialStateProperty.all(
-                  buttonBackgroundColor ?? hmsdefaultColor),
+                  buttonBackgroundColor ?? HMSThemeColors.primaryDefault),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),

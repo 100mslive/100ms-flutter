@@ -13,6 +13,7 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 ///[fontSize] is the size of the font, default value is 16
 ///[fontWeight] is the weight of the font, default value is FontWeight.w600
 ///[textOverflow] is the overflow of the text, default value is TextOverflow.ellipsis
+///[maxLines] are the max number of lines that HMSTitleText will render after that it will overflow
 class HMSTitleText extends StatelessWidget {
   final String text;
   final Color textColor;
@@ -21,6 +22,7 @@ class HMSTitleText extends StatelessWidget {
   final double? fontSize;
   final FontWeight? fontWeight;
   final TextOverflow? textOverflow;
+  final int maxLines;
 
   const HMSTitleText(
       {Key? key,
@@ -30,13 +32,15 @@ class HMSTitleText extends StatelessWidget {
       this.lineHeight = 24,
       this.fontSize = 16,
       this.fontWeight = FontWeight.w600,
-      this.textOverflow = TextOverflow.ellipsis})
+      this.textOverflow = TextOverflow.ellipsis,
+      this.maxLines = 1})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Text(text,
         overflow: textOverflow,
+        maxLines: maxLines,
         style: HMSTextStyle.setTextStyle(
             color: textColor,
             height: lineHeight! / fontSize!,

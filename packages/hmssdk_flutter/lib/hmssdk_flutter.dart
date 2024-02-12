@@ -18,10 +18,11 @@ export 'src/enum/hms_message_recipient_type.dart';
 export 'src/enum/hms_log_level.dart';
 export 'src/enum/hms_stats_listener_method.dart';
 export 'src/enum/hms_track_init_state.dart';
-export 'src/enum/hms_Quality_limitation_reason.dart';
+export 'src/enum/hms_quality_limitation_reason_enum.dart';
 export 'src/enum/hms_simulcast_layer.dart';
 export 'src/enum/hms_audio_mode.dart';
 export 'src/enum/hms_hls_playback_state.dart';
+export 'src/enum/hms_poll_enum.dart';
 
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';
@@ -62,7 +63,6 @@ export 'src/model/hms_peer_removed_from_room.dart';
 export 'src/model/hms_message_recipient.dart';
 export 'src/model/hms_logs_listener.dart';
 export 'src/model/hms_actions_result_listener.dart';
-export 'src/model/hms_message_result_listener.dart';
 export 'src/enum/hms_action_result_listener_method.dart';
 export 'src/model/hms_remote_peer.dart';
 export 'src/model/hms_hls_config.dart';
@@ -102,6 +102,12 @@ export 'src/model/hms_peer_list_iterator.dart';
 export 'src/model/peer_list_iterator_options.dart';
 export 'src/enum/hms_recording_state.dart';
 export 'src/enum/hms_streaming_state.dart';
+export 'src/model/polls/hms_poll_interactivity_center.dart';
+export 'src/model/polls/hms_poll_listener.dart';
+export 'src/model/polls/hms_poll_question_builder.dart';
+export 'src/model/polls/hms_poll.dart';
+export 'src/model/polls/hms_poll_question.dart';
+export 'src/model/polls/hms_poll_question_option.dart';
 
 //Views
 export 'src/ui/meeting/hms_texture_view.dart';

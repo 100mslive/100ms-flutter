@@ -2,6 +2,7 @@
 import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/poll_and_quiz_bottom_sheet.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +28,18 @@ class AppUtilitiesBottomSheet extends StatefulWidget {
 }
 
 class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<MeetingStore>().addBottomSheet(context);
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
+  }
+
   @override
   Widget build(BuildContext context) {
     MeetingStore meetingStore = context.read<MeetingStore>();
@@ -177,10 +190,10 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         ),
                       ),
                       optionText:
-                          meetingStore.isBRB ? "I'm Back" : "Be Right Back")
+                          meetingStore.isBRB ? "I'm Back" : "Be Right Back"),
 
                 ///This renders the raise hand option
-                ,
+
                 MoreOptionItem(
                     onTap: () async {
                       context.read<MeetingStore>().toggleLocalPeerHandRaise();
@@ -198,6 +211,38 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                     optionText: meetingStore.isRaisedHand
                         ? "Lower Hand"
                         : "Raise Hand"),
+
+                ///This renders the polls and quizzes option
+                if ((meetingStore.localPeer?.role.permissions.pollRead ??
+                        false) ||
+                    (meetingStore.localPeer?.role.permissions.pollWrite ??
+                        false))
+                  MoreOptionItem(
+                      onTap: () {
+                        Navigator.pop(context);
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: HMSThemeColors.surfaceDim,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16)),
+                          ),
+                          context: context,
+                          builder: (ctx) => ChangeNotifierProvider.value(
+                              value: meetingStore,
+                              child: const PollAndQuizBottomSheet()),
+                        );
+                      },
+                      optionIcon: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/src/assets/icons/polls.svg",
+                        height: 20,
+                        width: 20,
+                        colorFilter: ColorFilter.mode(
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
+                      ),
+                      optionText: "Polls and Quizzes"),
 
                 ///This renders the recording option
                 ///This option is only rendered if the local peer has the permission to
@@ -252,31 +297,35 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                       topRight: Radius.circular(16)),
                                 ),
                                 context: context,
-                                builder: (ctx) => EndServiceBottomSheet(
-                                  onButtonPressed: () =>
-                                      meetingStore.stopRtmpAndRecording(),
-                                  title: HMSTitleText(
-                                    text: "Stop Recording",
-                                    textColor: HMSThemeColors.alertErrorDefault,
-                                    letterSpacing: 0.15,
-                                    fontSize: 20,
+                                builder: (ctx) => ChangeNotifierProvider.value(
+                                  value: meetingStore,
+                                  child: EndServiceBottomSheet(
+                                    onButtonPressed: () =>
+                                        meetingStore.stopRtmpAndRecording(),
+                                    title: HMSTitleText(
+                                      text: "Stop Recording",
+                                      textColor:
+                                          HMSThemeColors.alertErrorDefault,
+                                      letterSpacing: 0.15,
+                                      fontSize: 20,
+                                    ),
+                                    bottomSheetTitleIcon: SvgPicture.asset(
+                                      "packages/hms_room_kit/lib/src/assets/icons/alert.svg",
+                                      height: 20,
+                                      width: 20,
+                                      colorFilter: ColorFilter.mode(
+                                          HMSThemeColors.alertErrorDefault,
+                                          BlendMode.srcIn),
+                                    ),
+                                    subTitle: HMSSubheadingText(
+                                      text:
+                                          "Are you sure you want to stop recording? You\n can’t undo this action.",
+                                      maxLines: 2,
+                                      textColor: HMSThemeColors
+                                          .onSurfaceMediumEmphasis,
+                                    ),
+                                    buttonText: "Stop Recording",
                                   ),
-                                  bottomSheetTitleIcon: SvgPicture.asset(
-                                    "packages/hms_room_kit/lib/src/assets/icons/alert.svg",
-                                    height: 20,
-                                    width: 20,
-                                    colorFilter: ColorFilter.mode(
-                                        HMSThemeColors.alertErrorDefault,
-                                        BlendMode.srcIn),
-                                  ),
-                                  subTitle: HMSSubheadingText(
-                                    text:
-                                        "Are you sure you want to stop recording? You\n can’t undo this action.",
-                                    maxLines: 2,
-                                    textColor:
-                                        HMSThemeColors.onSurfaceMediumEmphasis,
-                                  ),
-                                  buttonText: "Stop Recording",
                                 ),
                               );
                             } else {
