@@ -2683,7 +2683,8 @@ class MeetingStore extends ChangeNotifier
          * while for hls viewer we show the poll based on the `onCue` event i.e.
          * timed metadata event for poll
         */
-        if (localPeer?.role.permissions.pollRead ?? false) {
+        if ((localPeer?.role.permissions.pollRead ?? false) ||
+            (localPeer?.role.permissions.pollWrite ?? false)) {
           int index = pollQuestions
               .indexWhere((element) => element.poll.pollId == poll.pollId);
           if (index == -1) {
