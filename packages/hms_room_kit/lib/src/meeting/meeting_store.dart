@@ -2574,6 +2574,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onCue({required HMSHLSCue hlsCue}) {
+    log("onCue -> payload:${hlsCue.startDate}");
     /**
      * Here we use a list of alignments and select an alignment at random and use it 
      * to position the toast for timed metadata
@@ -2672,7 +2673,7 @@ class MeetingStore extends ChangeNotifier
   @override
   void onPollUpdate(
       {required HMSPoll poll, required HMSPollUpdateType pollUpdateType}) {
-    log("onPollUpdate -> poll $poll updateType: $pollUpdateType");
+    log("onPollUpdate -> poll $poll updateType: $pollUpdateType startedAt: ${poll.startedAt}");
     switch (pollUpdateType) {
       ///If the poll is started we add the poll in questions list
       case HMSPollUpdateType.started:
@@ -2695,7 +2696,23 @@ class MeetingStore extends ChangeNotifier
                   hmsToastType: HMSToastsType.pollStartedToast));
               notifyListeners();
             } else {
-              hlsViewerPolls.add(store);
+              /*
+               * Here we check whether the poll start time is 
+               * more than 20 secs older from now or not. We have kept 20 secs
+               * since the stream playback rolling window time is 
+               * set to 20 by default i.e. if the time difference is less than 20 secs
+               * we will get the [onCue] callback again. If its greater than 20
+               * we show the toast immediately for the user to vote.
+               */
+              if (poll.startedAt != null &&
+                  (DateTime.now().difference(poll.startedAt!) >
+                      const Duration(seconds: 20))) {
+                pollQuestions.add(store);
+                toasts.add(HMSToastModel(store,
+                    hmsToastType: HMSToastsType.pollStartedToast));
+              } else {
+                hlsViewerPolls.add(store);
+              }
             }
           }
         }

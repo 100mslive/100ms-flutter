@@ -155,7 +155,7 @@ class PollResultCard extends StatelessWidget {
                       ),
                     );
                   }),
-              if (question.voted)
+              if (question.myResponses.isNotEmpty)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

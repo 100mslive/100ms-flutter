@@ -39,10 +39,14 @@ class HMSPollExtension {
             }
             map["roles_that_can_vote"] = rolesThatCanVote
 
-            map["started_at"] = poll.startedAt
+            map["started_at"] = poll.startedAt * 1000
             map["started_by"] = HMSPeerExtension.toDictionary(poll.startedBy)
             map["state"] = getPollState(poll.state)
-            map["stopped_at"] = poll.stoppedAt
+            map["stopped_at"] = poll.stoppedAt?.let {
+                it * 1000
+            }?:run {
+                null
+            }
             map["title"] = poll.title
 
             return map
