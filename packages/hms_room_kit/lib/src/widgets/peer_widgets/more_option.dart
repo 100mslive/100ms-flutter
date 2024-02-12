@@ -36,6 +36,7 @@ class _MoreOptionState extends State<MoreOption> {
                 ///[peerTrackNode] is the peerTrackNode of the peer whose more option is clicked
                 ///We only show the modal bottom sheet if the peer is not the local peer
                 var peerTrackNode = context.read<PeerTrackNode>();
+                var meetingStore = context.read<MeetingStore>();
                 if (peerTrackNode.peer.peerId !=
                     meetingStore.localPeer!.peerId) {
                   showModalBottomSheet(
@@ -48,7 +49,7 @@ class _MoreOptionState extends State<MoreOption> {
                     ),
                     context: context,
                     builder: (ctx) => ChangeNotifierProvider.value(
-                        value: context.read<MeetingStore>(),
+                        value: meetingStore,
                         child: RemotePeerBottomSheet(
                           meetingStore: meetingStore,
                           peerTrackNode: peerTrackNode,

@@ -34,16 +34,15 @@ class PollQuestionCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Selector<HMSPollStore, String>(
-                      selector: (_, hmsPollStore) => hmsPollStore.poll.title,
-                      builder: (_, title, __) {
-                        return HMSTitleText(
-                          text: title,
-                          textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                          letterSpacing: 0.15,
-                          maxLines: 3,
-                        );
-                      }
-                    ),
+                        selector: (_, hmsPollStore) => hmsPollStore.poll.title,
+                        builder: (_, title, __) {
+                          return HMSTitleText(
+                            text: title,
+                            textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                            letterSpacing: 0.15,
+                            maxLines: 3,
+                          );
+                        }),
                   ),
                   Selector<HMSPollStore, HMSPollState>(
                       selector: (_, hmsPollStore) => hmsPollStore.poll.state,

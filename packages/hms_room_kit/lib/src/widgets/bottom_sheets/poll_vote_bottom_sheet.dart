@@ -14,8 +14,25 @@ import 'package:hms_room_kit/src/widgets/poll_widgets/voting_flow_widgets/poll_v
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
-class PollVoteBottomSheet extends StatelessWidget {
+class PollVoteBottomSheet extends StatefulWidget {
   const PollVoteBottomSheet({super.key});
+
+  @override
+  State<PollVoteBottomSheet> createState() => _PollVoteBottomSheetState();
+}
+
+class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<MeetingStore>().addBottomSheet(context);
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,11 +126,20 @@ class PollVoteBottomSheet extends StatelessWidget {
                                 in poll.questions![index].options) {
                               totalVotes += element.voteCount;
                             }
+                            var isVoteCountHidden = false;
+                            if (poll.rolesThatCanViewResponses.isNotEmpty &&
+                                !poll.rolesThatCanViewResponses.contains(context
+                                    .read<MeetingStore>()
+                                    .localPeer
+                                    ?.role)) {
+                              isVoteCountHidden = true;
+                            }
                             return PollResultCard(
                               questionNumber: index,
                               totalQuestions: poll.questions?.length ?? 0,
                               question: poll.questions![index],
                               totalVotes: totalVotes,
+                              isVoteCountHidden: isVoteCountHidden,
                             );
                           } else {
                             return PollVoteCard(

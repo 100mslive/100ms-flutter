@@ -3,6 +3,7 @@ import 'dart:math';
 
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/widgets/toasts/toast_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -91,9 +92,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                             child: SingleChildScrollView(
                               child: SizedBox(
                                 width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height -
-                                    MediaQuery.of(context).padding.top -
-                                    MediaQuery.of(context).padding.bottom,
+                                height: MediaQuery.of(context).size.height,
                                 child: Stack(
                                   children: [
                                     Selector<MeetingStore, bool>(
@@ -358,21 +357,34 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                   .asMap()
                                                   .entries
                                                   .map((toasts) {
-                                            return Positioned(
-                                                bottom: 48.0 + 8 * toasts.key,
-                                                left: 5,
-                                                child: Transform.scale(
-                                                  scale:
-                                                      Utilities.getToastScale(
-                                                          toasts.key,
-                                                          toastsItem.item2),
-                                                  child: Utilities.getToast(
-                                                      toasts.value,
-                                                      toasts.key,
-                                                      toastsItem.item2,
-                                                      context.read<
-                                                          MeetingStore>()),
-                                                ));
+                                            var meetingStore =
+                                                context.read<MeetingStore>();
+                                            return Selector<HLSPlayerStore,
+                                                    bool>(
+                                                selector: (_, hlsPlayerStore) =>
+                                                    hlsPlayerStore
+                                                        .areStreamControlsVisible,
+                                                builder: (_,
+                                                    areStreamControlsVisible,
+                                                    __) {
+                                                  return AnimatedPositioned(
+                                                    duration: const Duration(
+                                                        milliseconds: 200),
+                                                    bottom:
+                                                        (areStreamControlsVisible
+                                                                ? 28.0
+                                                                : 10.0) +
+                                                            8 * toasts.key,
+                                                    left: 5,
+                                                    child: ToastWidget(
+                                                        toast: toasts.value,
+                                                        index: toasts.key,
+                                                        toastsCount:
+                                                            toastsItem.item2,
+                                                        meetingStore:
+                                                            meetingStore),
+                                                  );
+                                                });
                                           }).toList());
                                         }),
 

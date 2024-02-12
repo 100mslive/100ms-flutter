@@ -29,6 +29,18 @@ class AppUtilitiesBottomSheet extends StatefulWidget {
 
 class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
   @override
+  void initState() {
+    super.initState();
+    context.read<MeetingStore>().addBottomSheet(context);
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
+  }
+
+  @override
   Widget build(BuildContext context) {
     MeetingStore meetingStore = context.read<MeetingStore>();
     return Padding(
@@ -285,31 +297,35 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                       topRight: Radius.circular(16)),
                                 ),
                                 context: context,
-                                builder: (ctx) => EndServiceBottomSheet(
-                                  onButtonPressed: () =>
-                                      meetingStore.stopRtmpAndRecording(),
-                                  title: HMSTitleText(
-                                    text: "Stop Recording",
-                                    textColor: HMSThemeColors.alertErrorDefault,
-                                    letterSpacing: 0.15,
-                                    fontSize: 20,
+                                builder: (ctx) => ChangeNotifierProvider.value(
+                                  value: meetingStore,
+                                  child: EndServiceBottomSheet(
+                                    onButtonPressed: () =>
+                                        meetingStore.stopRtmpAndRecording(),
+                                    title: HMSTitleText(
+                                      text: "Stop Recording",
+                                      textColor:
+                                          HMSThemeColors.alertErrorDefault,
+                                      letterSpacing: 0.15,
+                                      fontSize: 20,
+                                    ),
+                                    bottomSheetTitleIcon: SvgPicture.asset(
+                                      "packages/hms_room_kit/lib/src/assets/icons/alert.svg",
+                                      height: 20,
+                                      width: 20,
+                                      colorFilter: ColorFilter.mode(
+                                          HMSThemeColors.alertErrorDefault,
+                                          BlendMode.srcIn),
+                                    ),
+                                    subTitle: HMSSubheadingText(
+                                      text:
+                                          "Are you sure you want to stop recording? You\n can’t undo this action.",
+                                      maxLines: 2,
+                                      textColor: HMSThemeColors
+                                          .onSurfaceMediumEmphasis,
+                                    ),
+                                    buttonText: "Stop Recording",
                                   ),
-                                  bottomSheetTitleIcon: SvgPicture.asset(
-                                    "packages/hms_room_kit/lib/src/assets/icons/alert.svg",
-                                    height: 20,
-                                    width: 20,
-                                    colorFilter: ColorFilter.mode(
-                                        HMSThemeColors.alertErrorDefault,
-                                        BlendMode.srcIn),
-                                  ),
-                                  subTitle: HMSSubheadingText(
-                                    text:
-                                        "Are you sure you want to stop recording? You\n can’t undo this action.",
-                                    maxLines: 2,
-                                    textColor:
-                                        HMSThemeColors.onSurfaceMediumEmphasis,
-                                  ),
-                                  buttonText: "Stop Recording",
                                 ),
                               );
                             } else {

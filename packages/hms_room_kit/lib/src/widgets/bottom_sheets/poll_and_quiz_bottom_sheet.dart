@@ -13,8 +13,25 @@ import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/poll
 import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/poll_question_card.dart';
 
 ///[PollAndQuizBottomSheet] renders the poll and quiz creation UI
-class PollAndQuizBottomSheet extends StatelessWidget {
+class PollAndQuizBottomSheet extends StatefulWidget {
   const PollAndQuizBottomSheet({Key? key}) : super(key: key);
+
+  @override
+  State<PollAndQuizBottomSheet> createState() => _PollAndQuizBottomSheetState();
+}
+
+class _PollAndQuizBottomSheetState extends State<PollAndQuizBottomSheet> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<MeetingStore>().addBottomSheet(context);
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +65,15 @@ class PollAndQuizBottomSheet extends StatelessWidget {
                 ),
 
                 ///Poll and Quiz selection buttons
-                if (context
-                        .read<MeetingStore>()
-                        .localPeer
-                        ?.role
-                        .permissions
-                        .pollWrite ??
-                    false)
-                  const PollQuizSelectionWidget(),
+                ///Will be added in upcoming release
+                // if (context
+                //         .read<MeetingStore>()
+                //         .localPeer
+                //         ?.role
+                //         .permissions
+                //         .pollWrite ??
+                //     false)
+                //   const PollQuizSelectionWidget(),
 
                 if (context
                         .read<MeetingStore>()
@@ -80,13 +98,20 @@ class PollAndQuizBottomSheet extends StatelessWidget {
 
                 ///This section shows all the previous polls
                 ///which are either started or stopped
-                if (context
-                        .read<MeetingStore>()
-                        .localPeer
-                        ?.role
-                        .permissions
-                        .pollRead ??
-                    false)
+                if ((context
+                            .read<MeetingStore>()
+                            .localPeer
+                            ?.role
+                            .permissions
+                            .pollRead ??
+                        false) ||
+                    (context
+                            .read<MeetingStore>()
+                            .localPeer
+                            ?.role
+                            .permissions
+                            .pollWrite ??
+                        false))
                   Selector<MeetingStore, int>(
                       selector: (_, meetingStore) =>
                           meetingStore.pollQuestions.length,
@@ -106,13 +131,20 @@ class PollAndQuizBottomSheet extends StatelessWidget {
                             : const SizedBox();
                       }),
 
-                if (context
-                        .read<MeetingStore>()
-                        .localPeer
-                        ?.role
-                        .permissions
-                        .pollRead ??
-                    false)
+                if ((context
+                            .read<MeetingStore>()
+                            .localPeer
+                            ?.role
+                            .permissions
+                            .pollRead ??
+                        false) ||
+                    ((context
+                            .read<MeetingStore>()
+                            .localPeer
+                            ?.role
+                            .permissions
+                            .pollWrite ??
+                        false)))
                   Selector<MeetingStore, Tuple2<int, List<HMSPollStore>>>(
                     selector: (_, meetingStore) => Tuple2(
                         meetingStore.pollQuestions.length,

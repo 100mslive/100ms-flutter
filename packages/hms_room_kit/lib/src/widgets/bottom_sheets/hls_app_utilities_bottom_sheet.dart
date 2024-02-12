@@ -15,20 +15,27 @@ import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/overlay_participants_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
 
-///[HLSMoreOptionsBottomSheet] is a bottom sheet that is used to show more options in the meeting
-class HLSMoreOptionsBottomSheet extends StatefulWidget {
-  const HLSMoreOptionsBottomSheet({super.key});
+///[HLSAppUtilitiesBottomSheet] is a bottom sheet that is used to show more options in the meeting
+class HLSAppUtilitiesBottomSheet extends StatefulWidget {
+  const HLSAppUtilitiesBottomSheet({super.key});
 
   @override
-  State<HLSMoreOptionsBottomSheet> createState() =>
+  State<HLSAppUtilitiesBottomSheet> createState() =>
       _HLSMoreOptionsBottomSheetBottomSheetState();
 }
 
 class _HLSMoreOptionsBottomSheetBottomSheetState
-    extends State<HLSMoreOptionsBottomSheet> {
+    extends State<HLSAppUtilitiesBottomSheet> {
   @override
   void initState() {
     super.initState();
+    context.read<MeetingStore>().addBottomSheet(context);
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
   }
 
   @override
@@ -75,6 +82,7 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                   MoreOptionItem(
                       onTap: () async {
                         Navigator.pop(context);
+                        var meetingStore = context.read<MeetingStore>();
                         showModalBottomSheet(
                           isScrollControlled: true,
                           backgroundColor: HMSThemeColors.surfaceDim,
@@ -85,7 +93,7 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                           ),
                           context: context,
                           builder: (ctx) => ChangeNotifierProvider.value(
-                              value: context.read<MeetingStore>(),
+                              value: meetingStore,
                               child: (HMSRoomLayout.chatData == null ||
                                       (HMSRoomLayout.chatData?.isOverlay ??
                                           true))
