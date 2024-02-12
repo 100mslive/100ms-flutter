@@ -105,7 +105,7 @@ class PollResultCard extends StatelessWidget {
                                     activeColor:
                                         HMSThemeColors.onSurfaceHighEmphasis,
                                     checkColor: HMSThemeColors.surfaceDefault,
-                                    shape:const CircleBorder(),
+                                    shape: const CircleBorder(),
                                     value: true,
                                     onChanged: (value) {}),
                               if (!isVoteCountHidden)
