@@ -82,3 +82,13 @@ class HMSHLSPlayerPlaybackEventResponse {
 
   HMSHLSPlayerPlaybackEventResponse({required this.method, required this.data});
 }
+
+///HMSPollListenerMethodResponse contains all the responses sent from the poll channel
+///
+/// Checkout different responses in [HMSPollListenerMethod] enum
+class HMSPollListenerMethodResponse {
+  final HMSPollListenerMethod method;
+  final Map<dynamic, dynamic> data;
+
+  HMSPollListenerMethodResponse({required this.method, required this.data});
+}

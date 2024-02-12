@@ -3,7 +3,6 @@ package live.hms.hmssdk_flutter
 import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Context.*
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.projection.MediaProjectionManager
@@ -29,6 +28,7 @@ import kotlinx.coroutines.launch
 import live.hms.hmssdk_flutter.Constants.Companion.METHOD_CALL
 import live.hms.hmssdk_flutter.hls_player.HMSHLSPlayerAction
 import live.hms.hmssdk_flutter.methods.*
+import live.hms.hmssdk_flutter.poll_extension.HMSPollExtension
 import live.hms.hmssdk_flutter.views.HMSHLSPlayerFactory
 import live.hms.hmssdk_flutter.views.HMSTextureView
 import live.hms.hmssdk_flutter.views.HMSVideoViewFactory
@@ -36,7 +36,11 @@ import live.hms.video.audio.HMSAudioManager.*
 import live.hms.video.connection.stats.*
 import live.hms.video.error.HMSException
 import live.hms.video.events.AgentType
+import live.hms.video.interactivity.HmsPollUpdateListener
 import live.hms.video.media.tracks.*
+import live.hms.video.polls.HMSPollBuilder
+import live.hms.video.polls.models.HMSPollUpdateType
+import live.hms.video.polls.models.HmsPoll
 import live.hms.video.sdk.*
 import live.hms.video.sdk.models.*
 import live.hms.video.sdk.models.enums.*
@@ -61,12 +65,14 @@ class HmssdkFlutterPlugin :
     private var rtcStatsChannel: EventChannel? = null
     private var sessionStoreChannel: EventChannel? = null
     var hlsPlayerChannel: EventChannel? = null
+    private var pollsEventChannel : EventChannel? = null
     private var eventSink: EventChannel.EventSink? = null
     private var previewSink: EventChannel.EventSink? = null
     private var logsSink: EventChannel.EventSink? = null
     private var rtcSink: EventChannel.EventSink? = null
     private var sessionStoreSink: EventChannel.EventSink? = null
     var hlsPlayerSink: EventChannel.EventSink? = null
+    private var pollsSink: EventChannel.EventSink? = null
     private lateinit var activity: Activity
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
@@ -106,6 +112,9 @@ class HmssdkFlutterPlugin :
             this.hlsPlayerChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "hls_player_channel")
 
+            this.pollsEventChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger, "polls_event_channel")
+
             this.meetingEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Meeting event channel not found")
             this.channel?.setMethodCallHandler(this) ?: Log.e("Channel Error", "Event channel not found")
             this.previewChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Preview channel not found")
@@ -113,6 +122,7 @@ class HmssdkFlutterPlugin :
             this.rtcStatsChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "RTC Stats channel not found")
             this.sessionStoreChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Session Store channel not found")
             this.hlsPlayerChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "HLS Player channel not found")
+            this.pollsEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error","polls events channel not found")
             this.hmsVideoFactory = HMSVideoViewFactory(this)
             this.hmsHLSPlayerFactory = HMSHLSPlayerFactory(this)
 
@@ -274,6 +284,10 @@ class HmssdkFlutterPlugin :
 
             "get_peer_list_iterator", "peer_list_iterator_has_next", "peer_list_iterator_next" -> {
                 HMSPeerListIteratorAction.peerListIteratorAction(call, result, hmssdk!!)
+            }
+
+            "add_poll_update_listener", "remove_poll_update_listener", "quick_start_poll", "add_single_choice_poll_response", "add_multi_choice_poll_response", "stop_poll" -> {
+                pollActions(call,result)
             }
 
             else -> {
@@ -453,6 +467,21 @@ class HmssdkFlutterPlugin :
         }
     }
 
+    private var currentPolls = ArrayList<HmsPoll>()
+    private fun pollActions(call: MethodCall, result: Result){
+        when(call.method){
+            "add_poll_update_listener" -> {
+                hmssdk?.getHmsInteractivityCenter()?.pollUpdateListener = hmsPollListener
+            }
+            "remove_poll_update_listener" -> {
+                hmssdk?.getHmsInteractivityCenter()?.pollUpdateListener = null
+            }
+            else -> hmssdk?.let {
+                HMSPollAction.pollActions(call,result, it,currentPolls)
+            }
+        }
+    }
+
     override fun onDetachedFromEngine(
         @NonNull binding: FlutterPlugin.FlutterPluginBinding,
     ) {
@@ -464,12 +493,14 @@ class HmssdkFlutterPlugin :
             rtcStatsChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "RTC Stats channel not found")
             sessionStoreChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Session Store channel not found")
             hlsPlayerChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "HLS Player channel not found")
+            pollsEventChannel?.setStreamHandler(null)?: Log.e("Channel Error", "polls event  channel not found")
             eventSink = null
             previewSink = null
             rtcSink = null
             logsSink = null
             sessionStoreSink = null
             hlsPlayerSink = null
+            pollsSink = null
             hmssdkFlutterPlugin = null
             hmsBinaryMessenger = null
             hmsTextureRegistry = null
@@ -600,6 +631,8 @@ class HmssdkFlutterPlugin :
             this.sessionStoreSink = events
         } else if (nameOfEventSink == "hls_player") {
             this.hlsPlayerSink = events
+        } else if(nameOfEventSink == "polls") {
+            this.pollsSink = events
         }
     }
 
@@ -1544,11 +1577,7 @@ class HmssdkFlutterPlugin :
 
     private fun startScreenShare(result: Result) {
         androidScreenshareResult = result
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"), RECEIVER_EXPORTED)
-        }else {
-            activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"))
-        }
+        activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"))
         val mediaProjectionManager: MediaProjectionManager =
             activity.getSystemService(
                 Context.MEDIA_PROJECTION_SERVICE,
@@ -1613,11 +1642,7 @@ class HmssdkFlutterPlugin :
     ) {
         androidAudioShareResult = result
         mode = call.argument<String>("audio_mixing_mode")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"), RECEIVER_EXPORTED)
-        }else {
-            activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"),)
-        }
+        activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"))
         val mediaProjectionManager: MediaProjectionManager? =
             activity.getSystemService(
                 Context.MEDIA_PROJECTION_SERVICE,
@@ -2076,4 +2101,37 @@ class HmssdkFlutterPlugin :
                 }
             }
         }
+
+    private val hmsPollListener = object : HmsPollUpdateListener{
+        override fun onPollUpdate(hmsPoll: HmsPoll, hmsPollUpdateType: HMSPollUpdateType) {
+
+            if(hmsPollUpdateType == HMSPollUpdateType.started){
+                currentPolls.add(hmsPoll)
+            } else if(hmsPollUpdateType == HMSPollUpdateType.resultsupdated){
+                val index = currentPolls.indexOfFirst { it.pollId == hmsPoll.pollId }
+                if(index != -1){
+                    currentPolls[index] = hmsPoll
+                }
+            } else if(hmsPollUpdateType == HMSPollUpdateType.stopped){
+                val index = currentPolls.indexOfFirst { it.pollId == hmsPoll.pollId }
+                if(index != -1){
+                    currentPolls.removeAt(index)
+                }
+            }
+
+            val args = HashMap<String, Any?>()
+            args["event_name"] = "on_poll_update"
+
+            val pollHashMap = HashMap<String, Any?>()
+            pollHashMap["poll"] = HMSPollExtension.toDictionary(hmsPoll)
+            pollHashMap["poll_update_type"] = HMSPollExtension.getPollUpdateType(hmsPollUpdateType)
+            args["data"] = pollHashMap
+
+            CoroutineScope(Dispatchers.Main).launch {
+                pollsSink?.success(args)
+            }
+        }
+    }
+
+
 }

@@ -4,12 +4,13 @@ import 'dart:developer';
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 ///Project imports
+import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/live_badge.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
@@ -89,24 +90,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                                           HMSStreamingState.started),
                               builder: (_, isHLSStarted, __) {
                                 return isHLSStarted
-                                    ? Container(
-                                        height: 24,
-                                        width: 43,
-                                        decoration: BoxDecoration(
-                                            color: HMSThemeColors
-                                                .alertErrorDefault,
-                                            borderRadius:
-                                                BorderRadius.circular(4)),
-                                        child: Center(
-                                          child: HMSTitleText(
-                                              text: "LIVE",
-                                              fontSize: 10,
-                                              lineHeight: 16,
-                                              letterSpacing: 1.5,
-                                              textColor: HMSThemeColors
-                                                  .alertErrorBrighter),
-                                        ),
-                                      )
+                                    ? const LiveBadge()
                                     : Container();
                               }),
                           const SizedBox(

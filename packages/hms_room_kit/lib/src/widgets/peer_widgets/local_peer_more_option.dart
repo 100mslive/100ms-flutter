@@ -30,6 +30,7 @@ class LocalPeerMoreOption extends StatelessWidget {
                 ///[peerTrackNode] is the peerTrackNode of the peer whose more option is clicked
                 ///We only show the modal bottom sheet if the peer is the local peer
                 var peerTrackNode = context.read<PeerTrackNode>();
+                var meetingStore = context.read<MeetingStore>();
                 showModalBottomSheet(
                   isScrollControlled: true,
                   backgroundColor: HMSThemeColors.surfaceDim,
@@ -40,10 +41,10 @@ class LocalPeerMoreOption extends StatelessWidget {
                   ),
                   context: context,
                   builder: (ctx) => ChangeNotifierProvider.value(
-                      value: context.read<MeetingStore>(),
+                      value: meetingStore,
                       child: LocalPeerBottomSheet(
                         isInsetTile: isInsetTile,
-                        meetingStore: context.read<MeetingStore>(),
+                        meetingStore: meetingStore,
                         peerTrackNode: peerTrackNode,
                         callbackFunction: callbackFunction,
                       )),

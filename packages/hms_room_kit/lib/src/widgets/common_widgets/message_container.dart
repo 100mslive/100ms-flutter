@@ -100,6 +100,7 @@ class MessageContainer extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
+                          var meetingStore = context.read<MeetingStore>();
                           showModalBottomSheet(
                             isScrollControlled: true,
                             backgroundColor: HMSThemeColors.surfaceDim,
@@ -110,7 +111,7 @@ class MessageContainer extends StatelessWidget {
                             ),
                             context: context,
                             builder: (ctx) => ChangeNotifierProvider.value(
-                                value: context.read<MeetingStore>(),
+                                value: meetingStore,
                                 child: ChatUtilitiesBottomSheet(
                                   message: message,
                                 )),

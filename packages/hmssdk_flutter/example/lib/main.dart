@@ -1,5 +1,6 @@
 //Dart imports
 import 'dart:async';
+import 'dart:ui';
 
 //Package imports
 import 'package:firebase_core/firebase_core.dart';

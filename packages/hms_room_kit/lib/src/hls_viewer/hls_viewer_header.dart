@@ -15,6 +15,7 @@ import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/live_badge.dart';
 
 ///[HLSViewerHeader] is the header of the HLS Viewer screen
 class HLSViewerHeader extends StatelessWidget {
@@ -74,24 +75,7 @@ class HLSViewerHeader extends StatelessWidget {
                             meetingStore.streamingType['rtmp'] ==
                                 HMSStreamingState.started),
                     builder: (_, isHLSStarted, __) {
-                      return isHLSStarted
-                          ? Container(
-                              height: 24,
-                              width: 43,
-                              decoration: BoxDecoration(
-                                  color: HMSThemeColors.alertErrorDefault,
-                                  borderRadius: BorderRadius.circular(4)),
-                              child: Center(
-                                child: HMSTitleText(
-                                    text: "LIVE",
-                                    fontSize: 10,
-                                    lineHeight: 16,
-                                    letterSpacing: 1.5,
-                                    textColor:
-                                        HMSThemeColors.alertErrorBrighter),
-                              ),
-                            )
-                          : Container();
+                      return isHLSStarted ? const LiveBadge() : Container();
                     }),
                 const SizedBox(
                   width: 8,

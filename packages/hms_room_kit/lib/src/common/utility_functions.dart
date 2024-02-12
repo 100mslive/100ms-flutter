@@ -5,10 +5,12 @@ import 'dart:math' as math;
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+///Project imports
+import 'package:hms_room_kit/hms_room_kit.dart';
 
 ///This class contains the utility functions used in the app
 class Utilities {
@@ -116,6 +118,25 @@ class Utilities {
       return '${num.toStringAsFixed(num.truncateToDouble() == num ? 0 : 1)}K';
     } else {
       return number.toString();
+    }
+  }
+
+  ///This method returns the scale of the toast according to the index and the total number of toasts
+  static double getToastScale(int index, int toastsCount) {
+    if (toastsCount == 1) {
+      return 1;
+    } else if (toastsCount == 2) {
+      if (index == 0) {
+        return 0.95;
+      }
+      return 1;
+    } else {
+      if (index == 0) {
+        return 0.90;
+      } else if (index == 1) {
+        return 0.95;
+      }
+      return 1;
     }
   }
 
@@ -267,6 +288,17 @@ class Utilities {
     //     text: message,
     //     contentColor: Colors.black87,
     //     duration: Duration(seconds: time));
+  }
+
+  static String getQuestionType(HMSPollQuestionType questionType) {
+    switch (questionType) {
+      case HMSPollQuestionType.singleChoice:
+        return "SINGLE CHOICE";
+      case HMSPollQuestionType.multiChoice:
+        return "MULTI CHOICE";
+      default:
+        return "SINGLE CHOICE";
+    }
   }
 
   static Future<String> getStringData({required String key}) async {

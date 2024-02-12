@@ -45,11 +45,12 @@ class HMSListenableButton extends StatelessWidget {
                 style: ButtonStyle(
                     shadowColor: MaterialStateProperty.all(
                         shadowColor ?? HMSThemeColors.surfaceDim),
-                    backgroundColor: (textController.text.isEmpty || isDisabled)
-                        ? MaterialStateProperty.all(
-                            HMSThemeColors.primaryDisabled)
-                        : MaterialStateProperty.all(
-                            HMSThemeColors.primaryDefault),
+                    backgroundColor:
+                        (textController.text.trim().isEmpty || isDisabled)
+                            ? MaterialStateProperty.all(
+                                HMSThemeColors.primaryDisabled)
+                            : MaterialStateProperty.all(
+                                HMSThemeColors.primaryDefault),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
