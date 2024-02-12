@@ -24,6 +24,9 @@ https://100ms.atlassian.net/browse/FLUT-233
 - host created poll but VNRT getting notification instantly even when timed metadata is ON
 https://100ms.atlassian.net/browse/FLUT-220
 
+- VNRT user not able to see poll if rejoin session
+https://100ms.atlassian.net/browse/FLUT-235
+
 Room Kit: 1.0.10
 Core SDK: 1.9.7
 Android SDK: 2.9.0
