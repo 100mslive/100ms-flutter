@@ -27,7 +27,7 @@ https://100ms.atlassian.net/browse/FLUT-220
 - VNRT user not able to see poll if rejoin session
 https://100ms.atlassian.net/browse/FLUT-235
 
-Room Kit: 1.0.10
-Core SDK: 1.9.7
+Room Kit: 1.0.12
+Core SDK: 1.9.9
 Android SDK: 2.9.0
 iOS SDK: 1.5.0

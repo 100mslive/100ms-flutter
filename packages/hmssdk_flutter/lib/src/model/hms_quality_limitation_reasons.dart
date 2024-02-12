@@ -1,4 +1,4 @@
-import 'package:hmssdk_flutter/src/enum/hms_Quality_limitation_reason.dart';
+import 'package:hmssdk_flutter/src/enum/hms_quality_limitation_reason_enum.dart';
 
 class HMSQualityLimitationReasons {
   double? bandWidth;

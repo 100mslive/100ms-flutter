@@ -575,9 +575,6 @@ extension PlatformMethodValues on PlatformMethod {
       case 'on_re_connected':
         return PlatformMethod.onReconnected;
 
-      case 'on_re_connected':
-        return PlatformMethod.onReconnected;
-
       case 'switch_audio':
         return PlatformMethod.switchAudio;
 
