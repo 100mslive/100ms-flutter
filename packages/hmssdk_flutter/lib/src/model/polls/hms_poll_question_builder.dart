@@ -1,5 +1,8 @@
+///Project imports
 import 'package:hmssdk_flutter/src/enum/hms_poll_enum.dart';
 
+///[HMSPollQuestionBuilder] is used to create questions for polls
+///It contains getters and setters for poll question builder properties
 class HMSPollQuestionBuilder {
   bool? _canSkip;
   bool? _canChangeResponse;

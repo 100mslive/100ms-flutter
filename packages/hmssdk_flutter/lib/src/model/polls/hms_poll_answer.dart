@@ -1,5 +1,7 @@
+///Project imports
 import 'package:hmssdk_flutter/src/enum/hms_poll_enum.dart';
 
+///[HMSPollAnswer] class represents answer to poll questions
 class HMSPollAnswer {
   final String? answerText;
   final Duration duration;
@@ -21,6 +23,7 @@ class HMSPollAnswer {
     required this.update,
   });
 
+  ///Method to get HMSPollAnswer from map
   factory HMSPollAnswer.fromMap(Map map) {
     return HMSPollAnswer(
       answerText: map['answer'],
@@ -37,6 +40,7 @@ class HMSPollAnswer {
     );
   }
 
+  ///Method to get map from HMSPollAnswer Object
   Map<String, dynamic> toMap() {
     return {
       'answer': answerText,

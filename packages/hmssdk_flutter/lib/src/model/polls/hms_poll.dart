@@ -1,7 +1,13 @@
+///Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/model/hms_date_extension.dart';
 import 'package:hmssdk_flutter/src/model/polls/hms_poll_result_display.dart';
 
+///[HMSPoll] class represents poll
+///
+///This class encapsulates various properties and methods related to a poll, including its ID, title, anonymity status,
+///category (poll or quiz), creator, duration, user tracking mode, question count, questions, result display settings,
+///roles that can view responses, roles that can vote, start time, starter, current state, stop time, and stopper.
 class HMSPoll {
   final String pollId;
   final String title;

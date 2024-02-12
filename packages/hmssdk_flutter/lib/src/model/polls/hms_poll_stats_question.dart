@@ -1,5 +1,7 @@
+///Project imports
 import 'package:hmssdk_flutter/src/enum/hms_poll_enum.dart';
 
+///The [HMSPollStatsQuestion] class represents statistics for a single question in a poll.
 class HMSPollStatsQuestion {
   final int attemptedTimes;
   final int? correct;

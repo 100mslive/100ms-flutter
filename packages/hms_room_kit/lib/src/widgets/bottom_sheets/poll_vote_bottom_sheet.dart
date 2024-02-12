@@ -1,7 +1,12 @@
 ///Dart imports
 import 'dart:math' as math;
 
+///Package imports
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/poll_store.dart';
@@ -11,9 +16,8 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/live_badge.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/voting_flow_widgets/poll_result_card.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/voting_flow_widgets/poll_vote_card.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:provider/provider.dart';
 
+///[PollVoteBottomSheet] renders the voting bottom sheet for polls
 class PollVoteBottomSheet extends StatefulWidget {
   const PollVoteBottomSheet({super.key});
 

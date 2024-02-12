@@ -1,8 +1,12 @@
+///Package imports
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///Project imports
+import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
+
+///[PollResultCard] renders the results for polls
 class PollResultCard extends StatelessWidget {
   final int questionNumber;
   final int totalQuestions;

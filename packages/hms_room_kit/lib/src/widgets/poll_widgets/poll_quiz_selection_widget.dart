@@ -1,7 +1,9 @@
+///Package imports
 import 'package:flutter/cupertino.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/poll_quiz_selection_button.dart';
 
+///[PollQuizSelectionWidget] renders the widget for poll or quiz selection
 class PollQuizSelectionWidget extends StatefulWidget {
   const PollQuizSelectionWidget({super.key});
 

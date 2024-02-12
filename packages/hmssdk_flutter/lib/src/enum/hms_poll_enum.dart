@@ -1,3 +1,4 @@
+///[HMSPollUserTrackingMode] is the mode based on which the app identifies the user
 enum HMSPollUserTrackingMode { user_id, peer_id, username }
 
 extension HMSPollUserTrackingModeValues on HMSPollUserTrackingMode {
@@ -30,6 +31,7 @@ extension HMSPollUserTrackingModeValues on HMSPollUserTrackingMode {
   }
 }
 
+///The [HMSPollCategory] enum categorizes whether a poll or quiz is being represented.
 enum HMSPollCategory { poll, quiz }
 
 extension HMSPollCategoryValues on HMSPollCategory {
@@ -56,6 +58,7 @@ extension HMSPollCategoryValues on HMSPollCategory {
   }
 }
 
+///[HMSPollQuestionType] enum categorizes the type of question
 enum HMSPollQuestionType { singleChoice, multiChoice, shortAnswer, longAnswer }
 
 extension HMSPollQuestionTypeValues on HMSPollQuestionType {
@@ -92,6 +95,7 @@ extension HMSPollQuestionTypeValues on HMSPollQuestionType {
   }
 }
 
+///[HMSPollState] enum represents the different states a poll can be in.
 enum HMSPollState { started, stopped, created }
 
 extension HMSPollStateValues on HMSPollState {
@@ -122,6 +126,7 @@ extension HMSPollStateValues on HMSPollState {
   }
 }
 
+///[HMSPollUpdateType] enum represents different types of updates that can occur in a poll.
 enum HMSPollUpdateType { started, stopped, resultsupdated }
 
 extension HMSPollUpdateTypeValues on HMSPollUpdateType {
@@ -140,6 +145,7 @@ extension HMSPollUpdateTypeValues on HMSPollUpdateType {
   }
 }
 
+///[HMSPollListenerMethod] contains the [HMSPollListener] methods
 enum HMSPollListenerMethod { onPollUpdate, unknown }
 
 extension HMSPollListenerMethodValues on HMSPollListenerMethod {

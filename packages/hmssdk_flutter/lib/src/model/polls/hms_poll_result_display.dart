@@ -1,5 +1,7 @@
+///Project imports
 import 'package:hmssdk_flutter/src/model/polls/hms_poll_stats_question.dart';
 
+///[HMSPollResultDisplay] class represents the poll results
 class HMSPollResultDisplay {
   final List<HMSPollStatsQuestion>? questions;
   final int? totalDistinctUsers;
