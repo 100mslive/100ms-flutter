@@ -2574,7 +2574,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onCue({required HMSHLSCue hlsCue}) {
-    log("vKohli onCue -> payload:${hlsCue.startDate}");
+    log("onCue -> payload:${hlsCue.startDate}");
     /**
      * Here we use a list of alignments and select an alignment at random and use it 
      * to position the toast for timed metadata
@@ -2673,7 +2673,7 @@ class MeetingStore extends ChangeNotifier
   @override
   void onPollUpdate(
       {required HMSPoll poll, required HMSPollUpdateType pollUpdateType}) {
-    log("vKohli onPollUpdate -> poll $poll updateType: $pollUpdateType startedAt: ${poll.startedAt}");
+    log("onPollUpdate -> poll $poll updateType: $pollUpdateType startedAt: ${poll.startedAt}");
     switch (pollUpdateType) {
       ///If the poll is started we add the poll in questions list
       case HMSPollUpdateType.started:
