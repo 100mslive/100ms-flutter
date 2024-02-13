@@ -136,21 +136,6 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ///List to render saved questions
-                    // ListView.builder(
-                    //   physics: const NeverScrollableScrollPhysics(),
-                    //   shrinkWrap: true,
-                    //   itemBuilder: (context, index) => Padding(
-                    //     padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    //     child: SavedQuestionWidget(
-                    //       questionNumber: index,
-                    //       totalQuestions: pollBuilder.questions.length,
-                    //       pollQuestionBuilder: pollBuilder.questions[index],
-                    //     ),
-                    //   ),
-                    //   itemCount: pollBuilder.questions.length,
-                    // ),
-
                     ///List to render poll form
                     ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),
@@ -289,6 +274,9 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
                           )),
                         )
                       ],
+                    ),
+                    const SizedBox(
+                      height: 64,
                     )
                   ],
                 ),

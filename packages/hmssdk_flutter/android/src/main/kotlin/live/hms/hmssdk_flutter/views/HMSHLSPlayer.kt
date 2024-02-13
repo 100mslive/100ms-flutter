@@ -2,8 +2,10 @@ package live.hms.hmssdk_flutter.views
 
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Context.RECEIVER_NOT_EXPORTED
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
@@ -116,7 +118,11 @@ class HMSHLSPlayer(
                          * onRoomUpdate or onJoin
                          */
                         player.play(streamUrl)
-                        context.registerReceiver(broadcastReceiver, IntentFilter(HLS_PLAYER_INTENT))
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            context.registerReceiver(broadcastReceiver, IntentFilter(HLS_PLAYER_INTENT), RECEIVER_NOT_EXPORTED)
+                        }else {
+                            context.registerReceiver(broadcastReceiver, IntentFilter(HLS_PLAYER_INTENT))
+                        }
 
                         /**
                          * Here we add the event listener to listen to the events

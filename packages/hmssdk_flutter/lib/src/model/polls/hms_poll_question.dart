@@ -1,8 +1,10 @@
+///Project imports
 import 'package:hmssdk_flutter/src/enum/hms_poll_enum.dart';
 import 'package:hmssdk_flutter/src/model/polls/hms_poll_answer.dart';
 import 'package:hmssdk_flutter/src/model/polls/hms_poll_question_answer.dart';
 import 'package:hmssdk_flutter/src/model/polls/hms_poll_question_option.dart';
 
+///[HMSPollQuestion] class represents poll question
 class HMSPollQuestion {
   final int questionId;
   final bool canSkip;

@@ -223,6 +223,8 @@ class _OverlayChatComponentState extends State<OverlayChatComponent> {
                                     ),
                                     GestureDetector(
                                       onTap: () {
+                                        var meetingStore =
+                                            context.read<MeetingStore>();
                                         showModalBottomSheet(
                                           isScrollControlled: true,
                                           backgroundColor:
@@ -235,8 +237,7 @@ class _OverlayChatComponentState extends State<OverlayChatComponent> {
                                           context: context,
                                           builder: (ctx) =>
                                               ChangeNotifierProvider.value(
-                                                  value: context
-                                                      .read<MeetingStore>(),
+                                                  value: meetingStore,
                                                   child:
                                                       ChatUtilitiesBottomSheet(
                                                     message: data.item1[index],

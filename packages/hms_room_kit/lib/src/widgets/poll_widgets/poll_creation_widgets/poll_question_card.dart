@@ -33,12 +33,16 @@ class PollQuestionCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: HMSTitleText(
-                      text: context.read<HMSPollStore>().poll.title,
-                      textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                      letterSpacing: 0.15,
-                      maxLines: 3,
-                    ),
+                    child: Selector<HMSPollStore, String>(
+                        selector: (_, hmsPollStore) => hmsPollStore.poll.title,
+                        builder: (_, title, __) {
+                          return HMSTitleText(
+                            text: title,
+                            textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                            letterSpacing: 0.15,
+                            maxLines: 3,
+                          );
+                        }),
                   ),
                   Selector<HMSPollStore, HMSPollState>(
                       selector: (_, hmsPollStore) => hmsPollStore.poll.state,
@@ -60,7 +64,7 @@ class PollQuestionCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   HMSButton(
-                      width: 75,
+                      width: MediaQuery.of(context).size.width * 0.23,
                       onPressed: () {
                         var meetingStore = context.read<MeetingStore>();
                         var pollStore = context.read<HMSPollStore>();

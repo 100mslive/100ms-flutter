@@ -1,20 +1,44 @@
+///Package imports
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///Project imports
+import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
+
+///[PollResultCard] renders the results for polls
 class PollResultCard extends StatelessWidget {
   final int questionNumber;
   final int totalQuestions;
   final HMSPollQuestion question;
   final int totalVotes;
+  final bool isVoteCountHidden;
 
   const PollResultCard(
       {super.key,
       required this.questionNumber,
       required this.totalQuestions,
       required this.question,
-      required this.totalVotes});
+      required this.totalVotes,
+      required this.isVoteCountHidden});
+
+  bool isSelectedOption(int index) {
+    if (question.type == HMSPollQuestionType.singleChoice) {
+      for (var response in question.myResponses) {
+        if (index == response.selectedOption) {
+          return true;
+        }
+      }
+    } else if (question.type == HMSPollQuestionType.multiChoice) {
+      for (var response in question.myResponses) {
+        if (response.selectedOptions?.contains(index) ?? false) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -71,52 +95,71 @@ class PollResultCard extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              HMSSubheadingText(
-                                  text: question.options[index].text ?? "",
-                                  textColor:
-                                      HMSThemeColors.onSurfaceHighEmphasis),
-                              HMSSubheadingText(
-                                  text:
-                                      "${question.options[index].voteCount.toString()} vote${question.options[index].voteCount > 1 ? "s" : ""}",
-                                  textColor:
-                                      HMSThemeColors.onSurfaceMediumEmphasis)
+                              Expanded(
+                                child: HMSSubheadingText(
+                                    text: question.options[index].text ?? "",
+                                    maxLines: 3,
+                                    textColor:
+                                        HMSThemeColors.onSurfaceHighEmphasis),
+                              ),
+                              if (isVoteCountHidden &&
+                                  isSelectedOption(
+                                      question.options[index].index))
+                                Checkbox(
+                                    activeColor:
+                                        HMSThemeColors.onSurfaceHighEmphasis,
+                                    checkColor: HMSThemeColors.surfaceDefault,
+                                    shape: const CircleBorder(),
+                                    value: true,
+                                    onChanged: (value) {}),
+                              if (!isVoteCountHidden)
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: HMSSubheadingText(
+                                      text:
+                                          "${question.options[index].voteCount.toString()} vote${question.options[index].voteCount > 1 ? "s" : ""}",
+                                      textColor: HMSThemeColors
+                                          .onSurfaceMediumEmphasis),
+                                )
                             ],
                           ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
+                          if (!isVoteCountHidden)
+                            const SizedBox(
+                              height: 8,
                             ),
-                            height: 8,
-                            child: Flex(
-                              direction: Axis.horizontal,
-                              children: [
-                                Expanded(
-                                    flex: (question.options[index].voteCount),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: HMSThemeColors.primaryDefault,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    )),
-                                Expanded(
-                                    flex: totalVotes -
-                                        question.options[index].voteCount,
-                                    child: Container(
+                          if (!isVoteCountHidden)
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              height: 8,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      flex: (question.options[index].voteCount),
+                                      child: Container(
                                         decoration: BoxDecoration(
-                                      color: HMSThemeColors.surfaceBright,
-                                      borderRadius: BorderRadius.circular(8),
-                                    )))
-                              ],
-                            ),
-                          )
+                                          color: HMSThemeColors.primaryDefault,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      )),
+                                  Expanded(
+                                      flex: totalVotes -
+                                          question.options[index].voteCount,
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                        color: HMSThemeColors.surfaceBright,
+                                        borderRadius: BorderRadius.circular(8),
+                                      )))
+                                ],
+                              ),
+                            )
                         ],
                       ),
                     );
                   }),
-              if (question.voted)
+              if (question.myResponses.isNotEmpty)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

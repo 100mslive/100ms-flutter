@@ -5,6 +5,49 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+# 1.9.9 - 2024-02-12
+
+| Package                                | Version                                                                                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| hms_room_kit                | 1.0.12  |
+| hmssdk_flutter              | 1.9.9   |
+
+### ✨ Added
+
+- Introducing Polls
+
+  - APIs for Comprehensive Poll Management:
+    - `quickStartPoll` to start polls
+    - `addSingleChoicePollResponse` & `addMultiChoicePollResponse` for adding single and multi choice response
+    - `stopPoll` to stop polls
+
+  - Poll Update Listeners for Real-Time Notifications:
+    - Use `addPollUpdateListener` to start listening to poll updates
+    - Use `removePollUpdateListener` to stop listening to poll updates
+
+  - Enhanced Poll Permissions within `HMSPermissions`:
+    - `pollRead` property ensures controlled read access to poll results and details.
+    - `pollWrite` property enables secure write access, allowing for poll creation and response submission.
+
+Updated to Android SDK 2.9.0 & iOS SDK 1.5.0
+
+**Full Changelog**: [1.9.8...1.9.9](https://github.com/100mslive/100ms-flutter/compare/1.9.8...1.9.9)
+
+# 1.9.8 - 2024-02-01
+
+| Package                                | Version                                                                                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| hms_room_kit                | 1.0.11  |
+| hmssdk_flutter              | 1.9.8   |
+
+### 🛠️ Changed
+
+- Fixed broadcast receiver issues on android 14 devices
+
+  Learn more about this issue [here](https://developer.android.com/about/versions/14/behavior-changes-14#runtime-receivers-exported)
+
+**Full Changelog**: [1.9.7...1.9.8](https://github.com/100mslive/100ms-flutter/compare/1.9.7...1.9.8)
+
 # 1.9.7 - 2024-01-18
 
 | Package                                | Version                                                                                                                                  |

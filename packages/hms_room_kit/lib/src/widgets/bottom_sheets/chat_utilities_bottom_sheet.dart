@@ -32,6 +32,7 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
   @override
   initState() {
     super.initState();
+    context.read<MeetingStore>().addBottomSheet(context);
     isPinned = context.read<MeetingStore>().pinnedMessages.indexWhere(
             (element) => element["id"] == widget.message.messageId) !=
         -1;
@@ -39,6 +40,12 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
     isBlocked = context.read<MeetingStore>().blackListedUserIds.indexWhere(
             (userId) => userId == widget.message.sender?.customerUserId) !=
         -1;
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
   }
 
   @override

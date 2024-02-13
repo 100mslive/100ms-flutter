@@ -1,3 +1,4 @@
+///[HMSPollQuestionAnswer] class represents the answer to poll questions
 class HMSPollQuestionAnswer {
   final bool hidden;
   final int? option;

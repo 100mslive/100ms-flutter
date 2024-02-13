@@ -1,5 +1,7 @@
+///Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///The[HMSPollAnswerResponse] class represents the poll answer
 class HMSPollAnswerResponse {
   final bool correct;
   final HMSException? error;

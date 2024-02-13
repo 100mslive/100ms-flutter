@@ -8,6 +8,7 @@ import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
+import 'package:provider/provider.dart';
 
 ///[RemotePeerBottomSheet] is a widget that is used to render the bottom sheet for remote peers
 ///This bottom sheet is shown when the more option button is clicked on a remote peer tile
@@ -23,6 +24,18 @@ class RemotePeerBottomSheet extends StatefulWidget {
 }
 
 class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<MeetingStore>().addBottomSheet(context);
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(

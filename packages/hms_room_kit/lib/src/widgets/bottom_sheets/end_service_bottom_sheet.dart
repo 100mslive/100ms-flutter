@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 
 ///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
+import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
+import 'package:provider/provider.dart';
 
 ///[EndServiceBottomSheet] is a bottom sheet that is used to render the bottom sheet to stop services
 ///It has following parameters:
@@ -14,7 +16,7 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 /// [buttonText] is the text of the button
 /// [onButtonPressed] is the function that is called when the button is pressed
 /// [buttonColor] is the color of the button
-class EndServiceBottomSheet extends StatelessWidget {
+class EndServiceBottomSheet extends StatefulWidget {
   final Widget? bottomSheetTitleIcon;
   final Widget? title;
   final Widget? subTitle;
@@ -32,6 +34,23 @@ class EndServiceBottomSheet extends StatelessWidget {
       this.buttonColor});
 
   @override
+  State<EndServiceBottomSheet> createState() => _EndServiceBottomSheetState();
+}
+
+class _EndServiceBottomSheetState extends State<EndServiceBottomSheet> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<MeetingStore>().addBottomSheet(context);
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
       heightFactor: 0.25,
@@ -46,11 +65,11 @@ class EndServiceBottomSheet extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      bottomSheetTitleIcon ?? const SizedBox(),
+                      widget.bottomSheetTitleIcon ?? const SizedBox(),
                       const SizedBox(
                         width: 8,
                       ),
-                      title ?? const SizedBox()
+                      widget.title ?? const SizedBox()
                     ],
                   ),
                   const Row(
@@ -64,7 +83,7 @@ class EndServiceBottomSheet extends StatelessWidget {
               const SizedBox(
                 height: 8,
               ),
-              subTitle ?? const SizedBox(),
+              widget.subTitle ?? const SizedBox(),
               const SizedBox(
                 height: 16,
               ),
@@ -73,14 +92,15 @@ class EndServiceBottomSheet extends StatelessWidget {
                       shadowColor:
                           MaterialStateProperty.all(HMSThemeColors.surfaceDim),
                       backgroundColor: MaterialStateProperty.all(
-                          buttonColor ?? HMSThemeColors.alertErrorDefault),
+                          widget.buttonColor ??
+                              HMSThemeColors.alertErrorDefault),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ))),
                   onPressed: () {
-                    if (onButtonPressed != null) {
-                      onButtonPressed!();
+                    if (widget.onButtonPressed != null) {
+                      widget.onButtonPressed!();
                     }
                     Navigator.pop(context);
                   },
@@ -88,7 +108,7 @@ class EndServiceBottomSheet extends StatelessWidget {
                     height: 48,
                     child: Center(
                       child: HMSTitleText(
-                          text: buttonText ?? "",
+                          text: widget.buttonText ?? "",
                           textColor: HMSThemeColors.alertErrorBrighter),
                     ),
                   ))

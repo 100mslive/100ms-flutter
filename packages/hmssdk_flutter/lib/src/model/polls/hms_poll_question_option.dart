@@ -1,3 +1,4 @@
+///[HMSPollQuestionOption] represents options for poll questions
 class HMSPollQuestionOption {
   final int index;
   final String? text;

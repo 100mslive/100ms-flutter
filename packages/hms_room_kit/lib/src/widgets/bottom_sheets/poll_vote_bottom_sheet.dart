@@ -1,7 +1,12 @@
 ///Dart imports
 import 'dart:math' as math;
 
+///Package imports
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/poll_store.dart';
@@ -11,11 +16,27 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/live_badge.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/voting_flow_widgets/poll_result_card.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/voting_flow_widgets/poll_vote_card.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:provider/provider.dart';
 
-class PollVoteBottomSheet extends StatelessWidget {
+///[PollVoteBottomSheet] renders the voting bottom sheet for polls
+class PollVoteBottomSheet extends StatefulWidget {
   const PollVoteBottomSheet({super.key});
+
+  @override
+  State<PollVoteBottomSheet> createState() => _PollVoteBottomSheetState();
+}
+
+class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<MeetingStore>().addBottomSheet(context);
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +108,7 @@ class PollVoteBottomSheet extends StatelessWidget {
               ),
               HMSTitleText(
                 text:
-                    "${hmsPollStore.poll.startedBy?.name.substring(0, math.min(15, hmsPollStore.poll.startedBy?.name.length ?? 0)) ?? ""} started a poll",
+                    "${hmsPollStore.poll.createdBy?.name.substring(0, math.min(15, hmsPollStore.poll.createdBy?.name.length ?? 0)) ?? ""} started a poll",
                 textColor: HMSThemeColors.onSurfaceHighEmphasis,
                 letterSpacing: 0.15,
               ),
@@ -109,11 +130,20 @@ class PollVoteBottomSheet extends StatelessWidget {
                                 in poll.questions![index].options) {
                               totalVotes += element.voteCount;
                             }
+                            var isVoteCountHidden = false;
+                            if (poll.rolesThatCanViewResponses.isNotEmpty &&
+                                !poll.rolesThatCanViewResponses.contains(context
+                                    .read<MeetingStore>()
+                                    .localPeer
+                                    ?.role)) {
+                              isVoteCountHidden = true;
+                            }
                             return PollResultCard(
                               questionNumber: index,
                               totalQuestions: poll.questions?.length ?? 0,
                               question: poll.questions![index],
                               totalVotes: totalVotes,
+                              isVoteCountHidden: isVoteCountHidden,
                             );
                           } else {
                             return PollVoteCard(
@@ -139,9 +169,11 @@ class PollVoteBottomSheet extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               HMSButton(
-                                width: 100,
+                                width: MediaQuery.of(context).size.width * 0.3,
                                 onPressed: () {
-                                  context.read<MeetingStore>().stopPoll(hmsPollStore.poll);
+                                  context
+                                      .read<MeetingStore>()
+                                      .stopPoll(hmsPollStore.poll);
                                 },
                                 childWidget: HMSTitleText(
                                     text: "End Poll",

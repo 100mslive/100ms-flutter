@@ -1,6 +1,7 @@
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/poll_and_quiz_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart' as badge;
 
@@ -14,20 +15,27 @@ import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/overlay_participants_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
 
-///[HLSMoreOptionsBottomSheet] is a bottom sheet that is used to show more options in the meeting
-class HLSMoreOptionsBottomSheet extends StatefulWidget {
-  const HLSMoreOptionsBottomSheet({super.key});
+///[HLSAppUtilitiesBottomSheet] is a bottom sheet that is used to show more options in the meeting
+class HLSAppUtilitiesBottomSheet extends StatefulWidget {
+  const HLSAppUtilitiesBottomSheet({super.key});
 
   @override
-  State<HLSMoreOptionsBottomSheet> createState() =>
+  State<HLSAppUtilitiesBottomSheet> createState() =>
       _HLSMoreOptionsBottomSheetBottomSheetState();
 }
 
 class _HLSMoreOptionsBottomSheetBottomSheetState
-    extends State<HLSMoreOptionsBottomSheet> {
+    extends State<HLSAppUtilitiesBottomSheet> {
   @override
   void initState() {
     super.initState();
+    context.read<MeetingStore>().addBottomSheet(context);
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
   }
 
   @override
@@ -67,13 +75,14 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
 
             ///Here we render the participants button and the change name button
             Wrap(
-              spacing: 12,
               runSpacing: 24,
+              spacing: MediaQuery.of(context).size.width * 0.005,
               children: [
                 if (HMSRoomLayout.isParticipantsListEnabled)
                   MoreOptionItem(
                       onTap: () async {
                         Navigator.pop(context);
+                        var meetingStore = context.read<MeetingStore>();
                         showModalBottomSheet(
                           isScrollControlled: true,
                           backgroundColor: HMSThemeColors.surfaceDim,
@@ -84,7 +93,7 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                           ),
                           context: context,
                           builder: (ctx) => ChangeNotifierProvider.value(
-                              value: context.read<MeetingStore>(),
+                              value: meetingStore,
                               child: (HMSRoomLayout.chatData == null ||
                                       (HMSRoomLayout.chatData?.isOverlay ??
                                           true))
@@ -159,7 +168,50 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                             HMSThemeColors.onSurfaceHighEmphasis,
                             BlendMode.srcIn),
                       ),
-                      optionText: "Change Name")
+                      optionText: "Change Name"),
+
+                ///This renders the polls and quizzes option
+                if ((context
+                            .read<MeetingStore>()
+                            .localPeer
+                            ?.role
+                            .permissions
+                            .pollRead ??
+                        false) ||
+                    (context
+                            .read<MeetingStore>()
+                            .localPeer
+                            ?.role
+                            .permissions
+                            .pollWrite ??
+                        false))
+                  MoreOptionItem(
+                      onTap: () {
+                        var meetingStore = context.read<MeetingStore>();
+                        Navigator.pop(context);
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: HMSThemeColors.surfaceDim,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16)),
+                          ),
+                          context: context,
+                          builder: (ctx) => ChangeNotifierProvider.value(
+                              value: meetingStore,
+                              child: const PollAndQuizBottomSheet()),
+                        );
+                      },
+                      optionIcon: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/src/assets/icons/polls.svg",
+                        height: 20,
+                        width: 20,
+                        colorFilter: ColorFilter.mode(
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
+                      ),
+                      optionText: "Polls and Quizzes"),
               ],
             ),
           ],

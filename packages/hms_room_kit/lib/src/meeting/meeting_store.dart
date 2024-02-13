@@ -2,7 +2,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:math' as math;
 
 //Package imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -253,9 +252,13 @@ class MeetingStore extends ChangeNotifier
   Map<String, dynamic> chatControls = {"enabled": true, "updatedBy": null};
 
   ///Polls
-
   ///Stores the poll questions
   List<HMSPollStore> pollQuestions = [];
+
+  List<HMSPollStore> hlsViewerPolls = [];
+
+  ///List of bottom sheets currently open
+  List<BuildContext> bottomSheets = [];
 
   Future<HMSException?> join(String userName, String roomCode,
       {HMSConfig? roomConfig}) async {
@@ -1377,6 +1380,26 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
+  ///Function to add bottomsheet context in the bottomsheets list
+  void addBottomSheet(BuildContext context) {
+    bottomSheets.add(context);
+  }
+
+  ///Function to remove bottomsheet context from bottomsheets list
+  void removeBottomSheet(BuildContext context) {
+    bottomSheets.remove(context);
+  }
+
+  ///Function to remove all bottomsheets from list
+  void removeAllBottomSheets() {
+    for (var bottomSheetContext in bottomSheets) {
+      if (bottomSheetContext.mounted) {
+        Navigator.pop(bottomSheetContext);
+      }
+    }
+    bottomSheets.clear();
+  }
+
   void removePeer(HMSPeer peer) {
     peers.remove(peer);
     participantsInMeetingMap[peer.role.name]
@@ -1518,6 +1541,7 @@ class MeetingStore extends ChangeNotifier
 
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
+          removeAllBottomSheets();
           getSpotlightPeer();
           setPreviousRole(localPeer?.role.name ?? "");
           resetLayout(peer.role.name);
@@ -2550,12 +2574,32 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onCue({required HMSHLSCue hlsCue}) {
+    log("onCue -> payload:${hlsCue.startDate}");
     /**
      * Here we use a list of alignments and select an alignment at random and use it 
      * to position the toast for timed metadata
      */
-
     if (hlsCue.payload != null) {
+      /*
+       * Below code shows the poll for hls-viewer who are viewing stream at a delay.
+       * Here we get pollId from the payload and we find the poll object
+       * from `onPollUpdate` we use this object to show the toast for the poll.
+       * Mock payload for poll looks like "poll:{poll_id}"
+       */
+      if (hlsCue.payload!.startsWith("poll:")) {
+        var pollId = hlsCue.payload?.replaceFirst(RegExp(r'^poll:'), "");
+        int? index = hlsViewerPolls
+            .indexWhere((element) => element.poll.pollId == pollId);
+        if (index != -1) {
+          toasts.add(HMSToastModel(hlsViewerPolls[index],
+              hmsToastType: HMSToastsType.pollStartedToast));
+          pollQuestions.add(hlsViewerPolls[index]);
+          hlsViewerPolls.removeAt(index);
+          notifyListeners();
+        }
+      }
+
+      /*******************************This is the implementation for showing emoji's in HLS *******************/
       /**
        * Generally we are assuming that the timed metadata payload will be a JSON String
        * but if it's a normal string then this throws the format exception 
@@ -2563,23 +2607,24 @@ class MeetingStore extends ChangeNotifier
        * The toast is displayed for the time duration hlsCue.endDate - hlsCue.startDate
        * If endDate is null then toast is displayed for 2 seconds by default
        */
-      try {
-        final Map<String, dynamic> data = jsonDecode(hlsCue.payload!);
-        Utilities.showTimedMetadata(
-            Utilities.getTimedMetadataEmojiFromId(data["emojiId"]),
-            time: hlsCue.endDate == null
-                ? 2
-                : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds,
-            align: Utilities.timedMetadataAlignment[math.Random()
-                .nextInt(Utilities.timedMetadataAlignment.length)]);
-      } catch (e) {
-        Utilities.showTimedMetadata(hlsCue.payload!,
-            time: hlsCue.endDate == null
-                ? 2
-                : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds,
-            align: Utilities.timedMetadataAlignment[math.Random()
-                .nextInt(Utilities.timedMetadataAlignment.length)]);
-      }
+      // try {
+      //   final Map<String, dynamic> data = jsonDecode(hlsCue.payload!);
+      //   Utilities.showTimedMetadata(
+      //       Utilities.getTimedMetadataEmojiFromId(data["emojiId"]),
+      //       time: hlsCue.endDate == null
+      //           ? 2
+      //           : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds,
+      //       align: Utilities.timedMetadataAlignment[math.Random()
+      //           .nextInt(Utilities.timedMetadataAlignment.length)]);
+      // } catch (e) {
+      //   Utilities.showTimedMetadata(hlsCue.payload!,
+      //       time: hlsCue.endDate == null
+      //           ? 2
+      //           : (hlsCue.endDate!.difference(hlsCue.startDate)).inSeconds,
+      //       align: Utilities.timedMetadataAlignment[math.Random()
+      //           .nextInt(Utilities.timedMetadataAlignment.length)]);
+      // }
+      /************************************************************************************************************/
     }
   }
 
@@ -2628,32 +2673,69 @@ class MeetingStore extends ChangeNotifier
   @override
   void onPollUpdate(
       {required HMSPoll poll, required HMSPollUpdateType pollUpdateType}) {
-    log("onPollUpdate -> poll $poll updateType: $pollUpdateType");
+    log("onPollUpdate -> poll $poll updateType: $pollUpdateType startedAt: ${poll.startedAt}");
     switch (pollUpdateType) {
       ///If the poll is started we add the poll in questions list
       case HMSPollUpdateType.started:
-        if (localPeer?.role.permissions.pollRead ?? false) {
+
+        /*
+         * Here we check whether the peer has permission to view polls
+         * Then if the user is a realtime user we show the poll immediately 
+         * while for hls viewer we show the poll based on the `onCue` event i.e.
+         * timed metadata event for poll
+        */
+        if ((localPeer?.role.permissions.pollRead ?? false) ||
+            (localPeer?.role.permissions.pollWrite ?? false)) {
           int index = pollQuestions
               .indexWhere((element) => element.poll.pollId == poll.pollId);
           if (index == -1) {
             HMSPollStore store = HMSPollStore(poll: poll);
-            pollQuestions.add(store);
-            toasts.add(HMSToastModel(store,
-                hmsToastType: HMSToastsType.pollStartedToast));
-            notifyListeners();
+            if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
+              pollQuestions.add(store);
+              toasts.add(HMSToastModel(store,
+                  hmsToastType: HMSToastsType.pollStartedToast));
+              notifyListeners();
+            } else {
+              /*
+               * Here we check whether the poll start time is 
+               * more than 20 secs older from now or not. We have kept 20 secs
+               * since the stream playback rolling window time is 
+               * set to 20 by default i.e. if the time difference is less than 20 secs
+               * we will get the [onCue] callback again. If its greater than 20
+               * we show the toast immediately for the user to vote.
+               */
+              if (poll.startedAt != null &&
+                  (DateTime.now().difference(poll.startedAt!) >
+                      const Duration(seconds: 20))) {
+                pollQuestions.add(store);
+                toasts.add(HMSToastModel(store,
+                    hmsToastType: HMSToastsType.pollStartedToast));
+              } else {
+                hlsViewerPolls.add(store);
+              }
+            }
           }
         }
         break;
 
       ///In other cases we just update the state of the poll
-      default:
+      case HMSPollUpdateType.resultsupdated:
         int index = pollQuestions
             .indexWhere((element) => element.poll.pollId == poll.pollId);
         if (index != -1) {
           pollQuestions[index].updateState(poll);
         }
         notifyListeners();
+        break;
 
+      case HMSPollUpdateType.stopped:
+        removeToast(HMSToastsType.pollStartedToast, data: poll.pollId);
+        int index = pollQuestions
+            .indexWhere((element) => element.poll.pollId == poll.pollId);
+        if (index != -1) {
+          pollQuestions[index].updateState(poll);
+        }
+        notifyListeners();
         break;
     }
   }

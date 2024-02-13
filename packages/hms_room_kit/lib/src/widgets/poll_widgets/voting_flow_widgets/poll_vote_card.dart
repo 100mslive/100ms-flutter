@@ -1,12 +1,16 @@
+///Package imports
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/poll_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:provider/provider.dart';
 
+///[PollVoteCard] renders the vote card for polls
 class PollVoteCard extends StatefulWidget {
   final int questionNumber;
   final int totalQuestions;
@@ -25,6 +29,15 @@ class PollVoteCard extends StatefulWidget {
 class _PollVoteCardState extends State<PollVoteCard> {
   HMSPollQuestionOption? selectedOption;
   List<HMSPollQuestionOption> selectedOptions = [];
+  bool isPollAnswerValid = false;
+
+  void resetPollAnswerValidity() {
+    if (selectedOption != null || selectedOptions.isNotEmpty) {
+      isPollAnswerValid = true;
+    } else {
+      isPollAnswerValid = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +85,7 @@ class _PollVoteCardState extends State<PollVoteCard> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: widget.question.options.length,
                   itemBuilder: (BuildContext context, index) {
+                    ///TODO: Add dynamic padding based on text length
                     return Row(
                       children: [
                         Checkbox(
@@ -107,12 +121,13 @@ class _PollVoteCardState extends State<PollVoteCard> {
                                       .remove(widget.question.options[index]);
                                 }
                               }
-
+                              resetPollAnswerValidity();
                               setState(() {});
                             }),
                         Expanded(
                           child: HMSSubheadingText(
                               text: widget.question.options[index].text ?? "",
+                              maxLines: 3,
                               textColor: HMSThemeColors.onSurfaceHighEmphasis),
                         )
                       ],
@@ -122,31 +137,38 @@ class _PollVoteCardState extends State<PollVoteCard> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   HMSButton(
-                      width: 88,
+                      width: MediaQuery.of(context).size.width * 0.21,
                       onPressed: () {
-                        if (widget.question.type ==
-                                HMSPollQuestionType.singleChoice &&
-                            selectedOption != null) {
-                          context
-                              .read<MeetingStore>()
-                              .addSingleChoicePollResponse(
-                                  context.read<HMSPollStore>().poll,
-                                  widget.question,
-                                  selectedOption!);
-                        } else if (widget.question.type ==
-                                HMSPollQuestionType.multiChoice &&
-                            selectedOptions.isNotEmpty) {
-                          context
-                              .read<MeetingStore>()
-                              .addMultiChoicePollResponse(
-                                  context.read<HMSPollStore>().poll,
-                                  widget.question,
-                                  selectedOptions);
+                        if (isPollAnswerValid) {
+                          if (widget.question.type ==
+                                  HMSPollQuestionType.singleChoice &&
+                              selectedOption != null) {
+                            context
+                                .read<MeetingStore>()
+                                .addSingleChoicePollResponse(
+                                    context.read<HMSPollStore>().poll,
+                                    widget.question,
+                                    selectedOption!);
+                          } else if (widget.question.type ==
+                                  HMSPollQuestionType.multiChoice &&
+                              selectedOptions.isNotEmpty) {
+                            context
+                                .read<MeetingStore>()
+                                .addMultiChoicePollResponse(
+                                    context.read<HMSPollStore>().poll,
+                                    widget.question,
+                                    selectedOptions);
+                          }
                         }
                       },
+                      buttonBackgroundColor: isPollAnswerValid
+                          ? HMSThemeColors.primaryDefault
+                          : HMSThemeColors.primaryDisabled,
                       childWidget: HMSTitleText(
                           text: "Vote",
-                          textColor: HMSThemeColors.onSurfaceHighEmphasis))
+                          textColor: isPollAnswerValid
+                              ? HMSThemeColors.onPrimaryHighEmphasis
+                              : HMSThemeColors.onPrimaryLowEmphasis))
                 ],
               )
             ],

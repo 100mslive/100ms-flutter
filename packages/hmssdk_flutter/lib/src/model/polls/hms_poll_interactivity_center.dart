@@ -5,6 +5,9 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 abstract class HMSPollInteractivityCenter {
   ///[addPollUpdateListener] adds the poll update listener to send
   ///the poll events to the application
+  ///**Parameters**:
+  ///
+  ///**listener** - [listener]
   static void addPollUpdateListener({required HMSPollListener listener}) {
     PlatformService.addPollUpdateListener(listener);
   }
@@ -15,6 +18,19 @@ abstract class HMSPollInteractivityCenter {
     PlatformService.removePollUpdateListener();
   }
 
+  ///[quickStartPoll] starts a quick poll with supplied arguments
+  ///
+  ///**Parameters**:
+  ///
+  ///**pollBuilder** - [pollBuilder] is an object of HMSPollBuilder containing the poll configurations
+  ///
+  ///**hmsActionResultListener** - [hmsActionResultListener] is a callback whose [HMSActionResultListener.onSuccess] will be called when the action completes successfully.
+  ///
+  ///**Returns**
+  ///
+  /// Future<dynamic> - A Future representing the asynchronous operation. It will return either null if the operation is successful, or an [HMSException] if an error occurs.
+  ///
+  ///Refer [Quick Start Poll](Add docs link here)
   static void quickStartPoll(
       {required HMSPollBuilder pollBuilder,
       required HMSActionResultListener? hmsActionResultListener}) async {
@@ -22,6 +38,23 @@ abstract class HMSPollInteractivityCenter {
         arguments: {"poll_builder": pollBuilder.toMap()});
   }
 
+  ///[addSingleChoicePollResponse] method is used to answer a single choice poll
+  ///
+  ///**Parameters**
+  ///
+  ///**hmsPoll** - [hmsPoll] object for the poll that is being answered
+  ///
+  ///**pollQuestion** - [pollQuestion] object for the question that is being answered
+  ///
+  ///**optionSelected** - [optionSelected] object for the option that is selected
+  ///
+  ///**peer** - [peer] who is answering the poll
+  ///
+  ///**Returns**
+  ///
+  /// Future<dynamic> - A Future representing the asynchronous operation. It will return either null if the operation is successful, or an [HMSException] if an error occurs.
+  ///
+  ///Refer [addSingleChoicePollResponse](Add docs link here)
   static Future<dynamic> addSingleChoicePollResponse(
       {required HMSPoll hmsPoll,
       required HMSPollQuestion pollQuestion,
@@ -67,6 +100,17 @@ abstract class HMSPollInteractivityCenter {
     }
   }
 
+  /// [stopPoll] method is used to stop a poll.
+  ///
+  ///**Parameters**
+  ///
+  ///**poll** - [poll] object representing the poll to be stopped.
+  ///
+  ///**Returns**
+  ///
+  ///Future<dynamic> - A Future representing the asynchronous operation. It will return either null if the operation is successful, or an [HMSException] if an error occurs.
+  ///
+  ///Refer [stopPoll](Add docs link here)
   static Future<dynamic> stopPoll({required HMSPoll poll}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.stopPoll,
         arguments: {"poll_id": poll.pollId});
@@ -80,6 +124,19 @@ abstract class HMSPollInteractivityCenter {
     }
   }
 
+  ///[addMultiChoicePollResponse] method is used to answer a single choice poll
+  ///
+  ///**Parameters**
+  ///
+  ///**hmsPoll** - [hmsPoll] object for the poll that is being answered
+  ///
+  ///**pollQuestion** - [pollQuestion] object for the question that is being answered
+  ///
+  ///**optionsSelected** - [optionsSelected] list containing objects for the options selected
+  ///
+  ///**peer** - [peer] who is answering the poll
+  ///
+  ///Refer [addSingleChoicePollResponse](Add docs link here)
   static Future<dynamic> addMultiChoicePollResponse(
       {required HMSPoll hmsPoll,
       required HMSPollQuestion pollQuestion,
@@ -128,6 +185,8 @@ abstract class HMSPollInteractivityCenter {
   }
 }
 
+///[HMSPollBuilder] is used to create polls
+///It contains getters and setters for poll builder properties
 class HMSPollBuilder {
   bool? _isAnonymous;
   Duration? _duration;

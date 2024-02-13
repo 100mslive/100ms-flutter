@@ -11,23 +11,33 @@
     <uses-feature android:name="android.hardware.camera"/>
     <uses-feature android:name="android.hardware.camera.autofocus"/>
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <!--Required for android 14 and above -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+
+    <!-- This is required if the application uses foreground service for android 14 and above-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+
+
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
 
     <application
         android:label="100ms Video Calling Streaming"
         android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="false"
         android:hardwareAccelerated="true"
-        android:requestLegacyExternalStorage="true">
+        android:allowBackup="false"
+        android:hasFragileUserData="false">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask"
@@ -36,6 +46,7 @@
             android:windowSoftInputMode="adjustResize"
             android:exported="true"
             android:supportsPictureInPicture="true"
+            android:taskAffinity=""
             >
             <!-- Specifies an Android theme to apply to this Activity as soon as
                 the Android process has started. This theme is visible to the user
@@ -64,7 +75,8 @@
         </activity>
         <service android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
                 android:foregroundServiceType="camera|microphone"
-                android:stopWithTask="true" />
+                android:stopWithTask="true"
+                exported="false" />
 
         <!--Don't delete the meta-data below.
             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
