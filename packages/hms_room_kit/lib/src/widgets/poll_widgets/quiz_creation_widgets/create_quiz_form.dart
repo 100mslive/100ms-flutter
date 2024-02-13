@@ -33,8 +33,8 @@ class CreateQuizForm extends StatefulWidget {
       required this.questionBuilder,
       required this.deleteQuestionCallback,
       required this.saveQuizCallback,
-      required this.multiChoiceQuizAnswers,
-      required this.singleChoiceQuizAnswer});
+      this.multiChoiceQuizAnswers,
+      this.singleChoiceQuizAnswer});
 
   @override
   State<CreateQuizForm> createState() => _CreatePollFormState();
@@ -308,13 +308,14 @@ class _CreatePollFormState extends State<CreateQuizForm> {
                                 activeColor:
                                     HMSThemeColors.onSurfaceHighEmphasis,
                                 checkColor: HMSThemeColors.surfaceDefault,
-                                value: (widget.questionType ==
-                                        HMSPollQuestionType.singleChoice)
-                                    ? _correctOption ==
-                                        widget
-                                            .questionBuilder.quizOptions[index]
-                                    : _correctOptions?.contains(widget
-                                        .questionBuilder.quizOptions[index]),
+                                value: false,
+                                // (widget.questionType ==
+                                //         HMSPollQuestionType.singleChoice)
+                                //     ? _correctOption ==
+                                //         widget
+                                //             .questionBuilder.quizOptions[index]
+                                //     : _correctOptions?.contains(widget
+                                //         .questionBuilder.quizOptions[index]),
                                 shape: widget.questionType ==
                                         HMSPollQuestionType.singleChoice
                                     ? const CircleBorder()
@@ -322,25 +323,25 @@ class _CreatePollFormState extends State<CreateQuizForm> {
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(4))),
                                 onChanged: (value) {
-                                  if (value == true) {
-                                    if (widget.questionType ==
-                                        HMSPollQuestionType.singleChoice) {
-                                      _correctOption = widget
-                                          .questionBuilder.quizOptions[index];
-                                    } else if (widget.questionType ==
-                                        HMSPollQuestionType.multiChoice) {
-                                      _correctOptions?.add(widget
-                                          .questionBuilder.quizOptions[index]);
-                                    }
-                                  } else {
-                                    if (widget.questionType ==
-                                        HMSPollQuestionType.multiChoice) {
-                                      _correctOptions?.remove(widget
-                                          .questionBuilder.quizOptions[index]);
-                                    }
-                                  }
+                                  // if (value == true) {
+                                  //   if (widget.questionType ==
+                                  //       HMSPollQuestionType.singleChoice) {
+                                  //     _correctOption = widget
+                                  //         .questionBuilder.quizOptions[index];
+                                  //   } else if (widget.questionType ==
+                                  //       HMSPollQuestionType.multiChoice) {
+                                  //     _correctOptions?.add(widget
+                                  //         .questionBuilder.quizOptions[index]);
+                                  //   }
+                                  // } else {
+                                  //   if (widget.questionType ==
+                                  //       HMSPollQuestionType.multiChoice) {
+                                  //     _correctOptions?.remove(widget
+                                  //         .questionBuilder.quizOptions[index]);
+                                  //   }
+                                  // }
 
-                                  setState(() {});
+                                  // setState(() {});
                                 }),
                             const SizedBox(
                               width: 4,

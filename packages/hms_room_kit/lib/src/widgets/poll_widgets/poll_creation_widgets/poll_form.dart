@@ -206,7 +206,7 @@ class _PollFormState extends State<PollForm> {
                   builder: (ctx) => ChangeNotifierProvider.value(
                       value: meetingStore,
                       child: PollQuestionBottomSheet(
-                        pollName: _pollNameController.text.trim(),
+                        pollName: _pollNameController.text.trim(), isPoll: true,
                       )),
                 );
               },
