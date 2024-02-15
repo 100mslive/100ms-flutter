@@ -1,10 +1,8 @@
 ///Package imports
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:tuple/tuple.dart';
 
 ///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
@@ -39,15 +37,6 @@ class CreatePollForm extends StatefulWidget {
 class _CreatePollFormState extends State<CreatePollForm> {
   late TextEditingController _questionController;
   late List<TextEditingController> _optionsTextController;
-  // bool _isSkippable = false;
-  // bool _canChangeResponse = false;
-
-  List<Tuple2<String, HMSPollQuestionType>> getPollQuestionType() {
-    return const [
-      Tuple2("Single Choice", HMSPollQuestionType.singleChoice),
-      Tuple2("Multiple Choice", HMSPollQuestionType.multiChoice)
-    ];
-  }
 
   @override
   void initState() {
@@ -79,23 +68,6 @@ class _CreatePollFormState extends State<CreatePollForm> {
     }
     super.dispose();
   }
-
-  ///This function set's whether the question is skippable or not
-  // void setIsSkippable(value) {
-  //   widget.questionBuilder.withCanSkip = value;
-  //   setState(() {
-  //     _isSkippable = value;
-  //   });
-  // }
-
-  ///This function set's [canChangeResponse] which decides can the answer be changed
-  ///once voted
-  // void setCanChangeResponse(value) {
-  //   widget.questionBuilder.withCanChangeResponse = value;
-  //   setState(() {
-  //     _canChangeResponse = value;
-  //   });
-  // }
 
   ///This adds a new option controller
   void _addOption() {
@@ -173,7 +145,7 @@ class _CreatePollFormState extends State<CreatePollForm> {
             ///Dropdown for poll type
             DropdownButtonHideUnderline(
                 child: HMSDropDown(
-                    dropDownItems: getPollQuestionType()
+                    dropDownItems: Utilities.getQuestionTypeForPollQuiz()
                         .map((e) => DropdownMenuItem(
                               value: e.item2,
                               child: HMSTitleText(

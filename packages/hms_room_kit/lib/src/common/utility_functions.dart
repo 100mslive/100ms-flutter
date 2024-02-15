@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 ///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:tuple/tuple.dart';
 
 ///This class contains the utility functions used in the app
 class Utilities {
@@ -119,6 +120,15 @@ class Utilities {
     } else {
       return number.toString();
     }
+  }
+
+  ///This function returns the question type for poll/quiz
+  static List<Tuple2<String, HMSPollQuestionType>>
+      getQuestionTypeForPollQuiz() {
+    return const [
+      Tuple2("Single Choice", HMSPollQuestionType.singleChoice),
+      Tuple2("Multiple Choice", HMSPollQuestionType.multiChoice)
+    ];
   }
 
   ///This method returns the scale of the toast according to the index and the total number of toasts

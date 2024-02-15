@@ -36,7 +36,7 @@ class HMSPollStartToast extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.5,
         child: HMSSubheadingText(
           text:
-              "${poll.createdBy?.name.substring(0, math.min(8, poll.createdBy?.name.length ?? 0)) ?? ""}${(poll.createdBy?.name.length ?? 0) > 8 ? "..." : ""} started a new poll",
+              "${poll.createdBy?.name.substring(0, math.min(8, poll.createdBy?.name.length ?? 0)) ?? ""}${(poll.createdBy?.name.length ?? 0) > 8 ? "..." : ""} started a new ${poll.category == HMSPollCategory.poll ? "poll" : "quiz"}",
           textColor: HMSThemeColors.onSurfaceHighEmphasis,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.1,
@@ -60,7 +60,9 @@ class HMSPollStartToast extends StatelessWidget {
                   value: meetingStore,
                   child: ChangeNotifierProvider.value(
                     value: pollStore,
-                    child: const PollVoteBottomSheet(),
+                    child: PollVoteBottomSheet(
+                      isPoll: pollStore.poll.category == HMSPollCategory.poll,
+                    ),
                   )));
           meetingStore.removeToast(HMSToastsType.pollStartedToast,
               data: poll.pollId);

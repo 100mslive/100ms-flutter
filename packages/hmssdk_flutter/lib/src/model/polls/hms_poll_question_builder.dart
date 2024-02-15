@@ -62,10 +62,12 @@ class HMSPollQuestionBuilder {
   }
 
   set addQuizOption(List<HMSPollQuizOption> options) {
-    _options.addAll(options);
+    _options = options;
   }
 
   List<String> get pollOptions => _pollOptions;
+
+  List<HMSPollQuizOption> get quizOptions => _options;
 
   String? get title => _title;
 
@@ -78,7 +80,7 @@ class HMSPollQuestionBuilder {
       'can_skip': _canSkip,
       'title': _title,
       'duration': _duration?.inMilliseconds,
-      'options': _options,
+      'options': _options.map((e) => e.toMap()).toList(),
       'poll_options': _pollOptions,
       'text': _text,
       'type': HMSPollQuestionTypeValues.getStringFromHMSPollQuestionType(_type),
@@ -93,14 +95,20 @@ class HMSPollQuestionBuilder {
 
 class HMSPollQuizOption {
   final String text;
-  final bool isCorrect;
+  bool _isCorrect = false;
 
-  HMSPollQuizOption({required this.text, required this.isCorrect});
+  set isCorrect(bool isCorrect) {
+    _isCorrect = isCorrect;
+  }
+
+  bool get isOptionCorrect => _isCorrect;
+
+  HMSPollQuizOption({required this.text});
 
   Map<String, dynamic> toMap() {
     return {
       'text': text,
-      'is_correct': isCorrect,
+      'is_correct': _isCorrect,
     };
   }
 }

@@ -159,9 +159,9 @@ class HMSPollBuilderExtension{
             }
         }
 
-        if let options = pollQuestion["options"] as? [[String: Bool]] {
+        if let options = pollQuestion["options"] as? [[String: Any?]] {
             options.forEach { option in
-                if let key = option.keys.first, let value = option.values.first {
+                if let key = option["text"] as? String, let value = option["is_correct"] as? Bool{
                     pollQuestionBuilder.addQuizOption(with: key, isCorrect: value)
                 }
             }

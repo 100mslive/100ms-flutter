@@ -227,14 +227,14 @@ class HMSPollBuilder {
     if (_rolesThatCanViewResponse == null) {
       _rolesThatCanViewResponse = [];
     }
-    _rolesThatCanViewResponse?.addAll(rolesThatCanViewResponses);
+    _rolesThatCanViewResponse = rolesThatCanViewResponses;
   }
 
   set withRolesThatCanVote(List<HMSRole> rolesThatCanVote) {
     if (_rolesThatCanVote == null) {
       _rolesThatCanVote = [];
     }
-    _rolesThatCanVote?.addAll(rolesThatCanVote);
+    _rolesThatCanVote = rolesThatCanVote;
   }
 
   set withTitle(String title) {

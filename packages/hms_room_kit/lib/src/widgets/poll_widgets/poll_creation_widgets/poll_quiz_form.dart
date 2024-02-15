@@ -14,7 +14,7 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart
 class PollQuizForm extends StatefulWidget {
   final bool isPoll;
 
-  const PollQuizForm({Key? key, required this.isPoll}):super(key: key);
+  const PollQuizForm({Key? key, required this.isPoll}) : super(key: key);
 
   @override
   State<PollQuizForm> createState() => _PollQuizFormState();
@@ -23,7 +23,6 @@ class PollQuizForm extends StatefulWidget {
 class _PollQuizFormState extends State<PollQuizForm> {
   late TextEditingController _pollNameController;
   bool _hideVoteCount = false;
-  bool _isAnonymous = false;
 
   @override
   void initState() {
@@ -41,13 +40,6 @@ class _PollQuizFormState extends State<PollQuizForm> {
   void setHideVoteCount(bool value) {
     setState(() {
       _hideVoteCount = value;
-    });
-  }
-
-  ///This method sets the value of the is anonymous switch
-  void setIsAnonymous(bool value) {
-    setState(() {
-      _isAnonymous = value;
     });
   }
 
@@ -124,65 +116,64 @@ class _PollQuizFormState extends State<PollQuizForm> {
         ),
 
         ///Hide vote count switch
-        if (widget.isPoll)
-          ListTile(
-            horizontalTitleGap: 1,
-            enabled: false,
-            dense: true,
-            contentPadding: EdgeInsets.zero,
-            title: HMSSubheadingText(
-                text: "Hide vote count",
-                textColor: HMSThemeColors.onSurfaceMediumEmphasis),
-            trailing: SizedBox(
-              height: 24,
-              width: 40,
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: CupertinoSwitch(
-                  value: _hideVoteCount,
-                  onChanged: (value) => setHideVoteCount(value),
-                  activeColor: HMSThemeColors.primaryDefault,
-                ),
-              ),
-            ),
-          ),
-
-        ///Is the poll anonymous switch
         ListTile(
           horizontalTitleGap: 1,
           enabled: false,
           dense: true,
           contentPadding: EdgeInsets.zero,
-          title: Row(
-            children: [
-              HMSSubheadingText(
-                  text: "Make results anonymous",
-                  textColor: HMSThemeColors.onSurfaceMediumEmphasis),
-              // const SizedBox(
-              //   width: 8,
-              // ),
-              // SvgPicture.asset(
-              //   "packages/hms_room_kit/lib/src/assets/icons/info.svg",
-              //   height: 16,
-              //   width: 16,
-              //   colorFilter: ColorFilter.mode(
-              //       HMSThemeColors.onSurfaceLowEmphasis, BlendMode.srcIn),
-              // )
-            ],
-          ),
+          title: HMSSubheadingText(
+              text: "Hide vote count",
+              textColor: HMSThemeColors.onSurfaceMediumEmphasis),
           trailing: SizedBox(
             height: 24,
             width: 40,
             child: FittedBox(
               fit: BoxFit.contain,
               child: CupertinoSwitch(
-                value: _isAnonymous,
-                onChanged: (value) => setIsAnonymous(value),
+                value: _hideVoteCount,
+                onChanged: (value) => setHideVoteCount(value),
                 activeColor: HMSThemeColors.primaryDefault,
               ),
             ),
           ),
         ),
+
+        ///Is the poll anonymous switch
+        // ListTile(
+        //   horizontalTitleGap: 1,
+        //   enabled: false,
+        //   dense: true,
+        //   contentPadding: EdgeInsets.zero,
+        //   title: Row(
+        //     children: [
+        //       HMSSubheadingText(
+        //           text: "Make results anonymous",
+        //           textColor: HMSThemeColors.onSurfaceMediumEmphasis),
+        //       // const SizedBox(
+        //       //   width: 8,
+        //       // ),
+        //       // SvgPicture.asset(
+        //       //   "packages/hms_room_kit/lib/src/assets/icons/info.svg",
+        //       //   height: 16,
+        //       //   width: 16,
+        //       //   colorFilter: ColorFilter.mode(
+        //       //       HMSThemeColors.onSurfaceLowEmphasis, BlendMode.srcIn),
+        //       // )
+        //     ],
+        //   ),
+        //   trailing: SizedBox(
+        //     height: 24,
+        //     width: 40,
+        //     child: FittedBox(
+        //       fit: BoxFit.contain,
+        //       child: CupertinoSwitch(
+        //         value: _isAnonymous,
+        //         onChanged: (value) => setIsAnonymous(value),
+        //         activeColor: HMSThemeColors.primaryDefault,
+        //       ),
+        //     ),
+        //   ),
+        // ),
 
         ///Padding
         const SizedBox(
@@ -212,11 +203,16 @@ class _PollQuizFormState extends State<PollQuizForm> {
                       child: PollQuestionBottomSheet(
                         pollName: _pollNameController.text.trim(),
                         isPoll: widget.isPoll,
+                        rolesThatCanViewResponse: _hideVoteCount
+                            ? meetingStore.localPeer != null
+                                ? [meetingStore.localPeer!.role]
+                                : null
+                            : null,
                       )),
                 );
               },
               childWidget: HMSTitleText(
-                text: 'Create ${widget.isPoll?"Poll":"Quiz"}',
+                text: 'Create ${widget.isPoll ? "Poll" : "Quiz"}',
                 textColor: _pollNameController.text.isEmpty
                     ? HMSThemeColors.onPrimaryLowEmphasis
                     : HMSThemeColors.onPrimaryHighEmphasis,

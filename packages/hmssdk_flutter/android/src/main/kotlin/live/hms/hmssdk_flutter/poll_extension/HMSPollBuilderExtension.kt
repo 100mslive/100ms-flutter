@@ -209,7 +209,13 @@ class HMSPollBuilderExtension {
                     val optionMap = ArrayList<Pair<String,Boolean>>()
 
                     options.forEach {
-                        optionMap.add(Pair(it.keys.first(),it.values.first()))
+                        val text = it["text"] as String?
+                        text?.let { optionText ->
+                            val isCorrect = it["is_correct"]
+                            isCorrect?.let { isCorrectOption ->
+                                optionMap.add(Pair(optionText,isCorrectOption))
+                            }
+                        }
                     }
                     optionMap
                 }?:run {

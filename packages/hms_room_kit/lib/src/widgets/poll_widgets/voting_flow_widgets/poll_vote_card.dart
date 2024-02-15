@@ -15,12 +15,14 @@ class PollVoteCard extends StatefulWidget {
   final int questionNumber;
   final int totalQuestions;
   final HMSPollQuestion question;
+  final bool isPoll;
 
   const PollVoteCard(
       {super.key,
       required this.questionNumber,
       required this.totalQuestions,
-      required this.question});
+      required this.question,
+      required this.isPoll});
 
   @override
   State<PollVoteCard> createState() => _PollVoteCardState();
@@ -137,7 +139,8 @@ class _PollVoteCardState extends State<PollVoteCard> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   HMSButton(
-                      width: MediaQuery.of(context).size.width * 0.21,
+                      width: MediaQuery.of(context).size.width *
+                          (widget.isPoll ? 0.21 : 0.30),
                       onPressed: () {
                         if (isPollAnswerValid) {
                           if (widget.question.type ==
@@ -149,6 +152,7 @@ class _PollVoteCardState extends State<PollVoteCard> {
                                     context.read<HMSPollStore>().poll,
                                     widget.question,
                                     selectedOption!);
+                            selectedOption = null;
                           } else if (widget.question.type ==
                                   HMSPollQuestionType.multiChoice &&
                               selectedOptions.isNotEmpty) {
@@ -158,6 +162,7 @@ class _PollVoteCardState extends State<PollVoteCard> {
                                     context.read<HMSPollStore>().poll,
                                     widget.question,
                                     selectedOptions);
+                            selectedOptions = [];
                           }
                         }
                       },
@@ -165,7 +170,7 @@ class _PollVoteCardState extends State<PollVoteCard> {
                           ? HMSThemeColors.primaryDefault
                           : HMSThemeColors.primaryDisabled,
                       childWidget: HMSTitleText(
-                          text: "Vote",
+                          text: widget.isPoll ? "Vote" : "Answer",
                           textColor: isPollAnswerValid
                               ? HMSThemeColors.onPrimaryHighEmphasis
                               : HMSThemeColors.onPrimaryLowEmphasis))
