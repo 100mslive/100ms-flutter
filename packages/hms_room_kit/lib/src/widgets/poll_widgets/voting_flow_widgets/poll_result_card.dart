@@ -171,8 +171,7 @@ class PollResultCard extends StatelessWidget {
 
                               ///If it's not a poll and selected option show checkbox
                               ///If its a poll then only show when vote count is hidden
-                              if (isPollEnded &&
-                                  (!isPoll || isVoteCountHidden) &&
+                              if ((!isPoll || isVoteCountHidden) &&
                                   isSelectedOption(
                                       question.options[index].index))
                                 isPoll

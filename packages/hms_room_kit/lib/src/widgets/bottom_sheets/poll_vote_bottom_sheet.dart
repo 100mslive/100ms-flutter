@@ -109,8 +109,9 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                 ),
               ),
               HMSTitleText(
-                text:
-                    "${hmsPollStore.poll.createdBy?.name.substring(0, math.min(15, hmsPollStore.poll.createdBy?.name.length ?? 0)) ?? ""} started a ${widget.isPoll ? "poll" : "quiz"}",
+                text: hmsPollStore.poll.createdBy == null
+                    ? "Participant started a new ${hmsPollStore.poll.category == HMSPollCategory.poll ? "poll" : "quiz"}"
+                    : "${hmsPollStore.poll.createdBy?.name.substring(0, math.min(15, hmsPollStore.poll.createdBy?.name.length ?? 0)) ?? ""} started a ${widget.isPoll ? "poll" : "quiz"}",
                 textColor: HMSThemeColors.onSurfaceHighEmphasis,
                 letterSpacing: 0.15,
               ),

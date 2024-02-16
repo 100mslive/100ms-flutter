@@ -2659,6 +2659,27 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
+  ///Insert poll question
+  void insertPollQuestion(HMSPollStore store) {
+    pollQuestions.add(store);
+    sortPollQuestions();
+  }
+
+  ///Function to sort poll questions based on state and startedAt time
+  void sortPollQuestions() {
+    pollQuestions.sort((a, b) {
+      if (a.poll.state != b.poll.state) {
+        return a.poll.state == HMSPollState.started ? 1 : -1;
+      } else {
+        if (a.poll.startedAt != null && b.poll.startedAt != null) {
+          return a.poll.startedAt!.compareTo(b.poll.startedAt!);
+        }
+      }
+      return 1;
+    });
+    notifyListeners();
+  }
+
   @override
   void onPeerListUpdate(
       {required List<HMSPeer> addedPeers,
@@ -2690,7 +2711,7 @@ class MeetingStore extends ChangeNotifier
           if (index == -1) {
             HMSPollStore store = HMSPollStore(poll: poll);
             if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
-              pollQuestions.add(store);
+              insertPollQuestion(store);
               toasts.add(HMSToastModel(store,
                   hmsToastType: HMSToastsType.pollStartedToast));
               notifyListeners();
@@ -2706,7 +2727,7 @@ class MeetingStore extends ChangeNotifier
               if (poll.startedAt != null &&
                   (DateTime.now().difference(poll.startedAt!) >
                       const Duration(seconds: 20))) {
-                pollQuestions.add(store);
+                insertPollQuestion(store);
                 toasts.add(HMSToastModel(store,
                     hmsToastType: HMSToastsType.pollStartedToast));
               } else {
@@ -2733,6 +2754,7 @@ class MeetingStore extends ChangeNotifier
             .indexWhere((element) => element.poll.pollId == poll.pollId);
         if (index != -1) {
           pollQuestions[index].updateState(poll);
+          sortPollQuestions();
         }
         notifyListeners();
         break;

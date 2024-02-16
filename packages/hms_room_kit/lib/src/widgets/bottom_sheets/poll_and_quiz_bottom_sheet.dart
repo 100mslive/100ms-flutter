@@ -172,7 +172,7 @@ class _PollAndQuizBottomSheetState extends State<PollAndQuizBottomSheet> {
                               true))) {
                         return Center(
                           child: HMSTitleText(
-                              text: "No polls started in this session",
+                              text: "No polls/quizzes started in this session",
                               textColor: HMSThemeColors.onPrimaryHighEmphasis),
                         );
                       } else {
