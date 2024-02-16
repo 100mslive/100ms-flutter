@@ -577,7 +577,7 @@ class HMSSDK {
         arguments: arguments);
 
     if (hmsActionResultListener != null) {
-      if (result == null)
+      if (result == null) {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.changeRoleOfPeer,
             arguments: {
@@ -585,7 +585,7 @@ class HMSSDK {
               'role_name': toRole,
               'force_change': force
             });
-      else
+      } else {
         hmsActionResultListener.onException(
             arguments: {
               'peer': forPeer,
@@ -594,6 +594,7 @@ class HMSSDK {
             },
             methodType: HMSActionResultListenerMethod.changeRoleOfPeer,
             hmsException: HMSException.fromMap(result["error"]));
+      }
     }
   }
 
