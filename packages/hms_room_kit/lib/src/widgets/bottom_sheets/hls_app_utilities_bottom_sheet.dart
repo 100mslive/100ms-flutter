@@ -45,24 +45,28 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
           const EdgeInsets.only(top: 16.0, left: 20, right: 20, bottom: 24),
       child: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    HMSTitleText(
-                      text: "Options",
-                      textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                      letterSpacing: 0.15,
+                    Row(
+                      children: [
+                        HMSTitleText(
+                          text: "Options",
+                          textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                          letterSpacing: 0.15,
+                        )
+                      ],
+                    ),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [HMSCrossButton()],
                     )
                   ],
                 ),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [HMSCrossButton()],
-                )
               ],
             ),
             Padding(

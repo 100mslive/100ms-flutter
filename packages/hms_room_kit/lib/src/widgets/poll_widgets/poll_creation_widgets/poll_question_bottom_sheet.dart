@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/create_poll_form.dart';
+import 'package:hms_room_kit/src/widgets/poll_widgets/quiz_creation_widgets/create_quiz_form.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -16,8 +17,14 @@ import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/save
 ///[PollQuestionBottomSheet] renders the poll question form sheet
 class PollQuestionBottomSheet extends StatefulWidget {
   final String pollName;
+  final bool isPoll;
+  final List<HMSRole>? rolesThatCanViewResponse;
 
-  const PollQuestionBottomSheet({Key? key, required this.pollName})
+  const PollQuestionBottomSheet(
+      {Key? key,
+      required this.pollName,
+      required this.isPoll,
+      this.rolesThatCanViewResponse})
       : super(key: key);
 
   @override
@@ -27,49 +34,55 @@ class PollQuestionBottomSheet extends StatefulWidget {
 
 class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
   late HMSPollBuilder pollBuilder;
-  bool _isPollValid = false;
-  Map<HMSPollQuestionBuilder, bool> pollQuestionBuilders = {};
+  bool _isQuestionValid = false;
+  Map<HMSPollQuestionBuilder, bool> pollQuizQuestionBuilders = {};
 
   @override
   void initState() {
     ///Here we create a new poll builder object with single question
     pollBuilder = HMSPollBuilder();
-    pollQuestionBuilders[HMSPollQuestionBuilder()] = false;
+    pollQuizQuestionBuilders[HMSPollQuestionBuilder()] = false;
 
     ///Setting the title of the poll
     pollBuilder.withTitle = widget.pollName;
+
+    ///If hide vote count is true
+    if (widget.rolesThatCanViewResponse != null) {
+      pollBuilder.withRolesThatCanViewResponses =
+          widget.rolesThatCanViewResponse!;
+    }
     super.initState();
   }
 
   ///This function adds a new question builder
   void _addQuestion() {
-    pollQuestionBuilders[HMSPollQuestionBuilder()] = false;
+    pollQuizQuestionBuilders[HMSPollQuestionBuilder()] = false;
     setState(() {});
   }
 
-  void _deleteQuestionCallback(HMSPollQuestionBuilder pollQuestionBuilder) {
-    pollQuestionBuilders.remove(pollQuestionBuilder);
+  void _deleteCallback(HMSPollQuestionBuilder pollQuestionBuilder) {
+    pollQuizQuestionBuilders.remove(pollQuestionBuilder);
     setState(() {});
   }
 
-  void _savePollCallback(HMSPollQuestionBuilder pollQuestionBuilder) {
-    pollQuestionBuilders[pollQuestionBuilder] = true;
-    _checkPollValidity();
+  void _saveCallback(HMSPollQuestionBuilder pollQuestionBuilder) {
+    pollQuizQuestionBuilders[pollQuestionBuilder] = true;
+    _checkValidity();
     setState(() {});
   }
 
-  void _editPollCallback(HMSPollQuestionBuilder pollQuestionBuilder) {
-    pollQuestionBuilders[pollQuestionBuilder] = false;
-    _isPollValid = false;
+  void _editCallback(HMSPollQuestionBuilder pollQuestionBuilder) {
+    pollQuizQuestionBuilders[pollQuestionBuilder] = false;
+    _isQuestionValid = false;
     setState(() {});
   }
 
-  void _checkPollValidity() {
+  void _checkValidity() {
     var isValid = true;
-    pollQuestionBuilders.forEach((key, value) {
+    pollQuizQuestionBuilders.forEach((key, value) {
       isValid &= value;
     });
-    _isPollValid = isValid;
+    _isQuestionValid = isValid;
   }
 
   @override
@@ -136,47 +149,79 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
                     ///List to render poll form
                     ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: pollQuestionBuilders.length,
+                        itemCount: pollQuizQuestionBuilders.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) => Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 8.0),
-                              child: pollQuestionBuilders.values
+                              child: pollQuizQuestionBuilders.values
                                       .elementAt(index)
                                   ? SavedQuestionWidget(
                                       questionNumber: index,
                                       totalQuestions:
-                                          pollQuestionBuilders.length,
-                                      pollQuestionBuilder: pollQuestionBuilders
-                                          .keys
-                                          .elementAt(index),
-                                      editPollCallback: _editPollCallback,
-                                    )
-                                  : CreatePollForm(
-                                      questionNumber: index,
-                                      totalQuestions:
-                                          pollQuestionBuilders.length,
-                                      questionType: pollQuestionBuilders.keys
-                                          .elementAt(index)
-                                          .type,
-                                      questionController: TextEditingController(
-                                          text: pollQuestionBuilders.keys
+                                          pollQuizQuestionBuilders.length,
+                                      pollQuestionBuilder:
+                                          pollQuizQuestionBuilders.keys
+                                              .elementAt(index),
+                                      editCallback: _editCallback,
+                                      isPoll: widget.isPoll)
+                                  : widget.isPoll
+                                      ? CreatePollForm(
+                                          questionNumber: index,
+                                          totalQuestions:
+                                              pollQuizQuestionBuilders.length,
+                                          questionType: pollQuizQuestionBuilders
+                                              .keys
                                               .elementAt(index)
-                                              .text),
-                                      optionsTextController:
-                                          pollQuestionBuilders.keys
-                                              .elementAt(index)
-                                              .pollOptions
-                                              .map((e) => TextEditingController(
-                                                  text: e))
-                                              .toList(),
-                                      deleteQuestionCallback:
-                                          _deleteQuestionCallback,
-                                      questionBuilder: pollQuestionBuilders.keys
-                                          .elementAt(index),
-                                      savePollCallback: _savePollCallback,
-                                    ),
+                                              .type,
+                                          questionController:
+                                              TextEditingController(
+                                                  text: pollQuizQuestionBuilders
+                                                      .keys
+                                                      .elementAt(index)
+                                                      .text),
+                                          optionsTextController:
+                                              pollQuizQuestionBuilders.keys
+                                                  .elementAt(index)
+                                                  .pollOptions
+                                                  .map((e) =>
+                                                      TextEditingController(
+                                                          text: e))
+                                                  .toList(),
+                                          deleteQuestionCallback:
+                                              _deleteCallback,
+                                          questionBuilder:
+                                              pollQuizQuestionBuilders.keys
+                                                  .elementAt(index),
+                                          savePollCallback: _saveCallback,
+                                        )
+                                      : CreateQuizForm(
+                                          questionNumber: index,
+                                          totalQuestions:
+                                              pollQuizQuestionBuilders.length,
+                                          questionController:
+                                              TextEditingController(
+                                                  text: pollQuizQuestionBuilders
+                                                      .keys
+                                                      .elementAt(index)
+                                                      .text),
+                                          optionsTextController:
+                                              pollQuizQuestionBuilders.keys
+                                                  .elementAt(index)
+                                                  .quizOptions
+                                                  .map((e) =>
+                                                      TextEditingController(
+                                                          text: e.text))
+                                                  .toList(),
+                                          deleteQuestionCallback:
+                                              _deleteCallback,
+                                          questionBuilder:
+                                              pollQuizQuestionBuilders.keys
+                                                  .elementAt(index),
+                                          saveQuizCallback: _saveCallback,
+                                        ),
                             )),
+
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: GestureDetector(
@@ -208,7 +253,7 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
                           style: ButtonStyle(
                               shadowColor: MaterialStateProperty.all(
                                   HMSThemeColors.surfaceDim),
-                              backgroundColor: _isPollValid
+                              backgroundColor: _isQuestionValid
                                   ? MaterialStateProperty.all(
                                       HMSThemeColors.primaryDefault)
                                   : MaterialStateProperty.all(
@@ -219,14 +264,16 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
                                 borderRadius: BorderRadius.circular(8.0),
                               ))),
                           onPressed: () {
-                            if (_isPollValid) {
-                              pollQuestionBuilders.forEach((key, value) {
+                            if (_isQuestionValid) {
+                              pollQuizQuestionBuilders.forEach((key, value) {
                                 if (value) {
                                   pollBuilder.addQuestion(key);
                                 }
                               });
                               pollBuilder.withAnonymous = false;
-                              pollBuilder.withCategory = HMSPollCategory.poll;
+                              pollBuilder.withCategory = widget.isPoll
+                                  ? HMSPollCategory.poll
+                                  : HMSPollCategory.quiz;
                               pollBuilder.withMode =
                                   HMSPollUserTrackingMode.user_id;
 
@@ -239,8 +286,8 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
                           },
                           child: Center(
                               child: HMSTitleText(
-                            text: "Launch Poll",
-                            textColor: _isPollValid
+                            text: "Launch ${widget.isPoll ? "Poll" : "Quiz"}",
+                            textColor: _isQuestionValid
                                 ? HMSThemeColors.onPrimaryHighEmphasis
                                 : HMSThemeColors.onPrimaryLowEmphasis,
                           )),

@@ -1,5 +1,7 @@
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/poll_quiz_form.dart';
+import 'package:hms_room_kit/src/widgets/poll_widgets/poll_quiz_selection_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -8,7 +10,6 @@ import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/poll_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
-import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/poll_form.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/poll_question_card.dart';
 
 ///[PollAndQuizBottomSheet] renders the poll and quiz creation UI
@@ -20,6 +21,17 @@ class PollAndQuizBottomSheet extends StatefulWidget {
 }
 
 class _PollAndQuizBottomSheetState extends State<PollAndQuizBottomSheet> {
+  bool isPollSelected = true;
+
+  void _updatePollQuizSelection(int index) {
+    if (index == 0) {
+      isPollSelected = true;
+    } else {
+      isPollSelected = false;
+    }
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
@@ -64,15 +76,16 @@ class _PollAndQuizBottomSheetState extends State<PollAndQuizBottomSheet> {
                 ),
 
                 ///Poll and Quiz selection buttons
-                ///Will be added in upcoming release
-                // if (context
-                //         .read<MeetingStore>()
-                //         .localPeer
-                //         ?.role
-                //         .permissions
-                //         .pollWrite ??
-                //     false)
-                //   const PollQuizSelectionWidget(),
+                if (context
+                        .read<MeetingStore>()
+                        .localPeer
+                        ?.role
+                        .permissions
+                        .pollWrite ??
+                    false)
+                  PollQuizSelectionWidget(
+                    updateSelectionCallback: _updatePollQuizSelection,
+                  ),
 
                 if (context
                         .read<MeetingStore>()
@@ -86,14 +99,14 @@ class _PollAndQuizBottomSheetState extends State<PollAndQuizBottomSheet> {
                   ),
 
                 ///Poll or Quiz Section
-                if (context
+                if ((context
                         .read<MeetingStore>()
                         .localPeer
                         ?.role
                         .permissions
                         .pollWrite ??
-                    false)
-                  const PollForm(),
+                    false))
+                  PollQuizForm(isPoll: isPollSelected),
 
                 ///This section shows all the previous polls
                 ///which are either started or stopped
@@ -159,7 +172,7 @@ class _PollAndQuizBottomSheetState extends State<PollAndQuizBottomSheet> {
                               true))) {
                         return Center(
                           child: HMSTitleText(
-                              text: "No polls started in this session",
+                              text: "No polls/quizzes started in this session",
                               textColor: HMSThemeColors.onPrimaryHighEmphasis),
                         );
                       } else {

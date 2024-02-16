@@ -81,7 +81,9 @@ class PollQuestionCard extends StatelessWidget {
                                   value: meetingStore,
                                   child: ChangeNotifierProvider.value(
                                     value: pollStore,
-                                    child: const PollVoteBottomSheet(),
+                                    child: PollVoteBottomSheet(
+                                        isPoll: pollStore.poll.category ==
+                                            HMSPollCategory.poll),
                                   ),
                                 ));
                       },

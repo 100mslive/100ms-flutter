@@ -13,6 +13,8 @@ class PollResultCard extends StatelessWidget {
   final HMSPollQuestion question;
   final int totalVotes;
   final bool isVoteCountHidden;
+  final bool isPoll;
+  final bool isPollEnded;
 
   const PollResultCard(
       {super.key,
@@ -20,7 +22,9 @@ class PollResultCard extends StatelessWidget {
       required this.totalQuestions,
       required this.question,
       required this.totalVotes,
-      required this.isVoteCountHidden});
+      required this.isVoteCountHidden,
+      required this.isPoll,
+      required this.isPollEnded});
 
   bool isSelectedOption(int index) {
     if (question.type == HMSPollQuestionType.singleChoice) {
@@ -39,15 +43,60 @@ class PollResultCard extends StatelessWidget {
     return false;
   }
 
+  bool isMyOptionCorrect() {
+    if (question.myResponses.isNotEmpty) {
+      if (question.type == HMSPollQuestionType.singleChoice) {
+        if (question.correctAnswer?.option != null) {
+          return question.correctAnswer?.option ==
+              question.myResponses[questionNumber].selectedOption;
+        }
+      } else if (question.type == HMSPollQuestionType.multiChoice) {
+        if (question.myResponses.length !=
+            question.correctAnswer?.options?.length) {
+          return false;
+        }
+        if (question.correctAnswer?.options != null) {
+          for (var option in question.correctAnswer!.options!) {
+            if (!(question.myResponses[questionNumber].selectedOptions
+                    ?.contains(option) ??
+                true)) {
+              return false;
+            }
+          }
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  bool isCorrectAnswer(HMSPollQuestionOption option) {
+    if (question.type == HMSPollQuestionType.singleChoice) {
+      return question.correctAnswer?.option == option.index;
+    } else if (question.type == HMSPollQuestionType.multiChoice) {
+      if (question.correctAnswer?.options != null) {
+        return question.correctAnswer?.options?.contains(option.index) ?? false;
+      }
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 24),
       child: Container(
         decoration: BoxDecoration(
-          color: HMSThemeColors.surfaceDefault,
-          borderRadius: BorderRadius.circular(8),
-        ),
+            color: HMSThemeColors.surfaceDefault,
+            borderRadius: BorderRadius.circular(8),
+            border: isPollEnded
+                ? (isPoll || question.myResponses.isEmpty)
+                    ? const Border()
+                    : Border.all(
+                        color: isMyOptionCorrect()
+                            ? HMSThemeColors.alertSuccess
+                            : HMSThemeColors.alertErrorDefault)
+                : null),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -95,6 +144,23 @@ class PollResultCard extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              if (isPollEnded &&
+                                  isCorrectAnswer(question.options[index]))
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: Checkbox(
+                                        activeColor: HMSThemeColors
+                                            .onSurfaceHighEmphasis,
+                                        checkColor:
+                                            HMSThemeColors.surfaceDefault,
+                                        shape: const CircleBorder(),
+                                        value: true,
+                                        onChanged: (value) {}),
+                                  ),
+                                ),
                               Expanded(
                                 child: HMSSubheadingText(
                                     text: question.options[index].text ?? "",
@@ -102,17 +168,26 @@ class PollResultCard extends StatelessWidget {
                                     textColor:
                                         HMSThemeColors.onSurfaceHighEmphasis),
                               ),
-                              if (isVoteCountHidden &&
+
+                              ///If it's not a poll and selected option show checkbox
+                              ///If its a poll then only show when vote count is hidden
+                              if ((!isPoll || isVoteCountHidden) &&
                                   isSelectedOption(
                                       question.options[index].index))
-                                Checkbox(
-                                    activeColor:
-                                        HMSThemeColors.onSurfaceHighEmphasis,
-                                    checkColor: HMSThemeColors.surfaceDefault,
-                                    shape: const CircleBorder(),
-                                    value: true,
-                                    onChanged: (value) {}),
-                              if (!isVoteCountHidden)
+                                isPoll
+                                    ? Checkbox(
+                                        activeColor: HMSThemeColors
+                                            .onSurfaceHighEmphasis,
+                                        checkColor:
+                                            HMSThemeColors.surfaceDefault,
+                                        shape: const CircleBorder(),
+                                        value: true,
+                                        onChanged: (value) {})
+                                    : HMSSubheadingText(
+                                        text: "Your Answer",
+                                        textColor: HMSThemeColors
+                                            .onSurfaceMediumEmphasis),
+                              if (!isVoteCountHidden && isPoll)
                                 Padding(
                                   padding: const EdgeInsets.only(left: 8.0),
                                   child: HMSSubheadingText(
@@ -123,11 +198,11 @@ class PollResultCard extends StatelessWidget {
                                 )
                             ],
                           ),
-                          if (!isVoteCountHidden)
+                          if (!isVoteCountHidden && isPoll)
                             const SizedBox(
                               height: 8,
                             ),
-                          if (!isVoteCountHidden)
+                          if (!isVoteCountHidden && isPoll)
                             Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
@@ -164,7 +239,7 @@ class PollResultCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     HMSTitleText(
-                        text: "Voted",
+                        text: isPoll ? "Voted" : "Answered",
                         textColor: HMSThemeColors.onSurfaceLowEmphasis)
                   ],
                 )

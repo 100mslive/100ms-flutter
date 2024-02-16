@@ -10,18 +10,19 @@ import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_listenable_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 
-///[PollForm] widget renders the poll creation form with poll title.
-class PollForm extends StatefulWidget {
-  const PollForm({super.key});
+///[PollQuizForm] widget renders the poll creation form with poll title.
+class PollQuizForm extends StatefulWidget {
+  final bool isPoll;
+
+  const PollQuizForm({Key? key, required this.isPoll}) : super(key: key);
 
   @override
-  State<PollForm> createState() => _PollFormState();
+  State<PollQuizForm> createState() => _PollQuizFormState();
 }
 
-class _PollFormState extends State<PollForm> {
+class _PollQuizFormState extends State<PollQuizForm> {
   late TextEditingController _pollNameController;
   bool _hideVoteCount = false;
-  // bool _isAnonymous = false;
 
   @override
   void initState() {
@@ -42,20 +43,14 @@ class _PollFormState extends State<PollForm> {
     });
   }
 
-  ///This method sets the value of the is anonymous switch
-  // void setIsAnonymous(bool value) {
-  //   setState(() {
-  //     _isAnonymous = value;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         HMSSubheadingText(
-            text: "Poll Name", textColor: HMSThemeColors.onSurfaceHighEmphasis),
+            text: "${widget.isPoll ? "Poll" : "Quiz"} Name",
+            textColor: HMSThemeColors.onSurfaceHighEmphasis),
         const SizedBox(
           height: 8,
         ),
@@ -81,7 +76,7 @@ class _PollFormState extends State<PollForm> {
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 fillColor: HMSThemeColors.surfaceDefault,
                 filled: true,
-                hintText: "Name this Poll",
+                hintText: "Name this ${widget.isPoll ? "Poll" : "Quiz"}",
                 hintStyle: HMSTextStyle.setTextStyle(
                     color: HMSThemeColors.onSurfaceLowEmphasis,
                     height: 1.5,
@@ -207,11 +202,17 @@ class _PollFormState extends State<PollForm> {
                       value: meetingStore,
                       child: PollQuestionBottomSheet(
                         pollName: _pollNameController.text.trim(),
+                        isPoll: widget.isPoll,
+                        rolesThatCanViewResponse: _hideVoteCount
+                            ? meetingStore.localPeer != null
+                                ? [meetingStore.localPeer!.role]
+                                : null
+                            : null,
                       )),
                 );
               },
               childWidget: HMSTitleText(
-                text: 'Create Poll',
+                text: 'Create ${widget.isPoll ? "Poll" : "Quiz"}',
                 textColor: _pollNameController.text.isEmpty
                     ? HMSThemeColors.onPrimaryLowEmphasis
                     : HMSThemeColors.onPrimaryHighEmphasis,
