@@ -2236,10 +2236,10 @@ class MeetingStore extends ChangeNotifier
 
   ///Polls and Quiz
 
-  ///Method to start poll
+  ///Method to start poll and quiz
   void quickStartPoll(HMSPollBuilder pollBuilder) {
     _hmsSDKInteractor.quickStartPoll(
-        pollBuilder: pollBuilder, hmsActionResultListener: this);
+        pollBuilder: pollBuilder);
   }
 
   ///Method to add Poll Response
@@ -2673,7 +2673,7 @@ class MeetingStore extends ChangeNotifier
   @override
   void onPollUpdate(
       {required HMSPoll poll, required HMSPollUpdateType pollUpdateType}) {
-    log("onPollUpdate -> poll $poll updateType: $pollUpdateType startedAt: ${poll.startedAt}");
+    log("onPollUpdate -> poll $poll updateType: $pollUpdateType}");
     switch (pollUpdateType) {
       ///If the poll is started we add the poll in questions list
       case HMSPollUpdateType.started:

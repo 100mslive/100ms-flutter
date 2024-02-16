@@ -44,25 +44,27 @@ class PollResultCard extends StatelessWidget {
   }
 
   bool isMyOptionCorrect() {
-    if (question.type == HMSPollQuestionType.singleChoice) {
-      if (question.correctAnswer?.option != null) {
-        return question.correctAnswer?.option ==
-            question.myResponses[questionNumber].selectedOption;
-      }
-    } else if (question.type == HMSPollQuestionType.multiChoice) {
-      if (question.myResponses.length !=
-          question.correctAnswer?.options?.length) {
-        return false;
-      }
-      if (question.correctAnswer?.options != null) {
-        for (var option in question.correctAnswer!.options!) {
-          if (!(question.myResponses[questionNumber].selectedOptions
-                  ?.contains(option) ??
-              true)) {
-            return false;
-          }
+    if (question.myResponses.isNotEmpty) {
+      if (question.type == HMSPollQuestionType.singleChoice) {
+        if (question.correctAnswer?.option != null) {
+          return question.correctAnswer?.option ==
+              question.myResponses[questionNumber].selectedOption;
         }
-        return true;
+      } else if (question.type == HMSPollQuestionType.multiChoice) {
+        if (question.myResponses.length !=
+            question.correctAnswer?.options?.length) {
+          return false;
+        }
+        if (question.correctAnswer?.options != null) {
+          for (var option in question.correctAnswer!.options!) {
+            if (!(question.myResponses[questionNumber].selectedOptions
+                    ?.contains(option) ??
+                true)) {
+              return false;
+            }
+          }
+          return true;
+        }
       }
     }
     return false;
@@ -88,7 +90,7 @@ class PollResultCard extends StatelessWidget {
             color: HMSThemeColors.surfaceDefault,
             borderRadius: BorderRadius.circular(8),
             border: isPollEnded
-                ? isPoll
+                ? (isPoll || question.myResponses.isEmpty)
                     ? const Border()
                     : Border.all(
                         color: isMyOptionCorrect()

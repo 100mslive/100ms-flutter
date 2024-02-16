@@ -32,8 +32,7 @@ abstract class HMSPollInteractivityCenter {
   ///
   ///Refer [Quick Start Poll](Add docs link here)
   static void quickStartPoll(
-      {required HMSPollBuilder pollBuilder,
-      required HMSActionResultListener? hmsActionResultListener}) async {
+      {required HMSPollBuilder pollBuilder}) async {
     PlatformService.invokeMethod(PlatformMethod.quickStartPoll,
         arguments: {"poll_builder": pollBuilder.toMap()});
   }
