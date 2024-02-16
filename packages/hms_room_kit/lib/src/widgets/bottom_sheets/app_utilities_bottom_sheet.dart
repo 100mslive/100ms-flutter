@@ -51,29 +51,30 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
           bottom: 24),
       child: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ///This renders the title and close button
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    HMSTitleText(
-                      text: "Options",
-                      textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                      letterSpacing: 0.15,
-                    )
-                  ],
-                ),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    HMSCrossButton(),
-                  ],
-                )
-              ],
-            ),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      HMSTitleText(
+                        text: "Options",
+                        textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                        letterSpacing: 0.15,
+                      )
+                    ],
+                  ),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      HMSCrossButton(),
+                    ],
+                  )
+                ],
+              ),
+            ]),
             Padding(
               padding: const EdgeInsets.only(top: 16, bottom: 16),
               child: Divider(

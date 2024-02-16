@@ -414,12 +414,10 @@ class HMSSDKInteractor {
         forPeer: forPeer, hmsActionResultListener: hmsActionResultListener);
   }
 
-  void quickStartPoll(
-      {required HMSPollBuilder pollBuilder,
-      HMSActionResultListener? hmsActionResultListener}) {
+  void quickStartPoll({required HMSPollBuilder pollBuilder}) {
     HMSPollInteractivityCenter.quickStartPoll(
-        pollBuilder: pollBuilder,
-        hmsActionResultListener: hmsActionResultListener);
+      pollBuilder: pollBuilder,
+    );
   }
 
   Future<dynamic> addSingleChoicePollResponse(

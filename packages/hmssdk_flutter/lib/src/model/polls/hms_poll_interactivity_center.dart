@@ -31,9 +31,7 @@ abstract class HMSPollInteractivityCenter {
   /// Future<dynamic> - A Future representing the asynchronous operation. It will return either null if the operation is successful, or an [HMSException] if an error occurs.
   ///
   ///Refer [Quick Start Poll](Add docs link here)
-  static void quickStartPoll(
-      {required HMSPollBuilder pollBuilder,
-      required HMSActionResultListener? hmsActionResultListener}) async {
+  static void quickStartPoll({required HMSPollBuilder pollBuilder}) async {
     PlatformService.invokeMethod(PlatformMethod.quickStartPoll,
         arguments: {"poll_builder": pollBuilder.toMap()});
   }
@@ -227,14 +225,14 @@ class HMSPollBuilder {
     if (_rolesThatCanViewResponse == null) {
       _rolesThatCanViewResponse = [];
     }
-    _rolesThatCanViewResponse?.addAll(rolesThatCanViewResponses);
+    _rolesThatCanViewResponse = rolesThatCanViewResponses;
   }
 
   set withRolesThatCanVote(List<HMSRole> rolesThatCanVote) {
     if (_rolesThatCanVote == null) {
       _rolesThatCanVote = [];
     }
-    _rolesThatCanVote?.addAll(rolesThatCanVote);
+    _rolesThatCanVote = rolesThatCanVote;
   }
 
   set withTitle(String title) {

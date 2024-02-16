@@ -1,33 +1,15 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 
-- Polls: Create Polls initial Screen
-https://100ms.atlassian.net/browse/FLUT-194
+- Polls: Create a Quiz
+https://100ms.atlassian.net/browse/FLUT-210
 
-- Polls: Ask a Question Screen
-https://100ms.atlassian.net/browse/FLUT-195
+- Polls: Launch a Quiz
+https://100ms.atlassian.net/browse/FLUT-213
 
-- Polls: Single Choice Question Screen
-https://100ms.atlassian.net/browse/FLUT-196
+- Polls: Quiz Panel with a single question
+https://100ms.atlassian.net/browse/FLUT-211
 
-- Polls: Multiple Choice Question Screen
-https://100ms.atlassian.net/browse/FLUT-197
-
-- Polls: Launch Poll Screen
-https://100ms.atlassian.net/browse/FLUT-202
-
-- Polls: Poll Panel with a live Poll Screen
-https://100ms.atlassian.net/browse/FLUT-204
-
-- Created poll with hide count, can see count as VNRT
-https://100ms.atlassian.net/browse/FLUT-233
-
-- host created poll but VNRT getting notification instantly even when timed metadata is ON
-https://100ms.atlassian.net/browse/FLUT-220
-
-- VNRT user not able to see poll if rejoin session
-https://100ms.atlassian.net/browse/FLUT-235
-
-Room Kit: 1.0.12
-Core SDK: 1.9.9
+Room Kit: 1.0.13
+Core SDK: 1.9.10
 Android SDK: 2.9.0
 iOS SDK: 1.5.0

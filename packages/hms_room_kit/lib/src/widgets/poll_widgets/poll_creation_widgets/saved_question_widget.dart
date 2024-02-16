@@ -11,14 +11,15 @@ class SavedQuestionWidget extends StatelessWidget {
   final int questionNumber;
   final int totalQuestions;
   final HMSPollQuestionBuilder pollQuestionBuilder;
-  final Function editPollCallback;
-
+  final Function editCallback;
+  final bool isPoll;
   const SavedQuestionWidget(
       {super.key,
       required this.questionNumber,
       required this.totalQuestions,
       required this.pollQuestionBuilder,
-      required this.editPollCallback});
+      required this.editCallback,
+      required this.isPoll});
 
   @override
   Widget build(BuildContext context) {
@@ -68,16 +69,31 @@ class SavedQuestionWidget extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                     maxLines: 3,
                   ),
-                  children: pollQuestionBuilder.pollOptions
-                      .map((e) => Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: HMSSubheadingText(
-                              text: e,
-                              textColor: HMSThemeColors.onSurfaceMediumEmphasis,
-                              maxLines: 3,
-                            ),
-                          ))
-                      .toList()),
+                  children: isPoll
+                      ? pollQuestionBuilder.pollOptions
+                          .map((e) => Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: HMSSubheadingText(
+                                  text: e,
+                                  textColor:
+                                      HMSThemeColors.onSurfaceMediumEmphasis,
+                                  maxLines: 3,
+                                ),
+                              ))
+                          .toList()
+                      : pollQuestionBuilder.quizOptions
+                          .map((e) => Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: HMSSubheadingText(
+                                  text: e.text,
+                                  textColor:
+                                      HMSThemeColors.onSurfaceMediumEmphasis,
+                                  maxLines: 3,
+                                ),
+                              ))
+                          .toList()),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -108,7 +124,7 @@ class SavedQuestionWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8.0),
                         ))),
                     onPressed: () {
-                      editPollCallback(pollQuestionBuilder);
+                      editCallback(pollQuestionBuilder);
                     },
                     child: HMSTitleText(
                         text: "Edit",

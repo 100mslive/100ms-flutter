@@ -19,7 +19,9 @@ import 'package:hms_room_kit/src/widgets/poll_widgets/voting_flow_widgets/poll_v
 
 ///[PollVoteBottomSheet] renders the voting bottom sheet for polls
 class PollVoteBottomSheet extends StatefulWidget {
-  const PollVoteBottomSheet({super.key});
+  final bool isPoll;
+
+  const PollVoteBottomSheet({super.key, required this.isPoll});
 
   @override
   State<PollVoteBottomSheet> createState() => _PollVoteBottomSheetState();
@@ -107,8 +109,9 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                 ),
               ),
               HMSTitleText(
-                text:
-                    "${hmsPollStore.poll.createdBy?.name.substring(0, math.min(15, hmsPollStore.poll.createdBy?.name.length ?? 0)) ?? ""} started a poll",
+                text: hmsPollStore.poll.createdBy == null
+                    ? "Participant started a new ${hmsPollStore.poll.category == HMSPollCategory.poll ? "poll" : "quiz"}"
+                    : "${hmsPollStore.poll.createdBy?.name.substring(0, math.min(15, hmsPollStore.poll.createdBy?.name.length ?? 0)) ?? ""} started a ${widget.isPoll ? "poll" : "quiz"}",
                 textColor: HMSThemeColors.onSurfaceHighEmphasis,
                 letterSpacing: 0.15,
               ),
@@ -144,12 +147,15 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                               question: poll.questions![index],
                               totalVotes: totalVotes,
                               isVoteCountHidden: isVoteCountHidden,
+                              isPoll: poll.category == HMSPollCategory.poll,
+                              isPollEnded: poll.state == HMSPollState.stopped,
                             );
                           } else {
                             return PollVoteCard(
                                 questionNumber: index,
                                 totalQuestions: poll.questions?.length ?? 0,
-                                question: poll.questions![index]);
+                                question: poll.questions![index],
+                                isPoll: poll.category == HMSPollCategory.poll);
                           }
                         });
                   }),
@@ -176,7 +182,8 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                                       .stopPoll(hmsPollStore.poll);
                                 },
                                 childWidget: HMSTitleText(
-                                    text: "End Poll",
+                                    text:
+                                        "End ${widget.isPoll ? "Poll" : "Quiz"}",
                                     textColor:
                                         HMSThemeColors.onPrimaryHighEmphasis),
                                 buttonBackgroundColor:
