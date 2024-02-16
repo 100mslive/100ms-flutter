@@ -1,8 +1,7 @@
-///{@nodoc}
+///[HMSAudioCodec] contains audio codec supported by HMSSDK
 enum HMSAudioCodec { opus, unknown }
 
-///{@nodoc}
-///AudioCodec
+///Utility method to return audio codec from string and vice versa
 extension HMSAudioCodecValues on HMSAudioCodec {
   static HMSAudioCodec getHMSCodecFromName(String name) {
     switch (name) {
