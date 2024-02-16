@@ -31,8 +31,7 @@ abstract class HMSPollInteractivityCenter {
   /// Future<dynamic> - A Future representing the asynchronous operation. It will return either null if the operation is successful, or an [HMSException] if an error occurs.
   ///
   ///Refer [Quick Start Poll](Add docs link here)
-  static void quickStartPoll(
-      {required HMSPollBuilder pollBuilder}) async {
+  static void quickStartPoll({required HMSPollBuilder pollBuilder}) async {
     PlatformService.invokeMethod(PlatformMethod.quickStartPoll,
         arguments: {"poll_builder": pollBuilder.toMap()});
   }

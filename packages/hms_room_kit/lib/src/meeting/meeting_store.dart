@@ -2238,8 +2238,7 @@ class MeetingStore extends ChangeNotifier
 
   ///Method to start poll and quiz
   void quickStartPoll(HMSPollBuilder pollBuilder) {
-    _hmsSDKInteractor.quickStartPoll(
-        pollBuilder: pollBuilder);
+    _hmsSDKInteractor.quickStartPoll(pollBuilder: pollBuilder);
   }
 
   ///Method to add Poll Response

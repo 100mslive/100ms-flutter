@@ -44,7 +44,7 @@ class HMSPollStartToast extends StatelessWidget {
         ),
       ),
       action: HMSToastButton(
-        buttonTitle: poll.category == HMSPollCategory.poll?"Vote":"Answer",
+        buttonTitle: poll.category == HMSPollCategory.poll ? "Vote" : "Answer",
         action: () {
           var pollStore = context.read<HMSPollStore>();
           showModalBottomSheet(
