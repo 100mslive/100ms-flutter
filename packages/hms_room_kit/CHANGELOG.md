@@ -5,6 +5,21 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+## 1.0.13 - 2024-02-16
+
+| Package        | Version                                                                                                |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| hms_room_kit   | 1.0.13    |
+| hmssdk_flutter | 1.9.10     |
+
+### 🚀 Added
+
+- Introducing quizzes on prebuilt
+
+  Users can now create, manage, and stop quizzes directly from the prebuilt interface.
+
+Updated `hmssdk_flutter` package version to 1.9.10
+
 ## 1.0.12 - 2024-02-12
 
 | Package        | Version                                                                                                |
