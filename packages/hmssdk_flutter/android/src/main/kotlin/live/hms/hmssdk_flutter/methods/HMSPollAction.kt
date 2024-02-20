@@ -8,6 +8,7 @@ import live.hms.hmssdk_flutter.HMSExceptionExtension
 import live.hms.hmssdk_flutter.HMSResultExtension
 import live.hms.hmssdk_flutter.poll_extension.HMSPollBuilderExtension
 import live.hms.hmssdk_flutter.poll_extension.HMSPollAnswerResponseExtension
+import live.hms.hmssdk_flutter.poll_extension.HMSPollLeaderboardResponseExtension
 import live.hms.video.error.HMSException
 import live.hms.video.polls.HMSPollResponseBuilder
 import live.hms.video.polls.models.HmsPoll
@@ -15,6 +16,7 @@ import live.hms.video.polls.models.HmsPollState
 import live.hms.video.polls.models.answer.PollAnswerResponse
 import live.hms.video.polls.models.question.HMSPollQuestion
 import live.hms.video.polls.models.question.HMSPollQuestionOption
+import live.hms.video.polls.network.PollLeaderboardResponse
 import live.hms.video.sdk.HMSSDK
 import live.hms.video.sdk.HmsTypedActionResultListener
 
@@ -27,6 +29,7 @@ class HMSPollAction {
                 "add_single_choice_poll_response" -> addSingleChoicePollResponse(call,result,hmssdk,polls)
                 "add_multi_choice_poll_response" -> addMultiChoicePollResponse(call,result,hmssdk,polls)
                 "stop_poll" -> stopPoll(call,result,hmssdk,polls)
+                "fetch_leaderboard" -> fetchLeaderboard(call,result,hmssdk)
             }
         }
 
@@ -181,6 +184,28 @@ class HMSPollAction {
             }
             hmssdk.getHmsInteractivityCenter().stop(poll,HMSCommonAction.getActionListener(result))
 
+        }
+
+        private fun fetchLeaderboard(call: MethodCall, methodChannelResult: MethodChannel.Result, hmssdk: HMSSDK){
+            val pollId = call.argument<String?>("poll_id")
+            val count = call.argument<Int?>("count")
+            val startIndex = call.argument<Int?>("start_index")
+            val includeCurrentPeer = call.argument<Boolean?>("include_current_peer")
+
+            if(pollId == null || count == null || startIndex == null || includeCurrentPeer == null){
+                HMSErrorLogger.returnArgumentsError("Either pollId, count, startIndex or includeCurrentPeer is null")
+                return
+            }
+
+            hmssdk.getHmsInteractivityCenter().fetchLeaderboard(pollId,count.toLong(),startIndex.toLong(),includeCurrentPeer, object :  HmsTypedActionResultListener<PollLeaderboardResponse> {
+                override fun onSuccess(result: PollLeaderboardResponse) {
+                    methodChannelResult.success(HMSResultExtension.toDictionary(true,HMSPollLeaderboardResponseExtension.toDictionary(result)))
+                }
+
+                override fun onError(error: HMSException) {
+                    methodChannelResult.success(HMSResultExtension.toDictionary(false,HMSExceptionExtension.toDictionary(error)))
+                }
+            })
         }
     }
 }

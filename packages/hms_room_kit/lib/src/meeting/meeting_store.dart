@@ -2264,6 +2264,15 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.stopPoll(poll: poll);
   }
 
+  void fetchLeaderboard(HMSPoll poll) async {
+    var data = await _hmsSDKInteractor.fetchLeaderboard(
+        poll: poll, count: 5, startIndex: 0, includeCurrentPeer: true);
+
+    if (data is HMSPollLeaderboardResponse) {
+      log(data.summary?.respondedPeersCount.toString() ?? "null");
+    } else {}
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
   @override
   void onSuccess(
@@ -2749,6 +2758,9 @@ class MeetingStore extends ChangeNotifier
         break;
 
       case HMSPollUpdateType.stopped:
+        if (poll.category == HMSPollCategory.quiz) {
+          fetchLeaderboard(poll);
+        }
         removeToast(HMSToastsType.pollStartedToast, data: poll.pollId);
         int index = pollQuestions
             .indexWhere((element) => element.poll.pollId == poll.pollId);

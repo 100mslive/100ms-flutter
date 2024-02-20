@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/widgets/poll_widgets/leaderboard_widgets/quiz_leaderboard.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -188,6 +189,47 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                                         HMSThemeColors.onPrimaryHighEmphasis),
                                 buttonBackgroundColor:
                                     HMSThemeColors.alertErrorDefault,
+                              ),
+                            ],
+                          )
+                        : const SizedBox();
+                  }),
+              Selector<HMSPollStore, bool>(
+                  selector: (_, hmsPollStore) =>
+                      hmsPollStore.poll.state == HMSPollState.stopped,
+                  builder: (_, isPollEnded, __) {
+                    return (isPollEnded && !widget.isPoll)
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              HMSButton(
+                                width: MediaQuery.of(context).size.width * 0.45,
+                                onPressed: () {
+                                  var meetingStore =
+                                      context.read<MeetingStore>();
+                                  showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor:
+                                          HMSThemeColors.surfaceDim,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(16),
+                                            topRight: Radius.circular(16)),
+                                      ),
+                                      context: context,
+                                      builder: (ctx) =>
+                                          ChangeNotifierProvider.value(
+                                            value: meetingStore,
+                                            child: QuizLeaderboard(
+                                              poll:hmsPollStore.poll
+                                            )));
+                                },
+                                childWidget: HMSTitleText(
+                                    text: "View Leaderboard",
+                                    textColor:
+                                        HMSThemeColors.onPrimaryHighEmphasis),
+                                buttonBackgroundColor:
+                                    HMSThemeColors.primaryDefault,
                               ),
                             ],
                           )

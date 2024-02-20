@@ -1,5 +1,6 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/model/polls/hms_poll_answer_response.dart';
+import 'package:hmssdk_flutter/src/model/polls/hms_poll_leaderboard_response.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 abstract class HMSPollInteractivityCenter {
@@ -173,6 +174,36 @@ abstract class HMSPollInteractivityCenter {
             }
           });
           return pollResponses;
+        }
+      } else {
+        if (result["data"]["error"] != null) {
+          return HMSException.fromMap(result["data"]["error"]);
+        }
+      }
+    }
+  }
+
+  ///[fetchLeaderboard] method is used to fetch leaderboard
+  static Future<dynamic> fetchLeaderboard(
+      {required HMSPoll poll,
+      required int? count,
+      required int startIndex,
+      required bool includeCurrentPeer}) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.fetchLeaderboard,
+        arguments: {
+          "poll_id": poll.pollId,
+          "count": count,
+          "start_index": startIndex,
+          "include_current_peer": includeCurrentPeer
+        });
+
+    if (result != null) {
+      if (result["success"]) {
+        if (result["data"] != null) {
+          return HMSPollLeaderboardResponse.fromMap(result["data"]);
+        } else {
+          return null;
         }
       } else {
         if (result["data"]["error"] != null) {

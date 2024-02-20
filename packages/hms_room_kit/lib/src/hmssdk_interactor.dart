@@ -447,4 +447,16 @@ class HMSSDKInteractor {
   Future<dynamic> stopPoll({required HMSPoll poll}) {
     return HMSPollInteractivityCenter.stopPoll(poll: poll);
   }
+
+  Future<dynamic> fetchLeaderboard(
+      {required HMSPoll poll,
+      required int count,
+      required int startIndex,
+      required bool includeCurrentPeer}) {
+    return HMSPollInteractivityCenter.fetchLeaderboard(
+        poll: poll,
+        count: count,
+        startIndex: startIndex,
+        includeCurrentPeer: includeCurrentPeer);
+  }
 }

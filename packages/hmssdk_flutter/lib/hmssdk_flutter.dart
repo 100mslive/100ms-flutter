@@ -108,6 +108,10 @@ export 'src/model/polls/hms_poll_question_builder.dart';
 export 'src/model/polls/hms_poll.dart';
 export 'src/model/polls/hms_poll_question.dart';
 export 'src/model/polls/hms_poll_question_option.dart';
+export 'src/model/polls/hms_poll_leaderboard_entry.dart';
+export 'src/model/polls/hms_poll_leaderboard_response.dart';
+export 'src/model/polls/hms_poll_leaderboard_summary.dart';
+export 'src/model/polls/hms_poll_peer_info_response.dart';
 
 //Views
 export 'src/ui/meeting/hms_texture_view.dart';

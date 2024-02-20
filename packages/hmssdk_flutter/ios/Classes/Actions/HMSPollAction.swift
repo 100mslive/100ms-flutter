@@ -23,6 +23,8 @@ class HMSPollAction{
             break
         case "stop_poll":
             stopPoll(call, result, hmsSDK, polls)
+        case "fetch_leaderboard":
+            fetchLeaderboard(call, result, hmsSDK, polls)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -190,5 +192,35 @@ class HMSPollAction{
                 }
             }
         }
+    }
+    
+    static private func fetchLeaderboard(_ call: FlutterMethodCall,_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?,_ currentPolls: [HMSPoll]?){
+        
+        let arguments = call.arguments as? [AnyHashable: Any]
+        
+        guard let pollId = arguments?["poll_id"] as? String,
+              let count = arguments?["count"] as? Int,
+              let startIndex = arguments?["start_index"] as? Int,
+              let includeCurrentPeer = arguments?["include_current_peer"] as? Bool
+        else{
+            HMSErrorLogger.returnArgumentsError("Either pollId, count, startIndex or includeCurrentPeer is null")
+            return
+        }
+        
+        if let poll = currentPolls?.first(where: {$0.pollID == pollId}){
+            hmsSDK?.interactivityCenter.fetchLeaderboard(for: poll, offset: startIndex, count: count,includeCurrentPeer: includeCurrentPeer){
+                pollLeaderboardResponse, error in
+                
+                if let error = error{
+                    result(HMSResultExtension.toDictionary(false, HMSErrorExtension.toDictionary(error)))
+                }else{
+                    result(HMSResultExtension.toDictionary(true, HMSPollLeaderboardResponseExtension.toDictionary(pollLeaderboardResponse: pollLeaderboardResponse)))
+                }
+            }
+        }else{
+            HMSErrorLogger.returnArgumentsError("No poll with given pollId found")
+            return
+        }
+        
     }
 }
