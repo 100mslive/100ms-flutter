@@ -257,6 +257,8 @@ class MeetingStore extends ChangeNotifier
 
   List<HMSPollStore> hlsViewerPolls = [];
 
+  HMSPollLeaderboardResponse? pollLeaderboardResponse;
+
   ///List of bottom sheets currently open
   List<BuildContext> bottomSheets = [];
 
@@ -2243,21 +2245,25 @@ class MeetingStore extends ChangeNotifier
 
   ///Method to add Poll Response
   void addSingleChoicePollResponse(HMSPoll poll, HMSPollQuestion question,
-      HMSPollQuestionOption pollQuestionOption) {
+      HMSPollQuestionOption pollQuestionOption,
+      {Duration? timeTakenToAnswer}) {
     _hmsSDKInteractor.addSingleChoicePollResponse(
         poll: poll,
         question: question,
         pollQuestionOption: pollQuestionOption,
-        peer: localPeer);
+        peer: localPeer,
+        timeTakenToAnswer: timeTakenToAnswer);
   }
 
   void addMultiChoicePollResponse(HMSPoll poll, HMSPollQuestion question,
-      List<HMSPollQuestionOption> pollQuestionOption) {
+      List<HMSPollQuestionOption> pollQuestionOption,
+      {Duration? timeTakenToAnswer}) {
     _hmsSDKInteractor.addMultiChoicePollResponse(
         poll: poll,
         question: question,
         pollQuestionOption: pollQuestionOption,
-        peer: localPeer);
+        peer: localPeer,
+        timeTakenToAnswer: timeTakenToAnswer);
   }
 
   void stopPoll(HMSPoll poll) {
@@ -2269,8 +2275,11 @@ class MeetingStore extends ChangeNotifier
         poll: poll, count: 5, startIndex: 0, includeCurrentPeer: true);
 
     if (data is HMSPollLeaderboardResponse) {
-      log(data.summary?.respondedPeersCount.toString() ?? "null");
-    } else {}
+      pollLeaderboardResponse = data;
+    } else {
+      log("fetchLeaderboard error: $data");
+    }
+    notifyListeners();
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod

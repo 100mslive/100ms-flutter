@@ -48,7 +48,7 @@ class PollResultCard extends StatelessWidget {
       if (question.type == HMSPollQuestionType.singleChoice) {
         if (question.correctAnswer?.option != null) {
           return question.correctAnswer?.option ==
-              question.myResponses[questionNumber].selectedOption;
+              question.myResponses[0].selectedOption;
         }
       } else if (question.type == HMSPollQuestionType.multiChoice) {
         if (question.myResponses.length !=
@@ -57,8 +57,7 @@ class PollResultCard extends StatelessWidget {
         }
         if (question.correctAnswer?.options != null) {
           for (var option in question.correctAnswer!.options!) {
-            if (!(question.myResponses[questionNumber].selectedOptions
-                    ?.contains(option) ??
+            if (!(question.myResponses[0].selectedOptions?.contains(option) ??
                 true)) {
               return false;
             }

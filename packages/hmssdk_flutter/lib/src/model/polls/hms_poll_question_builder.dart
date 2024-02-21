@@ -75,6 +75,8 @@ class HMSPollQuestionBuilder {
 
   HMSPollQuestionType get type => _type;
 
+  int? get weight => _weight;
+
   Map<String, dynamic> toMap() {
     return {
       'can_skip': _canSkip,

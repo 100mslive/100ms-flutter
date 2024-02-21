@@ -72,6 +72,8 @@ class HMSPollAction{
             return
         }
         
+        let timeTakenToAnswer = arguments?["time_taken_to_answer"] as? Int
+        
         if let optionIndex = answer["index"] as? Int {
             
             if let poll = currentPolls?.first(where: {$0.pollID == pollId}){
@@ -80,7 +82,7 @@ class HMSPollAction{
                     
                     if let optionSelected = question.options?[optionIndex - 1]{
                         let response = HMSPollResponseBuilder(poll: poll)
-                        response.addResponse(for: question, options: [optionSelected])
+                        response.addResponse(for: question, options: [optionSelected],duration: timeTakenToAnswer)
                         hmsSDK?.interactivityCenter.add(response: response){ pollResult, error in
                             
                             if let error = error{
@@ -126,6 +128,9 @@ class HMSPollAction{
             HMSErrorLogger.returnArgumentsError("Invalid arguments")
             return
         }
+        
+        let timeTakenToAnswer = arguments?["time_taken_to_answer"] as? Int
+        
         if let poll = currentPolls?.first(where: {$0.pollID == pollId}){
             
             if let question = poll.questions?[index]{
@@ -144,7 +149,7 @@ class HMSPollAction{
                     }
                 }
                 let response = HMSPollResponseBuilder(poll: poll)
-                response.addResponse(for: question, options: selectedOptions)
+                response.addResponse(for: question, options: selectedOptions,duration: timeTakenToAnswer)
                 hmsSDK?.interactivityCenter.add(response: response){ pollResult, error in
                     
                     if let error = error{
@@ -207,7 +212,7 @@ class HMSPollAction{
             return
         }
         
-        if let poll = currentPolls?.first(where: {$0.pollID == pollId}){
+        if let poll = hmsSDK?.interactivityCenter.polls.first(where: {$0.pollID == pollId}){
             hmsSDK?.interactivityCenter.fetchLeaderboard(for: poll, offset: startIndex, count: count,includeCurrentPeer: includeCurrentPeer){
                 pollLeaderboardResponse, error in
                 

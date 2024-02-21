@@ -10,7 +10,6 @@ class SummaryBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.45,
       height: 80,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),

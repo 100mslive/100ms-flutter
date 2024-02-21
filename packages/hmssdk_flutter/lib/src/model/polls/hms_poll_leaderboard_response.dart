@@ -10,7 +10,6 @@ class HMSPollLeaderboardResponse {
       {required this.entries, required this.hasNext, required this.summary});
 
   factory HMSPollLeaderboardResponse.fromMap(Map map) {
-
     List<HMSPollLeaderboardEntry> peerEntryList = [];
     if (map["entries"] != null) {
       map["entries"].forEach((entry) {
@@ -18,7 +17,7 @@ class HMSPollLeaderboardResponse {
       });
     }
     return HMSPollLeaderboardResponse(
-        entries: map["entries"]==null?null:peerEntryList,
+        entries: map["entries"] == null ? null : peerEntryList,
         hasNext: map["has_next"],
         summary: map["summary"] == null
             ? null

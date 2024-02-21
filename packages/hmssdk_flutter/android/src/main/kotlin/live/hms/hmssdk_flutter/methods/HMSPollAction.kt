@@ -53,6 +53,7 @@ class HMSPollAction {
             val index = call.argument<Int?>("question_index")
             val userId = call.argument<String?>("user_id")
             val answer = call.argument<HashMap<String,Any?>>("answer")
+            val timeTakenToAnswer = call.argument<Int?>("time_taken_to_answer")
 
             /*
              * Here we get index for the option selected by the user
@@ -86,7 +87,14 @@ class HMSPollAction {
                              */
                             val questionOption = currentQuestion.options?.get(optionIndex - 1)
                             questionOption?.let {selectedOption ->
-                                val response = HMSPollResponseBuilder(poll, userId).addResponse(currentQuestion,selectedOption)
+                                val response =
+                                    timeTakenToAnswer?.let {_timeTakenToAnswer ->
+                                        HMSPollResponseBuilder(poll, userId).addResponse(currentQuestion,selectedOption,
+                                            _timeTakenToAnswer.toLong()
+                                        )
+                                    }?: run {
+                                        HMSPollResponseBuilder(poll, userId).addResponse(currentQuestion,selectedOption)
+                                    }
                                 hmssdk.getHmsInteractivityCenter().add(response, object : HmsTypedActionResultListener<PollAnswerResponse>{
                                     override fun onSuccess(result: PollAnswerResponse) {
                                         methodChannelResult.success(HMSResultExtension.toDictionary(true,HMSPollAnswerResponseExtension.toDictionary(result)))
@@ -117,6 +125,7 @@ class HMSPollAction {
             val index = call.argument<Int?>("question_index")
             val userId = call.argument<String?>("user_id")
             val answer = call.argument<ArrayList<HashMap<String,Any?>?>>("answer")
+            val timeTakenToAnswer = call.argument<Int?>("time_taken_to_answer")
 
             /*
              * We fetch the polls which are currently active and find the poll matching the pollId
@@ -148,7 +157,14 @@ class HMSPollAction {
                             }
                         }
 
-                        val response = HMSPollResponseBuilder(poll, userId).addResponse(currentQuestion,questionOptions)
+                        val response =
+                            timeTakenToAnswer?.let {_timeTakenToAnswer ->
+                                HMSPollResponseBuilder(poll, userId).addResponse(currentQuestion,questionOptions,
+                                    _timeTakenToAnswer.toLong()
+                                )
+                            }?: run {
+                                HMSPollResponseBuilder(poll, userId).addResponse(currentQuestion,questionOptions)
+                            }
                         hmssdk.getHmsInteractivityCenter().add(response, object : HmsTypedActionResultListener<PollAnswerResponse>{
                             override fun onSuccess(result: PollAnswerResponse) {
                                 methodChannelResult.success(HMSResultExtension.toDictionary(true,HMSPollAnswerResponseExtension.toDictionary(result)))

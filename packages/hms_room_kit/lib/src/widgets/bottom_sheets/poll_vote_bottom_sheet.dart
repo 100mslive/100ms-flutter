@@ -203,7 +203,7 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               HMSButton(
-                                width: MediaQuery.of(context).size.width * 0.45,
+                                width: MediaQuery.of(context).size.width * 0.50,
                                 onPressed: () {
                                   var meetingStore =
                                       context.read<MeetingStore>();
@@ -219,10 +219,9 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                                       context: context,
                                       builder: (ctx) =>
                                           ChangeNotifierProvider.value(
-                                            value: meetingStore,
-                                            child: QuizLeaderboard(
-                                              poll:hmsPollStore.poll
-                                            )));
+                                              value: meetingStore,
+                                              child: QuizLeaderboard(
+                                                  poll: hmsPollStore.poll)));
                                 },
                                 childWidget: HMSTitleText(
                                     text: "View Leaderboard",

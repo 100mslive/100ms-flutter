@@ -424,24 +424,28 @@ class HMSSDKInteractor {
       {required HMSPoll poll,
       required HMSPollQuestion question,
       required HMSPollQuestionOption pollQuestionOption,
-      HMSPeer? peer}) {
+      HMSPeer? peer,
+      Duration? timeTakenToAnswer}) {
     return HMSPollInteractivityCenter.addSingleChoicePollResponse(
         hmsPoll: poll,
         pollQuestion: question,
         optionSelected: pollQuestionOption,
-        peer: peer);
+        peer: peer,
+        timeTakenToAnswer: timeTakenToAnswer);
   }
 
   Future<dynamic> addMultiChoicePollResponse(
       {required HMSPoll poll,
       required HMSPollQuestion question,
       required List<HMSPollQuestionOption> pollQuestionOption,
-      HMSPeer? peer}) {
+      HMSPeer? peer,
+      Duration? timeTakenToAnswer}) {
     return HMSPollInteractivityCenter.addMultiChoicePollResponse(
         hmsPoll: poll,
         pollQuestion: question,
         optionsSelected: pollQuestionOption,
-        peer: peer);
+        peer: peer,
+        timeTakenToAnswer: timeTakenToAnswer);
   }
 
   Future<dynamic> stopPoll({required HMSPoll poll}) {

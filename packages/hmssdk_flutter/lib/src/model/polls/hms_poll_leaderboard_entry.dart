@@ -19,7 +19,9 @@ class HMSPollLeaderboardEntry {
   factory HMSPollLeaderboardEntry.fromMap(Map map) {
     return HMSPollLeaderboardEntry(
         correctResponses: map["correct_responses"],
-        duration: map["duration"]==null?null:Duration(milliseconds: map["duration"]),
+        duration: map["duration"] == null
+            ? null
+            : Duration(milliseconds: map["duration"].toInt()),
         position: map["position"],
         score: map["score"],
         totalResponses: map["total_responses"],

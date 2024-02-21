@@ -149,9 +149,10 @@ class _PollVoteCardState extends State<PollVoteCard> {
                             context
                                 .read<MeetingStore>()
                                 .addSingleChoicePollResponse(
-                                    context.read<HMSPollStore>().poll,
-                                    widget.question,
-                                    selectedOption!);
+                                  context.read<HMSPollStore>().poll,
+                                  widget.question,
+                                  selectedOption!,
+                                );
                             selectedOption = null;
                           } else if (widget.question.type ==
                                   HMSPollQuestionType.multiChoice &&

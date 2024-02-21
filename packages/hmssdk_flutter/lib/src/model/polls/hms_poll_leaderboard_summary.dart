@@ -15,7 +15,7 @@ class HMSPollLeaderboardSummary {
   factory HMSPollLeaderboardSummary.fromMap(Map map) {
     return HMSPollLeaderboardSummary(
         averageScore: map["average_score"],
-        averageTime: Duration(milliseconds: map["average_time"]),
+        averageTime: Duration(milliseconds: map["average_time"].toInt()),
         respondedCorrectlyPeersCount: map["responded_correctly_peers_count"],
         respondedPeersCount: map["responded_peers_count"],
         totalPeersCount: map["total_peers_count"]);

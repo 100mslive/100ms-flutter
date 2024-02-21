@@ -1,6 +1,5 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/model/polls/hms_poll_answer_response.dart';
-import 'package:hmssdk_flutter/src/model/polls/hms_poll_leaderboard_response.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 abstract class HMSPollInteractivityCenter {
@@ -58,7 +57,8 @@ abstract class HMSPollInteractivityCenter {
       {required HMSPoll hmsPoll,
       required HMSPollQuestion pollQuestion,
       required HMSPollQuestionOption optionSelected,
-      HMSPeer? peer}) async {
+      HMSPeer? peer,
+      Duration? timeTakenToAnswer}) async {
     int questionIndex =
         hmsPoll.questions?.indexWhere((element) => element == pollQuestion) ??
             -1;
@@ -76,7 +76,8 @@ abstract class HMSPollInteractivityCenter {
           "poll_id": hmsPoll.pollId,
           "question_index": questionIndex,
           "user_id": peer?.customerUserId,
-          "answer": optionSelected.toMap()
+          "answer": optionSelected.toMap(),
+          "time_taken_to_answer": timeTakenToAnswer?.inMilliseconds
         });
 
     if (result != null) {
@@ -140,7 +141,8 @@ abstract class HMSPollInteractivityCenter {
       {required HMSPoll hmsPoll,
       required HMSPollQuestion pollQuestion,
       required List<HMSPollQuestionOption> optionsSelected,
-      HMSPeer? peer}) async {
+      HMSPeer? peer,
+      Duration? timeTakenToAnswer}) async {
     int questionIndex =
         hmsPoll.questions?.indexWhere((element) => element == pollQuestion) ??
             -1;
@@ -160,7 +162,8 @@ abstract class HMSPollInteractivityCenter {
           "poll_id": hmsPoll.pollId,
           "question_index": questionIndex,
           "user_id": peer?.customerUserId,
-          "answer": optionsSelectedMap
+          "answer": optionsSelectedMap,
+          "time_taken_to_answer": timeTakenToAnswer?.inMilliseconds
         });
 
     if (result != null) {
