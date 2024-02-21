@@ -9,7 +9,10 @@ https://100ms.atlassian.net/browse/FLUT-213
 - Polls: Quiz Panel with a single question
 https://100ms.atlassian.net/browse/FLUT-211
 
-Room Kit: 1.0.13
-Core SDK: 1.9.10
+- Polls: Quiz Ended Screen
+https://100ms.atlassian.net/browse/FLUT-205
+
+Room Kit: 1.0.14
+Core SDK: 1.9.11
 Android SDK: 2.9.0
 iOS SDK: 1.5.0
