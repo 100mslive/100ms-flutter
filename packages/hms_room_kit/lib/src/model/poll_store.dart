@@ -8,6 +8,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 ///without rebuilding the whole UI
 class HMSPollStore extends ChangeNotifier {
   HMSPoll poll;
+  HMSPollLeaderboardResponse? pollLeaderboardResponse;
 
   HMSPollStore({required this.poll});
 
@@ -15,6 +16,12 @@ class HMSPollStore extends ChangeNotifier {
   ///and notify the listeners
   void updateState(HMSPoll poll) {
     this.poll = poll;
+    notifyListeners();
+  }
+
+  void updatePollLeaderboardResponse(
+      HMSPollLeaderboardResponse pollLeaderboardResponse) {
+    this.pollLeaderboardResponse = pollLeaderboardResponse;
     notifyListeners();
   }
 }

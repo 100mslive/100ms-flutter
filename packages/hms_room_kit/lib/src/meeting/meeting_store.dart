@@ -257,8 +257,6 @@ class MeetingStore extends ChangeNotifier
 
   List<HMSPollStore> hlsViewerPolls = [];
 
-  HMSPollLeaderboardResponse? pollLeaderboardResponse;
-
   ///List of bottom sheets currently open
   List<BuildContext> bottomSheets = [];
 
@@ -2275,7 +2273,11 @@ class MeetingStore extends ChangeNotifier
         poll: poll, count: 5, startIndex: 0, includeCurrentPeer: true);
 
     if (data is HMSPollLeaderboardResponse) {
-      pollLeaderboardResponse = data;
+      var pollIndex = pollQuestions
+          .indexWhere((element) => element.poll.pollId == poll.pollId);
+      if (pollIndex != -1) {
+        pollQuestions[pollIndex].updatePollLeaderboardResponse(data);
+      }
     } else {
       log("fetchLeaderboard error: $data");
     }

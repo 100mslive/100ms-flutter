@@ -16,13 +16,17 @@ class PollVoteCard extends StatefulWidget {
   final int totalQuestions;
   final HMSPollQuestion question;
   final bool isPoll;
+  final DateTime? startTime;
+  final Function? updatePage;
 
   const PollVoteCard(
       {super.key,
       required this.questionNumber,
       required this.totalQuestions,
       required this.question,
-      required this.isPoll});
+      required this.isPoll,
+      this.startTime,
+      this.updatePage});
 
   @override
   State<PollVoteCard> createState() => _PollVoteCardState();
@@ -87,7 +91,6 @@ class _PollVoteCardState extends State<PollVoteCard> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: widget.question.options.length,
                   itemBuilder: (BuildContext context, index) {
-                    ///TODO: Add dynamic padding based on text length
                     return Row(
                       children: [
                         Checkbox(
@@ -149,10 +152,15 @@ class _PollVoteCardState extends State<PollVoteCard> {
                             context
                                 .read<MeetingStore>()
                                 .addSingleChoicePollResponse(
-                                  context.read<HMSPollStore>().poll,
-                                  widget.question,
-                                  selectedOption!,
-                                );
+                                    context.read<HMSPollStore>().poll,
+                                    widget.question,
+                                    selectedOption!,
+                                    timeTakenToAnswer: widget.isPoll
+                                        ? null
+                                        : widget.startTime != null
+                                            ? (DateTime.now()
+                                                .difference(widget.startTime!))
+                                            : null);
                             selectedOption = null;
                           } else if (widget.question.type ==
                                   HMSPollQuestionType.multiChoice &&
@@ -162,8 +170,17 @@ class _PollVoteCardState extends State<PollVoteCard> {
                                 .addMultiChoicePollResponse(
                                     context.read<HMSPollStore>().poll,
                                     widget.question,
-                                    selectedOptions);
+                                    selectedOptions,
+                                    timeTakenToAnswer: widget.isPoll
+                                        ? null
+                                        : widget.startTime != null
+                                            ? (DateTime.now()
+                                                .difference(widget.startTime!))
+                                            : null);
                             selectedOptions = [];
+                          }
+                          if (!widget.isPoll && widget.updatePage != null) {
+                            widget.updatePage!(widget.totalQuestions);
                           }
                         }
                       },

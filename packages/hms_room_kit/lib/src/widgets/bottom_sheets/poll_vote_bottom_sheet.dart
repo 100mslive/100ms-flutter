@@ -1,4 +1,5 @@
 ///Dart imports
+import 'dart:developer';
 import 'dart:math' as math;
 
 ///Package imports
@@ -29,16 +30,55 @@ class PollVoteBottomSheet extends StatefulWidget {
 }
 
 class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
+  late PageController quizController;
+
   @override
   void initState() {
     super.initState();
     context.read<MeetingStore>().addBottomSheet(context);
+    if (!widget.isPoll) {
+      quizController = PageController(initialPage: getInitialPage());
+    }
+  }
+
+  int getInitialPage() {
+    int initialPage = context
+            .read<HMSPollStore>()
+            .poll
+            .questions
+            ?.indexWhere((element) => element.myResponses.isEmpty) ??
+        0;
+    if (initialPage == -1) {
+      return 0;
+    }
+    return initialPage;
   }
 
   @override
   void deactivate() {
     context.read<MeetingStore>().removeBottomSheet(context);
     super.deactivate();
+  }
+
+  void updatePage(int totalQuestions) {
+    if (quizController.page != null) {
+      if (quizController.page!.toInt() < totalQuestions - 1) {
+        quizController.nextPage(
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.bounceIn);
+      } else {
+        setState(() {});
+      }
+    }
+  }
+
+  bool areAllQuestionsAnswered(HMSPoll poll) {
+    bool areQuestionsAnswered = true;
+    poll.questions?.forEach((element) {
+      areQuestionsAnswered =
+          areQuestionsAnswered && element.myResponses.isNotEmpty;
+    });
+    return areQuestionsAnswered;
   }
 
   @override
@@ -122,43 +162,66 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
               Selector<HMSPollStore, HMSPoll>(
                   selector: (_, pollStore) => pollStore.poll,
                   builder: (_, poll, __) {
-                    return ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: poll.questions?.length ?? 0,
-                        shrinkWrap: true,
-                        itemBuilder: (BuildContext context, index) {
-                          if ((poll.questions![index].myResponses.isNotEmpty) ||
-                              (poll.state == HMSPollState.stopped)) {
-                            var totalVotes = 0;
-                            for (var element
-                                in poll.questions![index].options) {
-                              totalVotes += element.voteCount;
-                            }
-                            var isVoteCountHidden = false;
-                            if (poll.rolesThatCanViewResponses.isNotEmpty &&
-                                !poll.rolesThatCanViewResponses.contains(context
-                                    .read<MeetingStore>()
-                                    .localPeer
-                                    ?.role)) {
-                              isVoteCountHidden = true;
-                            }
-                            return PollResultCard(
-                              questionNumber: index,
-                              totalQuestions: poll.questions?.length ?? 0,
-                              question: poll.questions![index],
-                              totalVotes: totalVotes,
-                              isVoteCountHidden: isVoteCountHidden,
-                              isPoll: poll.category == HMSPollCategory.poll,
-                              isPollEnded: poll.state == HMSPollState.stopped,
-                            );
-                          } else {
-                            return PollVoteCard(
-                                questionNumber: index,
-                                totalQuestions: poll.questions?.length ?? 0,
-                                question: poll.questions![index],
-                                isPoll: poll.category == HMSPollCategory.poll);
-                          }
-                        });
+                    return (poll.category == HMSPollCategory.poll ||
+                            areAllQuestionsAnswered(poll))
+                        ? ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: poll.questions?.length ?? 0,
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext context, index) {
+                              if ((poll.questions![index].myResponses
+                                      .isNotEmpty) ||
+                                  (poll.state == HMSPollState.stopped)) {
+                                var totalVotes = 0;
+                                for (var element
+                                    in poll.questions![index].options) {
+                                  totalVotes += element.voteCount;
+                                }
+                                var isVoteCountHidden = false;
+                                if (poll.rolesThatCanViewResponses.isNotEmpty &&
+                                    !poll.rolesThatCanViewResponses.contains(
+                                        context
+                                            .read<MeetingStore>()
+                                            .localPeer
+                                            ?.role)) {
+                                  isVoteCountHidden = true;
+                                }
+                                return PollResultCard(
+                                  questionNumber: index,
+                                  totalQuestions: poll.questions?.length ?? 0,
+                                  question: poll.questions![index],
+                                  totalVotes: totalVotes,
+                                  isVoteCountHidden: isVoteCountHidden,
+                                  isPoll: poll.category == HMSPollCategory.poll,
+                                  isPollEnded:
+                                      poll.state == HMSPollState.stopped,
+                                );
+                              } else {
+                                return PollVoteCard(
+                                    questionNumber: index,
+                                    totalQuestions: poll.questions?.length ?? 0,
+                                    question: poll.questions![index],
+                                    isPoll:
+                                        poll.category == HMSPollCategory.poll);
+                              }
+                            })
+                        : SizedBox(
+                            height: 300,
+                            child: PageView.builder(
+                                controller: quizController,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return PollVoteCard(
+                                    questionNumber: index,
+                                    totalQuestions: poll.questions?.length ?? 0,
+                                    question: poll.questions![index],
+                                    isPoll:
+                                        poll.category == HMSPollCategory.poll,
+                                    startTime: DateTime.now(),
+                                    updatePage: updatePage,
+                                  );
+                                }),
+                          );
                   }),
               Selector<HMSPollStore, HMSPollState>(
                   selector: (_, pollStore) => pollStore.poll.state,
@@ -221,7 +284,7 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                                           ChangeNotifierProvider.value(
                                               value: meetingStore,
                                               child: QuizLeaderboard(
-                                                  poll: hmsPollStore.poll)));
+                                                  pollStore: hmsPollStore)));
                                 },
                                 childWidget: HMSTitleText(
                                     text: "View Leaderboard",
