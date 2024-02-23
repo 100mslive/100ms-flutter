@@ -216,11 +216,13 @@ abstract class HMSPollInteractivityCenter {
     }
   }
 
-  static Future<dynamic> fetchPollList({required HMSPollState hmsPollState}) async {
+  static Future<dynamic> fetchPollList(
+      {required HMSPollState hmsPollState}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.fetchPollList,
         arguments: {
-          "poll_state": HMSPollStateValues.getStringFromHMSPollState(hmsPollState)
+          "poll_state":
+              HMSPollStateValues.getStringFromHMSPollState(hmsPollState)
         });
 
     if (result != null) {
