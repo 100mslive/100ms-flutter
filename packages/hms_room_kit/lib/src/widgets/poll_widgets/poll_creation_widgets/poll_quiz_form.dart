@@ -108,6 +108,7 @@ class _PollQuizFormState extends State<PollQuizForm> {
         ),
 
         ///Settings section
+        if(widget.isPoll)
         Padding(
           padding: const EdgeInsets.only(bottom: 4.0),
           child: HMSSubheadingText(
