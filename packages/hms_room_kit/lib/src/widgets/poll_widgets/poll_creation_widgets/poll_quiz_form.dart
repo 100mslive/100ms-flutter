@@ -116,6 +116,7 @@ class _PollQuizFormState extends State<PollQuizForm> {
         ),
 
         ///Hide vote count switch
+        if(widget.isPoll)
         ListTile(
           horizontalTitleGap: 1,
           enabled: false,
