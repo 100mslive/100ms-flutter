@@ -57,9 +57,9 @@ class PollQuestionCard extends StatelessWidget {
                       })
                 ],
               ),
-                const SizedBox(
-                  height: 16,
-                ),
+              const SizedBox(
+                height: 16,
+              ),
               if ((context.read<HMSPollStore>().poll.questionCount != null))
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
