@@ -25,6 +25,8 @@ class HMSPollAction{
             stopPoll(call, result, hmsSDK, polls)
         case "fetch_leaderboard":
             fetchLeaderboard(call, result, hmsSDK, polls)
+        case "fetch_poll_list":
+            fetchPollList(call, result, hmsSDK)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -226,6 +228,53 @@ class HMSPollAction{
             HMSErrorLogger.returnArgumentsError("No poll with given pollId found")
             return
         }
-        
     }
+    
+    static private func fetchPollList(_ call: FlutterMethodCall,_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?){
+        
+        let arguments = call.arguments as? [AnyHashable: Any]
+        
+        guard let state = arguments?["poll_state"] as? String
+        else{
+            HMSErrorLogger.returnArgumentsError("state is null")
+            return
+        }
+        
+        if let state = getPollState(pollState: state){
+            hmsSDK?.interactivityCenter.fetchPollList(state: state){
+                pollList, error in
+                
+                if let error = error{
+                    result(HMSResultExtension.toDictionary(false, HMSErrorExtension.toDictionary(error)))
+                }else{
+                    var map = [[String: Any?]]()
+                    
+                    pollList?.forEach{
+                        map.append(HMSPollExtension.toDictionary(poll: $0))
+                    }
+                    result(HMSResultExtension.toDictionary(true, map))
+                }
+            }
+        }else{
+            HMSErrorLogger.returnArgumentsError("no poll state matched")
+        }
+    }
+    
+    private static func getPollState(pollState: String?) -> HMSPollState? {
+        guard let state = pollState else {
+            return nil
+        }
+        
+        switch state {
+        case "created":
+            return .created
+        case "started":
+            return .started
+        case "stopped":
+            return .stopped
+        default:
+            return nil
+        }
+    }
+    
 }

@@ -8,6 +8,7 @@ import live.hms.hmssdk_flutter.HMSExceptionExtension
 import live.hms.hmssdk_flutter.HMSResultExtension
 import live.hms.hmssdk_flutter.poll_extension.HMSPollBuilderExtension
 import live.hms.hmssdk_flutter.poll_extension.HMSPollAnswerResponseExtension
+import live.hms.hmssdk_flutter.poll_extension.HMSPollExtension
 import live.hms.hmssdk_flutter.poll_extension.HMSPollLeaderboardResponseExtension
 import live.hms.video.error.HMSException
 import live.hms.video.polls.HMSPollResponseBuilder
@@ -30,6 +31,7 @@ class HMSPollAction {
                 "add_multi_choice_poll_response" -> addMultiChoicePollResponse(call,result,hmssdk,polls)
                 "stop_poll" -> stopPoll(call,result,hmssdk,polls)
                 "fetch_leaderboard" -> fetchLeaderboard(call,result,hmssdk)
+                "fetch_poll_list" -> fetchPollList(call,result,hmssdk)
             }
         }
 
@@ -222,6 +224,42 @@ class HMSPollAction {
                     methodChannelResult.success(HMSResultExtension.toDictionary(false,HMSExceptionExtension.toDictionary(error)))
                 }
             })
+        }
+
+        private fun fetchPollList(call: MethodCall, methodChannelResult: MethodChannel.Result, hmssdk: HMSSDK){
+            val state = call.argument<String?>("poll_state")
+
+            val pollState = getPollState(state)
+
+            pollState?.let {
+                hmssdk.getHmsInteractivityCenter().fetchPollList(it,object : HmsTypedActionResultListener<List<HmsPoll>>{
+                    override fun onSuccess(result: List<HmsPoll>) {
+
+                        val map = ArrayList<HashMap<String,Any?>>()
+
+                        result.forEach { poll ->
+                            map.add(HMSPollExtension.toDictionary(poll))
+                        }
+                       methodChannelResult.success(HMSResultExtension.toDictionary(true, map))
+                    }
+
+                    override fun onError(error: HMSException) {
+                        methodChannelResult.success(HMSResultExtension.toDictionary(false,HMSExceptionExtension.toDictionary(error)))
+                    }
+                })
+
+
+            }
+
+        }
+
+        private fun getPollState(pollState: String?):HmsPollState?{
+            return when(pollState){
+                "created"-> HmsPollState.CREATED
+                "started" ->  HmsPollState.STARTED
+                "stopped" -> HmsPollState.STOPPED
+                else -> {null}
+            }
         }
     }
 }

@@ -215,6 +215,32 @@ abstract class HMSPollInteractivityCenter {
       }
     }
   }
+
+  static Future<dynamic> fetchPollList({required HMSPollState hmsPollState}) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.fetchPollList,
+        arguments: {
+          "poll_state": HMSPollStateValues.getStringFromHMSPollState(hmsPollState)
+        });
+
+    if (result != null) {
+      if (result["success"]) {
+        if (result["data"] != null) {
+          List<HMSPoll> polls = [];
+
+          result["data"]
+              .forEach((element) => polls.add(HMSPoll.fromMap(element)));
+          return polls;
+        } else {
+          return null;
+        }
+      } else {
+        if (result["data"]["error"] != null) {
+          return HMSException.fromMap(result["data"]["error"]);
+        }
+      }
+    }
+  }
 }
 
 ///[HMSPollBuilder] is used to create polls

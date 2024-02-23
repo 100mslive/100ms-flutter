@@ -893,6 +893,7 @@ class MeetingStore extends ChangeNotifier
     getAudioDevicesList();
     notifyListeners();
     setViewControllers();
+    fetchPollList(HMSPollState.stopped);
     // if (Platform.isIOS &&
     //     HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf !=
     //         null) {
@@ -2282,6 +2283,19 @@ class MeetingStore extends ChangeNotifier
       log("fetchLeaderboard error: $data");
     }
     notifyListeners();
+  }
+
+  void fetchPollList(HMSPollState state) async {
+    var data = await _hmsSDKInteractor.fetchPollList(hmsPollState: state);
+
+    if (data is List<HMSPoll>) {
+      for (var element in data) {
+        pollQuestions.add(HMSPollStore(poll: element));
+      }
+      sortPollQuestions();
+    } else {
+      log("fetchPollList error: $data");
+    }
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod

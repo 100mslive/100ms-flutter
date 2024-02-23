@@ -315,7 +315,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
            // MARK: - Polls
             
-        case "add_poll_update_listener", "remove_poll_update_listener", "quick_start_poll", "add_single_choice_poll_response", "add_multi_choice_poll_response", "stop_poll", "fetch_leaderboard":
+        case "add_poll_update_listener", "remove_poll_update_listener", "quick_start_poll", "add_single_choice_poll_response", "add_multi_choice_poll_response", "stop_poll", "fetch_leaderboard","fetch_poll_list":
             pollsAction(call, result)
             
         default:

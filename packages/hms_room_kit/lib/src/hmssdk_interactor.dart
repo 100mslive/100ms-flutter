@@ -463,4 +463,8 @@ class HMSSDKInteractor {
         startIndex: startIndex,
         includeCurrentPeer: includeCurrentPeer);
   }
+
+  Future<dynamic> fetchPollList({required HMSPollState hmsPollState}) {
+    return HMSPollInteractivityCenter.fetchPollList(hmsPollState: hmsPollState);
+  }
 }

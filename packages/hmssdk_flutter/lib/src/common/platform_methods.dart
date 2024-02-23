@@ -213,7 +213,8 @@ enum PlatformMethod {
   addSingleChoicePollResponse,
   addMultiChoicePollResponse,
   stopPoll,
-  fetchLeaderboard
+  fetchLeaderboard,
+  fetchPollList
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -535,6 +536,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "stop_poll";
       case PlatformMethod.fetchLeaderboard:
         return "fetch_leaderboard";
+      case PlatformMethod.fetchPollList:
+        return "fetch_poll_list";
       default:
         return 'unknown';
     }
@@ -855,6 +858,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.stopPoll;
       case "fetch_leaderboard":
         return PlatformMethod.fetchLeaderboard;
+      case "fetch_poll_list":
+        return PlatformMethod.fetchPollList;
       default:
         return PlatformMethod.unknown;
     }
