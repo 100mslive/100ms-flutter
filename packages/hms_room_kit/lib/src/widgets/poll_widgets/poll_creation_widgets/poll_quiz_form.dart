@@ -108,37 +108,37 @@ class _PollQuizFormState extends State<PollQuizForm> {
         ),
 
         ///Settings section
-        if(widget.isPoll)
-        Padding(
-          padding: const EdgeInsets.only(bottom: 4.0),
-          child: HMSSubheadingText(
-              text: "Settings",
-              textColor: HMSThemeColors.onSurfaceHighEmphasis),
-        ),
+        if (widget.isPoll)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4.0),
+            child: HMSSubheadingText(
+                text: "Settings",
+                textColor: HMSThemeColors.onSurfaceHighEmphasis),
+          ),
 
         ///Hide vote count switch
-        if(widget.isPoll)
-        ListTile(
-          horizontalTitleGap: 1,
-          enabled: false,
-          dense: true,
-          contentPadding: EdgeInsets.zero,
-          title: HMSSubheadingText(
-              text: "Hide vote count",
-              textColor: HMSThemeColors.onSurfaceMediumEmphasis),
-          trailing: SizedBox(
-            height: 24,
-            width: 40,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: CupertinoSwitch(
-                value: _hideVoteCount,
-                onChanged: (value) => setHideVoteCount(value),
-                activeColor: HMSThemeColors.primaryDefault,
+        if (widget.isPoll)
+          ListTile(
+            horizontalTitleGap: 1,
+            enabled: false,
+            dense: true,
+            contentPadding: EdgeInsets.zero,
+            title: HMSSubheadingText(
+                text: "Hide vote count",
+                textColor: HMSThemeColors.onSurfaceMediumEmphasis),
+            trailing: SizedBox(
+              height: 24,
+              width: 40,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: CupertinoSwitch(
+                  value: _hideVoteCount,
+                  onChanged: (value) => setHideVoteCount(value),
+                  activeColor: HMSThemeColors.primaryDefault,
+                ),
               ),
             ),
           ),
-        ),
 
         ///Is the poll anonymous switch
         // ListTile(
