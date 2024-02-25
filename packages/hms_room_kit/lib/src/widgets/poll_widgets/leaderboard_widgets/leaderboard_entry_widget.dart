@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/model/poll_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class LeaderBoardEntryWidget extends StatelessWidget {
   final HMSPollLeaderboardEntry entry;
+  final HMSPollStore pollStore;
   final int totalScore;
 
   const LeaderBoardEntryWidget(
-      {super.key, required this.entry, required this.totalScore});
+      {super.key,
+      required this.entry,
+      required this.totalScore,
+      required this.pollStore});
 
   Color getPositionBadgeColor() {
     switch (entry.position) {
@@ -22,6 +27,10 @@ class LeaderBoardEntryWidget extends StatelessWidget {
       default:
         return Colors.transparent;
     }
+  }
+  
+  bool _showTime(){
+    return (entry.duration != null && entry.duration!.inSeconds > 0);
   }
 
   String getFormattedTime() {
@@ -85,23 +94,25 @@ class LeaderBoardEntryWidget extends StatelessWidget {
               width: 4,
             ),
             HMSSubtitleText(
-                text: "${entry.correctResponses}/${entry.totalResponses}",
+                text:
+                    "${entry.correctResponses}/${pollStore.poll.questions?.length}",
                 textColor: HMSThemeColors.onSurfaceHighEmphasis),
-            const SizedBox(
-              width: 12,
-            ),
-            if (entry.duration != null && entry.duration!.inSeconds > 0)
+            if (_showTime())
+              const SizedBox(
+                width: 12,
+              ),
+            if (_showTime())
               SvgPicture.asset(
                 "packages/hms_room_kit/lib/src/assets/icons/clock.svg",
                 semanticsLabel: "clock",
                 width: 12,
                 height: 12,
               ),
-            if (entry.duration != null && entry.duration!.inSeconds > 0)
+            if (_showTime())
               const SizedBox(
                 width: 4,
               ),
-            if (entry.duration != null && entry.duration!.inSeconds > 0)
+            if (_showTime())
               HMSSubtitleText(
                   text: getFormattedTime(),
                   textColor: HMSThemeColors.onSurfaceHighEmphasis)

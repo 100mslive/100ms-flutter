@@ -7,19 +7,29 @@ import 'package:hms_room_kit/src/widgets/common_widgets/live_badge.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/leaderboard_widgets/leaderboard_entry_widget.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/leaderboard_widgets/summary_box.dart';
 
-class QuizLeaderboard extends StatelessWidget {
+class QuizLeaderboard extends StatefulWidget {
   final HMSPollStore pollStore;
 
   const QuizLeaderboard({super.key, required this.pollStore});
 
-  int getTotalScore() {
-    int pollScore = 0;
+  @override
+  State<QuizLeaderboard> createState() => _QuizLeaderboardState();
+}
 
-    pollStore.poll.questions?.forEach((element) {
-      pollScore += element.weight;
+class _QuizLeaderboardState extends State<QuizLeaderboard> {
+  int _totalScore = 0;
+
+  ///[getTotalScore] returns the total score by adding the weight for each question
+  void getTotalScore() {
+    widget.pollStore.poll.questions?.forEach((element) {
+      _totalScore += element.weight;
     });
+  }
 
-    return pollScore;
+  @override
+  void initState() {
+    super.initState();
+    getTotalScore();
   }
 
   @override
@@ -48,7 +58,7 @@ class QuizLeaderboard extends StatelessWidget {
                   constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width * 0.4),
                   child: HMSTitleText(
-                    text: pollStore.poll.title,
+                    text: widget.pollStore.poll.title,
                     fontSize: 20,
                     textColor: HMSThemeColors.onSurfaceHighEmphasis,
                     maxLines: 2,
@@ -87,36 +97,38 @@ class QuizLeaderboard extends StatelessWidget {
                   votedDescription,
                   correctPercent,
                   correctDescription;
-              if (pollStore.pollLeaderboardResponse?.summary != null &&
-                  pollStore.pollLeaderboardResponse?.summary
+              if (widget.pollStore.pollLeaderboardResponse?.summary != null &&
+                  widget.pollStore.pollLeaderboardResponse?.summary
                           ?.respondedPeersCount !=
                       null &&
-                  pollStore.pollLeaderboardResponse?.summary?.totalPeersCount !=
+                  widget.pollStore.pollLeaderboardResponse?.summary
+                          ?.totalPeersCount !=
                       0) {
-                votedPercent = ((pollStore.pollLeaderboardResponse!.summary!
-                                .respondedPeersCount! *
+                votedPercent = ((widget.pollStore.pollLeaderboardResponse!
+                                .summary!.respondedPeersCount! *
                             100) /
-                        (pollStore.pollLeaderboardResponse!.summary!
+                        (widget.pollStore.pollLeaderboardResponse!.summary!
                             .totalPeersCount!))
                     .toStringAsFixed(2);
                 votedDescription =
-                    "${pollStore.pollLeaderboardResponse!.summary!.respondedPeersCount!}/${pollStore.pollLeaderboardResponse!.summary!.totalPeersCount!}";
+                    "${widget.pollStore.pollLeaderboardResponse!.summary!.respondedPeersCount!}/${widget.pollStore.pollLeaderboardResponse!.summary!.totalPeersCount!}";
               }
 
-              if (pollStore.pollLeaderboardResponse?.summary != null &&
-                  pollStore.pollLeaderboardResponse?.summary
+              if (widget.pollStore.pollLeaderboardResponse?.summary != null &&
+                  widget.pollStore.pollLeaderboardResponse?.summary
                           ?.respondedCorrectlyPeersCount !=
                       null &&
-                  pollStore.pollLeaderboardResponse?.summary?.totalPeersCount !=
+                  widget.pollStore.pollLeaderboardResponse?.summary
+                          ?.totalPeersCount !=
                       0) {
-                correctPercent = ((pollStore.pollLeaderboardResponse!.summary!
-                                .respondedCorrectlyPeersCount! *
+                correctPercent = ((widget.pollStore.pollLeaderboardResponse!
+                                .summary!.respondedCorrectlyPeersCount! *
                             100) /
-                        (pollStore.pollLeaderboardResponse!.summary!
+                        (widget.pollStore.pollLeaderboardResponse!.summary!
                             .totalPeersCount!))
                     .toStringAsFixed(2);
                 correctDescription =
-                    "${pollStore.pollLeaderboardResponse!.summary!.respondedCorrectlyPeersCount!}/${pollStore.pollLeaderboardResponse!.summary!.totalPeersCount!}";
+                    "${widget.pollStore.pollLeaderboardResponse!.summary!.respondedCorrectlyPeersCount!}/${widget.pollStore.pollLeaderboardResponse!.summary!.totalPeersCount!}";
               }
 
               return Row(
@@ -151,24 +163,26 @@ class QuizLeaderboard extends StatelessWidget {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  if (pollStore.pollLeaderboardResponse?.summary?.averageTime !=
+                  if (widget.pollStore.pollLeaderboardResponse?.summary
+                              ?.averageTime !=
                           null &&
-                      pollStore.pollLeaderboardResponse!.summary!.averageTime!
-                              .inMilliseconds >
+                      widget.pollStore.pollLeaderboardResponse!.summary!
+                              .averageTime!.inMilliseconds >
                           0)
                     Expanded(
                       child: SummaryBox(
                           title: "AVG. TIME TAKEN",
-                          subtitle: pollStore.pollLeaderboardResponse?.summary
-                                      ?.averageTime ==
+                          subtitle: widget.pollStore.pollLeaderboardResponse
+                                      ?.summary?.averageTime ==
                                   null
                               ? "-"
-                              : "${pollStore.pollLeaderboardResponse!.summary!.averageTime!.inMilliseconds / 1000}s"),
+                              : "${widget.pollStore.pollLeaderboardResponse!.summary!.averageTime!.inMilliseconds / 1000}s"),
                     ),
-                  if (pollStore.pollLeaderboardResponse?.summary?.averageTime !=
+                  if (widget.pollStore.pollLeaderboardResponse?.summary
+                              ?.averageTime !=
                           null &&
-                      pollStore.pollLeaderboardResponse!.summary!.averageTime!
-                              .inMilliseconds >
+                      widget.pollStore.pollLeaderboardResponse!.summary!
+                              .averageTime!.inMilliseconds >
                           0)
                     const SizedBox(
                       width: 10,
@@ -176,12 +190,12 @@ class QuizLeaderboard extends StatelessWidget {
                   Expanded(
                     child: SummaryBox(
                         title: "AVG. SCORE",
-                        subtitle: pollStore.pollLeaderboardResponse?.summary
-                                    ?.averageScore ==
+                        subtitle: widget.pollStore.pollLeaderboardResponse
+                                    ?.summary?.averageScore ==
                                 null
                             ? "-"
-                            : pollStore
-                                .pollLeaderboardResponse!.summary!.averageScore!
+                            : widget.pollStore.pollLeaderboardResponse!.summary!
+                                .averageScore!
                                 .toStringAsFixed(2)),
                   )
                 ],
@@ -206,20 +220,24 @@ class QuizLeaderboard extends StatelessWidget {
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: pollStore.pollLeaderboardResponse!.entries!.length,
+                itemCount:
+                    widget.pollStore.pollLeaderboardResponse!.entries!.length,
                 itemBuilder: (context, index) {
                   return LeaderBoardEntryWidget(
-                      entry: pollStore.pollLeaderboardResponse!.entries![index],
-                      totalScore: getTotalScore());
+                    entry: widget
+                        .pollStore.pollLeaderboardResponse!.entries![index],
+                    totalScore: _totalScore,
+                    pollStore: widget.pollStore,
+                  );
                 }),
-            if (pollStore.pollLeaderboardResponse!.entries!.length > 5)
+            if (widget.pollStore.pollLeaderboardResponse!.entries!.length > 5)
               Container(
                 color: HMSThemeColors.surfaceDefault,
                 child: const Divider(
                   height: 5,
                 ),
               ),
-            if (pollStore.pollLeaderboardResponse!.entries!.length > 5)
+            if (widget.pollStore.pollLeaderboardResponse!.entries!.length > 5)
               GestureDetector(
                 onTap: () {},
                 child: Container(

@@ -1,4 +1,5 @@
 ///Dart imports
+import 'dart:io';
 import 'dart:math' as math;
 
 ///Package imports
@@ -31,6 +32,10 @@ class PollVoteBottomSheet extends StatefulWidget {
 class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
   late PageController quizController;
 
+  ///This stores the questionPageHeight, default we consider height as 300 for a question
+  ///with 2 options
+  double questionPageHeight = 300;
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +64,9 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
     super.deactivate();
   }
 
+  ///[updatePage] updates the page when a question is answered
+  ///Here we only call [nextPage] iff there are more questions left to be answered
+  ///and quizController is not null
   void updatePage(int totalQuestions) {
     if (quizController.page != null) {
       if (quizController.page!.toInt() < totalQuestions - 1) {
@@ -71,6 +79,9 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
     }
   }
 
+  ///[areAllQuestionsAnswered] checks whether all questions are answered or not
+  ///This is used in case of quiz to check whether to render listview with selected answers
+  ///or render a pageView with questions to be answered.
   bool areAllQuestionsAnswered(HMSPoll poll) {
     bool areQuestionsAnswered = true;
     poll.questions?.forEach((element) {
@@ -78,6 +89,19 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
           areQuestionsAnswered && element.myResponses.isNotEmpty;
     });
     return areQuestionsAnswered;
+  }
+
+  ///[setQuestionPageHeight] sets the height for question's page
+  ///for a question with 2 options we give a default height of 300
+  ///For each extra option we add additional 45
+  void setQuestionPageHeight(int optionsCount) {
+    questionPageHeight =
+        300 + (optionsCount - 2) * (Platform.isAndroid ? 45 : 50);
+    if (mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {});
+      });
+    }
   }
 
   @override
@@ -161,13 +185,21 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
               Selector<HMSPollStore, HMSPoll>(
                   selector: (_, pollStore) => pollStore.poll,
                   builder: (_, poll, __) {
-                    return (poll.category == HMSPollCategory.poll ||
+                    ///Here we check whether the question is a poll or all the questions of the poll/quiz are answered
+                    ///If one the above is true we render the list view with either vote card or result card
+                    ///else we show the question pages one by one
+                    return (poll.state == HMSPollState.stopped ||
+                            poll.category == HMSPollCategory.poll ||
                             areAllQuestionsAnswered(poll))
                         ? ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: poll.questions?.length ?? 0,
                             shrinkWrap: true,
                             itemBuilder: (BuildContext context, index) {
+                              ///Here we count the total number of votes
+                              ///This is done to show the poll result UI
+                              ///Vote count is only calculated if the user has answered the poll
+                              ///or the poll is stopped
                               if ((poll.questions![index].myResponses
                                       .isNotEmpty) ||
                                   (poll.state == HMSPollState.stopped)) {
@@ -176,14 +208,23 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                                     in poll.questions![index].options) {
                                   totalVotes += element.voteCount;
                                 }
+
+                                ///This check handles whether to show the poll
+                                ///This is checked using the [rolesThatCanViewResponses] property
+                                ///If the role of current user is in the list then the user
+                                ///can see the poll result else we don't show the poll result
                                 var isVoteCountHidden = false;
-                                if (poll.rolesThatCanViewResponses.isNotEmpty &&
-                                    !poll.rolesThatCanViewResponses.contains(
-                                        context
-                                            .read<MeetingStore>()
-                                            .localPeer
-                                            ?.role)) {
-                                  isVoteCountHidden = true;
+                                var currentPeerRoleName = context
+                                    .read<MeetingStore>()
+                                    .localPeer
+                                    ?.role.name;
+                                if (poll.rolesThatCanViewResponses.isNotEmpty) {
+                                  int index = poll.rolesThatCanViewResponses.indexWhere(
+                                      (element) =>
+                                          element.name == currentPeerRoleName);
+                                  if(index == -1){
+                                    isVoteCountHidden = true;
+                                  }
                                 }
                                 return PollResultCard(
                                   questionNumber: index,
@@ -197,15 +238,15 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                                 );
                               } else {
                                 return PollVoteCard(
-                                    questionNumber: index,
-                                    totalQuestions: poll.questions?.length ?? 0,
-                                    question: poll.questions![index],
-                                    isPoll:
-                                        poll.category == HMSPollCategory.poll);
+                                  questionNumber: index,
+                                  totalQuestions: poll.questions?.length ?? 0,
+                                  question: poll.questions![index],
+                                  isPoll: poll.category == HMSPollCategory.poll,
+                                );
                               }
                             })
                         : SizedBox(
-                            height: 300,
+                            height: questionPageHeight,
                             child: PageView.builder(
                                 controller: quizController,
                                 physics: const NeverScrollableScrollPhysics(),
@@ -218,6 +259,7 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                                         poll.category == HMSPollCategory.poll,
                                     startTime: DateTime.now(),
                                     updatePage: updatePage,
+                                    setPageSize: setQuestionPageHeight,
                                   );
                                 }),
                           );
@@ -265,7 +307,7 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               HMSButton(
-                                width: MediaQuery.of(context).size.width * 0.50,
+                                width: MediaQuery.of(context).size.width * 0.53,
                                 onPressed: () {
                                   var meetingStore =
                                       context.read<MeetingStore>();
