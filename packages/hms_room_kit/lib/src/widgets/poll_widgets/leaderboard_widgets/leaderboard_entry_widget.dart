@@ -28,8 +28,8 @@ class LeaderBoardEntryWidget extends StatelessWidget {
         return Colors.transparent;
     }
   }
-  
-  bool _showTime(){
+
+  bool _showTime() {
     return (entry.duration != null && entry.duration!.inSeconds > 0);
   }
 

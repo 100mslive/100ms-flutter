@@ -217,12 +217,13 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                                 var currentPeerRoleName = context
                                     .read<MeetingStore>()
                                     .localPeer
-                                    ?.role.name;
+                                    ?.role
+                                    .name;
                                 if (poll.rolesThatCanViewResponses.isNotEmpty) {
-                                  int index = poll.rolesThatCanViewResponses.indexWhere(
-                                      (element) =>
+                                  int index = poll.rolesThatCanViewResponses
+                                      .indexWhere((element) =>
                                           element.name == currentPeerRoleName);
-                                  if(index == -1){
+                                  if (index == -1) {
                                     isVoteCountHidden = true;
                                   }
                                 }

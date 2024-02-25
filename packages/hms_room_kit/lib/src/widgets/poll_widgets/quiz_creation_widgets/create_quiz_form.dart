@@ -54,6 +54,7 @@ class _CreatePollFormState extends State<CreateQuizForm> {
 
     _pointWeightageController = widget.pointWeightageController;
     _setWeight(widget.pointWeightageController.text);
+
     ///Here options text controller gets initialised.
     ///If controllers are passed on to the widget then we just
     ///assign those controllers to _optionsTextController

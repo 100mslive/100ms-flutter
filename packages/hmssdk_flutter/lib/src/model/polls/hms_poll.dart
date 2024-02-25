@@ -64,9 +64,11 @@ class HMSPoll {
               map['mode'])
           : null,
       questionCount: map['question_count'],
-      questions: map['questions']!=null?(map['questions'] as List)
-          .map((e) => HMSPollQuestion.fromMap(e))
-          .toList():null,
+      questions: map['questions'] != null
+          ? (map['questions'] as List)
+              .map((e) => HMSPollQuestion.fromMap(e))
+              .toList()
+          : null,
       result: map['result'] != null
           ? HMSPollResultDisplay.fromMap(map['result'])
           : null,
