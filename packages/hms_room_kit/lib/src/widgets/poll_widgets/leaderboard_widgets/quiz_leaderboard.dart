@@ -112,7 +112,7 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
                   votedDescription =
                       "${widget.pollStore.pollLeaderboardResponse!.summary!.respondedPeersCount!}/${widget.pollStore.pollLeaderboardResponse!.summary!.totalPeersCount!}";
                 }
-        
+
                 if (widget.pollStore.pollLeaderboardResponse?.summary != null &&
                     widget.pollStore.pollLeaderboardResponse?.summary
                             ?.respondedCorrectlyPeersCount !=
@@ -129,7 +129,7 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
                   correctDescription =
                       "${widget.pollStore.pollLeaderboardResponse!.summary!.respondedCorrectlyPeersCount!}/${widget.pollStore.pollLeaderboardResponse!.summary!.totalPeersCount!}";
                 }
-        
+
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -193,8 +193,8 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
                                       ?.summary?.averageScore ==
                                   null
                               ? "-"
-                              : widget.pollStore.pollLeaderboardResponse!.summary!
-                                  .averageScore!
+                              : widget.pollStore.pollLeaderboardResponse!
+                                  .summary!.averageScore!
                                   .toStringAsFixed(2)),
                     )
                   ],
@@ -229,7 +229,7 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
                       pollStore: widget.pollStore,
                     );
                   }),
-        
+
               ///Here we load list of all the users
               // if (widget.pollStore.pollLeaderboardResponse!.entries!.length > 5)
               //   Container(
