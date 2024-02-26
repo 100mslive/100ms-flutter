@@ -18,6 +18,8 @@
 
   - Users can now fetch rankings and quiz summary using the `fetchLeaderboard` method. More information about leaderboard can be found [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/polls)
 
+Updated to Android SDK 2.9.4 & iOS SDK 1.5.1
+
 **Full Changelog**: [1.9.10...1.9.11](https://github.com/100mslive/100ms-flutter/compare/1.9.10...1.9.11)
 
 # 1.9.10 - 2024-02-16
