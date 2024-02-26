@@ -230,47 +230,48 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
                     pollStore: widget.pollStore,
                   );
                 }),
-            if (widget.pollStore.pollLeaderboardResponse!.entries!.length > 5)
-              Container(
-                color: HMSThemeColors.surfaceDefault,
-                child: const Divider(
-                  height: 5,
-                ),
-              ),
-            if (widget.pollStore.pollLeaderboardResponse!.entries!.length > 5)
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  color: HMSThemeColors.surfaceDefault,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Row(
-                          children: [
-                            HMSSubheadingText(
-                                text: "View All",
-                                textColor:
-                                    HMSThemeColors.onSurfaceHighEmphasis),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 4.0),
-                              child: SvgPicture.asset(
-                                  "packages/hms_room_kit/lib/src/assets/icons/right_arrow.svg",
-                                  width: 24,
-                                  height: 24,
-                                  colorFilter: ColorFilter.mode(
-                                      HMSThemeColors.onSurfaceHighEmphasis,
-                                      BlendMode.srcIn)),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+            ///Here we load list of all the users
+            // if (widget.pollStore.pollLeaderboardResponse!.entries!.length > 5)
+            //   Container(
+            //     color: HMSThemeColors.surfaceDefault,
+            //     child: const Divider(
+            //       height: 5,
+            //     ),
+            //   ),
+            // if (widget.pollStore.pollLeaderboardResponse!.entries!.length > 5)
+            //   GestureDetector(
+            //     onTap: () {},
+            //     child: Container(
+            //       color: HMSThemeColors.surfaceDefault,
+            //       child: Padding(
+            //         padding: const EdgeInsets.symmetric(
+            //             horizontal: 16, vertical: 12),
+            //         child: Row(
+            //           mainAxisAlignment: MainAxisAlignment.end,
+            //           children: [
+            //             Row(
+            //               children: [
+            //                 HMSSubheadingText(
+            //                     text: "View All",
+            //                     textColor:
+            //                         HMSThemeColors.onSurfaceHighEmphasis),
+            //                 Padding(
+            //                   padding: const EdgeInsets.only(left: 4.0),
+            //                   child: SvgPicture.asset(
+            //                       "packages/hms_room_kit/lib/src/assets/icons/right_arrow.svg",
+            //                       width: 24,
+            //                       height: 24,
+            //                       colorFilter: ColorFilter.mode(
+            //                           HMSThemeColors.onSurfaceHighEmphasis,
+            //                           BlendMode.srcIn)),
+            //                 ),
+            //               ],
+            //             )
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ),
           ],
         ),
       ),

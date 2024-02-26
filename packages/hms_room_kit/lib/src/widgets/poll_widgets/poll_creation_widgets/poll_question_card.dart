@@ -60,39 +60,43 @@ class PollQuestionCard extends StatelessWidget {
               const SizedBox(
                 height: 16,
               ),
-              if ((context.read<HMSPollStore>().poll.questionCount != null))
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    HMSButton(
-                        width: MediaQuery.of(context).size.width * 0.23,
-                        onPressed: () {
-                          var meetingStore = context.read<MeetingStore>();
-                          var pollStore = context.read<HMSPollStore>();
-                          showModalBottomSheet(
-                              isScrollControlled: true,
-                              backgroundColor: HMSThemeColors.surfaceDim,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(16),
-                                    topRight: Radius.circular(16)),
-                              ),
-                              context: context,
-                              builder: (ctx) => ChangeNotifierProvider.value(
-                                    value: meetingStore,
-                                    child: ChangeNotifierProvider.value(
-                                      value: pollStore,
-                                      child: PollVoteBottomSheet(
-                                          isPoll: pollStore.poll.category ==
-                                              HMSPollCategory.poll),
-                                    ),
-                                  ));
-                        },
-                        childWidget: HMSTitleText(
-                            text: "View",
-                            textColor: HMSThemeColors.onSurfaceHighEmphasis))
-                  ],
-                )
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  HMSButton(
+                      width: MediaQuery.of(context).size.width * 0.23,
+                      onPressed: () {
+                        var meetingStore = context.read<MeetingStore>();
+                        var pollStore = context.read<HMSPollStore>();
+                        // meetingStore.fetchPollQuestions(pollStore.poll);
+                        // meetingStore.getPollResults(pollStore.poll);
+                        // if (pollStore.poll.category == HMSPollCategory.quiz) {
+                        //   meetingStore.fetchLeaderboard(pollStore.poll);
+                        // }
+                        showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: HMSThemeColors.surfaceDim,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  topRight: Radius.circular(16)),
+                            ),
+                            context: context,
+                            builder: (ctx) => ChangeNotifierProvider.value(
+                                  value: meetingStore,
+                                  child: ChangeNotifierProvider.value(
+                                    value: pollStore,
+                                    child: PollVoteBottomSheet(
+                                        isPoll: pollStore.poll.category ==
+                                            HMSPollCategory.poll),
+                                  ),
+                                ));
+                      },
+                      childWidget: HMSTitleText(
+                          text: "View",
+                          textColor: HMSThemeColors.onSurfaceHighEmphasis))
+                ],
+              )
             ],
           ),
         ),

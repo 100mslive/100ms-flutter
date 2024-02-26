@@ -10,6 +10,7 @@ import live.hms.hmssdk_flutter.poll_extension.HMSPollBuilderExtension
 import live.hms.hmssdk_flutter.poll_extension.HMSPollAnswerResponseExtension
 import live.hms.hmssdk_flutter.poll_extension.HMSPollExtension
 import live.hms.hmssdk_flutter.poll_extension.HMSPollLeaderboardResponseExtension
+import live.hms.hmssdk_flutter.poll_extension.HMSPollQuestionExtension
 import live.hms.video.error.HMSException
 import live.hms.video.polls.HMSPollResponseBuilder
 import live.hms.video.polls.models.HmsPoll
@@ -32,6 +33,8 @@ class HMSPollAction {
                 "stop_poll" -> stopPoll(call,result,hmssdk,polls)
                 "fetch_leaderboard" -> fetchLeaderboard(call,result,hmssdk)
                 "fetch_poll_list" -> fetchPollList(call,result,hmssdk)
+                "fetch_poll_questions" -> fetchPollQuestions(call,result,hmssdk)
+                "get_poll_results" -> getPollResults(call,result,hmssdk)
             }
         }
 
@@ -249,8 +252,105 @@ class HMSPollAction {
                 })
 
 
+            }?: run {
+                HMSErrorLogger.returnHMSException("fetchPollList","No poll state matched", "ARGUMENTS_ERROR",methodChannelResult)
             }
 
+        }
+
+        private fun fetchPollQuestions(call: MethodCall, methodChannelResult: MethodChannel.Result, hmssdk: HMSSDK){
+            val pollId = call.argument<String?>("poll_id")
+            val state = call.argument<String?>("poll_state")
+
+            pollId?.let {
+                val pollState = getPollState(state)
+
+                pollState?.let {
+                    hmssdk.getHmsInteractivityCenter().fetchPollList(it,object : HmsTypedActionResultListener<List<HmsPoll>>{
+                        override fun onSuccess(result: List<HmsPoll>) {
+
+                            val poll = result.find {
+                                    _poll ->
+                                _poll.pollId == pollId
+                            }
+                            poll?.let { _poll ->
+                                hmssdk.getHmsInteractivityCenter().fetchPollQuestions(_poll, object : HmsTypedActionResultListener<List<HMSPollQuestion>>{
+                                    override fun onSuccess(result: List<HMSPollQuestion>) {
+                                        val map = ArrayList<HashMap<String,Any?>>()
+
+                                        result.forEach { pollQuestion ->
+                                            val pollQuestionMap = HMSPollQuestionExtension.toDictionary(pollQuestion)
+                                            pollQuestionMap?.let { _pollQuestionMap ->
+                                                map.add(_pollQuestionMap)
+                                            }
+                                        }
+                                        methodChannelResult.success(HMSResultExtension.toDictionary(true, map))
+                                    }
+
+                                    override fun onError(error: HMSException) {
+                                        methodChannelResult.success(HMSResultExtension.toDictionary(false,HMSExceptionExtension.toDictionary(error)))
+                                    }
+
+                                })
+                            }?:run{
+                                HMSErrorLogger.logError("fetchPollQuestions","No poll with given pollId found","NULL_ERROR")
+                            }
+                        }
+
+                        override fun onError(error: HMSException) {
+                            methodChannelResult.success(HMSResultExtension.toDictionary(false,HMSExceptionExtension.toDictionary(error)))
+                        }
+                    })
+                }?:run{
+                    HMSErrorLogger.returnArgumentsError("No state matched with given state")
+                }
+            }?:run{
+                HMSErrorLogger.returnArgumentsError("pollId is null")
+            }
+        }
+
+        private fun getPollResults(call: MethodCall, methodChannelResult: MethodChannel.Result, hmssdk: HMSSDK){
+
+            val pollId = call.argument<String?>("poll_id")
+            val state = call.argument<String?>("poll_state")
+
+            pollId?.let {
+                val pollState = getPollState(state)
+
+                pollState?.let {
+                    hmssdk.getHmsInteractivityCenter().fetchPollList(it,object : HmsTypedActionResultListener<List<HmsPoll>>{
+                        override fun onSuccess(result: List<HmsPoll>) {
+
+                            val poll = result.find {
+                                    _poll ->
+                                _poll.pollId == pollId
+                            }
+                            poll?.let { _poll ->
+                                hmssdk.getHmsInteractivityCenter().getPollResults(_poll, object : HmsTypedActionResultListener<HmsPoll>{
+                                    override fun onSuccess(result: HmsPoll) {
+                                        methodChannelResult.success(HMSResultExtension.toDictionary(true, HMSPollExtension.toDictionary(result)))
+                                    }
+
+                                    override fun onError(error: HMSException) {
+                                        methodChannelResult.success(HMSResultExtension.toDictionary(false,HMSExceptionExtension.toDictionary(error)))
+                                    }
+
+                                })
+                            }?:run{
+                                HMSErrorLogger.logError("getPollResults","No poll with given pollId found","NULL_ERROR")
+                            }
+                        }
+
+                        override fun onError(error: HMSException) {
+                            methodChannelResult.success(HMSResultExtension.toDictionary(false,HMSExceptionExtension.toDictionary(error)))
+                        }
+                    })
+                }?:run{
+                    HMSErrorLogger.returnArgumentsError("No state matched with given state")
+                }
+            }?:run{
+                HMSErrorLogger.returnArgumentsError("pollId is null")
+            }
         }
 
         private fun getPollState(pollState: String?):HmsPollState?{

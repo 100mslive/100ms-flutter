@@ -50,7 +50,7 @@ abstract class HMSPollInteractivityCenter {
   ///
   ///**Returns**
   ///
-  /// Future<dynamic> - A Future representing the asynchronous operation. It will return either null if the operation is successful, or an [HMSException] if an error occurs.
+  /// Future<dynamic> - A Future representing the asynchronous operation. It will return either pollResponse if the operation is successful, or an [HMSException] if an error occurs or null if any argument error occurs.
   ///
   ///Refer [addSingleChoicePollResponse](Add docs link here)
   static Future<dynamic> addSingleChoicePollResponse(
@@ -240,6 +240,58 @@ abstract class HMSPollInteractivityCenter {
         if (result["data"]["error"] != null) {
           return HMSException.fromMap(result["data"]["error"]);
         }
+      }
+    }
+  }
+
+  static Future<dynamic> fetchPollQuestions({required HMSPoll hmsPoll}) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.fetchPollQuestions,
+        arguments: {
+          "poll_id": hmsPoll.pollId,
+          "poll_state":
+              HMSPollStateValues.getStringFromHMSPollState(hmsPoll.state)
+        });
+
+    if (result != null) {
+      if (result["success"]) {
+        if (result["data"] != null) {
+          List<HMSPollQuestion> questions = [];
+
+          result["data"].forEach(
+              (element) => questions.add(HMSPollQuestion.fromMap(element)));
+          return questions;
+        } else {
+          return null;
+        }
+      } else {
+        if (result["data"]["error"] != null) {
+          return HMSException.fromMap(result["data"]["error"]);
+        }
+      }
+    }
+  }
+
+  static Future<dynamic> getPollResults({required HMSPoll hmsPoll}) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.getPollResults,
+        arguments: {
+          "poll_id": hmsPoll.pollId,
+          "poll_state":
+              HMSPollStateValues.getStringFromHMSPollState(hmsPoll.state)
+        });
+
+    if (result != null) {
+      if (result["success"]) {
+        if (result["data"] != null) {
+          return HMSPoll.fromMap(result["data"]);
+        } else {
+          return null;
+        }
+      }
+    } else {
+      if (result["data"]["error"] != null) {
+        return HMSException.fromMap(result["data"]["error"]);
       }
     }
   }
