@@ -1,14 +1,5 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 
-- Polls: Create a Quiz
-https://100ms.atlassian.net/browse/FLUT-210
-
-- Polls: Launch a Quiz
-https://100ms.atlassian.net/browse/FLUT-213
-
-- Polls: Quiz Panel with a single question
-https://100ms.atlassian.net/browse/FLUT-211
-
 - Polls: Quiz Ended Screen
 https://100ms.atlassian.net/browse/FLUT-205
 
