@@ -16,7 +16,7 @@
 
 - Introducing leaderboard APIs
 
-  - Users can now fetch rankings and quiz summary using the leaderboard.
+  - Users can now fetch rankings and quiz summary using the `fetchLeaderboard` method. More information about leaderboard can be found [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/polls)
 
 **Full Changelog**: [1.9.10...1.9.11](https://github.com/100mslive/100ms-flutter/compare/1.9.10...1.9.11)
 
