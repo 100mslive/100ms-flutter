@@ -1,6 +1,4 @@
 // Automatic FlutterFlow imports
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
 // Imports other custom widgets
 import 'package:flutter/material.dart';
 // Begin custom widget code
@@ -10,10 +8,10 @@ import 'package:hms_room_kit/hms_room_kit.dart';
 
 class TestPrebuilt extends StatefulWidget {
   const TestPrebuilt({
-    Key? key,
+    super.key,
     this.width,
     this.height,
-  }) : super(key: key);
+  });
 
   final double? width;
   final double? height;
@@ -25,6 +23,6 @@ class TestPrebuilt extends StatefulWidget {
 class _TestPrebuiltState extends State<TestPrebuilt> {
   @override
   Widget build(BuildContext context) {
-    return HMSPrebuilt(roomCode: "xno-jwn-phi");
+    return const HMSPrebuilt(roomCode: "xno-jwn-phi");
   }
 }

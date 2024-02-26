@@ -1,6 +1,4 @@
 // Automatic FlutterFlow imports
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
 // Imports other custom widgets
 import 'package:flutter/material.dart';
 // Begin custom widget code
@@ -8,10 +6,10 @@ import 'package:flutter/material.dart';
 
 class TestWidget extends StatefulWidget {
   const TestWidget({
-    Key? key,
+    super.key,
     this.width,
     this.height,
-  }) : super(key: key);
+  });
 
   final double? width;
   final double? height;
