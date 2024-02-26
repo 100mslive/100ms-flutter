@@ -12,6 +12,9 @@ https://100ms.atlassian.net/browse/FLUT-211
 - Polls: Quiz Ended Screen
 https://100ms.atlassian.net/browse/FLUT-205
 
+- Polls and Quizzes are not getting dispalyed for VNRT user
+https://100ms.atlassian.net/browse/FLUT-247
+
 Room Kit: 1.0.14
 Core SDK: 1.9.11
 Android SDK: 2.9.0
