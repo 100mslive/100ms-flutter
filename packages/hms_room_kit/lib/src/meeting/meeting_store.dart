@@ -257,6 +257,9 @@ class MeetingStore extends ChangeNotifier
 
   List<HMSPollStore> hlsViewerPolls = [];
 
+  ///Cue Duration for hls stream
+  final int _hlsCueDuration = 20;
+
   ///List of bottom sheets currently open
   List<BuildContext> bottomSheets = [];
 
@@ -2775,6 +2778,13 @@ class MeetingStore extends ChangeNotifier
     switch (pollUpdateType) {
       ///If the poll is started we add the poll in questions list
       case HMSPollUpdateType.started:
+        if (poll.createdBy?.peerId == localPeer?.peerId) {
+          ///Send timed metadata for polls/quiz created by local peer.
+          sendHLSTimedMetadata([
+            HMSHLSTimedMetadata(
+                metadata: "poll:${poll.pollId}", duration: _hlsCueDuration)
+          ]);
+        }
 
         /*
          * Here we check whether the peer has permission to view polls
@@ -2804,7 +2814,7 @@ class MeetingStore extends ChangeNotifier
                */
               if (poll.startedAt != null &&
                   (DateTime.now().difference(poll.startedAt!) >
-                      const Duration(seconds: 20))) {
+                      Duration(seconds: _hlsCueDuration))) {
                 insertPollQuestion(store);
                 toasts.add(HMSToastModel(store,
                     hmsToastType: HMSToastsType.pollStartedToast));
