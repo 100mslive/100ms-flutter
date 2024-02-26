@@ -5,6 +5,21 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+# 1.9.11 - 2024-02-26
+
+| Package                                | Version                                                                                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| hms_room_kit                | 1.0.14  |
+| hmssdk_flutter              | 1.9.11  |
+
+### ✨ Added
+
+- Introducing leaderboard APIs
+
+  - Users can now fetch rankings and quiz summary using the leaderboard.
+
+**Full Changelog**: [1.9.10...1.9.11](https://github.com/100mslive/100ms-flutter/compare/1.9.10...1.9.11)
+
 # 1.9.10 - 2024-02-16
 
 | Package                                | Version                                                                                                                                  |
