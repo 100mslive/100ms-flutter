@@ -82,8 +82,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     text: 'Join',
                     options: FFButtonOptions(
                       height: 40,
-                      padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-                      iconPadding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
+                      iconPadding:
+                          const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                       color: FlutterFlowTheme.of(context).primary,
                       textStyle:
                           FlutterFlowTheme.of(context).titleSmall.override(
