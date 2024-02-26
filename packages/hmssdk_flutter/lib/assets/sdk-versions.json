@@ -1,7 +1,7 @@
 {
-  "flutter": "1.9.10",
-  "ios": "1.5.0",
+  "flutter": "1.9.11",
+  "ios": "1.5.1",
   "iOSBroadcastExtension": "0.0.9",
   "iOSHLSPlayerSDK": "0.0.2",
-  "android": "2.9.0"  
+  "android": "2.9.4"  
 }

@@ -257,6 +257,9 @@ class MeetingStore extends ChangeNotifier
 
   List<HMSPollStore> hlsViewerPolls = [];
 
+  ///Cue Duration for hls stream
+  final int _hlsCueDuration = 20;
+
   ///List of bottom sheets currently open
   List<BuildContext> bottomSheets = [];
 
@@ -893,6 +896,7 @@ class MeetingStore extends ChangeNotifier
     getAudioDevicesList();
     notifyListeners();
     setViewControllers();
+    // fetchPollList(HMSPollState.stopped);
     // if (Platform.isIOS &&
     //     HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf !=
     //         null) {
@@ -2243,26 +2247,103 @@ class MeetingStore extends ChangeNotifier
 
   ///Method to add Poll Response
   void addSingleChoicePollResponse(HMSPoll poll, HMSPollQuestion question,
-      HMSPollQuestionOption pollQuestionOption) {
+      HMSPollQuestionOption pollQuestionOption,
+      {Duration? timeTakenToAnswer}) {
     _hmsSDKInteractor.addSingleChoicePollResponse(
         poll: poll,
         question: question,
         pollQuestionOption: pollQuestionOption,
-        peer: localPeer);
+        peer: localPeer,
+        timeTakenToAnswer: timeTakenToAnswer);
   }
 
   void addMultiChoicePollResponse(HMSPoll poll, HMSPollQuestion question,
-      List<HMSPollQuestionOption> pollQuestionOption) {
+      List<HMSPollQuestionOption> pollQuestionOption,
+      {Duration? timeTakenToAnswer}) {
     _hmsSDKInteractor.addMultiChoicePollResponse(
         poll: poll,
         question: question,
         pollQuestionOption: pollQuestionOption,
-        peer: localPeer);
+        peer: localPeer,
+        timeTakenToAnswer: timeTakenToAnswer);
   }
 
   void stopPoll(HMSPoll poll) {
     _hmsSDKInteractor.stopPoll(poll: poll);
   }
+
+  void fetchLeaderboard(HMSPoll poll) async {
+    var data = await _hmsSDKInteractor.fetchLeaderboard(
+        poll: poll, count: 5, startIndex: 0, includeCurrentPeer: true);
+
+    if (data is HMSPollLeaderboardResponse) {
+      var pollIndex = pollQuestions
+          .indexWhere((element) => element.poll.pollId == poll.pollId);
+      if (pollIndex != -1) {
+        pollQuestions[pollIndex].updatePollLeaderboardResponse(data);
+      }
+    } else {
+      log("fetchLeaderboard error: $data");
+    }
+    notifyListeners();
+  }
+
+  // void fetchPollList(HMSPollState state) async {
+  //   var data = await _hmsSDKInteractor.fetchPollList(hmsPollState: state);
+
+  //   if (data is List<HMSPoll>) {
+  //     for (var element in data) {
+  //       pollQuestions.add(HMSPollStore(poll: element));
+  //     }
+  //     sortPollQuestions();
+  //   } else {
+  //     log("fetchPollList error: $data");
+  //   }
+  // }
+
+  // void fetchPollQuestions(HMSPoll poll) async {
+  //   var data = await _hmsSDKInteractor.fetchPollQuestions(hmsPoll: poll);
+
+  //   if (data is List<HMSPollQuestion>) {
+  //     int index = pollQuestions
+  //         .indexWhere((element) => element.poll.pollId == poll.pollId);
+
+  //     if (index != -1) {
+  //       var newPoll = HMSPoll(
+  //           pollId: poll.pollId,
+  //           title: poll.title,
+  //           anonymous: poll.anonymous,
+  //           category: poll.category,
+  //           createdBy: poll.createdBy,
+  //           duration: poll.duration,
+  //           pollUserTrackingMode: poll.pollUserTrackingMode,
+  //           questionCount: data.length,
+  //           questions: data,
+  //           result: poll.result,
+  //           rolesThatCanViewResponses: poll.rolesThatCanViewResponses,
+  //           rolesThatCanVote: poll.rolesThatCanVote,
+  //           startedAt: poll.startedAt,
+  //           startedBy: poll.startedBy,
+  //           state: poll.state,
+  //           stoppedAt: poll.stoppedAt,
+  //           stoppedBy: poll.stoppedBy);
+  //       pollQuestions[index].updateState(newPoll);
+  //     }
+  //   }
+  // }
+
+  // void getPollResults(HMSPoll poll) async {
+  //   var data = await _hmsSDKInteractor.getPollResults(hmsPoll: poll);
+
+  //   if (data is HMSPoll) {
+  //     int index = pollQuestions
+  //         .indexWhere((element) => element.poll.pollId == poll.pollId);
+
+  //     if (index != -1) {
+  //       pollQuestions[index].updateState(data);
+  //     }
+  //   }
+  // }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
   @override
@@ -2697,6 +2778,13 @@ class MeetingStore extends ChangeNotifier
     switch (pollUpdateType) {
       ///If the poll is started we add the poll in questions list
       case HMSPollUpdateType.started:
+        if (poll.createdBy?.peerId == localPeer?.peerId) {
+          ///Send timed metadata for polls/quiz created by local peer.
+          sendHLSTimedMetadata([
+            HMSHLSTimedMetadata(
+                metadata: "poll:${poll.pollId}", duration: _hlsCueDuration)
+          ]);
+        }
 
         /*
          * Here we check whether the peer has permission to view polls
@@ -2726,7 +2814,7 @@ class MeetingStore extends ChangeNotifier
                */
               if (poll.startedAt != null &&
                   (DateTime.now().difference(poll.startedAt!) >
-                      const Duration(seconds: 20))) {
+                      Duration(seconds: _hlsCueDuration))) {
                 insertPollQuestion(store);
                 toasts.add(HMSToastModel(store,
                     hmsToastType: HMSToastsType.pollStartedToast));
@@ -2749,6 +2837,9 @@ class MeetingStore extends ChangeNotifier
         break;
 
       case HMSPollUpdateType.stopped:
+        if (poll.category == HMSPollCategory.quiz) {
+          fetchLeaderboard(poll);
+        }
         removeToast(HMSToastsType.pollStartedToast, data: poll.pollId);
         int index = pollQuestions
             .indexWhere((element) => element.poll.pollId == poll.pollId);

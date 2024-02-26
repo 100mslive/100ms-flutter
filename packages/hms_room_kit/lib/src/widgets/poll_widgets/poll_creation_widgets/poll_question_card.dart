@@ -68,6 +68,11 @@ class PollQuestionCard extends StatelessWidget {
                       onPressed: () {
                         var meetingStore = context.read<MeetingStore>();
                         var pollStore = context.read<HMSPollStore>();
+                        // meetingStore.fetchPollQuestions(pollStore.poll);
+                        // meetingStore.getPollResults(pollStore.poll);
+                        // if (pollStore.poll.category == HMSPollCategory.quiz) {
+                        //   meetingStore.fetchLeaderboard(pollStore.poll);
+                        // }
                         showModalBottomSheet(
                             isScrollControlled: true,
                             backgroundColor: HMSThemeColors.surfaceDim,

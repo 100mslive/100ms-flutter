@@ -653,13 +653,14 @@ class HMSSDK {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.acceptChangeRole);
     if (hmsActionResultListener != null) {
-      if (result == null)
+      if (result == null) {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.acceptChangeRole);
-      else
+      } else {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.acceptChangeRole,
             hmsException: HMSException.fromMap(result["error"]));
+      }
     }
   }
 
@@ -741,12 +742,12 @@ class HMSSDK {
         arguments: arguments);
 
     if (hmsActionResultListener != null) {
-      if (result == null)
+      if (result == null) {
         hmsActionResultListener.onSuccess(arguments: {
           "track": forRemoteTrack,
           "mute": mute,
         }, methodType: HMSActionResultListenerMethod.changeTrackState);
-      else
+      } else {
         hmsActionResultListener.onException(
             arguments: {
               "track": forRemoteTrack,
@@ -754,6 +755,7 @@ class HMSSDK {
             },
             methodType: HMSActionResultListenerMethod.changeTrackState,
             hmsException: HMSException.fromMap(result["error"]));
+      }
     }
   }
 
@@ -794,7 +796,7 @@ class HMSSDK {
         arguments: arguments);
 
     if (hmsActionResultListener != null) {
-      if (result == null)
+      if (result == null) {
         hmsActionResultListener.onSuccess(arguments: {
           "mute": mute,
           "type": HMSTrackKindValue.getValueFromHMSTrackKind(
@@ -802,7 +804,7 @@ class HMSSDK {
           "source": source,
           "roles": roles
         }, methodType: HMSActionResultListenerMethod.changeTrackStateForRole);
-      else
+      } else {
         hmsActionResultListener.onException(
             arguments: {
               "mute": mute,
@@ -813,6 +815,7 @@ class HMSSDK {
             },
             methodType: HMSActionResultListenerMethod.changeTrackStateForRole,
             hmsException: HMSException.fromMap(result["error"]));
+      }
     }
   }
 
@@ -900,15 +903,16 @@ class HMSSDK {
         arguments: arguments) as Map?;
 
     if (hmsActionResultListener != null) {
-      if (result == null)
+      if (result == null) {
         hmsActionResultListener.onSuccess(
             arguments: arguments,
             methodType: HMSActionResultListenerMethod.startRtmpOrRecording);
-      else
+      } else {
         hmsActionResultListener.onException(
             arguments: arguments,
             methodType: HMSActionResultListenerMethod.startRtmpOrRecording,
             hmsException: HMSException.fromMap(result["error"]));
+      }
     }
   }
 
@@ -924,13 +928,14 @@ class HMSSDK {
         await PlatformService.invokeMethod(PlatformMethod.stopRtmpAndRecording);
 
     if (hmsActionResultListener != null) {
-      if (result == null)
+      if (result == null) {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.stopRtmpAndRecording);
-      else
+      } else {
         hmsActionResultListener.onException(
             methodType: HMSActionResultListenerMethod.stopRtmpAndRecording,
             hmsException: HMSException.fromMap(result["error"]));
+      }
     }
   }
 
@@ -946,15 +951,15 @@ class HMSSDK {
         PlatformMethod.startHlsStreaming,
         arguments: hmshlsConfig?.toMap());
     if (hmsActionResultListener != null) {
-      if (result == null) {
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.hlsStreamingStarted);
-        return null;
-      } else {
+      if (result != null) {
         hmsActionResultListener.onException(
             hmsException: HMSException.fromMap(result["error"]),
             methodType: HMSActionResultListenerMethod.hlsStreamingStarted);
         return HMSException.fromMap(result["error"]);
+      } else {
+        hmsActionResultListener.onSuccess(
+            methodType: HMSActionResultListenerMethod.hlsStreamingStarted);
+        return null;
       }
     }
     return null;
@@ -971,13 +976,14 @@ class HMSSDK {
         PlatformMethod.stopHlsStreaming,
         arguments: hmshlsConfig != null ? hmshlsConfig.toMap() : null);
     if (hmsActionResultListener != null) {
-      if (result == null)
+      if (result == null) {
         hmsActionResultListener.onSuccess(
             methodType: HMSActionResultListenerMethod.hlsStreamingStopped);
-      else
+      } else {
         hmsActionResultListener.onException(
             hmsException: HMSException.fromMap(result["error"]),
             methodType: HMSActionResultListenerMethod.hlsStreamingStopped);
+      }
     }
   }
 
@@ -1030,15 +1036,16 @@ class HMSSDK {
         arguments: arguments);
 
     if (hmsActionResultListener != null) {
-      if (result == null)
+      if (result == null) {
         hmsActionResultListener.onSuccess(
             arguments: arguments,
             methodType: HMSActionResultListenerMethod.changeMetadata);
-      else
+      } else {
         hmsActionResultListener.onException(
             arguments: arguments,
             methodType: HMSActionResultListenerMethod.changeMetadata,
             hmsException: HMSException.fromMap(result["error"]));
+      }
     }
   }
 
@@ -1061,15 +1068,16 @@ class HMSSDK {
         arguments: arguments);
 
     if (hmsActionResultListener != null) {
-      if (result == null)
+      if (result == null) {
         hmsActionResultListener.onSuccess(
             arguments: arguments,
             methodType: HMSActionResultListenerMethod.changeName);
-      else
+      } else {
         hmsActionResultListener.onException(
             arguments: arguments,
             methodType: HMSActionResultListenerMethod.changeName,
             hmsException: HMSException.fromMap(result["error"]));
+      }
     }
   }
 

@@ -286,7 +286,7 @@ class HmssdkFlutterPlugin :
                 HMSPeerListIteratorAction.peerListIteratorAction(call, result, hmssdk!!)
             }
 
-            "add_poll_update_listener", "remove_poll_update_listener", "quick_start_poll", "add_single_choice_poll_response", "add_multi_choice_poll_response", "stop_poll" -> {
+            "add_poll_update_listener", "remove_poll_update_listener", "quick_start_poll", "add_single_choice_poll_response", "add_multi_choice_poll_response", "stop_poll", "fetch_leaderboard","fetch_poll_list", "fetch_poll_questions", "get_poll_results" -> {
                 pollActions(call,result)
             }
 

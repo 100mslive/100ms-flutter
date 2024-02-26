@@ -199,6 +199,14 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
                                           questionNumber: index,
                                           totalQuestions:
                                               pollQuizQuestionBuilders.length,
+                                          pointWeightageController:
+                                              TextEditingController(
+                                                  text: pollQuizQuestionBuilders
+                                                          .keys
+                                                          .elementAt(index)
+                                                          .weight
+                                                          ?.toString() ??
+                                                      "10"),
                                           questionController:
                                               TextEditingController(
                                                   text: pollQuizQuestionBuilders

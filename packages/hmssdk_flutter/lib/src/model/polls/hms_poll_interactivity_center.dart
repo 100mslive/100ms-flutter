@@ -50,14 +50,15 @@ abstract class HMSPollInteractivityCenter {
   ///
   ///**Returns**
   ///
-  /// Future<dynamic> - A Future representing the asynchronous operation. It will return either null if the operation is successful, or an [HMSException] if an error occurs.
+  /// Future<dynamic> - A Future representing the asynchronous operation. It will return either pollResponse if the operation is successful, or an [HMSException] if an error occurs or null if any argument error occurs.
   ///
   ///Refer [addSingleChoicePollResponse](Add docs link here)
   static Future<dynamic> addSingleChoicePollResponse(
       {required HMSPoll hmsPoll,
       required HMSPollQuestion pollQuestion,
       required HMSPollQuestionOption optionSelected,
-      HMSPeer? peer}) async {
+      HMSPeer? peer,
+      Duration? timeTakenToAnswer}) async {
     int questionIndex =
         hmsPoll.questions?.indexWhere((element) => element == pollQuestion) ??
             -1;
@@ -75,7 +76,8 @@ abstract class HMSPollInteractivityCenter {
           "poll_id": hmsPoll.pollId,
           "question_index": questionIndex,
           "user_id": peer?.customerUserId,
-          "answer": optionSelected.toMap()
+          "answer": optionSelected.toMap(),
+          "time_taken_to_answer": timeTakenToAnswer?.inMilliseconds
         });
 
     if (result != null) {
@@ -139,7 +141,8 @@ abstract class HMSPollInteractivityCenter {
       {required HMSPoll hmsPoll,
       required HMSPollQuestion pollQuestion,
       required List<HMSPollQuestionOption> optionsSelected,
-      HMSPeer? peer}) async {
+      HMSPeer? peer,
+      Duration? timeTakenToAnswer}) async {
     int questionIndex =
         hmsPoll.questions?.indexWhere((element) => element == pollQuestion) ??
             -1;
@@ -159,7 +162,8 @@ abstract class HMSPollInteractivityCenter {
           "poll_id": hmsPoll.pollId,
           "question_index": questionIndex,
           "user_id": peer?.customerUserId,
-          "answer": optionsSelectedMap
+          "answer": optionsSelectedMap,
+          "time_taken_to_answer": timeTakenToAnswer?.inMilliseconds
         });
 
     if (result != null) {
@@ -178,6 +182,116 @@ abstract class HMSPollInteractivityCenter {
         if (result["data"]["error"] != null) {
           return HMSException.fromMap(result["data"]["error"]);
         }
+      }
+    }
+  }
+
+  ///[fetchLeaderboard] method is used to fetch leaderboard
+  static Future<dynamic> fetchLeaderboard(
+      {required HMSPoll poll,
+      required int? count,
+      required int startIndex,
+      required bool includeCurrentPeer}) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.fetchLeaderboard,
+        arguments: {
+          "poll_id": poll.pollId,
+          "count": count,
+          "start_index": startIndex,
+          "include_current_peer": includeCurrentPeer
+        });
+
+    if (result != null) {
+      if (result["success"]) {
+        if (result["data"] != null) {
+          return HMSPollLeaderboardResponse.fromMap(result["data"]);
+        } else {
+          return null;
+        }
+      } else {
+        if (result["data"]["error"] != null) {
+          return HMSException.fromMap(result["data"]["error"]);
+        }
+      }
+    }
+  }
+
+  static Future<dynamic> fetchPollList(
+      {required HMSPollState hmsPollState}) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.fetchPollList,
+        arguments: {
+          "poll_state":
+              HMSPollStateValues.getStringFromHMSPollState(hmsPollState)
+        });
+
+    if (result != null) {
+      if (result["success"]) {
+        if (result["data"] != null) {
+          List<HMSPoll> polls = [];
+
+          result["data"]
+              .forEach((element) => polls.add(HMSPoll.fromMap(element)));
+          return polls;
+        } else {
+          return null;
+        }
+      } else {
+        if (result["data"]["error"] != null) {
+          return HMSException.fromMap(result["data"]["error"]);
+        }
+      }
+    }
+  }
+
+  static Future<dynamic> fetchPollQuestions({required HMSPoll hmsPoll}) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.fetchPollQuestions,
+        arguments: {
+          "poll_id": hmsPoll.pollId,
+          "poll_state":
+              HMSPollStateValues.getStringFromHMSPollState(hmsPoll.state)
+        });
+
+    if (result != null) {
+      if (result["success"]) {
+        if (result["data"] != null) {
+          List<HMSPollQuestion> questions = [];
+
+          result["data"].forEach(
+              (element) => questions.add(HMSPollQuestion.fromMap(element)));
+          return questions;
+        } else {
+          return null;
+        }
+      } else {
+        if (result["data"]["error"] != null) {
+          return HMSException.fromMap(result["data"]["error"]);
+        }
+      }
+    }
+  }
+
+  static Future<dynamic> getPollResults({required HMSPoll hmsPoll}) async {
+    var result = await PlatformService.invokeMethod(
+        PlatformMethod.getPollResults,
+        arguments: {
+          "poll_id": hmsPoll.pollId,
+          "poll_state":
+              HMSPollStateValues.getStringFromHMSPollState(hmsPoll.state)
+        });
+
+    if (result != null) {
+      if (result["success"]) {
+        if (result["data"] != null) {
+          return HMSPoll.fromMap(result["data"]);
+        } else {
+          return null;
+        }
+      }
+    } else {
+      if (result["data"]["error"] != null) {
+        return HMSException.fromMap(result["data"]["error"]);
       }
     }
   }
