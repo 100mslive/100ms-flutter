@@ -214,14 +214,14 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.13"
+    version: "1.0.14"
   hmssdk_flutter:
     dependency: transitive
     description:
       path: "../../hmssdk_flutter"
       relative: true
     source: path
-    version: "1.9.10"
+    version: "1.9.11"
   http:
     dependency: transitive
     description:
