@@ -424,27 +424,55 @@ class HMSSDKInteractor {
       {required HMSPoll poll,
       required HMSPollQuestion question,
       required HMSPollQuestionOption pollQuestionOption,
-      HMSPeer? peer}) {
+      HMSPeer? peer,
+      Duration? timeTakenToAnswer}) {
     return HMSPollInteractivityCenter.addSingleChoicePollResponse(
         hmsPoll: poll,
         pollQuestion: question,
         optionSelected: pollQuestionOption,
-        peer: peer);
+        peer: peer,
+        timeTakenToAnswer: timeTakenToAnswer);
   }
 
   Future<dynamic> addMultiChoicePollResponse(
       {required HMSPoll poll,
       required HMSPollQuestion question,
       required List<HMSPollQuestionOption> pollQuestionOption,
-      HMSPeer? peer}) {
+      HMSPeer? peer,
+      Duration? timeTakenToAnswer}) {
     return HMSPollInteractivityCenter.addMultiChoicePollResponse(
         hmsPoll: poll,
         pollQuestion: question,
         optionsSelected: pollQuestionOption,
-        peer: peer);
+        peer: peer,
+        timeTakenToAnswer: timeTakenToAnswer);
   }
 
   Future<dynamic> stopPoll({required HMSPoll poll}) {
     return HMSPollInteractivityCenter.stopPoll(poll: poll);
+  }
+
+  Future<dynamic> fetchLeaderboard(
+      {required HMSPoll poll,
+      required int count,
+      required int startIndex,
+      required bool includeCurrentPeer}) {
+    return HMSPollInteractivityCenter.fetchLeaderboard(
+        poll: poll,
+        count: count,
+        startIndex: startIndex,
+        includeCurrentPeer: includeCurrentPeer);
+  }
+
+  Future<dynamic> fetchPollList({required HMSPollState hmsPollState}) {
+    return HMSPollInteractivityCenter.fetchPollList(hmsPollState: hmsPollState);
+  }
+
+  Future<dynamic> fetchPollQuestions({required HMSPoll hmsPoll}) {
+    return HMSPollInteractivityCenter.fetchPollQuestions(hmsPoll: hmsPoll);
+  }
+
+  Future<dynamic> getPollResults({required HMSPoll hmsPoll}) {
+    return HMSPollInteractivityCenter.getPollResults(hmsPoll: hmsPoll);
   }
 }

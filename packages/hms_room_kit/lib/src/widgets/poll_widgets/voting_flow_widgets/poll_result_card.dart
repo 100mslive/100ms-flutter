@@ -1,5 +1,6 @@
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
@@ -48,7 +49,7 @@ class PollResultCard extends StatelessWidget {
       if (question.type == HMSPollQuestionType.singleChoice) {
         if (question.correctAnswer?.option != null) {
           return question.correctAnswer?.option ==
-              question.myResponses[questionNumber].selectedOption;
+              question.myResponses[0].selectedOption;
         }
       } else if (question.type == HMSPollQuestionType.multiChoice) {
         if (question.myResponses.length !=
@@ -57,8 +58,7 @@ class PollResultCard extends StatelessWidget {
         }
         if (question.correctAnswer?.options != null) {
           for (var option in question.correctAnswer!.options!) {
-            if (!(question.myResponses[questionNumber].selectedOptions
-                    ?.contains(option) ??
+            if (!(question.myResponses[0].selectedOptions?.contains(option) ??
                 true)) {
               return false;
             }
@@ -151,14 +151,10 @@ class PollResultCard extends StatelessWidget {
                                   child: SizedBox(
                                     height: 20,
                                     width: 20,
-                                    child: Checkbox(
-                                        activeColor: HMSThemeColors
-                                            .onSurfaceHighEmphasis,
-                                        checkColor:
-                                            HMSThemeColors.surfaceDefault,
-                                        shape: const CircleBorder(),
-                                        value: true,
-                                        onChanged: (value) {}),
+                                    child: SvgPicture.asset(
+                                      "packages/hms_room_kit/lib/src/assets/icons/tick_circle.svg",
+                                      semanticsLabel: "tick",
+                                    ),
                                   ),
                                 ),
                               Expanded(
@@ -175,14 +171,10 @@ class PollResultCard extends StatelessWidget {
                                   isSelectedOption(
                                       question.options[index].index))
                                 isPoll
-                                    ? Checkbox(
-                                        activeColor: HMSThemeColors
-                                            .onSurfaceHighEmphasis,
-                                        checkColor:
-                                            HMSThemeColors.surfaceDefault,
-                                        shape: const CircleBorder(),
-                                        value: true,
-                                        onChanged: (value) {})
+                                    ? SvgPicture.asset(
+                                        "packages/hms_room_kit/lib/src/assets/icons/tick_circle.svg",
+                                        semanticsLabel: "tick",
+                                      )
                                     : HMSSubheadingText(
                                         text: "Your Answer",
                                         textColor: HMSThemeColors

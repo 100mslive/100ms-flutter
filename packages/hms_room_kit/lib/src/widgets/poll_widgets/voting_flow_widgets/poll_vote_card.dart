@@ -16,13 +16,19 @@ class PollVoteCard extends StatefulWidget {
   final int totalQuestions;
   final HMSPollQuestion question;
   final bool isPoll;
+  final DateTime? startTime;
+  final Function? updatePage;
+  final Function? setPageSize;
 
   const PollVoteCard(
       {super.key,
       required this.questionNumber,
       required this.totalQuestions,
       required this.question,
-      required this.isPoll});
+      required this.isPoll,
+      this.startTime,
+      this.updatePage,
+      this.setPageSize});
 
   @override
   State<PollVoteCard> createState() => _PollVoteCardState();
@@ -32,6 +38,7 @@ class _PollVoteCardState extends State<PollVoteCard> {
   HMSPollQuestionOption? selectedOption;
   List<HMSPollQuestionOption> selectedOptions = [];
   bool isPollAnswerValid = false;
+  bool _isAnswered = false;
 
   void resetPollAnswerValidity() {
     if (selectedOption != null || selectedOptions.isNotEmpty) {
@@ -39,6 +46,20 @@ class _PollVoteCardState extends State<PollVoteCard> {
     } else {
       isPollAnswerValid = false;
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.setPageSize != null) {
+      widget.setPageSize!(widget.question.options.length);
+    }
+  }
+
+  void setIsAnswered(bool isQuestionAnswered) {
+    setState(() {
+      _isAnswered = isQuestionAnswered;
+    });
   }
 
   @override
@@ -87,7 +108,6 @@ class _PollVoteCardState extends State<PollVoteCard> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: widget.question.options.length,
                   itemBuilder: (BuildContext context, index) {
-                    ///TODO: Add dynamic padding based on text length
                     return Row(
                       children: [
                         Checkbox(
@@ -142,7 +162,8 @@ class _PollVoteCardState extends State<PollVoteCard> {
                       width: MediaQuery.of(context).size.width *
                           (widget.isPoll ? 0.21 : 0.30),
                       onPressed: () {
-                        if (isPollAnswerValid) {
+                        ///Here we check whether the poll/quiz Answer is valid and it's not answered yet
+                        if (isPollAnswerValid && !_isAnswered) {
                           if (widget.question.type ==
                                   HMSPollQuestionType.singleChoice &&
                               selectedOption != null) {
@@ -151,7 +172,13 @@ class _PollVoteCardState extends State<PollVoteCard> {
                                 .addSingleChoicePollResponse(
                                     context.read<HMSPollStore>().poll,
                                     widget.question,
-                                    selectedOption!);
+                                    selectedOption!,
+                                    timeTakenToAnswer: widget.isPoll
+                                        ? null
+                                        : widget.startTime != null
+                                            ? (DateTime.now()
+                                                .difference(widget.startTime!))
+                                            : null);
                             selectedOption = null;
                           } else if (widget.question.type ==
                                   HMSPollQuestionType.multiChoice &&
@@ -161,17 +188,26 @@ class _PollVoteCardState extends State<PollVoteCard> {
                                 .addMultiChoicePollResponse(
                                     context.read<HMSPollStore>().poll,
                                     widget.question,
-                                    selectedOptions);
+                                    selectedOptions,
+                                    timeTakenToAnswer: widget.isPoll
+                                        ? null
+                                        : widget.startTime != null
+                                            ? (DateTime.now()
+                                                .difference(widget.startTime!))
+                                            : null);
                             selectedOptions = [];
+                          }
+                          if (!widget.isPoll && widget.updatePage != null) {
+                            widget.updatePage!(widget.totalQuestions);
                           }
                         }
                       },
-                      buttonBackgroundColor: isPollAnswerValid
+                      buttonBackgroundColor: isPollAnswerValid || !_isAnswered
                           ? HMSThemeColors.primaryDefault
                           : HMSThemeColors.primaryDisabled,
                       childWidget: HMSTitleText(
                           text: widget.isPoll ? "Vote" : "Answer",
-                          textColor: isPollAnswerValid
+                          textColor: isPollAnswerValid || !_isAnswered
                               ? HMSThemeColors.onPrimaryHighEmphasis
                               : HMSThemeColors.onPrimaryLowEmphasis))
                 ],

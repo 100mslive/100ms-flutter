@@ -1,6 +1,7 @@
 ///Package imports
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
@@ -14,6 +15,7 @@ class CreateQuizForm extends StatefulWidget {
   final int questionNumber;
   final int totalQuestions;
   final TextEditingController questionController;
+  final TextEditingController pointWeightageController;
   final List<TextEditingController> optionsTextController;
   final HMSPollQuestionBuilder questionBuilder;
   final Function deleteQuestionCallback;
@@ -26,7 +28,8 @@ class CreateQuizForm extends StatefulWidget {
       required this.questionController,
       required this.questionBuilder,
       required this.deleteQuestionCallback,
-      required this.saveQuizCallback});
+      required this.saveQuizCallback,
+      required this.pointWeightageController});
 
   @override
   State<CreateQuizForm> createState() => _CreatePollFormState();
@@ -35,6 +38,8 @@ class CreateQuizForm extends StatefulWidget {
 class _CreatePollFormState extends State<CreateQuizForm> {
   late TextEditingController _questionController;
   late List<TextEditingController> _optionsTextController;
+  late TextEditingController _pointWeightageController;
+  final _numberOnlyFormatter = FilteringTextInputFormatter.digitsOnly;
 
   ///Quiz variables
   HMSPollQuizOption? _correctOption;
@@ -46,6 +51,9 @@ class _CreatePollFormState extends State<CreateQuizForm> {
     ///the value passed from widget. It's empty when a fresh poll is created
     ///while it has `text` value when it's being edited
     _questionController = widget.questionController;
+
+    _pointWeightageController = widget.pointWeightageController;
+    _setWeight(widget.pointWeightageController.text);
 
     ///Here options text controller gets initialised.
     ///If controllers are passed on to the widget then we just
@@ -93,6 +101,7 @@ class _CreatePollFormState extends State<CreateQuizForm> {
   ///This is checked before launching the poll
   bool _isQuizValid() {
     bool areOptionsFilled = _optionsTextController.length >= 2;
+    areOptionsFilled = _pointWeightageController.text.isNotEmpty;
     for (var optionController in _optionsTextController) {
       areOptionsFilled = areOptionsFilled && (optionController.text.isNotEmpty);
     }
@@ -107,12 +116,20 @@ class _CreatePollFormState extends State<CreateQuizForm> {
 
   ///This function set's the text for the question
   void _setText(String text) {
-    widget.questionBuilder.withText = text;
+    widget.questionBuilder.withText = text.trim();
+  }
+
+  ///This function set's the weight for the question
+  void _setWeight(String text) {
+    if (text.isEmpty) {
+      return;
+    }
+    widget.questionBuilder.withWeight = int.parse(text.trim());
   }
 
   ///This function save the poll option
   void _saveQuizOption(String option, int index) {
-    _optionsTextController[index].text = option;
+    _optionsTextController[index].text = option.trim();
   }
 
   ///This function saves the option and also fires a callback
@@ -240,7 +257,7 @@ class _CreatePollFormState extends State<CreateQuizForm> {
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 onChanged: (value) {
-                  _setText(value.trim());
+                  _setText(value);
                   setState(() {});
                 },
                 decoration: InputDecoration(
@@ -367,7 +384,7 @@ class _CreatePollFormState extends State<CreateQuizForm> {
                               controller: _optionsTextController[index],
                               keyboardType: TextInputType.text,
                               onChanged: (value) {
-                                _saveQuizOption(value.trim(), index);
+                                _saveQuizOption(value, index);
                               },
                               decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.symmetric(
@@ -396,7 +413,12 @@ class _CreatePollFormState extends State<CreateQuizForm> {
                         if (_optionsTextController.length > 2)
                           IconButton(
                               onPressed: () {
+                                if (_correctOption?.text ==
+                                    _optionsTextController[index].text) {
+                                  _correctOption = null;
+                                }
                                 _optionsTextController.removeAt(index);
+                                _isQuizValid();
                                 setState(() {});
                               },
                               icon: SvgPicture.asset(
@@ -446,6 +468,55 @@ class _CreatePollFormState extends State<CreateQuizForm> {
                 height: 5,
                 color: HMSThemeColors.borderBright,
               ),
+            ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                HMSSubheadingText(
+                    text: "Point Weightage",
+                    textColor: HMSThemeColors.onSurfaceMediumEmphasis),
+                SizedBox(
+                  width: 88,
+                  height: 48,
+                  child: TextField(
+                    cursorColor: HMSThemeColors.onSurfaceHighEmphasis,
+                    onTapOutside: (event) =>
+                        FocusManager.instance.primaryFocus?.unfocus(),
+                    inputFormatters: [_numberOnlyFormatter],
+                    keyboardType: TextInputType.number,
+                    style: HMSTextStyle.setTextStyle(
+                        color: HMSThemeColors.onSurfaceHighEmphasis),
+                    controller: _pointWeightageController,
+                    onChanged: (value) {
+                      _setWeight(value);
+                      setState(() {});
+                    },
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 16),
+                        fillColor: HMSThemeColors.surfaceBright,
+                        filled: true,
+                        hintStyle: HMSTextStyle.setTextStyle(
+                            color: HMSThemeColors.onSurfaceLowEmphasis,
+                            height: 1.5,
+                            fontSize: 16,
+                            letterSpacing: 0.5,
+                            fontWeight: FontWeight.w400),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(8)),
+                            borderSide: BorderSide(
+                                color: HMSThemeColors.primaryDefault)),
+                        border: const OutlineInputBorder(
+                            borderSide: BorderSide.none)),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(
+              height: 16,
             ),
 
             ///Save the question

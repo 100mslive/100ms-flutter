@@ -315,7 +315,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
            // MARK: - Polls
             
-        case "add_poll_update_listener", "remove_poll_update_listener", "quick_start_poll", "add_single_choice_poll_response", "add_multi_choice_poll_response", "stop_poll":
+        case "add_poll_update_listener", "remove_poll_update_listener", "quick_start_poll", "add_single_choice_poll_response", "add_multi_choice_poll_response", "stop_poll", "fetch_leaderboard", "fetch_poll_list", "fetch_poll_questions", "get_poll_results":
             pollsAction(call, result)
             
         default:
@@ -427,11 +427,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     private func pollsAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "add_poll_update_listener":
-            var listener : HMSInteractivityCenter.HMSPollListener = { [weak self] hmsPoll, hmsPollUpdateType in
+            let listener : HMSInteractivityCenter.HMSPollListener = { [weak self] hmsPoll, hmsPollUpdateType in
                                 
                 guard let self = self else { return }
                 
-                var map = ["event_name": "on_poll_update",
+                let map = ["event_name": "on_poll_update",
                 "data": [
                     "poll": HMSPollExtension.toDictionary(poll: hmsPoll),
                     "poll_update_type": HMSPollExtension.getPollUpdateType(updateType: hmsPollUpdateType)

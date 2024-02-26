@@ -23,6 +23,14 @@ class HMSPollAction{
             break
         case "stop_poll":
             stopPoll(call, result, hmsSDK, polls)
+        case "fetch_leaderboard":
+            fetchLeaderboard(call, result, hmsSDK, polls)
+        case "fetch_poll_list":
+            fetchPollList(call, result, hmsSDK)
+        case "fetch_poll_questions":
+            fetchPollQuestions(call,result,hmsSDK)
+        case "get_poll_results":
+            getPollResults(call, result, hmsSDK)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -70,6 +78,8 @@ class HMSPollAction{
             return
         }
         
+        let timeTakenToAnswer = arguments?["time_taken_to_answer"] as? Int
+        
         if let optionIndex = answer["index"] as? Int {
             
             if let poll = currentPolls?.first(where: {$0.pollID == pollId}){
@@ -78,7 +88,7 @@ class HMSPollAction{
                     
                     if let optionSelected = question.options?[optionIndex - 1]{
                         let response = HMSPollResponseBuilder(poll: poll)
-                        response.addResponse(for: question, options: [optionSelected])
+                        response.addResponse(for: question, options: [optionSelected],duration: timeTakenToAnswer)
                         hmsSDK?.interactivityCenter.add(response: response){ pollResult, error in
                             
                             if let error = error{
@@ -124,6 +134,9 @@ class HMSPollAction{
             HMSErrorLogger.returnArgumentsError("Invalid arguments")
             return
         }
+        
+        let timeTakenToAnswer = arguments?["time_taken_to_answer"] as? Int
+        
         if let poll = currentPolls?.first(where: {$0.pollID == pollId}){
             
             if let question = poll.questions?[index]{
@@ -142,7 +155,7 @@ class HMSPollAction{
                     }
                 }
                 let response = HMSPollResponseBuilder(poll: poll)
-                response.addResponse(for: question, options: selectedOptions)
+                response.addResponse(for: question, options: selectedOptions,duration: timeTakenToAnswer)
                 hmsSDK?.interactivityCenter.add(response: response){ pollResult, error in
                     
                     if let error = error{
@@ -191,4 +204,178 @@ class HMSPollAction{
             }
         }
     }
+    
+    static private func fetchLeaderboard(_ call: FlutterMethodCall,_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?,_ currentPolls: [HMSPoll]?){
+        
+        let arguments = call.arguments as? [AnyHashable: Any]
+        
+        guard let pollId = arguments?["poll_id"] as? String,
+              let count = arguments?["count"] as? Int,
+              let startIndex = arguments?["start_index"] as? Int,
+              let includeCurrentPeer = arguments?["include_current_peer"] as? Bool
+        else{
+            HMSErrorLogger.returnArgumentsError("Either pollId, count, startIndex or includeCurrentPeer is null")
+            return
+        }
+        
+        if let poll = hmsSDK?.interactivityCenter.polls.first(where: {$0.pollID == pollId}){
+            hmsSDK?.interactivityCenter.fetchLeaderboard(for: poll, offset: startIndex, count: count,includeCurrentPeer: includeCurrentPeer){
+                pollLeaderboardResponse, error in
+                
+                if let error = error{
+                    result(HMSResultExtension.toDictionary(false, HMSErrorExtension.toDictionary(error)))
+                }else{
+                    result(HMSResultExtension.toDictionary(true, HMSPollLeaderboardResponseExtension.toDictionary(pollLeaderboardResponse: pollLeaderboardResponse)))
+                }
+            }
+        }else{
+            HMSErrorLogger.returnArgumentsError("No poll with given pollId found")
+            return
+        }
+    }
+    
+    static private func fetchPollList(_ call: FlutterMethodCall,_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?){
+        
+        let arguments = call.arguments as? [AnyHashable: Any]
+        
+        guard let state = arguments?["poll_state"] as? String
+        else{
+            HMSErrorLogger.returnArgumentsError("state is null")
+            return
+        }
+        
+        if let state = getPollState(pollState: state){
+            hmsSDK?.interactivityCenter.fetchPollList(state: state){
+                pollList, error in
+                
+                if let error = error{
+                    result(HMSResultExtension.toDictionary(false, HMSErrorExtension.toDictionary(error)))
+                }else{
+                    var map = [[String: Any?]]()
+                    
+                    pollList?.forEach{
+                        map.append(HMSPollExtension.toDictionary(poll: $0))
+                    }
+                    result(HMSResultExtension.toDictionary(true, map))
+                }
+            }
+        }else{
+            HMSErrorLogger.logError(#function, "No poll state matched","ARGUMENTS_ERROR")
+            result(nil)
+        }
+    }
+    
+    private static func fetchPollQuestions(_ call: FlutterMethodCall,_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?){
+        let arguments = call.arguments as? [AnyHashable: Any]
+        
+        guard let state = arguments?["poll_state"] as? String,
+              let pollId = arguments?["poll_id"] as? String
+        else{
+            HMSErrorLogger.returnArgumentsError("pollId or state is null")
+            return
+        }
+        
+        if let state = getPollState(pollState: state){
+            hmsSDK?.interactivityCenter.fetchPollList(state: state){
+                pollList, error in
+                
+                if let error = error{
+                    result(HMSResultExtension.toDictionary(false, HMSErrorExtension.toDictionary(error)))
+                }else{
+                    
+                    if let poll = pollList?.first(where: {
+                        $0.pollID == pollId
+                    }){
+                        hmsSDK?.interactivityCenter.fetchPollQuestions(poll: poll){
+                            updatedPoll, error in
+                            
+                            if let error = error{
+                                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.toDictionary(error)))
+                            }else{
+                                var map = [[String: Any?]]()
+                                updatedPoll?.questions?.forEach{
+                                    map.append(HMSPollQuestionExtension.toDictionary(question: $0))
+                                }
+                                result(HMSResultExtension.toDictionary(true, map))
+                                
+                            }
+                        }
+                    }else{
+                        HMSErrorLogger.logError(#function,"No poll with given pollId found","NULL_ERROR")
+                    }
+                    
+                }
+            }
+        }else{
+            HMSErrorLogger.logError(#function, "No poll state matched","ARGUMENTS_ERROR")
+            result(nil)
+        }
+    }
+    
+    private static func getPollResults(_ call: FlutterMethodCall,_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?){
+        let arguments = call.arguments as? [AnyHashable: Any]
+        
+        guard let state = arguments?["poll_state"] as? String,
+              let pollId = arguments?["poll_id"] as? String
+        else{
+            HMSErrorLogger.returnArgumentsError("pollId or state is null")
+            return
+        }
+        
+        if let state = getPollState(pollState: state){
+            hmsSDK?.interactivityCenter.fetchPollList(state: state){
+                pollList, error in
+                
+                if let error = error{
+                    result(HMSResultExtension.toDictionary(false, HMSErrorExtension.toDictionary(error)))
+                }else{
+                    
+                    if let poll = pollList?.first(where: {
+                        $0.pollID == pollId
+                    }){
+                        hmsSDK?.interactivityCenter.fetchPollResult(for: poll){
+                            updatedPoll, error in
+                            
+                            if let error = error{
+                                result(HMSResultExtension.toDictionary(false, HMSErrorExtension.toDictionary(error)))
+                            }else{
+                                if let updatedPoll{
+                                    result(HMSResultExtension.toDictionary(true, HMSPollExtension.toDictionary(poll: updatedPoll)))
+                                }else{
+                                    HMSErrorLogger.logError(#function,"poll is NULL","NULL_ERROR")
+                                    result(nil)
+                                    return
+                                }
+                                
+                            }
+                        }
+                    }else{
+                        HMSErrorLogger.logError(#function,"No poll with given pollId found","NULL_ERROR")
+                    }
+                    
+                }
+            }
+        }else{
+            HMSErrorLogger.logError(#function, "No poll state matched","ARGUMENTS_ERROR")
+            result(nil)
+        }
+    }
+    
+    private static func getPollState(pollState: String?) -> HMSPollState? {
+        guard let state = pollState else {
+            return nil
+        }
+        
+        switch state {
+        case "created":
+            return .created
+        case "started":
+            return .started
+        case "stopped":
+            return .stopped
+        default:
+            return nil
+        }
+    }
+    
 }
