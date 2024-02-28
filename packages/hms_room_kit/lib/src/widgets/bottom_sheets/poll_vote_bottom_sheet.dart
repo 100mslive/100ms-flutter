@@ -4,6 +4,7 @@ import 'dart:math' as math;
 
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/widgets/poll_widgets/leaderboard_widgets/leaderboard_voter_summary.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/leaderboard_widgets/quiz_leaderboard.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
@@ -182,6 +183,40 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
               const SizedBox(
                 height: 8,
               ),
+              if (!(context
+                          .read<MeetingStore>()
+                          .localPeer
+                          ?.role
+                          .permissions
+                          .pollWrite ??
+                      true) &&
+                  hmsPollStore.poll.category == HMSPollCategory.quiz &&
+                  hmsPollStore.poll.state == HMSPollState.stopped)
+                Builder(builder: (context) {
+                  var localPeerUserId =
+                      context.read<MeetingStore>().localPeer?.customerUserId;
+                  var index = hmsPollStore.pollLeaderboardResponse?.entries
+                          ?.indexWhere((element) =>
+                              element.peer?.userId == localPeerUserId) ??
+                      -1;
+                  HMSPollLeaderboardEntry? localPeerEntry;
+                  if (index != -1) {
+                    localPeerEntry =
+                        hmsPollStore.pollLeaderboardResponse?.entries?[index];
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: LeaderboardVoterSummary(
+                      showYourRank: false,
+                      correctAnswers: localPeerEntry?.correctResponses,
+                      totalQuestions: hmsPollStore.poll.questions?.length,
+                      questionsAttempted: localPeerEntry?.totalResponses,
+                      showPoints: false,
+                      avgTimeInMilliseconds:
+                          localPeerEntry?.duration?.inMilliseconds,
+                    ),
+                  );
+                }),
               Selector<HMSPollStore, HMSPoll>(
                   selector: (_, pollStore) => pollStore.poll,
                   builder: (_, poll, __) {

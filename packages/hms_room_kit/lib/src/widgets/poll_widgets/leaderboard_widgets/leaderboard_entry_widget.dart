@@ -9,12 +9,14 @@ class LeaderBoardEntryWidget extends StatelessWidget {
   final HMSPollLeaderboardEntry entry;
   final HMSPollStore pollStore;
   final int totalScore;
+  final Color? tileColor;
 
   const LeaderBoardEntryWidget(
       {super.key,
       required this.entry,
       required this.totalScore,
-      required this.pollStore});
+      required this.pollStore,
+      this.tileColor});
 
   Color getPositionBadgeColor() {
     switch (entry.position) {
@@ -54,8 +56,7 @@ class LeaderBoardEntryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      tileColor: HMSThemeColors.surfaceDefault,
-      style: ListTileStyle.list,
+      tileColor: tileColor ?? HMSThemeColors.surfaceDefault,
       dense: true,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       horizontalTitleGap: 0,
