@@ -2758,7 +2758,11 @@ class MeetingStore extends ChangeNotifier
   void sortPollQuestions() {
     pollQuestions.sort((a, b) {
       if (a.poll.state != b.poll.state) {
-        return a.poll.state == HMSPollState.started ? 1 : a.poll.state == HMSPollState.created ? 2:-1;
+        return a.poll.state == HMSPollState.started
+            ? 1
+            : a.poll.state == HMSPollState.created
+                ? 2
+                : -1;
       } else {
         if (a.poll.startedAt != null && b.poll.startedAt != null) {
           return a.poll.startedAt!.compareTo(b.poll.startedAt!);

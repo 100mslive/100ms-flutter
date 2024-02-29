@@ -62,7 +62,7 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
   @override
   void didUpdateWidget(covariant PollQuestionBottomSheet oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if(oldWidget.poll?.questions?.length != widget.poll?.questions?.length){
+    if (oldWidget.poll?.questions?.length != widget.poll?.questions?.length) {
       setPollBuilder(widget.poll!);
     }
   }

@@ -31,17 +31,19 @@ class _LeaderboardRankingsState extends State<LeaderboardRankings> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if(widget.pollStore.pollLeaderboardResponse?.entries?.isNotEmpty??false)
-        Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: HMSTitleText(
-                text: "Leaderboard",
-                textColor: HMSThemeColors.onSurfaceHighEmphasis)),
-        if(widget.pollStore.pollLeaderboardResponse?.entries?.isNotEmpty??false)
-        HMSSubtitleText(
-            text: "Based on score and time taken to cast the correct answer",
-            textColor: HMSThemeColors.onSurfaceMediumEmphasis,
-            maxLines: 2),
+        if (widget.pollStore.pollLeaderboardResponse?.entries?.isNotEmpty ??
+            false)
+          Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: HMSTitleText(
+                  text: "Leaderboard",
+                  textColor: HMSThemeColors.onSurfaceHighEmphasis)),
+        if (widget.pollStore.pollLeaderboardResponse?.entries?.isNotEmpty ??
+            false)
+          HMSSubtitleText(
+              text: "Based on score and time taken to cast the correct answer",
+              textColor: HMSThemeColors.onSurfaceMediumEmphasis,
+              maxLines: 2),
         const SizedBox(
           height: 16,
         ),
