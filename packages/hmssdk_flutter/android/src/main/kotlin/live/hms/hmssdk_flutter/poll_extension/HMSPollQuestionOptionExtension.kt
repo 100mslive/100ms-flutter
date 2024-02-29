@@ -40,7 +40,7 @@ class HMSPollQuestionOptionExtension {
                 }
 
                 val voteCount = pollQuestionOptionMap["vote_count"]?.let {
-                    it as Long
+                    (it as Int).toLong()
                 }?:run {
                     HMSErrorLogger.returnArgumentsError("voteCount should not be null")
                     return null

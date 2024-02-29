@@ -90,6 +90,9 @@ class PollQuestionCard extends StatelessWidget {
                         var pollStore = context.read<HMSPollStore>();
 
                         if (pollStore.poll.state == HMSPollState.created) {
+                          if (pollStore.poll.questions?.isEmpty ?? true) {
+                            meetingStore.fetchPollQuestions(pollStore.poll);
+                          }
                           showModalBottomSheet(
                               isScrollControlled: true,
                               backgroundColor: HMSThemeColors.surfaceDim,
@@ -103,11 +106,17 @@ class PollQuestionCard extends StatelessWidget {
                                     value: meetingStore,
                                     child: ChangeNotifierProvider.value(
                                       value: pollStore,
-                                      child: PollQuestionBottomSheet(
-                                        isPoll: pollStore.poll.category ==
-                                            HMSPollCategory.poll,
-                                        pollName: pollStore.poll.title,
-                                      ),
+                                      child: Selector<HMSPollStore, HMSPoll>(
+                                          selector: (_, hmsPollStore) =>
+                                              hmsPollStore.poll,
+                                          builder: (_, poll, __) {
+                                            return PollQuestionBottomSheet(
+                                              isPoll: poll.category ==
+                                                  HMSPollCategory.poll,
+                                              pollName: poll.title,
+                                              poll: poll,
+                                            );
+                                          }),
                                     ),
                                   ));
                           return;

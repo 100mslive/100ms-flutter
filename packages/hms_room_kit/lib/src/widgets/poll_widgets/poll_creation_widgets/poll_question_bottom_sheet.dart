@@ -1,4 +1,3 @@
-///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/create_poll_form.dart';
@@ -19,12 +18,14 @@ class PollQuestionBottomSheet extends StatefulWidget {
   final String pollName;
   final bool isPoll;
   final List<HMSRole>? rolesThatCanViewResponse;
+  final HMSPoll? poll;
 
   const PollQuestionBottomSheet(
       {Key? key,
       required this.pollName,
       required this.isPoll,
-      this.rolesThatCanViewResponse})
+      this.rolesThatCanViewResponse,
+      this.poll})
       : super(key: key);
 
   @override
@@ -40,18 +41,92 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
   @override
   void initState() {
     ///Here we create a new poll builder object with single question
-    pollBuilder = HMSPollBuilder();
-    pollQuizQuestionBuilders[HMSPollQuestionBuilder()] = false;
+    if (widget.poll != null) {
+      setPollBuilder(widget.poll!);
+    } else {
+      pollBuilder = HMSPollBuilder();
+      pollQuizQuestionBuilders[HMSPollQuestionBuilder()] = false;
 
-    ///Setting the title of the poll
-    pollBuilder.withTitle = widget.pollName;
+      ///Setting the title of the poll
+      pollBuilder.withTitle = widget.pollName;
 
-    ///If hide vote count is true
-    if (widget.rolesThatCanViewResponse != null) {
-      pollBuilder.withRolesThatCanViewResponses =
-          widget.rolesThatCanViewResponse!;
+      ///If hide vote count is true
+      if (widget.rolesThatCanViewResponse != null) {
+        pollBuilder.withRolesThatCanViewResponses =
+            widget.rolesThatCanViewResponse!;
+      }
     }
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant PollQuestionBottomSheet oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if(oldWidget.poll?.questions?.length != widget.poll?.questions?.length){
+      setPollBuilder(widget.poll!);
+    }
+  }
+
+  void setPollBuilder(HMSPoll poll) {
+    pollBuilder = HMSPollBuilder();
+    pollBuilder.withAnonymous = poll.anonymous;
+    if (poll.duration != null) {
+      pollBuilder.withDuration = poll.duration!;
+    }
+    pollBuilder.withCategory = poll.category;
+    pollBuilder.withMode =
+        poll.pollUserTrackingMode ?? HMSPollUserTrackingMode.user_id;
+    pollBuilder.withPollId = poll.pollId;
+    pollBuilder.withRolesThatCanViewResponses = poll.rolesThatCanViewResponses;
+    pollBuilder.withRolesThatCanVote = poll.rolesThatCanVote;
+    pollBuilder.withTitle = poll.title;
+    poll.questions?.forEach((question) {
+      var que = HMSPollQuestionBuilder();
+
+      que.withText = question.text;
+      que.withWeight = question.weight;
+      que.withCanChangeResponse = question.canChangeResponse;
+      que.withCanSkip = question.canSkip;
+      que.withType = question.type;
+      que.withDuration = question.duration;
+
+      if (poll.category == HMSPollCategory.quiz) {
+        List<HMSPollQuizOption> options = [];
+        for (var option in question.options) {
+          switch (question.type) {
+            case HMSPollQuestionType.singleChoice:
+              if (option.text != null) {
+                HMSPollQuizOption quizOption =
+                    HMSPollQuizOption(text: option.text!);
+                quizOption.isCorrect =
+                    question.correctAnswer?.option == option.index;
+                options.add(quizOption);
+              }
+              break;
+            case HMSPollQuestionType.multiChoice:
+              if (option.text != null) {
+                HMSPollQuizOption quizOption =
+                    HMSPollQuizOption(text: option.text!);
+                quizOption.isCorrect =
+                    question.correctAnswer?.options?.contains(option.index) ??
+                        false;
+                options.add(quizOption);
+              }
+              break;
+            default:
+              break;
+          }
+        }
+        que.addQuizOption = options;
+      } else {
+        List<String> options = [];
+        for (var option in question.options) {
+          options.add(option.text!);
+        }
+        que.withOption = options;
+      }
+      _saveCallback(que);
+    });
   }
 
   ///This function adds a new question builder
@@ -278,13 +353,14 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
                                   pollBuilder.addQuestion(key);
                                 }
                               });
-                              pollBuilder.withAnonymous = false;
-                              pollBuilder.withCategory = widget.isPoll
-                                  ? HMSPollCategory.poll
-                                  : HMSPollCategory.quiz;
-                              pollBuilder.withMode =
-                                  HMSPollUserTrackingMode.user_id;
-
+                              if (widget.poll == null) {
+                                pollBuilder.withAnonymous = false;
+                                pollBuilder.withCategory = widget.isPoll
+                                    ? HMSPollCategory.poll
+                                    : HMSPollCategory.quiz;
+                                pollBuilder.withMode =
+                                    HMSPollUserTrackingMode.user_id;
+                              }
                               context
                                   .read<MeetingStore>()
                                   .quickStartPoll(pollBuilder);

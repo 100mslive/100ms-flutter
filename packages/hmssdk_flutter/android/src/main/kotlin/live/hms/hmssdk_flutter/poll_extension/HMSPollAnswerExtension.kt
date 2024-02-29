@@ -38,7 +38,7 @@ class HMSPollAnswerExtension {
                 }
 
                 val duration = answerMap["duration"]?.let {
-                    it as Long
+                    (it as Int).toLong()
                 }?:run {
                     HMSErrorLogger.returnArgumentsError("duration should not be null")
                     return null

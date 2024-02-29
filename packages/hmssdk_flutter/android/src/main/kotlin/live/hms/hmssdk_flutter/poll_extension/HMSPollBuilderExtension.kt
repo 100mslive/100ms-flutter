@@ -24,7 +24,7 @@ class HMSPollBuilderExtension {
                     pollBuilder.withAnonymous(it as Boolean)
                 }
                 pollBuilderMap["duration"]?.let {
-                    pollBuilder.withDuration(it as Long)
+                    pollBuilder.withDuration((it as Int).toLong())
                 }
                 pollBuilderMap["mode"]?.let {
                     pollBuilder.withUserTrackingMode(getPollUserTrackingModeFromString(it as String))
@@ -150,7 +150,7 @@ class HMSPollBuilderExtension {
                 }
 
                 val duration = pollQuestion["duration"]?.let { duration ->
-                    duration as Long
+                    (duration as Int).toLong()
                 }
 
                 duration?.let { duration ->
@@ -174,7 +174,7 @@ class HMSPollBuilderExtension {
                 }
 
                 val maxLength = pollQuestion["max_length"]?.let { maxLength ->
-                    maxLength as Long
+                    (maxLength as Int).toLong()
                 }
 
                 maxLength?.let {
@@ -183,7 +183,7 @@ class HMSPollBuilderExtension {
 
 
                 val minLength = pollQuestion["min_length"]?.let { minLength ->
-                    minLength as Long
+                    (minLength as Int).toLong()
                 }
 
                 minLength?.let {

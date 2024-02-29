@@ -64,7 +64,7 @@ class HMSPollQuestionExtension {
                     return null
                 }
                 val duration = pollQuestion["duration"]?.let {
-                    it as Long
+                    (it as Int).toLong()
                 }?:run {
                     HMSErrorLogger.returnArgumentsError("duration should not be null")
                     return null
