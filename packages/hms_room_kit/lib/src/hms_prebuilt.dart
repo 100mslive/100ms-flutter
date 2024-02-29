@@ -15,7 +15,10 @@ class HMSPrebuilt extends StatelessWidget {
   ///
   /// Example: For the public Room: https://public.app.100ms.live/meeting/xvm-wxwo-gbl
   /// The room code is: xvm-wxwo-gbl
-  final String roomCode;
+  final String? roomCode;
+
+  ///[token]: The auth token to join the room
+  final String? authToken;
 
   ///The options for the prebuilt
   ///For more details checkout the [HMSPrebuiltOptions] class
@@ -28,8 +31,17 @@ class HMSPrebuilt extends StatelessWidget {
   final Function? onLeave;
 
   ///The key for the widget
-  const HMSPrebuilt(
-      {super.key, required this.roomCode, this.options, this.onLeave});
+  HMSPrebuilt(
+      {super.key,
+      required this.roomCode,
+      this.options,
+      this.onLeave,
+      this.authToken}) {
+    if (roomCode == null && authToken == null) {
+      throw ArgumentError.notNull(
+          "At least one parameter roomCode or authToken must be provided.");
+    }
+  }
 
   ///Builds the widget
   ///Returns a [ScreenController] widget
@@ -45,6 +57,7 @@ class HMSPrebuilt extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenController(
       roomCode: roomCode,
+      authToken: authToken,
       options: options,
       onLeave: onLeave,
     );

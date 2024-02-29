@@ -45,8 +45,6 @@ class PreviewStore extends ChangeNotifier
 
   int? networkQuality;
 
-  String meetingUrl = "";
-
   bool isRoomMute = false;
 
   List<HMSRole> roles = [];
@@ -108,13 +106,18 @@ class PreviewStore extends ChangeNotifier
     notifyListeners();
   }
 
-  Future<HMSException?> startPreview(
-      {required String userName, required String roomCode}) async {
+  Future<HMSException?> startPreview({required String userName}) async {
     //We use this to get the auth token from room code
-    dynamic tokenData = await hmsSDKInteractor.getAuthTokenByRoomCode(
-        userId: Constant.prebuiltOptions?.userId,
-        roomCode: roomCode,
-        endPoint: Constant.tokenEndPoint);
+
+    dynamic tokenData;
+    if (Constant.roomCode != null) {
+      tokenData = await hmsSDKInteractor.getAuthTokenByRoomCode(
+          userId: Constant.prebuiltOptions?.userId,
+          roomCode: Constant.roomCode!,
+          endPoint: Constant.tokenEndPoint);
+    } else {
+      tokenData = Constant.authToken;
+    }
 
     if ((tokenData is String?) && tokenData != null) {
       roomConfig = HMSConfig(
@@ -133,7 +136,6 @@ class PreviewStore extends ChangeNotifier
           Constant.webRTCLogLevel, Constant.sdkLogLevel);
       hmsSDKInteractor.addPreviewListener(this);
       hmsSDKInteractor.preview(config: roomConfig!);
-      meetingUrl = roomCode;
       return null;
     }
     return tokenData;

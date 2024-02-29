@@ -153,7 +153,6 @@ class MeetingStore extends ChangeNotifier
 
   bool isMessageInfoShown = true;
 
-  String meetingUrl = "";
   bool isAudioShareStarted = false;
 
   List<HMSAudioDevice> availableAudioOutputDevices = [];
@@ -263,17 +262,22 @@ class MeetingStore extends ChangeNotifier
   ///List of bottom sheets currently open
   List<BuildContext> bottomSheets = [];
 
-  Future<HMSException?> join(String userName, String roomCode,
-      {HMSConfig? roomConfig}) async {
+  Future<HMSException?> join(String userName, {HMSConfig? roomConfig}) async {
     //If roomConfig is null then only we call the methods to get the authToken
     //If we are joining the room from preview we already have authToken so we don't
     //need to call the getAuthTokenByRoomCode method
     if (roomConfig == null) {
       //We use this to get the auth token from room code
-      dynamic tokenData = await _hmsSDKInteractor.getAuthTokenByRoomCode(
-          userId: Constant.prebuiltOptions?.userId,
-          roomCode: Constant.roomCode,
-          endPoint: Constant.tokenEndPoint);
+      dynamic tokenData;
+
+      if (Constant.roomCode != null) {
+        await _hmsSDKInteractor.getAuthTokenByRoomCode(
+            userId: Constant.prebuiltOptions?.userId,
+            roomCode: Constant.roomCode!,
+            endPoint: Constant.tokenEndPoint);
+      } else {
+        tokenData = Constant.authToken;
+      }
 
       ///If the tokenData is String then we set the authToken in the roomConfig
       ///and then we join the room
@@ -300,7 +304,6 @@ class MeetingStore extends ChangeNotifier
     setMeetingModeUsingLayoutApi();
     _hmsSDKInteractor.join(config: roomConfig);
     setRecipientSelectorValue();
-    meetingUrl = roomCode;
     return null;
   }
 
