@@ -896,7 +896,7 @@ class MeetingStore extends ChangeNotifier
     getAudioDevicesList();
     notifyListeners();
     setViewControllers();
-    // fetchPollList(HMSPollState.stopped);
+    fetchPollList(HMSPollState.stopped);
     // if (Platform.isIOS &&
     //     HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf !=
     //         null) {
@@ -2272,9 +2272,13 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.stopPoll(poll: poll);
   }
 
-  void fetchLeaderboard(HMSPoll poll) async {
+  void fetchLeaderboard(HMSPoll poll,
+      {int count = 5, int startIndex = 0}) async {
     var data = await _hmsSDKInteractor.fetchLeaderboard(
-        poll: poll, count: 5, startIndex: 0, includeCurrentPeer: true);
+        poll: poll,
+        count: count,
+        startIndex: startIndex,
+        includeCurrentPeer: !(localPeer?.role.permissions.pollWrite ?? true));
 
     if (data is HMSPollLeaderboardResponse) {
       var pollIndex = pollQuestions
@@ -2288,62 +2292,66 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  // void fetchPollList(HMSPollState state) async {
-  //   var data = await _hmsSDKInteractor.fetchPollList(hmsPollState: state);
+  void fetchPollList(HMSPollState state) async {
+    var data = await _hmsSDKInteractor.fetchPollList(hmsPollState: state);
 
-  //   if (data is List<HMSPoll>) {
-  //     for (var element in data) {
-  //       pollQuestions.add(HMSPollStore(poll: element));
-  //     }
-  //     sortPollQuestions();
-  //   } else {
-  //     log("fetchPollList error: $data");
-  //   }
-  // }
+    if (data is List<HMSPoll>) {
+      for (var element in data) {
+        int index = pollQuestions.indexWhere(
+            (currentPoll) => currentPoll.poll.pollId == element.pollId);
+        if (index == -1) {
+          pollQuestions.add(HMSPollStore(poll: element));
+        }
+      }
+      sortPollQuestions();
+    } else {
+      log("fetchPollList error: $data");
+    }
+  }
 
-  // void fetchPollQuestions(HMSPoll poll) async {
-  //   var data = await _hmsSDKInteractor.fetchPollQuestions(hmsPoll: poll);
+  void fetchPollQuestions(HMSPoll poll) async {
+    var data = await _hmsSDKInteractor.fetchPollQuestions(hmsPoll: poll);
 
-  //   if (data is List<HMSPollQuestion>) {
-  //     int index = pollQuestions
-  //         .indexWhere((element) => element.poll.pollId == poll.pollId);
+    if (data is List<HMSPollQuestion>) {
+      int index = pollQuestions
+          .indexWhere((element) => element.poll.pollId == poll.pollId);
 
-  //     if (index != -1) {
-  //       var newPoll = HMSPoll(
-  //           pollId: poll.pollId,
-  //           title: poll.title,
-  //           anonymous: poll.anonymous,
-  //           category: poll.category,
-  //           createdBy: poll.createdBy,
-  //           duration: poll.duration,
-  //           pollUserTrackingMode: poll.pollUserTrackingMode,
-  //           questionCount: data.length,
-  //           questions: data,
-  //           result: poll.result,
-  //           rolesThatCanViewResponses: poll.rolesThatCanViewResponses,
-  //           rolesThatCanVote: poll.rolesThatCanVote,
-  //           startedAt: poll.startedAt,
-  //           startedBy: poll.startedBy,
-  //           state: poll.state,
-  //           stoppedAt: poll.stoppedAt,
-  //           stoppedBy: poll.stoppedBy);
-  //       pollQuestions[index].updateState(newPoll);
-  //     }
-  //   }
-  // }
+      if (index != -1) {
+        var newPoll = HMSPoll(
+            pollId: poll.pollId,
+            title: poll.title,
+            anonymous: poll.anonymous,
+            category: poll.category,
+            createdBy: poll.createdBy,
+            duration: poll.duration,
+            pollUserTrackingMode: poll.pollUserTrackingMode,
+            questionCount: data.length,
+            questions: data,
+            result: poll.result,
+            rolesThatCanViewResponses: poll.rolesThatCanViewResponses,
+            rolesThatCanVote: poll.rolesThatCanVote,
+            startedAt: poll.startedAt,
+            startedBy: poll.startedBy,
+            state: poll.state,
+            stoppedAt: poll.stoppedAt,
+            stoppedBy: poll.stoppedBy);
+        pollQuestions[index].updateState(newPoll);
+      }
+    }
+  }
 
-  // void getPollResults(HMSPoll poll) async {
-  //   var data = await _hmsSDKInteractor.getPollResults(hmsPoll: poll);
+  void getPollResults(HMSPoll poll) async {
+    var data = await _hmsSDKInteractor.getPollResults(hmsPoll: poll);
 
-  //   if (data is HMSPoll) {
-  //     int index = pollQuestions
-  //         .indexWhere((element) => element.poll.pollId == poll.pollId);
+    if (data is HMSPoll) {
+      int index = pollQuestions
+          .indexWhere((element) => element.poll.pollId == poll.pollId);
 
-  //     if (index != -1) {
-  //       pollQuestions[index].updateState(data);
-  //     }
-  //   }
-  // }
+      if (index != -1) {
+        pollQuestions[index].updateState(data);
+      }
+    }
+  }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
   @override
@@ -2750,7 +2758,11 @@ class MeetingStore extends ChangeNotifier
   void sortPollQuestions() {
     pollQuestions.sort((a, b) {
       if (a.poll.state != b.poll.state) {
-        return a.poll.state == HMSPollState.started ? 1 : -1;
+        return a.poll.state == HMSPollState.started
+            ? 1
+            : a.poll.state == HMSPollState.created
+                ? 2
+                : -1;
       } else {
         if (a.poll.startedAt != null && b.poll.startedAt != null) {
           return a.poll.startedAt!.compareTo(b.poll.startedAt!);
@@ -2822,6 +2834,11 @@ class MeetingStore extends ChangeNotifier
                 hlsViewerPolls.add(store);
               }
             }
+          } else {
+            pollQuestions[index].updateState(poll);
+            sortPollQuestions();
+            toasts.add(HMSToastModel(pollQuestions[index],
+                hmsToastType: HMSToastsType.pollStartedToast));
           }
         }
         break;

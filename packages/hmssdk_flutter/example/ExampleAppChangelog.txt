@@ -1,12 +1,12 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 
-- Polls: Quiz Ended Screen
-https://100ms.atlassian.net/browse/FLUT-205
+- Polls/Quizzes which are created and linked to a Room should show up on Prebuilt
+https://100ms.atlassian.net/browse/FLUT-239
 
-- Polls and Quizzes are not getting dispalyed for VNRT user
-https://100ms.atlassian.net/browse/FLUT-247
+- Participant summary is getting dispalyed for user who does not have create permission
+https://100ms.atlassian.net/browse/FLUT-249
 
-Room Kit: 1.0.14
-Core SDK: 1.9.11
+Room Kit: 1.0.15
+Core SDK: 1.9.12
 Android SDK: 2.9.4
 iOS SDK: 1.5.1
