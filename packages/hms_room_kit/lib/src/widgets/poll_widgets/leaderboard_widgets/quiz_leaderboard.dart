@@ -204,7 +204,7 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
                   onTap: () {
                     context.read<MeetingStore>().fetchLeaderboard(
                         widget.pollStore.poll,
-                        count: 50,
+                        count: 200,
                         startIndex: 0);
                     var meetingStore = context.read<MeetingStore>();
                     showModalBottomSheet(

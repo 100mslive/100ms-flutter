@@ -15,11 +15,11 @@ class LeaderboardRankingsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-        heightFactor: 0.87,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 12.0, left: 16, right: 16),
+      heightFactor: 0.87,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 12.0, left: 16, right: 16),
+        child: SingleChildScrollView(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
@@ -69,6 +69,8 @@ class LeaderboardRankingsList extends StatelessWidget {
               ),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
