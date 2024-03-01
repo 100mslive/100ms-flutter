@@ -1,6 +1,8 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/leaderboard_widgets/summary_box.dart';
 
+///[LeaderboardVoterSummary] renders the voter summary
 class LeaderboardVoterSummary extends StatelessWidget {
   final String? rank;
   final int? points;
@@ -22,7 +24,8 @@ class LeaderboardVoterSummary extends StatelessWidget {
       this.showPoints = true,
       this.questionsAttempted});
 
-  String setAnsweredProperty() {
+  ///[_setAnsweredProperty] returns the text to rendered based on the questionsAttempted and totalQuestions values
+  String _setAnsweredProperty() {
     if (questionsAttempted == null || totalQuestions == null) {
       return "-";
     } else {
@@ -42,8 +45,10 @@ class LeaderboardVoterSummary extends StatelessWidget {
                   ? SummaryBox(
                       title: "YOUR RANK", subtitle: rank == null ? "-" : rank!)
                   : SummaryBox(
-                      title: "ANSWERED", subtitle: setAnsweredProperty()),
+                      title: "ANSWERED", subtitle: _setAnsweredProperty()),
             ),
+
+            ///This is only rendered is [showPoints] is true
             if (showPoints)
               const SizedBox(
                 width: 10,
@@ -70,6 +75,8 @@ class LeaderboardVoterSummary extends StatelessWidget {
                         ? "-"
                         : "${avgTimeInMilliseconds! / 1000} secs"),
               ),
+
+            ///This is only rendered if time taken to answer the question is relevant
             if (avgTimeInMilliseconds != null && avgTimeInMilliseconds! > 0)
               const SizedBox(
                 width: 10,

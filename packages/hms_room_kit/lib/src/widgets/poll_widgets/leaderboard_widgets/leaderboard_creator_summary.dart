@@ -1,6 +1,10 @@
+///Package imports
 import 'package:flutter/material.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/widgets/poll_widgets/leaderboard_widgets/summary_box.dart';
 
+///[LeaderboardCreatorSummary] renders the creator quiz summary
 class LeaderboardCreatorSummary extends StatelessWidget {
   final double? votedPercent;
   final String? votedDescription;
@@ -51,6 +55,7 @@ class LeaderboardCreatorSummary extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            ///This is only rendered if the time taken is significant
             if (avgTimeInMilliseconds != null && avgTimeInMilliseconds! > 0)
               Expanded(
                 child: SummaryBox(
@@ -59,7 +64,9 @@ class LeaderboardCreatorSummary extends StatelessWidget {
                         ? "-"
                         : "${avgTimeInMilliseconds! / 1000}s"),
               ),
-            if (avgScore != null && avgScore! > 0)
+
+            ///This is only rendered if the time taken is significant
+            if (avgTimeInMilliseconds != null && avgTimeInMilliseconds! > 0)
               const SizedBox(
                 width: 10,
               ),

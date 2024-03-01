@@ -1,8 +1,11 @@
 ///Package imports
 import 'package:flutter/cupertino.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/poll_quiz_selection_button.dart';
 
+///[PollQuizSelectionWidget] renders the widget to select between quiz or poll
 class PollQuizSelectionWidget extends StatefulWidget {
   final Function updateSelectionCallback;
 
@@ -17,7 +20,8 @@ class PollQuizSelectionWidget extends StatefulWidget {
 class _PollQuizSelectionWidgetState extends State<PollQuizSelectionWidget> {
   int index = 0;
 
-  void updateSelection(newIndex) {
+  ///[_updateSelection] updates the selection for poll or quiz
+  void _updateSelection(newIndex) {
     widget.updateSelectionCallback(newIndex);
     setState(() {
       index = newIndex;
@@ -39,7 +43,7 @@ class _PollQuizSelectionWidgetState extends State<PollQuizSelectionWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             GestureDetector(
-              onTap: () => updateSelection(0),
+              onTap: () => _updateSelection(0),
               child: PollQuizSelectionButton(
                 isSelected: (index == 0),
                 iconName: "poll",
@@ -50,7 +54,7 @@ class _PollQuizSelectionWidgetState extends State<PollQuizSelectionWidget> {
               width: 16,
             ),
             GestureDetector(
-              onTap: () => updateSelection(1),
+              onTap: () => _updateSelection(1),
               child: PollQuizSelectionButton(
                 isSelected: (index == 1),
                 iconName: "quiz",

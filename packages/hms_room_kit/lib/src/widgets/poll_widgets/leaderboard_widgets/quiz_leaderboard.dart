@@ -1,5 +1,9 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/poll_store.dart';
@@ -9,8 +13,8 @@ import 'package:hms_room_kit/src/widgets/poll_widgets/leaderboard_widgets/leader
 import 'package:hms_room_kit/src/widgets/poll_widgets/leaderboard_widgets/leaderboard_rankings.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/leaderboard_widgets/leaderboard_rankings_list.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/leaderboard_widgets/leaderboard_voter_summary.dart';
-import 'package:provider/provider.dart';
 
+///[QuizLeaderboard] renders the quiz leaderboard
 class QuizLeaderboard extends StatefulWidget {
   final HMSPollStore pollStore;
 
@@ -23,8 +27,8 @@ class QuizLeaderboard extends StatefulWidget {
 class _QuizLeaderboardState extends State<QuizLeaderboard> {
   int _totalScore = 0;
 
-  ///[getTotalScore] returns the total score by adding the weight for each question
-  void getTotalScore() {
+  ///[_getTotalScore] returns the total score by adding the weight for each question
+  void _getTotalScore() {
     widget.pollStore.poll.questions?.forEach((element) {
       _totalScore += element.weight;
     });
@@ -33,7 +37,7 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
   @override
   void initState() {
     super.initState();
-    getTotalScore();
+    _getTotalScore();
   }
 
   @override
@@ -98,8 +102,13 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
                 height: 16,
               ),
 
+              ///Here we check whether to render the creator leaderboard summary
+              ///or voter leaderboard summary
               Builder(builder: (context) {
                 ///Poll creator flow
+                ///
+                ///If the peer has poll write permissions then we render
+                ///the creator summary else we render the voter summary
                 if ((context
                         .read<MeetingStore>()
                         .localPeer
@@ -109,14 +118,16 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
                     false)) {
                   double? votedPercent, correctPercent;
                   String? votedDescription, correctDescription;
-                  if (widget.pollStore.pollLeaderboardResponse?.summary !=
-                          null &&
-                      widget.pollStore.pollLeaderboardResponse?.summary
+
+                  ///If respondedPeersCount is not null and totalPeersCount is not null and greater than 0
+                  ///then only we assign values else we pass null values.
+                  if (widget.pollStore.pollLeaderboardResponse?.summary
                               ?.respondedPeersCount !=
                           null &&
-                      widget.pollStore.pollLeaderboardResponse?.summary
-                              ?.totalPeersCount !=
-                          0) {
+                      ((widget.pollStore.pollLeaderboardResponse?.summary
+                                  ?.totalPeersCount ??
+                              -1) >
+                          0)) {
                     votedPercent = ((widget.pollStore.pollLeaderboardResponse!
                                 .summary!.respondedPeersCount! *
                             100) /
@@ -126,14 +137,13 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
                         "${widget.pollStore.pollLeaderboardResponse!.summary!.respondedPeersCount!}/${widget.pollStore.pollLeaderboardResponse!.summary!.totalPeersCount!}";
                   }
 
-                  if (widget.pollStore.pollLeaderboardResponse?.summary !=
-                          null &&
-                      widget.pollStore.pollLeaderboardResponse?.summary
+                  if (widget.pollStore.pollLeaderboardResponse?.summary
                               ?.respondedCorrectlyPeersCount !=
                           null &&
-                      widget.pollStore.pollLeaderboardResponse?.summary
-                              ?.totalPeersCount !=
-                          0) {
+                      ((widget.pollStore.pollLeaderboardResponse?.summary
+                                  ?.totalPeersCount ??
+                              -1) >
+                          0)) {
                     correctPercent = ((widget.pollStore.pollLeaderboardResponse!
                                 .summary!.respondedCorrectlyPeersCount! *
                             100) /
@@ -142,6 +152,8 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
                     correctDescription =
                         "${widget.pollStore.pollLeaderboardResponse!.summary!.respondedCorrectlyPeersCount!}/${widget.pollStore.pollLeaderboardResponse!.summary!.totalPeersCount!}";
                   }
+
+                  ///Here we render the leaderboard creator summary
                   return LeaderboardCreatorSummary(
                     votedPercent: votedPercent,
                     votedDescription: votedDescription,
@@ -158,12 +170,16 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
                   );
                 } else {
                   ///Poll Voter flow
+                  ///Here we fetch the entry of the local peer based on the [customerUserId]
                   var localPeerUserId =
                       context.read<MeetingStore>().localPeer?.customerUserId;
                   var index = widget.pollStore.pollLeaderboardResponse?.entries
                           ?.indexWhere((element) =>
                               element.peer?.userId == localPeerUserId) ??
                       -1;
+
+                  ///If the peer details are not present we render empty SizedBox()
+                  ///else we render [LeaderboardVoterSummary] widget
                   if (index != -1) {
                     var entry = widget
                         .pollStore.pollLeaderboardResponse?.entries?[index];
@@ -185,7 +201,7 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
               LeaderboardRankings(
                   totalScore: _totalScore, pollStore: widget.pollStore),
 
-              // /Here we load list of all the users
+              /// This is only rendered if the number of peers is greater than 5
               if ((widget.pollStore.pollLeaderboardResponse!.summary
                           ?.totalPeersCount ??
                       0) >
@@ -196,6 +212,9 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
                     height: 5,
                   ),
                 ),
+
+              /// This is only rendered if the number of peers is greater than 5
+              /// On tapping on viewAll button we render the full list of participant rankings.
               if ((widget.pollStore.pollLeaderboardResponse!.summary
                           ?.totalPeersCount ??
                       0) >

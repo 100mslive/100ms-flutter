@@ -1377,8 +1377,10 @@ class MeetingStore extends ChangeNotifier
     _hmsSessionStore?.removeKeyChangeListener(hmsKeyChangeListener: this);
     _hmsSDKInteractor.removeHMSLogger();
     HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(this);
+    HMSPollInteractivityCenter.removePollUpdateListener();
   }
 
+  ///Function to toggle screen share
   void toggleScreenShare() {
     if (!isScreenShareOn) {
       startScreenShare();
@@ -2666,10 +2668,7 @@ class MeetingStore extends ChangeNotifier
   @override
   void onCue({required HMSHLSCue hlsCue}) {
     log("onCue -> payload:${hlsCue.startDate}");
-    /**
-     * Here we use a list of alignments and select an alignment at random and use it 
-     * to position the toast for timed metadata
-     */
+
     if (hlsCue.payload != null) {
       /*
        * Below code shows the poll for hls-viewer who are viewing stream at a delay.
@@ -2838,6 +2837,9 @@ class MeetingStore extends ChangeNotifier
               }
             }
           } else {
+            ///This handles the draft polls since they are already in the list
+            ///Here we update the poll in HMSPollStore and add toast as the poll state changes
+            ///from `created` to `started`.
             pollQuestions[index].updateState(poll);
             sortPollQuestions();
             toasts.add(HMSToastModel(pollQuestions[index],
@@ -2857,9 +2859,14 @@ class MeetingStore extends ChangeNotifier
         break;
 
       case HMSPollUpdateType.stopped:
+
+        ///If it's a quiz we fetch the leaderboard
         if (poll.category == HMSPollCategory.quiz) {
           fetchLeaderboard(poll);
         }
+
+        ///Here we remove the toast if it's present
+        ///update the poll in HMSPollStore and sort the poll questions
         removeToast(HMSToastsType.pollStartedToast, data: poll.pollId);
         int index = pollQuestions
             .indexWhere((element) => element.poll.pollId == poll.pollId);
