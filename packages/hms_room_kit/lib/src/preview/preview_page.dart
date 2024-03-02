@@ -27,14 +27,9 @@ import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 ///This renders the Preview Screen
 class PreviewPage extends StatefulWidget {
   final String name;
-  final String roomCode;
   final HMSPrebuiltOptions? options;
 
-  const PreviewPage(
-      {super.key,
-      required this.name,
-      required this.roomCode,
-      required this.options});
+  const PreviewPage({super.key, required this.name, required this.options});
   @override
   State<PreviewPage> createState() => _PreviewPageState();
 }
@@ -77,8 +72,7 @@ class _PreviewPageState extends State<PreviewPage> {
       _setMeetingStore(previewStore);
 
       /// We join the room here
-      HMSException? ans = await _meetingStore.join(
-          nameController.text.trim(), Constant.roomCode);
+      HMSException? ans = await _meetingStore.join(nameController.text.trim());
 
       ///If the room join fails we show the error dialog
       if (ans != null && mounted) {
@@ -149,15 +143,19 @@ class _PreviewPageState extends State<PreviewPage> {
               previewStore.isMeetingJoined = false,
               previewStore.hmsSDKInteractor.leave(),
               HMSThemeColors.resetLayoutColors(),
-              Navigator.pushReplacement(
-                  context,
-                  CupertinoPageRoute(
-                      builder: (_) => ScreenController(
-                            roomCode: Constant.roomCode,
-                            options: widget.options,
-                          ))),
+              navigateBack()
             }
         });
+  }
+
+  void navigateBack() {
+    Navigator.pushReplacement(
+        context,
+        CupertinoPageRoute(
+            builder: (_) => ScreenController(
+                  roomCode: Constant.roomCode,
+                  options: widget.options,
+                )));
   }
 
   @override
@@ -188,7 +186,6 @@ class _PreviewPageState extends State<PreviewPage> {
                       value: _meetingStore,
                       child: MeetingScreenController(
                           role: previewStore.peer?.role,
-                          roomCode: Constant.roomCode,
                           localPeerNetworkQuality: null,
                           user: nameController.text,
                           isRoomMute: previewStore.isRoomMute,
