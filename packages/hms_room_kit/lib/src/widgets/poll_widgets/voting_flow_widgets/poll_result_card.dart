@@ -27,7 +27,10 @@ class PollResultCard extends StatelessWidget {
       required this.isPoll,
       required this.isPollEnded});
 
-  bool isSelectedOption(int index) {
+  ///[_isSelectedOption] returns whether the option at given [index] is the selected option or not
+  bool _isSelectedOption(int index) {
+    ///If the question is a single choice question then we check whether option
+    ///at given index is the selected option in [selectedOption]
     if (question.type == HMSPollQuestionType.singleChoice) {
       for (var response in question.myResponses) {
         if (index == response.selectedOption) {
@@ -35,6 +38,8 @@ class PollResultCard extends StatelessWidget {
         }
       }
     } else if (question.type == HMSPollQuestionType.multiChoice) {
+      ///If the question is multi choice, then we check whether the selectedOptions
+      ///contains the given option index
       for (var response in question.myResponses) {
         if (response.selectedOptions?.contains(index) ?? false) {
           return true;
@@ -44,7 +49,15 @@ class PollResultCard extends StatelessWidget {
     return false;
   }
 
-  bool isMyOptionCorrect() {
+  ///[_isMyOptionCorrect] returns whether your answer is correct or not
+  bool _isMyOptionCorrect() {
+    ///We check whether the responses by local peer is not empty
+    ///If it's not then we check the type of the question i.e. single or multichoice
+    ///
+    ///In case of single choice we check whether the selectedOption is equal to the correct answer option
+    ///
+    ///In case of multi choice we check whether selectionOptions list contains the correct answer option
+    ///A question is only marked correct iff a user selects all the correct options.
     if (question.myResponses.isNotEmpty) {
       if (question.type == HMSPollQuestionType.singleChoice) {
         if (question.correctAnswer?.option != null) {
@@ -70,7 +83,9 @@ class PollResultCard extends StatelessWidget {
     return false;
   }
 
-  bool isCorrectAnswer(HMSPollQuestionOption option) {
+  ///[_isCorrectAnswer] returns whether the given option is correct or not
+  ///This marks the correct options from list of options
+  bool _isCorrectAnswer(HMSPollQuestionOption option) {
     if (question.type == HMSPollQuestionType.singleChoice) {
       return question.correctAnswer?.option == option.index;
     } else if (question.type == HMSPollQuestionType.multiChoice) {
@@ -89,11 +104,16 @@ class PollResultCard extends StatelessWidget {
         decoration: BoxDecoration(
             color: HMSThemeColors.surfaceDefault,
             borderRadius: BorderRadius.circular(8),
+
+            ///If the poll is ended and it's a quiz
+            ///and localpeer has answered the quiz
+            ///then we show the border based on whether the answer
+            ///is correct or not
             border: isPollEnded
                 ? (isPoll || question.myResponses.isEmpty)
                     ? const Border()
                     : Border.all(
-                        color: isMyOptionCorrect()
+                        color: _isMyOptionCorrect()
                             ? HMSThemeColors.alertSuccess
                             : HMSThemeColors.alertErrorDefault)
                 : null),
@@ -144,8 +164,9 @@ class PollResultCard extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              ///If the poll is ended and the option is a correct answer we show a tick
                               if (isPollEnded &&
-                                  isCorrectAnswer(question.options[index]))
+                                  _isCorrectAnswer(question.options[index]))
                                 Padding(
                                   padding: const EdgeInsets.only(right: 8.0),
                                   child: SizedBox(
@@ -168,7 +189,7 @@ class PollResultCard extends StatelessWidget {
                               ///If it's not a poll and selected option show checkbox
                               ///If its a poll then only show when vote count is hidden
                               if ((!isPoll || isVoteCountHidden) &&
-                                  isSelectedOption(
+                                  _isSelectedOption(
                                       question.options[index].index))
                                 isPoll
                                     ? SvgPicture.asset(

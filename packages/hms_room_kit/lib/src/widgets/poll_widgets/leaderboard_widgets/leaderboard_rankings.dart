@@ -1,13 +1,17 @@
 ///Dart imports
 import 'dart:math' as math;
 
+////Package imports
 import 'package:flutter/material.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/model/poll_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/leaderboard_widgets/leaderboard_entry_widget.dart';
 
+///[LeaderboardRankings] renders the leaderboard rankings
 class LeaderboardRankings extends StatefulWidget {
   final int totalScore;
   final HMSPollStore pollStore;
@@ -51,6 +55,9 @@ class _LeaderboardRankingsState extends State<LeaderboardRankings> {
             shrinkWrap: true,
             padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
+
+            ///If [showTopFivePeers] is true we show at max 5 peers
+            ///else we show all the participants rankings
             itemCount: widget.showTopFivePeers
                 ? math.min(5,
                     widget.pollStore.pollLeaderboardResponse!.entries!.length)

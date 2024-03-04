@@ -1,10 +1,14 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/model/poll_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
+///[LeaderBoardEntryWidget] renders the tile for each peer ranking
 class LeaderBoardEntryWidget extends StatelessWidget {
   final HMSPollLeaderboardEntry entry;
   final HMSPollStore pollStore;
@@ -18,7 +22,9 @@ class LeaderBoardEntryWidget extends StatelessWidget {
       required this.pollStore,
       this.tileColor});
 
-  Color getPositionBadgeColor() {
+  ///[_getPositionBadgeColor] returns the circleAvatar color based on the position
+  ///of the peer in the rankings
+  Color _getPositionBadgeColor() {
     switch (entry.position) {
       case 1:
         return const Color.fromRGBO(214, 149, 22, 1);
@@ -31,11 +37,13 @@ class LeaderBoardEntryWidget extends StatelessWidget {
     }
   }
 
+  ///[_showTime] returns whether to show time or not
   bool _showTime() {
     return (entry.duration != null && entry.duration!.inSeconds > 0);
   }
 
-  String getFormattedTime() {
+  ///[_getFormattedTime] returns the formatted time, in the format 1m 23s meaning 1 minute and 23 seconds
+  String _getFormattedTime() {
     String time = "";
     if (entry.duration == null) {
       return time;
@@ -62,7 +70,7 @@ class LeaderBoardEntryWidget extends StatelessWidget {
       horizontalTitleGap: 0,
       leading: CircleAvatar(
         radius: 12,
-        backgroundColor: getPositionBadgeColor(),
+        backgroundColor: _getPositionBadgeColor(),
         child: HMSSubtitleText(
           text: entry.position.toString(),
           textColor: HMSThemeColors.baseWhite,
@@ -82,6 +90,7 @@ class LeaderBoardEntryWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            ///If the position of peer is 1st we render the trophy
             if (entry.position == 1) const Text("🏆"),
             if (entry.position == 1)
               const SizedBox(
@@ -98,6 +107,8 @@ class LeaderBoardEntryWidget extends StatelessWidget {
                 text:
                     "${entry.correctResponses}/${pollStore.poll.questions?.length}",
                 textColor: HMSThemeColors.onSurfaceHighEmphasis),
+
+            ///Below widgets are only rendered if the taken by the peer is significant
             if (_showTime())
               const SizedBox(
                 width: 12,
@@ -115,7 +126,7 @@ class LeaderBoardEntryWidget extends StatelessWidget {
               ),
             if (_showTime())
               HMSSubtitleText(
-                  text: getFormattedTime(),
+                  text: _getFormattedTime(),
                   textColor: HMSThemeColors.onSurfaceHighEmphasis)
           ],
         ),

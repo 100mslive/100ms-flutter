@@ -1,11 +1,12 @@
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/create_poll_form.dart';
-import 'package:hms_room_kit/src/widgets/poll_widgets/quiz_creation_widgets/create_quiz_form.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
+import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/create_poll_form.dart';
+import 'package:hms_room_kit/src/widgets/poll_widgets/quiz_creation_widgets/create_quiz_form.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
@@ -42,7 +43,7 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
   void initState() {
     ///Here we create a new poll builder object with single question
     if (widget.poll != null) {
-      setPollBuilder(widget.poll!);
+      _setPollBuilder(widget.poll!);
     } else {
       pollBuilder = HMSPollBuilder();
       pollQuizQuestionBuilders[HMSPollQuestionBuilder()] = false;
@@ -62,12 +63,17 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
   @override
   void didUpdateWidget(covariant PollQuestionBottomSheet oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    ///This check is to ensure that the poll is only set once since didUpdateWidget will be
+    ///called multiple times
     if (oldWidget.poll?.questions?.length != widget.poll?.questions?.length) {
-      setPollBuilder(widget.poll!);
+      _setPollBuilder(widget.poll!);
     }
   }
 
-  void setPollBuilder(HMSPoll poll) {
+  ///[_setPollBuilder] converts HMSPoll object to HMSPollBuilder
+  ///This is done in case of editing a draft poll
+  void _setPollBuilder(HMSPoll poll) {
     pollBuilder = HMSPollBuilder();
     pollBuilder.withAnonymous = poll.anonymous;
     if (poll.duration != null) {
@@ -80,6 +86,8 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
     pollBuilder.withRolesThatCanViewResponses = poll.rolesThatCanViewResponses;
     pollBuilder.withRolesThatCanVote = poll.rolesThatCanVote;
     pollBuilder.withTitle = poll.title;
+
+    ///Here we convert each poll question to HMSPollQuestionBuilder
     poll.questions?.forEach((question) {
       var que = HMSPollQuestionBuilder();
 
@@ -135,23 +143,27 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
     setState(() {});
   }
 
+  ///This function deletes a question builder
   void _deleteCallback(HMSPollQuestionBuilder pollQuestionBuilder) {
     pollQuizQuestionBuilders.remove(pollQuestionBuilder);
     setState(() {});
   }
 
+  ///This function marks a question builder as saved
   void _saveCallback(HMSPollQuestionBuilder pollQuestionBuilder) {
     pollQuizQuestionBuilders[pollQuestionBuilder] = true;
     _checkValidity();
     setState(() {});
   }
 
+  ///This function marks a question builder as editable
   void _editCallback(HMSPollQuestionBuilder pollQuestionBuilder) {
     pollQuizQuestionBuilders[pollQuestionBuilder] = false;
     _isQuestionValid = false;
     setState(() {});
   }
 
+  ///This function check whether a question is valid or not
   void _checkValidity() {
     var isValid = true;
     pollQuizQuestionBuilders.forEach((key, value) {
@@ -229,6 +241,9 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
                         itemBuilder: (context, index) => Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 8.0),
+
+                              ///Here we render [SavedQuestionWidget] is a pollQuestionBuilder
+                              ///is marked as saved else we render the form based on whether it's a quiz or poll
                               child: pollQuizQuestionBuilders.values
                                       .elementAt(index)
                                   ? SavedQuestionWidget(

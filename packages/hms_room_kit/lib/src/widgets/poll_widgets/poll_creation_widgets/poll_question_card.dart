@@ -18,7 +18,8 @@ import 'package:hms_room_kit/src/widgets/common_widgets/live_badge.dart';
 class PollQuestionCard extends StatelessWidget {
   const PollQuestionCard({super.key});
 
-  String? getBadgeText(HMSPollState state) {
+  ///[_getBadgeText] returns the badge text based on the poll state
+  String? _getBadgeText(HMSPollState state) {
     switch (state) {
       case HMSPollState.started:
         return null;
@@ -29,7 +30,8 @@ class PollQuestionCard extends StatelessWidget {
     }
   }
 
-  Color? getBadgeColor(HMSPollState state) {
+  ///[_getBadgeColor] returs the badge color based on the poll state
+  Color? _getBadgeColor(HMSPollState state) {
     switch (state) {
       case HMSPollState.started:
         return null;
@@ -71,8 +73,8 @@ class PollQuestionCard extends StatelessWidget {
                       selector: (_, hmsPollStore) => hmsPollStore.poll.state,
                       builder: (_, pollState, __) {
                         return LiveBadge(
-                            text: getBadgeText(pollState),
-                            badgeColor: getBadgeColor(pollState),
+                            text: _getBadgeText(pollState),
+                            badgeColor: _getBadgeColor(pollState),
                             width: 50);
                       })
                 ],
@@ -89,6 +91,8 @@ class PollQuestionCard extends StatelessWidget {
                         var meetingStore = context.read<MeetingStore>();
                         var pollStore = context.read<HMSPollStore>();
 
+                        ///If the poll state is created and the questions are not fetched
+                        ///we fetch the poll/quiz questions
                         if (pollStore.poll.state == HMSPollState.created) {
                           if (pollStore.poll.questions?.isEmpty ?? true) {
                             meetingStore.fetchPollQuestions(pollStore.poll);
@@ -122,6 +126,8 @@ class PollQuestionCard extends StatelessWidget {
                           return;
                         }
 
+                        ///This is done to fetch questions and result in proper
+                        ///order as iOS and android returns different results
                         if (pollStore.poll.questions?.isEmpty ?? true) {
                           if (Platform.isAndroid) {
                             meetingStore.fetchPollQuestions(pollStore.poll);
@@ -131,6 +137,8 @@ class PollQuestionCard extends StatelessWidget {
                             meetingStore.fetchPollQuestions(pollStore.poll);
                           }
                         }
+
+                        ///If it's a quiz we fetch the leaderboard
                         if (pollStore.poll.category == HMSPollCategory.quiz &&
                             pollStore.pollLeaderboardResponse == null) {
                           meetingStore.fetchLeaderboard(pollStore.poll);

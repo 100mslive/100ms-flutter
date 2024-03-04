@@ -1,6 +1,10 @@
+///Package imports
 import 'package:flutter/material.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 
+///[SummaryBox] renders the summary box in the leaderboard summary widget
 class SummaryBox extends StatelessWidget {
   final String title;
   final String subtitle;
