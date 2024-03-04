@@ -271,7 +271,7 @@ class MeetingStore extends ChangeNotifier
       dynamic tokenData;
 
       if (Constant.roomCode != null) {
-        await _hmsSDKInteractor.getAuthTokenByRoomCode(
+        tokenData = await _hmsSDKInteractor.getAuthTokenByRoomCode(
             userId: Constant.prebuiltOptions?.userId,
             roomCode: Constant.roomCode!,
             endPoint: Constant.tokenEndPoint);

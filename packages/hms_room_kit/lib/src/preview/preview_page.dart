@@ -72,7 +72,7 @@ class _PreviewPageState extends State<PreviewPage> {
       _setMeetingStore(previewStore);
 
       /// We join the room here
-      HMSException? ans = await _meetingStore.join(nameController.text.trim());
+      HMSException? ans = await _meetingStore.join(nameController.text.trim(),roomConfig: previewStore.roomConfig);
 
       ///If the room join fails we show the error dialog
       if (ans != null && mounted) {
