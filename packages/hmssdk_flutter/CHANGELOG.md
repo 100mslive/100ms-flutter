@@ -5,6 +5,25 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+# 1.9.12 - 2024-03-04
+
+| Package                                | Version                                                                                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| hms_room_kit                | 1.0.15  |
+| hmssdk_flutter              | 1.9.12   |
+
+### ✨ Added
+
+- Introducing methods to fetch polls, questions, leaderboards and results
+
+  - Users can now fetch polls based on the poll state, questions for a poll and poll results
+    using the `fetchPollList`, `fetchPollQuestions` and `getPollResults` methods.
+    Checkout the docs [here](///Add docs)
+
+Updated to iOS SDK 1.6.0
+
+**Full Changelog**: [1.9.11...1.9.12](https://github.com/100mslive/100ms-flutter/compare/1.9.11...1.9.12)
+
 # 1.9.11 - 2024-02-26
 
 | Package                                | Version                                                                                                                                  |

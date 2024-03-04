@@ -220,6 +220,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         false))
                   MoreOptionItem(
                       onTap: () {
+                        meetingStore.fetchPollList(HMSPollState.created);
                         Navigator.pop(context);
                         showModalBottomSheet(
                           isScrollControlled: true,

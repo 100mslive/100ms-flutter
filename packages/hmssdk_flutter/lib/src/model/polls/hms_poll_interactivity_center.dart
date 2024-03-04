@@ -8,12 +8,16 @@ abstract class HMSPollInteractivityCenter {
   ///**Parameters**:
   ///
   ///**listener** - [listener]
+  ///
+  ///Refer [addPollUpdateListener](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/polls#listen-to-poll-updates)
   static void addPollUpdateListener({required HMSPollListener listener}) {
     PlatformService.addPollUpdateListener(listener);
   }
 
   ///[removePollUpdateListener] removes the poll update listener
   ///Thus the application no longer receives poll events
+  ///
+  ///Refer [removePollUpdateListener](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/polls#listen-to-poll-updates)
   static void removePollUpdateListener() {
     PlatformService.removePollUpdateListener();
   }
@@ -30,7 +34,7 @@ abstract class HMSPollInteractivityCenter {
   ///
   /// Future<dynamic> - A Future representing the asynchronous operation. It will return either null if the operation is successful, or an [HMSException] if an error occurs.
   ///
-  ///Refer [Quick Start Poll](Add docs link here)
+  ///Refer [Quick Start Poll](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/polls#quick-create)
   static void quickStartPoll({required HMSPollBuilder pollBuilder}) async {
     PlatformService.invokeMethod(PlatformMethod.quickStartPoll,
         arguments: {"poll_builder": pollBuilder.toMap()});
@@ -52,7 +56,7 @@ abstract class HMSPollInteractivityCenter {
   ///
   /// Future<dynamic> - A Future representing the asynchronous operation. It will return either pollResponse if the operation is successful, or an [HMSException] if an error occurs or null if any argument error occurs.
   ///
-  ///Refer [addSingleChoicePollResponse](Add docs link here)
+  ///Refer [addSingleChoicePollResponse](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/polls#voting-on-a-poll)
   static Future<dynamic> addSingleChoicePollResponse(
       {required HMSPoll hmsPoll,
       required HMSPollQuestion pollQuestion,
@@ -110,7 +114,7 @@ abstract class HMSPollInteractivityCenter {
   ///
   ///Future<dynamic> - A Future representing the asynchronous operation. It will return either null if the operation is successful, or an [HMSException] if an error occurs.
   ///
-  ///Refer [stopPoll](Add docs link here)
+  ///Refer [stopPoll](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/polls#stopping-a-poll)
   static Future<dynamic> stopPoll({required HMSPoll poll}) async {
     var result = await PlatformService.invokeMethod(PlatformMethod.stopPoll,
         arguments: {"poll_id": poll.pollId});
@@ -124,7 +128,7 @@ abstract class HMSPollInteractivityCenter {
     }
   }
 
-  ///[addMultiChoicePollResponse] method is used to answer a single choice poll
+  ///[addMultiChoicePollResponse] method is used to answer a multi choice poll
   ///
   ///**Parameters**
   ///
@@ -136,7 +140,11 @@ abstract class HMSPollInteractivityCenter {
   ///
   ///**peer** - [peer] who is answering the poll
   ///
-  ///Refer [addSingleChoicePollResponse](Add docs link here)
+  ///**Returns**
+  ///
+  /// Future<dynamic> - A Future representing the asynchronous operation. It will return either pollResponse if the operation is successful, or an [HMSException] if an error occurs or null if any argument error occurs.
+  ///
+  ///Refer [addMultiChoicePollResponse](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/polls#voting-on-a-poll)
   static Future<dynamic> addMultiChoicePollResponse(
       {required HMSPoll hmsPoll,
       required HMSPollQuestion pollQuestion,
@@ -186,7 +194,23 @@ abstract class HMSPollInteractivityCenter {
     }
   }
 
-  ///[fetchLeaderboard] method is used to fetch leaderboard
+  ///[fetchLeaderboard] method is used to fetch leaderboard for a quiz
+  ///
+  ///**Parameters**
+  ///
+  ///**hmsPoll** - [hmsPoll] object of the quiz for which leaderboard needs to be fetched
+  ///
+  ///**count** - [count] of the peers in the rankings
+  ///
+  ///**startIndex** - [startIndex] from where the leaderboard rankings needs to be fetched
+  ///
+  ///**includeCurrentPeer** - [includeCurrentPeer] whether to include the local peer in the leaderboard rankings
+  ///
+  ///**Returns**
+  ///
+  ///Future<dynamic> - A Future representing the asynchronous operation. It will return either HMSPollLeaderboardResponse if the operation is successful, or an [HMSException] if an error occurs or null if any argument error occurs.
+  ///
+  ///Refer [fetchLeaderboard](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/polls#quiz-leaderboard)
   static Future<dynamic> fetchLeaderboard(
       {required HMSPoll poll,
       required int? count,
@@ -216,6 +240,17 @@ abstract class HMSPollInteractivityCenter {
     }
   }
 
+  ///[fetchPollList] method is used to fetch list of polls/quiz with a given state
+  ///
+  ///**Parameters**
+  ///
+  ///**hmsPollState** - [hmsPollState] state of the polls/quiz that is required to be fetched
+  ///
+  ///**Returns**
+  ///
+  ///Future<dynamic> - A Future representing the asynchronous operation. It will return either List<HMSPoll> if the operation is successful, or an [HMSException] if an error occurs or null if any argument error occurs.
+  ///
+  ///Refer [fetchPollList](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/polls#fetchpolllist)
   static Future<dynamic> fetchPollList(
       {required HMSPollState hmsPollState}) async {
     var result = await PlatformService.invokeMethod(
@@ -244,6 +279,17 @@ abstract class HMSPollInteractivityCenter {
     }
   }
 
+  ///[fetchPollQuestions] method is used to fetch questions for the given poll
+  ///
+  ///**Parameters**
+  ///
+  ///**hmsPoll** - [hmsPoll] poll/quiz object for which questions are required to be fetched.
+  ///
+  ///**Returns**
+  ///
+  ///Future<dynamic> - A Future representing the asynchronous operation. It will return either List<HMSPollQuestion> if the operation is successful, or an [HMSException] if an error occurs or null if any argument error occurs.
+  ///
+  ///Refer [fetchPollQuestions](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/polls#fetchpollquestions)
   static Future<dynamic> fetchPollQuestions({required HMSPoll hmsPoll}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.fetchPollQuestions,
@@ -272,6 +318,17 @@ abstract class HMSPollInteractivityCenter {
     }
   }
 
+  ///[getPollResults] method is used to fetch poll/quiz results
+  ///
+  ///**Parameters**
+  ///
+  ///**hmsPoll** - [hmsPoll] poll/quiz object for which result is required to be fetched.
+  ///
+  ///**Returns**
+  ///
+  ///Future<dynamic> - A Future representing the asynchronous operation. It will return either HMSPoll if the operation is successful, or an [HMSException] if an error occurs or null if any argument error occurs.
+  ///
+  ///Refer [getPollResults](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/polls#getpollresults)
   static Future<dynamic> getPollResults({required HMSPoll hmsPoll}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.getPollResults,

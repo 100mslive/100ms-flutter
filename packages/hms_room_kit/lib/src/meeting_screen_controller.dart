@@ -14,9 +14,6 @@ import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 ///[MeetingScreenController] is the controller for the meeting screen
 ///It is used to join the room
 class MeetingScreenController extends StatefulWidget {
-  ///[roomCode] is the room code of the room to join
-  final String roomCode;
-
   ///[user] is the name of the user joining the room
   final String user;
 
@@ -48,7 +45,6 @@ class MeetingScreenController extends StatefulWidget {
 
   const MeetingScreenController(
       {Key? key,
-      required this.roomCode,
       required this.user,
       required this.localPeerNetworkQuality,
       this.isRoomMute = false,
@@ -97,7 +93,6 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
                 value: _hlsPlayerStore, child: const HLSViewerPage());
           }
           return MeetingPage(
-            meetingLink: widget.roomCode,
             isRoomMute: widget.isRoomMute,
             currentAudioDeviceMode: widget.currentAudioDeviceMode,
           );

@@ -18,7 +18,10 @@ import 'package:hms_room_kit/src/preview/preview_store.dart';
 ///For more details checkout the [HMSPrebuiltOptions] class
 class ScreenController extends StatefulWidget {
   ///[roomCode] is the room code of the room to join
-  final String roomCode;
+  final String? roomCode;
+
+  ///[authToken] auth token to join the room
+  final String? authToken;
 
   ///[options] is the options for the prebuilt
   ///For more details checkout the [HMSPrebuiltOptions] class
@@ -30,7 +33,11 @@ class ScreenController extends StatefulWidget {
   final Function? onLeave;
 
   const ScreenController(
-      {super.key, required this.roomCode, this.options, this.onLeave});
+      {super.key,
+      required this.roomCode,
+      this.options,
+      this.onLeave,
+      this.authToken});
   @override
   State<ScreenController> createState() => _ScreenControllerState();
 }
@@ -48,6 +55,7 @@ class _ScreenControllerState extends State<ScreenController> {
     ///Setting the prebuilt options and roomCode
     Constant.prebuiltOptions = widget.options;
     Constant.roomCode = widget.roomCode;
+    Constant.authToken = widget.authToken;
     Constant.onLeave = widget.onLeave;
 
     ///Here we set the endPoints if it's non-null
@@ -112,7 +120,7 @@ class _ScreenControllerState extends State<ScreenController> {
     await _hmsSDKInteractor.build();
     _previewStore = PreviewStore(hmsSDKInteractor: _hmsSDKInteractor);
     HMSException? ans = await _previewStore.startPreview(
-        userName: widget.options?.userName ?? "", roomCode: Constant.roomCode);
+        userName: widget.options?.userName ?? "");
 
     ///If preview fails then we show the error dialog
     ///with the error message and description
@@ -159,12 +167,10 @@ class _ScreenControllerState extends State<ScreenController> {
               ? ListenableProvider.value(
                   value: _previewStore,
                   child: PreviewPage(
-                    roomCode: Constant.roomCode,
                     name: widget.options?.userName?.trim() ?? "",
                     options: widget.options,
                   ))
               : PreviewPermissions(
-                  roomCode: Constant.roomCode,
                   options: widget.options,
                   callback: _isPermissionGrantedCallback),
     );

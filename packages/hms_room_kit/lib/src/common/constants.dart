@@ -9,7 +9,10 @@ class Constant {
       "https://public.app.100ms.live/meeting/xvm-wxwo-gbl";
 
   /// [Constant.roomCode] is the meeting code that will be used
-  static String roomCode = "";
+  static String? roomCode = "";
+
+  ///[Constant.authToken] is auth token to join the room
+  static String? authToken = "";
 
   /// [Constant.streamingUrl] is the streaming url that will be used
   static String streamingUrl = "";

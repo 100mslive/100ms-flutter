@@ -15,15 +15,10 @@ import 'package:hms_room_kit/src/widgets/hms_buttons/hms_back_button.dart';
 
 ///This renders the preview permissions screen
 class PreviewPermissions extends StatefulWidget {
-  final String roomCode;
   final HMSPrebuiltOptions? options;
   final void Function() callback;
 
-  const PreviewPermissions(
-      {super.key,
-      required this.roomCode,
-      this.options,
-      required this.callback});
+  const PreviewPermissions({super.key, this.options, required this.callback});
 
   @override
   State<PreviewPermissions> createState() => _PreviewPermissionsState();

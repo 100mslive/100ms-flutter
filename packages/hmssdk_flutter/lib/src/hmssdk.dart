@@ -368,7 +368,9 @@ class HMSSDK {
   /// Get the [HMSRoom] room object that the local peer has currently joined. Returns null if no room is joined.
   Future<HMSRoom?> getRoom() async {
     var hmsRoomMap = await PlatformService.invokeMethod(PlatformMethod.getRoom);
-    if (hmsRoomMap == null) return null;
+    if (hmsRoomMap == null) {
+      return null;
+    }
     return HMSRoom.fromMap(hmsRoomMap);
   }
 
@@ -384,7 +386,9 @@ class HMSSDK {
   Future<List<HMSPeer>?> getRemotePeers() async {
     List? peers =
         await PlatformService.invokeMethod(PlatformMethod.getRemotePeers);
-    if (peers == null) return null;
+    if (peers == null) {
+      return null;
+    }
     List<HMSPeer> listOfRemotePeers = [];
     peers.forEach((element) {
       listOfRemotePeers.add(HMSPeer.fromMap(element as Map));
@@ -395,7 +399,9 @@ class HMSSDK {
   /// Returns all peers, remote and local. Returns null if no room is joined.
   Future<List<HMSPeer>?> getPeers() async {
     List? peers = await PlatformService.invokeMethod(PlatformMethod.getPeers);
-    if (peers == null) return null;
+    if (peers == null) {
+      return null;
+    }
     List<HMSPeer> listOfPeers = [];
     peers.forEach((element) {
       listOfPeers.add(HMSPeer.fromMap(element as Map));
@@ -782,7 +788,9 @@ class HMSSDK {
       HMSActionResultListener? hmsActionResultListener}) async {
     List<String> rolesMap = [];
 
-    if (roles != null) roles.forEach((role) => rolesMap.add(role.name));
+    if (roles != null) {
+      roles.forEach((role) => rolesMap.add(role.name));
+    }
 
     var arguments = {
       "mute": mute,
@@ -1259,7 +1267,9 @@ class HMSSDK {
       {HMSActionResultListener? hmsActionResultListener,
       HMSAudioMixingMode audioMixingMode =
           HMSAudioMixingMode.TALK_AND_MUSIC}) async {
-    if (!Platform.isAndroid) return;
+    if (!Platform.isAndroid) {
+      return;
+    }
     var result = await PlatformService.invokeMethod(
         PlatformMethod.startAudioShare,
         arguments: {"audio_mixing_mode": audioMixingMode.name});
@@ -1284,7 +1294,9 @@ class HMSSDK {
   ///Refer [audio share guide here](https://www.100ms.live/docs/flutter/v2/features/audio_sharing)
   Future<void> stopAudioShare(
       {HMSActionResultListener? hmsActionResultListener}) async {
-    if (!Platform.isAndroid) return;
+    if (!Platform.isAndroid) {
+      return;
+    }
     var result =
         await PlatformService.invokeMethod(PlatformMethod.stopAudioShare);
     if (hmsActionResultListener != null) {
@@ -1307,9 +1319,10 @@ class HMSSDK {
   ///
   ///Refer [setAudioMixingMode guide here](https://www.100ms.live/docs/flutter/v2/features/audio_sharing#how-to-change-the-audio-mixing-mode)
   void setAudioMixingMode({required HMSAudioMixingMode audioMixingMode}) {
-    if (Platform.isAndroid)
+    if (Platform.isAndroid) {
       PlatformService.invokeMethod(PlatformMethod.setAudioMixingMode,
           arguments: {"audio_mixing_mode": audioMixingMode.name});
+    }
   }
 
   ///Method to get Track Settings.

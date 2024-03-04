@@ -56,6 +56,7 @@ class _PollVoteCardState extends State<PollVoteCard> {
     }
   }
 
+  ///[setIsAnswered] function sets whether the question is answered or not
   void setIsAnswered(bool isQuestionAnswered) {
     setState(() {
       _isAnswered = isQuestionAnswered;

@@ -30,7 +30,7 @@ class HmsSdkManager {
         "ios_screenshare_config": iOSScreenshareConfig?.toMap(),
         "hms_log_settings": hmsLogSettings?.toMap(),
         "dart_sdk_version":
-            dartSDKVersion.length > 0 ? dartSDKVersion[0] : "null",
+            dartSDKVersion.isNotEmpty ? dartSDKVersion[0] : "null",
         "hmssdk_version": versions['flutter'],
         "is_prebuilt": isPrebuilt
       };

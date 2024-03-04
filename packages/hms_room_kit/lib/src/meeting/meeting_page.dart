@@ -28,18 +28,13 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_left_room_screen.dar
 
 ///[MeetingPage] is the main page of the meeting
 ///It takes the following parameters:
-///[meetingLink] is the link of the meeting
 ///[isRoomMute] is the flag to mute the room
 class MeetingPage extends StatefulWidget {
-  final String meetingLink;
   final bool isRoomMute;
   final HMSAudioDevice currentAudioDeviceMode;
 
   const MeetingPage(
-      {Key? key,
-      required this.meetingLink,
-      this.isRoomMute = true,
-      required this.currentAudioDeviceMode})
+      {Key? key, this.isRoomMute = true, required this.currentAudioDeviceMode})
       : super(key: key);
 
   @override
