@@ -1,4 +1,5 @@
 ///Package imports
+library;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';

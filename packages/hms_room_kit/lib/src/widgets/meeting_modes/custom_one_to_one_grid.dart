@@ -1,4 +1,5 @@
 ///Package imports
+library;
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
