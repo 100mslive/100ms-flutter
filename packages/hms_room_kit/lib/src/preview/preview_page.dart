@@ -154,6 +154,7 @@ class _PreviewPageState extends State<PreviewPage> {
         CupertinoPageRoute(
             builder: (_) => ScreenController(
                   roomCode: Constant.roomCode,
+                  authToken: Constant.authToken,
                   options: widget.options,
                 )));
   }
