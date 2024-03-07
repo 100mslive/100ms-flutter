@@ -262,48 +262,32 @@ class MeetingStore extends ChangeNotifier
   ///List of bottom sheets currently open
   List<BuildContext> bottomSheets = [];
 
-  Future<HMSException?> join(String userName, {HMSConfig? roomConfig}) async {
-    //If roomConfig is null then only we call the methods to get the authToken
-    //If we are joining the room from preview we already have authToken so we don't
-    //need to call the getAuthTokenByRoomCode method
-    if (roomConfig == null) {
-      //We use this to get the auth token from room code
-      dynamic tokenData;
+  Future<HMSException?> join(String userName, String? tokenData) async {
+    late HMSConfig joinConfig;
 
-      if (Constant.roomCode != null) {
-        tokenData = await _hmsSDKInteractor.getAuthTokenByRoomCode(
-            userId: Constant.prebuiltOptions?.userId,
-            roomCode: Constant.roomCode!,
-            endPoint: Constant.tokenEndPoint);
-      } else {
-        tokenData = Constant.authToken;
-      }
-
-      ///If the tokenData is String then we set the authToken in the roomConfig
-      ///and then we join the room
-      ///
-      ///If the tokenData is HMSException then we return the HMSException i.e. tokenData
-      if ((tokenData is String?) && tokenData != null) {
-        ///Success Scenario
-        roomConfig = HMSConfig(
-            authToken: tokenData,
-            userName: userName,
-            captureNetworkQualityInPreview: true,
-            endPoint: Constant.initEndPoint);
-      } else {
-        ///Error Scenario
-        return tokenData;
-      }
+    ///Here we create the config using tokenData and userName
+    if (tokenData != null) {
+      joinConfig = HMSConfig(
+          authToken: tokenData,
+          userName: userName,
+          // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
+          //This is only for 100ms internal testing, endPoint can be safely removed from
+          //the HMSConfig for external usage
+          endPoint: Constant.initEndPoint);
     }
 
     _hmsSDKInteractor.addUpdateListener(this);
     _hmsSDKInteractor.addLogsListener(this);
     HMSPollInteractivityCenter.addPollUpdateListener(listener: this);
-    HMSHLSPlayerController.addHMSHLSPlaybackEventsListener(this);
+
+    if (HMSRoomLayout.peerType == PeerRoleType.hlsViewer) {
+      HMSHLSPlayerController.addHMSHLSPlaybackEventsListener(this);
+    }
     WidgetsBinding.instance.addObserver(this);
     setMeetingModeUsingLayoutApi();
-    _hmsSDKInteractor.join(config: roomConfig);
     setRecipientSelectorValue();
+    log("vKohli called join inside meetingStore");
+    _hmsSDKInteractor.join(config: joinConfig);
     return null;
   }
 
@@ -475,6 +459,9 @@ class MeetingStore extends ChangeNotifier
         toasts.removeWhere((toast) =>
             (toast.hmsToastType == HMSToastsType.pollStartedToast) &&
             (toast.toastData.poll.pollId == data));
+      case HMSToastsType.streamingErrorToast:
+        toasts.removeWhere(
+            (toast) => toast.hmsToastType == HMSToastsType.streamingErrorToast);
     }
     notifyListeners();
   }
@@ -897,9 +884,13 @@ class MeetingStore extends ChangeNotifier
     }
     getCurrentAudioDevice();
     getAudioDevicesList();
-    notifyListeners();
     setViewControllers();
+    notifyListeners();
     fetchPollList(HMSPollState.stopped);
+
+    if (HMSRoomLayout.roleLayoutData?.screens?.preview?.joinForm?.joinBtnType ==
+            JoinButtonType.JOIN_BTN_TYPE_JOIN_AND_GO_LIVE &&
+        !hasHlsStarted) startHLSStreaming(false, false);
     // if (Platform.isIOS &&
     //     HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf !=
     //         null) {
@@ -954,7 +945,7 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
-    log("onRoomUpdate-> room: ${room.toString()} update: ${update.name}");
+    log("meeting onRoomUpdate-> room: ${room.toString()} update: ${update.name}");
     peersInRoom = room.peerCount;
     switch (update) {
       case HMSRoomUpdate.browserRecordingStateUpdated:
@@ -2542,6 +2533,9 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.sendDirectMessage:
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
+        toasts.add(HMSToastModel(hmsException,
+            hmsToastType: HMSToastsType.streamingErrorToast));
+        notifyListeners();
         break;
       case HMSActionResultListenerMethod.hlsStreamingStopped:
         break;

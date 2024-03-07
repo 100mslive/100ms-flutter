@@ -13,15 +13,13 @@ import 'package:hms_room_kit/src/preview/preview_store.dart';
 ///The network quality is shown only if the [isHidden] is false
 class PreviewNetworkIndicator extends StatelessWidget {
   final PreviewStore previewStore;
-  final bool isHidden;
   const PreviewNetworkIndicator(
-      {super.key, required this.previewStore, required this.isHidden});
+      {super.key, required this.previewStore});
 
   @override
   Widget build(BuildContext context) {
     return ((previewStore.networkQuality != null &&
-                previewStore.networkQuality != -1) &&
-            !isHidden)
+                previewStore.networkQuality != -1))
         ? Positioned(
             bottom: 168,
             left: 8,

@@ -55,20 +55,19 @@ class ScreenElements {
 class Preview {
   final ScreenElements? previewHeader;
   final JoinForm? joinForm;
+  final bool? skipPreviewScreen;
 
-  Preview({
-    this.previewHeader,
-    this.joinForm,
-  });
+  Preview({this.previewHeader, this.joinForm, this.skipPreviewScreen = false});
 
   factory Preview.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return Preview();
     }
     return Preview(
-      previewHeader: ScreenElements.fromJson(json['preview_header']),
-      joinForm: JoinForm.fromJson(json['join_form']),
-    );
+        previewHeader: ScreenElements.fromJson(
+            json['default']?['elements']?['preview_header']),
+        joinForm: JoinForm.fromJson(json['default']?['elements']?['join_form']),
+        skipPreviewScreen: json["skip_preview_screen"]);
   }
 }
 
@@ -124,7 +123,7 @@ class Screens {
     }
     return Screens(
       preview: json.containsKey('preview') == true
-          ? Preview.fromJson(json['preview']?['default']?['elements'])
+          ? Preview.fromJson(json['preview'])
           : null,
       conferencing: json.containsKey('conferencing') == true
           ? Conferencing.fromJson(json['conferencing'])
@@ -218,6 +217,7 @@ class HMSRoomLayout {
   static bool isBRBEnabled = true;
   static List<String>? offStageRoles = [];
   static bool skipPreviewForRole = false;
+  static bool skipPreview = false;
 
   static Future<void> getRoomLayout(
       {required HMSSDKInteractor hmsSDKInteractor,
@@ -253,6 +253,7 @@ class HMSRoomLayout {
     peerType = roleLayoutData?.screens?.conferencing?.hlsLiveStreaming != null
         ? PeerRoleType.hlsViewer
         : PeerRoleType.conferencing;
+    skipPreview = roleLayoutData?.screens?.preview?.skipPreviewScreen??false;
     if (peerType == PeerRoleType.conferencing) {
       chatData =
           roleLayoutData?.screens?.conferencing?.defaultConf?.elements?.chat;

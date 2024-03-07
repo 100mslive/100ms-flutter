@@ -20,12 +20,10 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 ///and the peer list is not empty and the peer role has the permission to receive room state
 class PreviewHeader extends StatelessWidget {
   final PreviewStore previewStore;
-  final bool isHidden;
   final double width;
   const PreviewHeader(
       {super.key,
       required this.previewStore,
-      required this.isHidden,
       required this.width});
 
   @override
@@ -54,9 +52,7 @@ class PreviewHeader extends StatelessWidget {
                   ? 50
                   : 35),
         ),
-        child: isHidden
-            ? Container()
-            : Column(
+        child: Column(
                 children: [
                   ///We render a generic logo which can be replaced
                   ///with the company logo from dashboard
