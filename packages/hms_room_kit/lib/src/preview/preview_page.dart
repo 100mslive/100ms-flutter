@@ -1,14 +1,13 @@
 ///Dart imports
-import 'dart:developer';
 import 'dart:io';
 
 ///Package imports
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/src/meeting_screen_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
+import 'package:hms_room_kit/src/meeting_screen_controller.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/preview/preview_bottom_button_section.dart';
@@ -54,9 +53,8 @@ class _PreviewPageState extends State<PreviewPage> {
     super.dispose();
   }
 
+  ///[_navigateToMeeting] navigates to meeting from preview
   void _navigateToMeeting(PreviewStore previewStore) {
-    log("vKohli called _navigateToMeeting");
-
     HMSRole? role = previewStore.peer?.role;
     int? localPeerNetworkQuality = previewStore.networkQuality;
     bool isRoomMute = previewStore.isRoomMute;
@@ -64,7 +62,6 @@ class _PreviewPageState extends State<PreviewPage> {
 
     previewStore.removePreviewListener();
 
-    log("vKohli preview canPop: ${Navigator.canPop(context)}");
     Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => MeetingScreenController(
               role: role,

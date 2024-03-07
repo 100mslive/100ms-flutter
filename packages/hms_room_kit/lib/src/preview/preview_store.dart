@@ -11,7 +11,7 @@ import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/hmssdk_interactor.dart';
 
 class PreviewStore extends ChangeNotifier
-    implements HMSPreviewListener, HMSLogListener{
+    implements HMSPreviewListener, HMSLogListener {
   late HMSSDKInteractor hmsSDKInteractor;
 
   PreviewStore({required this.hmsSDKInteractor});

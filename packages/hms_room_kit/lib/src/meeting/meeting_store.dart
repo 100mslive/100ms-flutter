@@ -50,7 +50,7 @@ class MeetingStore extends ChangeNotifier
 
   bool hasHlsStarted = false;
 
-  bool isHLSLoading = false;
+  bool isHLSStarting = false;
 
   String? streamUrl = "";
 
@@ -286,7 +286,6 @@ class MeetingStore extends ChangeNotifier
     WidgetsBinding.instance.addObserver(this);
     setMeetingModeUsingLayoutApi();
     setRecipientSelectorValue();
-    log("vKohli called join inside meetingStore");
     _hmsSDKInteractor.join(config: joinConfig);
     return null;
   }
@@ -890,7 +889,11 @@ class MeetingStore extends ChangeNotifier
 
     if (HMSRoomLayout.roleLayoutData?.screens?.preview?.joinForm?.joinBtnType ==
             JoinButtonType.JOIN_BTN_TYPE_JOIN_AND_GO_LIVE &&
-        !hasHlsStarted) startHLSStreaming(false, false);
+        !hasHlsStarted) {
+      isHLSStarting = true;
+      notifyListeners();
+      startHLSStreaming(false, false);
+    }
     // if (Platform.isIOS &&
     //     HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf !=
     //         null) {
@@ -965,7 +968,8 @@ class MeetingStore extends ChangeNotifier
             room.hmsRtmpStreamingState?.state ?? HMSStreamingState.none;
         break;
       case HMSRoomUpdate.hlsStreamingStateUpdated:
-        isHLSLoading = false;
+        isHLSStarting =
+            room.hmshlsStreamingState?.state == HMSStreamingState.starting;
         streamingType["hls"] =
             room.hmshlsStreamingState?.state ?? HMSStreamingState.none;
         hasHlsStarted =
@@ -1542,7 +1546,7 @@ class MeetingStore extends ChangeNotifier
       case HMSPeerUpdate.roleUpdated:
         if (peer.isLocal) {
           removeAllBottomSheets();
-          getSpotlightPeer();
+          // getSpotlightPeer();
           setPreviousRole(localPeer?.role.name ?? "");
           resetLayout(peer.role.name);
           localPeer = peer;
@@ -1791,7 +1795,7 @@ class MeetingStore extends ChangeNotifier
     _hmsSessionStore?.addKeyChangeListener(
         keys: SessionStoreKeyValues.getSessionStoreKeys(),
         hmsKeyChangeListener: this);
-    getSpotlightPeer();
+    // getSpotlightPeer();
   }
 
   ///We get this call everytime metadata corresponding to a key is changed
@@ -2430,7 +2434,6 @@ class MeetingStore extends ChangeNotifier
         }
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
-        isHLSLoading = true;
         hlsStreamingRetry = false;
         notifyListeners();
         break;
@@ -2533,6 +2536,7 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.sendDirectMessage:
         break;
       case HMSActionResultListenerMethod.hlsStreamingStarted:
+        isHLSStarting = false;
         toasts.add(HMSToastModel(hmsException,
             hmsToastType: HMSToastsType.streamingErrorToast));
         notifyListeners();

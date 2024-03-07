@@ -22,9 +22,7 @@ class PreviewHeader extends StatelessWidget {
   final PreviewStore previewStore;
   final double width;
   const PreviewHeader(
-      {super.key,
-      required this.previewStore,
-      required this.width});
+      {super.key, required this.previewStore, required this.width});
 
   @override
   Widget build(BuildContext context) {
@@ -53,58 +51,57 @@ class PreviewHeader extends StatelessWidget {
                   : 35),
         ),
         child: Column(
-                children: [
-                  ///We render a generic logo which can be replaced
-                  ///with the company logo from dashboard
-                  HMSRoomLayout.roleLayoutData?.logo?.url == null
-                      ? Container()
-                      : HMSRoomLayout.roleLayoutData!.logo!.url!.contains("svg")
-                          ? SvgPicture.network(
-                              HMSRoomLayout.roleLayoutData!.logo!.url!,
-                              height: 30,
-                              width: 30,
-                            )
-                          : Image.network(
-                              HMSRoomLayout.roleLayoutData!.logo!.url!,
-                              errorBuilder: (context, exception, _) {
-                                log('Error is $exception');
-                                return const SizedBox(
-                                  width: 30,
-                                  height: 30,
-                                );
-                              },
-                              height: 30,
-                              width: 30,
-                            ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  HMSTitleText(
-                      text: HMSRoomLayout.roleLayoutData?.screens?.preview
-                              ?.previewHeader?.title ??
-                          "Get Started",
-                      fontSize: 24,
-                      lineHeight: 32,
-                      textColor: HMSThemeColors.onSurfaceHighEmphasis),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  HMSSubheadingText(
-                      text: HMSRoomLayout.roleLayoutData?.screens?.preview
-                              ?.previewHeader?.subTitle ??
-                          "Setup your audio and video before joining",
-                      textColor: HMSThemeColors.onSurfaceMediumEmphasis),
+          children: [
+            ///We render a generic logo which can be replaced
+            ///with the company logo from dashboard
+            HMSRoomLayout.roleLayoutData?.logo?.url == null
+                ? Container()
+                : HMSRoomLayout.roleLayoutData!.logo!.url!.contains("svg")
+                    ? SvgPicture.network(
+                        HMSRoomLayout.roleLayoutData!.logo!.url!,
+                        height: 30,
+                        width: 30,
+                      )
+                    : Image.network(
+                        HMSRoomLayout.roleLayoutData!.logo!.url!,
+                        errorBuilder: (context, exception, _) {
+                          log('Error is $exception');
+                          return const SizedBox(
+                            width: 30,
+                            height: 30,
+                          );
+                        },
+                        height: 30,
+                        width: 30,
+                      ),
+            const SizedBox(
+              height: 16,
+            ),
+            HMSTitleText(
+                text: HMSRoomLayout.roleLayoutData?.screens?.preview
+                        ?.previewHeader?.title ??
+                    "Get Started",
+                fontSize: 24,
+                lineHeight: 32,
+                textColor: HMSThemeColors.onSurfaceHighEmphasis),
+            const SizedBox(
+              height: 4,
+            ),
+            HMSSubheadingText(
+                text: HMSRoomLayout.roleLayoutData?.screens?.preview
+                        ?.previewHeader?.subTitle ??
+                    "Setup your audio and video before joining",
+                textColor: HMSThemeColors.onSurfaceMediumEmphasis),
 
-                  ///Here we use SizedBox to keep the UI consistent
-                  ///until we have received peer list or the room-state is
-                  ///not enabled
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  PreviewParticipantChip(
-                      previewStore: previewStore, width: width)
-                ],
-              ),
+            ///Here we use SizedBox to keep the UI consistent
+            ///until we have received peer list or the room-state is
+            ///not enabled
+            const SizedBox(
+              height: 16,
+            ),
+            PreviewParticipantChip(previewStore: previewStore, width: width)
+          ],
+        ),
       ),
     );
   }

@@ -26,9 +26,9 @@ class MeetingGridComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Selector<
             MeetingStore,
-            Tuple6<List<PeerTrackNode>, bool, int, int, MeetingMode,
-                PeerTrackNode?>>(
-        selector: (_, meetingStore) => Tuple6(
+            Tuple7<List<PeerTrackNode>, bool, int, int, MeetingMode,
+                PeerTrackNode?, int>>(
+        selector: (_, meetingStore) => Tuple7(
             meetingStore.peerTracks,
             meetingStore.isHLSLink,
             meetingStore.peerTracks.length,
@@ -36,9 +36,10 @@ class MeetingGridComponent extends StatelessWidget {
             meetingStore.meetingMode,
             meetingStore.peerTracks.isNotEmpty
                 ? meetingStore.peerTracks[meetingStore.screenShareCount]
-                : null),
+                : null,
+            meetingStore.viewControllers.length),
         builder: (_, data, __) {
-          if (data.item3 == 0) {
+          if (data.item3 == 0 || data.item7 == 0) {
             return Center(
                 child: Column(
               mainAxisSize: MainAxisSize.min,

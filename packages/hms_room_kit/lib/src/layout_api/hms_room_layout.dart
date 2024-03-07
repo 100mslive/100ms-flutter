@@ -253,7 +253,7 @@ class HMSRoomLayout {
     peerType = roleLayoutData?.screens?.conferencing?.hlsLiveStreaming != null
         ? PeerRoleType.hlsViewer
         : PeerRoleType.conferencing;
-    skipPreview = roleLayoutData?.screens?.preview?.skipPreviewScreen??false;
+    skipPreview = roleLayoutData?.screens?.preview?.skipPreviewScreen ?? false;
     if (peerType == PeerRoleType.conferencing) {
       chatData =
           roleLayoutData?.screens?.conferencing?.defaultConf?.elements?.chat;

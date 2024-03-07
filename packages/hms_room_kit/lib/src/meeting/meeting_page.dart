@@ -1,17 +1,16 @@
 //Dart imports
-import 'dart:developer' as Dev;
 import 'dart:io';
 import 'dart:math';
 
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_hls_starting_overlay.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart' as HMSTheme;
 import 'package:hms_room_kit/src/widgets/toasts/toast_widget.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
@@ -70,6 +69,14 @@ class _MeetingPageState extends State<MeetingPage> {
     context.read<MeetingStore>().initForegroundTask();
   }
 
+  bool showError(int? errorCode) {
+    if (errorCode != null) {
+      List<int> errorCodes = [1003, 2000, 4005, 424, 404];
+      return errorCodes.contains(errorCode);
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -88,8 +95,6 @@ class _MeetingPageState extends State<MeetingPage> {
                       false),
               builder: (_, failureErrors, __) {
                 if (failureErrors.item1) {
-                  Dev.log(
-                      "vKohli meeting canPop: ${Navigator.canPop(context)}");
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (context) => HMSLeftRoomScreen(
@@ -387,24 +392,6 @@ class _MeetingPageState extends State<MeetingPage> {
                                                 }
                                                 return const SizedBox();
                                               }),
-                                          if (failureErrors.item2 != null)
-                                            if (failureErrors.item2?.code?.errorCode == 1003 ||
-                                                failureErrors.item2?.code
-                                                        ?.errorCode ==
-                                                    2000 ||
-                                                failureErrors.item2?.code
-                                                        ?.errorCode ==
-                                                    4005 ||
-                                                failureErrors.item2?.code
-                                                        ?.errorCode ==
-                                                    424)
-                                              UtilityComponents
-                                                  .showFailureError(
-                                                      failureErrors.item2!,
-                                                      context,
-                                                      () => context
-                                                          .read<MeetingStore>()
-                                                          .leave()),
                                           if (HMSTheme
                                                   .HMSRoomLayout
                                                   .roleLayoutData
@@ -416,64 +403,28 @@ class _MeetingPageState extends State<MeetingPage> {
                                                   .JOIN_BTN_TYPE_JOIN_AND_GO_LIVE)
                                             Selector<MeetingStore,
                                                     Tuple2<bool, int>>(
-                                                builder: (_, hlsData, __) {
-                                                  return (hlsData.item1 ||
-                                                          hlsData.item2 == 0)
-                                                      ? const SizedBox()
-                                                      : Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                  gradient:
-                                                                      LinearGradient(
-                                                            begin: Alignment
-                                                                .topCenter,
-                                                            end: Alignment
-                                                                .bottomCenter,
-                                                            colors: [
-                                                              HMSThemeColors
-                                                                  .backgroundDim
-                                                                  .withOpacity(
-                                                                      1),
-                                                              HMSThemeColors
-                                                                  .backgroundDim
-                                                                  .withOpacity(
-                                                                      0)
-                                                            ],
-                                                          )),
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              CircularProgressIndicator(
-                                                                strokeWidth: 2,
-                                                                color: HMSThemeColors
-                                                                    .primaryDefault,
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 29,
-                                                              ),
-                                                              HMSSubtitleText(
-                                                                text:
-                                                                    "Starting live stream...",
-                                                                textColor:
-                                                                    HMSThemeColors
-                                                                        .onSurfaceHighEmphasis,
-                                                                fontSize: 16,
-                                                                lineHeight: 24,
-                                                                letterSpacing:
-                                                                    0.50,
-                                                              )
-                                                            ],
-                                                          ),
-                                                        );
-                                                },
                                                 selector: (_, meetingStore) =>
                                                     Tuple2(
                                                         meetingStore
-                                                            .hasHlsStarted,
+                                                            .isHLSStarting,
                                                         meetingStore
-                                                            .peerTracks.length))
+                                                            .peerTracks.length),
+                                                builder: (_, hlsData, __) {
+                                                  return (!hlsData.item1 ||
+                                                          hlsData.item2 == 0)
+                                                      ? const SizedBox()
+                                                      : HMSHLSStartingOverlay();
+                                                }),
+                                          if (failureErrors.item2 != null)
+                                            if (showError(failureErrors
+                                                .item2?.code?.errorCode))
+                                              UtilityComponents
+                                                  .showFailureError(
+                                                      failureErrors.item2!,
+                                                      context,
+                                                      () => context
+                                                          .read<MeetingStore>()
+                                                          .leave()),
                                         ],
                                       ),
                                     ),
