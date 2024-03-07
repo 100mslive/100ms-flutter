@@ -286,7 +286,7 @@ packages:
       path: "../../hms_room_kit"
       relative: true
     source: path
-    version: "1.0.15"
+    version: "1.0.16"
   hmssdk_flutter:
     dependency: transitive
     description:
