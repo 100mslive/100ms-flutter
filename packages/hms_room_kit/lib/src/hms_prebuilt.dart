@@ -1,3 +1,5 @@
+library;
+
 ///Package imports
 import 'package:flutter/widgets.dart';
 
