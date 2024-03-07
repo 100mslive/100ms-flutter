@@ -1,3 +1,5 @@
+library;
+
 ///Dart imports
 import 'dart:io';
 import 'dart:math' as math;

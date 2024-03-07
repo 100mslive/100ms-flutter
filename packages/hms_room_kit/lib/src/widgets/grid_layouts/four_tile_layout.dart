@@ -1,4 +1,6 @@
 ///Package imports
+library;
+
 import 'package:flutter/cupertino.dart';
 
 ///Project imports
