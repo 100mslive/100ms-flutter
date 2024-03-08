@@ -283,11 +283,12 @@ abstract class PlatformService {
                       data['current_audio_device'])
                   : null;
           List<HMSAudioDevice> availableAudioDevice = [];
-          if (data["available_audio_device"] != null)
+          if (data["available_audio_device"] != null) {
             for (var device in data["available_audio_device"]) {
               availableAudioDevice
                   .add(HMSAudioDeviceValues.getHMSAudioDeviceFromName(device));
             }
+          }
 
           notifyUpdateListeners(method, {
             'current_audio_device': currentAudioDevice,
@@ -395,11 +396,12 @@ abstract class PlatformService {
                       event.data['current_audio_device'])
                   : null;
           List<HMSAudioDevice> availableAudioDevice = [];
-          if (event.data["available_audio_device"] != null)
+          if (event.data["available_audio_device"] != null) {
             for (var device in event.data["available_audio_device"]) {
               availableAudioDevice
                   .add(HMSAudioDeviceValues.getHMSAudioDeviceFromName(device));
             }
+          }
 
           notifyPreviewListeners(method, {
             'current_audio_device': currentAudioDevice,

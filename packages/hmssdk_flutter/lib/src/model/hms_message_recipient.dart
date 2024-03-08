@@ -46,7 +46,7 @@ class HMSMessageRecipient {
 
   static List<HMSRole> getRoles(List list) {
     List<HMSRole> hmsRole = <HMSRole>[];
-    if (list.length == 0) return hmsRole;
+    if (list.isEmpty) return hmsRole;
     list.forEach((element) {
       hmsRole.add(HMSRole.fromMap(element));
     });

@@ -19,12 +19,14 @@ class HMSPublishSetting {
     List<String> allowed;
     if (map.containsKey('allowed')) {
       allowed = map['allowed'].cast<String>();
-    } else
+    } else {
       allowed = [];
+    }
 
     HMSAudioSetting? audioSetting;
-    if (map.containsKey('audio'))
+    if (map.containsKey('audio')) {
       audioSetting = HMSAudioSetting.fromMap(map['audio']);
+    }
     HMSVideoSetting? videoSetting;
     if (map.containsKey('video')) {
       videoSetting = HMSVideoSetting.fromMap(map['video']);
