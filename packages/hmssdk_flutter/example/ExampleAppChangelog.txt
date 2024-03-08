@@ -1,12 +1,9 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 
-- Polls/Quizzes which are created and linked to a Room should show up on Prebuilt
-https://100ms.atlassian.net/browse/FLUT-239
+- Skip preview screen based on flag in the layout API
+https://100ms.atlassian.net/browse/FLUT-217
 
-- Participant summary is getting dispalyed for user who does not have create permission
-https://100ms.atlassian.net/browse/FLUT-249
-
-Room Kit: 1.0.15
-Core SDK: 1.9.12
-Android SDK: 2.9.4
-iOS SDK: 1.5.1
+Room Kit: 1.0.16
+Core SDK: 1.9.13
+Android SDK: 2.9.5
+iOS SDK: 1.6.0
