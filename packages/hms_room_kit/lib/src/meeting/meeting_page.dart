@@ -10,6 +10,8 @@ import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_hls_starting_overlay.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart' as HMSTheme;
 import 'package:hms_room_kit/src/widgets/toasts/toast_widget.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_grid_component.dart';
@@ -65,6 +67,14 @@ class _MeetingPageState extends State<MeetingPage> {
 
   void _enableForegroundService() {
     context.read<MeetingStore>().initForegroundTask();
+  }
+
+  bool showError(int? errorCode) {
+    if (errorCode != null) {
+      List<int> errorCodes = [1003, 2000, 4005, 424, 404];
+      return errorCodes.contains(errorCode);
+    }
+    return false;
   }
 
   @override
@@ -382,24 +392,39 @@ class _MeetingPageState extends State<MeetingPage> {
                                                 }
                                                 return const SizedBox();
                                               }),
+                                          if (HMSTheme
+                                                  .HMSRoomLayout
+                                                  .roleLayoutData
+                                                  ?.screens
+                                                  ?.preview
+                                                  ?.joinForm
+                                                  ?.joinBtnType ==
+                                              HMSTheme.JoinButtonType
+                                                  .JOIN_BTN_TYPE_JOIN_AND_GO_LIVE)
+                                            Selector<MeetingStore,
+                                                    Tuple2<bool, int>>(
+                                                selector: (_, meetingStore) =>
+                                                    Tuple2(
+                                                        meetingStore
+                                                            .isHLSStarting,
+                                                        meetingStore
+                                                            .peerTracks.length),
+                                                builder: (_, hlsData, __) {
+                                                  return (!hlsData.item1 ||
+                                                          hlsData.item2 == 0)
+                                                      ? const SizedBox()
+                                                      : HMSHLSStartingOverlay();
+                                                }),
                                           if (failureErrors.item2 != null)
-                                            if (failureErrors.item2?.code?.errorCode == 1003 ||
-                                                failureErrors.item2?.code
-                                                        ?.errorCode ==
-                                                    2000 ||
-                                                failureErrors.item2?.code
-                                                        ?.errorCode ==
-                                                    4005 ||
-                                                failureErrors.item2?.code
-                                                        ?.errorCode ==
-                                                    424)
+                                            if (showError(failureErrors
+                                                .item2?.code?.errorCode))
                                               UtilityComponents
                                                   .showFailureError(
                                                       failureErrors.item2!,
                                                       context,
                                                       () => context
                                                           .read<MeetingStore>()
-                                                          .leave())
+                                                          .leave()),
                                         ],
                                       ),
                                     ),
