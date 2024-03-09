@@ -1,3 +1,5 @@
+library;
+
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';

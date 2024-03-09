@@ -1,4 +1,6 @@
 ///Package imports
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -125,6 +127,7 @@ class HMSLeftRoomScreen extends StatelessWidget {
                                 MaterialPageRoute(
                                     builder: (_) => HMSPrebuilt(
                                           roomCode: Constant.roomCode,
+                                          authToken: Constant.authToken,
                                           options: Constant.prebuiltOptions,
                                           onLeave: Constant.onLeave,
                                         ))),

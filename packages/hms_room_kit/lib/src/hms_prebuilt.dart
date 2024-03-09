@@ -1,3 +1,5 @@
+library;
+
 ///Package imports
 import 'package:flutter/widgets.dart';
 
@@ -17,7 +19,7 @@ class HMSPrebuilt extends StatelessWidget {
   /// The room code is: xvm-wxwo-gbl
   final String? roomCode;
 
-  ///[token]: The auth token to join the room
+  ///[authToken]: The auth token to join the room
   final String? authToken;
 
   ///The options for the prebuilt
@@ -47,8 +49,10 @@ class HMSPrebuilt extends StatelessWidget {
   ///Returns a [ScreenController] widget
   ///The [ScreenController] is the main widget that renders the prebuilt
   ///For more details checkout the [ScreenController] class
-  ///It takes the [roomCode],[options] and [onLeave] as parameters
+  ///It takes the [roomCode],[authToken], [options] and [onLeave] as parameters
   ///The [roomCode] is the room code of the room to join
+  ///The [authToken] is the auth token to join the room
+  ///User need to pass either [roomCode] or [authToken] to join the room
   ///The [options] are the options for the prebuilt
   ///For more details checkout the [HMSPrebuiltOptions] class
   ///The [options] are optional and are used to customize the prebuilt

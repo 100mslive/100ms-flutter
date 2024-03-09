@@ -20,6 +20,8 @@
     using the `fetchPollList`, `fetchPollQuestions` and `getPollResults` methods.
     Checkout the docs [here](///Add docs)
 
+Updated to iOS SDK 1.6.0
+
 **Full Changelog**: [1.9.11...1.9.12](https://github.com/100mslive/100ms-flutter/compare/1.9.11...1.9.12)
 
 # 1.9.11 - 2024-02-26

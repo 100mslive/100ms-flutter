@@ -1,4 +1,6 @@
 ///Package imports
+library;
+
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +22,7 @@ class ScreenController extends StatefulWidget {
   ///[roomCode] is the room code of the room to join
   final String? roomCode;
 
-  ///[token] auth token to join the room
+  ///[authToken] auth token to join the room
   final String? authToken;
 
   ///[options] is the options for the prebuilt
