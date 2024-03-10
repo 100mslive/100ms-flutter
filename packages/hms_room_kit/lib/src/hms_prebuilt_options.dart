@@ -23,6 +23,12 @@ class HMSPrebuiltOptions {
   //To enable the debug mode for the prebuilt
   final bool debugInfo;
 
+  ///This provides the img url of the user
+  final String? userImgUrl;
+
+  ///This sets whether it's a video call or audio call
+  final bool isVideoCall;
+
   //Screen share Config, to enable screen share for iOS
   //If you wish to enable screen share for iOS, you need to pass
   //this config
@@ -34,5 +40,7 @@ class HMSPrebuiltOptions {
       this.userId,
       this.endPoints,
       this.debugInfo = false,
-      this.iOSScreenshareConfig});
+      this.iOSScreenshareConfig,
+      this.userImgUrl,
+      this.isVideoCall = true});
 }

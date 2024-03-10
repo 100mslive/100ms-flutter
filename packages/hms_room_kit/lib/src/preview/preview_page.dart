@@ -152,17 +152,9 @@ class _PreviewPageState extends State<PreviewPage> {
                                 ),
 
                           PreviewHeader(
-                              previewStore: previewStore, width: width),
+                              previewStore: previewStore, imgUrl: "https://lh3.googleusercontent.com/a/ACg8ocKQA0ztVW296eh8zAz6KuaS7A_b8TzNA_unBRqUv3dg=s96-c", userName: widget.name,),
 
                           ///This renders the back button at top left
-                          Positioned(
-                              top: Platform.isIOS ? 50 : 35,
-                              left: 10,
-                              child: HMSBackButton(
-                                  onPressed: () => {
-                                        previewStore.leave(),
-                                        Navigator.pop(context)
-                                      })),
 
                           ///This renders the bottom sheet with microphone, camera and audio device settings
                           ///This also contains text field for entering the name
