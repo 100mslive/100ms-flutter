@@ -41,13 +41,13 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                         children: [
                           Row(
                             children: [
-                              ///TODO: Add image url check
-                              // if (imgUrl != null)
+                              if (Constant.prebuiltOptions?.userImgUrl != null)
                               Padding(
                                 padding: const EdgeInsets.only(right: 12.0),
                                 child: ClipOval(
                                     child: Image.network(
-                                  "https://lh3.googleusercontent.com/a/ACg8ocKQA0ztVW296eh8zAz6KuaS7A_b8TzNA_unBRqUv3dg=s96-c",
+                                      Constant.prebuiltOptions!.userImgUrl!
+                                  ,
                                   height: 40,
                                   width: 40,
                                 )),
@@ -56,7 +56,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   HMSTitleText(
-                                    text: "Alex K",
+                                    text: Constant.prebuiltOptions?.userName??"",
                                     textColor:
                                         HMSThemeColors.onSurfaceHighEmphasis,
                                     fontSize: 24,
@@ -136,22 +136,22 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              // if (Constant.prebuiltOptions?.userImgUrl != null)
+                              if (Constant.prebuiltOptions?.userImgUrl != null)
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 16.0),
                                 child: ClipOval(
                                     child: Image.network(
-                                  "https://lh3.googleusercontent.com/a/ACg8ocKQA0ztVW296eh8zAz6KuaS7A_b8TzNA_unBRqUv3dg=s96-c",
-                                  // Constant.prebuiltOptions!.userImgUrl!,
-                                  height: 56,
-                                  width: 56,
+                                      Constant.prebuiltOptions!.userImgUrl!
+                                  ,
+                                  height: 40,
+                                  width: 40,
                                 )),
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   HMSTitleText(
-                                    text: "Alex K",
+                                    text: Constant.prebuiltOptions?.userName??"",
                                     textColor:
                                         HMSThemeColors.onSurfaceHighEmphasis,
                                     fontSize: 24,

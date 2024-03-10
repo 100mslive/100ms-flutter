@@ -116,10 +116,11 @@ class _PreviewPageState extends State<PreviewPage> {
                                   child: Stack(
                                     alignment: Alignment.center,
                                     children: [
-                                      Image.network(
-                                        "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
-                                        fit: BoxFit.fill,
-                                      ),
+                                      if (widget.options?.userImgUrl != null)
+                                        Image.network(
+                                          widget.options!.userImgUrl!,
+                                          fit: BoxFit.fill,
+                                        ),
                                       SizedBox(
                                         height: height,
                                         width: width,
@@ -158,10 +159,13 @@ class _PreviewPageState extends State<PreviewPage> {
                                           : Stack(
                                               alignment: Alignment.center,
                                               children: [
-                                                Image.network(
-                                                  "https://lh3.googleusercontent.com/a/ACg8ocKQA0ztVW296eh8zAz6KuaS7A_b8TzNA_unBRqUv3dg=s96-c",
-                                                  fit: BoxFit.fill,
-                                                ),
+                                                if (widget
+                                                        .options?.userImgUrl !=
+                                                    null)
+                                                  Image.network(
+                                                    widget.options!.userImgUrl!,
+                                                    fit: BoxFit.fill,
+                                                  ),
                                                 SizedBox(
                                                   height: height,
                                                   width: width,

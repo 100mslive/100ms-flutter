@@ -69,7 +69,7 @@ class PreviewHeader extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         HMSTitleText(
-                          text: "Alex K",
+                          text: Constant.prebuiltOptions?.userName??"",
                           textColor: HMSThemeColors.onSurfaceHighEmphasis,
                           fontSize: 24,
                           lineHeight: 32,
@@ -99,7 +99,7 @@ class PreviewHeader extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       HMSTitleText(
-                        text: "Alex K",
+                        text: Constant.prebuiltOptions?.userName??"",
                         textColor: HMSThemeColors.onSurfaceHighEmphasis,
                         fontSize: 24,
                         lineHeight: 32,
