@@ -2,6 +2,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -67,8 +68,9 @@ class _VideoViewState extends State<VideoView> {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
+                  if(Constant.prebuiltOptions?.userImgUrl != null)
                   Image.network(
-                    "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
+                    Constant.prebuiltOptions!.userImgUrl!,
                     fit: BoxFit.fill,
                   ),
                   SizedBox(
