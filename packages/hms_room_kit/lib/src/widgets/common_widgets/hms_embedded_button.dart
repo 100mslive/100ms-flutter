@@ -55,22 +55,14 @@ class HMSEmbeddedButton extends StatelessWidget {
                * 
                * Similarly if the button is not active, we use the disabledBorderColor if it's not null
                */
-              border: isActive
-                  ? Border.all(
-                      color: enabledBorderColor ?? HMSThemeColors.borderBright,
-                      width: 1)
-                  : Border.all(
-                      color:
-                          disabledBorderColor ?? HMSThemeColors.surfaceBrighter,
-                      width: 1),
-              borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+              borderRadius: BorderRadius.circular(40),
               /**
                * The color of icon is set using the iconColor property
                * If the iconColor is not set, we use the default color which is onSurfaceHighEmphasis
                */
               color: isActive
-                  ? (onColor ?? (HMSThemeColors.backgroundDefault))
-                  : (offColor ?? HMSThemeColors.surfaceBrighter)),
+                  ? (onColor ?? (HMSThemeColors.backgroundDim))
+                  : (offColor ?? HMSThemeColors.baseWhite)),
           child: child),
     );
   }

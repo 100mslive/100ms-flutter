@@ -1,8 +1,6 @@
 ///Dart imports
 library;
 
-import 'dart:io';
-
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -77,19 +75,6 @@ class MeetingGridComponent extends StatelessWidget {
                           ///height of video grid by 140 else it covers the whole screen
                           ///
                           ///Here we also check for the platform and reduce the height accordingly
-                          height: showControls
-                              ? MediaQuery.of(context).size.height -
-                                  MediaQuery.of(context).padding.top -
-                                  MediaQuery.of(context).padding.bottom -
-                                  (Platform.isAndroid
-                                      ? 160
-                                      : Platform.isIOS
-                                          ? 230
-                                          : 160)
-                              : MediaQuery.of(context).size.height -
-                                  MediaQuery.of(context).padding.top -
-                                  MediaQuery.of(context).padding.bottom -
-                                  20,
                           child: GestureDetector(
                             onTap: () => visibilityController
                                 ?.toggleControlsVisibility(),
@@ -108,7 +93,7 @@ class MeetingGridComponent extends StatelessWidget {
                                 ? OneToOneMode(
                                     ///This is done to keep the inset tile
                                     ///at correct position when controls are hidden
-                                    bottomMargin: showControls ? 250 : 130,
+                                    bottomMargin: 140,
                                     peerTracks: data.item1,
                                     screenShareCount: data.item4,
                                     context: context,

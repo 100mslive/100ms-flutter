@@ -14,9 +14,6 @@ import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/local_peer_more_option.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/video_view.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/audio_mute_status.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/brb_tag.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/hand_raise.dart';
 
 ///[InsetTile] is a widget that is used to render the local peer tile in the inset view
 class InsetTile extends StatefulWidget {
@@ -112,10 +109,7 @@ class _InsetTileState extends State<InsetTile> {
                           avatarTitleFontSize: widget.avatarTitleFontSize,
                           avatarTitleTextLineHeight:
                               widget.avatarTitleTextLineHeight),
-                    ),
-                    const HandRaise(), //top left
-                    const BRBTag(), //top left
-                    const AudioMuteStatus(), //top right
+                    ), //top right
                     if (isButtonVisible)
                       LocalPeerMoreOption(
                         callbackFunction: widget.callbackFunction,

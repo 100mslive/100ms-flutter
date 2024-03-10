@@ -1,4 +1,6 @@
 //Package imports
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -7,7 +9,6 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 //Project imports
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/audio_level_avatar.dart';
 
 ///[VideoView] is a widget that renders the video of a peer
 ///It renders the video of the peer if the peer is not muted
@@ -62,12 +63,27 @@ class _VideoViewState extends State<VideoView> {
           ///We render the avatar
           if ((data.item1 == null) || data.item2 || data.item3) {
             return Semantics(
-                label: "fl_video_off",
-                child: AudioLevelAvatar(
-                  avatarRadius: widget.avatarRadius,
-                  avatarTitleFontSize: widget.avatarTitleFontSize,
-                  avatarTitleTextLineHeight: widget.avatarTitleTextLineHeight,
-                ));
+              label: "fl_video_off",
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Image.network(
+                    "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
+                    fit: BoxFit.fill,
+                  ),
+                  SizedBox(
+                    height: widget.viewSize?.height,
+                    width: widget.viewSize?.width,
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
+                      child: Container(
+                        color: Colors.black.withOpacity(0),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
           } else {
             ///If the peer is not muted and not offscreen
             ///We render the video

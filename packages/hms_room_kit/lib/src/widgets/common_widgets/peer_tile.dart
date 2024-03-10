@@ -10,16 +10,10 @@ import 'package:provider/provider.dart';
 // Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/local_peer_more_option.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/name_and_network.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/screen_share_tile_name.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/degrade_tile.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/video_view.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/audio_mute_status.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/brb_tag.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/hand_raise.dart';
-import 'package:hms_room_kit/src/widgets/peer_widgets/more_option.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/rtc_stats_view.dart';
 
 ///This widget is used to render the peer tile
@@ -106,22 +100,7 @@ class _PeerTileState extends State<PeerTile> {
                           child: DegradeTile(
                             constraints: constraints,
                           ),
-                        ),
-                        NameAndNetwork(maxWidth: constraints.maxWidth),
-                        const HandRaise(), //top left
-                        const BRBTag(), //top left
-                        const AudioMuteStatus(), //top right
-                        context.read<PeerTrackNode>().peer.isLocal
-                            ? const LocalPeerMoreOption(
-                                isInsetTile: false,
-                              )
-                            : const MoreOption(), //bottom right
-                        Semantics(
-                          label: "fl_stats_on_tile",
-                          child: RTCStatsView(
-                              isLocal:
-                                  context.read<PeerTrackNode>().peer.isLocal),
-                        )
+                        ), //top right
                       ],
                     ),
                   ),
