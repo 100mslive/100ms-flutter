@@ -48,13 +48,6 @@ class MeetingGridComponent extends StatelessWidget {
                   strokeWidth: 2,
                   color: HMSThemeColors.primaryDefault,
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                if (context.read<MeetingStore>().peers.isNotEmpty)
-                  HMSTitleText(
-                      text: "Please wait for broadcaster to join",
-                      textColor: HMSThemeColors.onSurfaceHighEmphasis)
               ],
             ));
           }

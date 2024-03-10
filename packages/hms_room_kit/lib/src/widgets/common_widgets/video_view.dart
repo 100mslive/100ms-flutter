@@ -62,7 +62,7 @@ class _VideoViewState extends State<VideoView> {
         builder: (_, data, __) {
           ///If the peer track node is null or the peer is muted or the peer is offscreen
           ///We render the avatar
-          if ((data.item1 == null) || data.item2 || data.item3) {
+          if ((data.item1 == null) || data.item2 || data.item3 || !(Constant.prebuiltOptions?.isVideoCall??false)) {
             return Semantics(
               label: "fl_video_off",
               child: Stack(
