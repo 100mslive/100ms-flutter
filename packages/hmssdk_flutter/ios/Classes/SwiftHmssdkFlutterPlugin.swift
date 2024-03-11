@@ -1292,6 +1292,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
         }
         
+        /**
+         `willTerminateNotification` is not fired in all cases. When app is in background & then app is force closed then this notification is not fired resulting in `leave` method not being invoked.
+         */
         NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification,
                                                        object: nil,
                                                        queue: .main) { [weak self] _ in
