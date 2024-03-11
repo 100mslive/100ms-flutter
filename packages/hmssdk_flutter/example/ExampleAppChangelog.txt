@@ -3,7 +3,10 @@ Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 - Skip preview screen based on flag in the layout API
 https://100ms.atlassian.net/browse/FLUT-217
 
+- Leave Room immediately if app is killed on iOS
+https://100ms.atlassian.net/browse/FLUT-181
+
 Room Kit: 1.0.16
 Core SDK: 1.9.13
-Android SDK: 2.9.5
+Android SDK: 2.9.51
 iOS SDK: 1.6.0
