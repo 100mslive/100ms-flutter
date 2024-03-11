@@ -1291,6 +1291,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 hlsStreamUrl = room.hlsStreamingState.variants.first?.url?.absoluteString
             }
         }
+        
+        NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification,
+                                                       object: nil,
+                                                       queue: .main) { [weak self] _ in
+            if self?.hmsSDK?.room != nil {
+                self?.hmsSDK?.leave()
+            }
+        }
 
         let data = [
             "event_name": "on_join_room",
@@ -1662,5 +1670,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         removeHMSLogger()
         HMSPeerListIteratorAction.clearIteratorMap()
         setIsRoomAudioUnmutedLocally(isRoomAudioUnmuted: true)
+        NotificationCenter.default.removeObserver(self)
     }
 }
