@@ -1291,6 +1291,17 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 hlsStreamUrl = room.hlsStreamingState.variants.first?.url?.absoluteString
             }
         }
+        
+        /**
+         `willTerminateNotification` is not fired in all cases. When app is in background & then app is force closed then this notification is not fired resulting in `leave` method not being invoked.
+         */
+        NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification,
+                                                       object: nil,
+                                                       queue: .main) { [weak self] _ in
+            if self?.hmsSDK?.room != nil {
+                self?.hmsSDK?.leave()
+            }
+        }
 
         let data = [
             "event_name": "on_join_room",
@@ -1662,5 +1673,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         removeHMSLogger()
         HMSPeerListIteratorAction.clearIteratorMap()
         setIsRoomAudioUnmutedLocally(isRoomAudioUnmuted: true)
+        NotificationCenter.default.removeObserver(self)
     }
 }
