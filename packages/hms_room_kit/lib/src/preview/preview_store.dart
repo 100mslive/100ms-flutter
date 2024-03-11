@@ -11,7 +11,7 @@ import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/hmssdk_interactor.dart';
 
 class PreviewStore extends ChangeNotifier
-    implements HMSPreviewListener, HMSLogListener, HMSUpdateListener {
+    implements HMSPreviewListener, HMSLogListener {
   late HMSSDKInteractor hmsSDKInteractor;
 
   PreviewStore({required this.hmsSDKInteractor});
@@ -33,12 +33,6 @@ class PreviewStore extends ChangeNotifier
 
   bool isHLSStreamingStarted = false;
 
-  bool isRoomJoinedAndHLSStarted = false;
-
-  bool isRoomJoined = false;
-
-  bool isMeetingJoined = false;
-
   bool isRTMPStreamingStarted = false;
 
   List<HMSPeer>? peers;
@@ -56,8 +50,6 @@ class PreviewStore extends ChangeNotifier
   HMSAudioDevice currentAudioDeviceMode = HMSAudioDevice.AUTOMATIC;
 
   int peerCount = 0;
-
-  HMSConfig? roomConfig;
 
   @override
   void onHMSError({required HMSException error}) {
@@ -106,39 +98,20 @@ class PreviewStore extends ChangeNotifier
     notifyListeners();
   }
 
-  Future<HMSException?> startPreview({required String userName}) async {
-    //We use this to get the auth token from room code
-
-    dynamic tokenData;
-    if (Constant.roomCode != null) {
-      tokenData = await hmsSDKInteractor.getAuthTokenByRoomCode(
-          userId: Constant.prebuiltOptions?.userId,
-          roomCode: Constant.roomCode!,
-          endPoint: Constant.tokenEndPoint);
-    } else {
-      tokenData = Constant.authToken;
-    }
-
-    if ((tokenData is String?) && tokenData != null) {
-      roomConfig = HMSConfig(
-          authToken: tokenData,
-          userName: userName,
-          captureNetworkQualityInPreview: true,
-          // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
-          //This is only for 100ms internal testing, endPoint can be safely removed from
-          //the HMSConfig for external usage
-          endPoint: Constant.initEndPoint);
-      await HMSRoomLayout.getRoomLayout(
-          hmsSDKInteractor: hmsSDKInteractor,
-          authToken: tokenData,
-          endPoint: Constant.layoutAPIEndPoint);
-      hmsSDKInteractor.startHMSLogger(
-          Constant.webRTCLogLevel, Constant.sdkLogLevel);
-      hmsSDKInteractor.addPreviewListener(this);
-      hmsSDKInteractor.preview(config: roomConfig!);
-      return null;
-    }
-    return tokenData;
+  void startPreview(
+      {required String userName, required String tokenData}) async {
+    HMSConfig joinRoomConfig = HMSConfig(
+        authToken: tokenData,
+        userName: userName,
+        captureNetworkQualityInPreview: true,
+        // endPoint is only required by 100ms Team. Client developers should not use `endPoint`
+        //This is only for 100ms internal testing, endPoint can be safely removed from
+        //the HMSConfig for external usage
+        endPoint: Constant.initEndPoint);
+    hmsSDKInteractor.startHMSLogger(
+        Constant.webRTCLogLevel, Constant.sdkLogLevel);
+    hmsSDKInteractor.addPreviewListener(this);
+    hmsSDKInteractor.preview(config: joinRoomConfig);
   }
 
   @override
@@ -175,7 +148,7 @@ class PreviewStore extends ChangeNotifier
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
     this.room = room;
-    log("onRoomUpdate-> room: ${room.toString()} update: ${update.name} streamingState: ${room.hmshlsStreamingState?.state.name}");
+    log("preview onRoomUpdate-> room: ${room.toString()} update: ${update.name} streamingState: ${room.hmshlsStreamingState?.state.name}");
     switch (update) {
       case HMSRoomUpdate.browserRecordingStateUpdated:
         isRecordingStarted =
@@ -198,10 +171,6 @@ class PreviewStore extends ChangeNotifier
       case HMSRoomUpdate.hlsStreamingStateUpdated:
         isHLSStreamingStarted =
             room.hmshlsStreamingState?.state == HMSStreamingState.started;
-        if (!isMeetingJoined && isRoomJoined && isHLSStreamingStarted) {
-          isRoomJoinedAndHLSStarted = true;
-          isMeetingJoined = true;
-        }
         break;
       case HMSRoomUpdate.roomPeerCountUpdated:
         peerCount = room.peerCount;
@@ -323,49 +292,4 @@ class PreviewStore extends ChangeNotifier
     }
     notifyListeners();
   }
-
-  void toggleIsRoomJoinedAndHLSStarted() {
-    isRoomJoinedAndHLSStarted = (!isRoomJoinedAndHLSStarted && isRoomJoined);
-    notifyListeners();
-  }
-
-  @override
-  void onChangeTrackStateRequest(
-      {required HMSTrackChangeRequest hmsTrackChangeRequest}) {}
-
-  @override
-  void onJoin({required HMSRoom room}) {}
-
-  @override
-  void onMessage({required HMSMessage message}) {}
-
-  @override
-  void onReconnected() {}
-
-  @override
-  void onReconnecting() {}
-
-  @override
-  void onRemovedFromRoom(
-      {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {}
-
-  @override
-  void onRoleChangeRequest({required HMSRoleChangeRequest roleChangeRequest}) {}
-
-  @override
-  void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {}
-
-  @override
-  void onTrackUpdate(
-      {required HMSTrack track,
-      required HMSTrackUpdate trackUpdate,
-      required HMSPeer peer}) {}
-
-  @override
-  void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {}
-
-  @override
-  void onPeerListUpdate(
-      {required List<HMSPeer> addedPeers,
-      required List<HMSPeer> removedPeers}) {}
 }
