@@ -26,6 +26,11 @@ class LeaveSessionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double availableWidth =
+        MediaQuery.of(context).orientation == Orientation.portrait
+            ? width
+            : width * 0.6;
     return GestureDetector(
       onTap: () => {
         if (onTap != null) {onTap!()}
@@ -57,7 +62,7 @@ class LeaveSessionTile extends StatelessWidget {
                     height: 4,
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.78,
+                    width: availableWidth * 0.78,
                     child: HMSSubheadingText(
                         text: subTitle ??
                             "Others will continue after you leave. You can join the session again.",

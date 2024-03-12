@@ -6,6 +6,7 @@ import 'dart:io';
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -16,7 +17,6 @@ import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.d
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/hls_viewer/overlay_chat_component.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/hls_app_utilities_bottom_sheet.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
 
@@ -41,8 +41,9 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
           children: [
             ///Chat Component only visible when the chat is opened
             if (HMSRoomLayout.chatData != null)
-              Selector<HLSPlayerStore, bool>(
-                  selector: (_, hlsPlayerStore) => hlsPlayerStore.isChatOpened,
+              Selector<MeetingStore, bool>(
+                  selector: (_, meetingStore) =>
+                      meetingStore.isOverlayChatOpened,
                   builder: (_, isChatOpened, __) {
                     if (isChatOpened) {
                       Provider.of<MeetingStore>(context, listen: true)
@@ -56,9 +57,9 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
             ///Bottom Navigation Bar
             ///We render the leave button, hand raise button, chat button and the menu button
             ///We only render the bottom navigation bar when the stream controls are visible
-            Selector<HLSPlayerStore, bool>(
-                selector: (_, hlsPlayerStore) =>
-                    hlsPlayerStore.areStreamControlsVisible,
+            Selector<MeetingNavigationVisibilityController, bool>(
+                selector: (_, meetingNavigationVisibilityController) =>
+                    meetingNavigationVisibilityController.showControls,
                 builder: (_, areStreamControlsVisible, __) {
                   return AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
@@ -127,9 +128,9 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
 
                               ///Chat Button
                               if (HMSRoomLayout.chatData != null)
-                                Selector<HLSPlayerStore, bool>(
-                                    selector: (_, hlsPlayerStore) =>
-                                        hlsPlayerStore.isChatOpened,
+                                Selector<MeetingStore, bool>(
+                                    selector: (_, meetingStore) =>
+                                        meetingStore.isOverlayChatOpened,
                                     builder: (_, isChatOpened, __) {
                                       return HMSEmbeddedButton(
                                         onTap: () => {
@@ -138,37 +139,27 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                               false)
                                             {
                                               context
-                                                  .read<HLSPlayerStore>()
-                                                  .toggleIsChatOpened()
+                                                  .read<MeetingStore>()
+                                                  .toggleChatOverlay()
                                             }
                                           else
                                             {
-                                              showModalBottomSheet(
-                                                isScrollControlled: true,
-                                                backgroundColor:
-                                                    HMSThemeColors.surfaceDim,
-                                                shape:
-                                                    const RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  16),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  16)),
-                                                ),
+                                              UtilityComponents
+                                                  .hmsFullWidthModalBottomSheet(
                                                 context: context,
                                                 builder: (ctx) => ChangeNotifierProvider
                                                     .value(
                                                         value: context.read<
                                                             MeetingStore>(),
-                                                        child: HMSRoomLayout
-                                                                .isParticipantsListEnabled
-                                                            ? const ChatParticipantsTabBar(
-                                                                tabIndex: 0,
-                                                              )
-                                                            : const ChatOnlyBottomSheet()),
+                                                        child: ChangeNotifierProvider.value(
+                                                          value: context.read<MeetingNavigationVisibilityController>(),
+                                                          child: HMSRoomLayout
+                                                                  .isParticipantsListEnabled
+                                                              ? const ChatParticipantsTabBar(
+                                                                  tabIndex: 0,
+                                                                )
+                                                              : const ChatOnlyBottomSheet(),
+                                                        )),
                                               )
                                             }
                                         },
@@ -229,22 +220,16 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                   Constant.prebuiltOptions?.userName == null)
                                 HMSEmbeddedButton(
                                   onTap: () async => {
-                                    showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      backgroundColor:
-                                          HMSThemeColors.surfaceDim,
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(16),
-                                            topRight: Radius.circular(16)),
-                                      ),
+                                    UtilityComponents.hmsModalBottomSheet(
                                       context: context,
                                       builder: (ctx) =>
                                           ChangeNotifierProvider.value(
                                               value:
                                                   context.read<MeetingStore>(),
                                               child:
-                                                  const HLSAppUtilitiesBottomSheet()),
+                                                  ChangeNotifierProvider.value(
+                                                    value: context.read<MeetingNavigationVisibilityController>(),
+                                                    child: const HLSAppUtilitiesBottomSheet())),
                                     )
                                   },
                                   enabledBorderColor: HMSThemeColors

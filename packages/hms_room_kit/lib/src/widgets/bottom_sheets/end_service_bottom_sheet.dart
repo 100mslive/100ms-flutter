@@ -55,7 +55,7 @@ class _EndServiceBottomSheetState extends State<EndServiceBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: 0.25,
+      heightFactor: MediaQuery.of(context).orientation == Orientation.portrait?0.25:0.55,
       child: Padding(
         padding: const EdgeInsets.only(top: 16.0, left: 20, right: 20),
         child: SingleChildScrollView(

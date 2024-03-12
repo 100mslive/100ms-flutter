@@ -28,7 +28,7 @@ class _ChatOnlyBottomSheetState extends State<ChatOnlyBottomSheet> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: FractionallySizedBox(
-      heightFactor: 0.87,
+      heightFactor: MediaQuery.of(context).orientation == Orientation.portrait?0.87:1,
       child: Padding(
         padding: const EdgeInsets.only(top: 12.0, left: 16, right: 16),
         child: Column(
@@ -36,10 +36,12 @@ class _ChatOnlyBottomSheetState extends State<ChatOnlyBottomSheet> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                HMSSubheadingText(
-                  text: HMSRoomLayout.chatData?.chatTitle ?? "Chat",
-                  textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                  fontWeight: FontWeight.w600,
+                Expanded(
+                  child: HMSSubheadingText(
+                    text: HMSRoomLayout.chatData?.chatTitle ?? "Chat",
+                    textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 if (HMSRoomLayout.chatData?.realTimeControls?.canDisableChat ??
                     false)

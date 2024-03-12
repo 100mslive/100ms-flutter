@@ -4,6 +4,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -103,14 +104,7 @@ class MessageContainer extends StatelessWidget {
                       GestureDetector(
                         onTap: () {
                           var meetingStore = context.read<MeetingStore>();
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: HMSThemeColors.surfaceDim,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(16),
-                                  topRight: Radius.circular(16)),
-                            ),
+                          UtilityComponents.hmsModalBottomSheet(
                             context: context,
                             builder: (ctx) => ChangeNotifierProvider.value(
                                 value: meetingStore,

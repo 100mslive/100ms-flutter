@@ -24,7 +24,42 @@ class MeetingGridComponent extends StatelessWidget {
 
   const MeetingGridComponent({super.key, required this.visibilityController});
 
-  @override
+  double getHeight(bool showControls, BuildContext context) {
+    Orientation orientation = MediaQuery.of(context).orientation;
+    EdgeInsets padding = MediaQuery.of(context).padding;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    switch (orientation) {
+      case Orientation.portrait:
+        if (!showControls) {
+          return screenHeight - padding.top - padding.bottom - 20;
+        } else {
+          return screenHeight -
+              padding.top -
+              padding.bottom -
+              (Platform.isAndroid
+                  ? 160
+                  : Platform.isIOS
+                      ? 230
+                      : 160);
+        }
+      case Orientation.landscape:
+        return screenHeight - padding.top - padding.bottom;
+    }
+  }
+
+  double getInsetTilePosition(bool showControls, BuildContext context) {
+    Orientation orientation = MediaQuery.of(context).orientation;
+
+    switch (orientation) {
+      case Orientation.portrait:
+        return showControls ? 250 : 130;
+      case Orientation.landscape:
+        return 110;
+    }
+  }
+
+  @override 
   Widget build(BuildContext context) {
     return Selector<
             MeetingStore,
@@ -77,19 +112,7 @@ class MeetingGridComponent extends StatelessWidget {
                           ///height of video grid by 140 else it covers the whole screen
                           ///
                           ///Here we also check for the platform and reduce the height accordingly
-                          height: showControls
-                              ? MediaQuery.of(context).size.height -
-                                  MediaQuery.of(context).padding.top -
-                                  MediaQuery.of(context).padding.bottom -
-                                  (Platform.isAndroid
-                                      ? 160
-                                      : Platform.isIOS
-                                          ? 230
-                                          : 160)
-                              : MediaQuery.of(context).size.height -
-                                  MediaQuery.of(context).padding.top -
-                                  MediaQuery.of(context).padding.bottom -
-                                  20,
+                          height: getHeight(showControls, context),
                           child: GestureDetector(
                             onTap: () => visibilityController
                                 ?.toggleControlsVisibility(),
@@ -108,7 +131,8 @@ class MeetingGridComponent extends StatelessWidget {
                                 ? OneToOneMode(
                                     ///This is done to keep the inset tile
                                     ///at correct position when controls are hidden
-                                    bottomMargin: showControls ? 250 : 130,
+                                    bottomMargin: getInsetTilePosition(
+                                        showControls, context),
                                     peerTracks: data.item1,
                                     screenShareCount: data.item4,
                                     context: context,

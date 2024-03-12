@@ -6,6 +6,7 @@ import 'dart:developer';
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -283,8 +284,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                               builder: (_, data, __) {
                                 return HMSEmbeddedButton(
                                     onTap: () {
-                                      showModalBottomSheet(
-                                          isScrollControlled: true,
+                                      UtilityComponents.hmsModalBottomSheet(
                                           backgroundColor: Colors.transparent,
                                           context: context,
                                           builder: (ctx) =>

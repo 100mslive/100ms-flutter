@@ -3,6 +3,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
+import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -77,7 +78,7 @@ class MeetingScreenController extends StatefulWidget {
 }
 
 class _MeetingScreenControllerState extends State<MeetingScreenController> {
-  HLSPlayerStore? _hlsPlayerStore;
+  MeetingNavigationVisibilityController? _meetingNavigationVisibilityController;
   bool showLoader = false;
   late MeetingStore _meetingStore;
 
@@ -116,7 +117,7 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
 
   ///This function sets the HLSPlayerStore if the role is hls-viewer
   void _setHLSPlayerStore() {
-    _hlsPlayerStore ??= HLSPlayerStore();
+    _meetingNavigationVisibilityController ??= MeetingNavigationVisibilityController();
   }
 
   ///This function sets the initial values of the meeting
@@ -138,7 +139,7 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
                               ?.hlsLiveStreaming !=
                           null)
                       ? ListenableProvider.value(
-                          value: _hlsPlayerStore, child: const HLSViewerPage())
+                          value: _meetingNavigationVisibilityController, child: const HLSViewerPage())
                       : MeetingPage(
                           isRoomMute: widget.isRoomMute,
                           currentAudioDeviceMode: widget.currentAudioDeviceMode,

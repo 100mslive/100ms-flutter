@@ -3,6 +3,8 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/common/utility_components.dart';
+import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/poll_and_quiz_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart' as badge;
@@ -42,6 +44,11 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double availableWidth =
+        MediaQuery.of(context).orientation == Orientation.portrait
+            ? width
+            : width * 0.6;
     return Padding(
       padding:
           const EdgeInsets.only(top: 16.0, left: 20, right: 20, bottom: 24),
@@ -82,31 +89,29 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
             ///Here we render the participants button and the change name button
             Wrap(
               runSpacing: 24,
-              spacing: MediaQuery.of(context).size.width * 0.005,
+              spacing: availableWidth * 0.005,
               children: [
                 if (HMSRoomLayout.isParticipantsListEnabled)
                   MoreOptionItem(
                       onTap: () async {
                         Navigator.pop(context);
                         var meetingStore = context.read<MeetingStore>();
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: HMSThemeColors.surfaceDim,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16)),
-                          ),
+                        var meetingNavigationVisibilityController = context
+                            .read<MeetingNavigationVisibilityController>();
+                        UtilityComponents.hmsFullWidthModalBottomSheet(
                           context: context,
                           builder: (ctx) => ChangeNotifierProvider.value(
                               value: meetingStore,
-                              child: (HMSRoomLayout.chatData == null ||
-                                      (HMSRoomLayout.chatData?.isOverlay ??
-                                          true))
-                                  ? const OverlayParticipantsBottomSheet()
-                                  : const ChatParticipantsTabBar(
-                                      tabIndex: 1,
-                                    )),
+                              child: ChangeNotifierProvider.value(
+                                value: meetingNavigationVisibilityController,
+                                child: (HMSRoomLayout.chatData == null ||
+                                        (HMSRoomLayout.chatData?.isOverlay ??
+                                            true))
+                                    ? const OverlayParticipantsBottomSheet()
+                                    : const ChatParticipantsTabBar(
+                                        tabIndex: 1,
+                                      ),
+                              )),
                         );
                       },
                       optionIcon: badge.Badge(
@@ -148,14 +153,7 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                       onTap: () async {
                         var meetingStore = context.read<MeetingStore>();
                         Navigator.pop(context);
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: HMSThemeColors.surfaceDim,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16)),
-                          ),
+                        UtilityComponents.hmsModalBottomSheet(
                           context: context,
                           builder: (ctx) => ChangeNotifierProvider.value(
                               value: meetingStore,
@@ -195,14 +193,7 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                       onTap: () {
                         var meetingStore = context.read<MeetingStore>();
                         Navigator.pop(context);
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: HMSThemeColors.surfaceDim,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16)),
-                          ),
+                        UtilityComponents.hmsModalBottomSheet(
                           context: context,
                           builder: (ctx) => ChangeNotifierProvider.value(
                               value: meetingStore,

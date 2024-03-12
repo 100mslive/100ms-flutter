@@ -6,6 +6,7 @@ import 'dart:math' as math;
 
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/leaderboard_widgets/leaderboard_voter_summary.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/leaderboard_widgets/quiz_leaderboard.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -110,6 +111,11 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
   @override
   Widget build(BuildContext context) {
     var hmsPollStore = context.watch<HMSPollStore>();
+    double width = MediaQuery.of(context).size.width;
+    double availableWidth =
+        MediaQuery.of(context).orientation == Orientation.portrait
+            ? width
+            : width * 0.6;
     return FractionallySizedBox(
       heightFactor: 0.87,
       child: Padding(
@@ -134,8 +140,8 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                         },
                       ),
                       Container(
-                        constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.4),
+                        constraints:
+                            BoxConstraints(maxWidth: availableWidth * 0.4),
                         child: HMSTitleText(
                           text: hmsPollStore.poll.title,
                           fontSize: 20,
@@ -318,7 +324,7 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               HMSButton(
-                                width: MediaQuery.of(context).size.width * 0.3,
+                                width: availableWidth * 0.3,
                                 onPressed: () {
                                   context
                                       .read<MeetingStore>()
@@ -345,19 +351,11 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               HMSButton(
-                                width: MediaQuery.of(context).size.width * 0.53,
+                                width: availableWidth * 0.53,
                                 onPressed: () {
                                   var meetingStore =
                                       context.read<MeetingStore>();
-                                  showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      backgroundColor:
-                                          HMSThemeColors.surfaceDim,
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(16),
-                                            topRight: Radius.circular(16)),
-                                      ),
+                                  UtilityComponents.hmsModalBottomSheet(
                                       context: context,
                                       builder: (ctx) =>
                                           ChangeNotifierProvider.value(

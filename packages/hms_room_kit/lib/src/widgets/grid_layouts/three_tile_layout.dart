@@ -29,26 +29,48 @@ class ThreeTileLayout extends StatelessWidget {
     ///The first row contains the tile with index [startIndex]
     ///The second row contains the tile with index [startIndex+1]
     ///The third row contains the tile with index [startIndex+2]
-    return Column(
-      children: [
-        Expanded(
-          child:
-              ListenablePeerWidget(index: startIndex, peerTracks: peerTracks),
-        ),
-        const SizedBox(
-          height: 2,
-        ),
-        Expanded(
-            child: ListenablePeerWidget(
-                index: startIndex + 1, peerTracks: peerTracks)),
-        const SizedBox(
-          height: 2,
-        ),
-        Expanded(
-          child: ListenablePeerWidget(
-              index: startIndex + 2, peerTracks: peerTracks),
-        ),
-      ],
-    );
+    return MediaQuery.of(context).orientation == Orientation.portrait
+        ? Column(
+            children: [
+              Expanded(
+                child: ListenablePeerWidget(
+                    index: startIndex, peerTracks: peerTracks),
+              ),
+              const SizedBox(
+                height: 2,
+              ),
+              Expanded(
+                  child: ListenablePeerWidget(
+                      index: startIndex + 1, peerTracks: peerTracks)),
+              const SizedBox(
+                height: 2,
+              ),
+              Expanded(
+                child: ListenablePeerWidget(
+                    index: startIndex + 2, peerTracks: peerTracks),
+              ),
+            ],
+          )
+        : Row(
+            children: [
+              Expanded(
+                child: ListenablePeerWidget(
+                    index: startIndex, peerTracks: peerTracks),
+              ),
+              const SizedBox(
+                width: 2,
+              ),
+              Expanded(
+                  child: ListenablePeerWidget(
+                      index: startIndex + 1, peerTracks: peerTracks)),
+              const SizedBox(
+                width: 2,
+              ),
+              Expanded(
+                child: ListenablePeerWidget(
+                    index: startIndex + 2, peerTracks: peerTracks),
+              ),
+            ],
+          );
   }
 }

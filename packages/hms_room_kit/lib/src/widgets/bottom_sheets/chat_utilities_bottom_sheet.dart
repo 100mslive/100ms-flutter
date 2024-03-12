@@ -53,7 +53,7 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: 0.5,
+      heightFactor: MediaQuery.of(context).orientation == Orientation.landscape?0.87:0.5,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
         child: SingleChildScrollView(

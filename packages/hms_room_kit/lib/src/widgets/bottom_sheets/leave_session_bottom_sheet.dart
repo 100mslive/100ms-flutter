@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/end_service_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
@@ -58,14 +59,7 @@ class _LeaveSessionBottomSheetState extends State<LeaveSessionBottomSheet> {
                   subTitleColor: HMSThemeColors.onSurfaceMediumEmphasis,
                   onTap: () => {
                     Navigator.pop(context),
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      backgroundColor: HMSThemeColors.surfaceDim,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(16),
-                            topRight: Radius.circular(16)),
-                      ),
+                    UtilityComponents.hmsModalBottomSheet(
                       context: context,
                       builder: (ctx) => ChangeNotifierProvider.value(
                         value: widget.meetingStore,
@@ -123,14 +117,7 @@ class _LeaveSessionBottomSheetState extends State<LeaveSessionBottomSheet> {
                   subTitleColor: HMSThemeColors.alertErrorBright,
                   onTap: () => {
                     Navigator.pop(context),
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      backgroundColor: HMSThemeColors.surfaceDim,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(16),
-                            topRight: Radius.circular(16)),
-                      ),
+                    UtilityComponents.hmsModalBottomSheet(
                       context: context,
                       builder: (ctx) => ChangeNotifierProvider.value(
                         value: widget.meetingStore,

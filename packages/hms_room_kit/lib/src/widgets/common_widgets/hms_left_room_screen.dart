@@ -2,6 +2,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 ///Project imports
@@ -36,6 +37,8 @@ class HMSLeftRoomScreen extends StatelessWidget {
                   InkWell(
                     onTap: () => {
                       ///Here we reset the layout colors and pop the leave screen
+                      ///and set the orientation to portrait
+                      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
                       HMSThemeColors.resetLayoutColors(),
                       Navigator.pop(context)
                     },
@@ -121,6 +124,8 @@ class HMSLeftRoomScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8.0),
                           ))),
                       onPressed: () => {
+                            ///Here we reset the screen orientation
+                            SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
                             HMSThemeColors.resetLayoutColors(),
                             Navigator.pushReplacement(
                                 context,

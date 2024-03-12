@@ -40,8 +40,15 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double availableWidth =
+        MediaQuery.of(context).orientation == Orientation.portrait
+            ? width
+            : width * 0.6;
     return FractionallySizedBox(
-      heightFactor: 0.35,
+      heightFactor: MediaQuery.of(context).orientation == Orientation.portrait
+          ? 0.35
+          : 0.87,
       child: Column(
         children: [
           Padding(
@@ -56,9 +63,8 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          constraints: BoxConstraints(
-                              maxWidth:
-                                  MediaQuery.of(context).size.width - 100),
+                          constraints:
+                              BoxConstraints(maxWidth: availableWidth - 100),
                           child: HMSTitleText(
                             text: widget.peerTrackNode.peer.name,
                             textColor: HMSThemeColors.onSurfaceHighEmphasis,
@@ -67,7 +73,7 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                         ),
                         const SizedBox(
                           height: 5,
-                        ),
+                        ), 
                         HMSSubtitleText(
                             text: widget.peerTrackNode.peer.role.name,
                             textColor: HMSThemeColors.onSurfaceMediumEmphasis)

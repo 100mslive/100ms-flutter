@@ -63,6 +63,12 @@ class _ChangeNameBottomSheetState extends State<ChangeNameBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double availableWidth =
+        MediaQuery.of(context).orientation == Orientation.portrait
+            ? width
+            : width * 0.6;
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.only(top: 16.0, left: 24, right: 24),
@@ -171,7 +177,7 @@ class _ChangeNameBottomSheetState extends State<ChangeNameBottomSheet> {
             Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
               child: HMSListenableButton(
-                  width: MediaQuery.of(context).size.width - 48,
+                  width: availableWidth - 48,
                   textController: nameController,
                   onPressed: () => {_changeName()},
                   childWidget: Container(

@@ -68,14 +68,6 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
               Column(
                   children: [
                     Expanded(
-                      // child: TextureViewGrid(
-                      //     peerTracks: widget.isLocalInsetPresent
-                      //         ? data.item1
-                      //             .where((element) =>
-                      //                 !(element.peer.isLocal) ||
-                      //                 element.track?.source == "SCREEN")
-                      //             .toList()
-                      //         : data.item1),
                       child: PageView.builder(
                           physics: const PageScrollPhysics(),
                           controller: controller,

@@ -19,6 +19,8 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
+///[MoreSettingsBottomSheet] is not used anywhere in prebuilt application
+///********************************NOT IN USE**********************************************************/
 class MoreSettingsBottomSheet extends StatefulWidget {
   final bool isAudioMixerDisabled;
 
@@ -159,6 +161,12 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                           if (Platform.isAndroid) {
                             showModalBottomSheet(
                               isScrollControlled: true,
+                              constraints: BoxConstraints(
+                                maxWidth: MediaQuery.of(context).orientation ==
+                                        Orientation.landscape
+                                    ? MediaQuery.of(context).size.width * 0.6
+                                    : MediaQuery.of(context).size.width,
+                              ),
                               backgroundColor: Colors.transparent,
                               context: context,
                               builder: (ctx) => ChangeNotifierProvider.value(

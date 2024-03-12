@@ -41,18 +41,22 @@ class _AudioSettingsBottomSheetState extends State<AudioSettingsBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-        maxChildSize:
-            (context.read<MeetingStore>().availableAudioOutputDevices.length +
+        maxChildSize: MediaQuery.of(context).orientation == Orientation.portrait
+            ? (context.read<MeetingStore>().availableAudioOutputDevices.length +
                     2.2) *
-                0.1,
-        minChildSize:
-            (context.read<MeetingStore>().availableAudioOutputDevices.length +
+                0.1
+            : 0.87,
+        minChildSize: MediaQuery.of(context).orientation == Orientation.portrait
+            ? (context.read<MeetingStore>().availableAudioOutputDevices.length +
                     2) *
-                0.1,
-        initialChildSize:
-            (context.read<MeetingStore>().availableAudioOutputDevices.length +
+                0.1
+            : 0.87,
+        initialChildSize: MediaQuery.of(context).orientation ==
+                Orientation.portrait
+            ? (context.read<MeetingStore>().availableAudioOutputDevices.length +
                     2) *
-                0.1,
+                0.1
+            : 0.87,
         builder: (context, ScrollController scrollController) {
           return Container(
             decoration: BoxDecoration(

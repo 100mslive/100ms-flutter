@@ -5,6 +5,7 @@ import 'dart:math';
 
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
 import 'package:hms_room_kit/src/widgets/toasts/toast_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -23,7 +24,6 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_waiting_ui.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 
@@ -40,19 +40,19 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
   @override
   void initState() {
     super.initState();
-    if (mounted) {
-      ///We start the timer to hide the controls
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<HLSPlayerStore>().startTimerToHideButtons();
-      });
-    }
+    if (mounted) {}
   }
 
   ///This function is used to set the stream status
   void _setStreamStatus(bool hasHlsStarted) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<HLSPlayerStore>().setStreamPlaying(hasHlsStarted);
-    });
+    ///We start the timer to hide the controls
+    if (hasHlsStarted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context
+            .read<MeetingNavigationVisibilityController>()
+            .startTimerToHideButtons();
+      });
+    }
   }
 
   @override
@@ -142,10 +142,13 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Selector<HLSPlayerStore, bool>(
-                                              selector: (_, hlsPlayerStore) =>
-                                                  hlsPlayerStore
-                                                      .areStreamControlsVisible,
+                                          Selector<
+                                                  MeetingNavigationVisibilityController,
+                                                  bool>(
+                                              selector: (_,
+                                                      meetingNavigationVisibilityController) =>
+                                                  meetingNavigationVisibilityController
+                                                      .showControls,
                                               builder: (_,
                                                   areStreamControlsVisible,
                                                   __) {
@@ -361,11 +364,13 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                   .map((toasts) {
                                             var meetingStore =
                                                 context.read<MeetingStore>();
-                                            return Selector<HLSPlayerStore,
+                                            return Selector<
+                                                    MeetingNavigationVisibilityController,
                                                     bool>(
-                                                selector: (_, hlsPlayerStore) =>
-                                                    hlsPlayerStore
-                                                        .areStreamControlsVisible,
+                                                selector: (_,
+                                                        meetingNavigationVisibilityController) =>
+                                                    meetingNavigationVisibilityController
+                                                        .showControls,
                                                 builder: (_,
                                                     areStreamControlsVisible,
                                                     __) {

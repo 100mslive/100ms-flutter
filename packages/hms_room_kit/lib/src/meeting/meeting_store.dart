@@ -817,6 +817,12 @@ class MeetingStore extends ChangeNotifier
   @override
   void onJoin({required HMSRoom room}) async {
     log("onJoin-> room: ${room.toString()}");
+
+    ///Since now prebuilt supports landscape only in webRTC hence we apply only
+    ///apply it if the user is webRTC
+    if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
+      setLandscapeLock(false);
+    }
     isMeetingStarted = true;
     hmsRoom = room;
     if (room.hmshlsStreamingState?.state == HMSStreamingState.started) {
@@ -917,19 +923,27 @@ class MeetingStore extends ChangeNotifier
   void setParticipantsList(List<HMSRole> roles) {
     String? onStageRoles = HMSRoomLayout.roleLayoutData?.screens?.conferencing
         ?.defaultConf?.elements?.onStageExp?.onStageRole;
+
+    ///Here we initialise the map only if it doesn't contain the role
     if (onStageRoles != null) {
-      participantsInMeetingMap[onStageRoles] = [];
+      if (!participantsInMeetingMap.containsKey(onStageRoles)) {
+        participantsInMeetingMap[onStageRoles] = [];
+      }
     }
     roles
         .where((role) => role.publishSettings?.allowed.isNotEmpty ?? false)
         .forEach((element) {
-      participantsInMeetingMap[element.name] = [];
+      if (!participantsInMeetingMap.containsKey(element.name)) {
+        participantsInMeetingMap[element.name] = [];
+      }
     });
 
     roles
         .where((role) => role.publishSettings?.allowed.isEmpty ?? false)
         .forEach((element) {
-      participantsInMeetingMap[element.name] = [];
+      if (!participantsInMeetingMap.containsKey(element.name)) {
+        participantsInMeetingMap[element.name] = [];
+      }
     });
   }
 
@@ -1356,7 +1370,6 @@ class MeetingStore extends ChangeNotifier
   }
 
   void resetForegroundTaskAndOrientation() {
-    setLandscapeLock(false);
     FlutterForegroundTask.stopService();
   }
 
@@ -1426,6 +1439,14 @@ class MeetingStore extends ChangeNotifier
 
   void addPeer(HMSPeer peer) {
     if (!peers.contains(peer)) peers.add(peer);
+
+    ///This check ensures that a key should be added to the map
+    ///if a peer is joined with a role which is not yet
+    ///in the map
+    if (!participantsInMeetingMap.containsKey(peer.role.name)) {
+      participantsInMeetingMap[peer.role.name] = [];
+    }
+
     if (participantsInMeetingMap[peer.role.name]
             ?.indexWhere((element) => element.peer.peerId == peer.peerId) ==
         -1) {
@@ -1503,6 +1524,7 @@ class MeetingStore extends ChangeNotifier
         participantsInMeetingMap[peer.role.name]
                 ?[participantsInMeetingMap[peer.role.name]!.length - 1]
             .updatePeer(peer);
+
         notifyListeners();
       }
     }
@@ -1510,10 +1532,15 @@ class MeetingStore extends ChangeNotifier
 
   void setLandscapeLock(bool value) {
     if (value) {
-      SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
-    } else {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    } else {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeRight,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown
+      ]);
     }
     isLandscapeLocked = value;
     notifyListeners();
@@ -1551,6 +1578,13 @@ class MeetingStore extends ChangeNotifier
           // getSpotlightPeer();
           setPreviousRole(localPeer?.role.name ?? "");
           resetLayout(peer.role.name);
+
+          ///This is done to only enable landscape mode for webRTC users
+          if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
+            setLandscapeLock(false);
+          } else {
+            setLandscapeLock(true);
+          }
           localPeer = peer;
         }
         if (HMSRoomLayout

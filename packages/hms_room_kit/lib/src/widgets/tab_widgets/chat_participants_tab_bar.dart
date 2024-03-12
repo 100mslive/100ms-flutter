@@ -42,9 +42,10 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: FractionallySizedBox(
-        heightFactor: 0.87,
+        heightFactor: MediaQuery.of(context).orientation == Orientation.portrait?0.87:1,
         child: Padding(
           padding: const EdgeInsets.only(top: 12.0, left: 16, right: 16),
           child: SingleChildScrollView(
@@ -57,7 +58,7 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width *
+                          width: width *
                               ((HMSRoomLayout.chatData?.realTimeControls
                                           ?.canDisableChat ??
                                       false)
