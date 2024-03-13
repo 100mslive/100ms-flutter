@@ -51,7 +51,6 @@ import live.hms.video.sessionstore.HmsSessionStore
 import live.hms.video.signal.init.*
 import live.hms.video.utils.HMSLogger
 import live.hms.video.utils.HmsUtilities
-import android.content.Context.RECEIVER_EXPORTED
 
 /** HmssdkFlutterPlugin */
 class HmssdkFlutterPlugin :
@@ -1579,7 +1578,7 @@ class HmssdkFlutterPlugin :
     private fun startScreenShare(result: Result) {
         androidScreenshareResult = result
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"), RECEIVER_EXPORTED)
+            activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"), Context.RECEIVER_EXPORTED)
         }else {
             activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"))
         }
@@ -1648,7 +1647,7 @@ class HmssdkFlutterPlugin :
         androidAudioShareResult = result
         mode = call.argument<String>("audio_mixing_mode")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"), RECEIVER_EXPORTED)
+            activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"), Context.RECEIVER_EXPORTED)
         }else {
             activity.applicationContext?.registerReceiver(activityBroadcastReceiver, IntentFilter("ACTIVITY_RECEIVER"),)
         }
