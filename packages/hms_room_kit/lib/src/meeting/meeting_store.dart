@@ -917,19 +917,27 @@ class MeetingStore extends ChangeNotifier
   void setParticipantsList(List<HMSRole> roles) {
     String? onStageRoles = HMSRoomLayout.roleLayoutData?.screens?.conferencing
         ?.defaultConf?.elements?.onStageExp?.onStageRole;
+
+    ///Here we initialise the map only if it doesn't contain the role
     if (onStageRoles != null) {
-      participantsInMeetingMap[onStageRoles] = [];
+      if (!participantsInMeetingMap.containsKey(onStageRoles)) {
+        participantsInMeetingMap[onStageRoles] = [];
+      }
     }
     roles
         .where((role) => role.publishSettings?.allowed.isNotEmpty ?? false)
         .forEach((element) {
-      participantsInMeetingMap[element.name] = [];
+      if (!participantsInMeetingMap.containsKey(element.name)) {
+        participantsInMeetingMap[element.name] = [];
+      }
     });
 
     roles
         .where((role) => role.publishSettings?.allowed.isEmpty ?? false)
         .forEach((element) {
-      participantsInMeetingMap[element.name] = [];
+      if (!participantsInMeetingMap.containsKey(element.name)) {
+        participantsInMeetingMap[element.name] = [];
+      }
     });
   }
 
@@ -1426,6 +1434,14 @@ class MeetingStore extends ChangeNotifier
 
   void addPeer(HMSPeer peer) {
     if (!peers.contains(peer)) peers.add(peer);
+
+    ///This check ensures that a key should be added to the map
+    ///if a peer is joined with a role which is not yet
+    ///in the map
+    if (!participantsInMeetingMap.containsKey(peer.role.name)) {
+      participantsInMeetingMap[peer.role.name] = [];
+    }
+
     if (participantsInMeetingMap[peer.role.name]
             ?.indexWhere((element) => element.peer.peerId == peer.peerId) ==
         -1) {
