@@ -51,8 +51,8 @@ class _MeetingPageState extends State<MeetingPage> {
     checkAudioState();
     _enableForegroundService();
     _visibilityController = MeetingNavigationVisibilityController();
-    if(Constant.prebuiltOptions?.isVideoCall??false){
-    _visibilityController!.startTimerToHideButtons();
+    if (Constant.prebuiltOptions?.isVideoCall ?? false) {
+      _visibilityController!.startTimerToHideButtons();
     }
   }
 
@@ -78,11 +78,17 @@ class _MeetingPageState extends State<MeetingPage> {
     return false;
   }
 
+  void popBack() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.pop(context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async {
-          context.read<MeetingStore>().endRoom(false,"Call Ended");
+          context.read<MeetingStore>().endRoom(false, "Call Ended");
           Navigator.pop(context);
           return true;
         },
@@ -94,6 +100,9 @@ class _MeetingPageState extends State<MeetingPage> {
                   meetingStore.localPeer?.role.permissions.hlsStreaming ??
                       false),
               builder: (_, failureErrors, __) {
+                if (failureErrors.item2) {
+                  popBack();
+                }
                 return Selector<MeetingStore, bool>(
                     selector: (_, meetingStore) => meetingStore.isPipActive,
                     builder: (_, isPipActive, __) {
