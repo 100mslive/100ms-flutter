@@ -188,7 +188,8 @@ class _PollVoteBottomSheetState extends State<PollVoteBottomSheet> {
                 ),
               ),
               HMSTitleText(
-                text: "${_getUserName(hmsPollStore)} started a ${widget.isPoll ? "poll" : "quiz"}",
+                text:
+                    "${_getUserName(hmsPollStore)} started a ${widget.isPoll ? "poll" : "quiz"}",
                 textColor: HMSThemeColors.onSurfaceHighEmphasis,
                 letterSpacing: 0.15,
               ),

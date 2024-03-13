@@ -27,7 +27,8 @@ class HMSPollAnswer {
   factory HMSPollAnswer.fromMap(Map map) {
     return HMSPollAnswer(
       answerText: map['answer'],
-      duration: map['duration'] != null?Duration(seconds: map['duration']):null,
+      duration:
+          map['duration'] != null ? Duration(seconds: map['duration']) : null,
       questionId: map['question_id'],
       questionType: HMSPollQuestionTypeValues.getHMSPollQuestionTypeFromString(
           map['question_type']),
