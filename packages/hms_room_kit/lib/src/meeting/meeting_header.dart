@@ -73,7 +73,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                             children: [
                               HMSEmbeddedButton(
                                   onTap: () async {
-                                    context.read<MeetingStore>().leave();
+                                    context.read<MeetingStore>().endRoom(false, "Call Ended");
                                     Navigator.pop(context);
                                   },
                                   isActive: true,

@@ -82,7 +82,7 @@ class _MeetingPageState extends State<MeetingPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async {
-          context.read<MeetingStore>().leave();
+          context.read<MeetingStore>().endRoom(false,"Call Ended");
           Navigator.pop(context);
           return true;
         },
