@@ -5,7 +5,9 @@ import 'dart:async';
 
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -110,10 +112,40 @@ class _InsetTileState extends State<InsetTile> {
                           avatarTitleTextLineHeight:
                               widget.avatarTitleTextLineHeight),
                     ), //top right
+                    if (isButtonVisible) LocalPeerMoreOption(), //bottom right
                     if (isButtonVisible)
-                      LocalPeerMoreOption(
-                        callbackFunction: widget.callbackFunction,
-                      ), //bottom right
+                    Positioned(
+                      top: 5,
+                      right: 5,
+                      child: GestureDetector(
+                        onTap: () {
+                          if (widget.callbackFunction != null) {
+                            widget.callbackFunction!();
+                          }
+                        },
+                        child: Semantics(
+                          label:
+                              "fl_${context.read<PeerTrackNode>().peer.name}minimize",
+                          child: Container(
+                            height: 30,
+                            width: 30,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(28),
+                              color: HMSThemeColors.backgroundDim
+                                  .withOpacity(0.64),
+                            ),
+                            child: SvgPicture.asset(
+                              "packages/hms_room_kit/lib/src/assets/icons/minimize.svg",
+                              colorFilter: ColorFilter.mode(
+                                  HMSThemeColors.onSurfaceHighEmphasis,
+                                  BlendMode.srcIn),
+                              fit: BoxFit.scaleDown,
+                              semanticsLabel: "fl_minimize",
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

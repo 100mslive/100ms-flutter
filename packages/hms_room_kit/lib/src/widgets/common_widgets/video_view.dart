@@ -62,24 +62,35 @@ class _VideoViewState extends State<VideoView> {
         builder: (_, data, __) {
           ///If the peer track node is null or the peer is muted or the peer is offscreen
           ///We render the avatar
-          if ((data.item1 == null) || data.item2 || data.item3 || !(Constant.prebuiltOptions?.isVideoCall??false)) {
+          if ((data.item1 == null) ||
+              data.item2 ||
+              data.item3 ||
+              !(Constant.prebuiltOptions?.isVideoCall ?? false)) {
             return Semantics(
               label: "fl_video_off",
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  if(Constant.prebuiltOptions?.userImgUrl != null)
-                  Image.network(
-                    Constant.prebuiltOptions!.userImgUrl!,
-                    fit: BoxFit.fill,
-                  ),
+                  Constant.prebuiltOptions?.userImgUrl != null
+                      ? Image.network(
+                          Constant.prebuiltOptions!.userImgUrl!,
+                          fit: BoxFit.fill,
+                        )
+                      : CircleAvatar(
+                          backgroundColor: Colors.blue.shade100,
+                          child: HMSTitleText(text: "D", textColor: HMSThemeColors.baseBlack),
+                        ),
                   SizedBox(
                     height: widget.viewSize?.height,
                     width: widget.viewSize?.width,
                     child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
+                      filter: (Constant.prebuiltOptions?.userImgUrl != null)
+                          ? ImageFilter.blur(sigmaX: 80, sigmaY: 80)
+                          : ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                       child: Container(
-                        color: Colors.black.withOpacity(0),
+                        color: (Constant.prebuiltOptions?.userImgUrl != null)
+                            ? Colors.black.withOpacity(0)
+                            : Colors.blue.shade100.withOpacity(0.0),
                       ),
                     ),
                   ),

@@ -42,28 +42,27 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                           Row(
                             children: [
                               if (Constant.prebuiltOptions?.userImgUrl != null)
-                              Padding(
-                                padding: const EdgeInsets.only(right: 12.0),
-                                child: ClipOval(
-                                    child: Image.network(
-                                      Constant.prebuiltOptions!.userImgUrl!
-                                  ,
-                                  height: 40,
-                                  width: 40,
-                                )),
-                              ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  child: ClipOval(
+                                      child: Image.network(
+                                    Constant.prebuiltOptions!.userImgUrl!,
+                                    height: 40,
+                                    width: 40,
+                                    fit: BoxFit.fill,
+                                  )),
+                                ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   HMSTitleText(
-                                    text: Constant.prebuiltOptions?.userName??"",
+                                    text: Constant.prebuiltOptions?.userName ??
+                                        "",
                                     textColor:
                                         HMSThemeColors.onSurfaceHighEmphasis,
-                                    fontSize: 24,
-                                    lineHeight: 32,
-                                  ),
-                                  const SizedBox(
-                                    height: 4,
+                                    fontSize: 20,
+                                    lineHeight: 24,
+                                    letterSpacing: 0.15,
                                   ),
                                   HMSMeetingTimer()
                                 ],
@@ -112,18 +111,7 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                               //               },
                               //               isActive: true,
                               //               onColor: HMSThemeColors.backgroundDim,
-                              //               child: SvgPicture.asset(
-                              //                 "packages/hms_room_kit/lib/src/assets/icons/camera.svg",
-                              //                 colorFilter: ColorFilter.mode(
-                              //                     data.item1
-                              //                         ? HMSThemeColors
-                              //                             .onSurfaceHighEmphasis
-                              //                         : HMSThemeColors
-                              //                             .onSurfaceLowEmphasis,
-                              //                     BlendMode.srcIn),
-                              //                 fit: BoxFit.scaleDown,
-                              //                 semanticsLabel: "fl_switch_camera",
-                              //               ),
+                              //               child:
                               //             )
                               //           : const SizedBox();
                               //     }),
@@ -137,21 +125,22 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               if (Constant.prebuiltOptions?.userImgUrl != null)
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 16.0),
-                                child: ClipOval(
-                                    child: Image.network(
-                                      Constant.prebuiltOptions!.userImgUrl!
-                                  ,
-                                  height: 40,
-                                  width: 40,
-                                )),
-                              ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 16.0),
+                                  child: ClipOval(
+                                      child: Image.network(
+                                    Constant.prebuiltOptions!.userImgUrl!,
+                                    height: 40,
+                                    width: 40,
+                                    fit: BoxFit.fill,
+                                  )),
+                                ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   HMSTitleText(
-                                    text: Constant.prebuiltOptions?.userName??"",
+                                    text: Constant.prebuiltOptions?.userName ??
+                                        "",
                                     textColor:
                                         HMSThemeColors.onSurfaceHighEmphasis,
                                     fontSize: 24,

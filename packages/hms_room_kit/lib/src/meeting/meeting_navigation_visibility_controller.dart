@@ -5,6 +5,7 @@ import 'dart:async';
 
 ///Package imports
 import 'package:flutter/widgets.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 
 class MeetingNavigationVisibilityController extends ChangeNotifier {
   bool showControls = true;
@@ -16,14 +17,16 @@ class MeetingNavigationVisibilityController extends ChangeNotifier {
 
   ///This method toggles the visibility of the buttons
   void toggleControlsVisibility() {
-    showControls = !showControls;
+    if (Constant.prebuiltOptions?.isVideoCall ?? false) {
+      showControls = !showControls;
 
-    ///If the controls are now visible and
-    ///If the timer is not active, we start the timer
-    if (showControls && !_isTimerActive) {
-      startTimerToHideButtons();
+      ///If the controls are now visible and
+      ///If the timer is not active, we start the timer
+      if (showControls && !_isTimerActive) {
+        startTimerToHideButtons();
+      }
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   ///This method starts a timer for 5 seconds and then hides the buttons

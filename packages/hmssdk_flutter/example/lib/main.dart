@@ -324,9 +324,11 @@ class _HomePageState extends State<HomePage> {
             builder: (_) => HMSPrebuilt(
                 roomCode: Constant.roomCode,
                 options: HMSPrebuiltOptions(
-                    userName: AppDebugConfig.nameChangeOnPreview
-                        ? null
-                        : "Flutter User",
+                    userImgUrl: "https://www.desipainters.com/dp/05/17709/17709.jpg",
+                    userName: "Alex",
+                    // AppDebugConfig.nameChangeOnPreview
+                    //     ? null
+                    //     : "Flutter User",
                     endPoints: endPoints,
                     userId:
                         uuidString, // pass your custom unique user identifier here
