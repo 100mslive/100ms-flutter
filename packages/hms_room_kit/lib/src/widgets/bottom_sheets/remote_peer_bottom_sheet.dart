@@ -73,7 +73,7 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                         ),
                         const SizedBox(
                           height: 5,
-                        ), 
+                        ),
                         HMSSubtitleText(
                             text: widget.peerTrackNode.peer.role.name,
                             textColor: HMSThemeColors.onSurfaceMediumEmphasis)

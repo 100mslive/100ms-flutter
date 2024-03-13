@@ -59,7 +59,7 @@ class MeetingGridComponent extends StatelessWidget {
     }
   }
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return Selector<
             MeetingStore,

@@ -117,7 +117,8 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
 
   ///This function sets the HLSPlayerStore if the role is hls-viewer
   void _setHLSPlayerStore() {
-    _meetingNavigationVisibilityController ??= MeetingNavigationVisibilityController();
+    _meetingNavigationVisibilityController ??=
+        MeetingNavigationVisibilityController();
   }
 
   ///This function sets the initial values of the meeting
@@ -139,7 +140,8 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
                               ?.hlsLiveStreaming !=
                           null)
                       ? ListenableProvider.value(
-                          value: _meetingNavigationVisibilityController, child: const HLSViewerPage())
+                          value: _meetingNavigationVisibilityController,
+                          child: const HLSViewerPage())
                       : MeetingPage(
                           isRoomMute: widget.isRoomMute,
                           currentAudioDeviceMode: widget.currentAudioDeviceMode,

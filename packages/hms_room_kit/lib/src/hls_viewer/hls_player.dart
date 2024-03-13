@@ -26,8 +26,9 @@ class HLSPlayer extends StatelessWidget {
             child: AspectRatio(
               aspectRatio: ratio,
               child: InkWell(
-                onTap: () =>
-                    context.read<MeetingNavigationVisibilityController>().toggleControlsVisibility(),
+                onTap: () => context
+                    .read<MeetingNavigationVisibilityController>()
+                    .toggleControlsVisibility(),
                 splashFactory: NoSplash.splashFactory,
                 child: IgnorePointer(
                   child: HMSHLSPlayer(

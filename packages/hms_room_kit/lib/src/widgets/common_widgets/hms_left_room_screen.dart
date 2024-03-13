@@ -38,7 +38,8 @@ class HMSLeftRoomScreen extends StatelessWidget {
                     onTap: () => {
                       ///Here we reset the layout colors and pop the leave screen
                       ///and set the orientation to portrait
-                      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
+                      SystemChrome.setPreferredOrientations(
+                          [DeviceOrientation.portraitUp]),
                       HMSThemeColors.resetLayoutColors(),
                       Navigator.pop(context)
                     },
@@ -125,7 +126,8 @@ class HMSLeftRoomScreen extends StatelessWidget {
                           ))),
                       onPressed: () => {
                             ///Here we reset the screen orientation
-                            SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
+                            SystemChrome.setPreferredOrientations(
+                                [DeviceOrientation.portraitUp]),
                             HMSThemeColors.resetLayoutColors(),
                             Navigator.pushReplacement(
                                 context,

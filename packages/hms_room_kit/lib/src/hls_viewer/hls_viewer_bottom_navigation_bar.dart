@@ -147,19 +147,24 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                               UtilityComponents
                                                   .hmsFullWidthModalBottomSheet(
                                                 context: context,
-                                                builder: (ctx) => ChangeNotifierProvider
-                                                    .value(
-                                                        value: context.read<
-                                                            MeetingStore>(),
-                                                        child: ChangeNotifierProvider.value(
-                                                          value: context.read<MeetingNavigationVisibilityController>(),
-                                                          child: HMSRoomLayout
-                                                                  .isParticipantsListEnabled
-                                                              ? const ChatParticipantsTabBar(
-                                                                  tabIndex: 0,
-                                                                )
-                                                              : const ChatOnlyBottomSheet(),
-                                                        )),
+                                                builder: (ctx) =>
+                                                    ChangeNotifierProvider
+                                                        .value(
+                                                            value: context.read<
+                                                                MeetingStore>(),
+                                                            child:
+                                                                ChangeNotifierProvider
+                                                                    .value(
+                                                              value: context.read<
+                                                                  MeetingNavigationVisibilityController>(),
+                                                              child: HMSRoomLayout
+                                                                      .isParticipantsListEnabled
+                                                                  ? const ChatParticipantsTabBar(
+                                                                      tabIndex:
+                                                                          0,
+                                                                    )
+                                                                  : const ChatOnlyBottomSheet(),
+                                                            )),
                                               )
                                             }
                                         },
@@ -222,14 +227,13 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                   onTap: () async => {
                                     UtilityComponents.hmsModalBottomSheet(
                                       context: context,
-                                      builder: (ctx) =>
-                                          ChangeNotifierProvider.value(
-                                              value:
-                                                  context.read<MeetingStore>(),
+                                      builder: (ctx) => ChangeNotifierProvider.value(
+                                          value: context.read<MeetingStore>(),
+                                          child: ChangeNotifierProvider.value(
+                                              value: context.read<
+                                                  MeetingNavigationVisibilityController>(),
                                               child:
-                                                  ChangeNotifierProvider.value(
-                                                    value: context.read<MeetingNavigationVisibilityController>(),
-                                                    child: const HLSAppUtilitiesBottomSheet())),
+                                                  const HLSAppUtilitiesBottomSheet())),
                                     )
                                   },
                                   enabledBorderColor: HMSThemeColors

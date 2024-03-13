@@ -33,7 +33,6 @@ class MeetingBottomNavigationBar extends StatefulWidget {
 
 class _MeetingBottomNavigationBarState
     extends State<MeetingBottomNavigationBar> {
-
   MeetingStore? meetingStore;
   MeetingNavigationVisibilityController? meetingNavigationVisibilityController;
   @override
@@ -199,21 +198,25 @@ class _MeetingBottomNavigationBarState
                                           }
                                         else
                                           {
-                                            meetingStore = context
-                                                          .read<MeetingStore>(),
-                                            meetingNavigationVisibilityController = context.read<MeetingNavigationVisibilityController>(),
+                                            meetingStore =
+                                                context.read<MeetingStore>(),
+                                            meetingNavigationVisibilityController =
+                                                context.read<
+                                                    MeetingNavigationVisibilityController>(),
                                             context
                                                 .read<MeetingStore>()
                                                 .setNewMessageFalse(),
-                                             
                                             UtilityComponents
                                                 .hmsFullWidthModalBottomSheet(
                                               context: context,
                                               builder: (ctx) =>
                                                   ChangeNotifierProvider.value(
                                                       value: meetingStore,
-                                                      child: ChangeNotifierProvider.value(
-                                                        value: meetingNavigationVisibilityController,
+                                                      child:
+                                                          ChangeNotifierProvider
+                                                              .value(
+                                                        value:
+                                                            meetingNavigationVisibilityController,
                                                         child: HMSRoomLayout
                                                                 .isParticipantsListEnabled
                                                             ? const ChatParticipantsTabBar(
@@ -261,13 +264,13 @@ class _MeetingBottomNavigationBarState
                               onTap: () async => {
                                 UtilityComponents.hmsModalBottomSheet(
                                   context: context,
-                                  builder: (ctx) =>
-                                      ChangeNotifierProvider.value(
-                                          value: context.read<MeetingStore>(),
+                                  builder: (ctx) => ChangeNotifierProvider.value(
+                                      value: context.read<MeetingStore>(),
+                                      child: ChangeNotifierProvider.value(
+                                          value: context.read<
+                                              MeetingNavigationVisibilityController>(),
                                           child:
-                                              ChangeNotifierProvider.value(
-                                                value: context.read<MeetingNavigationVisibilityController>(),
-                                                child: const AppUtilitiesBottomSheet())),
+                                              const AppUtilitiesBottomSheet())),
                                 )
                               },
                               onColor: HMSThemeColors.backgroundDim,

@@ -28,7 +28,8 @@ class _ChatOnlyBottomSheetState extends State<ChatOnlyBottomSheet> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: FractionallySizedBox(
-      heightFactor: MediaQuery.of(context).orientation == Orientation.portrait?0.87:1,
+      heightFactor:
+          MediaQuery.of(context).orientation == Orientation.portrait ? 0.87 : 1,
       child: Padding(
         padding: const EdgeInsets.only(top: 12.0, left: 16, right: 16),
         child: Column(
