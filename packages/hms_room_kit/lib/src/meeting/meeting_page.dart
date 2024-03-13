@@ -51,7 +51,9 @@ class _MeetingPageState extends State<MeetingPage> {
     checkAudioState();
     _enableForegroundService();
     _visibilityController = MeetingNavigationVisibilityController();
+    if(Constant.prebuiltOptions?.isVideoCall??false){
     _visibilityController!.startTimerToHideButtons();
+    }
   }
 
   void checkAudioState() async {
