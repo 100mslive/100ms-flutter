@@ -115,7 +115,7 @@ class HMSTrackSettingsExtension {
                                                       simulcastSettings: nil,
                                                       trackDescription: "track_description",
                                                       initialMuteState: getinitialMuteState(from: initialMuteState), cameraFocusMode: .focusModeAuto,
-                                                      cameraOrientationLock: .portraitUpsideDown,
+                                                      cameraOrientationLock: .allButUpsideDown,
                                                       videoPlugins: nil)
 
             }
