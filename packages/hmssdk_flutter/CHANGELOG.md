@@ -5,12 +5,30 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+# 1.9.13 - 2024-03-15
+
+| Package                                | Version                                                                                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| hms_room_kit                | 1.0.16  |
+| hmssdk_flutter              | 1.9.13  |
+
+### ✨ Added
+
+- Leave Room Immediately if App is Killed(iOS only)
+
+  - HMSSDK automatically triggers `leave` method call when the iOS application is terminated.
+
+Updated to android SDK 2.9.51
+
+**Full Changelog**: [1.9.12...1.9.13](https://github.com/100mslive/100ms-flutter/compare/1.9.12...1.9.13)
+
+
 # 1.9.12 - 2024-03-04
 
 | Package                                | Version                                                                                                                                  |
 | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | hms_room_kit                | 1.0.15  |
-| hmssdk_flutter              | 1.9.12   |
+| hmssdk_flutter              | 1.9.12  |
 
 ### ✨ Added
 
