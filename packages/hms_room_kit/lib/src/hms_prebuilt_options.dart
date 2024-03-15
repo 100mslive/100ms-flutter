@@ -1,3 +1,5 @@
+library;
+
 ///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 

@@ -6,5 +6,6 @@ enum HMSToastsType {
   roleChangeDeclineToast,
   chatPauseResumeToast,
   errorToast,
-  pollStartedToast
+  pollStartedToast,
+  streamingErrorToast
 }

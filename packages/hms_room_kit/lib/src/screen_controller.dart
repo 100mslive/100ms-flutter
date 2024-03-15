@@ -1,15 +1,16 @@
 ///Package imports
+library;
+
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
+import 'package:hms_room_kit/src/preview_meeting_flow.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:provider/provider.dart';
 
 ///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/hmssdk_interactor.dart';
-import 'package:hms_room_kit/src/preview/preview_page.dart';
 import 'package:hms_room_kit/src/preview/preview_permissions.dart';
-import 'package:hms_room_kit/src/preview/preview_store.dart';
 
 ///[ScreenController] is the controller for the preview screen
 ///It takes following parameters:
@@ -45,8 +46,9 @@ class ScreenController extends StatefulWidget {
 class _ScreenControllerState extends State<ScreenController> {
   bool isPermissionGranted = false;
   late HMSSDKInteractor _hmsSDKInteractor;
-  late PreviewStore _previewStore;
   bool isLoading = true;
+  HMSConfig? roomConfig;
+  dynamic tokenData;
 
   @override
   void initState() {
@@ -96,6 +98,32 @@ class _ScreenControllerState extends State<ScreenController> {
     }
   }
 
+  ///[_getAuthTokenAndSetLayout] gets the auth token and set the room layout
+  ///using the auth token
+  ///If [getAuthTokenByRoomCode] fails it returns HMSException object
+  ///else null
+  Future<HMSException?> _getAuthTokenAndSetLayout(
+      HMSSDKInteractor hmssdkInteractor, String userName) async {
+    if (Constant.roomCode != null) {
+      tokenData = await hmssdkInteractor.getAuthTokenByRoomCode(
+          userId: Constant.prebuiltOptions?.userId,
+          roomCode: Constant.roomCode!,
+          endPoint: Constant.tokenEndPoint);
+    } else {
+      tokenData = Constant.authToken;
+    }
+
+    if ((tokenData is String?) && tokenData != null) {
+      await HMSRoomLayout.getRoomLayout(
+          hmsSDKInteractor: hmssdkInteractor,
+          authToken: tokenData,
+          endPoint: Constant.layoutAPIEndPoint);
+      return null;
+    } else {
+      return tokenData;
+    }
+  }
+
   ///This function initializes the preview
   ///- Assign the _hmssdkInteractor an instance of HMSSDKInteractor
   ///- Build the HMSSDK
@@ -110,6 +138,7 @@ class _ScreenControllerState extends State<ScreenController> {
         isLoading = true;
       });
     }
+
     _hmsSDKInteractor = HMSSDKInteractor(
         iOSScreenshareConfig: widget.options?.iOSScreenshareConfig,
         joinWithMutedAudio: true,
@@ -118,11 +147,11 @@ class _ScreenControllerState extends State<ScreenController> {
         isAudioMixerDisabled: AppDebugConfig.isAudioMixerDisabled,
         isPrebuilt: true);
     await _hmsSDKInteractor.build();
-    _previewStore = PreviewStore(hmsSDKInteractor: _hmsSDKInteractor);
-    HMSException? ans = await _previewStore.startPreview(
-        userName: widget.options?.userName ?? "");
 
-    ///If preview fails then we show the error dialog
+    var ans = await _getAuthTokenAndSetLayout(
+        _hmsSDKInteractor, widget.options?.userName ?? "");
+
+    ///If fetching auth token fails then we show the error dialog
     ///with the error message and description
     if (ans != null && mounted) {
       showGeneralDialog(
@@ -132,13 +161,12 @@ class _ScreenControllerState extends State<ScreenController> {
                 () => Navigator.of(context).popUntil((route) => route.isFirst));
           });
     } else {
-      _hmsSDKInteractor.toggleAlwaysScreenOn();
+      Constant.debugMode = AppDebugConfig.isDebugMode;
       if (mounted) {
         setState(() {
           isLoading = false;
         });
       }
-      Constant.debugMode = AppDebugConfig.isDebugMode;
     }
   }
 
@@ -156,7 +184,7 @@ class _ScreenControllerState extends State<ScreenController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoading
+      body: (isLoading)
           ? Center(
               child: CircularProgressIndicator(
                 strokeWidth: 2,
@@ -164,12 +192,11 @@ class _ScreenControllerState extends State<ScreenController> {
               ),
             )
           : isPermissionGranted
-              ? ListenableProvider.value(
-                  value: _previewStore,
-                  child: PreviewPage(
-                    name: widget.options?.userName?.trim() ?? "",
-                    options: widget.options,
-                  ))
+              ? PreviewMeetingFlow(
+                  prebuiltOptions: widget.options,
+                  hmsSDKInteractor: _hmsSDKInteractor,
+                  tokenData: tokenData,
+                )
               : PreviewPermissions(
                   options: widget.options,
                   callback: _isPermissionGrantedCallback),

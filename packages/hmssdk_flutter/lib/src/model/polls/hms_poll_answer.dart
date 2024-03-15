@@ -4,7 +4,7 @@ import 'package:hmssdk_flutter/src/enum/hms_poll_enum.dart';
 ///[HMSPollAnswer] class represents answer to poll questions
 class HMSPollAnswer {
   final String? answerText;
-  final Duration duration;
+  final Duration? duration;
   final int questionId;
   final HMSPollQuestionType questionType;
   final int? selectedOption;
@@ -14,7 +14,7 @@ class HMSPollAnswer {
 
   HMSPollAnswer({
     this.answerText,
-    required this.duration,
+    this.duration,
     required this.questionId,
     required this.questionType,
     this.selectedOption,
@@ -27,7 +27,8 @@ class HMSPollAnswer {
   factory HMSPollAnswer.fromMap(Map map) {
     return HMSPollAnswer(
       answerText: map['answer'],
-      duration: Duration(seconds: map['duration']),
+      duration:
+          map['duration'] != null ? Duration(seconds: map['duration']) : null,
       questionId: map['question_id'],
       questionType: HMSPollQuestionTypeValues.getHMSPollQuestionTypeFromString(
           map['question_type']),
@@ -44,7 +45,7 @@ class HMSPollAnswer {
   Map<String, dynamic> toMap() {
     return {
       'answer': answerText,
-      'duration': duration.inSeconds,
+      'duration': duration?.inSeconds,
       'question_id': questionId,
       'question_type': questionType.toString(),
       'selected_option': selectedOption,

@@ -1,11 +1,15 @@
 ///Package imports
+library;
+
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
-import 'package:hms_room_kit/src/common/utility_functions.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/hmssdk_interactor.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_loader.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_viewer_page.dart';
 import 'package:hms_room_kit/src/meeting/meeting_page.dart';
@@ -40,8 +44,17 @@ class MeetingScreenController extends StatefulWidget {
   ///For more details checkout the [HMSConfig] class
   final HMSConfig? config;
 
+  ///[options] are the prebuilt options
+  final HMSPrebuiltOptions? options;
+
+  ///[tokenData] is the auth token for the room
+  final String? tokenData;
+
   ///[currentAudioDeviceMode] is the current audio device mode
   final HMSAudioDevice currentAudioDeviceMode;
+
+  ///[hmsSDKInteractor] is used to interact with the SDK
+  final HMSSDKInteractor hmsSDKInteractor;
 
   const MeetingScreenController(
       {Key? key,
@@ -52,7 +65,10 @@ class MeetingScreenController extends StatefulWidget {
       this.mirrorCamera = true,
       this.role,
       this.config,
-      this.currentAudioDeviceMode = HMSAudioDevice.AUTOMATIC})
+      this.currentAudioDeviceMode = HMSAudioDevice.AUTOMATIC,
+      this.options,
+      this.tokenData,
+      required this.hmsSDKInteractor})
       : super(key: key);
 
   @override
@@ -62,11 +78,40 @@ class MeetingScreenController extends StatefulWidget {
 
 class _MeetingScreenControllerState extends State<MeetingScreenController> {
   HLSPlayerStore? _hlsPlayerStore;
+  bool showLoader = false;
+  late MeetingStore _meetingStore;
+
   @override
   void initState() {
     super.initState();
+
+    ///Here we create an instance of meeting store, set initial settings and join meeting.
+    _meetingStore = MeetingStore(hmsSDKInteractor: widget.hmsSDKInteractor);
     _setInitValues();
+    _joinMeeting();
+
+    ///If the role is hlsStreaming we set the HLS Player store
+    if (HMSRoomLayout.roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
+        null) {
+      _setHLSPlayerStore();
+    }
     Utilities.initForegroundTask();
+  }
+
+  ///This function joins the room only if the name is not empty
+  void _joinMeeting() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    if (mounted) {
+      setState(() {
+        showLoader = true;
+      });
+    }
+
+    ///We join the room here
+    await _meetingStore.join(widget.user, widget.tokenData);
+    setState(() {
+      showLoader = false;
+    });
   }
 
   ///This function sets the HLSPlayerStore if the role is hls-viewer
@@ -76,27 +121,29 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
 
   ///This function sets the initial values of the meeting
   void _setInitValues() async {
-    context.read<MeetingStore>().setSettings();
+    _meetingStore.setSettings();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Selector<MeetingStore, String?>(
-        builder: (_, data, __) {
-          ///If the role is hls-viewer then we show the HLSViewerPage
-          ///else we show the MeetingPage
-          if (HMSRoomLayout
-                  .roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
-              null) {
-            _setHLSPlayerStore();
-            return ListenableProvider.value(
-                value: _hlsPlayerStore, child: const HLSViewerPage());
-          }
-          return MeetingPage(
-            isRoomMute: widget.isRoomMute,
-            currentAudioDeviceMode: widget.currentAudioDeviceMode,
+    return showLoader
+        ? const HMSLoader()
+        : ListenableProvider.value(
+            value: _meetingStore,
+            child: Selector<MeetingStore, String?>(
+                selector: (_, meetingStore) =>
+                    meetingStore.localPeer?.role.name,
+                builder: (_, data, __) {
+                  return (HMSRoomLayout.roleLayoutData?.screens?.conferencing
+                              ?.hlsLiveStreaming !=
+                          null)
+                      ? ListenableProvider.value(
+                          value: _hlsPlayerStore, child: const HLSViewerPage())
+                      : MeetingPage(
+                          isRoomMute: widget.isRoomMute,
+                          currentAudioDeviceMode: widget.currentAudioDeviceMode,
+                        );
+                }),
           );
-        },
-        selector: (_, meetingStore) => meetingStore.localPeer?.role.name);
   }
 }
