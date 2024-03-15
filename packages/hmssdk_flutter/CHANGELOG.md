@@ -18,7 +18,7 @@
 
   - HMSSDK automatically triggers `leave` method call when the iOS application is terminated.
 
-Updated to android SDK 2.9.51
+Updated to Android SDK 2.9.51 & iOS SDK 1.6.0
 
 **Full Changelog**: [1.9.12...1.9.13](https://github.com/100mslive/100ms-flutter/compare/1.9.12...1.9.13)
 
