@@ -1292,6 +1292,15 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             }
         }
         
+        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        
+        NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification,
+                                               object: nil,
+                                               queue: .main) { notification in
+            
+            print(#function, "UIDevice.current.orientation: ", UIDevice.current.orientation.rawValue)
+        }
+        
         /**
          `willTerminateNotification` is not fired in all cases. When app is in background & then app is force closed then this notification is not fired resulting in `leave` method not being invoked.
          */
