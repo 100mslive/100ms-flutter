@@ -184,14 +184,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  focus_detector:
+  focus_detector_v2:
     dependency: "direct main"
     description:
-      name: focus_detector
-      sha256: "05e32d9dd378cd54f1a3f9ce813c05156f28eb83f8e68f5bf1a37e9cdb21af1c"
+      name: focus_detector_v2
+      sha256: d4abc4c755ba894238ab92f42f6eee7ade78aa285199e112f45926c7053f90c6
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "3.1.0+1"
   google_fonts:
     dependency: "direct main"
     description:
@@ -737,10 +737,10 @@ packages:
     dependency: transitive
     description:
       name: visibility_detector
-      sha256: ec932527913f32f65aa01d3a393504240b9e9021ecc77123f017755605e48832
+      sha256: dd5cc11e13494f432d15939c3aa8ae76844c42b723398643ce9addb88a5ed420
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.2"
+    version: "0.4.0+2"
   vm_service:
     dependency: transitive
     description:
