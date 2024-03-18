@@ -114,8 +114,7 @@ class HMSTrackSettingsExtension {
                                                       cameraFacing: getCameraFacing(from: cameraFacing),
                                                       simulcastSettings: nil,
                                                       trackDescription: "track_description",
-                                                      initialMuteState: getinitialMuteState(from: initialMuteState), cameraFocusMode: .focusModeAuto,
-                                                      cameraOrientationLock: .landscape,
+                                                      initialMuteState: getinitialMuteState(from: initialMuteState),
                                                       videoPlugins: nil)
 
             }
