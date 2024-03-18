@@ -26,10 +26,8 @@ class MeetingGridComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<
-            MeetingStore,
-            Tuple6<List<PeerTrackNode>, bool, int, int, MeetingMode,
-                int>>(
+    return Selector<MeetingStore,
+            Tuple6<List<PeerTrackNode>, bool, int, int, MeetingMode, int>>(
         selector: (_, meetingStore) => Tuple6(
             meetingStore.peerTracks,
             meetingStore.isHLSLink,
@@ -38,18 +36,15 @@ class MeetingGridComponent extends StatelessWidget {
             meetingStore.meetingMode,
             meetingStore.viewControllers.length),
         builder: (_, data, __) {
-
           ///If there are no peerTracks or the view controllers are empty we show an empty tapable container
           if (data.item3 == 0 || data.item6 == 0) {
             return GestureDetector(
-              onTap: () => visibilityController?.toggleControlsVisibility(),
-              child: 
-              Container(
-                color: Colors.transparent,
-                height: double.infinity,
-                width: double.infinity,
-              )
-            );
+                onTap: () => visibilityController?.toggleControlsVisibility(),
+                child: Container(
+                  color: Colors.transparent,
+                  height: double.infinity,
+                  width: double.infinity,
+                ));
           }
           return Selector<MeetingStore, Tuple2<MeetingMode, HMSPeer?>>(
               selector: (_, meetingStore) =>
