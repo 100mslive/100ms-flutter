@@ -39,8 +39,10 @@ class HMSFlutterPlatformViewFactory: NSObject, FlutterPlatformViewFactory {
     private func getFrame(from arguments: [String: AnyObject]) -> CGRect? {
         guard let width = arguments["width"] as? Double,
               let height = arguments["height"] as? Double else {
+                print("Setting view width and height as null")
                   return nil
               }
+        print("Setting view width and height as \(width) \(height)")
         return CGRect(x: 0, y: 0, width: width, height: height)
     }
 
