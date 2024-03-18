@@ -45,8 +45,9 @@ class HMSFlutterPlatformView: NSObject, FlutterPlatformView {
         videoView?.videoContentMode = videoContentMode
         videoView?.mirror = mirror
         videoView?.disableAutoSimulcastLayerSelect = disableAutoSimulcastLayerSelect
-
+        
         if let track = videoTrack {
+            print("Setting Video View")
             videoView?.setVideoTrack(track)
             NotificationCenter.default.addObserver(self, selector: #selector(captureSnapshot), name: NSNotification.Name(track.trackId), object: nil)
         } else {
@@ -58,6 +59,7 @@ class HMSFlutterPlatformView: NSObject, FlutterPlatformView {
     }
 
     deinit {
+        print("Setting Video View to nil")
         videoView?.setVideoTrack(nil)
         videoView = nil
         NotificationCenter.default
