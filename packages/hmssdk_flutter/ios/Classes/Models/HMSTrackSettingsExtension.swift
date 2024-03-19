@@ -107,15 +107,21 @@ class HMSTrackSettingsExtension {
         if let videoSettingsDict = settingsDict["video_track_setting"] as? [AnyHashable: Any] {
             if let cameraFacing = videoSettingsDict["camera_facing"] as? String,
                let initialMuteState = videoSettingsDict["track_initial_state"] as? String {
-                videoSettings = HMSVideoTrackSettings(codec: HMSCodec.VP8,
-                                                      resolution: .init(width: 320, height: 180),
-                                                      maxBitrate: 32,
-                                                      maxFrameRate: 30,
-                                                      cameraFacing: getCameraFacing(from: cameraFacing),
-                                                      simulcastSettings: nil,
-                                                      trackDescription: "track_description",
-                                                      initialMuteState: getinitialMuteState(from: initialMuteState),
-                                                      videoPlugins: nil)
+                
+                videoSettings = HMSVideoTrackSettings.build { builder in
+                    builder.cameraFacing = getCameraFacing(from: cameraFacing)
+                    builder.initialMuteState = getinitialMuteState(from: initialMuteState)
+                }
+                
+//                videoSettings = HMSVideoTrackSettings(codec: HMSCodec.VP8,
+//                                                      resolution: .init(width: 320, height: 180),
+//                                                      maxBitrate: 32,
+//                                                      maxFrameRate: 30,
+//                                                      cameraFacing: getCameraFacing(from: cameraFacing),
+//                                                      simulcastSettings: nil,
+//                                                      trackDescription: "track_description",
+//                                                      initialMuteState: getinitialMuteState(from: initialMuteState),
+//                                                      videoPlugins: nil)
 
             }
         }
