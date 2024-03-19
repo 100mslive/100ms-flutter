@@ -36,11 +36,6 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin firebase_performance, io.flutter.plugins.firebase.performance.FlutterFirebasePerformancePlugin", e);
     }
     try {
-      flutterEngine.getPlugins().add(new com.pravera.flutter_foreground_task.FlutterForegroundTaskPlugin());
-    } catch (Exception e) {
-      Log.e(TAG, "Error registering plugin flutter_foreground_task, com.pravera.flutter_foreground_task.FlutterForegroundTaskPlugin", e);
-    }
-    try {
       flutterEngine.getPlugins().add(new live.hms.hmssdk_flutter.HmssdkFlutterPlugin());
     } catch (Exception e) {
       Log.e(TAG, "Error registering plugin hmssdk_flutter, live.hms.hmssdk_flutter.HmssdkFlutterPlugin", e);
