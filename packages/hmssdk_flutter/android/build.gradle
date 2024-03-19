@@ -30,6 +30,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
+
+    namespace 'live.hms.hmssdk_flutter'
     compileSdkVersion 34
 
     sourceSets {
