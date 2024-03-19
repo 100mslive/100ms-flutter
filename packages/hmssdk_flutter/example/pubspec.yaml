@@ -23,8 +23,8 @@ dependencies:
   package_info_plus:
   google_fonts:
   url_launcher:
-  qr_code_scanner:
-  uni_links:
+  mobile_scanner:
+  app_links:
   uuid: 
 
 dev_dependencies:
