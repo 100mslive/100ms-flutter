@@ -843,8 +843,8 @@ class MeetingStore extends ChangeNotifier
       if (each.isLocal) {
         int index = peerTracks
             .indexWhere((element) => element.uid == "${each.peerId}mainVideo");
-        if (index == -1 &&
-            (each.audioTrack != null || each.videoTrack != null)) {
+        if (index == -1) {
+          ///We add tile for local peer irrespective of whether it can publish or not
           peerTracks.add(PeerTrackNode(
               peer: each,
               uid: "${each.peerId}mainVideo",
