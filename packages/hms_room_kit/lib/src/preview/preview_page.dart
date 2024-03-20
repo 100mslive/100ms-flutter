@@ -186,8 +186,7 @@ class _PreviewPageState extends State<PreviewPage> {
 
                           PreviewHeader(
                             previewStore: previewStore,
-                            imgUrl:
-                                "https://lh3.googleusercontent.com/a/ACg8ocKQA0ztVW296eh8zAz6KuaS7A_b8TzNA_unBRqUv3dg=s96-c",
+                            imgUrl: widget.options?.userImgUrl,
                             userName: widget.name,
                             isVideoCall:
                                 Constant.prebuiltOptions?.isVideoCall ?? false,
