@@ -82,11 +82,9 @@ class MeetingStore extends ChangeNotifier
 
   bool reconnected = false;
 
-  bool isRoomEnded = false;
-
   ///This variable is used to check if the room end method is called or not
   ///by you or someone else(This also covers the case when you are removed from session but session is still active)
-  bool isEndRoomCalled = false;
+  bool isRoomEnded = false;
 
   List<HMSToastModel> toasts = [];
 
@@ -356,9 +354,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   void endRoom(bool lock, String? reason) {
-    isEndRoomCalled = true;
     _hmsSDKInteractor.endRoom(lock, reason ?? "", this);
-    _hmsSDKInteractor.destroy();
   }
 
   void removePeerFromRoom(HMSPeer peer) {
@@ -1214,7 +1210,6 @@ class MeetingStore extends ChangeNotifier
   @override
   void onRemovedFromRoom(
       {required HMSPeerRemovedFromPeer hmsPeerRemovedFromPeer}) {
-    isEndRoomCalled = hmsPeerRemovedFromPeer.roomWasEnded;
     log("onRemovedFromRoom-> sender: ${hmsPeerRemovedFromPeer.peerWhoRemoved}, reason: ${hmsPeerRemovedFromPeer.reason}, roomEnded: ${hmsPeerRemovedFromPeer.roomWasEnded}");
     description = "Removed by ${hmsPeerRemovedFromPeer.peerWhoRemoved?.name}";
     clearRoomState();
@@ -1335,10 +1330,8 @@ class MeetingStore extends ChangeNotifier
     // clearPIPState();
     removeListeners();
     toggleAlwaysScreenOn();
-    _hmsSDKInteractor.destroy();
     _hmsSessionStore = null;
     peerTracks.clear();
-    isRoomEnded = true;
     resetForegroundTaskAndOrientation();
 
     for (var element in viewControllers) {
@@ -1352,6 +1345,8 @@ class MeetingStore extends ChangeNotifier
     if (Constant.onLeave != null) {
       Constant.onLeave!();
     }
+    isRoomEnded = true;
+    _hmsSDKInteractor.destroy();
     notifyListeners();
   }
 

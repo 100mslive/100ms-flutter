@@ -66,7 +66,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
           selector: (_, meetingStore) => Tuple4(
               meetingStore.isRoomEnded,
               meetingStore.hmsException,
-              meetingStore.isEndRoomCalled,
+              meetingStore.isRoomEnded,
               meetingStore.localPeer?.role.permissions.hlsStreaming ?? false),
           builder: (_, failureData, __) {
             if (failureData.item1) {

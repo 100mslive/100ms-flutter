@@ -95,7 +95,7 @@ class _MeetingPageState extends State<MeetingPage> {
           child: Selector<MeetingStore, Tuple3<HMSException?, bool, bool>>(
               selector: (_, meetingStore) => Tuple3(
                   meetingStore.hmsException,
-                  meetingStore.isEndRoomCalled,
+                  meetingStore.isRoomEnded,
                   meetingStore.localPeer?.role.permissions.hlsStreaming ??
                       false),
               builder: (_, failureErrors, __) {
