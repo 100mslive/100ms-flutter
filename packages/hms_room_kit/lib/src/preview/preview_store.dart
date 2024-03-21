@@ -124,10 +124,6 @@ class PreviewStore extends ChangeNotifier
     audioPlayer?.setAsset(
         "packages/hms_room_kit/lib/src/assets/icons/dialing_ringtone.mp3");
     audioPlayer?.setLoopMode(LoopMode.one);
-    audioPlayer?.playerStateStream.listen((event) {
-      log(event.playing.toString());
-      log(event.processingState.name);
-    });
     audioPlayer?.play();
     HMSConfig joinRoomConfig = HMSConfig(
         authToken: tokenData,
