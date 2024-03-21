@@ -1,4 +1,5 @@
 //Dart imports
+import 'dart:async';
 import 'dart:developer';
 
 ///Package imports
@@ -54,15 +55,30 @@ class PreviewStore extends ChangeNotifier
 
   AudioPlayer? audioPlayer;
 
+  Timer? timer;
+
   @override
   void onHMSError({required HMSException error}) {
     this.error = error;
     notifyListeners();
   }
 
+  void fetchRemotePeers() {
+    timer = Timer.periodic(Duration(seconds: 1), (_) async {
+      List<HMSPeer>? remotePeers =
+          await hmsSDKInteractor.hmsSDK.getRemotePeers();
+      log("looking for peers ${remotePeers?.length}");
+      if (remotePeers?.isNotEmpty ?? false) {
+        peerCount = remotePeers!.length;
+        notifyListeners();
+      }
+    });
+  }
+
   @override
   void onPreview({required HMSRoom room, required List<HMSTrack> localTracks}) {
     log("onPreview-> room: ${room.toString()}");
+    fetchRemotePeers();
     this.room = room;
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
@@ -233,6 +249,7 @@ class PreviewStore extends ChangeNotifier
 
   void leave() {
     audioPlayer?.stop();
+    timer?.cancel();
     hmsSDKInteractor.leave();
 
     ///Here we call the method passed by the user in HMSPrebuilt as a callback
