@@ -27,7 +27,7 @@ dependencies:
   flutter_svg: ^2.0.5
   path_provider: ^2.0.15
   dropdown_button2: ^2.1.4
-  focus_detector: ^2.0.1
+  focus_detector_v2: ^3.1.0+1
   flutter_linkify: ^6.0.0
   tuple: ^2.0.2
   url_launcher: ^6.1.11
