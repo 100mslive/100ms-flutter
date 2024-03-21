@@ -845,6 +845,7 @@ class MeetingStore extends ChangeNotifier
             .indexWhere((element) => element.uid == "${each.peerId}mainVideo");
         if (index == -1 &&
             (each.audioTrack != null || each.videoTrack != null)) {
+          ///We add tile for local peer only if the peer can publish audio or video
           peerTracks.add(PeerTrackNode(
               peer: each,
               uid: "${each.peerId}mainVideo",

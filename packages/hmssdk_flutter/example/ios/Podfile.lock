@@ -25,7 +25,7 @@ PODS:
     - Firebase/Performance (= 10.22.0)
     - firebase_core
     - Flutter
-  - FirebaseABTesting (10.22.0):
+  - FirebaseABTesting (10.23.0):
     - FirebaseCore (~> 10.0)
   - FirebaseCore (10.22.0):
     - FirebaseCoreInternal (~> 10.0)
@@ -33,7 +33,7 @@ PODS:
     - GoogleUtilities/Logger (~> 7.12)
   - FirebaseCoreExtension (10.22.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseCoreInternal (10.22.0):
+  - FirebaseCoreInternal (10.23.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
   - FirebaseCrashlytics (10.22.0):
     - FirebaseCore (~> 10.5)
@@ -45,7 +45,7 @@ PODS:
     - PromisesObjC (~> 2.1)
   - FirebaseDynamicLinks (10.22.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseInstallations (10.22.0):
+  - FirebaseInstallations (10.23.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
@@ -64,10 +64,12 @@ PODS:
     - FirebaseABTesting (~> 10.0)
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
+    - FirebaseRemoteConfigInterop (~> 10.23)
     - FirebaseSharedSwift (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
-  - FirebaseSessions (10.22.0):
+  - FirebaseRemoteConfigInterop (10.23.0)
+  - FirebaseSessions (10.23.0):
     - FirebaseCore (~> 10.5)
     - FirebaseCoreExtension (~> 10.0)
     - FirebaseInstallations (~> 10.0)
@@ -75,7 +77,7 @@ PODS:
     - GoogleUtilities/Environment (~> 7.10)
     - nanopb (< 2.30911.0, >= 2.30908.0)
     - PromisesSwift (~> 2.1)
-  - FirebaseSharedSwift (10.22.0)
+  - FirebaseSharedSwift (10.23.0)
   - Flutter (1.0.0)
   - flutter_foreground_task (0.0.1):
     - Flutter
@@ -104,15 +106,15 @@ PODS:
   - HMSBroadcastExtensionSDK (0.0.9)
   - HMSHLSPlayerSDK (0.0.2):
     - HMSAnalyticsSDK (= 0.0.2)
-  - HMSSDK (1.6.0):
+  - HMSSDK (1.7.0):
     - HMSAnalyticsSDK (= 0.0.2)
-    - HMSWebRTC (= 1.0.5116)
-  - hmssdk_flutter (1.9.13):
+    - HMSWebRTC (= 1.0.5118)
+  - hmssdk_flutter (1.10.0):
     - Flutter
     - HMSBroadcastExtensionSDK (= 0.0.9)
     - HMSHLSPlayerSDK (= 0.0.2)
-    - HMSSDK (= 1.6.0)
-  - HMSWebRTC (1.0.5116)
+    - HMSSDK (= 1.7.0)
+  - HMSWebRTC (1.0.5118)
   - MTBBarcodeScanner (5.0.11)
   - nanopb (2.30910.0):
     - nanopb/decode (= 2.30910.0)
@@ -124,7 +126,7 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - permission_handler_apple (9.3.0):
+  - permission_handler_apple (9.1.1):
     - Flutter
   - PromisesObjC (2.4.0)
   - PromisesSwift (2.4.0):
@@ -172,6 +174,7 @@ SPEC REPOS:
     - FirebaseInstallations
     - FirebasePerformance
     - FirebaseRemoteConfig
+    - FirebaseRemoteConfigInterop
     - FirebaseSessions
     - FirebaseSharedSwift
     - GoogleDataTransport
@@ -242,9 +245,9 @@ SPEC CHECKSUMS:
   HMSAnalyticsSDK: 4d2a88a729b1eb42f3d25f217c28937ec318a5b7
   HMSBroadcastExtensionSDK: d80fe325f6c928bd8e5176290b5a4b7ae15d6fbb
   HMSHLSPlayerSDK: 6a54ad4d12f3dc2270d1ecd24019d71282a4f6a3
-  HMSSDK: 8bb7d5c9d593c4c1a15bdd28dbbc6dbc9a46c8e8
-  hmssdk_flutter: 35d1cb5147be29b64c513d42fa77347ba0ac0819
-  HMSWebRTC: ae54e9dd91b869051b283b43b14f57d43b7bf8e1
+  HMSSDK: 421b4ce83a601bbda283b3b9fbcd1da6898d2a84
+  hmssdk_flutter: dd0d9bcb8fb90c54319d0114e917c4607c0bc382
+  HMSWebRTC: 4487c7200f1e9358412c1d8cd974edd2766467dc
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
@@ -256,7 +259,7 @@ SPEC CHECKSUMS:
   share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5
   shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
-  url_launcher_ios: 6116280ddcfe98ab8820085d8d76ae7449447586
+  url_launcher_ios: bbd758c6e7f9fd7b5b1d4cde34d2b95fcce5e812
 
 PODFILE CHECKSUM: 9fb9f6e431a2c6c79942252e94b241ac7972ac90
 
