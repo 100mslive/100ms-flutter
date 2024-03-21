@@ -9,7 +9,6 @@ import 'dart:io';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:intl/intl.dart';
 
 //Project imports
@@ -839,6 +838,7 @@ class MeetingStore extends ChangeNotifier
         room.hmshlsStreamingState?.state ?? HMSStreamingState.none;
 
     setParticipantsList(roles);
+    toggleAlwaysScreenOn();
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
         int index = peerTracks
@@ -940,12 +940,6 @@ class MeetingStore extends ChangeNotifier
         participantsInMeetingMap[element.name] = [];
       }
     });
-  }
-
-  void initForegroundTask() {
-    FlutterForegroundTask.startService(
-        notificationTitle: "100ms foreground service running",
-        notificationText: "Tap to return to the app");
   }
 
   void getSpotlightPeer() async {
@@ -1366,7 +1360,6 @@ class MeetingStore extends ChangeNotifier
 
   void resetForegroundTaskAndOrientation() {
     setLandscapeLock(false);
-    FlutterForegroundTask.stopService();
   }
 
   // void clearPIPState() {

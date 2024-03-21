@@ -22,10 +22,15 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     compileSdkVersion 34
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-
 
     defaultConfig {
         applicationId "live.hms.flutter"
@@ -60,12 +65,11 @@ android {
     }
     lint {
         checkDependencies true
+        abortOnError false
     }
     android.buildTypes.release.ndk.debugSymbolLevel "FULL"
 
-    lintOptions {
-        abortOnError false
-    }
+    namespace 'live.hms.flutter'
 }
 
 flutter {
