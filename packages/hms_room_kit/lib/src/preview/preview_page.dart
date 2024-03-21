@@ -52,6 +52,7 @@ class _PreviewPageState extends State<PreviewPage> {
 
   ///[_navigateToMeeting] navigates to meeting from preview
   void _navigateToMeeting(PreviewStore previewStore) {
+    previewStore.timer?.cancel();
     HMSRole? role = previewStore.peer?.role;
     int? localPeerNetworkQuality = previewStore.networkQuality;
     bool isRoomMute = previewStore.isRoomMute;
