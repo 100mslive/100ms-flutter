@@ -222,7 +222,6 @@ class _MeetingBottomNavigationBarState
                               HMSEmbeddedButton(
                                   onTap: () async {
                                     context.read<MeetingStore>().endRoom(false,"Call ended");
-                                    Navigator.pop(context);
                                   },
                                   isActive: true,
                                   onColor: HMSThemeColors.alertErrorDefault,

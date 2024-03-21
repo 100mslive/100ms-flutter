@@ -89,8 +89,7 @@ class _MeetingPageState extends State<MeetingPage> {
     return WillPopScope(
         onWillPop: () async {
           context.read<MeetingStore>().endRoom(false, "Call Ended");
-          Navigator.pop(context);
-          return true;
+          return false;
         },
         child: WithForegroundTask(
           child: Selector<MeetingStore, Tuple3<HMSException?, bool, bool>>(

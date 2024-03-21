@@ -74,7 +74,6 @@ class _MeetingHeaderState extends State<MeetingHeader> {
                               HMSEmbeddedButton(
                                   onTap: () async {
                                     context.read<MeetingStore>().endRoom(false, "Call Ended");
-                                    Navigator.pop(context);
                                   },
                                   isActive: true,
                                   onColor: HMSThemeColors.alertErrorDefault,
