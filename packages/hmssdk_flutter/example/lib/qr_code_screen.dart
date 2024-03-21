@@ -147,8 +147,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                       controller: MobileScannerController(
                           detectionSpeed: DetectionSpeed.noDuplicates,
                           facing: CameraFacing.back),
-                      onDetect: (capture) => _onQRViewCreated(capture))
-                  ),
+                      onDetect: (capture) => _onQRViewCreated(capture))),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: SizedBox(

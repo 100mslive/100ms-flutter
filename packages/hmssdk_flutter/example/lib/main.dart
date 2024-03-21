@@ -127,7 +127,6 @@ class _HMSExampleAppState extends State<HMSExampleApp>
 
   void _incomingLinkHandler() {
     if (!kIsWeb) {
-
       _streamSubscription = _appLinks?.uriLinkStream.listen((Uri? uri) {
         if (!mounted) {
           return;
