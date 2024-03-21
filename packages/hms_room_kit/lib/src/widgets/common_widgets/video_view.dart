@@ -78,7 +78,8 @@ class _VideoViewState extends State<VideoView> {
                         )
                       : CircleAvatar(
                           backgroundColor: Colors.blue.shade100,
-                          child: HMSTitleText(text: "D", textColor: HMSThemeColors.baseBlack),
+                          child: HMSTitleText(
+                              text: "D", textColor: HMSThemeColors.baseBlack),
                         ),
                   SizedBox(
                     height: widget.viewSize?.height,

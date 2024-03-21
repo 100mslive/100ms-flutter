@@ -113,38 +113,38 @@ class _InsetTileState extends State<InsetTile> {
                     ), //top right
                     if (isButtonVisible) LocalPeerMoreOption(), //bottom right
                     if (isButtonVisible)
-                    Positioned(
-                      top: 5,
-                      right: 5,
-                      child: GestureDetector(
-                        onTap: () {
-                          if (widget.callbackFunction != null) {
-                            widget.callbackFunction!();
-                          }
-                        },
-                        child: Semantics(
-                          label:
-                              "fl_${context.read<PeerTrackNode>().peer.name}minimize",
-                          child: Container(
-                            height: 30,
-                            width: 30,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(28),
-                              color: HMSThemeColors.backgroundDim
-                                  .withOpacity(0.64),
-                            ),
-                            child: SvgPicture.asset(
-                              "packages/hms_room_kit/lib/src/assets/icons/minimize.svg",
-                              colorFilter: ColorFilter.mode(
-                                  HMSThemeColors.onSurfaceHighEmphasis,
-                                  BlendMode.srcIn),
-                              fit: BoxFit.scaleDown,
-                              semanticsLabel: "fl_minimize",
+                      Positioned(
+                        top: 5,
+                        right: 5,
+                        child: GestureDetector(
+                          onTap: () {
+                            if (widget.callbackFunction != null) {
+                              widget.callbackFunction!();
+                            }
+                          },
+                          child: Semantics(
+                            label:
+                                "fl_${context.read<PeerTrackNode>().peer.name}minimize",
+                            child: Container(
+                              height: 30,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(28),
+                                color: HMSThemeColors.backgroundDim
+                                    .withOpacity(0.64),
+                              ),
+                              child: SvgPicture.asset(
+                                "packages/hms_room_kit/lib/src/assets/icons/minimize.svg",
+                                colorFilter: ColorFilter.mode(
+                                    HMSThemeColors.onSurfaceHighEmphasis,
+                                    BlendMode.srcIn),
+                                fit: BoxFit.scaleDown,
+                                semanticsLabel: "fl_minimize",
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    )
+                      )
                   ],
                 ),
               ),

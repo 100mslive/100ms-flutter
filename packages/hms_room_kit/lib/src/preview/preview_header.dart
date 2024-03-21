@@ -1,8 +1,6 @@
 ///dart imports
 library;
 
-import 'dart:io';
-
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
@@ -43,15 +41,7 @@ class PreviewHeader extends StatelessWidget {
                 )
               : null),
       child: Padding(
-          padding: EdgeInsets.only(
-              top: (!(previewStore.peer?.role.publishSettings!.allowed
-                          .contains("video") ??
-                      false)
-                  ? MediaQuery.of(context).size.height * 0.4
-                  : Platform.isIOS
-                      ? 50
-                      : 50),
-              left: isVideoCall ? 24 : 0),
+          padding: EdgeInsets.only(top: 60, left: isVideoCall ? 24 : 0),
           child: isVideoCall
               ? Row(
                   children: [
@@ -69,7 +59,7 @@ class PreviewHeader extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         HMSTitleText(
-                          text: Constant.prebuiltOptions?.userName??"",
+                          text: Constant.prebuiltOptions?.userName ?? "",
                           textColor: HMSThemeColors.onSurfaceHighEmphasis,
                           fontSize: 24,
                           lineHeight: 32,
@@ -84,7 +74,7 @@ class PreviewHeader extends StatelessWidget {
                     )
                   ],
                 )
-              : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              : Column(children: [
                   if (imgUrl != null)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16.0),
@@ -99,7 +89,7 @@ class PreviewHeader extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       HMSTitleText(
-                        text: Constant.prebuiltOptions?.userName??"",
+                        text: Constant.prebuiltOptions?.userName ?? "",
                         textColor: HMSThemeColors.onSurfaceHighEmphasis,
                         fontSize: 24,
                         lineHeight: 32,
