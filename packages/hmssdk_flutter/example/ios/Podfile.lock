@@ -1,9 +1,9 @@
 PODS:
   - app_links (0.0.1):
     - Flutter
-  - Firebase/CoreOnly (10.9.0):
-    - FirebaseCore (= 10.9.0)
-  - Firebase/Crashlytics (10.9.0):
+  - Firebase/CoreOnly (10.18.0):
+    - FirebaseCore (= 10.18.0)
+  - Firebase/Crashlytics (10.18.0):
     - Firebase/CoreOnly
     - FirebaseCrashlytics (~> 10.18.0)
   - Firebase/DynamicLinks (10.18.0):
@@ -262,22 +262,23 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   app_links: e70ca16b4b0f88253b3b3660200d4a10b4ea9795
-  Firebase: bd152f0f3d278c4060c5c71359db08ebcfd5a3e2
-  firebase_core: ce64b0941c6d87c6ef5022ae9116a158236c8c94
-  firebase_crashlytics: 9b80d1944507cc07fa1c4455797f7d2eb7c8873f
-  firebase_dynamic_links: db9f2ebcc3ea646e76a1d3ee37e9e57890ff0a83
-  firebase_performance: d11d1fd9591547f6b75f325aaadd6550eaf7e090
-  FirebaseABTesting: 66d2594b36d4ff6e7d3c8719802100990de05857
-  FirebaseCore: b68d3616526ec02e4d155166bbafb8eca64af557
-  FirebaseCoreExtension: 6394c00b887d0bebadbc7049c464aa0cbddc5d41
-  FirebaseCoreInternal: bca337352024b18424a61e478460547d46c4c753
-  FirebaseCrashlytics: b60329455285aff853e54139d8ddbfe1e5f2b9f9
-  FirebaseDynamicLinks: 8cb66c4f403aa6ddf86ff3bc3c383a652f344ce9
-  FirebaseInstallations: 763814908793c0da14c18b3dcffdec71e29ed55e
-  FirebasePerformance: eee2f5da94fd7e5d15487649f8fe10a90c87c174
-  FirebaseRemoteConfig: e1b992a94d3674dddbcaf5d0d31a0312156ceb1c
-  FirebaseSessions: cd97fb07674f3906619c871eefbd260a1546c9d3
-  FirebaseSharedSwift: 48076404e6e52372290d15a07d2ed1d2f1754023
+  Firebase: 414ad272f8d02dfbf12662a9d43f4bba9bec2a06
+  firebase_core: 0af4a2b24f62071f9bf283691c0ee41556dcb3f5
+  firebase_crashlytics: 4b91b8ad60ee7c168fe88979f84c9573a729de7a
+  firebase_dynamic_links: b626a11f5eb02033981ae377377c3f297eb4c1b0
+  firebase_performance: 2183122a3c7a650c80d8c164e9e28f13c4c62fc7
+  FirebaseABTesting: aec61ed9a34d85a95e2013a3fdf051426a2419df
+  FirebaseCore: 2322423314d92f946219c8791674d2f3345b598f
+  FirebaseCoreExtension: cb88851781a24e031d1b58e0bd01eb1f46b044b5
+  FirebaseCoreInternal: 6a292e6f0bece1243a737e81556e56e5e19282e3
+  FirebaseCrashlytics: 86d5bce01f42fa1db265f87ff1d591f04db610ec
+  FirebaseDynamicLinks: c37307441c53838d66a9650dabca9e0459502527
+  FirebaseInstallations: 42d6ead4605d6eafb3b6683674e80e18eb6f2c35
+  FirebasePerformance: c406a9198d8aabfbac281b42855f5122fc1bcf69
+  FirebaseRemoteConfig: 70ebe9542cf5242d762d1c0b4d53bfc472e0a4ce
+  FirebaseRemoteConfigInterop: cbc87ffa4932719a7911a08e94510f18f026f5a7
+  FirebaseSessions: f06853e30f99fe42aa511014d7ee6c8c319f08a3
+  FirebaseSharedSwift: c92645b392db3c41a83a0aa967de16f8bad25568
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleMLKit: 2bd0dc6253c4d4f227aad460f69215a504b2980e
@@ -308,4 +309,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 9fb9f6e431a2c6c79942252e94b241ac7972ac90
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.2
