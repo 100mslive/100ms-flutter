@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
-///Project imports
-import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 

@@ -11,7 +11,6 @@ import 'package:provider/provider.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/hmssdk_interactor.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_loader.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_viewer_page.dart';
 import 'package:hms_room_kit/src/meeting/meeting_page.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
