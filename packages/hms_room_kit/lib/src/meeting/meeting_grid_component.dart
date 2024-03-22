@@ -61,39 +61,25 @@ class MeetingGridComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<
-            MeetingStore,
-            Tuple7<List<PeerTrackNode>, bool, int, int, MeetingMode,
-                PeerTrackNode?, int>>(
-        selector: (_, meetingStore) => Tuple7(
+    return Selector<MeetingStore,
+            Tuple6<List<PeerTrackNode>, bool, int, int, MeetingMode, int>>(
+        selector: (_, meetingStore) => Tuple6(
             meetingStore.peerTracks,
             meetingStore.isHLSLink,
             meetingStore.peerTracks.length,
             meetingStore.screenShareCount,
             meetingStore.meetingMode,
-            meetingStore.peerTracks.isNotEmpty
-                ? meetingStore.peerTracks[meetingStore.screenShareCount]
-                : null,
             meetingStore.viewControllers.length),
         builder: (_, data, __) {
-          if (data.item3 == 0 || data.item7 == 0) {
-            return Center(
-                child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: HMSThemeColors.primaryDefault,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                if (context.read<MeetingStore>().peers.isNotEmpty)
-                  HMSTitleText(
-                      text: "Please wait for broadcaster to join",
-                      textColor: HMSThemeColors.onSurfaceHighEmphasis)
-              ],
-            ));
+          ///If there are no peerTracks or the view controllers are empty we show an empty tapable container
+          if (data.item3 == 0 || data.item6 == 0) {
+            return GestureDetector(
+                onTap: () => visibilityController?.toggleControlsVisibility(),
+                child: Container(
+                  color: Colors.transparent,
+                  height: double.infinity,
+                  width: double.infinity,
+                ));
           }
           return Selector<MeetingStore, Tuple2<MeetingMode, HMSPeer?>>(
               selector: (_, meetingStore) =>

@@ -1,20 +1,18 @@
 PODS:
   - Flutter (1.0.0)
-  - flutter_foreground_task (0.0.1):
-    - Flutter
   - HMSAnalyticsSDK (0.0.2)
   - HMSBroadcastExtensionSDK (0.0.9)
   - HMSHLSPlayerSDK (0.0.2):
     - HMSAnalyticsSDK (= 0.0.2)
-  - HMSSDK (1.5.1):
+  - HMSSDK (1.7.0):
     - HMSAnalyticsSDK (= 0.0.2)
-    - HMSWebRTC (= 1.0.5116)
-  - hmssdk_flutter (1.9.11):
+    - HMSWebRTC (= 1.0.5118)
+  - hmssdk_flutter (1.10.0):
     - Flutter
     - HMSBroadcastExtensionSDK (= 0.0.9)
     - HMSHLSPlayerSDK (= 0.0.2)
-    - HMSSDK (= 1.5.1)
-  - HMSWebRTC (1.0.5116)
+    - HMSSDK (= 1.7.0)
+  - HMSWebRTC (1.0.5118)
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -30,7 +28,6 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-  - flutter_foreground_task (from `.symlinks/plugins/flutter_foreground_task/ios`)
   - hmssdk_flutter (from `.symlinks/plugins/hmssdk_flutter/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
@@ -49,8 +46,6 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
-  flutter_foreground_task:
-    :path: ".symlinks/plugins/flutter_foreground_task/ios"
   hmssdk_flutter:
     :path: ".symlinks/plugins/hmssdk_flutter/ios"
   path_provider_foundation:
@@ -66,13 +61,12 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  flutter_foreground_task: 21ef182ab0a29a3005cc72cd70e5f45cb7f7f817
   HMSAnalyticsSDK: 4d2a88a729b1eb42f3d25f217c28937ec318a5b7
   HMSBroadcastExtensionSDK: d80fe325f6c928bd8e5176290b5a4b7ae15d6fbb
   HMSHLSPlayerSDK: 6a54ad4d12f3dc2270d1ecd24019d71282a4f6a3
-  HMSSDK: ab468de17246fcc8d6315ea490e9d9b30431d6b3
-  hmssdk_flutter: 21fdd404f04dc0443f106f1f1a4f510a98418cb5
-  HMSWebRTC: ae54e9dd91b869051b283b43b14f57d43b7bf8e1
+  HMSSDK: 421b4ce83a601bbda283b3b9fbcd1da6898d2a84
+  hmssdk_flutter: dd0d9bcb8fb90c54319d0114e917c4607c0bc382
+  HMSWebRTC: 4487c7200f1e9358412c1d8cd974edd2766467dc
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
   share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5

@@ -46,7 +46,6 @@ class ScreenController extends StatefulWidget {
 class _ScreenControllerState extends State<ScreenController> {
   bool isPermissionGranted = false;
   late HMSSDKInteractor _hmsSDKInteractor;
-  var store;
   bool isLoading = true;
   HMSConfig? roomConfig;
   dynamic tokenData;

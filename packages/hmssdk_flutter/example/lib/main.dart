@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:ui';
 
 //Package imports
+import 'package:app_links/app_links.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -17,7 +18,6 @@ import 'package:hmssdk_flutter_example/room_service.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:uni_links/uni_links.dart';
 import 'package:uuid/uuid.dart';
 
 bool _initialURILinkHandled = false;
@@ -64,6 +64,7 @@ class _HMSExampleAppState extends State<HMSExampleApp>
     with TickerProviderStateMixin {
   ThemeMode _themeMode = ThemeMode.dark;
   Uri? _currentURI;
+  AppLinks? _appLinks;
   late AnimationController _controller;
 
   ThemeData _darkTheme = ThemeData(
@@ -106,7 +107,8 @@ class _HMSExampleAppState extends State<HMSExampleApp>
         if (widget.initialLink != null) {
           return;
         }
-        _currentURI = await getInitialUri();
+        _appLinks = AppLinks();
+        _currentURI = await _appLinks?.getInitialAppLink();
         if (_currentURI != null) {
           if (!mounted) {
             return;
@@ -125,7 +127,7 @@ class _HMSExampleAppState extends State<HMSExampleApp>
 
   void _incomingLinkHandler() {
     if (!kIsWeb) {
-      _streamSubscription = uriLinkStream.listen((Uri? uri) {
+      _streamSubscription = _appLinks?.uriLinkStream.listen((Uri? uri) {
         if (!mounted) {
           return;
         }

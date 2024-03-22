@@ -96,7 +96,6 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
         null) {
       _setHLSPlayerStore();
     }
-    Utilities.initForegroundTask();
   }
 
   ///This function joins the room only if the name is not empty
