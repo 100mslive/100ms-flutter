@@ -42,6 +42,7 @@ class HMSFlutterPlatformViewFactory: NSObject, FlutterPlatformViewFactory {
                 print("Setting view width and height as null")
                   return nil
               }
+        
         print("Setting view width and height as \(width) \(height)")
         return CGRect(x: 0, y: 0, width: width, height: height)
     }

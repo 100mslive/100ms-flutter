@@ -185,19 +185,25 @@ class _PlatformViewState extends State<_PlatformView> {
             );
     } else if (Platform.isIOS) {
       ///UIKitView for ios it uses VideoView provided by 100ms ios_sdk internally.
-      return UiKitView(
-        hitTestBehavior: PlatformViewHitTestBehavior.transparent,
-        viewType: 'HMSFlutterPlatformView',
-        creationParamsCodec: StandardMessageCodec(),
-        creationParams: {
-          'track_id': widget.track.trackId,
-          'set_mirror':
-              widget.track.source != "REGULAR" ? false : widget.setMirror,
-          'scale_type': widget.scaleType.value,
-          'disable_auto_simulcast_layer_select':
-              widget.disableAutoSimulcastLayerSelect
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          return UiKitView(
+            hitTestBehavior: PlatformViewHitTestBehavior.transparent,
+            viewType: 'HMSFlutterPlatformView',
+            creationParamsCodec: StandardMessageCodec(),
+            creationParams: {
+              'track_id': widget.track.trackId,
+              'set_mirror':
+                  widget.track.source != "REGULAR" ? false : widget.setMirror,
+              'scale_type': widget.scaleType.value,
+              'disable_auto_simulcast_layer_select':
+                  widget.disableAutoSimulcastLayerSelect,
+              'width': constraints.maxWidth,
+              'height': constraints.maxHeight
+            },
+            gestureRecognizers: {},
+          );
         },
-        gestureRecognizers: {},
       );
     } else {
       throw UnimplementedError(
