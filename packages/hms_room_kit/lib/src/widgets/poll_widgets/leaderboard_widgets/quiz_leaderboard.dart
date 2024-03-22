@@ -3,6 +3,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -44,6 +45,11 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double availableWidth =
+        MediaQuery.of(context).orientation == Orientation.portrait
+            ? width
+            : width * 0.6;
     return FractionallySizedBox(
       heightFactor: 0.87,
       child: Padding(
@@ -66,8 +72,7 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
                     },
                   ),
                   Container(
-                    constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width * 0.4),
+                    constraints: BoxConstraints(maxWidth: availableWidth * 0.4),
                     child: HMSTitleText(
                       text: widget.pollStore.poll.title,
                       fontSize: 20,
@@ -228,14 +233,7 @@ class _QuizLeaderboardState extends State<QuizLeaderboard> {
                         count: 200,
                         startIndex: 0);
                     var meetingStore = context.read<MeetingStore>();
-                    showModalBottomSheet(
-                        isScrollControlled: true,
-                        backgroundColor: HMSThemeColors.surfaceDim,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(16),
-                              topRight: Radius.circular(16)),
-                        ),
+                    UtilityComponents.hmsModalBottomSheet(
                         context: context,
                         builder: (ctx) => ChangeNotifierProvider.value(
                             value: meetingStore,

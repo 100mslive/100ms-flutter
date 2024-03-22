@@ -816,6 +816,12 @@ class MeetingStore extends ChangeNotifier
   @override
   void onJoin({required HMSRoom room}) async {
     log("onJoin-> room: ${room.toString()}");
+
+    ///Since now prebuilt supports landscape only in webRTC hence we apply only
+    ///apply it if the user is webRTC
+    if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
+      setLandscapeLock(false);
+    }
     isMeetingStarted = true;
     hmsRoom = room;
     if (room.hmshlsStreamingState?.state == HMSStreamingState.started) {
@@ -1513,6 +1519,7 @@ class MeetingStore extends ChangeNotifier
         participantsInMeetingMap[peer.role.name]
                 ?[participantsInMeetingMap[peer.role.name]!.length - 1]
             .updatePeer(peer);
+
         notifyListeners();
       }
     }
@@ -1520,10 +1527,15 @@ class MeetingStore extends ChangeNotifier
 
   void setLandscapeLock(bool value) {
     if (value) {
-      SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
-    } else {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    } else {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeRight,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown
+      ]);
     }
     isLandscapeLocked = value;
     notifyListeners();
@@ -1561,6 +1573,13 @@ class MeetingStore extends ChangeNotifier
           // getSpotlightPeer();
           setPreviousRole(localPeer?.role.name ?? "");
           resetLayout(peer.role.name);
+
+          ///This is done to only enable landscape mode for webRTC users
+          if (HMSRoomLayout.peerType == PeerRoleType.conferencing) {
+            setLandscapeLock(false);
+          } else {
+            setLandscapeLock(true);
+          }
           localPeer = peer;
         }
         if (HMSRoomLayout

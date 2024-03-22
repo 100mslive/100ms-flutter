@@ -3,6 +3,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:provider/provider.dart';
 
@@ -50,8 +51,18 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double availableWidth =
+        MediaQuery.of(context).orientation == Orientation.portrait
+            ? width
+            : width * 0.6;
+
     return FractionallySizedBox(
-      heightFactor: widget.isInsetTile ? 0.26 : 0.2,
+      heightFactor: MediaQuery.of(context).orientation == Orientation.portrait
+          ? widget.isInsetTile
+              ? 0.26
+              : 0.2
+          : 0.87,
       child: Padding(
           padding: const EdgeInsets.only(top: 16.0, left: 24, right: 24),
           child: Column(
@@ -65,9 +76,8 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            constraints: BoxConstraints(
-                                maxWidth:
-                                    MediaQuery.of(context).size.width - 100),
+                            constraints:
+                                BoxConstraints(maxWidth: availableWidth - 100),
                             child: HMSTitleText(
                               text:
                                   "${widget.meetingStore.localPeer?.name} (You)",
@@ -167,14 +177,7 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                           horizontalTitleGap: 2,
                           onTap: () async {
                             Navigator.pop(context);
-                            showModalBottomSheet(
-                              isScrollControlled: true,
-                              backgroundColor: HMSThemeColors.surfaceDim,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(16),
-                                    topRight: Radius.circular(16)),
-                              ),
+                            UtilityComponents.hmsModalBottomSheet(
                               context: context,
                               builder: (ctx) => ChangeNotifierProvider.value(
                                   value: widget.meetingStore,

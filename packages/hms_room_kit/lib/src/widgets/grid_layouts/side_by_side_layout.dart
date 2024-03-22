@@ -43,25 +43,46 @@ class SideBySideLayout extends StatelessWidget {
     ///Here we render the tile layout based on how many tiles we need to render
     ///If we need to render 1 tile then we render the [ListenablePeerWidget]
     ///If we need to render 2 tiles then we render the two tiles in a row
-    return tilesToBeRendered == 2
-        ? Row(children: [
-            Expanded(
-              child: ListenablePeerWidget(
-                  index: tileStartingIndex, peerTracks: peerTracks),
-            ),
-            const SizedBox(
-              width: 4,
-            ),
-            Expanded(
-              child: ListenablePeerWidget(
-                  index: tileStartingIndex + 1, peerTracks: peerTracks),
-            )
-          ])
-        : Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width / 4),
-            child: ListenablePeerWidget(
-                index: tileStartingIndex, peerTracks: peerTracks),
-          );
+    return MediaQuery.of(context).orientation == Orientation.portrait
+        ? tilesToBeRendered == 2
+            ? Row(children: [
+                Expanded(
+                  child: ListenablePeerWidget(
+                      index: tileStartingIndex, peerTracks: peerTracks),
+                ),
+                const SizedBox(
+                  width: 4,
+                ),
+                Expanded(
+                  child: ListenablePeerWidget(
+                      index: tileStartingIndex + 1, peerTracks: peerTracks),
+                )
+              ])
+            : Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width / 4),
+                child: ListenablePeerWidget(
+                    index: tileStartingIndex, peerTracks: peerTracks),
+              )
+        : tilesToBeRendered == 2
+            ? Column(children: [
+                Expanded(
+                  child: ListenablePeerWidget(
+                      index: tileStartingIndex, peerTracks: peerTracks),
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Expanded(
+                  child: ListenablePeerWidget(
+                      index: tileStartingIndex + 1, peerTracks: peerTracks),
+                )
+              ])
+            : Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height / 8),
+                child: ListenablePeerWidget(
+                    index: tileStartingIndex, peerTracks: peerTracks),
+              );
   }
 }

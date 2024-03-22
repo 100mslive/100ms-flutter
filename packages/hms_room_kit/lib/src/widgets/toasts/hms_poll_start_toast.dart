@@ -5,6 +5,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/poll_store.dart';
@@ -50,14 +51,7 @@ class HMSPollStartToast extends StatelessWidget {
         buttonTitle: poll.category == HMSPollCategory.poll ? "Vote" : "Answer",
         action: () {
           var pollStore = context.read<HMSPollStore>();
-          showModalBottomSheet(
-              isScrollControlled: true,
-              backgroundColor: HMSThemeColors.surfaceDim,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(16),
-                    topRight: Radius.circular(16)),
-              ),
+          UtilityComponents.hmsModalBottomSheet(
               context: context,
               builder: (ctx) => ChangeNotifierProvider.value(
                   value: meetingStore,

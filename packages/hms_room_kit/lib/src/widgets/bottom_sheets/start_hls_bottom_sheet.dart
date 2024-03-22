@@ -8,6 +8,8 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
+///[StartHLSBottomSheet] is not used anywhere in prebuilt application
+///********************************NOT IN USE**********************************************************/
 class StartHLSBottomSheet extends StatefulWidget {
   @override
   const StartHLSBottomSheet({key}) : super(key: key);

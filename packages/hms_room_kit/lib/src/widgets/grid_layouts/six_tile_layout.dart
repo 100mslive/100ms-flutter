@@ -30,60 +30,111 @@ class SixTileLayout extends StatelessWidget {
     ///The second row contains the tiles with index [startIndex+2] and [startIndex+3]
     ///The third row contains the tiles with index [startIndex+4] and [startIndex+5]
     ///The [ListenablePeerWidget] is used to render the tile
-    return Column(
-      children: [
-        Expanded(
-          child: Row(children: [
-            Expanded(
-              child: ListenablePeerWidget(
-                  index: startIndex, peerTracks: peerTracks),
-            ),
-            const SizedBox(
-              width: 2,
-            ),
-            Expanded(
-              child: ListenablePeerWidget(
-                  index: startIndex + 1, peerTracks: peerTracks),
-            )
-          ]),
-        ),
-        const SizedBox(
-          height: 2,
-        ),
-        Expanded(
-          child: Row(children: [
-            Expanded(
-              child: ListenablePeerWidget(
-                  index: startIndex + 2, peerTracks: peerTracks),
-            ),
-            const SizedBox(
-              width: 2,
-            ),
-            Expanded(
-              child: ListenablePeerWidget(
-                  index: startIndex + 3, peerTracks: peerTracks),
-            )
-          ]),
-        ),
-        const SizedBox(
-          height: 2,
-        ),
-        Expanded(
-          child: Row(children: [
-            Expanded(
-              child: ListenablePeerWidget(
-                  index: startIndex + 4, peerTracks: peerTracks),
-            ),
-            const SizedBox(
-              width: 2,
-            ),
-            Expanded(
-              child: ListenablePeerWidget(
-                  index: startIndex + 5, peerTracks: peerTracks),
-            )
-          ]),
-        ),
-      ],
-    );
+    return MediaQuery.of(context).orientation == Orientation.portrait
+        ? Column(
+            children: [
+              Expanded(
+                child: Row(children: [
+                  Expanded(
+                    child: ListenablePeerWidget(
+                        index: startIndex, peerTracks: peerTracks),
+                  ),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  Expanded(
+                    child: ListenablePeerWidget(
+                        index: startIndex + 1, peerTracks: peerTracks),
+                  )
+                ]),
+              ),
+              const SizedBox(
+                height: 2,
+              ),
+              Expanded(
+                child: Row(children: [
+                  Expanded(
+                    child: ListenablePeerWidget(
+                        index: startIndex + 2, peerTracks: peerTracks),
+                  ),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  Expanded(
+                    child: ListenablePeerWidget(
+                        index: startIndex + 3, peerTracks: peerTracks),
+                  )
+                ]),
+              ),
+              const SizedBox(
+                height: 2,
+              ),
+              Expanded(
+                child: Row(children: [
+                  Expanded(
+                    child: ListenablePeerWidget(
+                        index: startIndex + 4, peerTracks: peerTracks),
+                  ),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  Expanded(
+                    child: ListenablePeerWidget(
+                        index: startIndex + 5, peerTracks: peerTracks),
+                  )
+                ]),
+              ),
+            ],
+          )
+        : Column(
+            children: [
+              Expanded(
+                child: Row(children: [
+                  Expanded(
+                    child: ListenablePeerWidget(
+                        index: startIndex, peerTracks: peerTracks),
+                  ),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  Expanded(
+                    child: ListenablePeerWidget(
+                        index: startIndex + 1, peerTracks: peerTracks),
+                  ),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  Expanded(
+                    child: ListenablePeerWidget(
+                        index: startIndex + 2, peerTracks: peerTracks),
+                  ),
+                ]),
+              ),
+              const SizedBox(
+                height: 2,
+              ),
+              Expanded(
+                child: Row(children: [
+                  Expanded(
+                      child: ListenablePeerWidget(
+                          index: startIndex + 3, peerTracks: peerTracks)),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  Expanded(
+                    child: ListenablePeerWidget(
+                        index: startIndex + 4, peerTracks: peerTracks),
+                  ),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  Expanded(
+                    child: ListenablePeerWidget(
+                        index: startIndex + 5, peerTracks: peerTracks),
+                  )
+                ]),
+              ),
+            ],
+          );
   }
 }

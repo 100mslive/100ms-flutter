@@ -76,6 +76,7 @@ class _InsetTileState extends State<InsetTile> {
 
   @override
   Widget build(BuildContext context) {
+    Orientation orientation = MediaQuery.of(context).orientation;
     return Semantics(
       label: "fl_${context.read<PeerTrackNode>().peer.name}_video_tile",
       child: FocusDetector(
@@ -94,8 +95,12 @@ class _InsetTileState extends State<InsetTile> {
             onTap: () => _toggleButtonVisibility(),
             child: Container(
               key: key,
-              height: widget.itemHeight,
-              width: widget.itemWidth,
+              height: orientation == Orientation.landscape
+                  ? widget.itemWidth
+                  : widget.itemHeight,
+              width: orientation == Orientation.landscape
+                  ? widget.itemHeight
+                  : widget.itemWidth,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 color: HMSThemeColors.surfaceDefault,

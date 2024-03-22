@@ -2,6 +2,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -41,14 +42,7 @@ class _MoreOptionState extends State<MoreOption> {
                 var meetingStore = context.read<MeetingStore>();
                 if (peerTrackNode.peer.peerId !=
                     meetingStore.localPeer!.peerId) {
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    backgroundColor: HMSThemeColors.surfaceDim,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(16),
-                          topRight: Radius.circular(16)),
-                    ),
+                  UtilityComponents.hmsModalBottomSheet(
                     context: context,
                     builder: (ctx) => ChangeNotifierProvider.value(
                         value: meetingStore,

@@ -4,6 +4,7 @@ library;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/poll_vote_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/poll_question_bottom_sheet.dart';
@@ -44,6 +45,11 @@ class PollQuestionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double availableWidth =
+        MediaQuery.of(context).orientation == Orientation.portrait
+            ? width
+            : width * 0.6;
     return Padding(
       padding: const EdgeInsets.only(bottom: 24),
       child: Container(
@@ -88,7 +94,7 @@ class PollQuestionCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   HMSButton(
-                      width: MediaQuery.of(context).size.width * 0.23,
+                      width: availableWidth * 0.23,
                       onPressed: () {
                         var meetingStore = context.read<MeetingStore>();
                         var pollStore = context.read<HMSPollStore>();
@@ -99,14 +105,7 @@ class PollQuestionCard extends StatelessWidget {
                           if (pollStore.poll.questions?.isEmpty ?? true) {
                             meetingStore.fetchPollQuestions(pollStore.poll);
                           }
-                          showModalBottomSheet(
-                              isScrollControlled: true,
-                              backgroundColor: HMSThemeColors.surfaceDim,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(16),
-                                    topRight: Radius.circular(16)),
-                              ),
+                          UtilityComponents.hmsModalBottomSheet(
                               context: context,
                               builder: (ctx) => ChangeNotifierProvider.value(
                                     value: meetingStore,
@@ -145,14 +144,7 @@ class PollQuestionCard extends StatelessWidget {
                             pollStore.pollLeaderboardResponse == null) {
                           meetingStore.fetchLeaderboard(pollStore.poll);
                         }
-                        showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: HMSThemeColors.surfaceDim,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(16),
-                                  topRight: Radius.circular(16)),
-                            ),
+                        UtilityComponents.hmsModalBottomSheet(
                             context: context,
                             builder: (ctx) => ChangeNotifierProvider.value(
                                   value: meetingStore,

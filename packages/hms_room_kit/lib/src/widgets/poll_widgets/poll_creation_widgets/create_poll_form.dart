@@ -114,6 +114,11 @@ class _CreatePollFormState extends State<CreatePollForm> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double availableWidth =
+        MediaQuery.of(context).orientation == Orientation.portrait
+            ? width
+            : width * 0.6;
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -262,7 +267,7 @@ class _CreatePollFormState extends State<CreatePollForm> {
                       children: [
                         SizedBox(
                           height: 48,
-                          width: MediaQuery.of(context).size.width * 0.67,
+                          width: availableWidth * 0.67,
                           child: TextField(
                             cursorColor: HMSThemeColors.onSurfaceHighEmphasis,
                             onTapOutside: (event) =>

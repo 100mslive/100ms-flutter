@@ -8,6 +8,7 @@ import 'dart:developer';
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -56,12 +57,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
 
   void viewAll(String role) {
     var meetingStore = context.read<MeetingStore>();
-    showModalBottomSheet(
-      isScrollControlled: true,
-      backgroundColor: HMSThemeColors.surfaceDim,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+    UtilityComponents.hmsFullWidthModalBottomSheet(
       context: context,
       builder: (ctx) => ChangeNotifierProvider.value(
           value: meetingStore,
@@ -328,6 +324,11 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double availableWidth =
+        MediaQuery.of(context).orientation == Orientation.portrait
+            ? width
+            : width * 0.6;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.only(top: 16),
@@ -468,7 +469,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                                           __) {
                                                                         return Container(
                                                                           constraints:
-                                                                              BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+                                                                              BoxConstraints(maxWidth: availableWidth * 0.6),
                                                                           child: HMSTitleText(
                                                                               text: peerName + ((participantsPerRole.item2![peerIndex].peer.isLocal) ? " (You)" : ""),
                                                                               fontSize: 14,

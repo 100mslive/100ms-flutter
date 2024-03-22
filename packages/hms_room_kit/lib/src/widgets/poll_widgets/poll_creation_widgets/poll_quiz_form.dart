@@ -3,6 +3,7 @@ library;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/widgets/poll_widgets/poll_creation_widgets/poll_question_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
@@ -47,6 +48,11 @@ class _PollQuizFormState extends State<PollQuizForm> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double availableWidth =
+        MediaQuery.of(context).orientation == Orientation.portrait
+            ? width
+            : width * 0.6;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -189,18 +195,11 @@ class _PollQuizFormState extends State<PollQuizForm> {
           height: 40,
           child: HMSListenableButton(
               textController: _pollNameController,
-              width: MediaQuery.of(context).size.width - 40,
+              width: availableWidth - 40,
               onPressed: () {
                 if (_pollNameController.text.trim().isEmpty) return;
                 var meetingStore = context.read<MeetingStore>();
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  backgroundColor: HMSThemeColors.surfaceDim,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        topRight: Radius.circular(16)),
-                  ),
+                UtilityComponents.hmsModalBottomSheet(
                   context: context,
                   builder: (ctx) => ChangeNotifierProvider.value(
                       value: meetingStore,

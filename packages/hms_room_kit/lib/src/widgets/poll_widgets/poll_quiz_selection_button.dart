@@ -25,7 +25,11 @@ class PollQuizSelectionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 64,
-      width: (MediaQuery.of(context).size.width - 48) / 2,
+      width: ((MediaQuery.of(context).orientation == Orientation.portrait
+                  ? MediaQuery.of(context).size.width
+                  : MediaQuery.of(context).size.width * 0.6) -
+              48) /
+          2,
       decoration: BoxDecoration(
         border: Border.all(
           color: isSelected

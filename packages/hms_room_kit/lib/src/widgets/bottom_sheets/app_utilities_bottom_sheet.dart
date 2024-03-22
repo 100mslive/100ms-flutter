@@ -4,6 +4,8 @@ library;
 import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/common/utility_components.dart';
+import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/poll_and_quiz_bottom_sheet.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
@@ -45,11 +47,16 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
   @override
   Widget build(BuildContext context) {
     MeetingStore meetingStore = context.read<MeetingStore>();
+    double width = MediaQuery.of(context).size.width;
+    double availableWidth =
+        MediaQuery.of(context).orientation == Orientation.portrait
+            ? width
+            : width * 0.6;
     return Padding(
       padding: EdgeInsets.only(
           top: 16.0,
-          left: MediaQuery.of(context).size.width * 0.04,
-          right: MediaQuery.of(context).size.width * 0.04,
+          left: availableWidth * 0.04,
+          right: availableWidth * 0.04,
           bottom: 24),
       child: SingleChildScrollView(
         child: Column(
@@ -88,29 +95,32 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
             ///This renders the participants, screen share, brb, raise hand and recording options
             Wrap(
               runSpacing: 24,
-              spacing: MediaQuery.of(context).size.width * 0.005,
+              spacing: availableWidth * 0.005,
               children: [
                 ///This renders the participants option if participants list is enabled
                 if (HMSRoomLayout.isParticipantsListEnabled)
                   MoreOptionItem(
                       onTap: () async {
                         Navigator.pop(context);
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: HMSThemeColors.surfaceDim,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
+
+                        var meetingStore = context.read<MeetingStore>();
+                        var meetingNavigationVisibilityController = context
+                            .read<MeetingNavigationVisibilityController>();
+                        context.read<MeetingStore>().setNewMessageFalse();
+                        UtilityComponents.hmsFullWidthModalBottomSheet(
                           context: context,
                           builder: (ctx) => ChangeNotifierProvider.value(
                               value: meetingStore,
-                              child: (HMSRoomLayout.chatData == null ||
-                                      (HMSRoomLayout.chatData?.isOverlay ??
-                                          true))
-                                  ? const OverlayParticipantsBottomSheet()
-                                  : const ChatParticipantsTabBar(
-                                      tabIndex: 1,
-                                    )),
+                              child: ChangeNotifierProvider.value(
+                                value: meetingNavigationVisibilityController,
+                                child: (HMSRoomLayout.chatData == null ||
+                                        (HMSRoomLayout.chatData?.isOverlay ??
+                                            true))
+                                    ? const OverlayParticipantsBottomSheet()
+                                    : const ChatParticipantsTabBar(
+                                        tabIndex: 1,
+                                      ),
+                              )),
                         );
                       },
                       optionIcon: badge.Badge(
@@ -224,14 +234,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       onTap: () {
                         meetingStore.fetchPollList(HMSPollState.created);
                         Navigator.pop(context);
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: HMSThemeColors.surfaceDim,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16)),
-                          ),
+                        UtilityComponents.hmsModalBottomSheet(
                           context: context,
                           builder: (ctx) => ChangeNotifierProvider.value(
                               value: meetingStore,
@@ -292,14 +295,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                             HMSRecordingState.resumed);
                             if (isRecordingRunning) {
                               Navigator.pop(context);
-                              showModalBottomSheet(
-                                isScrollControlled: true,
-                                backgroundColor: HMSThemeColors.surfaceDim,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(16),
-                                      topRight: Radius.circular(16)),
-                                ),
+                              UtilityComponents.hmsModalBottomSheet(
                                 context: context,
                                 builder: (ctx) => ChangeNotifierProvider.value(
                                   value: meetingStore,

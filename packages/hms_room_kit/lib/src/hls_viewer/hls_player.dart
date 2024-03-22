@@ -2,10 +2,9 @@ library;
 
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
-///Project imports
-import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:provider/provider.dart';
 
@@ -25,8 +24,9 @@ class HLSPlayer extends StatelessWidget {
             child: AspectRatio(
               aspectRatio: ratio,
               child: InkWell(
-                onTap: () =>
-                    context.read<HLSPlayerStore>().toggleButtonsVisibility(),
+                onTap: () => context
+                    .read<MeetingNavigationVisibilityController>()
+                    .toggleControlsVisibility(),
                 splashFactory: NoSplash.splashFactory,
                 child: IgnorePointer(
                   child: HMSHLSPlayer(

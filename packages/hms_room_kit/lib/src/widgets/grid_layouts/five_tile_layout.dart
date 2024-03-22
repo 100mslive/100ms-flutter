@@ -29,54 +29,97 @@ class FiveTileLayout extends StatelessWidget {
     ///The first row contains the tiles with index [startIndex] and [startIndex+1]
     ///The second row contains the tiles with index [startIndex+2] and [startIndex+3]
     ///The third row contains the center tile with index [startIndex+4]
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          child: Row(children: [
+    return MediaQuery.of(context).orientation == Orientation.portrait
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Row(children: [
+                  Expanded(
+                    child: ListenablePeerWidget(
+                        index: startIndex, peerTracks: peerTracks),
+                  ),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  Expanded(
+                    child: ListenablePeerWidget(
+                        index: startIndex + 1, peerTracks: peerTracks),
+                  ),
+                ]),
+              ),
+              const SizedBox(
+                height: 2,
+              ),
+              Expanded(
+                child: Row(children: [
+                  Expanded(
+                    child: ListenablePeerWidget(
+                        index: startIndex + 2, peerTracks: peerTracks),
+                  ),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  Expanded(
+                    child: ListenablePeerWidget(
+                        index: startIndex + 3, peerTracks: peerTracks),
+                  ),
+                ]),
+              ),
+              const SizedBox(
+                height: 2,
+              ),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width / 4),
+                  child: ListenablePeerWidget(
+                      index: startIndex + 4, peerTracks: peerTracks),
+                ),
+              ),
+            ],
+          )
+        : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Expanded(
-              child: ListenablePeerWidget(
-                  index: startIndex, peerTracks: peerTracks),
+              child: Row(children: [
+                Expanded(
+                  child: ListenablePeerWidget(
+                      index: startIndex, peerTracks: peerTracks),
+                ),
+                const SizedBox(
+                  width: 2,
+                ),
+                Expanded(
+                  child: ListenablePeerWidget(
+                      index: startIndex + 1, peerTracks: peerTracks),
+                ),
+                const SizedBox(
+                  width: 2,
+                ),
+                Expanded(
+                  child: ListenablePeerWidget(
+                      index: startIndex + 2, peerTracks: peerTracks),
+                )
+              ]),
             ),
             const SizedBox(
-              width: 2,
+              height: 2,
             ),
             Expanded(
-              child: ListenablePeerWidget(
-                  index: startIndex + 1, peerTracks: peerTracks),
+              child: Row(children: [
+                Expanded(
+                  child: ListenablePeerWidget(
+                      index: startIndex + 3, peerTracks: peerTracks),
+                ),
+                const SizedBox(
+                  width: 2,
+                ),
+                Expanded(
+                  child: ListenablePeerWidget(
+                      index: startIndex + 4, peerTracks: peerTracks),
+                ),
+              ]),
             ),
-          ]),
-        ),
-        const SizedBox(
-          height: 2,
-        ),
-        Expanded(
-          child: Row(children: [
-            Expanded(
-              child: ListenablePeerWidget(
-                  index: startIndex + 2, peerTracks: peerTracks),
-            ),
-            const SizedBox(
-              width: 2,
-            ),
-            Expanded(
-              child: ListenablePeerWidget(
-                  index: startIndex + 3, peerTracks: peerTracks),
-            ),
-          ]),
-        ),
-        const SizedBox(
-          height: 2,
-        ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width / 4),
-            child: ListenablePeerWidget(
-                index: startIndex + 4, peerTracks: peerTracks),
-          ),
-        ),
-      ],
-    );
+          ]);
   }
 }

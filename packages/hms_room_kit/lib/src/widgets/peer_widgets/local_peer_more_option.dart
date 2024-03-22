@@ -3,6 +3,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -33,14 +34,7 @@ class LocalPeerMoreOption extends StatelessWidget {
                 ///We only show the modal bottom sheet if the peer is the local peer
                 var peerTrackNode = context.read<PeerTrackNode>();
                 var meetingStore = context.read<MeetingStore>();
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  backgroundColor: HMSThemeColors.surfaceDim,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        topRight: Radius.circular(16)),
-                  ),
+                UtilityComponents.hmsModalBottomSheet(
                   context: context,
                   builder: (ctx) => ChangeNotifierProvider.value(
                       value: meetingStore,

@@ -28,13 +28,7 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 class UtilityComponents {
   static Future<dynamic> onBackPressed(BuildContext context) {
     MeetingStore meetingStore = context.read<MeetingStore>();
-    return showModalBottomSheet(
-      isScrollControlled: true,
-      backgroundColor: HMSThemeColors.surfaceDim,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-      ),
+    return hmsModalBottomSheet(
       context: context,
       builder: (ctx) => ChangeNotifierProvider.value(
           value: meetingStore,
@@ -147,6 +141,42 @@ class UtilityComponents {
     //     ],
     //   ),
     // );
+  }
+
+  static Future<dynamic> hmsModalBottomSheet(
+      {required BuildContext context,
+      required Widget Function(BuildContext) builder,
+      Color? backgroundColor}) {
+    return showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: backgroundColor ?? HMSThemeColors.surfaceDim,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+        ),
+        constraints: BoxConstraints(
+          maxWidth: (MediaQuery.of(context).orientation == Orientation.landscape
+              ? MediaQuery.of(context).size.width * 0.6
+              : MediaQuery.of(context).size.width),
+        ),
+        builder: builder);
+  }
+
+  static Future<dynamic> hmsFullWidthModalBottomSheet(
+      {required BuildContext context,
+      required Widget Function(BuildContext) builder,
+      Color? backgroundColor,
+      bool isFullWidth = false}) {
+    return showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: backgroundColor ?? HMSThemeColors.surfaceDim,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+        ),
+        builder: builder);
   }
 
   static Future<dynamic> onLeaveStudio(BuildContext context) {
