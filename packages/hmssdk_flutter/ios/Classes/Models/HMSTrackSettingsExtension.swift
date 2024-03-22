@@ -67,7 +67,7 @@ class HMSTrackSettingsExtension {
             if let muteState = audioSettingsDict["track_initial_state"] as? String {
                 initialMuteState = getinitialMuteState(from: muteState)
             }
-
+            
             if #available(iOS 13.0, *), !audioMixerSourceMap.isEmpty {
                 do {
                     let audioMixerSource = try HMSAudioMixerSource(nodes: audioMixerSourceMap.values.map {$0})
@@ -99,6 +99,11 @@ class HMSTrackSettingsExtension {
                     if let mode = getAudioMode(from: audioSettingsDict["audio_mode"] as? String) {
                         builder.audioMode = mode
                     }
+                    
+                    if let enableNoiseCancellation = audioSettingsDict["enable_noise_cancellation"] as? Bool{
+                        builder.noiseCancellationPlugin = 
+                    }
+
                 })
             }
         }

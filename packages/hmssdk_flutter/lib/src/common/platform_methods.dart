@@ -216,7 +216,13 @@ enum PlatformMethod {
   fetchLeaderboard,
   fetchPollList,
   fetchPollQuestions,
-  getPollResults
+  getPollResults,
+
+  ///Noise cancellation methods
+  enableNoiseCancellation,
+  disableNoiseCancellation,
+  isNoiseCancellationEnabled,
+  isNoiseCancellationAvailable
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -544,6 +550,16 @@ extension PlatformMethodValues on PlatformMethod {
         return "fetch_poll_questions";
       case PlatformMethod.getPollResults:
         return "get_poll_results";
+
+      ///Noise cancellation Methods
+      case PlatformMethod.enableNoiseCancellation:
+        return "enable_noise_cancellation";
+      case PlatformMethod.disableNoiseCancellation:
+        return "disable_noise_cancellation";
+      case PlatformMethod.isNoiseCancellationEnabled:
+        return "is_noise_cancellation_enabled";
+      case PlatformMethod.isNoiseCancellationAvailable:
+        return "is_noise_cancellation_available";
       default:
         return 'unknown';
     }
@@ -870,6 +886,18 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.fetchPollQuestions;
       case "get_poll_results":
         return PlatformMethod.getPollResults;
+
+      ///Noise cancellation Methods
+
+      case "enable_noise_cancellation":
+        return PlatformMethod.enableNoiseCancellation;
+      case "disable_noise_cancellation":
+        return PlatformMethod.disableNoiseCancellation;
+      case "is_noise_cancellation_enabled":
+        return PlatformMethod.isNoiseCancellationEnabled;
+      case "is_noise_cancellation_available":
+        return PlatformMethod.isNoiseCancellationAvailable;
+
       default:
         return PlatformMethod.unknown;
     }
