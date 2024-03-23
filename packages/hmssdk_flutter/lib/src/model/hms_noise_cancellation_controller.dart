@@ -3,7 +3,6 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 ///[HMSNoiseCancellationController] class exposes methods to control noise cancellation for the user
 abstract class HMSNoiseCancellationController {
-
   ///[enable] enables noise cancellation
   static Future<void> enable() async {
     return await PlatformService.invokeMethod(

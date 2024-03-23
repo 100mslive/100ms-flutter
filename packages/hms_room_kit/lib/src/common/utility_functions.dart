@@ -400,6 +400,7 @@ class Utilities {
   }) {
     return HMSTrackSetting(
         audioTrackSetting: HMSAudioTrackSetting(
+
             ///If audio mixer is disabled we set the audio source as null
             ///Note that this is only required for iOS
             audioSource: isAudioMixerDisabled
