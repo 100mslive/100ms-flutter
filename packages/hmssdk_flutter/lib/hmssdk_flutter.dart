@@ -112,6 +112,7 @@ export 'src/model/polls/hms_poll_leaderboard_entry.dart';
 export 'src/model/polls/hms_poll_leaderboard_response.dart';
 export 'src/model/polls/hms_poll_leaderboard_summary.dart';
 export 'src/model/polls/hms_poll_peer_info_response.dart';
+export 'src/model/hms_noise_cancellation_controller.dart';
 
 //Views
 export 'src/ui/meeting/hms_texture_view.dart';

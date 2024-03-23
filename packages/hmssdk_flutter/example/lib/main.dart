@@ -335,7 +335,8 @@ class _HomePageState extends State<HomePage> {
                     iOSScreenshareConfig: HMSIOSScreenshareConfig(
                         appGroup: "group.flutterhms",
                         preferredExtension:
-                            "live.100ms.flutter.FlutterBroadcastUploadExtension")))));
+                            "live.100ms.flutter.FlutterBroadcastUploadExtension"),
+                    enableNoiseCancellation: true))));
   }
 
   @override

@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 ///Project imports
-import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/enums/meeting_mode.dart';
 import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';

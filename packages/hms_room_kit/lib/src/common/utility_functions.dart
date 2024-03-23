@@ -390,40 +390,36 @@ class Utilities {
     }
   }
 
-  static HMSTrackSetting getTrackSetting(
-      {required bool isAudioMixerDisabled,
-      required bool joinWithMutedVideo,
-      required bool joinWithMutedAudio,
-      required bool isSoftwareDecoderDisabled,
-      HMSAudioMode? audioMode}) {
-    return isAudioMixerDisabled
-        ? HMSTrackSetting(
-            audioTrackSetting: HMSAudioTrackSetting(
-                trackInitialState: joinWithMutedAudio
-                    ? HMSTrackInitState.MUTED
-                    : HMSTrackInitState.UNMUTED,
-                audioMode: audioMode),
-            videoTrackSetting: HMSVideoTrackSetting(
-                trackInitialState: joinWithMutedVideo
-                    ? HMSTrackInitState.MUTED
-                    : HMSTrackInitState.UNMUTED,
-                forceSoftwareDecoder: isSoftwareDecoderDisabled))
-        : HMSTrackSetting(
-            audioTrackSetting: HMSAudioTrackSetting(
-                audioSource: HMSAudioMixerSource(node: [
-                  HMSAudioFilePlayerNode("audioFilePlayerNode"),
-                  HMSMicNode(),
-                  HMSScreenBroadcastAudioReceiverNode(),
-                ]),
-                trackInitialState: joinWithMutedAudio
-                    ? HMSTrackInitState.MUTED
-                    : HMSTrackInitState.UNMUTED,
-                audioMode: audioMode),
-            videoTrackSetting: HMSVideoTrackSetting(
-                trackInitialState: joinWithMutedVideo
-                    ? HMSTrackInitState.MUTED
-                    : HMSTrackInitState.UNMUTED,
-                forceSoftwareDecoder: isSoftwareDecoderDisabled));
+  static HMSTrackSetting getTrackSetting({
+    required bool isAudioMixerDisabled,
+    required bool joinWithMutedVideo,
+    required bool joinWithMutedAudio,
+    required bool isSoftwareDecoderDisabled,
+    required bool isNoiseCancellationEnabled,
+    HMSAudioMode? audioMode,
+  }) {
+    return HMSTrackSetting(
+        audioTrackSetting: HMSAudioTrackSetting(
+            ///If audio mixer is disabled we set the audio source as null
+            ///Note that this is only required for iOS
+            audioSource: isAudioMixerDisabled
+                ? null
+                : HMSAudioMixerSource(node: [
+                    HMSAudioFilePlayerNode("audioFilePlayerNode"),
+                    HMSMicNode(),
+                    HMSScreenBroadcastAudioReceiverNode(),
+                  ]),
+            trackInitialState: joinWithMutedAudio
+                ? HMSTrackInitState.MUTED
+                : HMSTrackInitState.UNMUTED,
+            audioMode: audioMode,
+            enableNoiseCancellation: isNoiseCancellationEnabled),
+        videoTrackSetting: HMSVideoTrackSetting(
+          trackInitialState: joinWithMutedVideo
+              ? HMSTrackInitState.MUTED
+              : HMSTrackInitState.UNMUTED,
+          forceSoftwareDecoder: isSoftwareDecoderDisabled,
+        ));
   }
 
   static String getTimedMetadataEmojiFromId(String emojiId) {

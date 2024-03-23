@@ -10,6 +10,7 @@ import 'package:hms_room_kit/hms_room_kit.dart';
 ///[endPoints] - The token and init endpoints
 ///[debugInfo] - To enable the debug mode for the prebuilt
 ///[iOSScreenshareConfig] - Screen share Config, to enable screen share for iOS
+///[enableNoiseCancellation] - To enable noise cancellation in prebuilt
 class HMSPrebuiltOptions {
   //The name of the user
   final String? userName;
@@ -28,11 +29,16 @@ class HMSPrebuiltOptions {
   //this config
   final HMSIOSScreenshareConfig? iOSScreenshareConfig;
 
+  ///To enable noise cancellation in prebuilt.
+  ///Default value is true
+  final bool enableNoiseCancellation;
+
   ///[HMSPrebuiltOptions] is a class that is used to pass the options to the prebuilt
   HMSPrebuiltOptions(
       {this.userName,
       this.userId,
       this.endPoints,
       this.debugInfo = false,
-      this.iOSScreenshareConfig});
+      this.iOSScreenshareConfig,
+      this.enableNoiseCancellation = false});
 }
