@@ -263,6 +263,12 @@ class MeetingStore extends ChangeNotifier
   ///List of bottom sheets currently open
   List<BuildContext> bottomSheets = [];
 
+  ///Boolean to check whether noise cancellation is available
+  bool isNoiseCancellationAvailable = false;
+
+  ///Boolean to track whether noise cancellation is enabled or not
+  bool isNoiseCancellationEnabled = false;
+
   Future<HMSException?> join(String userName, String? tokenData) async {
     late HMSConfig joinConfig;
 
@@ -837,6 +843,7 @@ class MeetingStore extends ChangeNotifier
     streamingType["hls"] =
         room.hmshlsStreamingState?.state ?? HMSStreamingState.none;
 
+    checkNoiseCancellationAvailability();
     setParticipantsList(roles);
     toggleAlwaysScreenOn();
     for (HMSPeer each in room.peers!) {
@@ -2363,6 +2370,28 @@ class MeetingStore extends ChangeNotifier
         pollQuestions[index].updateState(data);
       }
     }
+  }
+
+  ///Noise cancellation Methods
+
+  void toggleNoiseCancellation() {
+    if (isNoiseCancellationEnabled) {
+      _hmsSDKInteractor.disableNoiseCancellation();
+    } else {
+      _hmsSDKInteractor.enableNoiseCancellation();
+    }
+    isNoiseCancellationEnabled = !isNoiseCancellationEnabled;
+    notifyListeners();
+  }
+
+  void checkNoiseCancellationAvailability() async {
+    isNoiseCancellationAvailable =
+        await _hmsSDKInteractor.isNoiseCancellationAvailable();
+    if (isNoiseCancellationAvailable) {
+      isNoiseCancellationEnabled =
+          await _hmsSDKInteractor.isNoiseCancellationEnabled();
+    }
+    notifyListeners();
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod

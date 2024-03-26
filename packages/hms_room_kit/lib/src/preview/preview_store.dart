@@ -51,6 +51,10 @@ class PreviewStore extends ChangeNotifier
 
   int peerCount = 0;
 
+  bool isNoiseCancellationAvailable = false;
+
+  bool isNoiseCancellationEnabled = false;
+
   @override
   void onHMSError({required HMSException error}) {
     this.error = error;
@@ -61,6 +65,7 @@ class PreviewStore extends ChangeNotifier
   void onPreview({required HMSRoom room, required List<HMSTrack> localTracks}) {
     log("onPreview-> room: ${room.toString()}");
     this.room = room;
+    checkNoiseCancellationAvailablility();
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
         HMSRoomLayout.resetLayout(each.role.name);
@@ -201,6 +206,26 @@ class PreviewStore extends ChangeNotifier
     if (isVideoOn) {
       hmsSDKInteractor.switchCamera();
     }
+  }
+
+  void checkNoiseCancellationAvailablility() async {
+    isNoiseCancellationAvailable =
+        await hmsSDKInteractor.isNoiseCancellationAvailable();
+    if (isNoiseCancellationAvailable) {
+      isNoiseCancellationEnabled =
+          await hmsSDKInteractor.isNoiseCancellationEnabled();
+    }
+    notifyListeners();
+  }
+
+  void toggleNoiseCancellation() async {
+    if (isNoiseCancellationEnabled) {
+      hmsSDKInteractor.disableNoiseCancellation();
+    } else {
+      hmsSDKInteractor.enableNoiseCancellation();
+    }
+    isNoiseCancellationEnabled = !isNoiseCancellationEnabled;
+    notifyListeners();
   }
 
   void addLogsListener(HMSLogListener hmsLogListener) {

@@ -290,6 +290,10 @@ class HmssdkFlutterPlugin :
                 pollActions(call,result)
             }
 
+            "enable_noise_cancellation", "disable_noise_cancellation", "is_noise_cancellation_enabled", "is_noise_cancellation_available" -> {
+                HMSNoiseCancellationControllerAction.noiseCancellationActions(call, result, hmssdk!!)
+            }
+
             else -> {
                 result.notImplemented()
             }

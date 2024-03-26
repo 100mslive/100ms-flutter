@@ -317,6 +317,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
         case "add_poll_update_listener", "remove_poll_update_listener", "quick_start_poll", "add_single_choice_poll_response", "add_multi_choice_poll_response", "stop_poll", "fetch_leaderboard", "fetch_poll_list", "fetch_poll_questions", "get_poll_results":
             pollsAction(call, result)
+        
+          // MARK: - Noise Cancellation
+        case "enable_noise_cancellation", "disable_noise_cancellation", "is_noise_cancellation_enabled", "is_noise_cancellation_available":
+            HMSNoiseCancellationController.noiseCancellationActions(call, result)
             
         default:
             result(FlutterMethodNotImplemented)

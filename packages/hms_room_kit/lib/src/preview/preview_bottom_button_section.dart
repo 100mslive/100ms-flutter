@@ -102,6 +102,25 @@ class PreviewBottomButtonSection extends StatelessWidget {
               ),
               Row(
                 children: [
+                  if (previewStore.isNoiseCancellationAvailable &&
+                      previewStore.isAudioOn)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: HMSEmbeddedButton(
+                          onTap: () {
+                            previewStore.toggleNoiseCancellation();
+                          },
+                          isActive: previewStore.isNoiseCancellationEnabled,
+                          child: SvgPicture.asset(
+                            'packages/hms_room_kit/lib/src/assets/icons/music_wave.svg',
+                            colorFilter: ColorFilter.mode(
+                                HMSThemeColors.onSurfaceHighEmphasis,
+                                BlendMode.srcIn),
+                            fit: BoxFit.scaleDown,
+                            semanticsLabel: "noise_cancellation_button",
+                          )),
+                    ),
+
                   ///This renders the [Audio Device Selection Button] only if the
                   ///Peer role has the permission to publish audio
                   ///and the Peer is not null

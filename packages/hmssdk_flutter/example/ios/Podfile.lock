@@ -126,6 +126,7 @@ PODS:
   - HMSBroadcastExtensionSDK (0.0.9)
   - HMSHLSPlayerSDK (0.0.2):
     - HMSAnalyticsSDK (= 0.0.2)
+  - HMSNoiseCancellationModels (1.0.0)
   - HMSSDK (1.7.0):
     - HMSAnalyticsSDK (= 0.0.2)
     - HMSWebRTC (= 1.0.5118)
@@ -133,6 +134,7 @@ PODS:
     - Flutter
     - HMSBroadcastExtensionSDK (= 0.0.9)
     - HMSHLSPlayerSDK (= 0.0.2)
+    - HMSNoiseCancellationModels (= 1.0.0)
     - HMSSDK (= 1.7.0)
   - HMSWebRTC (1.0.5118)
   - MLImage (1.0.0-beta4)
@@ -220,6 +222,7 @@ SPEC REPOS:
     - HMSAnalyticsSDK
     - HMSBroadcastExtensionSDK
     - HMSHLSPlayerSDK
+    - HMSNoiseCancellationModels
     - HMSSDK
     - HMSWebRTC
     - MLImage
@@ -289,8 +292,9 @@ SPEC CHECKSUMS:
   HMSAnalyticsSDK: 4d2a88a729b1eb42f3d25f217c28937ec318a5b7
   HMSBroadcastExtensionSDK: d80fe325f6c928bd8e5176290b5a4b7ae15d6fbb
   HMSHLSPlayerSDK: 6a54ad4d12f3dc2270d1ecd24019d71282a4f6a3
+  HMSNoiseCancellationModels: a3bda1405a16015632f4bcabd46ce48f35103b02
   HMSSDK: 421b4ce83a601bbda283b3b9fbcd1da6898d2a84
-  hmssdk_flutter: dd0d9bcb8fb90c54319d0114e917c4607c0bc382
+  hmssdk_flutter: 8f60b63db6286c0b92d9224585362ade6d7e1602
   HMSWebRTC: 4487c7200f1e9358412c1d8cd974edd2766467dc
   MLImage: 7bb7c4264164ade9bf64f679b40fb29c8f33ee9b
   MLKitBarcodeScanning: 04e264482c5f3810cb89ebc134ef6b61e67db505
@@ -309,4 +313,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 9fb9f6e431a2c6c79942252e94b241ac7972ac90
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.14.3

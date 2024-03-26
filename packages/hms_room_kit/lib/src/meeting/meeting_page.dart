@@ -33,9 +33,13 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_left_room_screen.dar
 class MeetingPage extends StatefulWidget {
   final bool isRoomMute;
   final HMSAudioDevice currentAudioDeviceMode;
+  final bool isNoiseCancellationEnabled;
 
   const MeetingPage(
-      {Key? key, this.isRoomMute = true, required this.currentAudioDeviceMode})
+      {Key? key,
+      this.isRoomMute = true,
+      required this.currentAudioDeviceMode,
+      this.isNoiseCancellationEnabled = false})
       : super(key: key);
 
   @override
@@ -61,6 +65,8 @@ class _MeetingPageState extends State<MeetingPage> {
     }
     context.read<MeetingStore>().currentAudioDeviceMode =
         widget.currentAudioDeviceMode;
+    context.read<MeetingStore>().isNoiseCancellationEnabled =
+        widget.isNoiseCancellationEnabled;
   }
 
   bool showError(int? errorCode) {

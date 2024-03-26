@@ -51,6 +51,13 @@ class HMSTrackSettingsExtension {
                         else -> hmsAudioTrackSettings.setPhoneCallMuteState(PhoneCallState.DISABLE_MUTE_ON_VOIP_PHONE_CALL_RING)
                     }
                 }
+
+                val enableNoiseCancellation = audioHashMap["enable_noise_cancellation"] as? Boolean
+                enableNoiseCancellation?.let {
+                    if(it){
+                        hmsAudioTrackSettings.enableNoiseCancellation(true)
+                    }
+                }
             }
 
             var hmsVideoTrackSettings = HMSVideoTrackSettings.Builder()

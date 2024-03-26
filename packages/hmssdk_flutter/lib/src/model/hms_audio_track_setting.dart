@@ -35,13 +35,19 @@ class HMSAudioTrackSetting {
   ///Refer: Read more about phone call state [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/track/set-track-settings#phonecallstate-android-only)
   final HMSAndroidPhoneCallState phoneCallState;
 
+  ///[enableNoiseCancellation] property sets the noise cancellation status in the room whether is enabled or not.
+  ///
+  ///Refer: Read more about noise cancellation [here](///)
+  final bool enableNoiseCancellation;
+
   HMSAudioTrackSetting(
       {this.useHardwareAcousticEchoCanceler,
       this.audioSource,
       this.trackInitialState = HMSTrackInitState.UNMUTED,
       this.audioMode,
       this.phoneCallState =
-          HMSAndroidPhoneCallState.DISABLE_MUTE_ON_VOIP_PHONE_CALL_RING});
+          HMSAndroidPhoneCallState.DISABLE_MUTE_ON_VOIP_PHONE_CALL_RING,
+      this.enableNoiseCancellation = false});
 
   factory HMSAudioTrackSetting.fromMap(Map map) {
     List<HMSAudioNode> nodeList = [];
@@ -72,6 +78,11 @@ class HMSAudioTrackSetting {
       }
     }
 
+    bool isNoiseCancellationEnabled = false;
+    if (map.containsKey("enable_noise_cancellation")) {
+      isNoiseCancellationEnabled = map["enable_noise_cancellation"];
+    }
+
     return HMSAudioTrackSetting(
         useHardwareAcousticEchoCanceler:
             map['user_hardware_acoustic_echo_canceler'] ?? null,
@@ -81,7 +92,8 @@ class HMSAudioTrackSetting {
                 map['track_initial_state'])
             : HMSTrackInitState.UNMUTED,
         audioMode: audioMode,
-        phoneCallState: phoneCallState);
+        phoneCallState: phoneCallState,
+        enableNoiseCancellation: isNoiseCancellationEnabled);
   }
 
   Map<String, dynamic> toMap() {
@@ -96,7 +108,8 @@ class HMSAudioTrackSetting {
           : null,
       'phone_call_state':
           HMSAndroidPhoneCallStateValue.getValuefromHMSPhoneCallState(
-              phoneCallState)
+              phoneCallState),
+      'enable_noise_cancellation': enableNoiseCancellation
     };
   }
 }

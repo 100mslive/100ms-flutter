@@ -73,6 +73,8 @@ class _PreviewPageState extends State<PreviewPage> {
               currentAudioDeviceMode: currentAudioDeviceMode,
               tokenData: widget.tokenData,
               hmsSDKInteractor: previewStore.hmsSDKInteractor,
+              isNoiseCancellationEnabled:
+                  previewStore.isNoiseCancellationEnabled,
             )));
   }
 
