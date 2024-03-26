@@ -189,7 +189,7 @@ packages:
     description:
       path: "packages/hmssdk_flutter"
       ref: develop
-      resolved-ref: "515dd7d613abbf632808473167367f84d313e683"
+      resolved-ref: e375d2ecf8e85055cc3aeb465c6e5fc33c253770
       url: "https://github.com/100mslive/100ms-flutter.git"
     source: git
     version: "1.10.0"
