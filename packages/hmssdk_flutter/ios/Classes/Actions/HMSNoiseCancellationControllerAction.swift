@@ -55,7 +55,7 @@ class HMSNoiseCancellationController{
                 print("An error occurred: \(error)")
             }
         }else{
-            HMSErrorLogger.logError(#function, "noise cancellation controller is not initialised. Please enable noise cancellation in audio track settings", "NULL_ERROR")
+            HMSErrorLogger.logError(#function, "Noise cancellation controller is not initialised. Please enable noise cancellation in audio track settings while initialising HMSSDK", "NULL_ERROR")
         }
     }
     
@@ -71,7 +71,7 @@ class HMSNoiseCancellationController{
                 print("An error occurred: \(error)")
             }
         }else{
-            HMSErrorLogger.logError(#function, "noise cancellation controller is not initialised. Please enable noise cancellation in audio track settings", "NULL_ERROR")
+            HMSErrorLogger.logError(#function, "Noise cancellation controller is not initialised. Please enable noise cancellation in audio track settings while initialising HMSSDK", "NULL_ERROR")
         }
     }
     
@@ -83,7 +83,7 @@ class HMSNoiseCancellationController{
                 let isNoiseCancellationEnabled = controller.isEnabled()
             result(HMSResultExtension.toDictionary(true,isNoiseCancellationEnabled))
         }else{
-            HMSErrorLogger.logError(#function, "noise cancellation controller is not initialised. Please enable noise cancellation in audio track settings", "NULL_ERROR")
+            HMSErrorLogger.logError(#function, "Noise cancellation controller is not initialised. Please enable noise cancellation in audio track settings while initialising HMSSDK", "NULL_ERROR")
         }
     }
     
@@ -95,7 +95,7 @@ class HMSNoiseCancellationController{
             let isNoiseCancellationAvailable = controller.isNoiseCancellationAvailable
             result(HMSResultExtension.toDictionary(true,isNoiseCancellationAvailable))
         }else{
-            HMSErrorLogger.logError(#function, "noise cancellation controller is not initialised. Please enable noise cancellation in audio track settings", "NULL_ERROR")
+            HMSErrorLogger.logError(#function, "Noise cancellation controller is not initialised. Please enable noise cancellation in audio track settings while initialising HMSSDK", "NULL_ERROR")
         }
     }
     

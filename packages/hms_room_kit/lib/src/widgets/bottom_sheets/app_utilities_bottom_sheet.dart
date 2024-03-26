@@ -362,29 +362,25 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                   ? "Recording"
                                   : "Record",
                         ),
-                if (meetingStore.isNoiseCancellationAvailable)
-                  Selector<MeetingStore, bool>(
-                      selector: (_, meetingStore) =>
-                          meetingStore.isNoiseCancellationEnabled,
-                      builder: (_, isNoiseCancellationEnabled, __) {
-                        return MoreOptionItem(
-                            onTap: () async {
-                              Navigator.pop(context);
-                              meetingStore.toggleNoiseCancellation();
-                            },
-                            isActive: isNoiseCancellationEnabled,
-                            optionIcon: SvgPicture.asset(
-                              "packages/hms_room_kit/lib/src/assets/icons/music_wave.svg",
-                              height: 20,
-                              width: 20,
-                              colorFilter: ColorFilter.mode(
-                                  HMSThemeColors.onSurfaceHighEmphasis,
-                                  BlendMode.srcIn),
-                            ),
-                            optionText: isNoiseCancellationEnabled
-                                ? "Noise Reduced"
-                                : "Reduce Noise");
-                      }),
+                if (meetingStore.isNoiseCancellationAvailable &&
+                    meetingStore.isMicOn)
+                  MoreOptionItem(
+                      onTap: () async {
+                        Navigator.pop(context);
+                        meetingStore.toggleNoiseCancellation();
+                      },
+                      isActive: meetingStore.isNoiseCancellationEnabled,
+                      optionIcon: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/src/assets/icons/music_wave.svg",
+                        height: 20,
+                        width: 20,
+                        colorFilter: ColorFilter.mode(
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
+                      ),
+                      optionText: meetingStore.isNoiseCancellationEnabled
+                          ? "Noise Reduced"
+                          : "Reduce Noise"),
               ],
             ),
           ],
