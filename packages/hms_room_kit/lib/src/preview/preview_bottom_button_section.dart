@@ -102,7 +102,8 @@ class PreviewBottomButtonSection extends StatelessWidget {
               ),
               Row(
                 children: [
-                  if (previewStore.isNoiseCancellationAvailable && previewStore.isAudioOn)
+                  if (previewStore.isNoiseCancellationAvailable &&
+                      previewStore.isAudioOn)
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: HMSEmbeddedButton(
