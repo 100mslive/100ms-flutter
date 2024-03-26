@@ -1,5 +1,8 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 
+- Added active noise cancellation feature
+https://100ms.atlassian.net/browse/FLUT-259
+
 - Fixed: UI inconsistent when using a Screenshare only Role
 https://100ms.atlassian.net/browse/FLUT-279
 
@@ -8,5 +11,5 @@ https://100ms.atlassian.net/browse/FLUT-280
 
 Room Kit: 1.1.0
 Core SDK: 1.10.0
-Android SDK: 2.9.51
+Android SDK: 2.9.52
 iOS SDK: 1.7.0
