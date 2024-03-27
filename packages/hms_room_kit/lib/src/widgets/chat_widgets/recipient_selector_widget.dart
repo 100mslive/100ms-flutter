@@ -305,7 +305,10 @@ class _RecipientSelectorWidgetState extends State<RecipientSelectorWidget> {
                                         child: Column(
                                           children: data.item1
                                               .where((peer) =>
-                                                  peer.isLocal == false)
+
+                                                  ///Don't show local and SIP peers
+                                                  peer.isLocal == false &&
+                                                  peer.type != HMSPeerType.sip)
                                               .map((peer) => ListTile(
                                                     onTap: () {
                                                       setState(() {
