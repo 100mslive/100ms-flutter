@@ -23,6 +23,7 @@ export 'src/enum/hms_simulcast_layer.dart';
 export 'src/enum/hms_audio_mode.dart';
 export 'src/enum/hms_hls_playback_state.dart';
 export 'src/enum/hms_poll_enum.dart';
+export 'src/enum/hms_peer_type.dart';
 
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';

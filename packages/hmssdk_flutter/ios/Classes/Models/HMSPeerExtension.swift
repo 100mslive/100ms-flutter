@@ -16,6 +16,7 @@ class  HMSPeerExtension {
             "peer_id": peer.peerID,
             "name": peer.name,
             "is_local": peer.isLocal,
+            "type": getPeerType(peer.type),
             "is_hand_raised": peer.isHandRaised,
             "customer_description": peer.metadata ?? "",
             "customer_user_id": peer.customerUserID ?? "",
@@ -70,6 +71,17 @@ class  HMSPeerExtension {
             return "handRaiseUpdated"
         @unknown default:
             return "defaultUpdate"
+        }
+    }
+    
+    private static func getPeerType(_ peerType: HMSPeerType) -> String {
+        switch peerType {
+        case .sip:
+            return "sip"
+        case .regular:
+            return "regular"
+        @unknown default:
+            return "regular"
         }
     }
 }

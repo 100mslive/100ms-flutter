@@ -21,6 +21,10 @@ class HMSPeer {
   ///returns whether the peer is local or not.
   final bool isLocal;
 
+  ///contains the type of peer whether it's a regular or SIP peer
+  ///Default value is regular
+  final HMSPeerType type;
+
   ///returns whether peer's hand is raised or not
   final bool isHandRaised;
 
@@ -51,21 +55,21 @@ class HMSPeer {
   ///updatedAt is the time when the peer object was last updated
   final DateTime? updatedAt;
 
-  HMSPeer({
-    required this.peerId,
-    required this.name,
-    required this.isLocal,
-    required this.role,
-    required this.isHandRaised,
-    this.customerUserId,
-    this.metadata,
-    this.audioTrack,
-    this.videoTrack,
-    this.auxiliaryTracks,
-    this.networkQuality,
-    this.joinedAt,
-    this.updatedAt,
-  });
+  HMSPeer(
+      {required this.peerId,
+      required this.name,
+      required this.isLocal,
+      required this.role,
+      required this.isHandRaised,
+      this.customerUserId,
+      this.metadata,
+      this.audioTrack,
+      this.videoTrack,
+      this.auxiliaryTracks,
+      this.networkQuality,
+      this.joinedAt,
+      this.updatedAt,
+      this.type = HMSPeerType.regular});
 
   ///important to compare using [peerId]
   @override

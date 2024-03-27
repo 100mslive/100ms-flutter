@@ -1,6 +1,7 @@
 package live.hms.hmssdk_flutter
 
 import live.hms.video.sdk.models.HMSPeer
+import live.hms.video.sdk.models.HMSPeerType
 import live.hms.video.sdk.models.enums.HMSPeerUpdate
 
 class HMSPeerExtension {
@@ -14,6 +15,7 @@ class HMSPeerExtension {
             args["is_local"] = peer.isLocal
             args["role"] = HMSRoleExtension.toDictionary(peer.hmsRole)
             args["metadata"] = peer.metadata
+            args["type"] = getValueFromPeerType(peer.type)
             args["is_hand_raised"] = peer.isHandRaised
             args["customer_user_id"] = peer.customerUserID
             args["audio_track"] = HMSTrackExtension.toDictionary(peer.audioTrack)
@@ -43,6 +45,14 @@ class HMSPeerExtension {
                 HMSPeerUpdate.NO_DOMINANT_SPEAKER -> "noDominantSpeaker"
                 HMSPeerUpdate.HAND_RAISED_CHANGED -> "handRaiseUpdated"
                 else -> "defaultUpdate"
+            }
+        }
+
+        private fun getValueFromPeerType(peerType: HMSPeerType): String {
+            return when(peerType){
+                HMSPeerType.SIP -> "sip"
+                HMSPeerType.REGULAR -> "regular"
+                else -> "regular"
             }
         }
     }

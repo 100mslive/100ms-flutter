@@ -210,11 +210,9 @@ packages:
   hmssdk_flutter:
     dependency: transitive
     description:
-      path: "packages/hmssdk_flutter"
-      ref: develop
-      resolved-ref: e375d2ecf8e85055cc3aeb465c6e5fc33c253770
-      url: "https://github.com/100mslive/100ms-flutter.git"
-    source: git
+      path: "../../hmssdk_flutter"
+      relative: true
+    source: path
     version: "1.10.0"
   http:
     dependency: transitive
