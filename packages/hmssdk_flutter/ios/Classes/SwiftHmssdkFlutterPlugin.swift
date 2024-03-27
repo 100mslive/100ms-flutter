@@ -791,10 +791,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             sdk.frameworkInfo = framework
 
-            if setLogger {
-                sdk.logger = self
-            }
-
             var trackSettings: HMSTrackSettings?
             if let settingsDict = arguments?["hms_track_setting"] as? [AnyHashable: Any] {
                 self.audioMixerSourceInit(settingsDict, sdk, result)
@@ -803,6 +799,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             if let settings = trackSettings {
                 sdk.trackSettings = settings
+            }
+            
+            if setLogger {
+                sdk.logger = self
             }
 
             result(true)
