@@ -796,6 +796,7 @@ class MeetingStore extends ChangeNotifier
 
   Future<void> getCurrentAudioDevice() async {
     currentAudioOutputDevice = await _hmsSDKInteractor.getCurrentAudioDevice();
+    notifyListeners();
   }
 
   void switchAudioOutput({required HMSAudioDevice audioDevice}) {
@@ -1322,6 +1323,7 @@ class MeetingStore extends ChangeNotifier
       availableAudioOutputDevices.clear();
       availableAudioOutputDevices.addAll(availableAudioDevice);
     }
+    notifyListeners();
   }
 
 // Helper Methods

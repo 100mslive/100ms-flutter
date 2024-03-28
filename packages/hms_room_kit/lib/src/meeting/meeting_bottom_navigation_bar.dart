@@ -205,12 +205,18 @@ class _MeetingBottomNavigationBarState
                                                         const AudioSettingsBottomSheet()));
                                       },
                                       onColor: HMSThemeColors.backgroundDim,
-                                      isActive: true,
+                                      isActive: data.item1 ==
+                                              HMSAudioDevice.SPEAKER_PHONE
+                                          ? false
+                                          : true,
                                       child: SvgPicture.asset(
                                         'packages/hms_room_kit/lib/src/assets/icons/${!data.item2 ? "speaker_state_off" : Utilities.getAudioDeviceIconName(data.item1)}.svg',
                                         colorFilter: ColorFilter.mode(
-                                            HMSThemeColors
-                                                .onSurfaceHighEmphasis,
+                                            data.item1 ==
+                                                    HMSAudioDevice.SPEAKER_PHONE
+                                                ? HMSThemeColors.baseBlack
+                                                : HMSThemeColors
+                                                    .onSurfaceHighEmphasis,
                                             BlendMode.srcIn),
                                         fit: BoxFit.scaleDown,
                                         semanticsLabel: "settings_button",

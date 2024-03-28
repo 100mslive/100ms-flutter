@@ -4,6 +4,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_room_kit/src/preview/preview_device_settings.dart';
@@ -112,11 +113,17 @@ class PreviewBottomButtonSection extends StatelessWidget {
                                 value: previewStore,
                                 child: const PreviewDeviceSettings()));
                       },
-                      isActive: true,
+                      isActive: previewStore.currentAudioOutputDevice ==
+                              HMSAudioDevice.SPEAKER_PHONE
+                          ? false
+                          : true,
                       child: SvgPicture.asset(
                         'packages/hms_room_kit/lib/src/assets/icons/${previewStore.isRoomMute ? "speaker_state_off" : Utilities.getAudioDeviceIconName(previewStore.currentAudioOutputDevice)}.svg',
                         colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
+                            previewStore.currentAudioOutputDevice ==
+                                    HMSAudioDevice.SPEAKER_PHONE
+                                ? HMSThemeColors.baseBlack
+                                : HMSThemeColors.onSurfaceHighEmphasis,
                             BlendMode.srcIn),
                         fit: BoxFit.scaleDown,
                         semanticsLabel: "settings_button",
