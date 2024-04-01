@@ -38,7 +38,7 @@ flutter pub get
     - Audio Room Template 
     - Video Room Template
 
-    In the above templates make sure having two roles `speaker` and `listener` with permissions to `publish` and `subscribe` each other. Also, ensure that both have end room and room state permissions.
+    In the above templates make sure having two roles `speaker` and `listener` with permissions to `publish` and `subscribe` each other. Also, ensure that both have `end room` and `room state` permissions.
 
 | Listener | Speaker |
 |----------|---------|
