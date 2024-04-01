@@ -1,6 +1,9 @@
 # Flutter One To One Audio/Video Calling Application
 
-Welcome to our One To One Audio/video Calling Application(Blitz 100ms), an application built for audio and video calling in Flutter. This application leverages the open source `hms_room_kit` package for efficient audio/video calls, integrates with CallKit for seamless Android/iOS call functionalities, and utilizes Firebase for reliable notifications.
+Welcome to our One-to-One Audio-Video Calling Flutter app named Blitz 100ms.
+
+
+This application leverages the open source `hms_room_kit` package for efficient audio/video calls, integrates with CallKit for seamless Android/iOS call functionalities, and utilizes Firebase for push notifications.
 
 ## Features
 Audio and video calling using `hms_room_kit`.
@@ -29,16 +32,16 @@ cd directory_name
 flutter pub get
 ```
 
-> Note 🔑: The app utilizes the `callkit-ui` branch from the `hms_room_kit` repository instead of the published package to integrate a customized calling interface, showcasing the flexibility and collaborative nature of open-source development.
+> Note 🔑: The app utilizes the `callkit-ui` branch from the `hms_room_kit` repository instead of the published package to integrate a customized calling interface.
 
-4. Set up Firebase for push notifications, google sign-in, and cloud functions. Add `GoogleService-Info.plist` to the `ios/Runner` directory and `google-services.json` to `android/app` directory.
+4. Set up Firebase for Push Notifications, Google Sign-in, and Cloud functions. Add `GoogleService-Info.plist` to the `ios/Runner` directory and `google-services.json` to `android/app` directory.
 
 5. Create a 100ms account, and setup below templates:
 
     - Audio Room Template 
     - Video Room Template
 
-    In the above templates make sure having two roles `speaker` and `listener` with permissions to `publish` and `subscribe` each other. Also, ensure that both have `end room` and `room state` permissions.
+    In the above templates, ensure two roles are `speaker` and `listener` with permissions to `publish` and `subscribe` to each other. Also, ensure both roles have `end room` and `room state` permissions.
 
 | Listener | Speaker |
 |----------|---------|
@@ -73,6 +76,10 @@ flutter run
 
 ## Usage
 
-Upon launching the app, users can initiate audio or video calls to other users through the interface provided by hms_room_kit. Incoming calls will trigger Firebase notifications, prompting the receiver to accept or decline the call. On iOS devices, CallKit integration ensures that the call UI is consistent with the native call experience.
+Upon launching the app, users can initiate audio or video calls to other users through the interface provided by hms_room_kit.
+
+Incoming calls will trigger Firebase notifications, prompting the receiver to accept or decline the call. 
+
+On iOS devices, CallKit integration ensures that the call UI is consistent with the native call experience.
 
 ///Add video here
