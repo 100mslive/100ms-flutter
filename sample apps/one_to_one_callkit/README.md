@@ -38,7 +38,15 @@ flutter pub get
 
     In above templates make sure having two roles `speaker` and `listener` with permissions to `publish` and `subscribe` each other. Also ensure that both has end room and room state permissions.
 
-    ///Add images here
+| Listener | Speaker |
+|----------|---------|
+|  <img width="494" alt="Screenshot 2024-04-01 at 6 11 46 PM" src="https://github.com/100mslive/100ms-flutter/assets/93931528/c3cfaa68-1872-44a5-91fe-37af8a7232ca"> | <img width="494" alt="Screenshot 2024-04-01 at 6 12 03 PM" src="https://github.com/100mslive/100ms-flutter/assets/93931528/90f24e52-a83c-488f-b753-9bc9bc47ba0f"> |
+
+For room state permissions enable the room state from `Advanced Settings`
+
+
+<img width="989" alt="Screenshot 2024-04-01 at 12 12 38 AM" src="https://github.com/100mslive/100ms-flutter/assets/93931528/cde6f46e-bc5b-4c06-bc08-edc461871b04">
+
 
 6. Add following fields in below files:
 
