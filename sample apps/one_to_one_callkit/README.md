@@ -29,6 +29,8 @@ cd directory_name
 flutter pub get
 ```
 
+> Note 🔑: The app utilizes the `callkit-ui` branch from the `hms_room_kit` repository instead of the published package to integrate a customized calling interface, showcasing the flexibility and collaborative nature of open-source development.
+
 4. Set up Firebase for push notifications, google sign-in, and cloud functions. Add `GoogleService-Info.plist` to the `ios/Runner` directory and `google-services.json` to `android/app` directory.
 
 5. Create a 100ms account, and setup below templates:
