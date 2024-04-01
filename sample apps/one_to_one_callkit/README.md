@@ -25,7 +25,7 @@ git clone https://github.com/100mslive/100ms-flutter.git
 2. Navigate to the project directory
 
 ```bash
-cd directory_name
+cd 100ms-flutter/sample apps/one_to_one_callkit
 ```
 
 3. Install dependencies
