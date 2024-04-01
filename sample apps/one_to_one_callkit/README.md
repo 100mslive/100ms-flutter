@@ -1,9 +1,9 @@
-# Flutter One To One Audio/video Calling Application
+# Flutter One To One Audio/Video Calling Application
 
 Welcome to our One To One Audio/video Calling Application(Blitz 100ms), an application built for audio and video calling in Flutter. This application leverages the open source `hms_room_kit` package for efficient audio/video calls, integrates with CallKit for seamless Android/iOS call functionalities, and utilizes Firebase for reliable notifications.
 
 ## Features
-Audio and video calling using hms_room_kit.
+Audio and video calling using `hms_room_kit`.
 CallKit integration for iOS to handle audio/video calls natively.
 Firebase notifications to alert users of incoming calls, even when the app is in the background.
 
@@ -29,14 +29,14 @@ cd directory_name
 flutter pub get
 ```
 
-4. Setup Firebase for push notifications, google signin and cloud functions. Add `GoogleService-Info.plist` to the `ios/Runner` directory and `google-services.json` to `android/app` directory.
+4. Set up Firebase for push notifications, google sign-in, and cloud functions. Add `GoogleService-Info.plist` to the `ios/Runner` directory and `google-services.json` to `android/app` directory.
 
 5. Create a 100ms account, and setup below templates:
 
     - Audio Room Template 
     - Video Room Template
 
-    In above templates make sure having two roles `speaker` and `listener` with permissions to `publish` and `subscribe` each other. Also ensure that both has end room and room state permissions.
+    In the above templates make sure having two roles `speaker` and `listener` with permissions to `publish` and `subscribe` each other. Also, ensure that both have end room and room state permissions.
 
 | Listener | Speaker |
 |----------|---------|
@@ -48,11 +48,11 @@ For room state permissions enable the room state from `Advanced Settings`
 <img width="989" alt="Screenshot 2024-04-01 at 12 12 38 AM" src="https://github.com/100mslive/100ms-flutter/assets/93931528/cde6f46e-bc5b-4c06-bc08-edc461871b04">
 
 
-6. Add following fields in below files:
+6. Add the following fields in the below files:
 
   - Update `CFBundleURLSchemes` in `Info.plist` with your client ID from `GoogleService-Info.plist`
-  - Update management token from 100ms dashboard, Developer section in `functions/index.js`
-  - Add Audio and video template ids in `createRoom` method in `lib/services/app_utilities.dart`
+  - Update management token from 100ms dashboard, `Developer section` in `functions/index.js`
+  - Add Audio and video template IDs in `createRoom` method in `lib/services/app_utilities.dart`
   - Add authentication client id in `loginUser` method from `GoogleService-Info.plist` file in `lib/services/app_utilities.dart`
 
 7. Deploy cloud functions
