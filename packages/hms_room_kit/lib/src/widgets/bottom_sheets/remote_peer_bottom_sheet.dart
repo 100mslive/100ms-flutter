@@ -10,6 +10,7 @@ import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
 ///[RemotePeerBottomSheet] is a widget that is used to render the bottom sheet for remote peers
@@ -188,8 +189,9 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                                 ? HMSThemeColors.onSurfaceLowEmphasis
                                 : HMSThemeColors.onSurfaceHighEmphasis)),
 
-                  if (widget.meetingStore.localPeer?.role.permissions.mute ??
-                      false)
+                  if ((widget.meetingStore.localPeer?.role.permissions.mute ??
+                          false) &&
+                      widget.peerTrackNode.peer.type == HMSPeerType.regular)
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
