@@ -9,90 +9,17 @@ A few resources to get you started if this is your first Flutter project:
 - [100ms flutter documentation](https://www.100ms.live/docs/flutter/v2/foundation/basics)
 - [getx](https://pub.dev/packages/get)
 
-## Now we will see steps to use getx and 100ms
+## How to run the application
 
-1. Create a controller class extending GetxController.
+- Clone the repo `git clone https://github.com/100mslive/100ms-flutter.git`
+- Navigate to `sample apps/getx` folder
+- Run flutter pub get
+- Add the meeting link in `main.dart` which you created from dashboard. To know about how to create room from dashboard checkout the docs here: https://www.100ms.live/docs/flutter/v2/get-started/token
+- Update the `tokenEndpoint` in `Constants.dart` file to your endpoint from dashboard's developer section.
 
-    ```dart
-      class RoomController extends GetxController{}
-    ```
-    
-3. In onInit() initialize all the necessary objects like hmssdk and creating tokens.
+<img width="1512" alt="Screenshot 2023-03-15 at 3 50 13 PM" src="https://user-images.githubusercontent.com/93931528/225282064-42e26903-f81c-48db-ad13-359a47e95142.png">
 
-   ```dart
-      void onInit() async {
-    hmsSdk.addUpdateListener(listener: this);
-
-    hmsSdk.build();
-    List<String?>? token = await RoomService().getToken(user: name, room: url);
-
-    if (token == null) return;
-    if (token[0] == null) return;
-
-    HMSConfig config = HMSConfig(
-      authToken: token[0]!,
-      userName: name,
-    );
-
-    hmsSdk.join(config: config);
-    super.onInit();
-    }
-   
-   ```
-    
-4. As you get onJoin() or onPreview() callback it means join success. create a list of PeerTrackNode on onTrackUpdate() callback.
-
-
-    ```dart
-      RxList<Rx<PeerTrackNode>> peerTrackList =
-      <Rx<PeerTrackNode>>[].obs;
-      
-      @override
-  void onTrackUpdate(
-      {required HMSTrack track,
-      required HMSTrackUpdate trackUpdate,
-      required HMSPeer peer}) {
-
-
-    if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-
-      if (trackUpdate == HMSTrackUpdate.trackRemoved) {
-        removeUserFromList(peer);
-      } else if(trackUpdate == HMSTrackUpdate.trackAdded) {
-        int index = peerTrackList.indexWhere((element) => element.value.peer.peerId == peer.peerId);
-        if(index > -1){
-          peerTrackList[index](PeerTrackNode(track as HMSVideoTrack, track.isMute, peer));
-        }
-        else{
-          peerTrackList.add(PeerTrackNode(track as HMSVideoTrack, track.isMute, peer).obs);
-        }
-      }
-
-    }
-  }
-    ```
-    
-5. you can add or delete peerTrackNode from list according to onPeerUpdate callback or onTrackUpdate as well.
-
-7. on UI side use GetXBuilder for rebuilding on observable changes.
-
-
-  ```dart
-      GetX<RoomController>(builder: (controller) {
-        return ListView.builder(
-          itemCount: controller.peerTrackList.length,
-          itemBuilder: (ctx, index) {
-            return Card(
-                key: Key(controller.peerTrackList[index].value.peer.peerId
-                    .toString()),
-                child: SizedBox(
-                    height: 250.0, child: VideoWidget(index, roomController)));
-          },
-        );
-      })
-  ```
-  
-7. you can also use obx for listening to changes
+- Run the application: `flutter run`
 
 ## How to use PeerTrackNode model class
 
@@ -101,17 +28,18 @@ This model class is used for some changes in a Peer.So that getx can only rebuil
 ```dart
 
 class PeerTrackNode{
-  HMSVideoTrack hmsVideoTrack;
+  HMSVideoTrack? hmsVideoTrack;
   bool isMute = true;
   HMSPeer peer;
   bool isOffScreen = true;
-
-  PeerTrackNode(this.hmsVideoTrack, this.isMute, this.peer , {this.isOffScreen = false});
-
+  String uid;
+  
+  PeerTrackNode(this.uid, this.hmsVideoTrack, this.isMute, this.peer,
+    {this.isOffScreen = false});
 }
 ```
 
-So now, for changing some properties in PeerTrackNode you need to do something like this.
+So now, for changing some properties in `PeerTrackNode` you need to do something like this.
 
 ```dart
   peerTrackList[index](PeerTrackNode(track as HMSVideoTrack, track.isMute, peer));

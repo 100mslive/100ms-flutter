@@ -4,42 +4,71 @@
 set -e
 set -x
 
-echo "🌳🍀 git branch: $(git rev-parse --abbrev-ref HEAD)"
+perform_pub_actions() {
 
-git pull --verbose
+	cd packages/hmssdk_flutter
 
-flutter pub get
+	echo "🌳🍀 git branch: $(git rev-parse --abbrev-ref HEAD)"
 
-cd ./example
+	git pull --verbose
 
-cd ./android
+	flutter pub get
 
-bundle install --verbose
+	cd ./example
+}
 
-bundle exec fastlane release_on_firebase
+release_android() {
+	cd ./android
 
-cd ../ios
+	bundle install --verbose
 
-pod install --verbose 
+	bundle exec fastlane release_on_firebase
+}
 
-bundle install --verbose
+release_iOS() {
+	cd ./ios
 
-bundle exec fastlane distribute_app
+	pod install --verbose
 
-cd .. ; cd ..
+	bundle install --verbose
 
-while read line; do
-    if [[ $line =~ ^versionCode.[0-9]+$ ]]; then 
-        buildNumber=$(echo $line | grep -o -E '[0-9]+')
-    elif [[ $line =~ ^versionName.*$ ]]; then
-        versionCode=$(echo $line | grep -o -E '[0-9].[0-9].[0-9]+')
-    fi
-done <example/android/app/build.gradle
+	bundle exec fastlane distribute_app
+}
 
+perform_git_actions() {
+	cd ..
 
-git add example/android/app/build.gradle
-git add example/ios/Podfile.lock
-git add example/ios/Runner/Info.plist
-git add example/ios/Runner.xcodeproj/project.pbxproj
+	while read line; do
+		if [[ $line =~ ^versionCode.[0-9]+$ ]]; then
+			buildNumber=$(echo $line | grep -o -E '[0-9]+')
+		elif [[ $line =~ ^versionName.*$ ]]; then
+			versionCode=$(echo $line | grep -o -E '[0-9].[0-9].[0-9]+')
+		fi
+	done <example/android/app/build.gradle
 
-git commit -m "released sample app version $versionCode ($buildNumber) 🍀"
+	git add example/android/app/build.gradle
+	git add example/ios/Podfile.lock
+	git add example/ios/Runner/Info.plist
+	git add example/ios/Runner.xcodeproj/project.pbxproj
+
+	git commit -m "released sample app version $versionCode ($buildNumber) 🍀"
+
+	git push --verbose
+}
+
+perform_pub_actions
+P1=$!
+
+wait $P1
+
+release_android &
+P2=$!
+
+release_iOS &
+P3=$!
+
+wait $P2 $P3
+
+perform_git_actions
+
+say done

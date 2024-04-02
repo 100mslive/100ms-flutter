@@ -1,5 +1,4 @@
 import 'package:example_riverpod/meeting/peer_track_node.dart';
-import 'package:example_riverpod/service/utility_function.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -10,75 +9,87 @@ class VideoTiles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      itemCount: peerTracks.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, crossAxisSpacing: 2),
-      itemBuilder: (context, index) {
-        final peerTrackProvider = ChangeNotifierProvider<PeerTrackNode>((ref) {
-          return peerTracks[index];
-        });
-        return Stack(
-          children: [
-            Consumer(
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height - kBottomNavigationBarHeight,
+      child: GridView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: peerTracks.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 2,
+            mainAxisExtent: MediaQuery.of(context).size.width / 2),
+        itemBuilder: (context, index) {
+          final peerTrackProvider =
+              ChangeNotifierProvider<PeerTrackNode>((ref) {
+            return peerTracks[index];
+          });
+          return Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            elevation: 5,
+            child: Consumer(
               builder: (context, ref, child) {
                 HMSVideoTrack? videoTrack = ref.watch(peerTrackProvider).track;
+                HMSPeer? peer = ref.watch(peerTrackProvider).peer;
                 if (videoTrack != null && videoTrack.isMute == false) {
-                  return HMSVideoView(
-                    track: videoTrack,
-                    scaleType: ScaleType.SCALE_ASPECT_FILL,
+                  return ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    child: Stack(
+                      children: [
+                        //To know more about HMSVideoView checkout the docs here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/render-video/overview
+                        HMSVideoView(
+                          track: videoTrack,
+                          scaleType: ScaleType.SCALE_ASPECT_FILL,
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Text(
+                            peer.name,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        )
+                      ],
+                    ),
                   );
                 } else {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                        child: CircleAvatar(
-                            backgroundColor: Utilities.getBackgroundColour(
-                                ref.read(peerTrackProvider).peer.name),
-                            radius: 36,
-                            child: Text(
-                              Utilities.getAvatarTitle(
-                                  ref.read(peerTrackProvider).peer.name),
-                              style: const TextStyle(
-                                fontSize: 36,
-                                color: Colors.white,
+                  return Container(
+                      alignment: Alignment.center,
+                      child: Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment.center,
+                            child: CircleAvatar(
+                                backgroundColor: Colors.green,
+                                radius: 36,
+                                child: Text(
+                                  peer.name[0],
+                                  style: const TextStyle(
+                                      fontSize: 36, color: Colors.white),
+                                )),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(
+                                peer.name,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
                               ),
-                            ))),
-                  );
+                            ),
+                          )
+                        ],
+                      ));
                 }
               },
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Consumer(builder: (context, ref, child) {
-                HMSPeer hmsPeer = ref.watch(peerTrackProvider).peer;
-                return Text(hmsPeer.name);
-              }),
-            ),
-            Positioned(
-              top: 5,
-              right: 5,
-              child: Consumer(builder: (context, ref, child) {
-                HMSAudioTrack? audioTrack =
-                    ref.watch(peerTrackProvider).audioTrack;
-                if (audioTrack != null && audioTrack.isMute == false) {
-                  return const SizedBox();
-                } else {
-                  return const Icon(
-                    Icons.mic_off,
-                    color: Colors.red,
-                  );
-                }
-              }),
-            ),
-            Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(border: Border.all(width: 1)))
-          ],
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

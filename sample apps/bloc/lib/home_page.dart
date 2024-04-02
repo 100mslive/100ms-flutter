@@ -6,7 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 class HomePage extends StatelessWidget {
   static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => HomePage());
+    return MaterialPageRoute<void>(builder: (_) => const HomePage());
   }
 
   const HomePage({Key? key}) : super(key: key);
@@ -14,7 +14,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final meetingTextController = TextEditingController(
-        text: "https://shaik.app.100ms.live/meeting/ajk-stp-ebs");
+        text:
+            "https://yogi-livestreamingkit.app.100ms.live/meeting/xuq-zjx-ovh");
     final nameTextController = TextEditingController();
 
     return SafeArea(
@@ -92,9 +93,9 @@ class HomePage extends StatelessWidget {
                   padding: const EdgeInsets.all(4.0),
                   decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(16))),
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(Icons.video_call_outlined, size: 48),
                       SizedBox(
                         width: 8,

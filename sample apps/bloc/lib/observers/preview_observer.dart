@@ -56,4 +56,11 @@ class PreviewObserver implements HMSPreviewListener {
       print("OnError ${error.message}");
     }
   }
+
+  @override
+  void onAudioDeviceChanged(
+      {HMSAudioDevice? currentAudioDevice,
+      List<HMSAudioDevice>? availableAudioDevice}) {
+    // TODO: implement onAudioDeviceChanged
+  }
 }

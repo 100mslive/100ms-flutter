@@ -16,6 +16,10 @@ class RoomOverviewLocalPeerVideoToggled extends RoomOverviewEvent {
   const RoomOverviewLocalPeerVideoToggled();
 }
 
+class RoomOverviewLocalPeerScreenshareToggled extends RoomOverviewEvent {
+  const RoomOverviewLocalPeerScreenshareToggled();
+}
+
 class RoomOverviewLocalPeerAudioToggled extends RoomOverviewEvent {
   const RoomOverviewLocalPeerAudioToggled();
 }

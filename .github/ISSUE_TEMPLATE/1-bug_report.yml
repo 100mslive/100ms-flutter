@@ -1,0 +1,116 @@
+name: 🐛 Bug Report
+description: Report a reproducible bug or regression in 100ms Flutter Package
+title: "🐛 "
+labels: ["Needs Triage 🔍"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please provide all the information requested. Issues that do not follow this format are likely to stall.
+        You can ask your questions on 100ms Discord as well: https://100ms.live/discord
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Please provide a clear and concise description of what the bug is. Include screenshots if needed. Test using the [latest 100ms Flutter release](https://github.com/100mslive/100ms-flutter/releases/latest) to make sure your issue has not already been fixed.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 100ms Flutter Version
+      description: What is the latest version of 100ms Flutter that this issue reproduces on? Please only list the highest version you tested.
+      placeholder: ex. 1.3.3
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Please tell us exactly how to reproduce the problem you are running into. Do provide a detailed list of steps that reproduce the issue.
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected results
+      description: What did you want to see?
+      placeholder: |
+        I expected to see...
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Code example, screenshot, or link to a repository
+      description: |
+        Please provide a minimal code example that reproduces the problem or a link to a repository on GitHub.
+        You may provide a screenshot of the application if you think it is relevant to your bug report.
+        Here are some tips for providing a minimal example: https://stackoverflow.com/help/mcve
+
+        You can use `flutter create bug` command and update the `main.dart` file.
+        Alternatively, you can use https://dartpad.dev/
+        which is capable of creating and running small Flutter apps.
+        Without this we will unlikely be able to progress on the issue, and because of that
+        we regretfully will have to close it.
+      value: |
+        <details>
+        <summary>Code sample</summary>
+
+        <!--
+              Please create a minimal reproducible sample that shows the problem
+              and attach it below between the lines with the backticks.
+        -->
+
+        ```dart
+        ```
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Logs
+      description: |
+        Include the full logs of the commands you are running between the lines
+        with the backticks below. If you are running any `flutter` commands,
+        please include the output of running them with `--verbose`; for example,
+        the output of running `flutter --verbose create foo`.
+
+        If the logs are too large to be uploaded to Github, you may upload
+        them as a `txt` file or use online tools like https://pastebin.com to
+        share it.
+
+        Note: Please do not upload screenshots of text. Instead, use code blocks
+        or the above mentioned ways to upload logs.
+      value: |
+        <details>
+        <summary>Logs</summary>
+
+        ```console
+
+        <!-- Paste your logs here -->
+
+        ```
+
+        </details>
+  - type: textarea
+    attributes:
+      label: Flutter Doctor output
+      description: |
+        Please provide the full output of running `flutter doctor -v`
+      value: |
+        <details>
+        <summary>Doctor output</summary>
+
+        ```console
+
+        <!-- Paste your output here -->
+
+        ```
+
+        </details>
+    validations:
+      required: true

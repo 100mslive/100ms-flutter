@@ -1,0 +1,26 @@
+name: Vale Linter
+
+on:
+    workflow_dispatch: {}
+    pull_request:
+        branches:
+            - develop
+            - main
+
+permissions:
+    checks: write
+    contents: read
+
+
+jobs:
+  vale:
+    name: runner / vale
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: errata-ai/vale-action@reviewdog
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          fail_on_error: true
+          filter_mode: diff_context

@@ -1,0 +1,23 @@
+import '../enum/hms_log_level.dart';
+
+///100ms HMSLogSettings
+///
+///[HMSLogSettings] contains maxDirSizeInBytes, isLogStorageEnabled and logLevel.
+class HMSLogSettings {
+  final double maxDirSizeInBytes;
+  final bool isLogStorageEnabled;
+  final HMSLogLevel level;
+
+  HMSLogSettings(
+      {required this.maxDirSizeInBytes,
+      required this.isLogStorageEnabled,
+      required this.level});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'max_dir_size_in_bytes': maxDirSizeInBytes,
+      'log_storage_enabled': isLogStorageEnabled,
+      'log_level': HMSLogLevelValue.getValueFromHMSLogLevel(level)
+    };
+  }
+}

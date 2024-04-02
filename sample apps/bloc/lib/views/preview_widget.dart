@@ -60,12 +60,16 @@ class PreviewWidget extends StatelessWidget {
                               left: itemWidth / 2 - 50.0,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                    primary: Colors.blue,
+                                    backgroundColor: Colors.blue,
                                     padding: const EdgeInsets.all(14)),
                                 onPressed: () {
                                   Navigator.of(context).pushReplacement(
-                                      Room.route(meetingUrl, userName,
-                                          state.isVideoOff, state.isMicOff));
+                                      Room.route(
+                                          meetingUrl,
+                                          userName,
+                                          state.isVideoOff,
+                                          state.isMicOff,
+                                          false));
                                 },
                                 child: const Text(
                                   "Join Now",

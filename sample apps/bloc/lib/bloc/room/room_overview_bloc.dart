@@ -8,18 +8,23 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 class RoomOverviewBloc extends Bloc<RoomOverviewEvent, RoomOverviewState> {
   final bool isVideoMute;
   final bool isAudioMute;
+  final bool isScreenShareActive;
   HMSSDK hmsSdk = HMSSDK();
   String name;
   String url;
   late RoomObserver roomObserver;
 
-  RoomOverviewBloc(this.isVideoMute, this.isAudioMute, this.name, this.url)
+  RoomOverviewBloc(this.isVideoMute, this.isAudioMute, this.name, this.url,
+      this.isScreenShareActive)
       : super(RoomOverviewState(
-            isAudioMute: isAudioMute, isVideoMute: isVideoMute)) {
+            isAudioMute: isAudioMute,
+            isVideoMute: isVideoMute,
+            isScreenShareActive: isScreenShareActive)) {
     roomObserver = RoomObserver(this);
     on<RoomOverviewSubscriptionRequested>(_onSubscription);
     on<RoomOverviewLocalPeerAudioToggled>(_onLocalAudioToggled);
     on<RoomOverviewLocalPeerVideoToggled>(_onLocalVideoToggled);
+    on<RoomOverviewLocalPeerScreenshareToggled>(_onScreenShareToggled);
     on<RoomOverviewOnJoinSuccess>(_onJoinSuccess);
     on<RoomOverviewOnPeerLeave>(_onPeerLeave);
     on<RoomOverviewOnPeerJoin>(_onPeerJoin);
@@ -45,6 +50,16 @@ class RoomOverviewBloc extends Bloc<RoomOverviewEvent, RoomOverviewState> {
       Emitter<RoomOverviewState> emit) async {
     hmsSdk.switchVideo(isOn: !state.isVideoMute);
     emit(state.copyWith(isVideoMute: !state.isVideoMute));
+  }
+
+  void _onScreenShareToggled(RoomOverviewLocalPeerScreenshareToggled event,
+      Emitter<RoomOverviewState> emit) async {
+    if (!state.isScreenShareActive) {
+      hmsSdk.startScreenShare();
+    } else {
+      hmsSdk.stopScreenShare();
+    }
+    emit(state.copyWith(isScreenShareActive: !state.isScreenShareActive));
   }
 
   Future<void> _onLocalAudioToggled(RoomOverviewLocalPeerAudioToggled event,

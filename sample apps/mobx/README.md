@@ -1,24 +1,65 @@
-# mobx Clone
+# demo_with_mobx_and_100ms
 
-This is a final version of the app for starter kit download starter branch in this repo.
+A demo app using Mobx and 100ms.
 
-Building mobx clone in Flutter with 100ms SDK
+## Getting Started
 
-Step by Step guide available at : https://www.100ms.live/blog/zoom-clone-in-flutter
+A few resources to get you started if this is your first Flutter project:
 
-mobx is the most popular video and audio conferencing app. From interacting with co-workers to organizing events like workshops and webinars, mobx is everywhere.
+- [100ms flutter documentation](https://www.100ms.live/docs/flutter/v2/foundation/basics)
+- [mobx](https://pub.dev/packages/mobx)
 
-This post will take you through a step by step guide on how to build a basic mobx like app using Flutter and 100ms' live audio-video SDK in the following way -
+> 🔑 Note: After cloning the repo make sure to generate the class using build_runner and mobx_codegen:
 
-* Add 100ms to a Flutter app
-* Join a room
-* Leave a room
-* Show video tiles with the user’s name
-* Show Screenshare tile
-* hand Raised
-* Mute/Unmute
-* Camera off/on
-* Toggle Front/Back camera
-* Chatting with everyone in the room
+```
+flutter packages pub run build_runner build --delete-conflicting-outputs 
+```
 
-![alt-text](https://github.com/govindmaheshwari2/mobx-example-app/blob/master/final.gif)
+## How to run the application
+
+- Clone the repo `git clone https://github.com/100mslive/100ms-flutter.git`
+- Navigate to `sample apps/mobx` folder
+- Run flutter pub get
+- Run code gen command
+
+```
+flutter packages pub run build_runner build --delete-conflicting-outputs 
+```
+
+- Add the meeting link in `main.dart` which you created from dashboard. To know about how to create room from dashboard checkout the docs here: https://www.100ms.live/docs/flutter/v2/get-started/token
+- Update the `tokenEndpoint` in `room_service.dart` file 
+
+```
+Uri endPoint = Uri.parse("Enter your endpoint here");`
+```
+
+- Run the application `flutter run`
+
+## How to use PeerTrackNode model class
+
+This model class is used for some changes in a Peer.So that getx can only rebuild that particular changes.
+
+```dart
+
+@observable
+class PeerTrackNode {
+  String uid;
+  HMSPeer peer;
+  @observable
+  String name;
+  bool isRaiseHand;
+  @observable
+  HMSVideoTrack? track;
+  @observable
+  bool isOffScreen;
+  PeerTrackNode(
+      { required this.uid,
+        required this.peer,
+      this.track,
+      this.name = "",
+      this.isRaiseHand = false,
+      this.isOffScreen = false});
+}
+```
+
+Marking the fields as observable makes them listenable, which is used to update the UI state.
