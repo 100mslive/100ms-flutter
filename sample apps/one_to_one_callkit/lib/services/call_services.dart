@@ -69,7 +69,7 @@ class CallServices {
         callbackText: 'Call back',
       ),
       duration: 30000,
-      extra: <String, dynamic>{'room_code': roomCode},
+      extra: {'room_code': roomCode},
       // headers: <String, dynamic>{'apiKey': 'Abc@123!', 'platform': 'flutter'},
       android: AndroidParams(
           isCustomNotification: true,
@@ -158,7 +158,6 @@ class CallServices {
   ///[getCurrentCall] method is used to get the current call
   static Future<dynamic> getCurrentCall() async {
     //check current call from pushkit if possible
-    FlutterCallkitIncoming.endAllCalls();
     var calls = await FlutterCallkitIncoming.activeCalls();
     if (calls is List) {
       if (calls.isNotEmpty) {

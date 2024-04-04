@@ -11,10 +11,17 @@ import 'package:one_to_one_callkit/services/user_data_model.dart';
 import 'package:one_to_one_callkit/services/user_data_store.dart';
 
 ///[UserListView] class is used to show the list of users
-class UserListView extends StatelessWidget {
+class UserListView extends StatefulWidget {
   final AppUtilities? appUtilities;
 
   const UserListView({super.key, required this.appUtilities});
+
+  @override
+  State<UserListView> createState() => _UserListViewState();
+}
+
+class _UserListViewState extends State<UserListView> {
+  String searchText = '';
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +70,11 @@ class UserListView extends StatelessWidget {
               cursorColor: HMSThemeColors.onSurfaceHighEmphasis,
               onTapOutside: (event) =>
                   FocusManager.instance.primaryFocus?.unfocus(),
-              onChanged: (value) => {},
+              onChanged: (value) => {
+                setState(() {
+                  searchText = value;
+                })
+              },
               style: HMSTextStyle.setTextStyle(
                   color: HMSThemeColors.onSurfaceHighEmphasis),
               keyboardType: TextInputType.text,
@@ -72,20 +83,23 @@ class UserListView extends StatelessWidget {
           const SizedBox(
             height: 32,
           ),
-
-          ///This renders the list of users
-          ///We have added pull_to_refresh to refresh the list of users
           Selector<UserDataStore, Tuple2<int, List<UserDataModel>>>(
               selector: (_, userDataStore) =>
                   Tuple2(userDataStore.users.length, userDataStore.users),
               builder: (_, data, __) {
+                final filteredUsers = data.item2
+                    .where((user) => user.userName
+                        .toLowerCase()
+                        .contains(searchText.toLowerCase()))
+                    .toList();
                 return Expanded(
                   child: RefreshIndicator(
                     onRefresh: () async =>
                         context.read<UserDataStore>().getUsers(),
                     child: ListView.builder(
-                        itemCount: data.item1,
+                        itemCount: filteredUsers.length,
                         itemBuilder: (context, index) {
+                          final user = filteredUsers[index];
                           return ListTile(
                             contentPadding: EdgeInsets.zero,
                             horizontalTitleGap: 8,
@@ -95,19 +109,19 @@ class UserListView extends StatelessWidget {
                               radius: 16,
                               child: data.item2[index].imgUrl == null
                                   ? HMSTitleText(
-                                      text: data.item2[index].userName[0],
+                                      text: user.userName[0],
                                       textColor:
                                           HMSThemeColors.onSurfaceHighEmphasis,
                                     )
                                   : ClipOval(
                                       child: Image.network(
-                                        data.item2[index].imgUrl!,
+                                        user.imgUrl!,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
                             ),
                             title: HMSTitleText(
-                              text: data.item2[index].userName,
+                              text: user.userName,
                               textColor: HMSThemeColors.onSurfaceHighEmphasis,
                               fontSize: 12,
                               lineHeight: 20,
@@ -119,8 +133,8 @@ class UserListView extends StatelessWidget {
                               children: [
                                 IconButton(
                                     onPressed: () {
-                                      appUtilities?.sendMessage(
-                                          data.item2[index], CallType.audio);
+                                      widget.appUtilities
+                                          ?.sendMessage(user, CallType.audio);
                                     },
                                     icon: Icon(
                                       Icons.call_outlined,
@@ -129,8 +143,8 @@ class UserListView extends StatelessWidget {
                                     )),
                                 IconButton(
                                     onPressed: () {
-                                      appUtilities?.sendMessage(
-                                          data.item2[index], CallType.video);
+                                      widget.appUtilities
+                                          ?.sendMessage(user, CallType.video);
                                     },
                                     icon: Icon(
                                       Icons.videocam_outlined,

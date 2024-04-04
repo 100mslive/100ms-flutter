@@ -34,6 +34,13 @@ exports.notifySubscribers = functions.https.onCall(async (data, _) => {
         callType: data.callType,
       },
       token: data.targetDevices,
+      apns: {
+        payload: {
+          aps: {
+            "content-available": 1,
+          },
+        },
+      },
     };
 
     await messaging.send(message).then((response) => {

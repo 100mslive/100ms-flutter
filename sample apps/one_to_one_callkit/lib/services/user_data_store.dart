@@ -36,6 +36,9 @@ class UserDataStore extends ChangeNotifier {
                     users.indexWhere((user) => user.email == element["email"]);
                 if (index == -1) {
                   users.add(UserDataModel.fromMap(element));
+                } else {
+                  users[index] = UserDataModel.fromMap(element);
+                  notifyListeners();
                 }
                 notifyListeners();
               }

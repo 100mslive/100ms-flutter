@@ -22,6 +22,26 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  ///To get messages from terminated state
+  await FirebaseMessaging.instance.getInitialMessage().then((message) {
+    if (message != null) {
+      if (message.data["body"] != null) {
+        var body = CallServices.parseStringToMap(message.data["body"]);
+        var roomCode = message.data["roomInfo"];
+        CallType callType =
+            message.data["callType"] == "1" ? CallType.video : CallType.audio;
+        CallServices.receiveCall(
+            UserDataModel(
+                email: body["email"],
+                userName: body["user_name"],
+                fcmToken: body["fcm_token"],
+                imgUrl: body["img_url"]),
+            roomCode,
+            callType);
+      }
+    }
+  });
   runApp(const MyApp());
 }
 
@@ -83,6 +103,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    checkAndNavigationCallingPage();
     CallServices.addCallkitUpdates();
     appUtilities = AppUtilities();
     googleSignIn();
@@ -92,9 +113,17 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   Future<void> checkAndNavigationCallingPage() async {
     var currentCall = await CallServices.getCurrentCall();
     if (currentCall != null &&
+        currentCall["accepted"] &&
         NavigationService.instance.isCurrent(AppRoute.homePage)) {
+      String roomCode = currentCall["extra"]["room_code"];
       NavigationService.instance
-          .pushNamedIfNotCurrent(AppRoute.previewPage, args: currentCall);
+          .pushNamedIfNotCurrent(AppRoute.previewPage, args: {
+        "is_video_call": currentCall["type"] == 1,
+        "user_img_url": currentCall["avatar"],
+        "user_name": currentCall["nameCaller"],
+        "room_code": roomCode,
+        "on_leave": CallServices.endCall
+      });
     }
   }
 

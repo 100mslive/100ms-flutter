@@ -264,7 +264,7 @@ class AppUtilities {
     }
   }
 
-  ///[getRoomCodes] function gets the room codes for the speaker and the listener
+  ///[getRoomCodes] function gets the room codes for the caller and the callee
   void getRoomCodes(
       Map<String, dynamic> jsonData, UserDataModel user, CallType type) {
     for (var item in jsonData['data']) {
@@ -281,12 +281,12 @@ class AppUtilities {
       "targetDevices": user.fcmToken,
       "messageTitle": "${currentUser?.userName} is calling",
       "messageBody": currentUser?.toMap().toString(),
-      "roomCode": roomCodesMap[UserRole.listener],
+      "roomCode": roomCodesMap[UserRole.callee],
       "callType": type == CallType.video ? "1" : "0"
     });
     log("Callkit: Fetched RoomCodes $roomCodesMap");
 
-    CallServices.startCall(user, type, roomCodesMap[UserRole.speaker]);
+    CallServices.startCall(user, type, roomCodesMap[UserRole.caller]);
   }
 
   ///[doesUserExist] function checks if the user already exists in the database
