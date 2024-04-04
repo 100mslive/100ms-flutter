@@ -77,7 +77,32 @@ class HlsLiveStreaming {
   }
 }
 
+class Header {
+  String? title;
+  String? description;
+
+  Header({this.title, this.description});
+
+  Header.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      title = null;
+      description = null;
+      return;
+    }
+    title = json['title'];
+    description = json['description'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['title'] = title;
+    data['description'] = description;
+    return data;
+  }
+}
+
 class Elements {
+  Header? header;
   Chat? chat;
   Map<String, dynamic>? participantList;
   VideoTileLayout? videoTileLayout;
@@ -86,7 +111,8 @@ class Elements {
   Map<String, dynamic>? brb;
 
   Elements(
-      {this.chat,
+      { this.header,
+      this.chat,
       this.participantList,
       this.videoTileLayout,
       this.emojiReactions,
@@ -95,6 +121,7 @@ class Elements {
 
   Elements.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
+      header = null;
       chat = null;
       participantList = null;
       videoTileLayout = null;
@@ -103,6 +130,10 @@ class Elements {
       brb = null;
       return;
     }
+
+    header = (json.containsKey('header') && json['header'] != null)
+        ? Header.fromJson(json['header'])
+        : null;
     chat = (json.containsKey('chat') && json['chat'] != null)
         ? Chat.fromJson(json['chat'])
         : null;
