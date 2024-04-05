@@ -102,7 +102,15 @@ class PreviewBottomButtonSection extends StatelessWidget {
               ),
               Row(
                 children: [
-                  if (previewStore.isNoiseCancellationAvailable &&
+                  ///This renders the [Noise Cancellation Button] only if the
+                  ///Peer role has the permission to publish audio
+                  ///and the Peer is not null
+                  ///and the noise cancellation is available
+                  ///and mic is unmuted
+                  if ((previewStore.peer?.role.publishSettings?.allowed
+                              .contains("audio") ??
+                          false) &&
+                      previewStore.isNoiseCancellationAvailable &&
                       previewStore.isAudioOn)
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),

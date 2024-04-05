@@ -1,7 +1,15 @@
+library;
+
+///Dart imports
 import 'dart:async';
+
+///Package imports
 import 'package:flutter/material.dart';
+
+///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 
+///[HLSPlayerStore] is a store that stores the state of the HLS Player
 class HLSPlayerStore extends ChangeNotifier {
   ///This variable stores whether the application is in full screen or not
   bool isFullScreen = false;
@@ -11,6 +19,8 @@ class HLSPlayerStore extends ChangeNotifier {
 
   ///This variable stores whether the buttons are visible or not
   bool areStreamControlsVisible = true;
+
+  bool isCaptionEnabled = false;
 
   ///This variable stores whether the chat is opened or not
   ///The initial value is taken from the [HMSRoomLayout.chatData]
@@ -38,6 +48,13 @@ class HLSPlayerStore extends ChangeNotifier {
     });
   }
 
+  ///[toggleFullScreen] toggles the full screen mode
+  void toggleFullScreen() {
+    isFullScreen = !isFullScreen;
+    notifyListeners();
+  }
+
+  ///This method sets the [isStreamPlaying] to true or false
   void setStreamPlaying(bool isStreamPlaying) {
     this.isStreamPlaying = isStreamPlaying;
     if (isStreamPlaying) {
@@ -47,12 +64,20 @@ class HLSPlayerStore extends ChangeNotifier {
       return;
     } else {
       areStreamControlsVisible = true;
+      isFullScreen = false;
     }
     notifyListeners();
   }
 
+  ///This method toggles the visibility of the chat
   void toggleIsChatOpened() {
     isChatOpened = !isChatOpened;
+    notifyListeners();
+  }
+
+  ///This method toggles the visibility of the captions
+  void toggleCaptions() {
+    isCaptionEnabled = !isCaptionEnabled;
     notifyListeners();
   }
 

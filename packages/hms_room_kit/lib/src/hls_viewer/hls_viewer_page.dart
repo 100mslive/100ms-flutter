@@ -5,28 +5,23 @@ import 'dart:math';
 
 ///Package imports
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_stream_description.dart';
-import 'package:hms_room_kit/src/widgets/bottom_sheets/chat_bottom_sheet.dart';
-import 'package:hms_room_kit/src/widgets/toasts/toast_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
+import 'package:hms_room_kit/src/hls_viewer/hls_player_desktop_controls.dart';
+import 'package:hms_room_kit/src/widgets/toasts/toast_widget.dart';
 import 'package:hms_room_kit/src/widgets/app_dialogs/audio_device_change_dialog.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_left_room_screen.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toast_model.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_viewer_bottom_navigation_bar.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_viewer_header.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/preview_for_role/preview_for_role_bottom_sheet.dart';
 import 'package:hms_room_kit/src/preview_for_role/preview_for_role_header.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
-import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_waiting_ui.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 
 ///[HLSViewerPage] is the page that is used to render the HLS Viewer
@@ -104,42 +99,40 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                             meetingStore.hasHlsStarted,
                                         builder: (_, hasHlsStarted, __) {
                                           _setStreamStatus(hasHlsStarted);
-                                          return (hasHlsStarted)
-                                              ? Column(
+                                          return Selector<HLSPlayerStore, bool>(
+                                              selector: (_, hlsPlayerStore) =>
+                                                  hlsPlayerStore.isFullScreen,
+                                              builder: (_, isFullScreen, __) {
+                                                double height =
+                                                    MediaQuery.of(context)
+                                                            .size
+                                                            .height -
+                                                        MediaQuery.of(context)
+                                                            .padding
+                                                            .top -
+                                                        MediaQuery.of(context)
+                                                            .padding
+                                                            .bottom;
+                                                return Column(
+                                                  mainAxisAlignment:
+                                                      isFullScreen
+                                                          ? MainAxisAlignment
+                                                              .center
+                                                          : MainAxisAlignment
+                                                              .start,
                                                   children: [
+                                                    ///Renders HLS Player
                                                     SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                              .size
-                                                              .width,
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              0.27,
-                                                      child: HLSPlayer(
-                                                        key: Key(context
-                                                                .read<
-                                                                    MeetingStore>()
-                                                                .localPeer
-                                                                ?.peerId ??
-                                                            "HLS_PLAYER"),
-                                                        
+                                                      height: height * 0.27,
+                                                      child: const HLSPlayer(
+                                                        key: Key("HLS_PLAYER"),
                                                       ),
                                                     ),
-                                                    HLSStreamDescription(),
-                                                    Expanded(
-                                                        child: ChatBottomSheet(isHLSChat: true,))
+                                                    if (!isFullScreen)
+                                                      HLSPlayerDesktopControls()
                                                   ],
-                                                )
-                                              : SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .height,
-                                                  child: const HLSWaitingUI());
+                                                );
+                                              });
                                         }),
 
                                     ///This renders the preview for role component

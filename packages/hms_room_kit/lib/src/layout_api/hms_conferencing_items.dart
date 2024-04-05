@@ -111,7 +111,7 @@ class Elements {
   Map<String, dynamic>? brb;
 
   Elements(
-      { this.header,
+      {this.header,
       this.chat,
       this.participantList,
       this.videoTileLayout,

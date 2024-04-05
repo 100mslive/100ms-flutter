@@ -52,7 +52,7 @@ class _ChatTextFieldState extends State<ChatTextField> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width -32;
+    double width = MediaQuery.of(context).size.width - 32;
     return SizedBox(
       height: 40,
       width: widget.isHLSChat ? width * 0.7 : width,
@@ -105,8 +105,7 @@ class _ChatTextFieldState extends State<ChatTextField> {
                                   color: HMSThemeColors.surfaceDefault,
                                   child: Selector<MeetingStore, dynamic>(
                                       selector: (_, meetingStore) =>
-                                          meetingStore
-                                              .recipientSelectorValue,
+                                          meetingStore.recipientSelectorValue,
                                       builder: (_, selectedValue, __) {
                                         return TextField(
                                           ///Here if the selected value is empty or equal to "Choose a Recipient" we disable the text field
@@ -114,12 +113,10 @@ class _ChatTextFieldState extends State<ChatTextField> {
                                               "Choose a Recipient",
                                           textCapitalization:
                                               TextCapitalization.sentences,
-                                          textInputAction:
-                                              TextInputAction.send,
-                                          onTapOutside: (event) =>
-                                              FocusManager
-                                                  .instance.primaryFocus
-                                                  ?.unfocus(),
+                                          textInputAction: TextInputAction.send,
+                                          onTapOutside: (event) => FocusManager
+                                              .instance.primaryFocus
+                                              ?.unfocus(),
                                           onSubmitted: (value) {
                                             widget.sendMessage(
                                                 messageTextController);
@@ -173,27 +170,24 @@ class _ChatTextFieldState extends State<ChatTextField> {
                                                           .primaryDefault),
                                                   borderRadius:
                                                       const BorderRadius.all(
-                                                          Radius.circular(
-                                                              8))),
-                                              enabledBorder:
-                                                  InputBorder.none,
+                                                          Radius.circular(8))),
+                                              enabledBorder: InputBorder.none,
                                               errorBorder: InputBorder.none,
-                                              disabledBorder:
-                                                  InputBorder.none,
-                                              hintStyle: HMSTextStyle.setTextStyle(
-                                                  color: HMSThemeColors
-                                                      .onSurfaceLowEmphasis,
-                                                  fontSize: 14,
-                                                  height: 20 / 14,
-                                                  letterSpacing: 0.25,
-                                                  fontWeight:
-                                                      FontWeight.w400),
+                                              disabledBorder: InputBorder.none,
+                                              hintStyle: HMSTextStyle
+                                                  .setTextStyle(
+                                                      color: HMSThemeColors
+                                                          .onSurfaceLowEmphasis,
+                                                      fontSize: 14,
+                                                      height: 20 / 14,
+                                                      letterSpacing: 0.25,
+                                                      fontWeight:
+                                                          FontWeight.w400),
                                               contentPadding:
                                                   const EdgeInsets.symmetric(
                                                       vertical: 8,
                                                       horizontal: 12),
-                                              hintText: HMSRoomLayout
-                                                      .chatData
+                                              hintText: HMSRoomLayout.chatData
                                                       ?.messagePlaceholder ??
                                                   "Send a message..."),
                                         );

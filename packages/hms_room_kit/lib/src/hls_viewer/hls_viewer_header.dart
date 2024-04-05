@@ -1,25 +1,19 @@
 library;
 
-///Dart imports
-import 'dart:developer';
-import 'dart:io';
-
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/src/common/utility_components.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 ///Project imports
-import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
+import 'package:hms_room_kit/src/common/utility_components.dart';
+import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 
 ///[HLSViewerHeader] is the header of the HLS Viewer screen
 class HLSViewerHeader extends StatelessWidget {
-  const HLSViewerHeader({super.key});
+  final bool hasHLSStarted;
+  const HLSViewerHeader({super.key, required this.hasHLSStarted});
 
   @override
   Widget build(BuildContext context) {
@@ -34,25 +28,72 @@ class HLSViewerHeader extends StatelessWidget {
           ])),
       child: Padding(
         padding: EdgeInsets.only(left: 12, right: 12, top: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.close,
-                    color: HMSThemeColors.onSurfaceHighEmphasis,
-                    size: 24,
-                  ),
-                  onPressed: () {
-                    UtilityComponents.onBackPressed(context);
-                  },
-                )
-              ],
-            ),
-          ],
-        ),
+        child: Selector<HLSPlayerStore, bool>(
+            selector: (_, hlsPlayerStore) =>
+                hlsPlayerStore.areStreamControlsVisible,
+            builder: (_, areStreamControlsVisible, __) {
+              return areStreamControlsVisible
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            ///This renders the [Close Button] and is always visible iff the controls are visible
+                            IconButton(
+                              icon: Icon(
+                                Icons.close,
+                                color: HMSThemeColors.onSurfaceHighEmphasis,
+                                size: 24,
+                              ),
+                              onPressed: () {
+                                UtilityComponents.onBackPressed(context);
+                              },
+                            )
+                          ],
+                        ),
+
+                        ///This renders the [Caption Button] and [Settings Button] only if the controls are visible
+                        ///and the HLS has started
+                        if (hasHLSStarted)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Selector<HLSPlayerStore, bool>(
+                                  selector: (_, meetingStore) =>
+                                      meetingStore.isCaptionEnabled,
+                                  builder: (_, isCaptionEnabled, __) {
+                                    return InkWell(
+                                      onTap: () {
+                                        context
+                                            .read<HLSPlayerStore>()
+                                            .toggleCaptions();
+                                      },
+                                      child: SvgPicture.asset(
+                                        "packages/hms_room_kit/lib/src/assets/icons/caption_${isCaptionEnabled ? "on" : "off"}.svg",
+                                        colorFilter: ColorFilter.mode(
+                                            HMSThemeColors
+                                                .onSurfaceHighEmphasis,
+                                            BlendMode.srcIn),
+                                        semanticsLabel: "caption_toggle_button",
+                                      ),
+                                    );
+                                  }),
+                              const SizedBox(
+                                width: 16,
+                              ),
+                              SvgPicture.asset(
+                                "packages/hms_room_kit/lib/src/assets/icons/settings.svg",
+                                colorFilter: ColorFilter.mode(
+                                    HMSThemeColors.onSurfaceHighEmphasis,
+                                    BlendMode.srcIn),
+                                semanticsLabel: "caption_toggle_button",
+                              )
+                            ],
+                          )
+                      ],
+                    )
+                  : const SizedBox();
+            }),
       ),
     );
   }
