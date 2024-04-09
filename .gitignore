@@ -46,6 +46,9 @@ sample apps/flutter-quickstart-app/.dart_tool/
 sample apps/hms-callkit-app/.dart_tool/
 sample apps/flutter-quickstart-app/build/ios/Pods.build/
 sample apps/hms-callkit-app/.dart_tool/flutter_build/
+sample apps/flutter-meet/.dart_tool/
+sample apps/flutter-meet/android/.idea/
+
 
 ##GIT Files
 .dart_tool/package_config.json
