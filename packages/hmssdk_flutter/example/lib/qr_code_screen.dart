@@ -3,6 +3,7 @@ import 'dart:developer';
 
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter_example/foreground_task_handler.dart';
 import 'package:hmssdk_flutter_example/room_service.dart';
@@ -76,20 +77,22 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
           Utilities.saveStringData(key: "meetingLink", value: rawValue.trim());
           initForegroundTask();
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (_) => HMSPrebuilt(
-                  roomCode: Constant.roomCode,
-                  onLeave: stopForegroundTask,
-                  options: HMSPrebuiltOptions(
-                      userName: AppDebugConfig.nameChangeOnPreview
-                          ? null
-                          : "Flutter User",
-                      userId: widget.uuidString,
-                      endPoints: endPoints,
-                      iOSScreenshareConfig: HMSIOSScreenshareConfig(
-                          appGroup: "group.flutterhms",
-                          preferredExtension:
-                              "live.100ms.flutter.FlutterBroadcastUploadExtension"),
-                      enableNoiseCancellation: true))));
+              builder: (_) => WithForegroundTask(
+                child: HMSPrebuilt(
+                    roomCode: Constant.roomCode,
+                    onLeave: stopForegroundTask,
+                    options: HMSPrebuiltOptions(
+                        userName: AppDebugConfig.nameChangeOnPreview
+                            ? null
+                            : "Flutter User",
+                        userId: widget.uuidString,
+                        endPoints: endPoints,
+                        iOSScreenshareConfig: HMSIOSScreenshareConfig(
+                            appGroup: "group.flutterhms",
+                            preferredExtension:
+                                "live.100ms.flutter.FlutterBroadcastUploadExtension"),
+                        enableNoiseCancellation: true)),
+              )));
         }
       }
     } catch (e) {
