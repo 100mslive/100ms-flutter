@@ -81,6 +81,8 @@ PODS:
     - PromisesSwift (~> 2.1)
   - FirebaseSharedSwift (10.23.0)
   - Flutter (1.0.0)
+  - flutter_foreground_task (0.0.1):
+    - Flutter
   - GoogleDataTransport (9.4.1):
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30911.0, >= 2.30908.0)
@@ -188,6 +190,7 @@ DEPENDENCIES:
   - firebase_dynamic_links (from `.symlinks/plugins/firebase_dynamic_links/ios`)
   - firebase_performance (from `.symlinks/plugins/firebase_performance/ios`)
   - Flutter (from `Flutter`)
+  - flutter_foreground_task (from `.symlinks/plugins/flutter_foreground_task/ios`)
   - HMSBroadcastExtensionSDK
   - hmssdk_flutter (from `.symlinks/plugins/hmssdk_flutter/ios`)
   - mobile_scanner (from `.symlinks/plugins/mobile_scanner/ios`)
@@ -246,6 +249,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_performance/ios"
   Flutter:
     :path: Flutter
+  flutter_foreground_task:
+    :path: ".symlinks/plugins/flutter_foreground_task/ios"
   hmssdk_flutter:
     :path: ".symlinks/plugins/hmssdk_flutter/ios"
   mobile_scanner:
@@ -283,6 +288,7 @@ SPEC CHECKSUMS:
   FirebaseSessions: f06853e30f99fe42aa511014d7ee6c8c319f08a3
   FirebaseSharedSwift: c92645b392db3c41a83a0aa967de16f8bad25568
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_foreground_task: 21ef182ab0a29a3005cc72cd70e5f45cb7f7f817
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleMLKit: 2bd0dc6253c4d4f227aad460f69215a504b2980e
   GoogleToolboxForMac: 8bef7c7c5cf7291c687cf5354f39f9db6399ad34
@@ -313,4 +319,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 9fb9f6e431a2c6c79942252e94b241ac7972ac90
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.14.3

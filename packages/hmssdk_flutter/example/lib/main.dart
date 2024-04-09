@@ -10,9 +10,11 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter_example/app_settings_bottom_sheet.dart';
+import 'package:hmssdk_flutter_example/foreground_task_handler.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:hmssdk_flutter_example/room_service.dart';
 import 'package:lottie/lottie.dart';
@@ -48,6 +50,13 @@ void main() async {
     [DeviceOrientation.portraitUp],
   );
   runApp(HMSExampleApp(initialLink: initialLink?.link));
+}
+
+///This function sets up the foreground service interaction
+@pragma('vm:entry-point')
+void startCallback() {
+  // The setTaskHandler function must be called to handle the task in the background.
+  FlutterForegroundTask.setTaskHandler(ForegroundTaskHandler());
 }
 
 class HMSExampleApp extends StatefulWidget {
@@ -320,23 +329,27 @@ class _HomePageState extends State<HomePage> {
     Utilities.saveStringData(
         key: "meetingLink", value: meetingLinkController.text.trim());
     FocusManager.instance.primaryFocus?.unfocus();
+    initForegroundTask();
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (_) => HMSPrebuilt(
-                roomCode: Constant.roomCode,
-                options: HMSPrebuiltOptions(
-                    userName: AppDebugConfig.nameChangeOnPreview
-                        ? null
-                        : "Flutter User",
-                    endPoints: endPoints,
-                    userId:
-                        uuidString, // pass your custom unique user identifier here
-                    iOSScreenshareConfig: HMSIOSScreenshareConfig(
-                        appGroup: "group.flutterhms",
-                        preferredExtension:
-                            "live.100ms.flutter.FlutterBroadcastUploadExtension"),
-                    enableNoiseCancellation: true))));
+            builder: (_) => WithForegroundTask(
+                  child: HMSPrebuilt(
+                      roomCode: Constant.roomCode,
+                      onLeave: stopForegroundTask,
+                      options: HMSPrebuiltOptions(
+                          userName: AppDebugConfig.nameChangeOnPreview
+                              ? null
+                              : "Flutter User",
+                          endPoints: endPoints,
+                          userId:
+                              uuidString, // pass your custom unique user identifier here
+                          iOSScreenshareConfig: HMSIOSScreenshareConfig(
+                              appGroup: "group.flutterhms",
+                              preferredExtension:
+                                  "live.100ms.flutter.FlutterBroadcastUploadExtension"),
+                          enableNoiseCancellation: true)),
+                )));
   }
 
   @override
