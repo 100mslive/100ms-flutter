@@ -110,7 +110,7 @@ class PreviewBottomButtonSection extends StatelessWidget {
                           onTap: () {
                             previewStore.toggleNoiseCancellation();
                           },
-                          isActive: previewStore.isNoiseCancellationEnabled,
+                          isActive: !previewStore.isNoiseCancellationEnabled,
                           child: SvgPicture.asset(
                             'packages/hms_room_kit/lib/src/assets/icons/music_wave.svg',
                             colorFilter: ColorFilter.mode(
