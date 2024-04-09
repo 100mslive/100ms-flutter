@@ -5,11 +5,9 @@ import live.hms.hmssdk_flutter.HMSRoleExtension
 import live.hms.video.polls.models.*
 
 class HMSPollExtension {
-
     companion object {
         fun toDictionary(poll: HmsPoll): HashMap<String, Any?> {
-
-            val map = HashMap<String,Any?>()
+            val map = HashMap<String, Any?>()
 
             map["anonymous"] = poll.anonymous
             map["category"] = getPollCategory(poll.category)
@@ -19,22 +17,22 @@ class HMSPollExtension {
             map["poll_id"] = poll.pollId
             map["question_count"] = poll.questionCount
 
-            val questions = ArrayList<HashMap<String,Any?>?>()
-            poll.questions?.forEach{
+            val questions = ArrayList<HashMap<String, Any?>?>()
+            poll.questions?.forEach {
                 questions.add(HMSPollQuestionExtension.toDictionary(it))
             }
             map["questions"] = questions
 
             map["result"] = HMSPollResultDisplayExtension.toDictionary(poll.result)
 
-            val rolesThatCanViewResponses = ArrayList<HashMap<String,Any?>?>()
-            poll.rolesThatCanViewResponses.forEach{
+            val rolesThatCanViewResponses = ArrayList<HashMap<String, Any?>?>()
+            poll.rolesThatCanViewResponses.forEach {
                 rolesThatCanViewResponses.add(HMSRoleExtension.toDictionary(it))
             }
             map["roles_that_can_view_responses"] = rolesThatCanViewResponses
 
-            val rolesThatCanVote = ArrayList<HashMap<String,Any?>?>()
-            poll.rolesThatCanVote.forEach{
+            val rolesThatCanVote = ArrayList<HashMap<String, Any?>?>()
+            poll.rolesThatCanVote.forEach {
                 rolesThatCanVote.add(HMSRoleExtension.toDictionary(it))
             }
             map["roles_that_can_vote"] = rolesThatCanVote
@@ -44,7 +42,7 @@ class HMSPollExtension {
             map["state"] = getPollState(poll.state)
             map["stopped_at"] = poll.stoppedAt?.let {
                 it * 1000
-            }?:run {
+            } ?: run {
                 null
             }
             map["title"] = poll.title
@@ -52,16 +50,16 @@ class HMSPollExtension {
             return map
         }
 
-        private fun getPollCategory(pollCategory: HmsPollCategory):String?{
-            return when(pollCategory){
+        private fun getPollCategory(pollCategory: HmsPollCategory): String? {
+            return when (pollCategory) {
                 HmsPollCategory.POLL -> "poll"
                 HmsPollCategory.QUIZ -> "quiz"
                 else -> null
             }
         }
 
-        private fun getPollUserTrackingMode(pollUserTrackingMode: HmsPollUserTrackingMode?):String?{
-            return when(pollUserTrackingMode){
+        private fun getPollUserTrackingMode(pollUserTrackingMode: HmsPollUserTrackingMode?): String? {
+            return when (pollUserTrackingMode) {
                 HmsPollUserTrackingMode.USER_ID -> "user_id"
                 HmsPollUserTrackingMode.PEER_ID -> "peer_id"
                 HmsPollUserTrackingMode.USERNAME -> "username"
@@ -69,8 +67,8 @@ class HMSPollExtension {
             }
         }
 
-        private fun getPollState(pollState: HmsPollState):String?{
-            return when(pollState){
+        private fun getPollState(pollState: HmsPollState): String? {
+            return when (pollState) {
                 HmsPollState.CREATED -> "created"
                 HmsPollState.STARTED -> "started"
                 HmsPollState.STOPPED -> "stopped"
@@ -78,8 +76,8 @@ class HMSPollExtension {
             }
         }
 
-        fun getPollUpdateType(hmsPollUpdateType: HMSPollUpdateType):String?{
-            return when(hmsPollUpdateType){
+        fun getPollUpdateType(hmsPollUpdateType: HMSPollUpdateType): String? {
+            return when (hmsPollUpdateType) {
                 HMSPollUpdateType.started -> "started"
                 HMSPollUpdateType.stopped -> "stopped"
                 HMSPollUpdateType.resultsupdated -> "results_updated"
@@ -88,4 +86,3 @@ class HMSPollExtension {
         }
     }
 }
-

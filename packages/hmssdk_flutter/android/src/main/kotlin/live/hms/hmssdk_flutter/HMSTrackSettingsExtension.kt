@@ -54,7 +54,7 @@ class HMSTrackSettingsExtension {
 
                 val enableNoiseCancellation = audioHashMap["enable_noise_cancellation"] as? Boolean
                 enableNoiseCancellation?.let {
-                    if(it){
+                    if (it) {
                         hmsAudioTrackSettings.enableNoiseCancellation(true)
                     }
                 }

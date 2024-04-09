@@ -17,7 +17,7 @@ class  HMSRoomExtension {
         if let roomID = room.roomID {
             dict["id"] = roomID
         }
-        
+
         if let name = room.name {
             dict["name"] = name
         }

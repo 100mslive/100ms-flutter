@@ -17,7 +17,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var sessionEventChannel: FlutterEventChannel?
     var hlsPlayerChannel: FlutterEventChannel?
     var pollsEventChannel: FlutterEventChannel?
-    
+
     var eventSink: FlutterEventSink?
     var previewSink: FlutterEventSink?
     var logsSink: FlutterEventSink?
@@ -56,8 +56,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let rtcChannel = FlutterEventChannel(name: "rtc_event_channel", binaryMessenger: registrar.messenger())
         let sessionChannel = FlutterEventChannel(name: "session_event_channel", binaryMessenger: registrar.messenger())
         let hlsChannel = FlutterEventChannel(name: "hls_player_channel", binaryMessenger: registrar.messenger())
-        let pollsChannel = FlutterEventChannel(name: "polls_event_channel",binaryMessenger: registrar.messenger())
-        
+        let pollsChannel = FlutterEventChannel(name: "polls_event_channel", binaryMessenger: registrar.messenger())
+
         let instance = SwiftHmssdkFlutterPlugin(channel: channel,
                                                 meetingEventChannel: eventChannel,
                                                 previewEventChannel: previewChannel,
@@ -176,7 +176,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         if pollsEventChannel != nil {
             pollsEventChannel!.setStreamHandler(nil)
             pollsEventSink = nil
-        } else{
+        } else {
             print(#function, "pollsEventChannel not found")
         }
     }
@@ -314,14 +314,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             HMSPeerListIteratorAction.peerListIteratorAction(call, result, hmsSDK)
 
            // MARK: - Polls
-            
+
         case "add_poll_update_listener", "remove_poll_update_listener", "quick_start_poll", "add_single_choice_poll_response", "add_multi_choice_poll_response", "stop_poll", "fetch_leaderboard", "fetch_poll_list", "fetch_poll_questions", "get_poll_results":
             pollsAction(call, result)
-        
+
           // MARK: - Noise Cancellation
         case "enable_noise_cancellation", "disable_noise_cancellation", "is_noise_cancellation_enabled", "is_noise_cancellation_available":
             HMSNoiseCancellationController.noiseCancellationActions(call, result)
-            
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -426,30 +426,29 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             result(FlutterMethodNotImplemented)
         }
     }
-    
+
     var currentPolls = [HMSPoll]()
     private func pollsAction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "add_poll_update_listener":
-            let listener : HMSInteractivityCenter.HMSPollListener = { [weak self] hmsPoll, hmsPollUpdateType in
-                                
+            let listener: HMSInteractivityCenter.HMSPollListener = { [weak self] hmsPoll, hmsPollUpdateType in
+
                 guard let self = self else { return }
-                
+
                 let map = ["event_name": "on_poll_update",
                 "data": [
                     "poll": HMSPollExtension.toDictionary(poll: hmsPoll),
                     "poll_update_type": HMSPollExtension.getPollUpdateType(updateType: hmsPollUpdateType)
                     ]
-                ] as [String : Any]
-                if(hmsPollUpdateType == .started){
+                ] as [String: Any]
+                if hmsPollUpdateType == .started {
                     currentPolls.append(hmsPoll)
-                }else if(hmsPollUpdateType == .stopped){
+                } else if hmsPollUpdateType == .stopped {
                     currentPolls.removeAll(where: {
                         $0.pollID == hmsPoll.pollID
                     })
-                }
-                else if(hmsPollUpdateType == .resultsUpdated){
-                    if let index = currentPolls.firstIndex(where: {$0.pollID == hmsPoll.pollID}){
+                } else if hmsPollUpdateType == .resultsUpdated {
+                    if let index = currentPolls.firstIndex(where: {$0.pollID == hmsPoll.pollID}) {
                         currentPolls[index] = hmsPoll
                     }
                 }
@@ -606,38 +605,35 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             var dict: [String: Any] = ["key": key]
 
-            do{
+            do {
                 let isValid = try JSONSerialization.isValidJSONObject(value)
-                if(isValid){
+                if isValid {
                     let jsonData = try JSONSerialization.data(withJSONObject: value, options: [])
-                    if let jsonString = String(data: jsonData, encoding: .utf8){
+                    if let jsonString = String(data: jsonData, encoding: .utf8) {
                         dict["value"] = jsonString
-                    }else{
+                    } else {
                         HMSErrorLogger.logError(#function, "Session metadata type is not compatible, Please use String? type while setting metadata", "Type Incompatibility Error")
                         dict["value"] = nil
                     }
-                }
-                else{
-                    if let intValue = value as? Int{
+                } else {
+                    if let intValue = value as? Int {
                         let stringValue = String(intValue)
                         dict["value"] = stringValue
-                    } else if let doubleValue = value as? Double{
+                    } else if let doubleValue = value as? Double {
                         let doubleValue = String(doubleValue)
                         dict["value"] = doubleValue
-                    } else if let stringValue = value as? String{
+                    } else if let stringValue = value as? String {
                         dict["value"] = stringValue
-                    } else if let boolValue = value as? Bool{
+                    } else if let boolValue = value as? Bool {
                         dict["value"] = String(boolValue)
-                    } else if (value == nil || value is NSNull) {
+                    } else if value == nil || value is NSNull {
                         dict["value"] = nil
-                    }
-                    else{
+                    } else {
                         HMSErrorLogger.logError(#function, "Session metadata type is not compatible, Please use compatible type while setting metadata", "Type Incompatibility Error")
                         dict["value"] = nil
                     }
                 }
-            }
-            catch{
+            } catch {
                 HMSErrorLogger.logError(#function, "Session metadata type is not compatible, JSON parsing failed", "Type Incompatibility Error")
                 dict["value"] = nil
             }
@@ -800,7 +796,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             if let settings = trackSettings {
                 sdk.trackSettings = settings
             }
-            
+
             if setLogger {
                 sdk.logger = self
             }
@@ -1295,7 +1291,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 hlsStreamUrl = room.hlsStreamingState.variants.first?.url?.absoluteString
             }
         }
-        
+
         /**
          `willTerminateNotification` is not fired in all cases. When app is in background & then app is force closed then this notification is not fired resulting in `leave` method not being invoked.
          */

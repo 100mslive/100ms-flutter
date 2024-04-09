@@ -8,11 +8,11 @@
 import Foundation
 import HMSSDK
 
-class HMSPollAnswerExtension{
-    
-    static func toDictionary(answer: HMSPollQuestionResponse) -> [String:Any]{
-        
-        var map = [String:Any]()
+class HMSPollAnswerExtension {
+
+    static func toDictionary(answer: HMSPollQuestionResponse) -> [String: Any] {
+
+        var map = [String: Any]()
 
         map["answer"] = answer.text
         map["duration"] = answer.duration
@@ -22,7 +22,7 @@ class HMSPollAnswerExtension{
         map["selected_options"] = answer.options
         map["skipped"] = answer.skipped
         map["update"] = answer.update
-        
+
         return map
     }
 }

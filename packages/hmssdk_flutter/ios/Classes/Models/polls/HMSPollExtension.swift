@@ -15,24 +15,24 @@ class HMSPollExtension {
 
         map["anonymous"] = poll.anonymous
         map["category"] = getPollCategory(pollCategory: poll.category)
-        
-        if let createdBy = poll.createdBy{
+
+        if let createdBy = poll.createdBy {
             map["created_by"] = HMSPeerExtension.toDictionary(createdBy)
         }
-        
+
         map["duration"] = poll.duration
-        
-        if let mode = poll.mode{
+
+        if let mode = poll.mode {
             map["mode"] = getPollUserTrackingMode(mode: mode)
         }
-       
+
         map["poll_id"] = poll.pollID
         map["question_count"] = poll.questionCount
 
         let questions = poll.questions?.map { HMSPollQuestionExtension.toDictionary(question: $0) }
         map["questions"] = questions
 
-        if let result = poll.result{
+        if let result = poll.result {
             map["result"] = HMSPollResultExtension.toDictionary(pollResult: result)
         }
 
@@ -42,20 +42,20 @@ class HMSPollExtension {
         let rolesThatCanVote = poll.rolesThatCanVote.map { HMSRoleExtension.toDictionary($0) }
         map["roles_that_can_vote"] = rolesThatCanVote
 
-        if let startedAt = poll.startedAt{
+        if let startedAt = poll.startedAt {
             map["started_at"] = Int(startedAt.timeIntervalSince1970 * 1000)
         }
-        
-        if let startedBy = poll.startedBy{
+
+        if let startedBy = poll.startedBy {
             map["started_by"] = HMSPeerExtension.toDictionary(startedBy)
         }
-        
+
         map["state"] = getPollState(state: poll.state)
-        
-        if let stoppedAt = poll.stoppedAt{
+
+        if let stoppedAt = poll.stoppedAt {
             map["stopped_at"] = Int(stoppedAt.timeIntervalSince1970 * 1000)
         }
-        
+
         map["title"] = poll.title
 
         return map
@@ -111,4 +111,3 @@ class HMSPollExtension {
         }
     }
 }
-

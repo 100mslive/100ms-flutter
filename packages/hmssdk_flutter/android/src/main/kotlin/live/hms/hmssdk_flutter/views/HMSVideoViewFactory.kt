@@ -81,7 +81,14 @@ class HMSVideoViewFactory(private val plugin: HmssdkFlutterPlugin) :
             requireNotNull(
                 context,
             ),
-            viewId, creationParams, track, setMirror!!, scaleType, matchParent, disableAutoSimulcastLayerSelect, plugin,
+            viewId,
+            creationParams,
+            track,
+            setMirror!!,
+            scaleType,
+            matchParent,
+            disableAutoSimulcastLayerSelect,
+            plugin,
         )
     }
 }

@@ -2,7 +2,6 @@
 import live.hms.hmssdk_flutter.HMSExceptionExtension
 import live.hms.hmssdk_flutter.HMSHLSVariantExtension
 import live.hms.video.sdk.models.*
-import java.text.SimpleDateFormat
 
 class HMSStreamingState {
     companion object {

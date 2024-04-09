@@ -73,7 +73,7 @@ class  HMSPeerExtension {
             return "defaultUpdate"
         }
     }
-    
+
     private static func getPeerType(_ peerType: HMSPeerType) -> String {
         switch peerType {
         case .sip:

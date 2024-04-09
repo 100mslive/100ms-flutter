@@ -52,7 +52,12 @@ class HMSHLSPlayer(
      */
     init {
         // Inflate the HLS player view using the layout inflater service.
-        hlsPlayerView = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.hms_hls_player, this)?.findViewById(R.id.hlsView)
+        hlsPlayerView =
+            (
+                context.getSystemService(
+                    Context.LAYOUT_INFLATER_SERVICE,
+                ) as LayoutInflater
+            ).inflate(R.layout.hms_hls_player, this)?.findViewById(R.id.hlsView)
         hlsPlayerView?.let {
 
             // Set the HLS player controller visibility based on the showHLSControls flag.
@@ -120,7 +125,7 @@ class HMSHLSPlayer(
                         player.play(streamUrl)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                             context.registerReceiver(broadcastReceiver, IntentFilter(HLS_PLAYER_INTENT), RECEIVER_NOT_EXPORTED)
-                        }else {
+                        } else {
                             context.registerReceiver(broadcastReceiver, IntentFilter(HLS_PLAYER_INTENT))
                         }
 

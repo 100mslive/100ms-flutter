@@ -3,16 +3,13 @@ package live.hms.hmssdk_flutter.poll_extension
 import live.hms.video.polls.network.HMSPollLeaderboardSummary
 
 class HMSPollLeaderboardSummaryExtension {
-
-    companion object{
-
-        fun toDictionary(pollLeaderboardSummary: HMSPollLeaderboardSummary?):HashMap<String,Any?>?{
-
-            if(pollLeaderboardSummary == null){
+    companion object {
+        fun toDictionary(pollLeaderboardSummary: HMSPollLeaderboardSummary?): HashMap<String, Any?>? {
+            if (pollLeaderboardSummary == null) {
                 return null
             }
 
-            val map = HashMap<String,Any?>()
+            val map = HashMap<String, Any?>()
 
             map["average_score"] = pollLeaderboardSummary.averageScore
             map["average_time"] = pollLeaderboardSummary.averageTime
