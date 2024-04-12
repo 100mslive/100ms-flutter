@@ -15,7 +15,6 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/more_option_item.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/overlay_participants_bottom_sheet.dart';
-import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
 
 ///[HLSAppUtilitiesBottomSheet] is a bottom sheet that is used to show more options in the meeting
 class HLSAppUtilitiesBottomSheet extends StatefulWidget {
@@ -100,13 +99,7 @@ class _HLSMoreOptionsBottomSheetBottomSheetState
                           context: context,
                           builder: (ctx) => ChangeNotifierProvider.value(
                               value: meetingStore,
-                              child: (HMSRoomLayout.chatData == null ||
-                                      (HMSRoomLayout.chatData?.isOverlay ??
-                                          true))
-                                  ? const OverlayParticipantsBottomSheet()
-                                  : const ChatParticipantsTabBar(
-                                      tabIndex: 1,
-                                    )),
+                              child: const OverlayParticipantsBottomSheet()),
                         );
                       },
                       optionIcon: badge.Badge(
