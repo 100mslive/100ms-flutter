@@ -97,25 +97,36 @@ class HLSStreamDescription extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ///This renders the title
-                    Container(
-                      constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width * 0.8),
-                      child: HMSSubheadingText(
-                        text: HMSRoomLayout
-                                .roleLayoutData
-                                ?.screens
-                                ?.conferencing
-                                ?.hlsLiveStreaming
-                                ?.elements
-                                ?.header
-                                ?.title ??
-                            "",
-                        maxLines: showDescription ? 5 : 2,
-                        textColor: HMSThemeColors.onSecondaryHighEmphasis,
-                        textOverflow: TextOverflow.ellipsis,
-                        fontWeight: FontWeight.w600,
+                    ///Only renders this if the title is non null and not empty
+                    if (HMSRoomLayout
+                            .roleLayoutData
+                            ?.screens
+                            ?.conferencing
+                            ?.hlsLiveStreaming
+                            ?.elements
+                            ?.header
+                            ?.title
+                            ?.isNotEmpty ??
+                        false)
+                      Container(
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.75),
+                        child: HMSSubheadingText(
+                          text: HMSRoomLayout
+                                  .roleLayoutData
+                                  ?.screens
+                                  ?.conferencing
+                                  ?.hlsLiveStreaming
+                                  ?.elements
+                                  ?.header
+                                  ?.title ??
+                              "",
+                          maxLines: showDescription ? 5 : 2,
+                          textColor: HMSThemeColors.onSecondaryHighEmphasis,
+                          textOverflow: TextOverflow.ellipsis,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
                     Row(
                       children: [
                         ///This renders the number of peers watching the stream

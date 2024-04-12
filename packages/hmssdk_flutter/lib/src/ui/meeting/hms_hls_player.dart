@@ -31,7 +31,7 @@ class HMSHLSPlayer extends StatelessWidget {
 
   final bool? showPlayerControls;
 
-  HMSHLSPlayer(
+  const HMSHLSPlayer(
       {Key? key, this.hlsUrl, this.isHLSStatsRequired, this.showPlayerControls})
       : super(key: key);
 

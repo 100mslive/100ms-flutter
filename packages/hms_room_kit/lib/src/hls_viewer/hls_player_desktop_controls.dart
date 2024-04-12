@@ -37,8 +37,11 @@ class _HLSPlayerDesktopControlsState extends State<HLSPlayerDesktopControls> {
           ///Renders Chat Bottom Sheet only is the description is not visible
           if (!showDescription)
             Expanded(
-                child: ChatBottomSheet(
-              isHLSChat: true,
+                child: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: ChatBottomSheet(
+                isHLSChat: true,
+              ),
             ))
         ],
       ),

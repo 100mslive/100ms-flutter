@@ -147,7 +147,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                               minHeight: MediaQuery.of(context)
                                                       .size
                                                       .height *
-                                                  0.6,
+                                                  0.5,
                                             ),
                                             child: const HMSEmptyChatWidget())))
                                 : Expanded(

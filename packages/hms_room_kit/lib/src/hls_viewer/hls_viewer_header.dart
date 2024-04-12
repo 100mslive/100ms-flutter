@@ -4,6 +4,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 ///Project imports
 import 'package:hms_room_kit/src/common/utility_components.dart';
@@ -58,29 +59,38 @@ class HLSViewerHeader extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Selector<HLSPlayerStore, bool>(
-                                  selector: (_, meetingStore) =>
-                                      meetingStore.isCaptionEnabled,
-                                  builder: (_, isCaptionEnabled, __) {
-                                    return InkWell(
-                                      onTap: () {
-                                        context
-                                            .read<HLSPlayerStore>()
-                                            .toggleCaptions();
-                                      },
-                                      child: SvgPicture.asset(
-                                        "packages/hms_room_kit/lib/src/assets/icons/caption_${isCaptionEnabled ? "on" : "off"}.svg",
-                                        colorFilter: ColorFilter.mode(
-                                            HMSThemeColors
-                                                .onSurfaceHighEmphasis,
-                                            BlendMode.srcIn),
-                                        semanticsLabel: "caption_toggle_button",
-                                      ),
-                                    );
+
+                              ///The caption button is only rendered when closed captions are supported
+                              ///and the HLS has started
+                              Selector<HLSPlayerStore, Tuple2<bool, bool>>(
+                                  selector: (_, hlsPlayerStore) => Tuple2(
+                                      hlsPlayerStore.isCaptionEnabled,
+                                      hlsPlayerStore.areCaptionsSupported),
+                                  builder: (_, captionsData, __) {
+                                    return captionsData.item2
+                                        ? InkWell(
+                                            onTap: () {
+                                              context
+                                                  .read<HLSPlayerStore>()
+                                                  .toggleCaptions();
+                                            },
+                                            child: SvgPicture.asset(
+                                              "packages/hms_room_kit/lib/src/assets/icons/caption_${captionsData.item1 ? "on" : "off"}.svg",
+                                              colorFilter: ColorFilter.mode(
+                                                  HMSThemeColors
+                                                      .onSurfaceHighEmphasis,
+                                                  BlendMode.srcIn),
+                                              semanticsLabel:
+                                                  "caption_toggle_button",
+                                            ),
+                                          )
+                                        : const SizedBox();
                                   }),
                               const SizedBox(
                                 width: 16,
                               ),
+
+                              ///This renders the settings button
                               SvgPicture.asset(
                                 "packages/hms_room_kit/lib/src/assets/icons/settings.svg",
                                 colorFilter: ColorFilter.mode(

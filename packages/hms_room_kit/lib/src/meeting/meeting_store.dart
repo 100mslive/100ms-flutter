@@ -222,6 +222,9 @@ class MeetingStore extends ChangeNotifier
 
   HMSHLSPlayerStats? hlsPlayerStats;
 
+  ///[hlsPlayerSize] stores the resolution of HLS Stream
+  Size hlsPlayerSize = Size(1, 1);
+
   bool isHLSStatsEnabled = false;
 
   bool isDefaultAspectRatioSelected = true;
@@ -2701,6 +2704,13 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onLogMessage({required HMSLogList hmsLogList}) {
+    notifyListeners();
+  }
+
+  @override
+  void onVideoSizeChanged({required Size size}) {
+    log("onVideoSizeChanged -> height:${size.height} width:${size.width}");
+    hlsPlayerSize = size;
     notifyListeners();
   }
 

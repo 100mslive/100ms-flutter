@@ -5,6 +5,7 @@ import 'dart:async';
 
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
@@ -20,7 +21,11 @@ class HLSPlayerStore extends ChangeNotifier {
   ///This variable stores whether the buttons are visible or not
   bool areStreamControlsVisible = true;
 
+  ///This variable stores whether the captions are enabled or not
   bool isCaptionEnabled = false;
+
+  ///This variable stores whether the captions are supported or not
+  bool areCaptionsSupported = false;
 
   ///This variable stores whether the chat is opened or not
   ///The initial value is taken from the [HMSRoomLayout.chatData]
@@ -101,5 +106,12 @@ class HLSPlayerStore extends ChangeNotifier {
         notifyListeners();
       }
     }
+  }
+
+  ///[areClosedCaptionsSupported] checks if the closed captions are supported or not
+  void areClosedCaptionsSupported() async {
+    areCaptionsSupported =
+        await HMSHLSPlayerController.areClosedCaptionsSupported();
+    notifyListeners();
   }
 }

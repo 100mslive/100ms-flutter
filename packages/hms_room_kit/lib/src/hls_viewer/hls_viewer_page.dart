@@ -34,6 +34,11 @@ class HLSViewerPage extends StatefulWidget {
 }
 
 class _HLSViewerPageState extends State<HLSViewerPage> {
+
+  ///These variables keep track of height and width of the screen
+  double height = 0.0;
+  double width = 0.0;
+
   @override
   void initState() {
     super.initState();
@@ -45,10 +50,18 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
     }
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+  }
+
   ///This function is used to set the stream status
   void _setStreamStatus(bool hasHlsStarted) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<HLSPlayerStore>().setStreamPlaying(hasHlsStarted);
+      context.read<HLSPlayerStore>().areClosedCaptionsSupported();
     });
   }
 
@@ -90,8 +103,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                   scaffoldBackgroundColor:
                                       HMSThemeColors.backgroundDim),
                               child: SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height,
+                                width: width,
+                                height: height,
                                 child: Stack(
                                   children: [
                                     Selector<MeetingStore, bool>(
@@ -103,16 +116,13 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                               selector: (_, hlsPlayerStore) =>
                                                   hlsPlayerStore.isFullScreen,
                                               builder: (_, isFullScreen, __) {
-                                                double height =
+                                                double widgetHeight = height -
                                                     MediaQuery.of(context)
-                                                            .size
-                                                            .height -
-                                                        MediaQuery.of(context)
-                                                            .padding
-                                                            .top -
-                                                        MediaQuery.of(context)
-                                                            .padding
-                                                            .bottom;
+                                                        .padding
+                                                        .top -
+                                                    MediaQuery.of(context)
+                                                        .padding
+                                                        .bottom;
                                                 return Column(
                                                   mainAxisAlignment:
                                                       isFullScreen
@@ -123,10 +133,11 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                   children: [
                                                     ///Renders HLS Player
                                                     SizedBox(
-                                                      height: height * 0.27,
-                                                      child: const HLSPlayer(
-                                                        key: Key("HLS_PLAYER"),
-                                                      ),
+                                                      width: width,
+                                                      height: isFullScreen
+                                                          ? widgetHeight
+                                                          : widgetHeight * 0.27,
+                                                      child: const HLSPlayer(),
                                                     ),
                                                     if (!isFullScreen)
                                                       HLSPlayerDesktopControls()

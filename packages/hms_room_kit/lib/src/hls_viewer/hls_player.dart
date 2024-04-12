@@ -2,16 +2,15 @@ library;
 
 ///Package imports
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_viewer_bottom_navigation_bar.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_viewer_header.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_waiting_ui.dart';
-import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:provider/provider.dart';
 
 ///Project imports
 import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
-import 'package:provider/provider.dart';
+import 'package:hms_room_kit/src/hls_viewer/hls_player_overlay_options.dart';
+import 'package:hms_room_kit/src/hls_viewer/hls_waiting_ui.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 
 ///[HLSPlayer] is a component that is used to show the HLS Player
 class HLSPlayer extends StatelessWidget {
@@ -29,40 +28,55 @@ class HLSPlayer extends StatelessWidget {
               ///Renders the HLS Player if the HLS has started
               ///Otherwise renders the waiting UI
               hasHLSStarted
-                  ? InkWell(
-                      enableFeedback: false,
-                      canRequestFocus: false,
-                      splashColor: HMSThemeColors.backgroundDim,
-
-                      ///Toggles the visibility of the stream controls
-                      onTap: () {
-                        context
-                            .read<HLSPlayerStore>()
-                            .toggleButtonsVisibility();
-                      },
-                      child: IgnorePointer(
-                        child: HMSHLSPlayer(
-                          key: key,
-                          showPlayerControls: false,
-                          isHLSStatsRequired:
-                              context.read<MeetingStore>().isHLSStatsEnabled,
-                        ),
-                      ),
-                    )
+                  ? Align(
+                    alignment: Alignment.center,
+                    child: Selector<MeetingStore, Size>(
+                        selector: (_, meetingStore) =>
+                            meetingStore.hlsPlayerSize,
+                        builder: (_, hlsPlayerSize, __) {
+                          return AspectRatio(
+                            aspectRatio:
+                                hlsPlayerSize.width / hlsPlayerSize.height,
+                            child: InkWell(
+                              onTap: () => context
+                                  .read<HLSPlayerStore>()
+                                  .toggleButtonsVisibility(),
+                              splashFactory: NoSplash.splashFactory,
+                              splashColor: HMSThemeColors.backgroundDim,
+                              child: IgnorePointer(
+                                child: const HMSHLSPlayer(
+                                  showPlayerControls: false,
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  )
                   : Center(child: const HLSWaitingUI()),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  HLSViewerHeader(
-                    hasHLSStarted: hasHLSStarted,
-                  ),
-
-                  ///Renders the bottom navigation bar if the HLS has started
-                  ///Otherwise does not render the bottom navigation bar
-                  hasHLSStarted
-                      ? HLSViewerBottomNavigationBar()
-                      : const SizedBox()
-                ],
+              
+              ///This renders the overlay controls for HLS Player
+              Align(
+                alignment: Alignment.center,
+                child: Selector<HLSPlayerStore, bool>(
+                    selector: (_, hlsPlayerStore) =>
+                        hlsPlayerStore.isFullScreen,
+                    builder: (_, isFullScreen, __) {
+                      return isFullScreen
+                          ? Selector<MeetingStore, Size>(
+                              selector: (_, meetingStore) =>
+                                  meetingStore.hlsPlayerSize,
+                              builder: (_, hlsPlayerSize, __) {
+                                return AspectRatio(
+                                  aspectRatio: hlsPlayerSize.width /
+                                      hlsPlayerSize.height,
+                                  child: HLSPlayerOverlayOptions(
+                                    hasHLSStarted: hasHLSStarted,
+                                  ),
+                                );
+                              })
+                          : HLSPlayerOverlayOptions(
+                              hasHLSStarted: hasHLSStarted);
+                    }),
               )
             ],
           );

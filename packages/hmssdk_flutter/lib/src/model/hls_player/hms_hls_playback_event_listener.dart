@@ -1,3 +1,6 @@
+//Dart imports
+import 'dart:ui';
+
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
@@ -30,4 +33,9 @@ abstract class HMSHLSPlaybackEventsListener {
   ///
   /// - Parameter: playerStats: A [HMSHLSPlayerStats] object containing info about HLS Player stats
   void onHLSEventUpdate({required HMSHLSPlayerStats playerStats}) {}
+
+  /// Callback to get the stream height/width changes
+  ///
+  /// - Parameter: size: A [Size] object containing the new height and width of the stream
+  void onVideoSizeChanged({required Size size}) {}
 }

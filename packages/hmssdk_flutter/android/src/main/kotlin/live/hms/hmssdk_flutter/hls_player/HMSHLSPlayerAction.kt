@@ -7,6 +7,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 import live.hms.hmssdk_flutter.Constants.Companion.HLS_PLAYER_INTENT
 import live.hms.hmssdk_flutter.Constants.Companion.METHOD_CALL
 import live.hms.hmssdk_flutter.HMSErrorLogger
+import java.lang.ref.WeakReference
 
 /**
  * This class is used to send actions from flutter plugin to HLS Player
@@ -14,26 +15,34 @@ import live.hms.hmssdk_flutter.HMSErrorLogger
  */
 class HMSHLSPlayerAction {
     companion object {
+
+        private lateinit var hlsActions: WeakReference<IHLSPlayerActionInterface>
         fun hlsPlayerAction(
             call: MethodCall,
-            result: Result,
-            activity: Activity,
+            result: Result
         ) {
             when (call.method) {
-                "start_hls_player" -> start(call, result, activity)
-                "stop_hls_player" -> stop(result, activity)
-                "pause_hls_player" -> pause(result, activity)
-                "resume_hls_player" -> resume(result, activity)
-                "seek_to_live_position" -> seekToLivePosition(result, activity)
-                "seek_forward" -> seekForward(call, result, activity)
-                "seek_backward" -> seekBackward(call, result, activity)
-                "set_hls_player_volume" -> setVolume(call, result, activity)
-                "add_hls_stats_listener" -> addHLSStatsListener(result, activity)
-                "remove_hls_stats_listener" -> removeHLSStatsListener(result, activity)
+                "start_hls_player" -> start(call, result)
+                "stop_hls_player" -> stop(result)
+                "pause_hls_player" -> pause(result)
+                "resume_hls_player" -> resume(result)
+                "seek_to_live_position" -> seekToLivePosition(result)
+                "seek_forward" -> seekForward(call, result)
+                "seek_backward" -> seekBackward(call, result)
+                "set_hls_player_volume" -> setVolume(call, result)
+                "add_hls_stats_listener" -> addHLSStatsListener(result)
+                "remove_hls_stats_listener" -> removeHLSStatsListener(result)
+                "are_closed_captions_supported" -> areClosedCaptionsSupported(result)
+                "enable_closed_captions" -> enableClosedCaptions(result)
+                "disable_closed_captions" -> disableClosedCaptions(result)
                 else -> {
                     result.notImplemented()
                 }
             }
+        }
+
+        fun assignInterfaceObject(actionObject:  WeakReference<IHLSPlayerActionInterface>){
+            hlsActions = actionObject
         }
 
         /**
@@ -41,72 +50,57 @@ class HMSHLSPlayerAction {
          *
          * @param call The method call object containing the HLS URL as an argument.
          * @param result The result object to be returned after starting the player.
-         * @param activity The current activity from which the method is called.
          */
         private fun start(
             call: MethodCall,
-            result: Result,
-            activity: Activity,
+            result: Result
         ) {
             val hlsUrl = call.argument<String?>("hls_url")
-            activity.sendBroadcast(Intent(HLS_PLAYER_INTENT).putExtra(METHOD_CALL, "start_hls_player").putExtra("hls_url", hlsUrl))
-            result.success(null)
+            hlsActions.get()?.start(hlsUrl, result)
         }
 
         /**
          * Stops the HLS player by sending a broadcast intent with the specified method call.
          *
          * @param result The result object to be returned after stopping the player.
-         * @param activity The current activity from which the method is called.
          */
         private fun stop(
-            result: Result,
-            activity: Activity,
+            result: Result
         ) {
-            activity.sendBroadcast(Intent(HLS_PLAYER_INTENT).putExtra(METHOD_CALL, "stop_hls_player"))
-            result.success(null)
+            hlsActions.get()?.stop(result)
         }
 
         /**
          * Pauses the HLS player by sending a broadcast intent with the specified method call.
          *
          * @param result The result object to be returned after pausing the player.
-         * @param activity The current activity from which the method is called.
          */
         private fun pause(
             result: Result,
-            activity: Activity,
         ) {
-            activity.sendBroadcast(Intent(HLS_PLAYER_INTENT).putExtra(METHOD_CALL, "pause_hls_player"))
-            result.success(null)
+            hlsActions.get()?.pause(result)
         }
 
         /**
          * Resumes the HLS player by sending a broadcast intent with the specified method call.
          *
          * @param result The result object to be returned after resuming the player.
-         * @param activity The current activity from which the method is called.
          */
         private fun resume(
             result: Result,
-            activity: Activity,
         ) {
-            activity.sendBroadcast(Intent(HLS_PLAYER_INTENT).putExtra(METHOD_CALL, "resume_hls_player"))
-            result.success(null)
+            hlsActions.get()?.resume(result)
         }
 
         /**
          * Seeks to the live position in the HLS player by sending a broadcast intent with the specified method call.
          *
          * @param result The result object to be returned after seeking to the live position.
-         * @param activity The current activity from which the method is called.
          */
         private fun seekToLivePosition(
-            result: Result,
-            activity: Activity,
+            result: Result
         ) {
-            activity.sendBroadcast(Intent(HLS_PLAYER_INTENT).putExtra(METHOD_CALL, "seek_to_live_position"))
-            result.success(null)
+            hlsActions.get()?.seekToLivePosition(result)
         }
 
         /**
@@ -114,12 +108,10 @@ class HMSHLSPlayerAction {
          *
          * @param call The method call object containing the number of seconds to seek forward as an argument.
          * @param result The result object to be returned after seeking forward.
-         * @param activity The current activity from which the method is called.
          */
         private fun seekForward(
             call: MethodCall,
-            result: Result,
-            activity: Activity,
+            result: Result
         ) {
             val seconds: Int? =
                 call.argument<Int?>("seconds") ?: run {
@@ -128,9 +120,8 @@ class HMSHLSPlayerAction {
                 }
 
             seconds?.let {
-                activity.sendBroadcast(Intent(HLS_PLAYER_INTENT).putExtra(METHOD_CALL, "seek_forward").putExtra("seconds", seconds))
+                hlsActions.get()?.seekForward(it,result)
             }
-            result.success(null)
         }
 
         /**
@@ -138,12 +129,10 @@ class HMSHLSPlayerAction {
          *
          * @param call The method call object containing the number of seconds to seek backward as an argument.
          * @param result The result object to be returned after seeking backward.
-         * @param activity The current activity from which the method is called.
          */
         private fun seekBackward(
             call: MethodCall,
-            result: Result,
-            activity: Activity,
+            result: Result
         ) {
             val seconds: Int? =
                 call.argument<Int?>("seconds") ?: run {
@@ -152,9 +141,8 @@ class HMSHLSPlayerAction {
                 }
 
             seconds?.let {
-                activity.sendBroadcast(Intent(HLS_PLAYER_INTENT).putExtra(METHOD_CALL, "seek_backward").putExtra("seconds", seconds))
+                hlsActions.get()?.seekBackward(it,result)
             }
-            result.success(null)
         }
 
         /**
@@ -162,12 +150,10 @@ class HMSHLSPlayerAction {
          *
          * @param call The method call object containing the volume level as an argument.
          * @param result The result object to be returned after setting the volume.
-         * @param activity The current activity from which the method is called.
          */
         private fun setVolume(
             call: MethodCall,
-            result: Result,
-            activity: Activity,
+            result: Result
         ) {
             val volume: Int? =
                 call.argument<Int?>("volume") ?: run {
@@ -176,37 +162,60 @@ class HMSHLSPlayerAction {
                 }
 
             volume?.let {
-                activity.sendBroadcast(Intent(HLS_PLAYER_INTENT).putExtra(METHOD_CALL, "set_volume").putExtra("volume", volume))
+                hlsActions.get()?.setVolume(it,result)
             }
-            result.success(null)
         }
 
         /**
          * Adds a listener to receive HLS player statistics by sending a broadcast intent with the corresponding method call.
          *
          * @param result The result object to be returned after adding the HLS stats listener.
-         * @param activity The current activity from which the method is called.
          */
         private fun addHLSStatsListener(
-            result: Result,
-            activity: Activity,
+            result: Result
         ) {
-            activity.sendBroadcast(Intent(HLS_PLAYER_INTENT).putExtra(METHOD_CALL, "add_hls_stats_listener"))
-            result.success(null)
+            hlsActions.get()?.addHLSStatsListener(result)
         }
 
         /**
          * Removes the listener for HLS player statistics by sending a broadcast intent with the corresponding method call.
          *
          * @param result The result object to be returned after removing the HLS stats listener.
-         * @param activity The current activity from which the method is called.
          */
         private fun removeHLSStatsListener(
-            result: Result,
-            activity: Activity,
+            result: Result
         ) {
-            activity.sendBroadcast(Intent(HLS_PLAYER_INTENT).putExtra(METHOD_CALL, "remove_hls_stats_listener"))
-            result.success(null)
+            hlsActions.get()?.removeHLSStatsListener(result)
+        }
+
+        /**
+         * Checks whether closed captions are supported or not
+         * This can be enabled/disabled from 100ms dashboard
+         *
+         * @param result The result object used to send response regarding closed captions
+         */
+        private fun areClosedCaptionsSupported(
+            result: Result
+        ){
+            hlsActions.get()?.areClosedCaptionsSupported(result)
+        }
+
+        /**
+         * Enable closed captions in the player
+         *
+         * @param result is the object to be returned after enabling closed captions
+         */
+        private fun enableClosedCaptions(result: Result){
+            hlsActions.get()?.enableClosedCaptions(result)
+        }
+
+        /**
+         * Disable closed captions in the player
+         *
+         * @param result is the object to be returned after disabling closed captions
+         */
+        private fun disableClosedCaptions(result: Result){
+            hlsActions.get()?.disableClosedCaptions(result)
         }
     }
 }
