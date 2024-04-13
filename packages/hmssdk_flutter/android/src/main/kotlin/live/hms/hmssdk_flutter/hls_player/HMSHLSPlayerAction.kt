@@ -1,11 +1,7 @@
 package live.hms.hmssdk_flutter.hls_player
 
-import android.app.Activity
-import android.content.Intent
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
-import live.hms.hmssdk_flutter.Constants.Companion.HLS_PLAYER_INTENT
-import live.hms.hmssdk_flutter.Constants.Companion.METHOD_CALL
 import live.hms.hmssdk_flutter.HMSErrorLogger
 import java.lang.ref.WeakReference
 
@@ -15,11 +11,11 @@ import java.lang.ref.WeakReference
  */
 class HMSHLSPlayerAction {
     companion object {
-
         private lateinit var hlsActions: WeakReference<IHLSPlayerActionInterface>
+
         fun hlsPlayerAction(
             call: MethodCall,
-            result: Result
+            result: Result,
         ) {
             when (call.method) {
                 "start_hls_player" -> start(call, result)
@@ -41,7 +37,7 @@ class HMSHLSPlayerAction {
             }
         }
 
-        fun assignInterfaceObject(actionObject:  WeakReference<IHLSPlayerActionInterface>){
+        fun assignInterfaceObject(actionObject: WeakReference<IHLSPlayerActionInterface>) {
             hlsActions = actionObject
         }
 
@@ -53,7 +49,7 @@ class HMSHLSPlayerAction {
          */
         private fun start(
             call: MethodCall,
-            result: Result
+            result: Result,
         ) {
             val hlsUrl = call.argument<String?>("hls_url")
             hlsActions.get()?.start(hlsUrl, result)
@@ -64,9 +60,7 @@ class HMSHLSPlayerAction {
          *
          * @param result The result object to be returned after stopping the player.
          */
-        private fun stop(
-            result: Result
-        ) {
+        private fun stop(result: Result) {
             hlsActions.get()?.stop(result)
         }
 
@@ -75,9 +69,7 @@ class HMSHLSPlayerAction {
          *
          * @param result The result object to be returned after pausing the player.
          */
-        private fun pause(
-            result: Result,
-        ) {
+        private fun pause(result: Result) {
             hlsActions.get()?.pause(result)
         }
 
@@ -86,9 +78,7 @@ class HMSHLSPlayerAction {
          *
          * @param result The result object to be returned after resuming the player.
          */
-        private fun resume(
-            result: Result,
-        ) {
+        private fun resume(result: Result) {
             hlsActions.get()?.resume(result)
         }
 
@@ -97,9 +87,7 @@ class HMSHLSPlayerAction {
          *
          * @param result The result object to be returned after seeking to the live position.
          */
-        private fun seekToLivePosition(
-            result: Result
-        ) {
+        private fun seekToLivePosition(result: Result) {
             hlsActions.get()?.seekToLivePosition(result)
         }
 
@@ -111,7 +99,7 @@ class HMSHLSPlayerAction {
          */
         private fun seekForward(
             call: MethodCall,
-            result: Result
+            result: Result,
         ) {
             val seconds: Int? =
                 call.argument<Int?>("seconds") ?: run {
@@ -120,7 +108,7 @@ class HMSHLSPlayerAction {
                 }
 
             seconds?.let {
-                hlsActions.get()?.seekForward(it,result)
+                hlsActions.get()?.seekForward(it, result)
             }
         }
 
@@ -132,7 +120,7 @@ class HMSHLSPlayerAction {
          */
         private fun seekBackward(
             call: MethodCall,
-            result: Result
+            result: Result,
         ) {
             val seconds: Int? =
                 call.argument<Int?>("seconds") ?: run {
@@ -141,7 +129,7 @@ class HMSHLSPlayerAction {
                 }
 
             seconds?.let {
-                hlsActions.get()?.seekBackward(it,result)
+                hlsActions.get()?.seekBackward(it, result)
             }
         }
 
@@ -153,7 +141,7 @@ class HMSHLSPlayerAction {
          */
         private fun setVolume(
             call: MethodCall,
-            result: Result
+            result: Result,
         ) {
             val volume: Int? =
                 call.argument<Int?>("volume") ?: run {
@@ -162,7 +150,7 @@ class HMSHLSPlayerAction {
                 }
 
             volume?.let {
-                hlsActions.get()?.setVolume(it,result)
+                hlsActions.get()?.setVolume(it, result)
             }
         }
 
@@ -171,9 +159,7 @@ class HMSHLSPlayerAction {
          *
          * @param result The result object to be returned after adding the HLS stats listener.
          */
-        private fun addHLSStatsListener(
-            result: Result
-        ) {
+        private fun addHLSStatsListener(result: Result) {
             hlsActions.get()?.addHLSStatsListener(result)
         }
 
@@ -182,9 +168,7 @@ class HMSHLSPlayerAction {
          *
          * @param result The result object to be returned after removing the HLS stats listener.
          */
-        private fun removeHLSStatsListener(
-            result: Result
-        ) {
+        private fun removeHLSStatsListener(result: Result) {
             hlsActions.get()?.removeHLSStatsListener(result)
         }
 
@@ -194,9 +178,7 @@ class HMSHLSPlayerAction {
          *
          * @param result The result object used to send response regarding closed captions
          */
-        private fun areClosedCaptionsSupported(
-            result: Result
-        ){
+        private fun areClosedCaptionsSupported(result: Result) {
             hlsActions.get()?.areClosedCaptionsSupported(result)
         }
 
@@ -205,7 +187,7 @@ class HMSHLSPlayerAction {
          *
          * @param result is the object to be returned after enabling closed captions
          */
-        private fun enableClosedCaptions(result: Result){
+        private fun enableClosedCaptions(result: Result) {
             hlsActions.get()?.enableClosedCaptions(result)
         }
 
@@ -214,7 +196,7 @@ class HMSHLSPlayerAction {
          *
          * @param result is the object to be returned after disabling closed captions
          */
-        private fun disableClosedCaptions(result: Result){
+        private fun disableClosedCaptions(result: Result) {
             hlsActions.get()?.disableClosedCaptions(result)
         }
     }

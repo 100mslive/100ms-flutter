@@ -29,31 +29,31 @@ class HLSPlayer extends StatelessWidget {
               ///Otherwise renders the waiting UI
               hasHLSStarted
                   ? Align(
-                    alignment: Alignment.center,
-                    child: Selector<MeetingStore, Size>(
-                        selector: (_, meetingStore) =>
-                            meetingStore.hlsPlayerSize,
-                        builder: (_, hlsPlayerSize, __) {
-                          return AspectRatio(
-                            aspectRatio:
-                                hlsPlayerSize.width / hlsPlayerSize.height,
-                            child: InkWell(
-                              onTap: () => context
-                                  .read<HLSPlayerStore>()
-                                  .toggleButtonsVisibility(),
-                              splashFactory: NoSplash.splashFactory,
-                              splashColor: HMSThemeColors.backgroundDim,
-                              child: IgnorePointer(
-                                child: const HMSHLSPlayer(
-                                  showPlayerControls: false,
+                      alignment: Alignment.center,
+                      child: Selector<MeetingStore, Size>(
+                          selector: (_, meetingStore) =>
+                              meetingStore.hlsPlayerSize,
+                          builder: (_, hlsPlayerSize, __) {
+                            return AspectRatio(
+                              aspectRatio:
+                                  hlsPlayerSize.width / hlsPlayerSize.height,
+                              child: InkWell(
+                                onTap: () => context
+                                    .read<HLSPlayerStore>()
+                                    .toggleButtonsVisibility(),
+                                splashFactory: NoSplash.splashFactory,
+                                splashColor: HMSThemeColors.backgroundDim,
+                                child: IgnorePointer(
+                                  child: const HMSHLSPlayer(
+                                    showPlayerControls: false,
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        }),
-                  )
+                            );
+                          }),
+                    )
                   : Center(child: const HLSWaitingUI()),
-              
+
               ///This renders the overlay controls for HLS Player
               Align(
                 alignment: Alignment.center,

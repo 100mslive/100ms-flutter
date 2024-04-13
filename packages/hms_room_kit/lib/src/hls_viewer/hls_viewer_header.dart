@@ -59,7 +59,6 @@ class HLSViewerHeader extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-
                               ///The caption button is only rendered when closed captions are supported
                               ///and the HLS has started
                               Selector<HLSPlayerStore, Tuple2<bool, bool>>(

@@ -91,7 +91,7 @@ class HMSHLSStreamViewController: HMSHLSPlayerDelegate {
         } else {
             playerView?.videoGravity = .resizeAspectFill
         }
-        
+
         let data = [
             "event_name": "on_video_size_changed",
             "data": ["width": videoSize.width, "height": videoSize.height] as [String: Any?]

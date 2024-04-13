@@ -34,7 +34,6 @@ class HLSViewerPage extends StatefulWidget {
 }
 
 class _HLSViewerPageState extends State<HLSViewerPage> {
-
   ///These variables keep track of height and width of the screen
   double height = 0.0;
   double width = 0.0;

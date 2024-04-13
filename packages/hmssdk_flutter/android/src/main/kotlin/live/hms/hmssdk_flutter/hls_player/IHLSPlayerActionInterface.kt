@@ -8,18 +8,41 @@ import io.flutter.plugin.common.MethodChannel.Result
  * from flutter
  */
 interface IHLSPlayerActionInterface {
+    fun start(
+        hlsUrl: String?,
+        result: Result,
+    )
 
-    fun start(hlsUrl: String?, result: Result)
     fun stop(result: Result)
+
     fun pause(result: Result)
+
     fun resume(result: Result)
+
     fun seekToLivePosition(result: Result)
-    fun seekForward(seconds: Int, result: Result)
-    fun seekBackward(seconds: Int, result: Result)
-    fun setVolume(volume: Int, result: Result)
+
+    fun seekForward(
+        seconds: Int,
+        result: Result,
+    )
+
+    fun seekBackward(
+        seconds: Int,
+        result: Result,
+    )
+
+    fun setVolume(
+        volume: Int,
+        result: Result,
+    )
+
     fun addHLSStatsListener(result: Result)
+
     fun removeHLSStatsListener(result: Result)
+
     fun areClosedCaptionsSupported(result: Result)
+
     fun enableClosedCaptions(result: Result)
+
     fun disableClosedCaptions(result: Result)
 }

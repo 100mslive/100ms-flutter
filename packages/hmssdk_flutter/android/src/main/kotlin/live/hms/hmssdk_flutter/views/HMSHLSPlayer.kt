@@ -1,12 +1,6 @@
 package live.hms.hmssdk_flutter.views
 
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Context.RECEIVER_NOT_EXPORTED
-import android.content.Intent
-import android.content.IntentFilter
-import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.media3.common.Player
@@ -20,8 +14,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import live.hms.hls_player.*
-import live.hms.hmssdk_flutter.Constants
-import live.hms.hmssdk_flutter.Constants.Companion.HLS_PLAYER_INTENT
 import live.hms.hmssdk_flutter.HMSErrorLogger
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.hmssdk_flutter.R
@@ -110,8 +102,8 @@ class HMSHLSPlayer(
                                 hlsPlayerView?.resizeMode = RESIZE_MODE_ZOOM
                             }
 
-                            val hashMap =HashMap<String, Any>()
-                            val args = HashMap<String,Any>()
+                            val hashMap = HashMap<String, Any>()
+                            val args = HashMap<String, Any>()
                             hashMap["event_name"] = "on_video_size_changed"
                             args["height"] = height
                             args["width"] = width
@@ -142,7 +134,6 @@ class HMSHLSPlayer(
          */
         hlsPlayer?.let { player ->
             hlsUrl?.let {
-
                 /**
                  * Here we play the stream using streamUrl using the stream from
                  * url passed by the user
@@ -251,91 +242,101 @@ class HMSHLSPlayer(
             }
         }
 
-
     /**
      * This handles the method call from flutter channel
      * and return the values
      */
-    private fun initializeMethodHandler(){
-        actions = object : IHLSPlayerActionInterface {
-
-            /**
-             * Starts the HLS player with the specified HLS URL.
-             * - Parameters:
-             * - hlsUrl: The HLS URL to play. If nil, the HLS URL from hmssdkFlutterPlugin will be used.
-             */
-            override fun start(hlsUrl: String?, result: Result) {
-                hlsUrl?.let {
-                    hlsPlayer?.play(hlsUrl)
-                } ?: run {
-                    hmssdkFlutterPlugin?.hlsStreamUrl?.let {
-                        hlsPlayer?.play(it)
+    private fun initializeMethodHandler() {
+        actions =
+            object : IHLSPlayerActionInterface {
+                /**
+                 * Starts the HLS player with the specified HLS URL.
+                 * - Parameters:
+                 * - hlsUrl: The HLS URL to play. If nil, the HLS URL from hmssdkFlutterPlugin will be used.
+                 */
+                override fun start(
+                    hlsUrl: String?,
+                    result: Result,
+                ) {
+                    hlsUrl?.let {
+                        hlsPlayer?.play(hlsUrl)
                     } ?: run {
-                        HMSErrorLogger.logError("start", "HLS Stream URL is null", "NULL Error")
+                        hmssdkFlutterPlugin?.hlsStreamUrl?.let {
+                            hlsPlayer?.play(it)
+                        } ?: run {
+                            HMSErrorLogger.logError("start", "HLS Stream URL is null", "NULL Error")
+                        }
                     }
+                    result.success(null)
                 }
-                result.success(null)
-            }
 
-            override fun stop(result: Result) {
-                hlsPlayer?.stop()
-                result.success(null)
-            }
+                override fun stop(result: Result) {
+                    hlsPlayer?.stop()
+                    result.success(null)
+                }
 
-            override fun pause(result: Result) {
-                hlsPlayer?.pause()
-                result.success(null)
-            }
+                override fun pause(result: Result) {
+                    hlsPlayer?.pause()
+                    result.success(null)
+                }
 
-            override fun resume(result: Result) {
-                hlsPlayer?.resume()
-                result.success(null)
-            }
+                override fun resume(result: Result) {
+                    hlsPlayer?.resume()
+                    result.success(null)
+                }
 
-            override fun seekToLivePosition(result: Result) {
-                hlsPlayer?.seekToLivePosition()
-                result.success(null)
-            }
+                override fun seekToLivePosition(result: Result) {
+                    hlsPlayer?.seekToLivePosition()
+                    result.success(null)
+                }
 
-            override fun seekForward(seconds: Int, result: Result) {
-                hlsPlayer?.seekForward(seconds.toLong(), TimeUnit.SECONDS)
-                result.success(null)
-            }
+                override fun seekForward(
+                    seconds: Int,
+                    result: Result,
+                ) {
+                    hlsPlayer?.seekForward(seconds.toLong(), TimeUnit.SECONDS)
+                    result.success(null)
+                }
 
-            override fun seekBackward(seconds: Int, result: Result) {
-                hlsPlayer?.seekBackward(seconds.toLong(), TimeUnit.SECONDS)
-                result.success(null)
-            }
+                override fun seekBackward(
+                    seconds: Int,
+                    result: Result,
+                ) {
+                    hlsPlayer?.seekBackward(seconds.toLong(), TimeUnit.SECONDS)
+                    result.success(null)
+                }
 
-            override fun setVolume(volume: Int, result: Result) {
-                hlsPlayer?.volume = volume
-                result.success(null)
-            }
+                override fun setVolume(
+                    volume: Int,
+                    result: Result,
+                ) {
+                    hlsPlayer?.volume = volume
+                    result.success(null)
+                }
 
-            override fun addHLSStatsListener(result: Result) {
-                HLSStatsHandler.addHLSStatsListener(hmssdkFlutterPlugin, hlsPlayer)
-                result.success(null)
-            }
+                override fun addHLSStatsListener(result: Result) {
+                    HLSStatsHandler.addHLSStatsListener(hmssdkFlutterPlugin, hlsPlayer)
+                    result.success(null)
+                }
 
-            override fun removeHLSStatsListener(result: Result) {
-                HLSStatsHandler.removeStatsListener(hlsPlayer)
-                result.success(null)
-            }
+                override fun removeHLSStatsListener(result: Result) {
+                    HLSStatsHandler.removeStatsListener(hlsPlayer)
+                    result.success(null)
+                }
 
-            override fun areClosedCaptionsSupported(result: Result) {
-                val areCaptionsSupported = hlsPlayer?.areClosedCaptionsSupported()
-                result.success(areCaptionsSupported)
-            }
+                override fun areClosedCaptionsSupported(result: Result) {
+                    val areCaptionsSupported = hlsPlayer?.areClosedCaptionsSupported()
+                    result.success(areCaptionsSupported)
+                }
 
-            override fun enableClosedCaptions(result: Result) {
-                TODO("Not yet implemented")
-            }
+                override fun enableClosedCaptions(result: Result) {
+                    TODO("Not yet implemented")
+                }
 
-            override fun disableClosedCaptions(result: Result) {
-                TODO("Not yet implemented")
+                override fun disableClosedCaptions(result: Result) {
+                    TODO("Not yet implemented")
+                }
             }
-
-        }
     }
     /********************************************/
 }
