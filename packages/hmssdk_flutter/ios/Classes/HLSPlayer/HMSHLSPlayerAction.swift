@@ -48,6 +48,15 @@ class HMSHLSPlayerAction {
 
         case "remove_hls_stats_listener":
             removeHLSStatsListener(result)
+        
+        case "are_closed_captions_supported":
+            areClosedCaptionsSupported(result)
+            
+        case "enable_closed_captions":
+            enableClosedCaptions(result)
+        
+        case "disable_closed_captions":
+            disableClosedCaptions(result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -192,6 +201,20 @@ class HMSHLSPlayerAction {
      */
     static private func removeHLSStatsListener(_ result: @escaping FlutterResult) {
         NotificationCenter.default.post(name: NSNotification.Name(HLS_PLAYER_METHOD), object: nil, userInfo: [METHOD_CALL: "remove_hls_stats_listener"])
+        result(nil)
+    }
+    
+    static private func areClosedCaptionsSupported(_ result: @escaping FlutterResult){
+        NotificationCenter.default.post(name: NSNotification.Name(HLS_PLAYER_METHOD), object: nil, userInfo: [METHOD_CALL: "are_closed_captions_supported", "result": result])
+    }
+    
+    static private func enableClosedCaptions(_ result: @escaping FlutterResult){
+        NotificationCenter.default.post(name: NSNotification.Name(HLS_PLAYER_METHOD), object: nil, userInfo: [METHOD_CALL: "enable_closed_captions"])
+        result(nil)
+    }
+    
+    static private func disableClosedCaptions(_ result: @escaping FlutterResult){
+        NotificationCenter.default.post(name: NSNotification.Name(HLS_PLAYER_METHOD), object: nil, userInfo: [METHOD_CALL: "disable_closed_captions"])
         result(nil)
     }
 }

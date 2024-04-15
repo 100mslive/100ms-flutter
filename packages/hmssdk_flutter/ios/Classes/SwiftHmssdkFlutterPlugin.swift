@@ -300,7 +300,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
             // MARK: - HLS Player
 
-        case "start_hls_player", "stop_hls_player", "pause_hls_player", "resume_hls_player", "seek_to_live_position", "seek_forward", "seek_backward", "set_hls_player_volume", "add_hls_stats_listener", "remove_hls_stats_listener":
+        case "start_hls_player", "stop_hls_player", "pause_hls_player", "resume_hls_player", "seek_to_live_position", "seek_forward", "seek_backward", "set_hls_player_volume", "add_hls_stats_listener", "remove_hls_stats_listener", "are_closed_captions_supported", "enable_closed_captions", "disable_closed_captions":
             HMSHLSPlayerAction.hlsPlayerAction(call, result)
 
         case "toggle_always_screen_on":

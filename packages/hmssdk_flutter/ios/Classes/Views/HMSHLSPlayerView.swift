@@ -161,6 +161,40 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
         case "remove_hls_stats_listener":
             removeHLSStatsListener()
 
+        case "are_closed_captions_supported":
+            let result = notification.userInfo?["result"] as? FlutterResult
+            
+            var isSubtitleToggleShown = false
+            guard let playerItem = hlsPlayer?._nativePlayer.currentItem else {
+                isSubtitleToggleShown = false
+                return
+            }
+            
+            guard let availableSubtitleTracks = playerItem.asset.mediaSelectionGroup(forMediaCharacteristic: .legible) else {
+                isSubtitleToggleShown = false
+                return
+            }
+            
+            guard let firstOption = availableSubtitleTracks.options.first else {
+                isSubtitleToggleShown = false
+                return
+            }
+            
+            if firstOption.mediaType == .subtitle {
+                isSubtitleToggleShown = true
+            }
+            else {
+                isSubtitleToggleShown = false
+            }
+            
+            result?(isSubtitleToggleShown)
+        
+        case "enable_closed_captions":
+            break
+        
+        case "disable_closed_captions":
+            break
+            
         default:
             return
         }
