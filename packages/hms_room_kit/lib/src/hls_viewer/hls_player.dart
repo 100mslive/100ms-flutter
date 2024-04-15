@@ -30,9 +30,9 @@ class HLSPlayer extends StatelessWidget {
               hasHLSStarted
                   ? Align(
                       alignment: Alignment.center,
-                      child: Selector<MeetingStore, Size>(
-                          selector: (_, meetingStore) =>
-                              meetingStore.hlsPlayerSize,
+                      child: Selector<HLSPlayerStore, Size>(
+                          selector: (_, hlsPlayerStore) =>
+                              hlsPlayerStore.hlsPlayerSize,
                           builder: (_, hlsPlayerSize, __) {
                             return AspectRatio(
                               aspectRatio:
@@ -62,9 +62,9 @@ class HLSPlayer extends StatelessWidget {
                         hlsPlayerStore.isFullScreen,
                     builder: (_, isFullScreen, __) {
                       return isFullScreen
-                          ? Selector<MeetingStore, Size>(
-                              selector: (_, meetingStore) =>
-                                  meetingStore.hlsPlayerSize,
+                          ? Selector<HLSPlayerStore, Size>(
+                              selector: (_, hlsPlayerStore) =>
+                                  hlsPlayerStore.hlsPlayerSize,
                               builder: (_, hlsPlayerSize, __) {
                                 return AspectRatio(
                                   aspectRatio: hlsPlayerSize.width /
@@ -77,6 +77,21 @@ class HLSPlayer extends StatelessWidget {
                           : HLSPlayerOverlayOptions(
                               hasHLSStarted: hasHLSStarted);
                     }),
+              ),
+              Selector<HLSPlayerStore, HMSHLSPlaybackState>(
+                selector: (_, hlsPlayerStore) =>
+                    hlsPlayerStore.playerPlaybackState,
+                builder: (_, state, __) {
+                  return state == HMSHLSPlaybackState.BUFFERING
+                      ? Align(
+                          alignment: Alignment.center,
+                          child: CircularProgressIndicator(
+                            color: HMSThemeColors.primaryDefault,
+                            strokeWidth: 1,
+                          ),
+                        )
+                      : const SizedBox();
+                },
               )
             ],
           );

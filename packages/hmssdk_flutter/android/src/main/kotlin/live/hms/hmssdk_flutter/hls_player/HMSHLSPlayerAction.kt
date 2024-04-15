@@ -11,7 +11,7 @@ import java.lang.ref.WeakReference
  */
 class HMSHLSPlayerAction {
     companion object {
-        private lateinit var hlsActions: WeakReference<IHLSPlayerActionInterface>
+        private var hlsActions: WeakReference<IHLSPlayerActionInterface>? = null
 
         fun hlsPlayerAction(
             call: MethodCall,
@@ -52,7 +52,11 @@ class HMSHLSPlayerAction {
             result: Result,
         ) {
             val hlsUrl = call.argument<String?>("hls_url")
-            hlsActions.get()?.start(hlsUrl, result)
+            hlsActions?.let {
+                it.get()?.start(hlsUrl, result)
+            }?:run{
+                HMSErrorLogger.logError("start", "hlsActions is NULL", "NULL Error")
+            }
         }
 
         /**
@@ -61,7 +65,11 @@ class HMSHLSPlayerAction {
          * @param result The result object to be returned after stopping the player.
          */
         private fun stop(result: Result) {
-            hlsActions.get()?.stop(result)
+            hlsActions?.let {
+                it.get()?.stop(result)
+            }?:run{
+                HMSErrorLogger.logError("stop", "hlsActions is NULL", "NULL Error")
+            }
         }
 
         /**
@@ -70,7 +78,11 @@ class HMSHLSPlayerAction {
          * @param result The result object to be returned after pausing the player.
          */
         private fun pause(result: Result) {
-            hlsActions.get()?.pause(result)
+            hlsActions?.let {
+                it.get()?.pause(result)
+            }?:run{
+                HMSErrorLogger.logError("pause", "hlsActions is NULL", "NULL Error")
+            }
         }
 
         /**
@@ -79,7 +91,11 @@ class HMSHLSPlayerAction {
          * @param result The result object to be returned after resuming the player.
          */
         private fun resume(result: Result) {
-            hlsActions.get()?.resume(result)
+            hlsActions?.let {
+                it.get()?.resume(result)
+            }?:run{
+                HMSErrorLogger.logError("resume", "hlsActions is NULL", "NULL Error")
+            }
         }
 
         /**
@@ -88,7 +104,11 @@ class HMSHLSPlayerAction {
          * @param result The result object to be returned after seeking to the live position.
          */
         private fun seekToLivePosition(result: Result) {
-            hlsActions.get()?.seekToLivePosition(result)
+            hlsActions?.let {
+                it.get()?.seekToLivePosition(result)
+            }?:run{
+                HMSErrorLogger.logError("seekToLivePosition", "hlsActions is NULL", "NULL Error")
+            }
         }
 
         /**
@@ -108,7 +128,11 @@ class HMSHLSPlayerAction {
                 }
 
             seconds?.let {
-                hlsActions.get()?.seekForward(it, result)
+                hlsActions?.let {_hlsActions ->
+                    _hlsActions.get()?.seekForward(it, result)
+                }?:run{
+                    HMSErrorLogger.logError("seekForward", "hlsActions is NULL", "NULL Error")
+                }
             }
         }
 
@@ -129,7 +153,11 @@ class HMSHLSPlayerAction {
                 }
 
             seconds?.let {
-                hlsActions.get()?.seekBackward(it, result)
+                hlsActions?.let { _hlsActions ->
+                    _hlsActions.get()?.seekBackward(it, result)
+                }?:run{
+                    HMSErrorLogger.logError("seekBackward", "hlsActions is NULL", "NULL Error")
+                }
             }
         }
 
@@ -150,7 +178,11 @@ class HMSHLSPlayerAction {
                 }
 
             volume?.let {
-                hlsActions.get()?.setVolume(it, result)
+                hlsActions?.let {_hlsActions ->
+                    _hlsActions.get()?.setVolume(it,result)
+                }?:run{
+                    HMSErrorLogger.logError("setVolume", "hlsActions is NULL", "NULL Error")
+                }
             }
         }
 
@@ -160,7 +192,12 @@ class HMSHLSPlayerAction {
          * @param result The result object to be returned after adding the HLS stats listener.
          */
         private fun addHLSStatsListener(result: Result) {
-            hlsActions.get()?.addHLSStatsListener(result)
+
+            hlsActions?.let {
+                it.get()?.addHLSStatsListener(result)
+            }?:run{
+                HMSErrorLogger.logError("addHLSStatsListener", "hlsActions is NULL", "NULL Error")
+            }
         }
 
         /**
@@ -169,7 +206,11 @@ class HMSHLSPlayerAction {
          * @param result The result object to be returned after removing the HLS stats listener.
          */
         private fun removeHLSStatsListener(result: Result) {
-            hlsActions.get()?.removeHLSStatsListener(result)
+            hlsActions?.let {
+                it.get()?.removeHLSStatsListener(result)
+            }?:run{
+                HMSErrorLogger.logError("removeHLSStatsListener", "hlsActions is NULL", "NULL Error")
+            }
         }
 
         /**
@@ -179,7 +220,11 @@ class HMSHLSPlayerAction {
          * @param result The result object used to send response regarding closed captions
          */
         private fun areClosedCaptionsSupported(result: Result) {
-            hlsActions.get()?.areClosedCaptionsSupported(result)
+            hlsActions?.let {
+                it.get()?.areClosedCaptionsSupported(result)
+            }?:run{
+                HMSErrorLogger.logError("areClosedCaptionsSupported", "hlsActions is NULL", "NULL Error")
+            }
         }
 
         /**
@@ -188,7 +233,11 @@ class HMSHLSPlayerAction {
          * @param result is the object to be returned after enabling closed captions
          */
         private fun enableClosedCaptions(result: Result) {
-            hlsActions.get()?.enableClosedCaptions(result)
+            hlsActions?.let {
+                it.get()?.enableClosedCaptions(result)
+            }?:run{
+                HMSErrorLogger.logError("enableClosedCaptions", "hlsActions is NULL", "NULL Error")
+            }
         }
 
         /**
@@ -197,7 +246,11 @@ class HMSHLSPlayerAction {
          * @param result is the object to be returned after disabling closed captions
          */
         private fun disableClosedCaptions(result: Result) {
-            hlsActions.get()?.disableClosedCaptions(result)
+            hlsActions?.let {
+                it.get()?.disableClosedCaptions(result)
+            }?:run{
+                HMSErrorLogger.logError("disableClosedCaptions", "hlsActions is NULL", "NULL Error")
+            }
         }
     }
 }

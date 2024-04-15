@@ -2,6 +2,7 @@ library;
 
 ///Dart imports
 import 'dart:async';
+import 'dart:developer';
 
 ///Package imports
 import 'package:flutter/material.dart';
@@ -11,7 +12,8 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 
 ///[HLSPlayerStore] is a store that stores the state of the HLS Player
-class HLSPlayerStore extends ChangeNotifier {
+class HLSPlayerStore extends ChangeNotifier
+    implements HMSHLSPlaybackEventsListener {
   ///This variable stores whether the application is in full screen or not
   bool isFullScreen = false;
 
@@ -36,6 +38,17 @@ class HLSPlayerStore extends ChangeNotifier {
   ///
   ///This is done to avoid multiple timers running at the same time
   bool _isTimerActive = false;
+
+  ///HLS Player Stats
+
+  HMSHLSPlayerStats? hlsPlayerStats;
+
+  ///[hlsPlayerSize] stores the resolution of HLS Stream
+  Size hlsPlayerSize = Size(1, 1);
+
+  bool isHLSStatsEnabled = false;
+
+  HMSHLSPlaybackState playerPlaybackState = HMSHLSPlaybackState.PLAYING;
 
   ///This method starts a timer for 5 seconds and then hides the buttons
   ///
@@ -112,6 +125,51 @@ class HLSPlayerStore extends ChangeNotifier {
   void areClosedCaptionsSupported() async {
     areCaptionsSupported =
         await HMSHLSPlayerController.areClosedCaptionsSupported();
+    notifyListeners();
+  }
+
+  void setHLSPlayerStats(bool value) {
+    isHLSStatsEnabled = value;
+    if (!value) {
+      HMSHLSPlayerController.removeHLSStatsListener();
+    } else {
+      HMSHLSPlayerController.addHLSStatsListener();
+    }
+    notifyListeners();
+  }
+
+  @override
+  void onCue({required HMSHLSCue hlsCue}) {}
+
+  @override
+  void onHLSError({required HMSException hlsException}) {}
+
+  @override
+  void onHLSEventUpdate({required HMSHLSPlayerStats playerStats}) {
+    log("onHLSEventUpdate-> bitrate:${playerStats.averageBitrate} buffered duration: ${playerStats.bufferedDuration}");
+    hlsPlayerStats = playerStats;
+    notifyListeners();
+  }
+
+  @override
+  void onPlaybackFailure({required String? error}) {
+    log("Playback failure $error");
+  }
+
+  @override
+  void onPlaybackStateChanged({required HMSHLSPlaybackState playbackState}) {
+    log("Playback state changed to ${playbackState.name}");
+    playerPlaybackState = playbackState;
+    if (playerPlaybackState == HMSHLSPlaybackState.PLAYING) {
+      areClosedCaptionsSupported();
+    }
+    notifyListeners();
+  }
+
+  @override
+  void onVideoSizeChanged({required Size size}) {
+    log("onVideoSizeChanged -> height:${size.height} width:${size.width}");
+    hlsPlayerSize = size;
     notifyListeners();
   }
 }

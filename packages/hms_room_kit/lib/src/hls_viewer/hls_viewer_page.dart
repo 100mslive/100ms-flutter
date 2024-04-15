@@ -45,6 +45,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
       ///We start the timer to hide the controls
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.read<HLSPlayerStore>().startTimerToHideButtons();
+        HMSHLSPlayerController.addHMSHLSPlaybackEventsListener(
+            context.read<HLSPlayerStore>());
       });
     }
   }
@@ -60,8 +62,14 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
   void _setStreamStatus(bool hasHlsStarted) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<HLSPlayerStore>().setStreamPlaying(hasHlsStarted);
-      context.read<HLSPlayerStore>().areClosedCaptionsSupported();
     });
+  }
+
+  @override
+  void deactivate() {
+    HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(
+        context.read<HLSPlayerStore>());
+    super.deactivate();
   }
 
   @override
@@ -111,6 +119,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                             meetingStore.hasHlsStarted,
                                         builder: (_, hasHlsStarted, __) {
                                           _setStreamStatus(hasHlsStarted);
+
                                           return Selector<HLSPlayerStore, bool>(
                                               selector: (_, hlsPlayerStore) =>
                                                   hlsPlayerStore.isFullScreen,

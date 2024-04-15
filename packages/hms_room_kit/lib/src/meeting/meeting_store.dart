@@ -218,15 +218,6 @@ class MeetingStore extends ChangeNotifier
 
   String? spotlightMetadata;
 
-  ///HLS Player Stats
-
-  HMSHLSPlayerStats? hlsPlayerStats;
-
-  ///[hlsPlayerSize] stores the resolution of HLS Stream
-  Size hlsPlayerSize = Size(1, 1);
-
-  bool isHLSStatsEnabled = false;
-
   bool isDefaultAspectRatioSelected = true;
 
   int currentPage = 0;
@@ -2708,11 +2699,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   @override
-  void onVideoSizeChanged({required Size size}) {
-    log("onVideoSizeChanged -> height:${size.height} width:${size.width}");
-    hlsPlayerSize = size;
-    notifyListeners();
-  }
+  void onVideoSizeChanged({required Size size}) {}
 
   @override
   void onCue({required HMSHLSCue hlsCue}) {
@@ -2768,36 +2755,16 @@ class MeetingStore extends ChangeNotifier
   }
 
   @override
-  void onPlaybackFailure({required String? error}) {
-    Utilities.showToast("Playback failure $error");
-  }
+  void onPlaybackFailure({required String? error}) {}
 
   @override
-  void onPlaybackStateChanged({required HMSHLSPlaybackState playbackState}) {
-    Utilities.showToast("Playback state changed to ${playbackState.name}");
-  }
+  void onPlaybackStateChanged({required HMSHLSPlaybackState playbackState}) {}
 
   @override
-  void onHLSError({required HMSException hlsException}) {
-    // TODO: implement onHLSError
-  }
+  void onHLSError({required HMSException hlsException}) {}
 
   @override
-  void onHLSEventUpdate({required HMSHLSPlayerStats playerStats}) {
-    log("onHLSEventUpdate-> bitrate:${playerStats.averageBitrate} buffered duration: ${playerStats.bufferedDuration}");
-    hlsPlayerStats = playerStats;
-    notifyListeners();
-  }
-
-  void setHLSPlayerStats(bool value) {
-    isHLSStatsEnabled = value;
-    if (!value) {
-      HMSHLSPlayerController.removeHLSStatsListener();
-    } else {
-      HMSHLSPlayerController.addHLSStatsListener();
-    }
-    notifyListeners();
-  }
+  void onHLSEventUpdate({required HMSHLSPlayerStats playerStats}) {}
 
   ///Insert poll question
   void insertPollQuestion(HMSPollStore store) {
