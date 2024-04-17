@@ -2,8 +2,12 @@
 import 'dart:io' show Platform;
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show StandardMessageCodec;
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart'
+    show AndroidViewController, PlatformViewsService, StandardMessageCodec;
 
 ///100ms HMSHLSPlayer
 ///
@@ -65,17 +69,33 @@ class _PlatformView extends StatelessWidget {
   Widget build(BuildContext context) {
     ///AndroidView for android it uses surfaceRenderer provided internally by webrtc.
     if (Platform.isAndroid) {
-      return AndroidView(
-        key: key,
+      return PlatformViewLink(
         viewType: 'HMSHLSPlayer',
-        onPlatformViewCreated: onPlatformViewCreated,
-        creationParamsCodec: StandardMessageCodec(),
-        creationParams: {
-          'hls_url': hlsUrl,
-          'is_hls_stats_required': isHLSStatsRequired,
-          'show_player_controls': showPlayerControls
+        surfaceFactory: (context, controller) {
+          return AndroidViewSurface(
+            controller: controller as AndroidViewController,
+            gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+            hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+          );
         },
-        gestureRecognizers: {},
+        onCreatePlatformView: (params) {
+          return PlatformViewsService.initSurfaceAndroidView(
+            id: params.id,
+            viewType: 'HMSHLSPlayer',
+            layoutDirection: TextDirection.ltr,
+            creationParams: {
+              'hls_url': hlsUrl,
+              'is_hls_stats_required': isHLSStatsRequired,
+              'show_player_controls': showPlayerControls
+            },
+            creationParamsCodec: const StandardMessageCodec(),
+            onFocus: () {
+              params.onFocusChanged(true);
+            },
+          )
+            ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+            ..create();
+        },
       );
     } else if (Platform.isIOS) {
       ///UIKitView for ios it uses VideoView provided by 100ms ios_sdk internally.

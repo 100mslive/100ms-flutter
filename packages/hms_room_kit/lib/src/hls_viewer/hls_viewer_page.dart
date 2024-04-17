@@ -126,10 +126,10 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                               builder: (_, isFullScreen, __) {
                                                 double widgetHeight = height -
                                                     MediaQuery.of(context)
-                                                        .padding
+                                                        .viewPadding
                                                         .top -
                                                     MediaQuery.of(context)
-                                                        .padding
+                                                        .viewPadding
                                                         .bottom;
                                                 return Column(
                                                   mainAxisAlignment:

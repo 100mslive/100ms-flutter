@@ -1,8 +1,5 @@
 library;
 
-///Dart imports
-import 'dart:io';
-
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -25,8 +22,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
               end: Alignment.bottomCenter,
               colors: [Colors.black.withAlpha(0), Colors.black.withAlpha(64)])),
       child: Padding(
-        padding: EdgeInsets.only(
-            bottom: Platform.isIOS ? 32.0 : 12, left: 12, right: 12),
+        padding: EdgeInsets.only(left: 12, right: 12),
 
         ///Here we render the chat component if the chat is opened
         ///We also render the leave button, hand raise button, chat button and the menu button

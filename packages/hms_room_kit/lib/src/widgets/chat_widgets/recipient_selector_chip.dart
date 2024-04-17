@@ -71,7 +71,7 @@ class _ReceipientSelectorChipState extends State<ReceipientSelectorChip> {
           }
       },
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 8.0, top: 16),
+        padding: const EdgeInsets.only(bottom: 8.0),
         child: Row(
           children: [
             Padding(
