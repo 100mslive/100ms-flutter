@@ -242,7 +242,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                     ),
                   if (mutePermission &&
                       peerTrackNode != null &&
-                      !peerTrackNode.peer.isLocal)
+                      !peerTrackNode.peer.isLocal && peerTrackNode.peer.type == HMSPeerType.regular)
                     PopupMenuItem(
                       value: 3,
                       child: Row(children: [
@@ -271,7 +271,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                     ),
                   if (mutePermission &&
                       peerTrackNode != null &&
-                      !peerTrackNode.peer.isLocal)
+                      !peerTrackNode.peer.isLocal && peerTrackNode.peer.type == HMSPeerType.regular)
                     PopupMenuItem(
                       value: 4,
                       child: Row(children: [

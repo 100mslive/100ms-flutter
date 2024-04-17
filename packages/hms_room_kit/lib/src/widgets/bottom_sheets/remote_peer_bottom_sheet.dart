@@ -158,8 +158,8 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                   //         text: "Spotlight Tile for Everyone",
                   //         textColor: HMSThemeColors.onSurfaceHighEmphasis)),
 
-                  if (widget.meetingStore.localPeer?.role.permissions.mute ??
-                      false)
+                  if ((widget.meetingStore.localPeer?.role.permissions.mute ??
+                      false) && widget.peerTrackNode.peer.type == HMSPeerType.regular)
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
