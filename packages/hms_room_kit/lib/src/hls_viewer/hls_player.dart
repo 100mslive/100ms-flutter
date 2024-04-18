@@ -82,12 +82,12 @@ class HLSPlayer extends StatelessWidget {
                 selector: (_, hlsPlayerStore) =>
                     hlsPlayerStore.playerPlaybackState,
                 builder: (_, state, __) {
-                  return state == HMSHLSPlaybackState.BUFFERING
+                  return state == HMSHLSPlaybackState.BUFFERING || state == HMSHLSPlaybackState.FAILED
                       ? Align(
                           alignment: Alignment.center,
                           child: CircularProgressIndicator(
                             color: HMSThemeColors.primaryDefault,
-                            strokeWidth: 1,
+                            strokeWidth: 2,
                           ),
                         )
                       : const SizedBox();

@@ -39,6 +39,9 @@ class HLSPlayerStore extends ChangeNotifier
   ///This is done to avoid multiple timers running at the same time
   bool _isTimerActive = false;
 
+  ///This variable stores whether there is some error in playing stream
+  bool isPlayerFailed = false;
+
   ///HLS Player Stats
 
   HMSHLSPlayerStats? hlsPlayerStats;
@@ -154,6 +157,8 @@ class HLSPlayerStore extends ChangeNotifier
   @override
   void onPlaybackFailure({required String? error}) {
     log("Playback failure $error");
+    isPlayerFailed = true;
+    notifyListeners();
   }
 
   @override
@@ -161,6 +166,7 @@ class HLSPlayerStore extends ChangeNotifier
     log("Playback state changed to ${playbackState.name}");
     playerPlaybackState = playbackState;
     if (playerPlaybackState == HMSHLSPlaybackState.PLAYING) {
+      isPlayerFailed = false;
       areClosedCaptionsSupported();
     }
     notifyListeners();
