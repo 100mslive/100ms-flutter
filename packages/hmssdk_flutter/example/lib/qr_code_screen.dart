@@ -78,21 +78,21 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
           initForegroundTask();
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => WithForegroundTask(
-                child: HMSPrebuilt(
-                    roomCode: Constant.roomCode,
-                    onLeave: stopForegroundTask,
-                    options: HMSPrebuiltOptions(
-                        userName: AppDebugConfig.nameChangeOnPreview
-                            ? null
-                            : "Flutter User",
-                        userId: widget.uuidString,
-                        endPoints: endPoints,
-                        iOSScreenshareConfig: HMSIOSScreenshareConfig(
-                            appGroup: "group.flutterhms",
-                            preferredExtension:
-                                "live.100ms.flutter.FlutterBroadcastUploadExtension"),
-                        enableNoiseCancellation: true)),
-              )));
+                    child: HMSPrebuilt(
+                        roomCode: Constant.roomCode,
+                        onLeave: stopForegroundTask,
+                        options: HMSPrebuiltOptions(
+                            userName: AppDebugConfig.nameChangeOnPreview
+                                ? null
+                                : "Flutter User",
+                            userId: widget.uuidString,
+                            endPoints: endPoints,
+                            iOSScreenshareConfig: HMSIOSScreenshareConfig(
+                                appGroup: "group.flutterhms",
+                                preferredExtension:
+                                    "live.100ms.flutter.FlutterBroadcastUploadExtension"),
+                            enableNoiseCancellation: true)),
+                  )));
         }
       }
     } catch (e) {
