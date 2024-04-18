@@ -8,6 +8,7 @@
 ///
 ///[hmssdk_flutter] will send updates to all the listeners when there is any change in anything.
 import 'dart:async';
+import 'dart:developer';
 
 // Flutter imports:
 import 'package:flutter/services.dart';
@@ -778,6 +779,13 @@ abstract class PlatformService {
               size: Size(arguments["width"].toDouble(),
                   arguments["height"].toDouble())));
         }
+        break;
+      case HMSHLSPlaybackEventMethod.onCues:
+        log("DAtA from log: ${arguments["subtitles"]}");
+        hlsPlaybackEventListener.forEach((e) => e.onCues(
+            subtitles: arguments["subtitles"] != null
+                ? List<String>.from(arguments["subtitles"])
+                : []));
         break;
       case HMSHLSPlaybackEventMethod.unknown:
         break;

@@ -3,6 +3,7 @@ library;
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -57,7 +58,9 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                             Row(
                               children: [
                                 GestureDetector(
-                                  onTap: () => {},
+                                  onTap: () => {
+                                    HMSHLSPlayerController.seekToLivePosition()
+                                  },
                                   child: Row(
                                     children: [
                                       Padding(

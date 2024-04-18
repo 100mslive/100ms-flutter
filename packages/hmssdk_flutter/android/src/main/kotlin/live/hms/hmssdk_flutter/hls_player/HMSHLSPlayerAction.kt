@@ -17,6 +17,7 @@ class HMSHLSPlayerAction {
             call: MethodCall,
             result: Result,
         ) {
+            print("Called method: ${call.method}")
             when (call.method) {
                 "start_hls_player" -> start(call, result)
                 "stop_hls_player" -> stop(result)

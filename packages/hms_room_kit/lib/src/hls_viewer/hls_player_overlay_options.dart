@@ -2,10 +2,12 @@ library;
 
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 ///Project imports
 import 'package:hms_room_kit/src/hls_viewer/hls_viewer_bottom_navigation_bar.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_viewer_header.dart';
+import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 
 ///[HLSPlayerOverlayOptions] renders the overlay options for the HLS Player
 class HLSPlayerOverlayOptions extends StatelessWidget {
@@ -19,6 +21,20 @@ class HLSPlayerOverlayOptions extends StatelessWidget {
       children: [
         HLSViewerHeader(
           hasHLSStarted: hasHLSStarted,
+        ),
+
+        CircleAvatar(
+          backgroundColor: Colors.red,
+          child: Container(
+            child: SvgPicture.asset(
+                              "packages/hms_room_kit/lib/src/assets/icons/resume.svg",
+                              height: 20,
+                              width: 20,
+                              colorFilter: ColorFilter.mode(
+                                  HMSThemeColors.onSurfaceMediumEmphasis,
+                                  BlendMode.srcIn),
+                            ),
+          ),
         ),
 
         ///Renders the bottom navigation bar if the HLS has started

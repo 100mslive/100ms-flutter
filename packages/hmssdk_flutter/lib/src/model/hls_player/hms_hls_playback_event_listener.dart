@@ -38,4 +38,9 @@ abstract class HMSHLSPlaybackEventsListener {
   ///
   /// - Parameter: size: A [Size] object containing the new height and width of the stream
   void onVideoSizeChanged({required Size size}) {}
+
+  /// Callback to get the subtitles
+  /// 
+  /// - Parameter: subtitles: A list of [String] containing the subtitles
+  void onCues({required List<String> subtitles}){}
 }

@@ -95,6 +95,11 @@ class HLSPlayerStore extends ChangeNotifier
 
   ///This method toggles the visibility of the captions
   void toggleCaptions() {
+    if(isCaptionEnabled){
+      HMSHLSPlayerController.disableClosedCaptions();
+    }else{
+      HMSHLSPlayerController.enableClosedCaptions();
+    }
     isCaptionEnabled = !isCaptionEnabled;
     notifyListeners();
   }
@@ -171,5 +176,11 @@ class HLSPlayerStore extends ChangeNotifier
     log("onVideoSizeChanged -> height:${size.height} width:${size.width}");
     hlsPlayerSize = size;
     notifyListeners();
+  }
+
+  @override
+  void onCues({required List<String> subtitles}) {
+    log("onCues -> subtitles: $subtitles");
+    // TODO: implement onCues
   }
 }
