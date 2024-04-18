@@ -2,6 +2,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 ///[HMSNoiseCancellationController] class exposes methods to control noise cancellation for the user
+/// Checkout the Noise Cancellations Docs here: https://www.100ms.live/docs/flutter/v2/how-to-guides/extend-capabilities/noise-cancellation
 abstract class HMSNoiseCancellationController {
   ///[enable] enables noise cancellation
   static Future<void> enable() async {
