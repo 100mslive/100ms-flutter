@@ -5,6 +5,35 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+## 1.1.0 - 2024-04-19
+
+| Package        | Version                                                                                                |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| hms_room_kit   | 1.1.0    |
+| hmssdk_flutter | 1.10.0   |
+
+### 🚀 Added
+
+- Newly designed UI for SIP Peers
+  
+  SIP peers will now have a newly designed UI to match the overall theme of the application.
+
+- Enhanced Prebuilt with Noise Cancellation
+
+  Prebuilt supports noise cancellation out of the box. Users can enable or disable noise cancellation from the prebuilt interface.
+
+- All-New HLS Player Interface
+
+  HLS Player now has a new look and feel to enhance the overall user experience.
+
+### 🔄 Changed
+
+- Removed `flutter_foreground_task` dependency from prebuilt
+
+  Prebuilt no longer uses `flutter_foreground_task` package. For apps that require foreground service, the package can be added on the application level.
+
+Uses `hmssdk_flutter` package version to 1.1.10
+
 ## 1.0.17 - 2024-04-01
 
 | Package        | Version                                                                                                |
