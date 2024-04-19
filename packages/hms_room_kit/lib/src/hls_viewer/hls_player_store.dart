@@ -157,8 +157,6 @@ class HLSPlayerStore extends ChangeNotifier
   @override
   void onPlaybackFailure({required String? error}) {
     log("Playback failure $error");
-    isPlayerFailed = true;
-    notifyListeners();
   }
 
   @override
@@ -168,6 +166,9 @@ class HLSPlayerStore extends ChangeNotifier
     if (playerPlaybackState == HMSHLSPlaybackState.PLAYING) {
       isPlayerFailed = false;
       areClosedCaptionsSupported();
+    }
+    if (playerPlaybackState == HMSHLSPlaybackState.FAILED) {
+      isPlayerFailed = true;
     }
     notifyListeners();
   }
