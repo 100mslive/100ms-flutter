@@ -12,7 +12,6 @@ import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 
-
 ///[RefreshStreamBottomSheet] is a bottom sheet that is used to render the bottom sheet to refresh the stream
 class RefreshStreamBottomSheet extends StatefulWidget {
   const RefreshStreamBottomSheet({super.key});

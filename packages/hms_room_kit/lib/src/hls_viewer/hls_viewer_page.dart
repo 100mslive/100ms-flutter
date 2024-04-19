@@ -393,7 +393,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                           return const SizedBox();
                                         }),
 
-                                    ///This renders the bottom sheet for the stream error 
+                                    ///This renders the bottom sheet for the stream error
                                     ///with a button refresh the stream
                                     Selector<HLSPlayerStore, bool>(
                                       selector: (_, hlsPlayerStore) =>
@@ -401,11 +401,13 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                       builder: (_, isPlayerFailed, __) {
                                         return Positioned(
                                             bottom: 0,
-                                            child: isPlayerFailed?RefreshStreamBottomSheet():const SizedBox());
+                                            child: isPlayerFailed
+                                                ? RefreshStreamBottomSheet()
+                                                : const SizedBox());
                                       },
                                     ),
 
-                                    ///Renders the error toast with a leave button since the 
+                                    ///Renders the error toast with a leave button since the
                                     ///error is irrecoverable
                                     if (failureData.item2 != null &&
                                         (failureData.item2?.code?.errorCode ==
