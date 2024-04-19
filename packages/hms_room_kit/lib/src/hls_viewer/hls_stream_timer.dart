@@ -59,6 +59,9 @@ class _HLSStreamTimerState extends State<HLSStreamTimer> {
       _minutes %= 60;
     }
 
+    ///We only show seconds if hours and minutes are 0
+    ///only minutes if hours are 0
+    ///only hours if hours are greater than 0
     return "Started${_hours > 0 ? " ${_hours.toString()}h" : ""} ${_hours < 1 && _minutes > 0 ? "${_minutes.toString()}m" : ""} ${_hours < 1 && _minutes < 1 ? "${_seconds.toString()}s " : ""}ago";
   }
 

@@ -39,6 +39,9 @@ class HLSPlayerStore extends ChangeNotifier
   ///This is done to avoid multiple timers running at the same time
   bool _isTimerActive = false;
 
+  ///This variable stores whether there is some error in playing stream
+  bool isPlayerFailed = false;
+
   ///HLS Player Stats
 
   HMSHLSPlayerStats? hlsPlayerStats;
@@ -88,9 +91,9 @@ class HLSPlayerStore extends ChangeNotifier
   }
 
   void toggleStreamPlaying() {
-    if(isStreamPlaying){
+    if (isStreamPlaying) {
       HMSHLSPlayerController.pause();
-    }else{
+    } else {
       HMSHLSPlayerController.resume();
     }
   }
@@ -177,6 +180,7 @@ class HLSPlayerStore extends ChangeNotifier
       case HMSHLSPlaybackState.PLAYING:
         areClosedCaptionsSupported();
         isStreamPlaying = true;
+        isPlayerFailed = false;
         break;
       case HMSHLSPlaybackState.STOPPED:
         break;
@@ -186,6 +190,7 @@ class HLSPlayerStore extends ChangeNotifier
       case HMSHLSPlaybackState.BUFFERING:
         break;
       case HMSHLSPlaybackState.FAILED:
+        isPlayerFailed = true;
         break;
       case HMSHLSPlaybackState.UNKNOWN:
         break;

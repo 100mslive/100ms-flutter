@@ -10,6 +10,7 @@ import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
+import 'package:hms_room_kit/src/widgets/bottom_sheets/refresh_stream_bottom_sheet.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player_desktop_controls.dart';
 import 'package:hms_room_kit/src/widgets/toasts/toast_widget.dart';
 import 'package:hms_room_kit/src/widgets/app_dialogs/audio_device_change_dialog.dart';
@@ -270,6 +271,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                           return Container();
                                         }),
 
+                                    ///This renders toasts
                                     Selector<MeetingStore,
                                             HMSTrackChangeRequest?>(
                                         selector: (_, meetingStore) =>
@@ -378,6 +380,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                           }).toList());
                                         }),
 
+                                    ///This renders the reconnection dialog
                                     Selector<MeetingStore, bool>(
                                         selector: (_, meetingStore) =>
                                             meetingStore.reconnecting,
@@ -389,6 +392,21 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                           }
                                           return const SizedBox();
                                         }),
+
+                                    ///This renders the bottom sheet for the stream error 
+                                    ///with a button refresh the stream
+                                    Selector<HLSPlayerStore, bool>(
+                                      selector: (_, hlsPlayerStore) =>
+                                          hlsPlayerStore.isPlayerFailed,
+                                      builder: (_, isPlayerFailed, __) {
+                                        return Positioned(
+                                            bottom: 0,
+                                            child: isPlayerFailed?RefreshStreamBottomSheet():const SizedBox());
+                                      },
+                                    ),
+
+                                    ///Renders the error toast with a leave button since the 
+                                    ///error is irrecoverable
                                     if (failureData.item2 != null &&
                                         (failureData.item2?.code?.errorCode ==
                                                 1003 ||
