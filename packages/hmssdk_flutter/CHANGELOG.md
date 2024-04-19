@@ -5,6 +5,35 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+# 1.10.0 - 2024-04-19
+
+| Package                                | Version                                                                                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| hms_room_kit                | 1.1.0 |
+| hmssdk_flutter              | 1.10.0 |
+
+### ✨ Added
+
+- Noise Cancellation Integration
+
+  You can enhance your app's audio quality with the newly integrated Noise Cancellation feature in HMSSDK. With this addition, control Noise Cancellation settings through the `HMSNoiseCancellationController`
+
+  Learn more about leveraging this capability in your app by checking the documentation [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/extend-capabilities/noise-cancellation).
+  
+- [SIP](https://www.100ms.live/docs/server-side/v2/how-to-guides/Session%20Initiation%20Protocol%20(SIP)/SIP-Interconnect) Capability
+
+  HMSSDK now offers a way to differentiate between SIP and non-SIP users in the Room. You can use the `type` property in the `HMSPeer` class to check if a peer is a SIP user.
+
+  Learn more about SIP Capabilities [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/extend-capabilities/sip).
+
+### 🛠️ Changed
+
+- `HMSHLSPlayer` now uses Hybrid Composition on Android for better performance.
+
+Uses Android SDK 2.9.53 & iOS SDK 1.8.0
+
+**Full Changelog**: [1.9.14...1.10.0](https://github.com/100mslive/100ms-flutter/compare/1.9.14...1.10.0)
+
 # 1.9.14 - 2024-04-01
 
 | Package                                | Version                                                                                                                                  |
@@ -14,7 +43,7 @@
 
 ### 🛠️ Fix
 
-- Resolved an issue on iOS where video appears stretched in landscape mode
+- Resolved an issue on iOS where the video appears stretched in landscape mode
 
 Uses Android SDK 2.9.51 & iOS SDK 1.8.0
 
@@ -51,7 +80,7 @@ Updated to Android SDK 2.9.51 & iOS SDK 1.6.0
 
   - Users can now fetch polls based on the poll state, questions for a poll and poll results
     using the `fetchPollList`, `fetchPollQuestions` and `getPollResults` methods.
-    Checkout the docs [here](///Add docs)
+    Checkout the docs [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/polls#fetchpolllist)
 
 Updated to iOS SDK 1.6.0
 
