@@ -172,6 +172,8 @@ enum PlatformMethod {
   setSessionMetadataForKey,
   addKeyChangeListener,
   removeKeyChangeListener,
+
+  ///HLS Player methods
   start,
   stop,
   pause,
@@ -182,6 +184,10 @@ enum PlatformMethod {
   setHLSPlayerVolume,
   addHLSStatsListener,
   removeHLSStatsListener,
+  areClosedCaptionsSupported,
+  enableClosedCaptions,
+  disableClosedCaptions,
+
   switchAudioOutputUsingiOSUI,
   sendHLSTimedMetadata,
   toggleAlwaysScreenOn,
@@ -472,6 +478,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "add_key_change_listener";
       case PlatformMethod.removeKeyChangeListener:
         return "remove_key_change_listener";
+
+      ///HLS Player methods
       case PlatformMethod.start:
         return "start_hls_player";
       case PlatformMethod.stop:
@@ -492,6 +500,13 @@ extension PlatformMethodValues on PlatformMethod {
         return "add_hls_stats_listener";
       case PlatformMethod.removeHLSStatsListener:
         return "remove_hls_stats_listener";
+      case PlatformMethod.areClosedCaptionsSupported:
+        return "are_closed_captions_supported";
+      case PlatformMethod.enableClosedCaptions:
+        return "enable_closed_captions";
+      case PlatformMethod.disableClosedCaptions:
+        return "disable_closed_captions";
+
       case PlatformMethod.switchAudioOutputUsingiOSUI:
         return "switch_audio_output_using_ios_ui";
       case PlatformMethod.sendHLSTimedMetadata:
@@ -808,6 +823,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.addKeyChangeListener;
       case "remove_key_change_listener":
         return PlatformMethod.removeKeyChangeListener;
+
+      ///HLS Player methods
       case "start_hls_player":
         return PlatformMethod.start;
       case "stop_hls_player":
@@ -828,6 +845,13 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.addHLSStatsListener;
       case "remove_hls_stats_listener":
         return PlatformMethod.removeHLSStatsListener;
+      case "are_closed_captions_supported":
+        return PlatformMethod.areClosedCaptionsSupported;
+      case "enable_closed_captions":
+        return PlatformMethod.enableClosedCaptions;
+      case "disable_closed_captions":
+        return PlatformMethod.disableClosedCaptions;
+
       case "switch_audio_output_using_ios_ui":
         return PlatformMethod.switchAudioOutputUsingiOSUI;
       case "send_hls_timed_metadata":

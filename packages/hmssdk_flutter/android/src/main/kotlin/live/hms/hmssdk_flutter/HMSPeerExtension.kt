@@ -49,7 +49,7 @@ class HMSPeerExtension {
         }
 
         private fun getValueFromPeerType(peerType: HMSPeerType): String {
-            return when(peerType){
+            return when (peerType) {
                 HMSPeerType.SIP -> "sip"
                 HMSPeerType.REGULAR -> "regular"
                 else -> "regular"

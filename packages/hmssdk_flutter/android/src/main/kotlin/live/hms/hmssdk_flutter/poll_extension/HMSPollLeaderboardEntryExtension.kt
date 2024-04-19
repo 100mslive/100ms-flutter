@@ -3,12 +3,9 @@ package live.hms.hmssdk_flutter.poll_extension
 import live.hms.video.polls.network.HMSPollLeaderboardEntry
 
 class HMSPollLeaderboardEntryExtension {
-
-    companion object{
-
-        fun toDictionary(hmsPollLeaderboardEntry: HMSPollLeaderboardEntry):HashMap<String,Any?>{
-
-            val map = HashMap<String,Any?>()
+    companion object {
+        fun toDictionary(hmsPollLeaderboardEntry: HMSPollLeaderboardEntry): HashMap<String, Any?> {
+            val map = HashMap<String, Any?>()
 
             map["correct_responses"] = hmsPollLeaderboardEntry.correctResponses
             map["duration"] = hmsPollLeaderboardEntry.duration

@@ -28,7 +28,7 @@ class HMSSubheadingText extends StatelessWidget {
   final FontWeight? fontWeight;
   final TextOverflow? textOverflow;
   final TextAlign? textAlign;
-  final int maxLines;
+  final int? maxLines;
   const HMSSubheadingText(
       {Key? key,
       required this.text,
@@ -36,7 +36,7 @@ class HMSSubheadingText extends StatelessWidget {
       this.letterSpacing = 0.25,
       this.lineHeight = 20,
       this.fontSize = 14,
-      this.maxLines = 1,
+      this.maxLines,
       this.fontWeight = FontWeight.w400,
       this.textOverflow = TextOverflow.ellipsis,
       this.textAlign = TextAlign.start})

@@ -19,6 +19,8 @@
 		EC1052B52858A77D005EAB9E /* SampleHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1052B42858A77D005EAB9E /* SampleHandler.swift */; };
 		EC1052B92858A77D005EAB9E /* FlutterBroadcastUploadExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EC1052B02858A77D005EAB9E /* FlutterBroadcastUploadExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EC9BCD2B26B1CFDB00D378A0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EC9BCD2A26B1CFDB00D378A0 /* GoogleService-Info.plist */; };
+		ECAB35012BC53D4000AC25F4 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = ECAB35002BC53D4000AC25F4 /* PrivacyInfo.xcprivacy */; };
+		ECAB35022BC53D4000AC25F4 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = ECAB35002BC53D4000AC25F4 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +86,7 @@
 		EC3386D4296EBF6B00F565A8 /* Runner.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		EC638D182858ABE8005D0AF2 /* FlutterBroadcastUploadExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FlutterBroadcastUploadExtension.entitlements; sourceTree = "<group>"; };
 		EC9BCD2A26B1CFDB00D378A0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		ECAB35002BC53D4000AC25F4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		FF549B17CAF9408297610536 /* Pods-FlutterBroadcastUploadExtension.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlutterBroadcastUploadExtension.profile.xcconfig"; path = "Target Support Files/Pods-FlutterBroadcastUploadExtension/Pods-FlutterBroadcastUploadExtension.profile.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -153,6 +156,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				ECAB35002BC53D4000AC25F4 /* PrivacyInfo.xcprivacy */,
 				B44CF4C02A83BCF0003B3D5E /* RunnerRelease.entitlements */,
 				EC9BCD2A26B1CFDB00D378A0 /* GoogleService-Info.plist */,
 				EC3386D4296EBF6B00F565A8 /* Runner.entitlements */,
@@ -280,6 +284,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ECAB35012BC53D4000AC25F4 /* PrivacyInfo.xcprivacy in Resources */,
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				EC9BCD2B26B1CFDB00D378A0 /* GoogleService-Info.plist in Resources */,
@@ -292,6 +297,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ECAB35022BC53D4000AC25F4 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

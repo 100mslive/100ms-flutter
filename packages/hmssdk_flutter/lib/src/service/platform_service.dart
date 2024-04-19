@@ -772,6 +772,13 @@ abstract class PlatformService {
         hlsPlaybackEventListener.forEach((e) => e.onHLSEventUpdate(
             playerStats: HMSHLSPlayerStats.fromMap(arguments)));
         break;
+      case HMSHLSPlaybackEventMethod.onVideoSizeChanged:
+        if (arguments["width"] != null && arguments["height"] != null) {
+          hlsPlaybackEventListener.forEach((e) => e.onVideoSizeChanged(
+              size: Size(arguments["width"].toDouble(),
+                  arguments["height"].toDouble())));
+        }
+        break;
       case HMSHLSPlaybackEventMethod.unknown:
         break;
     }

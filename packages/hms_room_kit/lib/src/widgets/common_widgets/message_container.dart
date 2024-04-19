@@ -20,12 +20,11 @@ import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 ///[MessageContainer] is a widget that is used to render the message container
 class MessageContainer extends StatelessWidget {
   final HMSMessage message;
+  final bool isHLSChat;
   final DateFormat formatter = DateFormat('hh:mm a');
 
-  MessageContainer({
-    Key? key,
-    required this.message,
-  }) : super(key: key);
+  MessageContainer({Key? key, required this.message, this.isHLSChat = false})
+      : super(key: key);
 
   String sender(HMSMessageRecipient? hmsMessageRecipient) {
     if (hmsMessageRecipient == null) return "";
@@ -50,9 +49,13 @@ class MessageContainer extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Container(
         decoration: BoxDecoration(
-          color: sender(message.hmsMessageRecipient) != ""
-              ? HMSThemeColors.surfaceDefault
-              : HMSThemeColors.surfaceDim,
+          color: isHLSChat
+              ? sender(message.hmsMessageRecipient) != ""
+                  ? HMSThemeColors.backgroundDefault
+                  : HMSThemeColors.backgroundDim
+              : sender(message.hmsMessageRecipient) != ""
+                  ? HMSThemeColors.surfaceDefault
+                  : HMSThemeColors.surfaceDim,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Padding(

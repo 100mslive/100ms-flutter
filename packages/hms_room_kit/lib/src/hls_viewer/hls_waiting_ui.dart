@@ -15,40 +15,43 @@ class HLSWaitingUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CircleAvatar(
-          radius: 50,
-          backgroundColor: HMSThemeColors.surfaceDefault,
-          child: SvgPicture.asset(
-            "packages/hms_room_kit/lib/src/assets/icons/live.svg",
-            height: 56,
-            width: 56,
-            colorFilter: ColorFilter.mode(
-                HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
+    return SingleChildScrollView(
+      physics: NeverScrollableScrollPhysics(),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            radius: 50,
+            backgroundColor: HMSThemeColors.surfaceDefault,
+            child: SvgPicture.asset(
+              "packages/hms_room_kit/lib/src/assets/icons/live.svg",
+              height: 56,
+              width: 56,
+              colorFilter: ColorFilter.mode(
+                  HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
+            ),
           ),
-        ),
-        const SizedBox(
-          height: 24,
-        ),
-        HMSTitleText(
-          text: "Stream yet to start",
-          textColor: HMSThemeColors.onSurfaceHighEmphasis,
-          fontSize: 24,
-          lineHeight: 32,
-          letterSpacing: 0.25,
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        HMSSubheadingText(
-            text: "Sit back and relax",
-            fontSize: 16,
-            lineHeight: 24,
-            letterSpacing: 0.5,
-            textColor: HMSThemeColors.onSurfaceMediumEmphasis)
-      ],
+          const SizedBox(
+            height: 24,
+          ),
+          HMSTitleText(
+            text: "Stream yet to start",
+            textColor: HMSThemeColors.onSurfaceHighEmphasis,
+            fontSize: 24,
+            lineHeight: 32,
+            letterSpacing: 0.25,
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          HMSSubheadingText(
+              text: "Sit back and relax",
+              fontSize: 16,
+              lineHeight: 24,
+              letterSpacing: 0.5,
+              textColor: HMSThemeColors.onSurfaceMediumEmphasis)
+        ],
+      ),
     );
   }
 }

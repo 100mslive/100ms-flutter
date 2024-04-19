@@ -100,6 +100,27 @@ class HMSHLSPlayerController {
         arguments: arguments);
   }
 
+  ///[areClosedCaptionsSupported] checks whether closed captions are supported in the current HLS playback.
+  /// This can be enabled/disabled from 100ms dashboard.
+  ///
+  /// If closed captions are supported, you can enable/disable them using [enableClosedCaptions] and [disableClosedCaptions] respectively.
+  /// If this returns null then we set it to false.
+  static Future<bool> areClosedCaptionsSupported() async {
+    bool? result = await PlatformService.invokeMethod(
+        PlatformMethod.areClosedCaptionsSupported);
+    return result ?? false;
+  }
+
+  ///[enableClosedCaptions] enables closed captions in the current HLS playback.
+  static Future<void> enableClosedCaptions() async {
+    await PlatformService.invokeMethod(PlatformMethod.enableClosedCaptions);
+  }
+
+  ///[disableClosedCaptions] disables closed captions in the current HLS playback.
+  static Future<void> disableClosedCaptions() async {
+    await PlatformService.invokeMethod(PlatformMethod.disableClosedCaptions);
+  }
+
   /// Adds an HLS stats listener to receive HLS playback statistics.
   /// Refer [add HLS Stats listener](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player#how-to-know-the-stats-related-to-hls-playback)
   static Future<void> addHLSStatsListener() async {

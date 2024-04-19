@@ -22,7 +22,7 @@ class  HMSPermissionExtension {
             "un_mute": permission.unmute ?? false,
             "poll_read": permission.pollRead ?? false,
             "poll_write": permission.pollWrite ?? false
- 
+
         ]
     }
 }

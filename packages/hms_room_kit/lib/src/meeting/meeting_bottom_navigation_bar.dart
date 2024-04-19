@@ -1,6 +1,6 @@
-///Package imports
 library;
 
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +8,7 @@ import 'package:tuple/tuple.dart';
 
 ///Project imports
 import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
-import 'package:hms_room_kit/src/hls_viewer/overlay_chat_component.dart';
+import 'package:hms_room_kit/src/widgets/chat_widgets/overlay_chat_component.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/chat_only_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';

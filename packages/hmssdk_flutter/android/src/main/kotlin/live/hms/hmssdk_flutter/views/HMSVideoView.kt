@@ -2,7 +2,6 @@ package live.hms.hmssdk_flutter.views
 
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Context.RECEIVER_EXPORTED
 import android.content.Context.RECEIVER_NOT_EXPORTED
 import android.content.Intent
 import android.content.IntentFilter
@@ -111,7 +110,7 @@ class HMSVideoView(
                 hmsVideoView?.addTrack(track)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId), RECEIVER_NOT_EXPORTED)
-                }else {
+                } else {
                     context.registerReceiver(broadcastReceiver, IntentFilter(track.trackId))
                 }
             } else {

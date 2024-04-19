@@ -91,5 +91,16 @@ class HMSHLSStreamViewController: HMSHLSPlayerDelegate {
         } else {
             playerView?.videoGravity = .resizeAspectFill
         }
+
+        let data = [
+            "event_name": "on_video_size_changed",
+            "data": ["width": videoSize.width, "height": videoSize.height] as [String: Any?]
+        ] as [String: Any?]
+
+        guard let hmssdkFlutterPlugin else {
+            HMSErrorLogger.logError(#function, "hmssdkFlutterPlugin is null", "NULL_ERROR")
+            return
+        }
+        hmssdkFlutterPlugin.hlsPlayerSink?(data)
     }
 }

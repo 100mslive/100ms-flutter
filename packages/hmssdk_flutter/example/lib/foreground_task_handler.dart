@@ -1,6 +1,7 @@
 import 'dart:isolate';
 
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter_example/main.dart';
 
 ///[ForegroundTaskHandler] is a class that extends [TaskHandler]
@@ -50,29 +51,34 @@ class ForegroundTaskHandler extends TaskHandler {
   }
 }
 
-void initForegroundTask() {
-  FlutterForegroundTask.init(
-    androidNotificationOptions: AndroidNotificationOptions(
-        channelId: '100ms_flutter_notification',
-        channelName: '100ms Flutter Notification',
-        channelDescription:
-            'This notification appears when the foreground service is running.',
-        channelImportance: NotificationChannelImportance.LOW,
-        priority: NotificationPriority.LOW,
-        iconData: NotificationIconData(
-            resType: ResourceType.mipmap,
-            resPrefix: ResourcePrefix.ic,
-            name: "launcher")),
-    iosNotificationOptions:
-        const IOSNotificationOptions(showNotification: false),
-    foregroundTaskOptions: const ForegroundTaskOptions(),
-  );
+Future<bool> initForegroundTask() async {
+  bool isPermissionsGiven = await Utilities.getPermissions();
+  if (isPermissionsGiven) {
+    FlutterForegroundTask.init(
+      androidNotificationOptions: AndroidNotificationOptions(
+          channelId: '100ms_flutter_notification',
+          channelName: '100ms Flutter Notification',
+          channelDescription:
+              'This notification appears when the foreground service is running.',
+          channelImportance: NotificationChannelImportance.LOW,
+          priority: NotificationPriority.LOW,
+          iconData: NotificationIconData(
+              resType: ResourceType.mipmap,
+              resPrefix: ResourcePrefix.ic,
+              name: "launcher")),
+      iosNotificationOptions:
+          const IOSNotificationOptions(showNotification: false),
+      foregroundTaskOptions: const ForegroundTaskOptions(),
+    );
 
-  ///[startService] starts the foreground task
-  FlutterForegroundTask.startService(
-      notificationTitle: 'Foreground Service is running',
-      notificationText: 'Tap to return to the app',
-      callback: startCallback);
+    ///[startService] starts the foreground task
+    FlutterForegroundTask.startService(
+        notificationTitle: 'Foreground Service is running',
+        notificationText: 'Tap to return to the app',
+        callback: startCallback);
+    return true;
+  }
+  return false;
 }
 
 ///[stopForegroundTask] stops the foreground task

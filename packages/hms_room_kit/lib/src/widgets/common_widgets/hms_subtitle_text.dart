@@ -37,7 +37,7 @@ class HMSSubtitleText extends StatelessWidget {
       this.fontWeight = FontWeight.w400,
       this.textOverflow = TextOverflow.ellipsis,
       this.textAlign,
-      this.maxLines = 1})
+      this.maxLines})
       : super(key: key);
 
   @override

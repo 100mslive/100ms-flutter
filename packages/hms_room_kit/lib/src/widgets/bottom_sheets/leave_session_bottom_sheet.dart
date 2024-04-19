@@ -1,11 +1,17 @@
+library;
+
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/end_service_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/leave_session_tile.dart';
-import 'package:provider/provider.dart';
 
 class LeaveSessionBottomSheet extends StatefulWidget {
   final MeetingStore meetingStore;
@@ -28,6 +34,8 @@ class _LeaveSessionBottomSheetState extends State<LeaveSessionBottomSheet> {
     context.read<MeetingStore>().removeBottomSheet(context);
     super.deactivate();
   }
+
+  ///Here we render bottom sheet with leave and end options
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +82,8 @@ class _LeaveSessionBottomSheetState extends State<LeaveSessionBottomSheet> {
                             widget.meetingStore.leave(),
                           },
                           title: HMSTitleText(
-                            text: "Leave Session",
+                            text:
+                                "Leave ${HMSRoomLayout.peerType == PeerRoleType.conferencing ? "Session" : "Stream"}",
                             textColor: HMSThemeColors.alertErrorDefault,
                             letterSpacing: 0.15,
                             fontSize: 20,
@@ -89,11 +98,12 @@ class _LeaveSessionBottomSheetState extends State<LeaveSessionBottomSheet> {
                           ),
                           subTitle: HMSSubheadingText(
                             text:
-                                "Others will continue after you leave. You can join\n the session again.",
+                                "Others will continue after you leave. You can join the session again.",
                             maxLines: 2,
                             textColor: HMSThemeColors.onSurfaceMediumEmphasis,
                           ),
-                          buttonText: "Leave Session",
+                          buttonText:
+                              "Leave ${HMSRoomLayout.peerType == PeerRoleType.conferencing ? "Session" : "Stream"}",
                         ),
                       ),
                     )
@@ -200,7 +210,8 @@ class _LeaveSessionBottomSheetState extends State<LeaveSessionBottomSheet> {
                 widget.meetingStore.leave(),
               },
               title: HMSTitleText(
-                text: "Leave Session",
+                text:
+                    "Leave ${HMSRoomLayout.peerType == PeerRoleType.conferencing ? "Session" : "Stream"}",
                 textColor: HMSThemeColors.alertErrorDefault,
                 letterSpacing: 0.15,
                 fontSize: 20,
@@ -214,11 +225,12 @@ class _LeaveSessionBottomSheetState extends State<LeaveSessionBottomSheet> {
               ),
               subTitle: HMSSubheadingText(
                 text:
-                    "Others will continue after you leave. You can join\n the session again.",
+                    "Others will continue after you leave. You can join the session again.",
                 maxLines: 2,
                 textColor: HMSThemeColors.onSurfaceMediumEmphasis,
               ),
-              buttonText: "Leave Session",
+              buttonText:
+                  "Leave ${HMSRoomLayout.peerType == PeerRoleType.conferencing ? "Session" : "Stream"}",
             ),
           );
   }
