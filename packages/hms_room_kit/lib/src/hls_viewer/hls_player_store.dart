@@ -87,6 +87,14 @@ class HLSPlayerStore extends ChangeNotifier
     notifyListeners();
   }
 
+  void toggleStreamPlaying() {
+    if(isStreamPlaying){
+      HMSHLSPlayerController.pause();
+    }else{
+      HMSHLSPlayerController.resume();
+    }
+  }
+
   ///This method toggles the visibility of the chat
   void toggleIsChatOpened() {
     isChatOpened = !isChatOpened;
@@ -95,9 +103,9 @@ class HLSPlayerStore extends ChangeNotifier
 
   ///This method toggles the visibility of the captions
   void toggleCaptions() {
-    if(isCaptionEnabled){
+    if (isCaptionEnabled) {
       HMSHLSPlayerController.disableClosedCaptions();
-    }else{
+    } else {
       HMSHLSPlayerController.enableClosedCaptions();
     }
     isCaptionEnabled = !isCaptionEnabled;
@@ -165,8 +173,22 @@ class HLSPlayerStore extends ChangeNotifier
   void onPlaybackStateChanged({required HMSHLSPlaybackState playbackState}) {
     log("Playback state changed to ${playbackState.name}");
     playerPlaybackState = playbackState;
-    if (playerPlaybackState == HMSHLSPlaybackState.PLAYING) {
-      areClosedCaptionsSupported();
+    switch (playbackState) {
+      case HMSHLSPlaybackState.PLAYING:
+        areClosedCaptionsSupported();
+        isStreamPlaying = true;
+        break;
+      case HMSHLSPlaybackState.STOPPED:
+        break;
+      case HMSHLSPlaybackState.PAUSED:
+        isStreamPlaying = false;
+        break;
+      case HMSHLSPlaybackState.BUFFERING:
+        break;
+      case HMSHLSPlaybackState.FAILED:
+        break;
+      case HMSHLSPlaybackState.UNKNOWN:
+        break;
     }
     notifyListeners();
   }
