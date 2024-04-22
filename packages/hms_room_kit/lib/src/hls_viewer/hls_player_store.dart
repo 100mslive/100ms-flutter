@@ -96,6 +96,8 @@ class HLSPlayerStore extends ChangeNotifier
     } else {
       HMSHLSPlayerController.resume();
     }
+    isStreamPlaying = !isStreamPlaying;
+    notifyListeners();
   }
 
   ///This method toggles the visibility of the chat

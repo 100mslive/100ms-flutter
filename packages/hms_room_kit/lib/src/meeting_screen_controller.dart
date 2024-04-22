@@ -126,6 +126,18 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
     _meetingStore.setSettings();
   }
 
+  void setScreenRotation() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (HMSRoomLayout
+              .roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
+          null) {
+        _meetingStore.allowScreenRotation(true);
+      } else {
+        _meetingStore.allowScreenRotation(false);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return showLoader
@@ -136,6 +148,7 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
                 selector: (_, meetingStore) =>
                     meetingStore.localPeer?.role.name,
                 builder: (_, data, __) {
+                  setScreenRotation();
                   return (HMSRoomLayout.roleLayoutData?.screens?.conferencing
                               ?.hlsLiveStreaming !=
                           null)

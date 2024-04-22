@@ -43,10 +43,20 @@ class HLSPlayer extends StatelessWidget {
                                     .toggleButtonsVisibility(),
                                 splashFactory: NoSplash.splashFactory,
                                 splashColor: HMSThemeColors.backgroundDim,
-                                child: IgnorePointer(
-                                  child: const HMSHLSPlayer(
-                                    showPlayerControls: false,
-                                  ),
+                                child: Selector<HLSPlayerStore,bool>(
+                                  selector: (_,hlsPlayerStore) => hlsPlayerStore.isFullScreen,
+                                  builder: (_,isFullScreen,__) {
+                                    return InteractiveViewer(
+                                      minScale: 1,
+                                      panEnabled: isFullScreen,
+                                      scaleEnabled: isFullScreen,
+                                      child: IgnorePointer(
+                                        child: const HMSHLSPlayer(
+                                          showPlayerControls: false,
+                                        ),
+                                      ),
+                                    );
+                                  }
                                 ),
                               ),
                             );

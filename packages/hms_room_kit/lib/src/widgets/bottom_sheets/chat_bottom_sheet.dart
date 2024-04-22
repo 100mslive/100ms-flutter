@@ -29,7 +29,6 @@ class ChatBottomSheet extends StatefulWidget {
 }
 
 class _ChatBottomSheetState extends State<ChatBottomSheet> {
-  late double widthOfScreen;
   String currentlySelectedValue = "Choose a Recipient";
   String? currentlySelectedpeerId;
 
@@ -104,8 +103,6 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    widthOfScreen = MediaQuery.of(context).size.width;
-
     return WillPopScope(
       onWillPop: () async {
         context.read<MeetingStore>().setNewMessageFalse();
@@ -209,9 +206,13 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                           Expanded(
                             child: Row(
                               children: [
-                                ChatTextField(
-                                  sendMessage: sendMessage,
-                                  isHLSChat: widget.isHLSChat,
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right:8.0),
+                                    child: ChatTextField(
+                                      sendMessage: sendMessage
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),

@@ -132,26 +132,72 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                     MediaQuery.of(context)
                                                         .viewPadding
                                                         .bottom;
-                                                return Column(
-                                                  mainAxisAlignment:
-                                                      isFullScreen
-                                                          ? MainAxisAlignment
-                                                              .center
-                                                          : MainAxisAlignment
-                                                              .start,
-                                                  children: [
-                                                    ///Renders HLS Player
-                                                    SizedBox(
-                                                      width: width,
-                                                      height: isFullScreen
-                                                          ? widgetHeight
-                                                          : widgetHeight * 0.27,
-                                                      child: const HLSPlayer(),
-                                                    ),
-                                                    if (!isFullScreen)
-                                                      HLSPlayerDesktopControls()
-                                                  ],
-                                                );
+                                                return OrientationBuilder(
+                                                    builder:
+                                                        (context, orientation) {
+                                                  return orientation ==
+                                                          Orientation.portrait
+                                                      ? Column(
+                                                          mainAxisAlignment:
+                                                              isFullScreen
+                                                                  ? MainAxisAlignment
+                                                                      .center
+                                                                  : MainAxisAlignment
+                                                                      .start,
+                                                          children: [
+                                                            ///Renders HLS Player
+                                                            AnimatedContainer(
+                                                              duration: Duration(
+                                                                  milliseconds:
+                                                                      200),
+                                                              curve: Curves
+                                                                  .bounceIn,
+                                                              width: width,
+                                                              height: isFullScreen
+                                                                  ? widgetHeight
+                                                                  : widgetHeight *
+                                                                      0.27,
+                                                              child:
+                                                                  const HLSPlayer(),
+                                                            ),
+                                                            if (!isFullScreen)
+                                                              HLSPlayerDesktopControls(
+                                                                orientation: orientation,
+                                                              )
+                                                          ],
+                                                        )
+                                                      : Row(
+                                                          mainAxisAlignment:
+                                                              isFullScreen
+                                                                  ? MainAxisAlignment
+                                                                      .center
+                                                                  : MainAxisAlignment
+                                                                      .start,
+                                                          children: [
+                                                            ///Renders HLS Player
+                                                            AnimatedContainer(
+                                                              duration: Duration(
+                                                                  milliseconds:
+                                                                      200),
+                                                              curve: Curves
+                                                                  .bounceIn,
+                                                              width:
+                                                                  isFullScreen
+                                                                      ? width
+                                                                      : width *
+                                                                          0.6,
+                                                              height:
+                                                                  widgetHeight,
+                                                              child:
+                                                                  const HLSPlayer(),
+                                                            ),
+                                                            if (!isFullScreen)
+                                                              HLSPlayerDesktopControls(
+                                                                orientation: orientation
+                                                              )
+                                                          ],
+                                                        );
+                                                });
                                               });
                                         }),
 
@@ -393,7 +439,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                           return const SizedBox();
                                         }),
 
-                                    ///This renders the bottom sheet for the stream error 
+                                    ///This renders the bottom sheet for the stream error
                                     ///with a button refresh the stream
                                     Selector<HLSPlayerStore, bool>(
                                       selector: (_, hlsPlayerStore) =>
@@ -401,11 +447,13 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                       builder: (_, isPlayerFailed, __) {
                                         return Positioned(
                                             bottom: 0,
-                                            child: isPlayerFailed?RefreshStreamBottomSheet():const SizedBox());
+                                            child: isPlayerFailed
+                                                ? RefreshStreamBottomSheet()
+                                                : const SizedBox());
                                       },
                                     ),
 
-                                    ///Renders the error toast with a leave button since the 
+                                    ///Renders the error toast with a leave button since the
                                     ///error is irrecoverable
                                     if (failureData.item2 != null &&
                                         (failureData.item2?.code?.errorCode ==
