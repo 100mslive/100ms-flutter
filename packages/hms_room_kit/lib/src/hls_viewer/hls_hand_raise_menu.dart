@@ -7,39 +7,12 @@ import 'package:hms_room_kit/src/widgets/bottom_sheets/hls_app_utilities_bottom_
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
 import 'package:provider/provider.dart';
 
-class HLSHandRaiseMenu extends StatefulWidget {
+class HLSHandRaiseMenu extends StatelessWidget {
   const HLSHandRaiseMenu({Key? key}) : super(key: key);
 
   @override
-  State<HLSHandRaiseMenu> createState() => _HLSHandRaiseMenuState();
-}
-
-class _HLSHandRaiseMenuState extends State<HLSHandRaiseMenu> {
-  bool _isKeyboardOpen = false;
-
-  @override
-  void initState() {
-    super.initState();
-    FocusManager.instance.addListener(_onFocusChange);
-  }
-
-  @override
-  void dispose() {
-    FocusManager.instance.removeListener(_onFocusChange);
-    super.dispose();
-  }
-
-  void _onFocusChange() {
-    setState(() {
-      _isKeyboardOpen = !_isKeyboardOpen;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return _isKeyboardOpen
-        ? const SizedBox()
-        : Row(
+    return  Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Selector<MeetingStore, bool>(

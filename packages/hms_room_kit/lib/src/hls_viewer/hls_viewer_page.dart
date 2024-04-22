@@ -167,12 +167,6 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                           ],
                                                         )
                                                       : Row(
-                                                          mainAxisAlignment:
-                                                              isFullScreen
-                                                                  ? MainAxisAlignment
-                                                                      .center
-                                                                  : MainAxisAlignment
-                                                                      .start,
                                                           children: [
                                                             ///Renders HLS Player
                                                             AnimatedContainer(

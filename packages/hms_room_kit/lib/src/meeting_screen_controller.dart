@@ -148,7 +148,7 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
                 selector: (_, meetingStore) =>
                     meetingStore.localPeer?.role.name,
                 builder: (_, data, __) {
-                  setScreenRotation();
+                  // setScreenRotation();
                   return (HMSRoomLayout.roleLayoutData?.screens?.conferencing
                               ?.hlsLiveStreaming !=
                           null)

@@ -23,87 +23,93 @@ class HLSPlayer extends StatelessWidget {
     return Selector<MeetingStore, bool>(
         selector: (_, meetingStore) => meetingStore.hasHlsStarted,
         builder: (_, hasHLSStarted, __) {
-          return Stack(
-            children: [
-              ///Renders the HLS Player if the HLS has started
-              ///Otherwise renders the waiting UI
-              hasHLSStarted
-                  ? Align(
-                      alignment: Alignment.center,
-                      child: Selector<HLSPlayerStore, Size>(
+          return Selector<HLSPlayerStore, bool>(
                           selector: (_, hlsPlayerStore) =>
-                              hlsPlayerStore.hlsPlayerSize,
-                          builder: (_, hlsPlayerSize, __) {
-                            return AspectRatio(
-                              aspectRatio:
-                                  hlsPlayerSize.width / hlsPlayerSize.height,
-                              child: InkWell(
-                                onTap: () => context
-                                    .read<HLSPlayerStore>()
-                                    .toggleButtonsVisibility(),
-                                splashFactory: NoSplash.splashFactory,
-                                splashColor: HMSThemeColors.backgroundDim,
-                                child: Selector<HLSPlayerStore,bool>(
-                                  selector: (_,hlsPlayerStore) => hlsPlayerStore.isFullScreen,
-                                  builder: (_,isFullScreen,__) {
-                                    return InteractiveViewer(
-                                      minScale: 1,
-                                      panEnabled: isFullScreen,
-                                      scaleEnabled: isFullScreen,
-                                      child: IgnorePointer(
-                                        child: const HMSHLSPlayer(
-                                          showPlayerControls: false,
-                                        ),
+                              hlsPlayerStore.isFullScreen,
+                          builder: (_, isFullScreen, __) {
+              return InteractiveViewer(
+                minScale: 1,
+                panEnabled: isFullScreen,
+                scaleEnabled: isFullScreen,
+                child: Stack(
+                  children: [
+                    ///Renders the HLS Player if the HLS has started
+                    ///Otherwise renders the waiting UI
+                    hasHLSStarted
+                        ? Align(
+                            alignment: Alignment.center,
+                            child: Selector<HLSPlayerStore, Size>(
+                                selector: (_, hlsPlayerStore) =>
+                                    hlsPlayerStore.hlsPlayerSize,
+                                builder: (_, hlsPlayerSize, __) {
+                                  return InkWell(
+                                    onTap: () => context
+                                        .read<HLSPlayerStore>()
+                                        .toggleButtonsVisibility(),
+                                    splashFactory: NoSplash.splashFactory,
+                                    splashColor: HMSThemeColors.backgroundDim,
+                                    child: AspectRatio(
+                                      aspectRatio:
+                                          hlsPlayerSize.width / hlsPlayerSize.height,
+                                      child: Selector<HLSPlayerStore,bool>(
+                                        selector: (_,hlsPlayerStore) => hlsPlayerStore.isFullScreen,
+                                        builder: (_,isFullScreen,__) {
+                                          return IgnorePointer(
+                                            child: const HMSHLSPlayer(
+                                              showPlayerControls: false,
+                                            ),
+                                          );
+                                        }
                                       ),
-                                    );
-                                  }
-                                ),
-                              ),
-                            );
+                                    ),
+                                  );
+                                }),
+                          )
+                        : Center(child: const HLSWaitingUI()),
+              
+                    ///This renders the overlay controls for HLS Player
+                    Align(
+                      alignment: Alignment.center,
+                      child: Selector<HLSPlayerStore, bool>(
+                          selector: (_, hlsPlayerStore) =>
+                              hlsPlayerStore.isFullScreen,
+                          builder: (_, isFullScreen, __) {
+                            return isFullScreen
+                                ? Selector<HLSPlayerStore, Size>(
+                                    selector: (_, hlsPlayerStore) =>
+                                        hlsPlayerStore.hlsPlayerSize,
+                                    builder: (_, hlsPlayerSize, __) {
+                                      return AspectRatio(
+                                        aspectRatio: hlsPlayerSize.width /
+                                            hlsPlayerSize.height,
+                                        child: HLSPlayerOverlayOptions(
+                                          hasHLSStarted: hasHLSStarted,
+                                        ),
+                                      );
+                                    })
+                                : HLSPlayerOverlayOptions(
+                                    hasHLSStarted: hasHLSStarted);
                           }),
+                    ),
+                    Selector<HLSPlayerStore, HMSHLSPlaybackState>(
+                      selector: (_, hlsPlayerStore) =>
+                          hlsPlayerStore.playerPlaybackState,
+                      builder: (_, state, __) {
+                        return state == HMSHLSPlaybackState.BUFFERING || state == HMSHLSPlaybackState.FAILED
+                            ? Align(
+                                alignment: Alignment.center,
+                                child: CircularProgressIndicator(
+                                  color: HMSThemeColors.primaryDefault,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const SizedBox();
+                      },
                     )
-                  : Center(child: const HLSWaitingUI()),
-
-              ///This renders the overlay controls for HLS Player
-              Align(
-                alignment: Alignment.center,
-                child: Selector<HLSPlayerStore, bool>(
-                    selector: (_, hlsPlayerStore) =>
-                        hlsPlayerStore.isFullScreen,
-                    builder: (_, isFullScreen, __) {
-                      return isFullScreen
-                          ? Selector<HLSPlayerStore, Size>(
-                              selector: (_, hlsPlayerStore) =>
-                                  hlsPlayerStore.hlsPlayerSize,
-                              builder: (_, hlsPlayerSize, __) {
-                                return AspectRatio(
-                                  aspectRatio: hlsPlayerSize.width /
-                                      hlsPlayerSize.height,
-                                  child: HLSPlayerOverlayOptions(
-                                    hasHLSStarted: hasHLSStarted,
-                                  ),
-                                );
-                              })
-                          : HLSPlayerOverlayOptions(
-                              hasHLSStarted: hasHLSStarted);
-                    }),
-              ),
-              Selector<HLSPlayerStore, HMSHLSPlaybackState>(
-                selector: (_, hlsPlayerStore) =>
-                    hlsPlayerStore.playerPlaybackState,
-                builder: (_, state, __) {
-                  return state == HMSHLSPlaybackState.BUFFERING || state == HMSHLSPlaybackState.FAILED
-                      ? Align(
-                          alignment: Alignment.center,
-                          child: CircularProgressIndicator(
-                            color: HMSThemeColors.primaryDefault,
-                            strokeWidth: 2,
-                          ),
-                        )
-                      : const SizedBox();
-                },
-              )
-            ],
+                  ],
+                ),
+              );
+            }
           );
         });
   }
