@@ -187,9 +187,10 @@ packages:
   hmssdk_flutter:
     dependency: "direct main"
     description:
-      path: "../hmssdk_flutter"
-      relative: true
-    source: path
+      name: hmssdk_flutter
+      sha256: "88673b9ddd7eaa2e997976a4386374b0881b4485f4ba750689d3c9ca25032f65"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.10.0"
   http:
     dependency: transitive
