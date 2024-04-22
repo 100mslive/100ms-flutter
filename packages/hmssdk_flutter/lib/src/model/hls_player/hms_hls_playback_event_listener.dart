@@ -40,7 +40,7 @@ abstract class HMSHLSPlaybackEventsListener {
   void onVideoSizeChanged({required Size size}) {}
 
   /// Callback to get the subtitles
-  /// 
+  ///
   /// - Parameter: subtitles: A list of [String] containing the subtitles
-  void onCues({required List<String> subtitles}){}
+  void onCues({required List<String> subtitles}) {}
 }

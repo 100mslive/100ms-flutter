@@ -30,27 +30,25 @@ class _HLSPlayerDesktopControlsState extends State<HLSPlayerDesktopControls> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          ///Renders HLS Stream Description and Chat Bottom Sheet
-          widget.orientation == Orientation.portrait
-              ? HLSStreamDescription(
-                  showDescription: showDescription,
-                  toggleDescription: toggleDescription)
-              : const SizedBox(),
+    return Column(
+      children: [
+        ///Renders HLS Stream Description and Chat Bottom Sheet
+        widget.orientation == Orientation.portrait
+            ? HLSStreamDescription(
+                showDescription: showDescription,
+                toggleDescription: toggleDescription)
+            : const SizedBox(),
 
-          ///Renders Chat Bottom Sheet only is the description is not visible
-          if (!showDescription)
-            Expanded(
-                child: Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: const ChatBottomSheet(
-                isHLSChat: true,
-              ),
-            ))
-        ],
-      ),
+        ///Renders Chat Bottom Sheet only if the description is not visible
+        if (!showDescription)
+          Expanded(
+              child: Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: const ChatBottomSheet(
+              isHLSChat: true,
+            ),
+          ))
+      ],
     );
   }
 }

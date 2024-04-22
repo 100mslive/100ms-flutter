@@ -39,13 +39,13 @@ class HMSHLSVariant {
 
   factory HMSHLSVariant.fromMap(Map map) {
     return HMSHLSVariant(
-      hlsStreamUrl: map['hls_stream_url'] as String?,
-      meetingUrl: map['meeting_url'] as String?,
-      metadata: map['metadata'] as String?,
-      startedAt: map['started_at'] != null
-          ? HMSDateExtension.convertDateFromEpoch(map['started_at'])
-          : null,
-      playlistType: HMSHLSPlaylistTypeValues.getHMSHLSPlaylistTypeFromString(map["playlist_type"])
-    );
+        hlsStreamUrl: map['hls_stream_url'] as String?,
+        meetingUrl: map['meeting_url'] as String?,
+        metadata: map['metadata'] as String?,
+        startedAt: map['started_at'] != null
+            ? HMSDateExtension.convertDateFromEpoch(map['started_at'])
+            : null,
+        playlistType: HMSHLSPlaylistTypeValues.getHMSHLSPlaylistTypeFromString(
+            map["playlist_type"]));
   }
 }

@@ -23,7 +23,7 @@ class HLSPlayerOverlayOptions extends StatelessWidget {
         ),
 
         ///This renders the pause/play button
-        hasHLSStarted?HLSViewerMidSection(): const SizedBox(),
+        hasHLSStarted ? HLSViewerMidSection() : const SizedBox(),
 
         ///Renders the bottom navigation bar if the HLS has started
         ///Otherwise does not render the bottom navigation bar

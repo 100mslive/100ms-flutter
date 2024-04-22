@@ -2900,7 +2900,7 @@ class MeetingStore extends ChangeNotifier
         break;
     }
   }
-  
+
   @override
   void onCues({required List<String> subtitles}) {
     // TODO: implement onCues

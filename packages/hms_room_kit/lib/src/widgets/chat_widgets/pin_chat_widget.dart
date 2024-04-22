@@ -1,6 +1,6 @@
-///Package imports
 library;
 
+///Package imports
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
@@ -28,6 +28,7 @@ class _PinChatWidgetState extends State<PinChatWidget> {
   int currentPage = 0;
   PageController? _pageController;
   bool isExpanded = false;
+  double height = 0, containerHeight = 0, dotsHeight = 0;
 
   @override
   void initState() {
@@ -51,7 +52,22 @@ class _PinChatWidgetState extends State<PinChatWidget> {
     });
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    height = MediaQuery.of(context).size.height;
+    containerHeight = height * 0.09;
+    dotsHeight = containerHeight * 0.5;
+  }
+
   void toggleExpand() {
+    if (isExpanded) {
+      containerHeight = height * 0.09;
+      dotsHeight = containerHeight * 0.5;
+    } else {
+      containerHeight = height * 0.12;
+      dotsHeight = containerHeight * 0.5;
+    }
     setState(() {
       isExpanded = !isExpanded;
     });
@@ -73,94 +89,99 @@ class _PinChatWidgetState extends State<PinChatWidget> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        AnimatedContainer(
-                          height: MediaQuery.of(context).size.height *
-                              (isExpanded ? 0.13 : 0.09),
-                          width:
-                              (HMSRoomLayout.chatData?.allowPinningMessages ??
-                                      false)
-                                  ? MediaQuery.of(context).size.width * 0.83
-                                  : MediaQuery.of(context).size.width * 0.9,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: widget.backgroundColor ??
-                                  HMSThemeColors.surfaceDefault),
-                          duration: const Duration(milliseconds: 0),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                        Expanded(
+                          child: AnimatedContainer(
+                            height: containerHeight,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: widget.backgroundColor ??
+                                    HMSThemeColors.surfaceDefault),
+                            duration: const Duration(milliseconds: 0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 if (data.item2 > 1)
-                                  DotsIndicator(
-                                    axis: Axis.vertical,
-                                    mainAxisSize: MainAxisSize.min,
-                                    dotsCount: data.item2,
-                                    position: currentPage >= data.item2
-                                        ? 0
-                                        : currentPage,
-                                    decorator: DotsDecorator(
-                                      spacing: const EdgeInsets.only(
-                                          bottom: 3.0, right: 8),
-                                      size: Size(2.0, isExpanded ? 24 : 9.0),
-                                      activeSize:
-                                          Size(2.0, isExpanded ? 24 : 9.0),
-                                      color:
-                                          HMSThemeColors.onSurfaceLowEmphasis,
-                                      activeColor:
-                                          HMSThemeColors.onSurfaceHighEmphasis,
-                                      activeShape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(16.0)),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(16.0)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8.0, top: 2, bottom: 2),
+                                    child: SingleChildScrollView(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      child: DotsIndicator(
+                                        axis: Axis.vertical,
+                                        mainAxisSize: MainAxisSize.max,
+                                        dotsCount: data.item2,
+                                        position: currentPage >= data.item2
+                                            ? 0
+                                            : currentPage,
+                                        decorator: DotsDecorator(
+                                          spacing: const EdgeInsets.only(
+                                              bottom: 3.0, right: 8),
+                                          size: Size(
+                                              2.0, dotsHeight / data.item2),
+                                          activeSize: Size(
+                                              2.0, dotsHeight / data.item2),
+                                          color: HMSThemeColors
+                                              .onSurfaceLowEmphasis,
+                                          activeColor: HMSThemeColors
+                                              .onSurfaceHighEmphasis,
+                                          activeShape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16.0)),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16.0)),
+                                        ),
+                                        onTap: (position) =>
+                                            setCurrentPage(position),
+                                      ),
                                     ),
-                                    onTap: (position) =>
-                                        setCurrentPage(position),
                                   ),
                                 Expanded(
-                                  child: PageView.builder(
-                                    scrollDirection: Axis.vertical,
-                                    controller: _pageController,
-                                    itemCount: data.item2,
-                                    physics: const PageScrollPhysics(),
-                                    onPageChanged: (value) =>
-                                        setCurrentPage(value),
-                                    itemBuilder: (context, index) =>
-                                        SelectableLinkify(
-                                      maxLines: 3,
-                                      scrollPhysics: isExpanded
-                                          ? const BouncingScrollPhysics()
-                                          : const NeverScrollableScrollPhysics(),
-                                      text: data.item1[index]["text"],
-                                      onOpen: (link) async {
-                                        Uri url = Uri.parse(link.url);
-                                        if (await canLaunchUrl(url)) {
-                                          await launchUrl(url,
-                                              mode: LaunchMode
-                                                  .externalApplication);
-                                        }
-                                      },
-                                      onTap: () => toggleExpand(),
-                                      options:
-                                          const LinkifyOptions(humanize: false),
-                                      style: HMSTextStyle.setTextStyle(
-                                        fontSize: 14.0,
-                                        color: HMSThemeColors
-                                            .onSurfaceHighEmphasis,
-                                        letterSpacing: 0.25,
-                                        height: 20 / 14,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                      linkStyle: HMSTextStyle.setTextStyle(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: PageView.builder(
+                                      scrollDirection: Axis.vertical,
+                                      controller: _pageController,
+                                      itemCount: data.item2,
+                                      physics: const PageScrollPhysics(),
+                                      onPageChanged: (value) =>
+                                          setCurrentPage(value),
+                                      itemBuilder: (context, index) =>
+                                          SelectableLinkify(
+                                        maxLines: 3,
+                                        scrollPhysics: isExpanded
+                                            ? const BouncingScrollPhysics()
+                                            : const NeverScrollableScrollPhysics(),
+                                        text: data.item1[index]["text"],
+                                        onOpen: (link) async {
+                                          Uri url = Uri.parse(link.url);
+                                          if (await canLaunchUrl(url)) {
+                                            await launchUrl(url,
+                                                mode: LaunchMode
+                                                    .externalApplication);
+                                          }
+                                        },
+                                        onTap: () => toggleExpand(),
+                                        options: const LinkifyOptions(
+                                            humanize: false),
+                                        style: HMSTextStyle.setTextStyle(
                                           fontSize: 14.0,
-                                          color: HMSThemeColors.primaryDefault,
+                                          color: HMSThemeColors
+                                              .onSurfaceHighEmphasis,
                                           letterSpacing: 0.25,
                                           height: 20 / 14,
-                                          fontWeight: FontWeight.w400),
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        linkStyle: HMSTextStyle.setTextStyle(
+                                            fontSize: 14.0,
+                                            color:
+                                                HMSThemeColors.primaryDefault,
+                                            letterSpacing: 0.25,
+                                            height: 20 / 14,
+                                            fontWeight: FontWeight.w400),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -168,7 +189,6 @@ class _PinChatWidgetState extends State<PinChatWidget> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 8),
                         if (HMSRoomLayout.chatData?.allowPinningMessages ??
                             false)
                           GestureDetector(

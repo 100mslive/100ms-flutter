@@ -104,6 +104,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                       : SafeArea(
                           child: Scaffold(
                             backgroundColor: HMSThemeColors.backgroundDim,
+                            resizeToAvoidBottomInset: false,
                             body: Theme(
                               data: ThemeData(
                                   brightness: Brightness.dark,
@@ -125,13 +126,6 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                               selector: (_, hlsPlayerStore) =>
                                                   hlsPlayerStore.isFullScreen,
                                               builder: (_, isFullScreen, __) {
-                                                double widgetHeight = height -
-                                                    MediaQuery.of(context)
-                                                        .viewPadding
-                                                        .top -
-                                                    MediaQuery.of(context)
-                                                        .viewPadding
-                                                        .bottom;
                                                 return OrientationBuilder(
                                                     builder:
                                                         (context, orientation) {
@@ -146,48 +140,36 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                                                       .start,
                                                           children: [
                                                             ///Renders HLS Player
-                                                            AnimatedContainer(
-                                                              duration: Duration(
-                                                                  milliseconds:
-                                                                      200),
-                                                              curve: Curves
-                                                                  .bounceIn,
-                                                              width: width,
-                                                              height: isFullScreen
-                                                                  ? widgetHeight
-                                                                  : widgetHeight *
-                                                                      0.27,
+                                                            Expanded(
+                                                              flex: 1,
                                                               child:
                                                                   const HLSPlayer(),
                                                             ),
                                                             if (!isFullScreen)
-                                                              HLSPlayerDesktopControls(
-                                                                orientation: orientation,
+                                                              Expanded(
+                                                                flex: 3,
+                                                                child:
+                                                                    HLSPlayerDesktopControls(
+                                                                  orientation:
+                                                                      orientation,
+                                                                ),
                                                               )
                                                           ],
                                                         )
                                                       : Row(
                                                           children: [
                                                             ///Renders HLS Player
-                                                            AnimatedContainer(
-                                                              duration: Duration(
-                                                                  milliseconds:
-                                                                      200),
-                                                              curve: Curves
-                                                                  .bounceIn,
-                                                              width:
-                                                                  isFullScreen
-                                                                      ? width
-                                                                      : width *
-                                                                          0.6,
-                                                              height:
-                                                                  widgetHeight,
+                                                            Expanded(
+                                                              flex: 2,
                                                               child:
                                                                   const HLSPlayer(),
                                                             ),
                                                             if (!isFullScreen)
-                                                              HLSPlayerDesktopControls(
-                                                                orientation: orientation
+                                                              Expanded(
+                                                                flex: 1,
+                                                                child: HLSPlayerDesktopControls(
+                                                                    orientation:
+                                                                        orientation),
                                                               )
                                                           ],
                                                         );
