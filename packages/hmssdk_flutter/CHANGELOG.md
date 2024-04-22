@@ -30,7 +30,7 @@
 
 - `HMSHLSPlayer` now uses Hybrid Composition on Android for better performance.
 
-Uses Android SDK 2.9.53 & iOS SDK 1.8.0
+Uses Android SDK 2.9.54 & iOS SDK 1.8.0
 
 **Full Changelog**: [1.9.14...1.10.0](https://github.com/100mslive/100ms-flutter/compare/1.9.14...1.10.0)
 
