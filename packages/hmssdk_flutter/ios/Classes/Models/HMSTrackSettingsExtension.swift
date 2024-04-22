@@ -99,6 +99,20 @@ class HMSTrackSettingsExtension {
                     if let mode = getAudioMode(from: audioSettingsDict["audio_mode"] as? String) {
                         builder.audioMode = mode
                     }
+
+                    /*
+                     Here we set the noise cancellation controller based on the parameter passed in audio track
+                     settings
+                     */
+                    if let enableNoiseCancellation = audioSettingsDict["enable_noise_cancellation"] as? Bool {
+                        if enableNoiseCancellation {
+
+                            /// We create  the noise cancellation plugin
+                            HMSNoiseCancellationController.createPlugin()
+                            builder.noiseCancellationPlugin = HMSNoiseCancellationController.noiseCancellationController
+                        }
+                    }
+
                 })
             }
         }

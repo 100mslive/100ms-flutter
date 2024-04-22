@@ -13,14 +13,13 @@ import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
+import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
-import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/model/participant_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/participants_view_all_bottom_sheet.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 
 ///[ParticipantsBottomSheet] is the bottom sheet that is shown when the user
@@ -243,7 +242,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                     ),
                   if (mutePermission &&
                       peerTrackNode != null &&
-                      !peerTrackNode.peer.isLocal)
+                      !peerTrackNode.peer.isLocal &&
+                      peerTrackNode.peer.type == HMSPeerType.regular)
                     PopupMenuItem(
                       value: 3,
                       child: Row(children: [
@@ -272,7 +272,8 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                     ),
                   if (mutePermission &&
                       peerTrackNode != null &&
-                      !peerTrackNode.peer.isLocal)
+                      !peerTrackNode.peer.isLocal &&
+                      peerTrackNode.peer.type == HMSPeerType.regular)
                     PopupMenuItem(
                       value: 4,
                       child: Row(children: [
@@ -483,26 +484,47 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                                     children: [
                                                                       Selector<
                                                                               ParticipantsStore,
-                                                                              int>(
-                                                                          selector: (_, participantsStore) => (participantsStore.peer.networkQuality?.quality ??
-                                                                              -1),
+                                                                              bool>(
                                                                           builder: (_,
-                                                                              networkQuality,
+                                                                              isSIPPeer,
                                                                               __) {
-                                                                            return networkQuality != -1 && networkQuality < 3
+                                                                            return isSIPPeer
+                                                                                ? CircleAvatar(
+                                                                                    radius: 16,
+                                                                                    backgroundColor: HMSThemeColors.surfaceBright,
+                                                                                    child: SvgPicture.asset(
+                                                                                      "packages/hms_room_kit/lib/src/assets/icons/sip_call.svg",
+                                                                                      height: 12,
+                                                                                      width: 12,
+                                                                                      colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
+                                                                                    ))
+                                                                                : const SizedBox();
+                                                                          },
+                                                                          selector: (_, participantsStore) =>
+                                                                              participantsStore.peer.type ==
+                                                                              HMSPeerType.sip),
+                                                                      Selector<
+                                                                              ParticipantsStore,
+                                                                              Tuple2<int,
+                                                                                  bool>>(
+                                                                          selector: (_, participantsStore) => Tuple2(
+                                                                              participantsStore.peer.networkQuality?.quality ?? -1,
+                                                                              participantsStore.peer.type != HMSPeerType.sip),
+                                                                          builder: (_, participantData, __) {
+                                                                            return participantData.item1 != -1 && participantData.item1 < 3 && participantData.item2
                                                                                 ? Padding(
                                                                                     padding: const EdgeInsets.only(right: 16.0),
                                                                                     child: CircleAvatar(
                                                                                       radius: 16,
                                                                                       backgroundColor: HMSThemeColors.surfaceDefault,
                                                                                       child: SvgPicture.asset(
-                                                                                        "packages/hms_room_kit/lib/src/assets/icons/network_$networkQuality.svg",
+                                                                                        "packages/hms_room_kit/lib/src/assets/icons/network_${participantData.item1}.svg",
                                                                                         height: 16,
                                                                                         width: 16,
                                                                                       ),
                                                                                     ),
                                                                                   )
-                                                                                : Container();
+                                                                                : const SizedBox();
                                                                           }),
                                                                       Selector<
                                                                               ParticipantsStore,
@@ -527,7 +549,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                                                       ),
                                                                                     ),
                                                                                   )
-                                                                                : Container();
+                                                                                : const SizedBox();
                                                                           }),
                                                                       _kebabMenu(
                                                                           currentPeer

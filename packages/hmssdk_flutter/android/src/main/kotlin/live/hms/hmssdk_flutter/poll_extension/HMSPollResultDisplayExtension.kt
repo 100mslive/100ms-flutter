@@ -3,16 +3,13 @@ package live.hms.hmssdk_flutter.poll_extension
 import live.hms.video.polls.network.PollResultsDisplay
 
 class HMSPollResultDisplayExtension {
-
-    companion object{
-
-        fun toDictionary(pollResultsDisplay: PollResultsDisplay?):HashMap<String,Any?>?{
-
+    companion object {
+        fun toDictionary(pollResultsDisplay: PollResultsDisplay?): HashMap<String, Any?>? {
             pollResultsDisplay?.let {
-                val map = HashMap<String,Any?>()
+                val map = HashMap<String, Any?>()
 
-                val questions = ArrayList<HashMap<String,Any?>?>()
-                it.questions.forEach{ question -> questions.add(HMSPollStatsQuestionsExtension.toDictionary(question))}
+                val questions = ArrayList<HashMap<String, Any?>?>()
+                it.questions.forEach { question -> questions.add(HMSPollStatsQuestionsExtension.toDictionary(question)) }
                 map["questions"] = questions
 
                 map["total_distinct_users"] = it.totalDistinctUsers
@@ -20,7 +17,7 @@ class HMSPollResultDisplayExtension {
                 map["voting_users"] = it.votingUsers
 
                 return map
-            }?:run {
+            } ?: run {
                 return null
             }
         }

@@ -5,26 +5,24 @@ import 'dart:math';
 
 ///Package imports
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/src/widgets/toasts/toast_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
+import 'package:hms_room_kit/src/widgets/bottom_sheets/refresh_stream_bottom_sheet.dart';
+import 'package:hms_room_kit/src/hls_viewer/hls_player_desktop_controls.dart';
+import 'package:hms_room_kit/src/widgets/toasts/toast_widget.dart';
 import 'package:hms_room_kit/src/widgets/app_dialogs/audio_device_change_dialog.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_left_room_screen.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toast_model.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_viewer_bottom_navigation_bar.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_viewer_header.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/preview_for_role/preview_for_role_bottom_sheet.dart';
 import 'package:hms_room_kit/src/preview_for_role/preview_for_role_header.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
-import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_waiting_ui.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 
 ///[HLSViewerPage] is the page that is used to render the HLS Viewer
@@ -37,6 +35,10 @@ class HLSViewerPage extends StatefulWidget {
 }
 
 class _HLSViewerPageState extends State<HLSViewerPage> {
+  ///These variables keep track of height and width of the screen
+  double height = 0.0;
+  double width = 0.0;
+
   @override
   void initState() {
     super.initState();
@@ -44,8 +46,17 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
       ///We start the timer to hide the controls
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.read<HLSPlayerStore>().startTimerToHideButtons();
+        HMSHLSPlayerController.addHMSHLSPlaybackEventsListener(
+            context.read<HLSPlayerStore>());
       });
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
   }
 
   ///This function is used to set the stream status
@@ -53,6 +64,13 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<HLSPlayerStore>().setStreamPlaying(hasHlsStarted);
     });
+  }
+
+  @override
+  void deactivate() {
+    HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(
+        context.read<HLSPlayerStore>());
+    super.deactivate();
   }
 
   @override
@@ -83,18 +101,18 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                 builder: (_, isPipActive, __) {
                   return isPipActive
                       ? HMSHLSPlayer()
-                      : Scaffold(
-                          backgroundColor: HMSThemeColors.backgroundDim,
-                          body: Theme(
-                            data: ThemeData(
-                                brightness: Brightness.dark,
-                                primaryColor: HMSThemeColors.primaryDefault,
-                                scaffoldBackgroundColor:
-                                    HMSThemeColors.backgroundDim),
-                            child: SingleChildScrollView(
+                      : SafeArea(
+                          child: Scaffold(
+                            backgroundColor: HMSThemeColors.backgroundDim,
+                            body: Theme(
+                              data: ThemeData(
+                                  brightness: Brightness.dark,
+                                  primaryColor: HMSThemeColors.primaryDefault,
+                                  scaffoldBackgroundColor:
+                                      HMSThemeColors.backgroundDim),
                               child: SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height,
+                                width: width,
+                                height: height,
                                 child: Stack(
                                   children: [
                                     Selector<MeetingStore, bool>(
@@ -102,69 +120,40 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                             meetingStore.hasHlsStarted,
                                         builder: (_, hasHlsStarted, __) {
                                           _setStreamStatus(hasHlsStarted);
-                                          return (hasHlsStarted)
-                                              ? SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .height,
-                                                  child: HLSPlayer(
-                                                    key: Key(context
-                                                            .read<
-                                                                MeetingStore>()
-                                                            .localPeer
-                                                            ?.peerId ??
-                                                        "HLS_PLAYER"),
-                                                    ratio: Utilities
-                                                        .getHLSPlayerDefaultRatio(
-                                                            MediaQuery.of(
-                                                                    context)
-                                                                .size),
-                                                  ),
-                                                )
-                                              : SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .height,
-                                                  child: const HLSWaitingUI());
-                                        }),
 
-                                    ///Will only be displayed when the controls are visible
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Selector<HLSPlayerStore, bool>(
+                                          return Selector<HLSPlayerStore, bool>(
                                               selector: (_, hlsPlayerStore) =>
-                                                  hlsPlayerStore
-                                                      .areStreamControlsVisible,
-                                              builder: (_,
-                                                  areStreamControlsVisible,
-                                                  __) {
-                                                return AnimatedContainer(
-                                                  duration: const Duration(
-                                                      milliseconds: 200),
-                                                  height:
-                                                      areStreamControlsVisible
-                                                          ? 100
-                                                          : 0,
-                                                  child: areStreamControlsVisible
-                                                      ? const HLSViewerHeader()
-                                                      : Container(),
+                                                  hlsPlayerStore.isFullScreen,
+                                              builder: (_, isFullScreen, __) {
+                                                double widgetHeight = height -
+                                                    MediaQuery.of(context)
+                                                        .viewPadding
+                                                        .top -
+                                                    MediaQuery.of(context)
+                                                        .viewPadding
+                                                        .bottom;
+                                                return Column(
+                                                  mainAxisAlignment:
+                                                      isFullScreen
+                                                          ? MainAxisAlignment
+                                                              .center
+                                                          : MainAxisAlignment
+                                                              .start,
+                                                  children: [
+                                                    ///Renders HLS Player
+                                                    SizedBox(
+                                                      width: width,
+                                                      height: isFullScreen
+                                                          ? widgetHeight
+                                                          : widgetHeight * 0.27,
+                                                      child: const HLSPlayer(),
+                                                    ),
+                                                    if (!isFullScreen)
+                                                      HLSPlayerDesktopControls()
+                                                  ],
                                                 );
-                                              }),
-                                          const HLSViewerBottomNavigationBar()
-                                        ],
-                                      ),
-                                    ),
+                                              });
+                                        }),
 
                                     ///This renders the preview for role component
                                     Selector<
@@ -282,6 +271,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                           return Container();
                                         }),
 
+                                    ///This renders toasts
                                     Selector<MeetingStore,
                                             HMSTrackChangeRequest?>(
                                         selector: (_, meetingStore) =>
@@ -390,6 +380,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                           }).toList());
                                         }),
 
+                                    ///This renders the reconnection dialog
                                     Selector<MeetingStore, bool>(
                                         selector: (_, meetingStore) =>
                                             meetingStore.reconnecting,
@@ -401,6 +392,23 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                           }
                                           return const SizedBox();
                                         }),
+
+                                    ///This renders the bottom sheet for the stream error
+                                    ///with a button refresh the stream
+                                    Selector<HLSPlayerStore, bool>(
+                                      selector: (_, hlsPlayerStore) =>
+                                          hlsPlayerStore.isPlayerFailed,
+                                      builder: (_, isPlayerFailed, __) {
+                                        return Positioned(
+                                            bottom: 0,
+                                            child: isPlayerFailed
+                                                ? RefreshStreamBottomSheet()
+                                                : const SizedBox());
+                                      },
+                                    ),
+
+                                    ///Renders the error toast with a leave button since the
+                                    ///error is irrecoverable
                                     if (failureData.item2 != null &&
                                         (failureData.item2?.code?.errorCode ==
                                                 1003 ||

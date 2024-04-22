@@ -1,7 +1,6 @@
 package live.hms.hmssdk_flutter
 
 import live.hms.video.sdk.models.HMSHLSVariant
-import java.text.SimpleDateFormat
 
 class HMSHLSVariantExtension {
     companion object {

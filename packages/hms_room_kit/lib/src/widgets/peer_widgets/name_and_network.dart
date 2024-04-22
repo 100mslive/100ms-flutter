@@ -1,10 +1,14 @@
-///Package imports
 library;
 
+///Package import
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
+import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/network_icon_widget.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/peer_name.dart';
 
@@ -35,6 +39,16 @@ class NameAndNetwork extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                ///Phone icon is only rendered if its a SIP peer
+                if (context.read<PeerTrackNode>().peer.type == HMSPeerType.sip)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 2.0),
+                    child: SvgPicture.asset(
+                      'packages/hms_room_kit/lib/src/assets/icons/sip_call.svg',
+                      height: 12,
+                      semanticsLabel: "fl_sip_call_icon_label",
+                    ),
+                  ),
                 PeerName(
                   maxWidth: maxWidth,
                 ),

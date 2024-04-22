@@ -9,7 +9,6 @@ import 'dart:io';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:intl/intl.dart';
 
 //Project imports
@@ -219,12 +218,6 @@ class MeetingStore extends ChangeNotifier
 
   String? spotlightMetadata;
 
-  ///HLS Player Stats
-
-  HMSHLSPlayerStats? hlsPlayerStats;
-
-  bool isHLSStatsEnabled = false;
-
   bool isDefaultAspectRatioSelected = true;
 
   int currentPage = 0;
@@ -263,6 +256,12 @@ class MeetingStore extends ChangeNotifier
 
   ///List of bottom sheets currently open
   List<BuildContext> bottomSheets = [];
+
+  ///Boolean to check whether noise cancellation is available
+  bool isNoiseCancellationAvailable = false;
+
+  ///Boolean to track whether noise cancellation is enabled or not
+  bool isNoiseCancellationEnabled = false;
 
   Future<HMSException?> join(String userName, String? tokenData) async {
     late HMSConfig joinConfig;
@@ -838,13 +837,16 @@ class MeetingStore extends ChangeNotifier
     streamingType["hls"] =
         room.hmshlsStreamingState?.state ?? HMSStreamingState.none;
 
+    checkNoiseCancellationAvailability();
     setParticipantsList(roles);
+    toggleAlwaysScreenOn();
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
         int index = peerTracks
             .indexWhere((element) => element.uid == "${each.peerId}mainVideo");
         if (index == -1 &&
             (each.audioTrack != null || each.videoTrack != null)) {
+          ///We add tile for local peer only if the peer can publish audio or video
           peerTracks.add(PeerTrackNode(
               peer: each,
               uid: "${each.peerId}mainVideo",
@@ -939,12 +941,6 @@ class MeetingStore extends ChangeNotifier
         participantsInMeetingMap[element.name] = [];
       }
     });
-  }
-
-  void initForegroundTask() {
-    FlutterForegroundTask.startService(
-        notificationTitle: "100ms foreground service running",
-        notificationText: "Tap to return to the app");
   }
 
   void getSpotlightPeer() async {
@@ -1365,7 +1361,6 @@ class MeetingStore extends ChangeNotifier
 
   void resetForegroundTaskAndOrientation() {
     setLandscapeLock(false);
-    FlutterForegroundTask.stopService();
   }
 
   // void clearPIPState() {
@@ -2371,6 +2366,28 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
+  ///Noise cancellation Methods
+
+  void toggleNoiseCancellation() {
+    if (isNoiseCancellationEnabled) {
+      _hmsSDKInteractor.disableNoiseCancellation();
+    } else {
+      _hmsSDKInteractor.enableNoiseCancellation();
+    }
+    isNoiseCancellationEnabled = !isNoiseCancellationEnabled;
+    notifyListeners();
+  }
+
+  void checkNoiseCancellationAvailability() async {
+    isNoiseCancellationAvailable =
+        await _hmsSDKInteractor.isNoiseCancellationAvailable();
+    if (isNoiseCancellationAvailable) {
+      isNoiseCancellationEnabled =
+          await _hmsSDKInteractor.isNoiseCancellationEnabled();
+    }
+    notifyListeners();
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
   @override
   void onSuccess(
@@ -2682,6 +2699,9 @@ class MeetingStore extends ChangeNotifier
   }
 
   @override
+  void onVideoSizeChanged({required Size size}) {}
+
+  @override
   void onCue({required HMSHLSCue hlsCue}) {
     log("onCue -> payload:${hlsCue.startDate}");
 
@@ -2735,36 +2755,16 @@ class MeetingStore extends ChangeNotifier
   }
 
   @override
-  void onPlaybackFailure({required String? error}) {
-    Utilities.showToast("Playback failure $error");
-  }
+  void onPlaybackFailure({required String? error}) {}
 
   @override
-  void onPlaybackStateChanged({required HMSHLSPlaybackState playbackState}) {
-    Utilities.showToast("Playback state changed to ${playbackState.name}");
-  }
+  void onPlaybackStateChanged({required HMSHLSPlaybackState playbackState}) {}
 
   @override
-  void onHLSError({required HMSException hlsException}) {
-    // TODO: implement onHLSError
-  }
+  void onHLSError({required HMSException hlsException}) {}
 
   @override
-  void onHLSEventUpdate({required HMSHLSPlayerStats playerStats}) {
-    log("onHLSEventUpdate-> bitrate:${playerStats.averageBitrate} buffered duration: ${playerStats.bufferedDuration}");
-    hlsPlayerStats = playerStats;
-    notifyListeners();
-  }
-
-  void setHLSPlayerStats(bool value) {
-    isHLSStatsEnabled = value;
-    if (!value) {
-      HMSHLSPlayerController.removeHLSStatsListener();
-    } else {
-      HMSHLSPlayerController.addHLSStatsListener();
-    }
-    notifyListeners();
-  }
+  void onHLSEventUpdate({required HMSHLSPlayerStats playerStats}) {}
 
   ///Insert poll question
   void insertPollQuestion(HMSPollStore store) {

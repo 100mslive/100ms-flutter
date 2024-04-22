@@ -8,20 +8,20 @@
 import Foundation
 import HMSSDK
 
-class HMSPollBuilderExtension{
-    
-    static func toHMSPollBuilder(_ pollBuilderMap:[String:Any?]?, _ hmssdk:HMSSDK) -> HMSPollBuilder?{
-        
-        guard let pollBuilderMap = pollBuilderMap else{
+class HMSPollBuilderExtension {
+
+    static func toHMSPollBuilder(_ pollBuilderMap: [String: Any?]?, _ hmssdk: HMSSDK) -> HMSPollBuilder? {
+
+        guard let pollBuilderMap = pollBuilderMap else {
             return nil
         }
-        
+
         let pollBuilder = HMSPollBuilder()
-        
-        if let anonymous = pollBuilderMap["anonymous"] as? Bool{
+
+        if let anonymous = pollBuilderMap["anonymous"] as? Bool {
             pollBuilder.withAnonymous(anonymous)
         }
-        
+
         if let duration = pollBuilderMap["duration"] as? Int {
             pollBuilder.withDuration(duration)
         }
@@ -29,7 +29,7 @@ class HMSPollBuilderExtension{
         if let mode = pollBuilderMap["mode"] as? String {
             pollBuilder.withUserTrackingMode(getPollUserTrackingModeFromString(mode))
         }
-        
+
         if let pollCategory = pollBuilderMap["poll_category"] as? String {
             pollBuilder.withCategory(getPollCategoryFromString(pollCategory))
         }
@@ -37,7 +37,7 @@ class HMSPollBuilderExtension{
         if let pollId = pollBuilderMap["poll_id"] as? String {
             pollBuilder.withPollID(pollId)
         }
-        
+
         let availableRoles = hmssdk.roles
         if let rolesThatCanViewResponses = pollBuilderMap["roles_that_can_view_responses"] as? [String] {
             let roles = rolesThatCanViewResponses.compactMap { roleName in
@@ -56,22 +56,22 @@ class HMSPollBuilderExtension{
         if let title = pollBuilderMap["title"] as? String {
             pollBuilder.withTitle(title)
         }
-        
-        if let questions = pollBuilderMap["questions"] as? [[String: Any?]]{
-            
-            questions.forEach{
-                if let questionBuilder = getPollQuestionBuilder($0){
+
+        if let questions = pollBuilderMap["questions"] as? [[String: Any?]] {
+
+            questions.forEach {
+                if let questionBuilder = getPollQuestionBuilder($0) {
                     pollBuilder.addQuestion(with: questionBuilder)
                 }
             }
-            
+
         }
         return pollBuilder
     }
-    
-    private static func getPollCategoryFromString(_ pollCategory:String) -> HMSPollCategory{
-        
-        switch pollCategory{
+
+    private static func getPollCategoryFromString(_ pollCategory: String) -> HMSPollCategory {
+
+        switch pollCategory {
         case "poll":
             return .poll
         case "quiz":
@@ -80,7 +80,7 @@ class HMSPollBuilderExtension{
             return .poll
         }
     }
-    
+
     private static func getPollUserTrackingModeFromString(_ pollUserTrackingMode: String) -> HMSPollUserTrackingMode {
         switch pollUserTrackingMode {
         case "user_id":
@@ -108,7 +108,7 @@ class HMSPollBuilderExtension{
             return .singleChoice
         }
     }
-    
+
     private static func getPollQuestionBuilder(_ pollQuestion: [String: Any?]?) -> HMSPollQuestionBuilder? {
         guard let pollQuestion = pollQuestion else {
             return nil
@@ -116,14 +116,13 @@ class HMSPollBuilderExtension{
 
         let pollQuestionBuilder = HMSPollQuestionBuilder()
 
-        if let typeString = pollQuestion["type"] as? String{
+        if let typeString = pollQuestion["type"] as? String {
             let type = getPollQuestionTypeFromString(typeString)
             pollQuestionBuilder.withType(type)
         } else {
             HMSErrorLogger.returnArgumentsError("type should not be null")
             return nil
         }
-
 
         if let canSkip = pollQuestion["can_skip"] as? Bool {
             pollQuestionBuilder.withCanBeSkipped(canSkip)
@@ -161,18 +160,17 @@ class HMSPollBuilderExtension{
 
         if let options = pollQuestion["options"] as? [[String: Any?]] {
             options.forEach { option in
-                if let key = option["text"] as? String, let value = option["is_correct"] as? Bool{
+                if let key = option["text"] as? String, let value = option["is_correct"] as? Bool {
                     pollQuestionBuilder.addQuizOption(with: key, isCorrect: value)
                 }
             }
         }
 
-        if let canChangeResponse = pollQuestion["can_change_response"] as? Bool{
+        if let canChangeResponse = pollQuestion["can_change_response"] as? Bool {
             pollQuestionBuilder.withCanChangeResponse(canChangeResponse: canChangeResponse)
         }
 
         return pollQuestionBuilder
     }
 
-    
 }

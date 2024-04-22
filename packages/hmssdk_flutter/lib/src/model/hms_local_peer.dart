@@ -27,7 +27,8 @@ class HMSLocalPeer extends HMSPeer {
       List<HMSTrack>? auxiliaryTracks,
       HMSNetworkQuality? networkQuality,
       DateTime? joinedAt,
-      DateTime? updatedAt})
+      DateTime? updatedAt,
+      HMSPeerType type = HMSPeerType.regular})
       : super(
             isLocal: isLocal,
             name: name,
@@ -41,32 +42,35 @@ class HMSLocalPeer extends HMSPeer {
             auxiliaryTracks: auxiliaryTracks,
             networkQuality: networkQuality,
             joinedAt: joinedAt,
-            updatedAt: updatedAt);
+            updatedAt: updatedAt,
+            type: type);
 
   factory HMSLocalPeer.fromMap(Map map) {
     return HMSLocalPeer(
-      peerId: map['peer_id'],
-      name: map['name'],
-      isLocal: map['is_local'],
-      isHandRaised: map['is_hand_raised'],
-      role: HMSRole.fromMap(map['role']),
-      metadata: map['metadata'],
-      customerUserId: map['customer_user_id'],
-      audioTrack: map["audio_track"] != null
-          ? HMSLocalAudioTrack.fromMap(map: map["audio_track"])
-          : null,
-      videoTrack: map["video_track"] != null
-          ? HMSLocalVideoTrack.fromMap(map: map["video_track"])
-          : null,
-      networkQuality: map["network_quality"] != null
-          ? HMSNetworkQuality.fromMap(map["network_quality"])
-          : null,
-      joinedAt: map.containsKey("joined_at")
-          ? HMSDateExtension.convertDateFromEpoch(map["joined_at"])
-          : null,
-      updatedAt: map.containsKey("updated_at")
-          ? HMSDateExtension.convertDateFromEpoch(map["updated_at"])
-          : null,
-    );
+        peerId: map['peer_id'],
+        name: map['name'],
+        isLocal: map['is_local'],
+        isHandRaised: map['is_hand_raised'],
+        role: HMSRole.fromMap(map['role']),
+        metadata: map['metadata'],
+        customerUserId: map['customer_user_id'],
+        audioTrack: map["audio_track"] != null
+            ? HMSLocalAudioTrack.fromMap(map: map["audio_track"])
+            : null,
+        videoTrack: map["video_track"] != null
+            ? HMSLocalVideoTrack.fromMap(map: map["video_track"])
+            : null,
+        networkQuality: map["network_quality"] != null
+            ? HMSNetworkQuality.fromMap(map["network_quality"])
+            : null,
+        joinedAt: map.containsKey("joined_at")
+            ? HMSDateExtension.convertDateFromEpoch(map["joined_at"])
+            : null,
+        updatedAt: map.containsKey("updated_at")
+            ? HMSDateExtension.convertDateFromEpoch(map["updated_at"])
+            : null,
+        type: map.containsKey("type")
+            ? HMSPeerTypevalues.getPeerTypeFromString(map["type"])
+            : HMSPeerType.regular);
   }
 }

@@ -56,6 +56,8 @@ class MeetingScreenController extends StatefulWidget {
   ///[hmsSDKInteractor] is used to interact with the SDK
   final HMSSDKInteractor hmsSDKInteractor;
 
+  final bool isNoiseCancellationEnabled;
+
   const MeetingScreenController(
       {Key? key,
       required this.user,
@@ -68,7 +70,8 @@ class MeetingScreenController extends StatefulWidget {
       this.currentAudioDeviceMode = HMSAudioDevice.AUTOMATIC,
       this.options,
       this.tokenData,
-      required this.hmsSDKInteractor})
+      required this.hmsSDKInteractor,
+      this.isNoiseCancellationEnabled = false})
       : super(key: key);
 
   @override
@@ -95,7 +98,6 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
         null) {
       _setHLSPlayerStore();
     }
-    Utilities.initForegroundTask();
   }
 
   ///This function joins the room only if the name is not empty
@@ -142,6 +144,8 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
                       : MeetingPage(
                           isRoomMute: widget.isRoomMute,
                           currentAudioDeviceMode: widget.currentAudioDeviceMode,
+                          isNoiseCancellationEnabled:
+                              widget.isNoiseCancellationEnabled,
                         );
                 }),
           );

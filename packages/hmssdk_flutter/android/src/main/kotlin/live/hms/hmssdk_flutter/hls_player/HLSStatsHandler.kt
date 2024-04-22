@@ -66,7 +66,11 @@ class HLSStatsHandler {
                     }
                 },
             ) ?: run {
-                HMSErrorLogger.logError("addHLSStatsListener", "hlsPlayer is null, Consider calling this method after attaching the HMSHLSPlayer or sending isHLSStatsRequired as true to get the stats", "NULL_ERROR")
+                HMSErrorLogger.logError(
+                    "addHLSStatsListener",
+                    "hlsPlayer is null, Consider calling this method after attaching the HMSHLSPlayer or sending isHLSStatsRequired as true to get the stats",
+                    "NULL_ERROR",
+                )
             }
         }
 

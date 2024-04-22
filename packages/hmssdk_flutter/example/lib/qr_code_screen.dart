@@ -1,10 +1,15 @@
-import 'dart:io';
+///Dart imports
+import 'dart:developer';
 
+///Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hmssdk_flutter_example/foreground_task_handler.dart';
 import 'package:hmssdk_flutter_example/room_service.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
+///[QRCodeScreen] is a StatefulWidget that is used to handle the scan the QR code functionality
 class QRCodeScreen extends StatefulWidget {
   final String uuidString;
   QRCodeScreen({Key? key, required this.uuidString}) : super(key: key);
@@ -15,83 +20,84 @@ class QRCodeScreen extends StatefulWidget {
 
 class _QRCodeScreenState extends State<QRCodeScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  QRViewController? controller;
 
   @override
   void reassemble() {
     super.reassemble();
-    if (Platform.isAndroid) {
-      controller!.pauseCamera();
-    } else if (Platform.isIOS) {
-      controller!.resumeCamera();
-    }
   }
 
   @override
   void dispose() {
-    controller?.dispose();
     super.dispose();
   }
 
-  void _onQRViewCreated(QRViewController qrController) {
-    this.controller = qrController;
-    controller!.resumeCamera();
-    controller!.scannedDataStream.listen((scanData) async {
-      if (scanData.code != null) {
-        controller!.pauseCamera();
-        FocusManager.instance.primaryFocus?.unfocus();
+  void _onQRViewCreated(BarcodeCapture barcodeCapture) async {
+    try {
+      final List<Barcode> barcodes = barcodeCapture.barcodes;
+      if (barcodes.isNotEmpty) {
+        log(barcodes[0].rawValue ?? "");
+        String? rawValue = barcodes[0].rawValue;
+        if (rawValue != null) {
+          FocusManager.instance.primaryFocus?.unfocus();
 
-        Map<String, String>? endPoints;
-        if (scanData.code!.trim().contains("app.100ms.live")) {
-          List<String?>? roomData = RoomService.getCode(scanData.code!.trim());
+          Map<String, String>? endPoints;
+          if (rawValue.trim().contains("app.100ms.live")) {
+            List<String?>? roomData = RoomService.getCode(rawValue.trim());
 
-          //If the link is not valid then we might not get the code and whether the link is a
-          //PROD or QA so we return the error in this case
-          if (roomData == null || roomData.isEmpty) {
-            return;
+            //If the link is not valid then we might not get the code and whether the link is a
+            //PROD or QA so we return the error in this case
+            if (roomData == null || roomData.isEmpty) {
+              return;
+            }
+
+            ///************************************************************************************************** */
+
+            ///This section can be safely commented out as it's only required for 100ms internal usage
+
+            //qaTokenEndPoint is only required for 100ms internal testing
+            //It can be removed and should not affect the join method call
+            //For _endPoint just pass it as null
+            //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
+            //Pass the layoutAPIEndPoint as null the qa endPoint is only for 100ms internal testing
+
+            ///If you wish to set your own token end point then you can pass it in the endPoints map
+            ///The key for the token end point is "tokenEndPointKey"
+            ///The key for the init end point is "initEndPointKey"
+            ///The key for the layout api end point is "layoutAPIEndPointKey"
+            if (roomData[1] == "false") {
+              endPoints = RoomService.setEndPoints();
+            }
+
+            ///************************************************************************************************** */
+
+            Constant.roomCode = roomData[0] ?? '';
+          } else {
+            Constant.roomCode = rawValue.trim();
           }
-
-          ///************************************************************************************************** */
-
-          ///This section can be safely commented out as it's only required for 100ms internal usage
-
-          //qaTokenEndPoint is only required for 100ms internal testing
-          //It can be removed and should not affect the join method call
-          //For _endPoint just pass it as null
-          //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
-          //Pass the layoutAPIEndPoint as null the qa endPoint is only for 100ms internal testing
-
-          ///If you wish to set your own token end point then you can pass it in the endPoints map
-          ///The key for the token end point is "tokenEndPointKey"
-          ///The key for the init end point is "initEndPointKey"
-          ///The key for the layout api end point is "layoutAPIEndPointKey"
-          if (roomData[1] == "false") {
-            endPoints = RoomService.setEndPoints();
-          }
-
-          ///************************************************************************************************** */
-
-          Constant.roomCode = roomData[0] ?? '';
-        } else {
-          Constant.roomCode = scanData.code!.trim();
+          Utilities.saveStringData(key: "meetingLink", value: rawValue.trim());
+          await initForegroundTask();
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => WithForegroundTask(
+                    child: HMSPrebuilt(
+                        roomCode: Constant.roomCode,
+                        onLeave: stopForegroundTask,
+                        options: HMSPrebuiltOptions(
+                            userName: AppDebugConfig.nameChangeOnPreview
+                                ? null
+                                : "Flutter User",
+                            userId: widget.uuidString,
+                            endPoints: endPoints,
+                            iOSScreenshareConfig: HMSIOSScreenshareConfig(
+                                appGroup: "group.flutterhms",
+                                preferredExtension:
+                                    "live.100ms.flutter.FlutterBroadcastUploadExtension"),
+                            enableNoiseCancellation: true)),
+                  )));
         }
-        Utilities.saveStringData(
-            key: "meetingLink", value: scanData.code!.trim());
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => HMSPrebuilt(
-                roomCode: Constant.roomCode,
-                options: HMSPrebuiltOptions(
-                    userName: AppDebugConfig.nameChangeOnPreview
-                        ? null
-                        : "Flutter User",
-                    userId: widget.uuidString,
-                    endPoints: endPoints,
-                    iOSScreenshareConfig: HMSIOSScreenshareConfig(
-                        appGroup: "group.flutterhms",
-                        preferredExtension:
-                            "live.100ms.flutter.FlutterBroadcastUploadExtension")))));
       }
-    });
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   @override
@@ -142,19 +148,14 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                 height: 30,
               ),
               Container(
-                height:
-                    orientation == Orientation.portrait ? height * 0.75 : 500,
-                width: MediaQuery.of(context).size.width - 40,
-                child: QRView(
-                  key: qrKey,
-                  onQRViewCreated: _onQRViewCreated,
-                  overlay: QrScannerOverlayShape(
-                    borderRadius: 10,
-                    borderWidth: 5,
-                    borderColor: Colors.white,
-                  ),
-                ),
-              ),
+                  height:
+                      orientation == Orientation.portrait ? height * 0.75 : 500,
+                  width: MediaQuery.of(context).size.width - 40,
+                  child: MobileScanner(
+                      controller: MobileScannerController(
+                          detectionSpeed: DetectionSpeed.noDuplicates,
+                          facing: CameraFacing.back),
+                      onDetect: (capture) => _onQRViewCreated(capture))),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: SizedBox(

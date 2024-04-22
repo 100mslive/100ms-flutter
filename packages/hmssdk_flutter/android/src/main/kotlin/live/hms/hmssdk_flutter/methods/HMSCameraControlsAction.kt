@@ -98,7 +98,11 @@ class HMSCameraControlsAction {
                             if (cameraControl.isFlashSupported()) {
                                 cameraControl.setFlash(true)
                             } else {
-                                HMSErrorLogger.logError("captureImageAtMaxSupportedResolution", "Flash is not supported for current facing camera", "Compatibility error")
+                                HMSErrorLogger.logError(
+                                    "captureImageAtMaxSupportedResolution",
+                                    "Flash is not supported for current facing camera",
+                                    "Compatibility error",
+                                )
                             }
                         }
                         cameraControl.captureImageAtMaxSupportedResolution(imageFile) { isSuccess ->
@@ -107,7 +111,9 @@ class HMSCameraControlsAction {
                             if (isSuccess) {
                                 result.success(HMSResultExtension.toDictionary(true, filePath))
                             } else {
-                                result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("Error in capturing image")))
+                                result.success(
+                                    HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("Error in capturing image")),
+                                )
                             }
                             if (withFlash) {
                                 cameraControl.setFlash(false)
@@ -177,7 +183,14 @@ class HMSCameraControlsAction {
                             result.success(HMSResultExtension.toDictionary(true, null))
                             return
                         } else {
-                            result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("Flash is not supported for current facing camera, Also please ensure camera is turned ON")))
+                            result.success(
+                                HMSResultExtension.toDictionary(
+                                    false,
+                                    HMSExceptionExtension.getError(
+                                        "Flash is not supported for current facing camera, Also please ensure camera is turned ON",
+                                    ),
+                                ),
+                            )
                             return
                         }
                     } ?: run {

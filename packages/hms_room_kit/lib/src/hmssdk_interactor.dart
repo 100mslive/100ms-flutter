@@ -20,6 +20,7 @@ import 'package:hms_room_kit/src/common/utility_functions.dart';
 ///[isAudioMixerDisabled] - This is used to disable the audio mixer for iOS. By default it's true.
 ///[audioMode] - This is used to set the audio mode. By default it's VOICE.
 ///[isPrebuilt] - This is used to set the prebuilt mode. By default it's false.
+///[isNoiseCancellationEnabled] - This is used to set the noise cancellation status in a call. Default value is false
 class HMSSDKInteractor {
   /// [hmsSDK] is the instance of the HMSSDK class which is used to interact with the SDK.
   late HMSSDK hmsSDK;
@@ -28,6 +29,7 @@ class HMSSDKInteractor {
   /// Remove [iOSScreenshareConfig] if your app does not implements Screen Share on iOS.
   /// [joinWithMutedAudio] & [joinWithMutedVideo] are required to set the initial audio/video state i.e what should be camera and mic
   /// state while room is joined. By default both audio and video are kept as unmute.
+  /// [isNoiseCancellationEnabled] - By default it's false and is used to enable noise cancellation in the call
   HMSSDKInteractor(
       {HMSIOSScreenshareConfig? iOSScreenshareConfig,
       bool joinWithMutedAudio = false,
@@ -35,7 +37,8 @@ class HMSSDKInteractor {
       bool isSoftwareDecoderDisabled = true,
       bool isAudioMixerDisabled = true,
       HMSAudioMode audioMode = HMSAudioMode.VOICE,
-      bool isPrebuilt = false}) {
+      bool isPrebuilt = false,
+      bool isNoiseCancellationEnabled = false}) {
     HMSLogSettings hmsLogSettings = HMSLogSettings(
         maxDirSizeInBytes: 1000000,
         isLogStorageEnabled: true,
@@ -46,7 +49,8 @@ class HMSSDKInteractor {
         joinWithMutedVideo: joinWithMutedVideo,
         joinWithMutedAudio: joinWithMutedAudio,
         isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
-        audioMode: audioMode);
+        audioMode: audioMode,
+        isNoiseCancellationEnabled: isNoiseCancellationEnabled);
 
     hmsSDK = HMSSDK(
         iOSScreenshareConfig: iOSScreenshareConfig,
@@ -474,5 +478,21 @@ class HMSSDKInteractor {
 
   Future<dynamic> getPollResults({required HMSPoll hmsPoll}) {
     return HMSPollInteractivityCenter.getPollResults(hmsPoll: hmsPoll);
+  }
+
+  void enableNoiseCancellation() {
+    HMSNoiseCancellationController.enable();
+  }
+
+  void disableNoiseCancellation() {
+    HMSNoiseCancellationController.disable();
+  }
+
+  Future<bool> isNoiseCancellationAvailable() {
+    return HMSNoiseCancellationController.isAvailable();
+  }
+
+  Future<bool> isNoiseCancellationEnabled() {
+    return HMSNoiseCancellationController.isEnabled();
   }
 }

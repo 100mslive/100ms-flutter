@@ -24,7 +24,7 @@ class HMSTitleText extends StatelessWidget {
   final double? fontSize;
   final FontWeight? fontWeight;
   final TextOverflow? textOverflow;
-  final int maxLines;
+  final int? maxLines;
 
   const HMSTitleText(
       {Key? key,
@@ -35,7 +35,7 @@ class HMSTitleText extends StatelessWidget {
       this.fontSize = 16,
       this.fontWeight = FontWeight.w600,
       this.textOverflow = TextOverflow.ellipsis,
-      this.maxLines = 1})
+      this.maxLines})
       : super(key: key);
 
   @override

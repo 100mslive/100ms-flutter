@@ -60,10 +60,16 @@ class HMSPeerListIteratorAction {
                         peerListIteratorOptions =
                             PeerListIteratorOptions(
                                 byRoleName = it["by_role_name"] as String?,
-                                byPeerIds = it["by_peer_ids"] as ArrayList<String>?, limit = limitValue,
+                                byPeerIds = it["by_peer_ids"] as ArrayList<String>?,
+                                limit = limitValue,
                             )
                     } ?: run {
-                        HMSErrorLogger.returnHMSException("getPeerListIterator", "limit parameter is null while peerListIteratorOptions is non-null", "NULL Error", result)
+                        HMSErrorLogger.returnHMSException(
+                            "getPeerListIterator",
+                            "limit parameter is null while peerListIteratorOptions is non-null",
+                            "NULL Error",
+                            result,
+                        )
                     }
                 }
 
@@ -100,7 +106,12 @@ class HMSPeerListIteratorAction {
                 peerListIterator?.let { iterator ->
                     result.success(HMSResultExtension.toDictionary(true, iterator.hasNext()))
                 } ?: run {
-                    HMSErrorLogger.returnHMSException("peerListIteratorHasNext", "No peerListIterator with given uid found", "NULL Error", result)
+                    HMSErrorLogger.returnHMSException(
+                        "peerListIteratorHasNext",
+                        "No peerListIterator with given uid found",
+                        "NULL Error",
+                        result,
+                    )
                 }
             } ?: run {
                 HMSErrorLogger.returnHMSException("peerListIteratorHasNext", "uid is null", "NULL Error", result)
@@ -128,7 +139,9 @@ class HMSPeerListIteratorAction {
                     iterator.next(
                         object : PeerListResultListener {
                             override fun onError(error: HMSException) {
-                                methodChannelResult.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)))
+                                methodChannelResult.success(
+                                    HMSResultExtension.toDictionary(false, HMSExceptionExtension.toDictionary(error)),
+                                )
                             }
 
                             override fun onSuccess(result: ArrayList<HMSPeer>) {
@@ -144,7 +157,12 @@ class HMSPeerListIteratorAction {
                         },
                     )
                 } ?: run {
-                    HMSErrorLogger.returnHMSException("peerListIteratorNext", "No peerListIterator with given uid found", "NULL Error", methodChannelResult)
+                    HMSErrorLogger.returnHMSException(
+                        "peerListIteratorNext",
+                        "No peerListIterator with given uid found",
+                        "NULL Error",
+                        methodChannelResult,
+                    )
                 }
             } ?: run {
                 HMSErrorLogger.returnHMSException("peerListIteratorNext", "uid is null", "NULL Error", methodChannelResult)

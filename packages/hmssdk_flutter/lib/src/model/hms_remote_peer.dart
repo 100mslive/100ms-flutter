@@ -34,7 +34,8 @@ class HMSRemotePeer extends HMSPeer {
       List<HMSTrack>? auxiliaryTracks,
       HMSNetworkQuality? networkQuality,
       DateTime? joinedAt,
-      DateTime? updatedAt})
+      DateTime? updatedAt,
+      HMSPeerType type = HMSPeerType.regular})
       : super(
             peerId: peerId,
             name: name,
@@ -48,7 +49,8 @@ class HMSRemotePeer extends HMSPeer {
             auxiliaryTracks: auxiliaryTracks,
             networkQuality: networkQuality,
             joinedAt: joinedAt,
-            updatedAt: updatedAt);
+            updatedAt: updatedAt,
+            type: type);
 
   ///important to compare using [peerId]
   @override
@@ -64,23 +66,25 @@ class HMSRemotePeer extends HMSPeer {
   factory HMSRemotePeer.fromMap(Map map) {
     HMSRole role = HMSRole.fromMap(map['role']);
     HMSRemotePeer peer = HMSRemotePeer(
-      peerId: map['peer_id'],
-      name: map['name'],
-      isLocal: map['is_local'],
-      isHandRaised: map['is_hand_raised'],
-      role: role,
-      metadata: map['metadata'],
-      customerUserId: map['customer_user_id'],
-      networkQuality: map["network_quality"] != null
-          ? HMSNetworkQuality.fromMap(map["network_quality"])
-          : null,
-      joinedAt: map.containsKey("joined_at")
-          ? HMSDateExtension.convertDateFromEpoch(map["joined_at"])
-          : null,
-      updatedAt: map.containsKey("updated_at")
-          ? HMSDateExtension.convertDateFromEpoch(map["updated_at"])
-          : null,
-    );
+        peerId: map['peer_id'],
+        name: map['name'],
+        isLocal: map['is_local'],
+        isHandRaised: map['is_hand_raised'],
+        role: role,
+        metadata: map['metadata'],
+        customerUserId: map['customer_user_id'],
+        networkQuality: map["network_quality"] != null
+            ? HMSNetworkQuality.fromMap(map["network_quality"])
+            : null,
+        joinedAt: map.containsKey("joined_at")
+            ? HMSDateExtension.convertDateFromEpoch(map["joined_at"])
+            : null,
+        updatedAt: map.containsKey("updated_at")
+            ? HMSDateExtension.convertDateFromEpoch(map["updated_at"])
+            : null,
+        type: map.containsKey("type")
+            ? HMSPeerTypevalues.getPeerTypeFromString(map["type"])
+            : HMSPeerType.regular);
 
     if (map['audio_track'] != null) {
       peer.audioRemoteTrack =

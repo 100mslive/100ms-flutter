@@ -23,6 +23,7 @@ export 'src/enum/hms_simulcast_layer.dart';
 export 'src/enum/hms_audio_mode.dart';
 export 'src/enum/hms_hls_playback_state.dart';
 export 'src/enum/hms_poll_enum.dart';
+export 'src/enum/hms_peer_type.dart';
 
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';
@@ -112,6 +113,7 @@ export 'src/model/polls/hms_poll_leaderboard_entry.dart';
 export 'src/model/polls/hms_poll_leaderboard_response.dart';
 export 'src/model/polls/hms_poll_leaderboard_summary.dart';
 export 'src/model/polls/hms_poll_peer_info_response.dart';
+export 'src/model/hms_noise_cancellation_controller.dart';
 
 //Views
 export 'src/ui/meeting/hms_texture_view.dart';

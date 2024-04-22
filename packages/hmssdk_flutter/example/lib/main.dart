@@ -3,21 +3,23 @@ import 'dart:async';
 import 'dart:ui';
 
 //Package imports
+import 'package:app_links/app_links.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter_example/app_settings_bottom_sheet.dart';
+import 'package:hmssdk_flutter_example/foreground_task_handler.dart';
 import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:hmssdk_flutter_example/room_service.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:uni_links/uni_links.dart';
 import 'package:uuid/uuid.dart';
 
 bool _initialURILinkHandled = false;
@@ -50,6 +52,13 @@ void main() async {
   runApp(HMSExampleApp(initialLink: initialLink?.link));
 }
 
+///This function sets up the foreground service interaction
+@pragma('vm:entry-point')
+void startCallback() {
+  // The setTaskHandler function must be called to handle the task in the background.
+  FlutterForegroundTask.setTaskHandler(ForegroundTaskHandler());
+}
+
 class HMSExampleApp extends StatefulWidget {
   final Uri? initialLink;
   HMSExampleApp({Key? key, this.initialLink}) : super(key: key);
@@ -64,6 +73,7 @@ class _HMSExampleAppState extends State<HMSExampleApp>
     with TickerProviderStateMixin {
   ThemeMode _themeMode = ThemeMode.dark;
   Uri? _currentURI;
+  AppLinks? _appLinks;
   late AnimationController _controller;
 
   ThemeData _darkTheme = ThemeData(
@@ -106,7 +116,8 @@ class _HMSExampleAppState extends State<HMSExampleApp>
         if (widget.initialLink != null) {
           return;
         }
-        _currentURI = await getInitialUri();
+        _appLinks = AppLinks();
+        _currentURI = await _appLinks?.getInitialAppLink();
         if (_currentURI != null) {
           if (!mounted) {
             return;
@@ -125,7 +136,7 @@ class _HMSExampleAppState extends State<HMSExampleApp>
 
   void _incomingLinkHandler() {
     if (!kIsWeb) {
-      _streamSubscription = uriLinkStream.listen((Uri? uri) {
+      _streamSubscription = _appLinks?.uriLinkStream.listen((Uri? uri) {
         if (!mounted) {
           return;
         }
@@ -318,22 +329,27 @@ class _HomePageState extends State<HomePage> {
     Utilities.saveStringData(
         key: "meetingLink", value: meetingLinkController.text.trim());
     FocusManager.instance.primaryFocus?.unfocus();
+    await initForegroundTask();
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (_) => HMSPrebuilt(
-                roomCode: Constant.roomCode,
-                options: HMSPrebuiltOptions(
-                    userName: AppDebugConfig.nameChangeOnPreview
-                        ? null
-                        : "Flutter User",
-                    endPoints: endPoints,
-                    userId:
-                        uuidString, // pass your custom unique user identifier here
-                    iOSScreenshareConfig: HMSIOSScreenshareConfig(
-                        appGroup: "group.flutterhms",
-                        preferredExtension:
-                            "live.100ms.flutter.FlutterBroadcastUploadExtension")))));
+            builder: (_) => WithForegroundTask(
+                  child: HMSPrebuilt(
+                      roomCode: Constant.roomCode,
+                      onLeave: stopForegroundTask,
+                      options: HMSPrebuiltOptions(
+                          userName: AppDebugConfig.nameChangeOnPreview
+                              ? null
+                              : "Flutter User",
+                          endPoints: endPoints,
+                          userId:
+                              uuidString, // pass your custom unique user identifier here
+                          iOSScreenshareConfig: HMSIOSScreenshareConfig(
+                              appGroup: "group.flutterhms",
+                              preferredExtension:
+                                  "live.100ms.flutter.FlutterBroadcastUploadExtension"),
+                          enableNoiseCancellation: true)),
+                )));
   }
 
   @override
