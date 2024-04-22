@@ -55,7 +55,7 @@ class HMSHLSPlayerAction {
             val hlsUrl = call.argument<String?>("hls_url")
             hlsActions?.let {
                 it.get()?.start(hlsUrl, result)
-            }?:run{
+            } ?: run {
                 HMSErrorLogger.logError("start", "hlsActions is NULL", "NULL Error")
             }
         }
@@ -68,7 +68,7 @@ class HMSHLSPlayerAction {
         private fun stop(result: Result) {
             hlsActions?.let {
                 it.get()?.stop(result)
-            }?:run{
+            } ?: run {
                 HMSErrorLogger.logError("stop", "hlsActions is NULL", "NULL Error")
             }
         }
@@ -81,7 +81,7 @@ class HMSHLSPlayerAction {
         private fun pause(result: Result) {
             hlsActions?.let {
                 it.get()?.pause(result)
-            }?:run{
+            } ?: run {
                 HMSErrorLogger.logError("pause", "hlsActions is NULL", "NULL Error")
             }
         }
@@ -94,7 +94,7 @@ class HMSHLSPlayerAction {
         private fun resume(result: Result) {
             hlsActions?.let {
                 it.get()?.resume(result)
-            }?:run{
+            } ?: run {
                 HMSErrorLogger.logError("resume", "hlsActions is NULL", "NULL Error")
             }
         }
@@ -107,7 +107,7 @@ class HMSHLSPlayerAction {
         private fun seekToLivePosition(result: Result) {
             hlsActions?.let {
                 it.get()?.seekToLivePosition(result)
-            }?:run{
+            } ?: run {
                 HMSErrorLogger.logError("seekToLivePosition", "hlsActions is NULL", "NULL Error")
             }
         }
@@ -129,9 +129,9 @@ class HMSHLSPlayerAction {
                 }
 
             seconds?.let {
-                hlsActions?.let {_hlsActions ->
+                hlsActions?.let { _hlsActions ->
                     _hlsActions.get()?.seekForward(it, result)
-                }?:run{
+                } ?: run {
                     HMSErrorLogger.logError("seekForward", "hlsActions is NULL", "NULL Error")
                 }
             }
@@ -156,7 +156,7 @@ class HMSHLSPlayerAction {
             seconds?.let {
                 hlsActions?.let { _hlsActions ->
                     _hlsActions.get()?.seekBackward(it, result)
-                }?:run{
+                } ?: run {
                     HMSErrorLogger.logError("seekBackward", "hlsActions is NULL", "NULL Error")
                 }
             }
@@ -179,9 +179,9 @@ class HMSHLSPlayerAction {
                 }
 
             volume?.let {
-                hlsActions?.let {_hlsActions ->
-                    _hlsActions.get()?.setVolume(it,result)
-                }?:run{
+                hlsActions?.let { _hlsActions ->
+                    _hlsActions.get()?.setVolume(it, result)
+                } ?: run {
                     HMSErrorLogger.logError("setVolume", "hlsActions is NULL", "NULL Error")
                 }
             }
@@ -193,10 +193,9 @@ class HMSHLSPlayerAction {
          * @param result The result object to be returned after adding the HLS stats listener.
          */
         private fun addHLSStatsListener(result: Result) {
-
             hlsActions?.let {
                 it.get()?.addHLSStatsListener(result)
-            }?:run{
+            } ?: run {
                 HMSErrorLogger.logError("addHLSStatsListener", "hlsActions is NULL", "NULL Error")
             }
         }
@@ -209,7 +208,7 @@ class HMSHLSPlayerAction {
         private fun removeHLSStatsListener(result: Result) {
             hlsActions?.let {
                 it.get()?.removeHLSStatsListener(result)
-            }?:run{
+            } ?: run {
                 HMSErrorLogger.logError("removeHLSStatsListener", "hlsActions is NULL", "NULL Error")
             }
         }
@@ -223,7 +222,7 @@ class HMSHLSPlayerAction {
         private fun areClosedCaptionsSupported(result: Result) {
             hlsActions?.let {
                 it.get()?.areClosedCaptionsSupported(result)
-            }?:run{
+            } ?: run {
                 HMSErrorLogger.logError("areClosedCaptionsSupported", "hlsActions is NULL", "NULL Error")
             }
         }
@@ -236,7 +235,7 @@ class HMSHLSPlayerAction {
         private fun enableClosedCaptions(result: Result) {
             hlsActions?.let {
                 it.get()?.enableClosedCaptions(result)
-            }?:run{
+            } ?: run {
                 HMSErrorLogger.logError("enableClosedCaptions", "hlsActions is NULL", "NULL Error")
             }
         }
@@ -249,7 +248,7 @@ class HMSHLSPlayerAction {
         private fun disableClosedCaptions(result: Result) {
             hlsActions?.let {
                 it.get()?.disableClosedCaptions(result)
-            }?:run{
+            } ?: run {
                 HMSErrorLogger.logError("disableClosedCaptions", "hlsActions is NULL", "NULL Error")
             }
         }

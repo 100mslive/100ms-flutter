@@ -23,9 +23,11 @@ import 'package:hms_room_kit/src/widgets/toasts/hms_toast_button.dart';
 class ChatTextField extends StatefulWidget {
   final Function sendMessage;
   final Color? toastBackgroundColor;
+  final bool isHLSChat;
   const ChatTextField(
       {Key? key,
       required this.sendMessage,
+      this.isHLSChat = false,
       this.toastBackgroundColor})
       : super(key: key);
 

@@ -302,14 +302,14 @@ packages:
       path: "../../hms_room_kit"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.1.1"
   hmssdk_flutter:
     dependency: transitive
     description:
       path: ".."
       relative: true
     source: path
-    version: "1.10.0"
+    version: "1.10.1"
   http:
     dependency: transitive
     description:

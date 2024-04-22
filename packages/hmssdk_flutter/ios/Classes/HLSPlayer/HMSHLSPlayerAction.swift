@@ -58,6 +58,15 @@ class HMSHLSPlayerAction {
         case "disable_closed_captions":
             disableClosedCaptions(result)
 
+        case "are_closed_captions_supported":
+            areClosedCaptionsSupported(result)
+
+        case "enable_closed_captions":
+            enableClosedCaptions(result)
+
+        case "disable_closed_captions":
+            disableClosedCaptions(result)
+
         default:
             result(FlutterMethodNotImplemented)
         }
