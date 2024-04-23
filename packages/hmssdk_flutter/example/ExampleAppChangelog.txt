@@ -1,34 +1,15 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 
-- Added active noise cancellation feature
-https://100ms.atlassian.net/browse/FLUT-259
+- Added Captions in HLS Player
+https://100ms.atlassian.net/browse/FLUT-265
 
-- Added SIP Peer support
-https://100ms.atlassian.net/browse/FLUT-260
+- Pinch & Zoom on HLS Player
+https://100ms.atlassian.net/browse/FLUT-268
 
-- Fixed: UI inconsistent when using a Screenshare only Role
-https://100ms.atlassian.net/browse/FLUT-279
+- Full Screen Landscape UI
+https://100ms.atlassian.net/browse/FLUT-269
 
-- Removed `flutter_foreground_task` from `hms_room_kit`
-https://100ms.atlassian.net/browse/FLUT-280
-
-- Main Player UI with Chat below
-https://100ms.atlassian.net/browse/FLUT-262
-
-- Description Pane
-https://100ms.atlassian.net/browse/FLUT-263
-
-- Remove webrtc header and footer + Bottom toolbar from HLS screen
-https://100ms.atlassian.net/browse/FLUT-264
-
-- New Player Controls (Auto hide/overlay)
-https://100ms.atlassian.net/browse/FLUT-266
-
-- Header + Description from Layout API in Description Pane
-https://100ms.atlassian.net/browse/FLUT-271
-
-
-Room Kit: 1.1.0
-Core SDK: 1.10.0
-Android SDK: 2.9.53
-iOS SDK: 1.8.0
+Room Kit: 1.1.1
+Core SDK: 1.10.1
+Android SDK: 2.9.54
+iOS SDK: 1.9.0
