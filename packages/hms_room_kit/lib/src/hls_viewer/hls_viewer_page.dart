@@ -71,6 +71,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
     HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(
         context.read<HLSPlayerStore>());
     context.read<HLSPlayerStore>().setHLSPlayerStats(false);
+    context.read<HLSPlayerStore>().cancelTimer();
     super.deactivate();
   }
 

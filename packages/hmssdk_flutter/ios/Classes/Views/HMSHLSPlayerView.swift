@@ -203,8 +203,6 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
             }else{
                 HMSErrorLogger.logError("\(#function)", "Closed Captions are not supported", "SUPPORT ERROR")
             }
-            result?(nil)
-            
         case "disable_closed_captions":
             let result = notification.userInfo?["result"] as? FlutterResult
             let player = hlsPlayer?._nativePlayer
@@ -215,7 +213,24 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
             if let _ = playerItem.currentMediaSelection.selectedMediaOption(in: availableSubtitleTracks) {
                 playerItem.select(nil, in: availableSubtitleTracks)
             }
-            result?(nil)
+            
+        case "get_stream_properties":
+            let result = notification.userInfo?["result"] as? FlutterResult
+            let player = hlsPlayer?._nativePlayer
+            guard let playerItem = player?.currentItem else {return }
+            
+            var map = [String:Any?]()
+            
+            let duration = playerItem.duration
+        
+            if duration.isIndefinite {
+                guard let timeRange = playerItem.seekableTimeRanges.last as? CMTimeRange else { return }
+                
+                map["rolling_window_time"] = timeRange.duration.seconds
+            }else{
+                map["stream_duration"] = duration.seconds
+            }
+            result?(map)
             
         default:
             return

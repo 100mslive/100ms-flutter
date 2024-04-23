@@ -363,6 +363,16 @@ class HMSHLSPlayer(
                     areCaptionsEnabled = false
                     result.success(null)
                 }
+
+                override fun getStreamProperties(result: Result) {
+                    val map = HashMap<String,Any?>()
+
+                    map["rolling_window_time"] =
+                        hlsPlayer?.getNativePlayer()?.seekParameters?.toleranceAfterUs?.div(1000000);
+                    map["stream_duration"] = hlsPlayer?.getNativePlayer()?.duration?.div(1000)
+
+                    result.success(map)
+                }
             }
     }
     /********************************************/

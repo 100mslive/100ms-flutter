@@ -15,13 +15,11 @@ import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 class HLSViewerBottomNavigationBar extends StatelessWidget {
   const HLSViewerBottomNavigationBar({super.key});
 
-
   String _setTimeFromLive(Duration time) {
     int minutes = time.inMinutes;
     int seconds = time.inSeconds.remainder(60);
 
-    return
-        "-${minutes > 0 ? "${minutes.toString().padLeft(2, '0')}:" : ""}${seconds.toString().padLeft(2, '0')}s";
+    return "-${minutes > 0 ? "${minutes.toString().padLeft(2, '0')}:" : ""}${seconds.toString().padLeft(2, '0')}s";
   }
 
   @override
@@ -132,7 +130,8 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                                                                   .only(
                                                                   left: 8.0),
                                                           child: HMSTitleText(
-                                                            text: _setTimeFromLive(timeFromLive),
+                                                            text: _setTimeFromLive(
+                                                                timeFromLive),
                                                             textColor:
                                                                 HMSThemeColors
                                                                     .baseWhite,
@@ -175,10 +174,12 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                 selector: (_, hlsPlayerStore) =>
                     hlsPlayerStore.areStreamControlsVisible,
                 builder: (_, areStreamControlsVisible, __) {
-                  return areStreamControlsVisible?Padding(
-                    padding: const EdgeInsets.only(top: 8, bottom: 4 ),
-                    child: HLSPlayerSeekbar(),
-                  ):const SizedBox();
+                  return areStreamControlsVisible
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 8, bottom: 4),
+                          child: HLSPlayerSeekbar(),
+                        )
+                      : const SizedBox();
                 })
           ],
         ),

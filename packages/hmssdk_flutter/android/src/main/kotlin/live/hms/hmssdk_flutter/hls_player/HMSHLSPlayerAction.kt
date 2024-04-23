@@ -32,6 +32,7 @@ class HMSHLSPlayerAction {
                 "are_closed_captions_supported" -> areClosedCaptionsSupported(result)
                 "enable_closed_captions" -> enableClosedCaptions(result)
                 "disable_closed_captions" -> disableClosedCaptions(result)
+                "get_stream_properties" -> getStreamProperties(result)
                 else -> {
                     result.notImplemented()
                 }
@@ -250,6 +251,14 @@ class HMSHLSPlayerAction {
                 it.get()?.disableClosedCaptions(result)
             } ?: run {
                 HMSErrorLogger.logError("disableClosedCaptions", "hlsActions is NULL", "NULL Error")
+            }
+        }
+
+        private fun getStreamProperties(result:Result){
+            hlsActions?.let {
+                it.get()?.getStreamProperties(result)
+            } ?: run {
+                HMSErrorLogger.logError("getStreamProperties", "hlsActions is NULL", "NULL Error")
             }
         }
     }
