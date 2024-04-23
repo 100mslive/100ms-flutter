@@ -7,12 +7,22 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
+import 'package:hms_room_kit/src/hls_viewer/hls_player_seekbar.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 
 ///[HLSViewerBottomNavigationBar] is the bottom navigation bar for the HLS Viewer
 class HLSViewerBottomNavigationBar extends StatelessWidget {
   const HLSViewerBottomNavigationBar({super.key});
+
+
+  String _setTimeFromLive(Duration time) {
+    int minutes = time.inMinutes;
+    int seconds = time.inSeconds.remainder(60);
+
+    return
+        "-${minutes > 0 ? "${minutes.toString().padLeft(2, '0')}:" : ""}${seconds.toString().padLeft(2, '0')}s";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,30 +64,89 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            ///This renders the go live button
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () => {
-                                    HMSHLSPlayerController.seekToLivePosition()
-                                  },
-                                  child: Row(
+                            ///This renders the go live/live button
+                            Selector<HLSPlayerStore, bool>(
+                                selector: (_, hlsPlayerStore) =>
+                                    hlsPlayerStore.isLive,
+                                builder: (_, isLive, __) {
+                                  return Row(
                                     children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 8.0),
-                                        child: SvgPicture.asset(
-                                            "packages/hms_room_kit/lib/src/assets/icons/red_dot.svg"),
-                                      ),
-                                      HMSTitleText(
-                                          text: "LIVE",
-                                          textColor: HMSThemeColors
-                                              .onSurfaceHighEmphasis)
+                                      GestureDetector(
+                                        onTap: () => {
+                                          if (!isLive)
+                                            {
+                                              HMSHLSPlayerController
+                                                  .seekToLivePosition()
+                                            }
+                                        },
+                                        child: isLive
+                                            ? Row(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 8.0),
+                                                    child: SvgPicture.asset(
+                                                      "packages/hms_room_kit/lib/src/assets/icons/red_dot.svg",
+                                                      height: 8,
+                                                      width: 8,
+                                                    ),
+                                                  ),
+                                                  HMSTitleText(
+                                                      text: "LIVE",
+                                                      textColor: HMSThemeColors
+                                                          .onSurfaceHighEmphasis)
+                                                ],
+                                              )
+                                            : Row(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 8.0),
+                                                    child: SvgPicture.asset(
+                                                      "packages/hms_room_kit/lib/src/assets/icons/red_dot.svg",
+                                                      height: 8,
+                                                      width: 8,
+                                                      colorFilter: ColorFilter.mode(
+                                                          HMSThemeColors
+                                                              .onSurfaceLowEmphasis,
+                                                          BlendMode.srcIn),
+                                                    ),
+                                                  ),
+                                                  HMSTitleText(
+                                                      text: "GO LIVE",
+                                                      textColor: HMSThemeColors
+                                                          .onSurfaceMediumEmphasis),
+                                                  Selector<HLSPlayerStore,
+                                                          Duration>(
+                                                      selector:
+                                                          (_, hlsPlayerStore) =>
+                                                              hlsPlayerStore
+                                                                  .timeFromLive,
+                                                      builder: (_, timeFromLive,
+                                                          __) {
+                                                        return Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  left: 8.0),
+                                                          child: HMSTitleText(
+                                                            text: _setTimeFromLive(timeFromLive),
+                                                            textColor:
+                                                                HMSThemeColors
+                                                                    .baseWhite,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                          ),
+                                                        );
+                                                      })
+                                                ],
+                                              ),
+                                      )
                                     ],
-                                  ),
-                                )
-                              ],
-                            ),
+                                  );
+                                }),
 
                             ///This renders the minimize/maximize button
                             ///to toggle the full screen mode
@@ -101,6 +170,16 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                         )
                       : const SizedBox();
                 }),
+
+            Selector<HLSPlayerStore, bool>(
+                selector: (_, hlsPlayerStore) =>
+                    hlsPlayerStore.areStreamControlsVisible,
+                builder: (_, areStreamControlsVisible, __) {
+                  return areStreamControlsVisible?Padding(
+                    padding: const EdgeInsets.only(top: 8, bottom: 4 ),
+                    child: HLSPlayerSeekbar(),
+                  ):const SizedBox();
+                })
           ],
         ),
       ),

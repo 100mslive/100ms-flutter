@@ -33,8 +33,8 @@ class HLSPlayer extends StatelessWidget {
                           hlsPlayerStore.isFullScreen,
                       builder: (_, isFullScreen, __) {
                         return InteractiveViewer(
-                          panEnabled: isFullScreen,
-                          scaleEnabled: isFullScreen,
+                          minScale: 1,
+                          maxScale: 8,
                           child: Align(
                             alignment: Alignment.center,
                             child: Selector<HLSPlayerStore, Size>(

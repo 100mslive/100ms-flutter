@@ -29,6 +29,12 @@ class HLSPlayerStore extends ChangeNotifier
   ///This variable stores whether the captions are supported or not
   bool areCaptionsSupported = false;
 
+  ///This variable stores whether the stream is at live edge or not
+  bool isLive = true;
+
+  ///This variable stores the time from live edge
+  Duration timeFromLive = Duration(milliseconds: 0);
+
   ///This variable stores whether the chat is opened or not
   ///The initial value is taken from the [HMSRoomLayout.chatData]
   bool isChatOpened = (HMSRoomLayout.chatData?.isOpenInitially ?? false) &&
@@ -164,7 +170,9 @@ class HLSPlayerStore extends ChangeNotifier
 
   @override
   void onHLSEventUpdate({required HMSHLSPlayerStats playerStats}) {
-    log("onHLSEventUpdate-> bitrate:${playerStats.averageBitrate} buffered duration: ${playerStats.bufferedDuration}");
+    log("onHLSEventUpdate-> distanceFromLive: ${playerStats.distanceFromLive} buffered duration: ${playerStats.bufferedDuration}");
+    isLive = playerStats.distanceFromLive < 2000;
+    timeFromLive = Duration(milliseconds: playerStats.distanceFromLive.toInt());
     hlsPlayerStats = playerStats;
     notifyListeners();
   }
@@ -181,6 +189,7 @@ class HLSPlayerStore extends ChangeNotifier
     switch (playbackState) {
       case HMSHLSPlaybackState.PLAYING:
         areClosedCaptionsSupported();
+        setHLSPlayerStats(true);
         isStreamPlaying = true;
         isPlayerFailed = false;
         break;
