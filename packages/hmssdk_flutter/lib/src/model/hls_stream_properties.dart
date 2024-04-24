@@ -10,7 +10,7 @@ class HLSStreamProperties {
 
   factory HLSStreamProperties.fromMap(Map<dynamic, dynamic> map) {
     return HLSStreamProperties(
-        rollingWindowTime: map['rolling_window_time'],
-        streamDuration: map['stream_duration']);
+        rollingWindowTime: map['rolling_window_time'] != null?map["rolling_window_time"].toDouble():null,
+        streamDuration: map['stream_duration']!= null?map["stream_duration"].toDouble():null);
   }
 }
