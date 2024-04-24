@@ -1,8 +1,12 @@
 library;
 
+///Dart imports
+import 'dart:io';
+
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -37,6 +41,21 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
         ///We also render the leave button, hand raise button, chat button and the menu button
         child: Column(
           children: [
+            if(Platform.isAndroid)
+            Selector<HLSPlayerStore, String?>(
+                selector: (_, hlsPlayerStore) => hlsPlayerStore.caption,
+                builder: (_, caption, __) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom:4.0,left: 4,right: 4),
+                    child: HMSSubheadingText(
+                      text: caption ?? "",
+                      textColor: HMSThemeColors.baseWhite,
+                      fontWeight: FontWeight.w600,
+                      maxLines: 5,
+                    ),
+                  );
+                }),
+
             ///Chat Component only visible when the chat is opened
             // if (HMSRoomLayout.chatData != null)
             //   Selector<HLSPlayerStore, bool>(

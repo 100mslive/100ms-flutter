@@ -67,7 +67,6 @@ class _HLSPlayerSeekbarState extends State<HLSPlayerSeekbar> {
                         value: seekBarValue.toDouble(),
                         onChanged: (value) {},
                         onChangeEnd: (value) {
-                          HMSHLSPlayerController.resume();
                           if (value > seekBarValue) {
                             HMSHLSPlayerController.seekForward(
                                 seconds: (value - seekBarValue).toInt());
@@ -75,6 +74,7 @@ class _HLSPlayerSeekbarState extends State<HLSPlayerSeekbar> {
                             HMSHLSPlayerController.seekBackward(
                                 seconds: (seekBarValue - value).toInt());
                           }
+                          HMSHLSPlayerController.resume();
                           _toggleIsInteracting(false);
                         },
                         onChangeStart: (_) {

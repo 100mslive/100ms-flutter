@@ -73,6 +73,8 @@ class HLSPlayerStore extends ChangeNotifier
   ///This variable handles the timer for fetching the stream properties
   Timer? _timer;
 
+  String? caption;
+
   ///This method starts a timer for 5 seconds and then hides the buttons
   ///
   ///[isStreamPlaying] is used to check if the video is playing or not
@@ -265,6 +267,11 @@ class HLSPlayerStore extends ChangeNotifier
 
   @override
   void onCues({required List<String> subtitles}) {
-    log("onCues -> subtitles: $subtitles");
+    log("onCues -> $subtitles");
+    String newSubtitles = subtitles.join(" ");
+    if(newSubtitles != caption){
+      caption = newSubtitles;
+    }
+    notifyListeners();
   }
 }

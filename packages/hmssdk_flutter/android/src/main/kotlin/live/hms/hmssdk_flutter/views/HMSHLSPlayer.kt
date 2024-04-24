@@ -2,6 +2,7 @@ package live.hms.hmssdk_flutter.views
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import androidx.media3.common.Player
 import androidx.media3.common.VideoSize
@@ -74,6 +75,11 @@ class HMSHLSPlayer(
 
             // Set the native player of the HLS player view.
             it.player = hlsPlayer?.getNativePlayer()
+
+            ///Hiding Subtitles
+            if(!showHLSControls){
+                it.subtitleView?.visibility = View.GONE
+            }
             it.player?.addListener(
                 object : Player.Listener {
                     override fun onSurfaceSizeChanged(
