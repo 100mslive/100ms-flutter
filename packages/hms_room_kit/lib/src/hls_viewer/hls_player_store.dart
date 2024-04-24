@@ -18,7 +18,7 @@ class HLSPlayerStore extends ChangeNotifier
   ///[timeBeforeLive] is the time to show the go live button
   ///It is set to 10 seconds for Android and 1 second for iOS
   ///Basically `Go Live` will only be shown if the distance from live is greater than this value
-  final int timeBeforeLive = Platform.isAndroid ? 10000 : 1000;
+  final int timeBeforeLive = Platform.isAndroid ? 10000 : 5000;
 
   ///This variable stores whether the application is in full screen or not
   bool isFullScreen = false;
