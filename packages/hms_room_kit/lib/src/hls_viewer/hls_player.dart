@@ -74,6 +74,8 @@ class HLSPlayer extends StatelessWidget {
                   child: HLSPlayerOverlayOptions(
                     hasHLSStarted: hasHLSStarted,
                   )),
+
+              ///This renders the circular progress indicator when the player is buffering or failed
               Selector<HLSPlayerStore, HMSHLSPlaybackState>(
                 selector: (_, hlsPlayerStore) =>
                     hlsPlayerStore.playerPlaybackState,

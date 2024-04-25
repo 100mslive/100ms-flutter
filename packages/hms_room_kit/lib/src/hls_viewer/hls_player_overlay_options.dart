@@ -15,19 +15,30 @@ class HLSPlayerOverlayOptions extends StatelessWidget {
   const HLSPlayerOverlayOptions({super.key, required this.hasHLSStarted});
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    ///Here top and bottom navigation bar are in Column
+    ///while mid section is above the Column
+    ///This is done to avoid overflowing in case of 
+    ///large transcription
+    return Stack(
       children: [
-        HLSViewerHeader(
-          hasHLSStarted: hasHLSStarted,
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            HLSViewerHeader(
+              hasHLSStarted: hasHLSStarted,
+            ),
+
+            ///Renders the bottom navigation bar if the HLS has started
+            ///Otherwise does not render the bottom navigation bar
+            hasHLSStarted ? HLSViewerBottomNavigationBar() : const SizedBox()
+          ],
         ),
 
         ///This renders the pause/play button
-        hasHLSStarted ? HLSViewerMidSection() : const SizedBox(),
-
-        ///Renders the bottom navigation bar if the HLS has started
-        ///Otherwise does not render the bottom navigation bar
-        hasHLSStarted ? HLSViewerBottomNavigationBar() : const SizedBox()
+        Align(
+          alignment: Alignment.center,
+          child: hasHLSStarted ? HLSViewerMidSection() : const SizedBox(),
+        )
       ],
     );
   }

@@ -166,6 +166,11 @@ class HLSPlayerStore extends ChangeNotifier
   void areClosedCaptionsSupported() async {
     areCaptionsSupported =
         await HMSHLSPlayerController.areClosedCaptionsSupported();
+
+    ///If isCaptionEnabled is true we enable the captions
+    if (isCaptionEnabled) {
+      HMSHLSPlayerController.enableClosedCaptions();
+    }
     notifyListeners();
   }
 

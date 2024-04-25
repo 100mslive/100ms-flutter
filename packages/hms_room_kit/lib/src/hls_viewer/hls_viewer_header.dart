@@ -85,18 +85,20 @@ class HLSViewerHeader extends StatelessWidget {
                                           )
                                         : const SizedBox();
                                   }),
-                              const SizedBox(
-                                width: 16,
-                              ),
 
-                              ///This renders the settings button
-                              SvgPicture.asset(
-                                "packages/hms_room_kit/lib/src/assets/icons/settings.svg",
-                                colorFilter: ColorFilter.mode(
-                                    HMSThemeColors.onSurfaceHighEmphasis,
-                                    BlendMode.srcIn),
-                                semanticsLabel: "caption_toggle_button",
-                              )
+                              ///This will be added later
+                              // const SizedBox(
+                              //   width: 16,
+                              // ),
+
+                              // ///This renders the settings button
+                              // SvgPicture.asset(
+                              //   "packages/hms_room_kit/lib/src/assets/icons/settings.svg",
+                              //   colorFilter: ColorFilter.mode(
+                              //       HMSThemeColors.onSurfaceHighEmphasis,
+                              //       BlendMode.srcIn),
+                              //   semanticsLabel: "caption_toggle_button",
+                              // )
                             ],
                           )
                       ],
