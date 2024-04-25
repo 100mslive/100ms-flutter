@@ -17,7 +17,7 @@ class HLSPlayerOverlayOptions extends StatelessWidget {
   Widget build(BuildContext context) {
     ///Here top and bottom navigation bar are in Column
     ///while mid section is above the Column
-    ///This is done to avoid overflowing in case of 
+    ///This is done to avoid overflowing in case of
     ///large transcription
     return Stack(
       children: [
