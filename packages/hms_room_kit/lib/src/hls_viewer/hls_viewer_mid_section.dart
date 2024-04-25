@@ -20,23 +20,22 @@ class HLSViewerMidSection extends StatelessWidget {
         builder: (_, areStreamControlsVisible, __) {
           return areStreamControlsVisible
               ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: InkWell(
-                      onTap: () => {
-                        HMSHLSPlayerController.seekBackward(seconds: 10)
-                      },
-                      child: SvgPicture.asset(
-                                        "packages/hms_room_kit/lib/src/assets/icons/seek_backward.svg",
-                                        colorFilter: ColorFilter.mode(
-                                            HMSThemeColors.baseWhite, BlendMode.srcIn),
-                                      ),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: InkWell(
+                        onTap: () =>
+                            {HMSHLSPlayerController.seekBackward(seconds: 10)},
+                        child: SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/seek_backward.svg",
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.baseWhite, BlendMode.srcIn),
+                        ),
+                      ),
                     ),
-                  ),
-                  GestureDetector(
+                    GestureDetector(
                       onTap: () => {
                         context.read<HLSPlayerStore>().toggleStreamPlaying(),
                       },
@@ -53,28 +52,28 @@ class HLSViewerMidSection extends StatelessWidget {
                                   return SvgPicture.asset(
                                     "packages/hms_room_kit/lib/src/assets/icons/${isStreamPlaying ? "pause" : "play"}.svg",
                                     colorFilter: ColorFilter.mode(
-                                        HMSThemeColors.baseWhite, BlendMode.srcIn),
+                                        HMSThemeColors.baseWhite,
+                                        BlendMode.srcIn),
                                   );
                                 }),
                           ),
                         ),
                       ),
                     ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: InkWell(
-                      onTap: () => {
-                        HMSHLSPlayerController.seekForward(seconds: 10)
-                      },
-                      child: SvgPicture.asset(
-                                        "packages/hms_room_kit/lib/src/assets/icons/seek_forward.svg",
-                                        colorFilter: ColorFilter.mode(
-                                            HMSThemeColors.baseWhite, BlendMode.srcIn),
-                                      ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: InkWell(
+                        onTap: () =>
+                            {HMSHLSPlayerController.seekForward(seconds: 10)},
+                        child: SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/seek_forward.svg",
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.baseWhite, BlendMode.srcIn),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
-              )
+                  ],
+                )
               : const SizedBox();
         });
   }

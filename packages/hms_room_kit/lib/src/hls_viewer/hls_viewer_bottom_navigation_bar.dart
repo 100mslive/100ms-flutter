@@ -41,20 +41,21 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
         ///We also render the leave button, hand raise button, chat button and the menu button
         child: Column(
           children: [
-            if(Platform.isAndroid)
-            Selector<HLSPlayerStore, String?>(
-                selector: (_, hlsPlayerStore) => hlsPlayerStore.caption,
-                builder: (_, caption, __) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom:4.0,left: 4,right: 4),
-                    child: HMSSubheadingText(
-                      text: caption ?? "",
-                      textColor: HMSThemeColors.baseWhite,
-                      fontWeight: FontWeight.w600,
-                      maxLines: 5,
-                    ),
-                  );
-                }),
+            if (Platform.isAndroid)
+              Selector<HLSPlayerStore, String?>(
+                  selector: (_, hlsPlayerStore) => hlsPlayerStore.caption,
+                  builder: (_, caption, __) {
+                    return Padding(
+                      padding:
+                          const EdgeInsets.only(bottom: 4.0, left: 4, right: 4),
+                      child: HMSSubheadingText(
+                        text: caption ?? "",
+                        textColor: HMSThemeColors.baseWhite,
+                        fontWeight: FontWeight.w600,
+                        maxLines: 5,
+                      ),
+                    );
+                  }),
 
             ///Chat Component only visible when the chat is opened
             // if (HMSRoomLayout.chatData != null)
