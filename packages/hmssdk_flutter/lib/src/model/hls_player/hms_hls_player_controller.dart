@@ -1,4 +1,5 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hmssdk_flutter/src/model/hls_player/hms_hls_layer.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 ///100ms HMSHLSPlayerController
@@ -138,5 +139,35 @@ class HMSHLSPlayerController {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.getStreamProperties);
     return HLSStreamProperties.fromMap(result);
+  }
+
+  static Future<List<HMSHLSLayer>> getHLSLayers() async {
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.getHLSLayers);
+    List<HMSHLSLayer> layers = [];
+    var hlsLayers = result?["layers"];
+    if (hlsLayers != null) {
+      for (var layer in hlsLayers) {
+        layers.add(HMSHLSLayer.fromMap(layer));
+      }
+    }
+    return layers;
+  }
+
+  static Future<void> setHLSLayer({required HMSHLSLayer hmsHLSLayer}) async {
+    await PlatformService.invokeMethod(PlatformMethod.setHLSLayer,
+        arguments: {
+          "layer": hmsHLSLayer.toMap()
+        });
+  }
+
+  static Future<HMSHLSLayer?> getCurrentHLSLayer() async {
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.getCurrentHLSLayer);
+
+    if (result != null) {
+      return HMSHLSLayer.fromMap(result);
+    }
+    return null;
   }
 }

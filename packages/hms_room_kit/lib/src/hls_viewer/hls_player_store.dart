@@ -210,6 +210,10 @@ class HLSPlayerStore extends ChangeNotifier
     notifyListeners();
   }
 
+  void getHLSLayers(){
+    HMSHLSPlayerController.getHLSLayers();
+  }
+
   @override
   void onCue({required HMSHLSCue hlsCue}) {}
 
