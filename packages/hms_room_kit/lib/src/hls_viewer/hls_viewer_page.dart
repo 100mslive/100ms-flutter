@@ -70,6 +70,8 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
   void deactivate() {
     HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(
         context.read<HLSPlayerStore>());
+    context.read<HLSPlayerStore>().setHLSPlayerStats(false);
+    context.read<HLSPlayerStore>().cancelTimer();
     super.deactivate();
   }
 
@@ -104,6 +106,7 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                       : SafeArea(
                           child: Scaffold(
                             backgroundColor: HMSThemeColors.backgroundDim,
+                            resizeToAvoidBottomInset: false,
                             body: Theme(
                               data: ThemeData(
                                   brightness: Brightness.dark,
@@ -125,33 +128,54 @@ class _HLSViewerPageState extends State<HLSViewerPage> {
                                               selector: (_, hlsPlayerStore) =>
                                                   hlsPlayerStore.isFullScreen,
                                               builder: (_, isFullScreen, __) {
-                                                double widgetHeight = height -
-                                                    MediaQuery.of(context)
-                                                        .viewPadding
-                                                        .top -
-                                                    MediaQuery.of(context)
-                                                        .viewPadding
-                                                        .bottom;
-                                                return Column(
-                                                  mainAxisAlignment:
-                                                      isFullScreen
-                                                          ? MainAxisAlignment
-                                                              .center
-                                                          : MainAxisAlignment
-                                                              .start,
-                                                  children: [
-                                                    ///Renders HLS Player
-                                                    SizedBox(
-                                                      width: width,
-                                                      height: isFullScreen
-                                                          ? widgetHeight
-                                                          : widgetHeight * 0.27,
-                                                      child: const HLSPlayer(),
-                                                    ),
-                                                    if (!isFullScreen)
-                                                      HLSPlayerDesktopControls()
-                                                  ],
-                                                );
+                                                return OrientationBuilder(
+                                                    builder:
+                                                        (context, orientation) {
+                                                  return orientation ==
+                                                          Orientation.portrait
+                                                      ? Column(
+                                                          mainAxisAlignment:
+                                                              isFullScreen
+                                                                  ? MainAxisAlignment
+                                                                      .center
+                                                                  : MainAxisAlignment
+                                                                      .start,
+                                                          children: [
+                                                            ///Renders HLS Player
+                                                            Expanded(
+                                                              flex: 1,
+                                                              child:
+                                                                  const HLSPlayer(),
+                                                            ),
+                                                            if (!isFullScreen)
+                                                              Expanded(
+                                                                flex: 3,
+                                                                child:
+                                                                    HLSPlayerDesktopControls(
+                                                                  orientation:
+                                                                      orientation,
+                                                                ),
+                                                              )
+                                                          ],
+                                                        )
+                                                      : Row(
+                                                          children: [
+                                                            ///Renders HLS Player
+                                                            Expanded(
+                                                              flex: 2,
+                                                              child:
+                                                                  const HLSPlayer(),
+                                                            ),
+                                                            if (!isFullScreen)
+                                                              Expanded(
+                                                                flex: 1,
+                                                                child: HLSPlayerDesktopControls(
+                                                                    orientation:
+                                                                        orientation),
+                                                              )
+                                                          ],
+                                                        );
+                                                });
                                               });
                                         }),
 

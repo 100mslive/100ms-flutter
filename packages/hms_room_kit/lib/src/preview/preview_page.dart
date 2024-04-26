@@ -62,6 +62,9 @@ class _PreviewPageState extends State<PreviewPage> {
     bool isRoomMute = previewStore.isRoomMute;
     HMSAudioDevice currentAudioDeviceMode = previewStore.currentAudioDeviceMode;
 
+    if (nameController.text.trim().isEmpty) {
+      return;
+    }
     previewStore.removePreviewListener();
 
     Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -271,9 +274,14 @@ class _PreviewPageState extends State<PreviewPage> {
                                                   textController:
                                                       nameController,
                                                   width: width * 0.38,
-                                                  onPressed: () =>
-                                                      _navigateToMeeting(
-                                                          previewStore),
+                                                  onPressed: () {
+                                                    nameController.text
+                                                            .trim()
+                                                            .isEmpty
+                                                        ? null
+                                                        : _navigateToMeeting(
+                                                            previewStore);
+                                                  },
                                                   childWidget:
                                                       PreviewJoinButton(
                                                     isEmpty: nameController.text

@@ -1,6 +1,8 @@
 //Dart imports
 import 'dart:core';
 
+///Project imports
+import 'package:hmssdk_flutter/src/enum/hms_hls_playlist_type.dart';
 import 'package:hmssdk_flutter/src/model/hms_date_extension.dart';
 
 ///100ms HMSHLSVarient
@@ -11,12 +13,14 @@ class HMSHLSVariant {
   final String? meetingUrl;
   final String? metadata;
   final DateTime? startedAt;
+  final HMSHLSPlaylistType playlistType;
 
   HMSHLSVariant(
       {required this.hlsStreamUrl,
       required this.meetingUrl,
       required this.metadata,
-      required this.startedAt});
+      required this.startedAt,
+      required this.playlistType});
 
   Map<String, dynamic> toMap() {
     return {
@@ -24,6 +28,7 @@ class HMSHLSVariant {
       'meetingUrl': this.meetingUrl,
       'metadata': this.metadata,
       'startedAt': this.startedAt,
+      'playlist_type': this.playlistType,
     };
   }
 
@@ -34,12 +39,13 @@ class HMSHLSVariant {
 
   factory HMSHLSVariant.fromMap(Map map) {
     return HMSHLSVariant(
-      hlsStreamUrl: map['hls_stream_url'] as String?,
-      meetingUrl: map['meeting_url'] as String?,
-      metadata: map['metadata'] as String?,
-      startedAt: map['started_at'] != null
-          ? HMSDateExtension.convertDateFromEpoch(map['started_at'])
-          : null,
-    );
+        hlsStreamUrl: map['hls_stream_url'] as String?,
+        meetingUrl: map['meeting_url'] as String?,
+        metadata: map['metadata'] as String?,
+        startedAt: map['started_at'] != null
+            ? HMSDateExtension.convertDateFromEpoch(map['started_at'])
+            : null,
+        playlistType: HMSHLSPlaylistTypeValues.getHMSHLSPlaylistTypeFromString(
+            map["playlist_type"]));
   }
 }

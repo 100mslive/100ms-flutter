@@ -5,7 +5,26 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
-## 1.1.0 - 2024-04-19
+## 1.1.1 - 2024-04-26
+
+| Package        | Version                                                                                                |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| hms_room_kit   | 1.1.1    |
+| hmssdk_flutter | 1.10.1   |
+
+### 🚀 Added
+
+- Support for captions in HLS Player
+
+  HLS Player now supports captions for better accessibility. This can be enabled or disabled from the player settings.
+
+- Introducing Landscape Mode for HLS Player
+
+  HLS Player now supports landscape mode for better viewing experience.
+
+Uses `hmssdk_flutter` package version 1.10.1
+
+## 1.1.0 - 2024-04-22
 
 | Package        | Version                                                                                                |
 | -------------- | ------------------------------------------------------------------------------------------------------ |
@@ -32,7 +51,7 @@
 
   Prebuilt no longer uses `flutter_foreground_task` package. For apps that require foreground service, the package can be added on the application level.
 
-Uses `hmssdk_flutter` package version to 1.1.10
+Uses `hmssdk_flutter` package version 1.10.0
 
 ## 1.0.17 - 2024-04-01
 
@@ -41,7 +60,7 @@ Uses `hmssdk_flutter` package version to 1.1.10
 | hms_room_kit   | 1.0.17    |
 | hmssdk_flutter | 1.9.14    |
 
-Uses `hmssdk_flutter` package version to 1.9.14
+Uses `hmssdk_flutter` package version 1.9.14
 
 ## 1.0.16 - 2024-03-15
 

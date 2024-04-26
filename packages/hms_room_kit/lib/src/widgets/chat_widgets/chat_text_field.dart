@@ -1,6 +1,6 @@
-///Dart imports
 library;
 
+///Dart imports
 import 'dart:math' as math;
 
 ///Package imports
@@ -27,8 +27,8 @@ class ChatTextField extends StatefulWidget {
   const ChatTextField(
       {Key? key,
       required this.sendMessage,
-      this.toastBackgroundColor,
-      this.isHLSChat = false})
+      this.isHLSChat = false,
+      this.toastBackgroundColor})
       : super(key: key);
 
   @override
@@ -52,10 +52,8 @@ class _ChatTextFieldState extends State<ChatTextField> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width - 32;
     return SizedBox(
       height: 40,
-      width: widget.isHLSChat ? width * 0.7 : width,
       child: Selector<MeetingStore, Tuple3<bool, int, List<String>>>(
 
           ///item1: whether chat is resumed or not

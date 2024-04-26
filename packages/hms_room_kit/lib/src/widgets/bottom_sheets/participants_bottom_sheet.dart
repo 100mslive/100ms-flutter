@@ -1,6 +1,6 @@
-///Dart imports
 library;
 
+///Dart imports
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
@@ -272,8 +272,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                     ),
                   if (mutePermission &&
                       peerTrackNode != null &&
-                      !peerTrackNode.peer.isLocal &&
-                      peerTrackNode.peer.type == HMSPeerType.regular)
+                      !peerTrackNode.peer.isLocal)
                     PopupMenuItem(
                       value: 4,
                       child: Row(children: [

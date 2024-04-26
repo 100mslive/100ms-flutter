@@ -57,7 +57,10 @@ class HMSHLSPlayerAction {
         
         case "disable_closed_captions":
             disableClosedCaptions(result)
-
+            
+        case "get_stream_properties":
+            getStreamProperties(result)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -216,5 +219,9 @@ class HMSHLSPlayerAction {
     static private func disableClosedCaptions(_ result: @escaping FlutterResult){
         NotificationCenter.default.post(name: NSNotification.Name(HLS_PLAYER_METHOD), object: nil, userInfo: [METHOD_CALL: "disable_closed_captions"])
         result(nil)
+    }
+    
+    static private func getStreamProperties(_ result: @escaping FlutterResult){
+        NotificationCenter.default.post(name: NSNotification.Name(HLS_PLAYER_METHOD), object: nil, userInfo: [METHOD_CALL: "get_stream_properties", "result": result])
     }
 }

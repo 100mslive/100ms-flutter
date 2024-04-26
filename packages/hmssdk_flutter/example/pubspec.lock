@@ -302,15 +302,15 @@ packages:
       path: "../../hms_room_kit"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.1.1"
   hmssdk_flutter:
     dependency: transitive
     description:
       name: hmssdk_flutter
-      sha256: "88673b9ddd7eaa2e997976a4386374b0881b4485f4ba750689d3c9ca25032f65"
+      sha256: bfa6e6ec411d6f86f6cc054936fb2163c4cd3f8703f8848099689652b3794376
       url: "https://pub.dev"
     source: hosted
-    version: "1.10.0"
+    version: "1.10.1"
   http:
     dependency: transitive
     description:

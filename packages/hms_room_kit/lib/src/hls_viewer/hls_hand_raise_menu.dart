@@ -1,12 +1,18 @@
+library;
+
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/hls_app_utilities_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
-import 'package:provider/provider.dart';
 
+///[HLSHandRaiseMenu] is a widget that is used to render the hand raise menu in case of Viewer near realtime
 class HLSHandRaiseMenu extends StatelessWidget {
   const HLSHandRaiseMenu({Key? key}) : super(key: key);
 

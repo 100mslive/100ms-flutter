@@ -45,4 +45,6 @@ interface IHLSPlayerActionInterface {
     fun enableClosedCaptions(result: Result)
 
     fun disableClosedCaptions(result: Result)
+
+    fun getStreamProperties(result: Result)
 }
