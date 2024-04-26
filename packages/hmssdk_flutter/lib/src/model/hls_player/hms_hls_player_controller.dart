@@ -105,6 +105,7 @@ class HMSHLSPlayerController {
   ///
   /// If closed captions are supported, you can enable/disable them using [enableClosedCaptions] and [disableClosedCaptions] respectively.
   /// If this returns null then we set it to false.
+  /// Refer [areClosedCaptionsSupported](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player#how-to-enabledisable-captions)
   static Future<bool> areClosedCaptionsSupported() async {
     bool? result = await PlatformService.invokeMethod(
         PlatformMethod.areClosedCaptionsSupported);
@@ -112,11 +113,13 @@ class HMSHLSPlayerController {
   }
 
   ///[enableClosedCaptions] enables closed captions in the current HLS playback.
+  /// Refer [enableClosedCaptions](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player#how-to-enabledisable-captions)
   static Future<void> enableClosedCaptions() async {
     await PlatformService.invokeMethod(PlatformMethod.enableClosedCaptions);
   }
 
   ///[disableClosedCaptions] disables closed captions in the current HLS playback.
+  /// Refer [disableClosedCaptions](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player#how-to-enabledisable-captions)
   static Future<void> disableClosedCaptions() async {
     await PlatformService.invokeMethod(PlatformMethod.disableClosedCaptions);
   }
@@ -134,6 +137,7 @@ class HMSHLSPlayerController {
   }
 
   ///[getStreamProperties] gets the properties of the current HLS stream.
+  /// Refer [getStreamProperties](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player#how-to-get-stream-properties)
   static Future<HLSStreamProperties> getStreamProperties() async {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.getStreamProperties);
