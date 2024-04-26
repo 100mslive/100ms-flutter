@@ -3,6 +3,7 @@ library;
 ///Dart imports
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 ///Package imports
 import 'package:flutter/material.dart';
@@ -14,6 +15,11 @@ import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 ///[HLSPlayerStore] is a store that stores the state of the HLS Player
 class HLSPlayerStore extends ChangeNotifier
     implements HMSHLSPlaybackEventsListener {
+  ///[timeBeforeLive] is the time to show the go live button
+  ///It is set to 10 seconds for Android and 1 second for iOS
+  ///Basically `Go Live` will only be shown if the distance from live is greater than this value
+  final int timeBeforeLive = Platform.isAndroid ? 10000 : 5000;
+
   ///This variable stores whether the application is in full screen or not
   bool isFullScreen = false;
 
@@ -28,6 +34,15 @@ class HLSPlayerStore extends ChangeNotifier
 
   ///This variable stores whether the captions are supported or not
   bool areCaptionsSupported = false;
+
+  ///This variable stores whether the stream is at live edge or not
+  bool isLive = true;
+
+  ///This variable stores the time from live edge
+  Duration timeFromLive = Duration(milliseconds: 0);
+
+  ///This variable stores the stream rolling window time
+  Duration rollingWindow = Duration(milliseconds: 0);
 
   ///This variable stores whether the chat is opened or not
   ///The initial value is taken from the [HMSRoomLayout.chatData]
@@ -49,9 +64,16 @@ class HLSPlayerStore extends ChangeNotifier
   ///[hlsPlayerSize] stores the resolution of HLS Stream
   Size hlsPlayerSize = Size(1, 1);
 
+  ///This variable stores whether the HLS Stats are enabled or not
   bool isHLSStatsEnabled = false;
 
+  ///This variable stores the player playback state
   HMSHLSPlaybackState playerPlaybackState = HMSHLSPlaybackState.PLAYING;
+
+  ///This variable handles the timer for fetching the stream properties
+  Timer? _timer;
+
+  String? caption;
 
   ///This method starts a timer for 5 seconds and then hides the buttons
   ///
@@ -90,6 +112,17 @@ class HLSPlayerStore extends ChangeNotifier
     notifyListeners();
   }
 
+  ///[toggleStreamPlaying] toggles the stream playing
+  void toggleStreamPlaying() {
+    if (isStreamPlaying) {
+      HMSHLSPlayerController.pause();
+    } else {
+      HMSHLSPlayerController.resume();
+    }
+    isStreamPlaying = !isStreamPlaying;
+    notifyListeners();
+  }
+
   ///This method toggles the visibility of the chat
   void toggleIsChatOpened() {
     isChatOpened = !isChatOpened;
@@ -98,6 +131,11 @@ class HLSPlayerStore extends ChangeNotifier
 
   ///This method toggles the visibility of the captions
   void toggleCaptions() {
+    if (isCaptionEnabled) {
+      HMSHLSPlayerController.disableClosedCaptions();
+    } else {
+      HMSHLSPlayerController.enableClosedCaptions();
+    }
     isCaptionEnabled = !isCaptionEnabled;
     notifyListeners();
   }
@@ -128,6 +166,11 @@ class HLSPlayerStore extends ChangeNotifier
   void areClosedCaptionsSupported() async {
     areCaptionsSupported =
         await HMSHLSPlayerController.areClosedCaptionsSupported();
+
+    ///If isCaptionEnabled is true we enable the captions
+    if (isCaptionEnabled) {
+      HMSHLSPlayerController.enableClosedCaptions();
+    }
     notifyListeners();
   }
 
@@ -141,6 +184,37 @@ class HLSPlayerStore extends ChangeNotifier
     notifyListeners();
   }
 
+  ///[startTimer] starts a timer to get the stream properties every 3 seconds
+  void startTimer() {
+    if (_timer != null) {
+      _timer?.cancel();
+    }
+    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
+      getStreamProperties();
+    });
+  }
+
+  ///[cancelTimer] cancels the timer
+  void cancelTimer() {
+    _timer?.cancel();
+  }
+
+  ///[getStreamProperties] gets the stream properties
+  void getStreamProperties() async {
+    HLSStreamProperties result =
+        await HMSHLSPlayerController.getStreamProperties();
+
+    ///If the [rollingWindowTime] is not null we set the [rollingWindow] to the value of [rollingWindowTime]
+    ///If the [streamDuration] is not null we set the [rollingWindow] to the value of [streamDuration]
+    ///If both are null we set the [rollingWindow] to 0
+    if (result.rollingWindowTime != null && result.streamDuration == null) {
+      rollingWindow = Duration(seconds: result.rollingWindowTime!.toInt());
+    } else if (result.streamDuration != null) {
+      rollingWindow = Duration(seconds: result.streamDuration!.toInt());
+    }
+    notifyListeners();
+  }
+
   @override
   void onCue({required HMSHLSCue hlsCue}) {}
 
@@ -149,7 +223,9 @@ class HLSPlayerStore extends ChangeNotifier
 
   @override
   void onHLSEventUpdate({required HMSHLSPlayerStats playerStats}) {
-    log("onHLSEventUpdate-> bitrate:${playerStats.averageBitrate} buffered duration: ${playerStats.bufferedDuration}");
+    log("onHLSEventUpdate-> distanceFromLive: ${playerStats.distanceFromLive} buffered duration: ${playerStats.bufferedDuration}");
+    isLive = playerStats.distanceFromLive < timeBeforeLive;
+    timeFromLive = Duration(milliseconds: playerStats.distanceFromLive.toInt());
     hlsPlayerStats = playerStats;
     notifyListeners();
   }
@@ -163,12 +239,26 @@ class HLSPlayerStore extends ChangeNotifier
   void onPlaybackStateChanged({required HMSHLSPlaybackState playbackState}) {
     log("Playback state changed to ${playbackState.name}");
     playerPlaybackState = playbackState;
-    if (playerPlaybackState == HMSHLSPlaybackState.PLAYING) {
-      isPlayerFailed = false;
-      areClosedCaptionsSupported();
-    }
-    if (playerPlaybackState == HMSHLSPlaybackState.FAILED) {
-      isPlayerFailed = true;
+    switch (playbackState) {
+      case HMSHLSPlaybackState.PLAYING:
+        areClosedCaptionsSupported();
+        setHLSPlayerStats(true);
+        startTimer();
+        isStreamPlaying = true;
+        isPlayerFailed = false;
+        break;
+      case HMSHLSPlaybackState.STOPPED:
+        break;
+      case HMSHLSPlaybackState.PAUSED:
+        isStreamPlaying = false;
+        break;
+      case HMSHLSPlaybackState.BUFFERING:
+        break;
+      case HMSHLSPlaybackState.FAILED:
+        isPlayerFailed = true;
+        break;
+      case HMSHLSPlaybackState.UNKNOWN:
+        break;
     }
     notifyListeners();
   }
@@ -177,6 +267,16 @@ class HLSPlayerStore extends ChangeNotifier
   void onVideoSizeChanged({required Size size}) {
     log("onVideoSizeChanged -> height:${size.height} width:${size.width}");
     hlsPlayerSize = size;
+    notifyListeners();
+  }
+
+  @override
+  void onCues({required List<String> subtitles}) {
+    log("onCues -> $subtitles");
+    String newSubtitles = subtitles.join(" ");
+    if (newSubtitles != caption) {
+      caption = newSubtitles;
+    }
     notifyListeners();
   }
 }

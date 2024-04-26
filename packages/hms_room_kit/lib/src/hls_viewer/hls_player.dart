@@ -28,56 +28,54 @@ class HLSPlayer extends StatelessWidget {
               ///Renders the HLS Player if the HLS has started
               ///Otherwise renders the waiting UI
               hasHLSStarted
-                  ? Align(
-                      alignment: Alignment.center,
-                      child: Selector<HLSPlayerStore, Size>(
-                          selector: (_, hlsPlayerStore) =>
-                              hlsPlayerStore.hlsPlayerSize,
-                          builder: (_, hlsPlayerSize, __) {
-                            return AspectRatio(
-                              aspectRatio:
-                                  hlsPlayerSize.width / hlsPlayerSize.height,
-                              child: InkWell(
-                                onTap: () => context
-                                    .read<HLSPlayerStore>()
-                                    .toggleButtonsVisibility(),
-                                splashFactory: NoSplash.splashFactory,
-                                splashColor: HMSThemeColors.backgroundDim,
-                                child: IgnorePointer(
-                                  child: const HMSHLSPlayer(
-                                    showPlayerControls: false,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
-                    )
+                  ? Selector<HLSPlayerStore, bool>(
+                      selector: (_, hlsPlayerStore) =>
+                          hlsPlayerStore.isFullScreen,
+                      builder: (_, isFullScreen, __) {
+                        return InteractiveViewer(
+                          minScale: 1,
+                          maxScale: 8,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Selector<HLSPlayerStore, Size>(
+                                selector: (_, hlsPlayerStore) =>
+                                    hlsPlayerStore.hlsPlayerSize,
+                                builder: (_, hlsPlayerSize, __) {
+                                  return InkWell(
+                                    onTap: () => context
+                                        .read<HLSPlayerStore>()
+                                        .toggleButtonsVisibility(),
+                                    splashFactory: NoSplash.splashFactory,
+                                    splashColor: HMSThemeColors.backgroundDim,
+                                    child: AspectRatio(
+                                      aspectRatio: hlsPlayerSize.width /
+                                          hlsPlayerSize.height,
+                                      child: Selector<HLSPlayerStore, bool>(
+                                          selector: (_, hlsPlayerStore) =>
+                                              hlsPlayerStore.isFullScreen,
+                                          builder: (_, isFullScreen, __) {
+                                            return IgnorePointer(
+                                              child: const HMSHLSPlayer(
+                                                showPlayerControls: false,
+                                              ),
+                                            );
+                                          }),
+                                    ),
+                                  );
+                                }),
+                          ),
+                        );
+                      })
                   : Center(child: const HLSWaitingUI()),
 
               ///This renders the overlay controls for HLS Player
               Align(
-                alignment: Alignment.center,
-                child: Selector<HLSPlayerStore, bool>(
-                    selector: (_, hlsPlayerStore) =>
-                        hlsPlayerStore.isFullScreen,
-                    builder: (_, isFullScreen, __) {
-                      return isFullScreen
-                          ? Selector<HLSPlayerStore, Size>(
-                              selector: (_, hlsPlayerStore) =>
-                                  hlsPlayerStore.hlsPlayerSize,
-                              builder: (_, hlsPlayerSize, __) {
-                                return AspectRatio(
-                                  aspectRatio: hlsPlayerSize.width /
-                                      hlsPlayerSize.height,
-                                  child: HLSPlayerOverlayOptions(
-                                    hasHLSStarted: hasHLSStarted,
-                                  ),
-                                );
-                              })
-                          : HLSPlayerOverlayOptions(
-                              hasHLSStarted: hasHLSStarted);
-                    }),
-              ),
+                  alignment: Alignment.center,
+                  child: HLSPlayerOverlayOptions(
+                    hasHLSStarted: hasHLSStarted,
+                  )),
+
+              ///This renders the circular progress indicator when the player is buffering or failed
               Selector<HLSPlayerStore, HMSHLSPlaybackState>(
                 selector: (_, hlsPlayerStore) =>
                     hlsPlayerStore.playerPlaybackState,

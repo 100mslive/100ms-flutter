@@ -1,5 +1,6 @@
 package live.hms.hmssdk_flutter
 
+import live.hms.video.sdk.models.HMSHLSPlaylistType
 import live.hms.video.sdk.models.HMSHLSVariant
 
 class HMSHLSVariantExtension {
@@ -13,7 +14,23 @@ class HMSHLSVariantExtension {
             hmshlsVariant.startedAt?.let {
                 args["started_at"] = it
             }
+            args["playlist_type"] = getHMSHLSVariantToString(hmshlsVariant.playlistType)
             return args
+        }
+
+        private fun getHMSHLSVariantToString(hmsHlsVariantType: HMSHLSPlaylistType?): String{
+
+            return when(hmsHlsVariantType){
+                HMSHLSPlaylistType.dvr -> {
+                    "dvr"
+                }
+                HMSHLSPlaylistType.noDVR -> {
+                    "noDvr"
+                }
+                else -> {
+                    "noDvr"
+                }
+            }
         }
     }
 }

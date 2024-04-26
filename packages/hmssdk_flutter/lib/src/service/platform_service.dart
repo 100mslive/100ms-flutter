@@ -11,6 +11,7 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/services.dart';
+
 // Project imports:
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_hls_playback_event_method.dart';
@@ -778,6 +779,12 @@ abstract class PlatformService {
               size: Size(arguments["width"].toDouble(),
                   arguments["height"].toDouble())));
         }
+        break;
+      case HMSHLSPlaybackEventMethod.onCues:
+        hlsPlaybackEventListener.forEach((e) => e.onCues(
+            subtitles: arguments["subtitles"] != null
+                ? List<String>.from(arguments["subtitles"])
+                : []));
         break;
       case HMSHLSPlaybackEventMethod.unknown:
         break;

@@ -150,7 +150,7 @@ class MeetingStore extends ChangeNotifier
 
   MeetingMode meetingMode = MeetingMode.activeSpeakerWithInset;
 
-  bool isLandscapeLocked = false;
+  bool isScreenRotationAllowed = false;
 
   bool isMessageInfoShown = true;
 
@@ -857,7 +857,9 @@ class MeetingStore extends ChangeNotifier
         addPeer(localPeer!);
         if (HMSRoomLayout
                 .roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
-            null) isHLSLink = true;
+            null) {
+          isHLSLink = true;
+        }
         index = peerTracks
             .indexWhere((element) => element.uid == "${each.peerId}mainVideo");
         if (each.videoTrack != null) {
@@ -1343,7 +1345,7 @@ class MeetingStore extends ChangeNotifier
     _hmsSessionStore = null;
     peerTracks.clear();
     isRoomEnded = true;
-    resetForegroundTaskAndOrientation();
+    resetOrientation();
 
     for (var element in viewControllers) {
       element.disposeTextureView();
@@ -1359,8 +1361,8 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  void resetForegroundTaskAndOrientation() {
-    setLandscapeLock(false);
+  void resetOrientation() {
+    allowScreenRotation(false);
   }
 
   // void clearPIPState() {
@@ -1519,14 +1521,18 @@ class MeetingStore extends ChangeNotifier
     }
   }
 
-  void setLandscapeLock(bool value) {
-    if (value) {
-      SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
+  void allowScreenRotation(bool allowRotation) {
+    if (allowRotation) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeRight,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown
+      ]);
     } else {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     }
-    isLandscapeLocked = value;
+    isScreenRotationAllowed = allowRotation;
     notifyListeners();
   }
 
@@ -2893,5 +2899,10 @@ class MeetingStore extends ChangeNotifier
         notifyListeners();
         break;
     }
+  }
+
+  @override
+  void onCues({required List<String> subtitles}) {
+    // TODO: implement onCues
   }
 }

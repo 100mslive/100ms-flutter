@@ -1,6 +1,6 @@
-///Package imports
 library;
 
+///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -159,8 +159,7 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                   //         textColor: HMSThemeColors.onSurfaceHighEmphasis)),
 
                   if ((widget.meetingStore.localPeer?.role.permissions.mute ??
-                          false) &&
-                      widget.peerTrackNode.peer.type == HMSPeerType.regular)
+                      false))
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {

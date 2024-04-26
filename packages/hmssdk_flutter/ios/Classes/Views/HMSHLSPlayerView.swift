@@ -126,6 +126,27 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
         // Set the hlsPlayer to nil to release its resources
         hlsPlayer = nil
     }
+    
+    private func areClosedCaptionsSupported() -> Bool{
+        guard let playerItem = hlsPlayer?._nativePlayer.currentItem else {
+            return false
+        }
+        
+        guard let availableSubtitleTracks = playerItem.asset.mediaSelectionGroup(forMediaCharacteristic: .legible) else {
+            return false
+        }
+        
+        guard let firstOption = availableSubtitleTracks.options.first else {
+            return false
+        }
+        
+        if firstOption.mediaType == .subtitle {
+            return true
+        }
+        else {
+            return false
+        }
+    }
 
     /**
      * Below methods handles the HLS Player controller calls
@@ -163,37 +184,54 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
 
         case "are_closed_captions_supported":
             let result = notification.userInfo?["result"] as? FlutterResult
-
-            var isSubtitleToggleShown = false
-            guard let playerItem = hlsPlayer?._nativePlayer.currentItem else {
-                isSubtitleToggleShown = false
-                return
-            }
-
-            guard let availableSubtitleTracks = playerItem.asset.mediaSelectionGroup(forMediaCharacteristic: .legible) else {
-                isSubtitleToggleShown = false
-                return
-            }
-
-            guard let firstOption = availableSubtitleTracks.options.first else {
-                isSubtitleToggleShown = false
-                return
-            }
-
-            if firstOption.mediaType == .subtitle {
-                isSubtitleToggleShown = true
-            } else {
-                isSubtitleToggleShown = false
-            }
-
-            result?(isSubtitleToggleShown)
-
+            result?(areClosedCaptionsSupported())
+        
         case "enable_closed_captions":
-            break
-
+            let result = notification.userInfo?["result"] as? FlutterResult
+            if(areClosedCaptionsSupported()){
+                let player = hlsPlayer?._nativePlayer
+                guard let playerItem = player?.currentItem else {return }
+                
+                guard let availableSubtitleTracks = playerItem.asset.mediaSelectionGroup(forMediaCharacteristic: .legible) else { return }
+                
+                if let firstSubtitle = availableSubtitleTracks.options.first(where: {$0.mediaType == .subtitle}) {
+                    
+                    playerItem.select(firstSubtitle, in: availableSubtitleTracks)
+                    
+                }
+            }else{
+                HMSErrorLogger.logError("\(#function)", "Closed Captions are not supported", "SUPPORT ERROR")
+            }
+            result?(nil)
         case "disable_closed_captions":
-            break
-
+            let result = notification.userInfo?["result"] as? FlutterResult
+            let player = hlsPlayer?._nativePlayer
+            guard let playerItem = player?.currentItem else {return }
+            
+            guard let availableSubtitleTracks = playerItem.asset.mediaSelectionGroup(forMediaCharacteristic: .legible) else { return }
+            
+            if let _ = playerItem.currentMediaSelection.selectedMediaOption(in: availableSubtitleTracks) {
+                playerItem.select(nil, in: availableSubtitleTracks)
+            }
+            result?(nil)
+        case "get_stream_properties":
+            let result = notification.userInfo?["result"] as? FlutterResult
+            let player = hlsPlayer?._nativePlayer
+            guard let playerItem = player?.currentItem else {return }
+            
+            var map = [String:Any?]()
+            
+            let duration = playerItem.duration
+        
+            if duration.isIndefinite {
+                guard let timeRange = playerItem.seekableTimeRanges.last as? CMTimeRange else { return }
+                
+                map["rolling_window_time"] = timeRange.duration.seconds
+            }else{
+                map["stream_duration"] = duration.seconds
+            }
+            result?(map)
+            
         default:
             return
         }

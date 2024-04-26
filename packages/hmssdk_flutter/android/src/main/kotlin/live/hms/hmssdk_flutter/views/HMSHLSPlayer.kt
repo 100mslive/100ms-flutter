@@ -2,6 +2,7 @@ package live.hms.hmssdk_flutter.views
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import androidx.media3.common.Player
 import androidx.media3.common.VideoSize
@@ -40,7 +41,7 @@ class HMSHLSPlayer(
     var hlsPlayer: HmsHlsPlayer? = null
     private var hlsPlayerView: PlayerView? = null
     private var actions: IHLSPlayerActionInterface? = null
-
+    private var areCaptionsEnabled = false
     /**
      *  Inflate the HLS player view and initialize the HLS player.
      *  Set the HLS player view and player if the inflation is successful.
@@ -75,6 +76,10 @@ class HMSHLSPlayer(
             // Set the native player of the HLS player view.
             it.player = hlsPlayer?.getNativePlayer()
 
+            ///Hiding Subtitles
+            if(!showHLSControls){
+                it.subtitleView?.visibility = View.GONE
+            }
             it.player?.addListener(
                 object : Player.Listener {
                     override fun onSurfaceSizeChanged(
@@ -115,6 +120,23 @@ class HMSHLSPlayer(
                     }
 
                     override fun onCues(cueGroup: CueGroup) {
+                        if(areCaptionsEnabled){
+                            val hashMap = HashMap<String, Any>()
+                            val args = HashMap<String, Any>()
+
+                            hashMap["event_name"] = "on_cues"
+                            val cues = ArrayList<Any>()
+                            cueGroup.cues.forEach {_cues ->
+                                _cues.text?.let { cue ->
+                                    cues.add(cue.toString())
+                                }
+                            }
+                            args["subtitles"] = cues
+                            hashMap["data"] = args
+                            CoroutineScope(Dispatchers.Main).launch {
+                                hmssdkFlutterPlugin?.hlsPlayerSink?.success(hashMap)
+                            }
+                        }
                         super.onCues(cueGroup)
                     }
                 },
@@ -242,6 +264,10 @@ class HMSHLSPlayer(
             }
         }
 
+    private fun areClosedCaptionSupported(): Boolean{
+        return hlsPlayer?.areClosedCaptionsSupported()?:false
+    }
+
     /**
      * This handles the method call from flutter channel
      * and return the values
@@ -325,16 +351,33 @@ class HMSHLSPlayer(
                 }
 
                 override fun areClosedCaptionsSupported(result: Result) {
-                    val areCaptionsSupported = hlsPlayer?.areClosedCaptionsSupported()
+                    val areCaptionsSupported = areClosedCaptionSupported()
                     result.success(areCaptionsSupported)
                 }
 
                 override fun enableClosedCaptions(result: Result) {
-                    TODO("Not yet implemented")
+                    if(areClosedCaptionSupported()){
+                        areCaptionsEnabled = true
+                        result.success(null)
+                    }else{
+                        HMSErrorLogger.logError("enableClosedCaptions", "Closed Captions are not supported", "SUPPORT ERROR")
+                        result.success(null)
+                    }
                 }
 
                 override fun disableClosedCaptions(result: Result) {
-                    TODO("Not yet implemented")
+                    areCaptionsEnabled = false
+                    result.success(null)
+                }
+
+                override fun getStreamProperties(result: Result) {
+                    val map = HashMap<String,Any?>()
+
+                    map["rolling_window_time"] =
+                        hlsPlayer?.getNativePlayer()?.seekParameters?.toleranceAfterUs?.div(1000000);
+                    map["stream_duration"] = hlsPlayer?.getNativePlayer()?.duration?.div(1000)
+
+                    result.success(map)
                 }
             }
     }

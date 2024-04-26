@@ -1,7 +1,7 @@
+library;
+
 //Package imports
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/src/hls_viewer/hls_hand_raise_menu.dart';
-import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -11,13 +11,14 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/src/widgets/chat_widgets/hms_empty_chat_widget.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/message_container.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
-import 'package:hms_room_kit/src/widgets/chat_widgets/chat_text_field.dart';
 import 'package:hms_room_kit/src/widgets/chat_widgets/pin_chat_widget.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/widgets/chat_widgets/recipient_selector_chip.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_error_toast.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toast_model.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
+import 'package:hms_room_kit/src/widgets/chat_widgets/chat_text_utility.dart';
 
 ///[ChatBottomSheet] is a bottom sheet that is used to render the bottom sheet for chat
 class ChatBottomSheet extends StatefulWidget {
@@ -29,7 +30,6 @@ class ChatBottomSheet extends StatefulWidget {
 }
 
 class _ChatBottomSheetState extends State<ChatBottomSheet> {
-  late double widthOfScreen;
   String currentlySelectedValue = "Choose a Recipient";
   String? currentlySelectedpeerId;
 
@@ -50,10 +50,15 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
 
   void _scrollToEnd() {
     if (_scrollController.hasClients) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollController
-          .animateTo(_scrollController.position.maxScrollExtent,
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeInOut));
+      WidgetsBinding.instance.addPostFrameCallback((_) => {
+            if (_scrollController.positions.isNotEmpty)
+              {
+                _scrollController.animateTo(
+                    _scrollController.position.maxScrollExtent,
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut)
+              }
+          });
     }
   }
 
@@ -104,8 +109,6 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    widthOfScreen = MediaQuery.of(context).size.width;
-
     return WillPopScope(
       onWillPop: () async {
         context.read<MeetingStore>().setNewMessageFalse();
@@ -152,10 +155,13 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                             child: const HMSEmptyChatWidget())))
                                 : Expanded(
                                     child: Column(children: [
-                                      const PinChatWidget(),
+                                      Expanded(
+                                          flex: 1,
+                                          child: const PinChatWidget()),
 
                                       /// List containing chats
                                       Expanded(
+                                        flex: 3,
                                         child: SingleChildScrollView(
                                           reverse: true,
                                           child: Column(
@@ -194,31 +200,8 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                           currentlySelectedValue: currentlySelectedValue,
                           updateSelectedValue: _updateValueChoose),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        ///Text Field
-                        if ((HMSRoomLayout.chatData?.isPrivateChatEnabled ??
-                                false) ||
-                            (HMSRoomLayout.chatData?.isPublicChatEnabled ??
-                                false) ||
-                            (HMSRoomLayout
-                                    .chatData?.rolesWhitelist.isNotEmpty ??
-                                false))
-                          Expanded(
-                            child: Row(
-                              children: [
-                                ChatTextField(
-                                  sendMessage: sendMessage,
-                                  isHLSChat: widget.isHLSChat,
-                                ),
-                              ],
-                            ),
-                          ),
-                        if (widget.isHLSChat) HLSHandRaiseMenu()
-                      ],
-                    )
+                    ChatTextUtility(
+                        sendMessage: sendMessage, isHLSChat: widget.isHLSChat)
                   ],
                 ),
               ),

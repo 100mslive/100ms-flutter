@@ -187,6 +187,7 @@ enum PlatformMethod {
   areClosedCaptionsSupported,
   enableClosedCaptions,
   disableClosedCaptions,
+  getStreamProperties,
 
   switchAudioOutputUsingiOSUI,
   sendHLSTimedMetadata,
@@ -506,6 +507,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "enable_closed_captions";
       case PlatformMethod.disableClosedCaptions:
         return "disable_closed_captions";
+      case PlatformMethod.getStreamProperties:
+        return "get_stream_properties";
 
       case PlatformMethod.switchAudioOutputUsingiOSUI:
         return "switch_audio_output_using_ios_ui";
@@ -851,6 +854,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.enableClosedCaptions;
       case "disable_closed_captions":
         return PlatformMethod.disableClosedCaptions;
+      case "get_stream_properties":
+        return PlatformMethod.getStreamProperties;
 
       case "switch_audio_output_using_ios_ui":
         return PlatformMethod.switchAudioOutputUsingiOSUI;

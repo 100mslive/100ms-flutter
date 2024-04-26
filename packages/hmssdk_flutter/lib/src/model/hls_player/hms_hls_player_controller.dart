@@ -132,4 +132,11 @@ class HMSHLSPlayerController {
   static Future<void> removeHLSStatsListener() async {
     await PlatformService.invokeMethod(PlatformMethod.removeHLSStatsListener);
   }
+
+  ///[getStreamProperties] gets the properties of the current HLS stream.
+  static Future<HLSStreamProperties> getStreamProperties() async {
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.getStreamProperties);
+    return HLSStreamProperties.fromMap(result);
+  }
 }

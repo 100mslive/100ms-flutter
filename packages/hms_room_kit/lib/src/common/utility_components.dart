@@ -992,10 +992,10 @@ class UtilityComponents {
     MeetingStore meetingStore = Provider.of<MeetingStore>(context);
     return GestureDetector(
       onTap: () {
-        if (meetingStore.isLandscapeLocked) {
-          meetingStore.setLandscapeLock(false);
+        if (meetingStore.isScreenRotationAllowed) {
+          meetingStore.allowScreenRotation(false);
         } else {
-          meetingStore.setLandscapeLock(true);
+          meetingStore.allowScreenRotation(true);
         }
       },
       child: Padding(
@@ -1003,7 +1003,7 @@ class UtilityComponents {
         child: SvgPicture.asset(
             "packages/hms_room_kit/lib/src/assets/icons/rotate.svg",
             colorFilter: ColorFilter.mode(
-                meetingStore.isLandscapeLocked ? Colors.blue : iconColor,
+                meetingStore.isScreenRotationAllowed ? Colors.blue : iconColor,
                 BlendMode.srcIn)),
       ),
     );
