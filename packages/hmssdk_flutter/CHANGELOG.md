@@ -5,6 +5,24 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+# 1.10.1 - 2024-04-26
+
+| Package                                | Version                                                                                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| hms_room_kit                | 1.1.1 |
+| hmssdk_flutter              | 1.10.1 |
+
+### ✨ Added
+
+- Support for captions in HLS Player
+
+  HMSSDK now provides support for captions in HLS Player. You can now `enable` or `disable` captions in the HLS Player using the 
+  `HMSHLSPlayerController` methods. Moreover HMSSDK provides a new `onCues` callback to get captions. Learn more about it [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player#how-to-enabledisable-captions)
+
+Uses Android SDK 2.9.54 & iOS SDK 1.9.0
+
+**Full Changelog**: [1.10.0...1.10.1](https://github.com/100mslive/100ms-flutter/compare/1.10.0...1.10.1)
+
 # 1.10.0 - 2024-04-19
 
 | Package                                | Version                                                                                                                                  |
