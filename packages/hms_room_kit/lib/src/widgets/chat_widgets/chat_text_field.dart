@@ -1,6 +1,6 @@
-///Dart imports
 library;
 
+///Dart imports
 import 'dart:math' as math;
 
 ///Package imports
