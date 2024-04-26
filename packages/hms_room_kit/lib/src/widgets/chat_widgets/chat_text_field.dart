@@ -56,129 +56,124 @@ class _ChatTextFieldState extends State<ChatTextField> {
       height: 40,
       child: Selector<MeetingStore, Tuple3<bool, int, List<String>>>(
 
-              ///item1: whether chat is resumed or not
-              ///item2: number of blacklisted users
-              ///item3: list of blacklisted user ids
-              selector: (_, meetingStore) => Tuple3(
-                  meetingStore.chatControls["enabled"],
-                  meetingStore.blackListedUserIds.length,
-                  meetingStore.blackListedUserIds),
-              builder: (_, chatControls, __) {
-                return chatControls.item1
+          ///item1: whether chat is resumed or not
+          ///item2: number of blacklisted users
+          ///item3: list of blacklisted user ids
+          selector: (_, meetingStore) => Tuple3(
+              meetingStore.chatControls["enabled"],
+              meetingStore.blackListedUserIds.length,
+              meetingStore.blackListedUserIds),
+          builder: (_, chatControls, __) {
+            return chatControls.item1
 
-                    ///If chat is not paused we render the text field
-                    ///else we render the paused chat toast
-                    ? Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: chatControls.item3.contains(context
-                                .read<MeetingStore>()
-                                .localPeer
-                                ?.customerUserId)
+                ///If chat is not paused we render the text field
+                ///else we render the paused chat toast
+                ? Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: chatControls.item3.contains(context
+                            .read<MeetingStore>()
+                            .localPeer
+                            ?.customerUserId)
 
-                            ///If the user is blocked from sending messages
-                            ? Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      color: widget.toastBackgroundColor ??
-                                          HMSThemeColors.surfaceDefault,
-                                      height: 36,
-                                      child: Center(
-                                        child: HMSSubheadingText(
-                                            text:
-                                                "You’ve been blocked from sending messages",
-                                            textColor: HMSThemeColors
-                                                .onSurfaceMediumEmphasis),
-                                      ),
-                                    ),
+                        ///If the user is blocked from sending messages
+                        ? Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  color: widget.toastBackgroundColor ??
+                                      HMSThemeColors.surfaceDefault,
+                                  height: 36,
+                                  child: Center(
+                                    child: HMSSubheadingText(
+                                        text:
+                                            "You’ve been blocked from sending messages",
+                                        textColor: HMSThemeColors
+                                            .onSurfaceMediumEmphasis),
                                   ),
-                                ],
-                              )
-                            : Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      color: HMSThemeColors.surfaceDefault,
-                                      child: Selector<MeetingStore, dynamic>(
-                                          selector: (_, meetingStore) =>
-                                              meetingStore
-                                                  .recipientSelectorValue,
-                                          builder: (_, selectedValue, __) {
-                                            return TextField(
-                                              ///Here if the selected value is empty or equal to "Choose a Recipient" we disable the text field
-                                              enabled: selectedValue !=
-                                                  "Choose a Recipient",
-                                              textCapitalization:
-                                                  TextCapitalization.sentences,
-                                              textInputAction:
-                                                  TextInputAction.send,
-                                              onTapOutside: (event) =>
-                                                  FocusManager
-                                                      .instance.primaryFocus
-                                                      ?.unfocus(),
-                                              onSubmitted: (value) {
-                                                widget.sendMessage(
-                                                    messageTextController);
-                                                messageTextController.clear();
-                                              },
-                                              onChanged: (value) {
-                                                setState(() {});
-                                              },
-                                              style: HMSTextStyle.setTextStyle(
-                                                  color: HMSThemeColors
-                                                      .onSurfaceHighEmphasis,
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 20 / 14,
-                                                  fontSize: 14,
-                                                  letterSpacing: 0.25),
-                                              controller: messageTextController,
-                                              decoration: InputDecoration(
-                                                  isDense: true,
-                                                  suffixIcon: GestureDetector(
-                                                      onTap: () {
-                                                        if (messageTextController
-                                                            .text
-                                                            .trim()
-                                                            .isEmpty) {
-                                                          Utilities.showToast(
-                                                              "Message can't be empty");
-                                                        }
-                                                        widget.sendMessage(
-                                                            messageTextController);
+                                ),
+                              ),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  color: HMSThemeColors.surfaceDefault,
+                                  child: Selector<MeetingStore, dynamic>(
+                                      selector: (_, meetingStore) =>
+                                          meetingStore.recipientSelectorValue,
+                                      builder: (_, selectedValue, __) {
+                                        return TextField(
+                                          ///Here if the selected value is empty or equal to "Choose a Recipient" we disable the text field
+                                          enabled: selectedValue !=
+                                              "Choose a Recipient",
+                                          textCapitalization:
+                                              TextCapitalization.sentences,
+                                          textInputAction: TextInputAction.send,
+                                          onTapOutside: (event) => FocusManager
+                                              .instance.primaryFocus
+                                              ?.unfocus(),
+                                          onSubmitted: (value) {
+                                            widget.sendMessage(
+                                                messageTextController);
+                                            messageTextController.clear();
+                                          },
+                                          onChanged: (value) {
+                                            setState(() {});
+                                          },
+                                          style: HMSTextStyle.setTextStyle(
+                                              color: HMSThemeColors
+                                                  .onSurfaceHighEmphasis,
+                                              fontWeight: FontWeight.w400,
+                                              height: 20 / 14,
+                                              fontSize: 14,
+                                              letterSpacing: 0.25),
+                                          controller: messageTextController,
+                                          decoration: InputDecoration(
+                                              isDense: true,
+                                              suffixIcon: GestureDetector(
+                                                  onTap: () {
+                                                    if (messageTextController
+                                                        .text
+                                                        .trim()
+                                                        .isEmpty) {
+                                                      Utilities.showToast(
+                                                          "Message can't be empty");
+                                                    }
+                                                    widget.sendMessage(
+                                                        messageTextController);
+                                                    messageTextController
+                                                        .clear();
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                    "packages/hms_room_kit/lib/src/assets/icons/send_message.svg",
+                                                    fit: BoxFit.scaleDown,
+                                                    colorFilter: ColorFilter.mode(
                                                         messageTextController
-                                                            .clear();
-                                                      },
-                                                      child: SvgPicture.asset(
-                                                        "packages/hms_room_kit/lib/src/assets/icons/send_message.svg",
-                                                        fit: BoxFit.scaleDown,
-                                                        colorFilter: ColorFilter.mode(
-                                                            messageTextController
-                                                                    .text
-                                                                    .trim()
-                                                                    .isEmpty
-                                                                ? HMSThemeColors
-                                                                    .onSurfaceLowEmphasis
-                                                                : HMSThemeColors
-                                                                    .onSurfaceHighEmphasis,
-                                                            BlendMode.srcIn),
-                                                      )),
-                                                  focusedBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          width: 2,
-                                                          color: HMSThemeColors
-                                                              .primaryDefault),
-                                                      borderRadius:
-                                                          const BorderRadius.all(
-                                                              Radius.circular(
-                                                                  8))),
-                                                  enabledBorder:
-                                                      InputBorder.none,
-                                                  errorBorder: InputBorder.none,
-                                                  disabledBorder:
-                                                      InputBorder.none,
-                                                  hintStyle: HMSTextStyle.setTextStyle(
+                                                                .text
+                                                                .trim()
+                                                                .isEmpty
+                                                            ? HMSThemeColors
+                                                                .onSurfaceLowEmphasis
+                                                            : HMSThemeColors
+                                                                .onSurfaceHighEmphasis,
+                                                        BlendMode.srcIn),
+                                                  )),
+                                              focusedBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      width: 2,
+                                                      color: HMSThemeColors
+                                                          .primaryDefault),
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(8))),
+                                              enabledBorder: InputBorder.none,
+                                              errorBorder: InputBorder.none,
+                                              disabledBorder: InputBorder.none,
+                                              hintStyle: HMSTextStyle
+                                                  .setTextStyle(
                                                       color: HMSThemeColors
                                                           .onSurfaceLowEmphasis,
                                                       fontSize: 14,
@@ -186,82 +181,81 @@ class _ChatTextFieldState extends State<ChatTextField> {
                                                       letterSpacing: 0.25,
                                                       fontWeight:
                                                           FontWeight.w400),
-                                                  contentPadding:
-                                                      const EdgeInsets.symmetric(
-                                                          vertical: 8,
-                                                          horizontal: 12),
-                                                  hintText: HMSRoomLayout
-                                                          .chatData
-                                                          ?.messagePlaceholder ??
-                                                      "Send a message..."),
-                                            );
-                                          }),
-                                    ),
-                                  )
-                                ],
-                              ))
-                    : HMSToast(
-                        toastColor: widget.toastBackgroundColor ??
-                            HMSThemeColors.surfaceDefault,
-                        toastPosition: 0,
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            HMSSubheadingText(
-                              text: "Chat paused",
-                              textColor: HMSThemeColors.onSurfaceHighEmphasis,
-                              lineHeight: 20,
-                              letterSpacing: 0.1,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            HMSSubtitleText(
-                              text:
-                                  "Chat has been paused by ${context.read<MeetingStore>().chatControls["updatedBy"].toString().substring(0, math.min(10, context.read<MeetingStore>().chatControls["updatedBy"].toString().length))}",
-                              textColor: HMSThemeColors.onSurfaceMediumEmphasis,
-                            )
-                          ],
-                        ),
-                        action: (HMSRoomLayout.chatData?.realTimeControls
-                                    ?.canDisableChat ??
-                                false)
-                            ? HMSToastButton(
-                                buttonTitle: "Resume",
-                                action: () {
-                                  context
-                                      .read<MeetingStore>()
-                                      .setSessionMetadataForKey(
-                                          key: SessionStoreKeyValues
-                                              .getNameFromMethod(
-                                                  SessionStoreKey.chatState),
-                                          metadata: {
-                                        "enabled": true,
-                                        "updatedBy": {
-                                          "peerID": context
-                                              .read<MeetingStore>()
-                                              .localPeer
-                                              ?.peerId,
-                                          "userID": context
-                                              .read<MeetingStore>()
-                                              .localPeer
-                                              ?.customerUserId,
-                                          "userName": context
-                                              .read<MeetingStore>()
-                                              .localPeer
-                                              ?.name
-                                        },
-                                        "updatedAt": DateTime.now()
-                                            .millisecondsSinceEpoch //unix timestamp in miliseconds
-                                      });
-                                },
-                                height: 36,
-                                width: 88,
-                                buttonColor: HMSThemeColors.primaryDefault,
-                                textColor: HMSThemeColors.onPrimaryHighEmphasis,
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 8,
+                                                      horizontal: 12),
+                                              hintText: HMSRoomLayout.chatData
+                                                      ?.messagePlaceholder ??
+                                                  "Send a message..."),
+                                        );
+                                      }),
+                                ),
                               )
-                            : null,
-                      );
-              }),
+                            ],
+                          ))
+                : HMSToast(
+                    toastColor: widget.toastBackgroundColor ??
+                        HMSThemeColors.surfaceDefault,
+                    toastPosition: 0,
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        HMSSubheadingText(
+                          text: "Chat paused",
+                          textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                          lineHeight: 20,
+                          letterSpacing: 0.1,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        HMSSubtitleText(
+                          text:
+                              "Chat has been paused by ${context.read<MeetingStore>().chatControls["updatedBy"].toString().substring(0, math.min(10, context.read<MeetingStore>().chatControls["updatedBy"].toString().length))}",
+                          textColor: HMSThemeColors.onSurfaceMediumEmphasis,
+                        )
+                      ],
+                    ),
+                    action: (HMSRoomLayout
+                                .chatData?.realTimeControls?.canDisableChat ??
+                            false)
+                        ? HMSToastButton(
+                            buttonTitle: "Resume",
+                            action: () {
+                              context
+                                  .read<MeetingStore>()
+                                  .setSessionMetadataForKey(
+                                      key: SessionStoreKeyValues
+                                          .getNameFromMethod(
+                                              SessionStoreKey.chatState),
+                                      metadata: {
+                                    "enabled": true,
+                                    "updatedBy": {
+                                      "peerID": context
+                                          .read<MeetingStore>()
+                                          .localPeer
+                                          ?.peerId,
+                                      "userID": context
+                                          .read<MeetingStore>()
+                                          .localPeer
+                                          ?.customerUserId,
+                                      "userName": context
+                                          .read<MeetingStore>()
+                                          .localPeer
+                                          ?.name
+                                    },
+                                    "updatedAt": DateTime.now()
+                                        .millisecondsSinceEpoch //unix timestamp in miliseconds
+                                  });
+                            },
+                            height: 36,
+                            width: 88,
+                            buttonColor: HMSThemeColors.primaryDefault,
+                            textColor: HMSThemeColors.onPrimaryHighEmphasis,
+                          )
+                        : null,
+                  );
+          }),
     );
   }
 }

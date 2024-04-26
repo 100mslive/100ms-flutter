@@ -62,11 +62,11 @@ class _ChatTextUtilityState extends State<ChatTextUtility>
         if (HMSRoomLayout.chatData == null)
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(right:8.0),
+              padding: const EdgeInsets.only(right: 8.0),
               child: Container(
                 decoration: BoxDecoration(
-                color: HMSThemeColors.surfaceDefault,
-                borderRadius: BorderRadius.circular(8),
+                  color: HMSThemeColors.surfaceDefault,
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 height: 40,
                 child: Padding(
