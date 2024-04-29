@@ -166,6 +166,11 @@ class HLSPlayerStore extends ChangeNotifier
   void areClosedCaptionsSupported() async {
     areCaptionsSupported =
         await HMSHLSPlayerController.areClosedCaptionsSupported();
+
+    ///If isCaptionEnabled is true we enable the captions
+    if (isCaptionEnabled) {
+      HMSHLSPlayerController.enableClosedCaptions();
+    }
     notifyListeners();
   }
 
@@ -273,7 +278,7 @@ class HLSPlayerStore extends ChangeNotifier
   void onCues({required List<String> subtitles}) {
     log("onCues -> $subtitles");
     String newSubtitles = subtitles.join(" ");
-    if(newSubtitles != caption){
+    if (newSubtitles != caption) {
       caption = newSubtitles;
     }
     notifyListeners();

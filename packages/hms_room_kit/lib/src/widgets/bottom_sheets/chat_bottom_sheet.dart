@@ -50,15 +50,13 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
 
   void _scrollToEnd() {
     if (_scrollController.hasClients) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => {
-            if (_scrollController.positions.isNotEmpty)
-              {
-                _scrollController.animateTo(
-                    _scrollController.position.maxScrollExtent,
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.easeInOut)
-              }
-          });
+      WidgetsBinding.instance.addPostFrameCallback((_) =>
+          _scrollController.positions.isNotEmpty
+              ? _scrollController.animateTo(
+                  _scrollController.position.maxScrollExtent,
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeInOut)
+              : null);
     }
   }
 

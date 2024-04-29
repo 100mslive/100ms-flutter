@@ -36,42 +36,32 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
               colors: [Colors.black.withAlpha(0), Colors.black.withAlpha(64)])),
       child: Padding(
         padding: EdgeInsets.only(left: 12, right: 12),
-
-        ///Here we render the chat component if the chat is opened
-        ///We also render the leave button, hand raise button, chat button and the menu button
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if(Platform.isAndroid)
-            Selector<HLSPlayerStore, String?>(
-                selector: (_, hlsPlayerStore) => hlsPlayerStore.caption,
-                builder: (_, caption, __) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom:4.0,left: 4,right: 4),
-                    child: HMSSubheadingText(
-                      text: caption ?? "",
-                      textColor: HMSThemeColors.baseWhite,
-                      fontWeight: FontWeight.w600,
-                      maxLines: 5,
-                    ),
-                  );
-                }),
-
-            ///Chat Component only visible when the chat is opened
-            // if (HMSRoomLayout.chatData != null)
-            //   Selector<HLSPlayerStore, bool>(
-            //       selector: (_, hlsPlayerStore) => hlsPlayerStore.isChatOpened,
-            //       builder: (_, isChatOpened, __) {
-            //         if (isChatOpened) {
-            //           Provider.of<MeetingStore>(context, listen: true)
-            //               .isNewMessageReceived = false;
-            //         }
-            //         return isChatOpened
-            //             ? const OverlayChatComponent()
-            //             : Container();
-            //       }),
+            ///This renders the captions only in case of android since iOS provides caption out of the box
+            if (Platform.isAndroid)
+              Selector<HLSPlayerStore, String?>(
+                  selector: (_, hlsPlayerStore) => hlsPlayerStore.caption,
+                  builder: (_, caption, __) {
+                    return caption != null
+                        ? Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 4.0, left: 4, right: 4),
+                            child: Center(
+                              child: HMSSubheadingText(
+                                text: caption,
+                                textColor: HMSThemeColors.baseWhite,
+                                fontWeight: FontWeight.w600,
+                                maxLines: 5,
+                              ),
+                            ),
+                          )
+                        : SizedBox();
+                  }),
 
             ///Bottom Navigation Bar
-            ///We render the leave button, hand raise button, chat button and the menu button
+            ///We render the stream controls here
             ///We only render the bottom navigation bar when the stream controls are visible
             Selector<HLSPlayerStore, bool>(
                 selector: (_, hlsPlayerStore) =>
@@ -189,6 +179,7 @@ class HLSViewerBottomNavigationBar extends StatelessWidget {
                       : const SizedBox();
                 }),
 
+            ///This renders the seekbar
             Selector<HLSPlayerStore, bool>(
                 selector: (_, hlsPlayerStore) =>
                     hlsPlayerStore.areStreamControlsVisible,

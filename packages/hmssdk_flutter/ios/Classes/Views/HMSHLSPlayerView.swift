@@ -187,7 +187,6 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
             result?(areClosedCaptionsSupported())
         
         case "enable_closed_captions":
-            
             let result = notification.userInfo?["result"] as? FlutterResult
             if(areClosedCaptionsSupported()){
                 let player = hlsPlayer?._nativePlayer
@@ -203,6 +202,7 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
             }else{
                 HMSErrorLogger.logError("\(#function)", "Closed Captions are not supported", "SUPPORT ERROR")
             }
+            result?(nil)
         case "disable_closed_captions":
             let result = notification.userInfo?["result"] as? FlutterResult
             let player = hlsPlayer?._nativePlayer
@@ -213,7 +213,7 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
             if let _ = playerItem.currentMediaSelection.selectedMediaOption(in: availableSubtitleTracks) {
                 playerItem.select(nil, in: availableSubtitleTracks)
             }
-            
+            result?(nil)
         case "get_stream_properties":
             let result = notification.userInfo?["result"] as? FlutterResult
             let player = hlsPlayer?._nativePlayer
