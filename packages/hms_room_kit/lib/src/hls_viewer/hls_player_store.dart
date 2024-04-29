@@ -75,6 +75,10 @@ class HLSPlayerStore extends ChangeNotifier
 
   String? caption;
 
+  Map<String, HMSHLSLayer> layerMap = {};
+
+  HMSHLSLayer? selectedLayer;
+
   ///This method starts a timer for 5 seconds and then hides the buttons
   ///
   ///[isStreamPlaying] is used to check if the video is playing or not
@@ -217,7 +221,28 @@ class HLSPlayerStore extends ChangeNotifier
 
   void getHLSLayers() async {
     var layers = await HMSHLSPlayerController.getHLSLayers();
-    log("Layers are $layers");
+    layers.sort((a, b) => (b.bitrate ?? 0).compareTo(a.bitrate ?? 0));
+    int layersSize = layers.length;
+    if (layers[layersSize - 1].bitrate == 0 ||
+        layers[layersSize - 1].bitrate == null) {
+      layerMap["AUTO"] = layers[layersSize - 1];
+    }
+    layerMap["HIGH"] = layers[0];
+    if (layersSize > 1) {
+      layerMap["LOW"] = layers[layersSize - 2];
+    }
+    layerMap["MEDIUM"] = layers[layersSize ~/ 2];
+  }
+
+  void getCurrentHLSLayer() async {
+    var layer = await HMSHLSPlayerController.getCurrentHLSLayer();
+    selectedLayer = layer;
+  }
+
+  void setHLSLayer(HMSHLSLayer hmsHLSLayer) async {
+    selectedLayer = hmsHLSLayer;
+    await HMSHLSPlayerController.setHLSLayer(hmsHLSLayer: hmsHLSLayer);
+    notifyListeners();
   }
 
   @override
@@ -250,6 +275,7 @@ class HLSPlayerStore extends ChangeNotifier
         setHLSPlayerStats(true);
         startTimer();
         getHLSLayers();
+        getCurrentHLSLayer();
         isStreamPlaying = true;
         isPlayerFailed = false;
         break;

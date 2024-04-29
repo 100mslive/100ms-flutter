@@ -1,5 +1,4 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/model/hls_player/hms_hls_layer.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 ///100ms HMSHLSPlayerController

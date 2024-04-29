@@ -457,62 +457,77 @@ class HMSHLSPlayerAction {
         
         [
             "resolution": [
-                "height": 1080,
-                "width": 1920
+                "height": 1080.0,
+                "width": 1920.0
             ],
             "bitrate": 4000 * 1000
         ],
         [
             "resolution": [
-                "height": 720,
-                "width": 1280
+                "height": 720.0,
+                "width": 1280.0
             ],
             "bitrate": 1500 * 1000
         ],
         [
             "resolution": [
-                "height": 540,
-                "width": 960
+                "height": 540.0,
+                "width": 960.0
             ],
             "bitrate": 1000 * 1000
         ],
         [
             "resolution": [
-                "height": 480,
-                "width": 852
+                "height": 480.0,
+                "width": 852.0
             ],
             "bitrate": 850 * 1000
         ],
         [
             "resolution": [
-                "height": 360,
-                "width": 640
+                "height": 360.0,
+                "width": 640.0
             ],
             "bitrate": 450 * 1000
         ],
         [
             "resolution": [
-                "height": 240,
-                "width": 426
+                "height": 240.0,
+                "width": 426.0
             ],
             "bitrate": 300 * 1000
         ],
         [
             "resolution": [
-                "height": 144,
-                "width": 256
+                "height": 144.0,
+                "width": 256.0
             ],
             "bitrate": 200 * 1000
         ],
+        [
+            "resolution": [
+                "height": 1080.0,
+                "width": 1920.0
+            ],
+            "bitrate": 0
+        ]
         
     ]
     
-    static private var currentBitrate : Any? = nil
+    static private var currentBitrate : Any? =  [
+        "resolution": [
+            "height": 0.0,
+            "width": 0.0
+        ],
+        "bitrate": 0
+    ]
     
     static private func getHLSLayers(
         _ result: @escaping FlutterResult
     ){
-        result(layersMap)
+        var layers = [String:Any]()
+        layers["layers"] = layersMap
+        result(layers)
     }
     
     static private func setHLSLayer(
