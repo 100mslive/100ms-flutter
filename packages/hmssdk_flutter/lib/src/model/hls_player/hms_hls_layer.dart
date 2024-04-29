@@ -6,7 +6,7 @@ class HMSHLSLayer {
 
   HMSHLSLayer({this.resolution, this.bitrate});
 
-  factory HMSHLSLayer.fromMap(Map<String, dynamic> map){
+  factory HMSHLSLayer.fromMap(Map<dynamic, dynamic> map){
     return HMSHLSLayer(
       resolution: map['resolution'] != null? HMSResolution.fromMap(map['resolution']):null,
       bitrate: map['bitrate']

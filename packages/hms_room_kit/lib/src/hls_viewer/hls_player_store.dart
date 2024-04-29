@@ -215,8 +215,9 @@ class HLSPlayerStore extends ChangeNotifier
     notifyListeners();
   }
 
-  void getHLSLayers(){
-    HMSHLSPlayerController.getHLSLayers();
+  void getHLSLayers() async {
+    var layers = await HMSHLSPlayerController.getHLSLayers();
+    log("Layers are $layers");
   }
 
   @override
@@ -248,6 +249,7 @@ class HLSPlayerStore extends ChangeNotifier
         areClosedCaptionsSupported();
         setHLSPlayerStats(true);
         startTimer();
+        getHLSLayers();
         isStreamPlaying = true;
         isPlayerFailed = false;
         break;
