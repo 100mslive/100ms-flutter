@@ -159,9 +159,7 @@ class HMSHLSPlayerController {
 
   static Future<void> setHLSLayer({required HMSHLSLayer hmsHLSLayer}) async {
     await PlatformService.invokeMethod(PlatformMethod.setHLSLayer,
-        arguments: {
-          "layer": hmsHLSLayer.toMap()
-        });
+        arguments: {"layer": hmsHLSLayer.toMap()});
   }
 
   static Future<HMSHLSLayer?> getCurrentHLSLayer() async {

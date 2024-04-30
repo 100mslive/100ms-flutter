@@ -34,8 +34,9 @@ class _HLSViewerQualitySelectorBottomSheetState
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     return SizedBox(
-        height: MediaQuery.of(context).orientation == Orientation.landscape? height * 0.8: height * 0.4,
-        width: ,
+        height: MediaQuery.of(context).orientation == Orientation.landscape
+            ? height * 0.8
+            : height * 0.4,
         child: Container(
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.only(
@@ -59,8 +60,7 @@ class _HLSViewerQualitySelectorBottomSheetState
                             children: [
                               HMSTitleText(
                                 text: "Quality",
-                                textColor:
-                                    HMSThemeColors.onSurfaceHighEmphasis,
+                                textColor: HMSThemeColors.onSurfaceHighEmphasis,
                                 letterSpacing: 0.15,
                               ),
                             ],
@@ -81,42 +81,51 @@ class _HLSViewerQualitySelectorBottomSheetState
                         child: ListView.builder(
                             itemCount: data.item2,
                             itemBuilder: (context, index) {
-                              return ListTile(
-                                horizontalTitleGap: 2,
-                                enabled: false,
-                                contentPadding: EdgeInsets.zero,
-                                title: HMSSubtitleText(
-                                  text:
-                                      data.item1.entries.elementAt(index).key,
-                                  fontSize: 14,
-                                  lineHeight: 20,
-                                  letterSpacing: 0.10,
-                                  fontWeight: FontWeight.w600,
-                                  textColor:
-                                      HMSThemeColors.onSurfaceHighEmphasis,
-                                ),
-                                trailing: context
-                                            .read<HLSPlayerStore>()
-                                            .selectedLayer ==
-                                        data.item1.entries
-                                            .elementAt(index)
-                                            .value
-                                    ? SizedBox(
-                                        height: 24,
-                                        width: 24,
-                                        child: SvgPicture.asset(
-                                          "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
-                                          fit: BoxFit.scaleDown,
-                                          colorFilter: ColorFilter.mode(
-                                              HMSThemeColors
-                                                  .onSurfaceHighEmphasis,
-                                              BlendMode.srcIn),
+                              return GestureDetector(
+                                onTap: () {
+                                  context.read<HLSPlayerStore>().setHLSLayer(
+                                      data.item1.entries
+                                          .elementAt(index)
+                                          .value);
+                                  Navigator.pop(context);
+                                },
+                                child: ListTile(
+                                  horizontalTitleGap: 2,
+                                  enabled: false,
+                                  contentPadding: EdgeInsets.zero,
+                                  title: HMSSubtitleText(
+                                    text:
+                                        data.item1.entries.elementAt(index).key,
+                                    fontSize: 14,
+                                    lineHeight: 20,
+                                    letterSpacing: 0.10,
+                                    fontWeight: FontWeight.w600,
+                                    textColor:
+                                        HMSThemeColors.onSurfaceHighEmphasis,
+                                  ),
+                                  trailing: context
+                                              .read<HLSPlayerStore>()
+                                              .selectedLayer ==
+                                          data.item1.entries
+                                              .elementAt(index)
+                                              .value
+                                      ? SizedBox(
+                                          height: 24,
+                                          width: 24,
+                                          child: SvgPicture.asset(
+                                            "packages/hms_room_kit/lib/src/assets/icons/tick.svg",
+                                            fit: BoxFit.scaleDown,
+                                            colorFilter: ColorFilter.mode(
+                                                HMSThemeColors
+                                                    .onSurfaceHighEmphasis,
+                                                BlendMode.srcIn),
+                                          ),
+                                        )
+                                      : const SizedBox(
+                                          height: 24,
+                                          width: 24,
                                         ),
-                                      )
-                                    : const SizedBox(
-                                        height: 24,
-                                        width: 24,
-                                      ),
+                                ),
                               );
                             }),
                       )

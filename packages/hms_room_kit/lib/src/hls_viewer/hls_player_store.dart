@@ -8,6 +8,7 @@ import 'dart:io';
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:collection/collection.dart';
 
 ///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
@@ -219,6 +220,7 @@ class HLSPlayerStore extends ChangeNotifier
     notifyListeners();
   }
 
+  ///[getHLSLayers] gets the HLS Layers
   void getHLSLayers() async {
     var layers = await HMSHLSPlayerController.getHLSLayers();
     layers.sort((a, b) => (b.bitrate ?? 0).compareTo(a.bitrate ?? 0));
@@ -234,12 +236,33 @@ class HLSPlayerStore extends ChangeNotifier
     layerMap["MEDIUM"] = layers[layersSize ~/ 2];
   }
 
+  ///[getCurrentHLSLayer] gets the current HLS Layer
   void getCurrentHLSLayer() async {
     var layer = await HMSHLSPlayerController.getCurrentHLSLayer();
-    selectedLayer = layer;
+
+    ///Here we are finding the layer with the same bitrate as the current layer
+    var layerSelected = layerMap.entries.firstWhereIndexedOrNull(
+        (index, element) => (element.value.bitrate == layer?.bitrate));
+
+    ///If the layer is found we set the selected layer to that layer
+    if (layerSelected != null) {
+      selectedLayer = layerSelected.value;
+    }
+    notifyListeners();
   }
 
-  void setHLSLayer(HMSHLSLayer hmsHLSLayer) async {
+  ///[setHLSLayer] sets the HLS Layer
+  void setHLSLayer(HMSHLSLayer? hmsHLSLayer) async {
+    if (hmsHLSLayer == null) {
+      if (Platform.isAndroid) {
+        HMSHLSPlayerController.setHLSLayer(
+            hmsHLSLayer: HMSHLSLayer(resolution: null, bitrate: null));
+      } else {
+        HMSHLSPlayerController.setHLSLayer(
+            hmsHLSLayer: HMSHLSLayer(resolution: null, bitrate: 0));
+      }
+      return;
+    }
     selectedLayer = hmsHLSLayer;
     await HMSHLSPlayerController.setHLSLayer(hmsHLSLayer: hmsHLSLayer);
     notifyListeners();
@@ -253,7 +276,7 @@ class HLSPlayerStore extends ChangeNotifier
 
   @override
   void onHLSEventUpdate({required HMSHLSPlayerStats playerStats}) {
-    log("onHLSEventUpdate-> distanceFromLive: ${playerStats.distanceFromLive} buffered duration: ${playerStats.bufferedDuration}");
+    log("onHLSEventUpdate-> distanceFromLive: ${playerStats.distanceFromLive}ms buffered duration: ${playerStats.bufferedDuration}ms bitrate: ${playerStats.averageBitrate}");
     isLive = playerStats.distanceFromLive < timeBeforeLive;
     timeFromLive = Duration(milliseconds: playerStats.distanceFromLive.toInt());
     hlsPlayerStats = playerStats;

@@ -505,21 +505,13 @@ class HMSHLSPlayerAction {
             "bitrate": 200 * 1000
         ],
         [
-            "resolution": [
-                "height": 1080.0,
-                "width": 1920.0
-            ],
-            "bitrate": 0
+            "bitrate": nil
         ]
         
     ]
     
     static private var currentBitrate : Any? =  [
-        "resolution": [
-            "height": 0.0,
-            "width": 0.0
-        ],
-        "bitrate": 0
+        "bitrate": nil
     ]
     
     static private func getHLSLayers(
@@ -540,8 +532,25 @@ class HMSHLSPlayerAction {
                   return
               }
         
-        let bitrate = layer["bitrate"]{
+        /*
+         Here if the bitrate is nil
+         we set it as zero otherwise the given bitrate is applied
+        */
+        if let bitrate = layer["bitrate"]{
             currentBitrate = bitrate
+            NotificationCenter.default.post(
+                name: NSNotification.Name(
+                    HLS_PLAYER_METHOD
+                ),
+                object: nil,
+                userInfo: [
+                    METHOD_CALL: "set_hls_layer",
+                    "result": result,
+                    "bitrate": bitrate
+                ]
+            )
+        }else{
+            currentBitrate = nil
             NotificationCenter.default.post(
                 name: NSNotification.Name(
                     HLS_PLAYER_METHOD
@@ -550,7 +559,7 @@ class HMSHLSPlayerAction {
                 userInfo: [
                     METHOD_CALL: "",
                     "result": result,
-                    "bitrate": bitrate
+                    "bitrate": 0
                 ]
             )
         }
