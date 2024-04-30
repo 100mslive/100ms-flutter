@@ -223,17 +223,30 @@ class HLSPlayerStore extends ChangeNotifier
   ///[getHLSLayers] gets the HLS Layers
   void getHLSLayers() async {
     var layers = await HMSHLSPlayerController.getHLSLayers();
-    layers.sort((a, b) => (b.bitrate ?? 0).compareTo(a.bitrate ?? 0));
     int layersSize = layers.length;
-    if (layers[layersSize - 1].bitrate == 0 ||
-        layers[layersSize - 1].bitrate == null) {
-      layerMap["AUTO"] = layers[layersSize - 1];
+    if (layersSize > 0) {
+
+      ///This sorts the layers in descending order of bitrate
+      layers.sort((a, b) => (b.bitrate ?? 0).compareTo(a.bitrate ?? 0));
+
+      ///This checks for layer with zero or null bitrate and sets it to
+      ///"AUTO" key
+      if (layers[layersSize - 1].bitrate == 0 ||
+          layers[layersSize - 1].bitrate == null) {
+        layerMap["AUTO"] = layers[layersSize - 1];
+      }
+
+      ///This picks up the highest bitrate layer from the sorted layers
+      layerMap["HIGH"] = layers[0];
+
+      ///This picks up the mid layer from the sorted layers
+      layerMap["MEDIUM"] = layers[layersSize ~/ 2];
+
+      ///This picks up the lowest bitrate layer from the sorted layers
+      if (layersSize > 1) {
+        layerMap["LOW"] = layers[layersSize - 2];
+      }
     }
-    layerMap["HIGH"] = layers[0];
-    if (layersSize > 1) {
-      layerMap["LOW"] = layers[layersSize - 2];
-    }
-    layerMap["MEDIUM"] = layers[layersSize ~/ 2];
   }
 
   ///[getCurrentHLSLayer] gets the current HLS Layer
@@ -252,17 +265,7 @@ class HLSPlayerStore extends ChangeNotifier
   }
 
   ///[setHLSLayer] sets the HLS Layer
-  void setHLSLayer(HMSHLSLayer? hmsHLSLayer) async {
-    if (hmsHLSLayer == null) {
-      if (Platform.isAndroid) {
-        HMSHLSPlayerController.setHLSLayer(
-            hmsHLSLayer: HMSHLSLayer(resolution: null, bitrate: null));
-      } else {
-        HMSHLSPlayerController.setHLSLayer(
-            hmsHLSLayer: HMSHLSLayer(resolution: null, bitrate: 0));
-      }
-      return;
-    }
+  void setHLSLayer(HMSHLSLayer hmsHLSLayer) async {
     selectedLayer = hmsHLSLayer;
     await HMSHLSPlayerController.setHLSLayer(hmsHLSLayer: hmsHLSLayer);
     notifyListeners();
