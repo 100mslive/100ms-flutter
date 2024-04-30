@@ -50,6 +50,8 @@ import live.hms.video.sessionstore.HmsSessionStore
 import live.hms.video.signal.init.*
 import live.hms.video.utils.HMSLogger
 import live.hms.video.utils.HmsUtilities
+import live.hms.video.whiteboard.HMSWhiteboardUpdate
+import live.hms.video.whiteboard.HMSWhiteboardUpdateListener
 
 /** HmssdkFlutterPlugin */
 class HmssdkFlutterPlugin :
@@ -293,6 +295,10 @@ class HmssdkFlutterPlugin :
                 HMSNoiseCancellationControllerAction.noiseCancellationActions(call, result, hmssdk!!)
             }
 
+            "start_whiteboard", "stop_whiteboard", "add_whiteboard_update_listener", "remove_whiteboard_update_listener" -> {
+                whiteboardActions(call,result)
+            }
+
             else -> {
                 result.notImplemented()
             }
@@ -471,6 +477,22 @@ class HmssdkFlutterPlugin :
     }
 
     private var currentPolls = ArrayList<HmsPoll>()
+
+    private fun whiteboardActions(
+        call: MethodCall,
+        result: Result
+    ){
+        when(call.method){
+            "add_whiteboard_update_listener" ->
+                hmssdk?.getHmsInteractivityCenter()?.setWhiteboardUpdateListener(whiteboardListener)
+            "remove_whiteboard_update_listener" ->
+                hmssdk?.getHmsInteractivityCenter()?.removeWhiteboardUpdateListener(whiteboardListener)
+            else ->
+                hmssdk?.let {
+                    HMSWhiteboardAction.whiteboardActions(call,result,it)
+                }
+        }
+    }
 
     private fun pollActions(
         call: MethodCall,
@@ -2162,5 +2184,42 @@ class HmssdkFlutterPlugin :
                     pollsSink?.success(args)
                 }
             }
+        }
+
+    private val whiteboardListener =
+        object: HMSWhiteboardUpdateListener{
+            override fun onUpdate(hmsWhiteboardUpdate: HMSWhiteboardUpdate) {
+                when(hmsWhiteboardUpdate){
+                    is HMSWhiteboardUpdate.Start -> {
+
+                        val args = HashMap<String,Any?>()
+
+                        args["event_name"] = "on_whiteboard_start"
+
+                        args["data"] = HMSWhiteboardExtension.toDictionary(hmsWhiteboardUpdate.hmsWhiteboard)
+
+                        if (args["data"] != null) {
+                            CoroutineScope(Dispatchers.Main).launch {
+                                eventSink?.success(args)
+                            }
+                        }
+                    }
+                    is HMSWhiteboardUpdate.Stop ->
+                        {
+                            val args = HashMap<String,Any?>()
+
+                            args["event_name"] = "on_whiteboard_stop"
+
+                            args["data"] = HMSWhiteboardExtension.toDictionary(hmsWhiteboardUpdate.hmsWhiteboard)
+
+                            if (args["data"] != null) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    eventSink?.success(args)
+                                }
+                            }
+                        }
+                }
+            }
+
         }
 }

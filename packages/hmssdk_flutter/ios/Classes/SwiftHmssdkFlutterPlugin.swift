@@ -322,6 +322,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "enable_noise_cancellation", "disable_noise_cancellation", "is_noise_cancellation_enabled", "is_noise_cancellation_available":
             HMSNoiseCancellationController.noiseCancellationActions(call, result)
 
+        case "start_whiteboard", "stop_whiteboard", "add_whiteboard_update_listener", "remove_whiteboard_update_listener":
+            whiteboardActions(call,result)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -460,6 +463,28 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             break
         default:
             HMSPollAction.pollActions(call, result, hmsSDK, currentPolls)
+        }
+    }
+
+    private func whiteboardActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+        switch call.method{
+        case "add_whiteboard_update_listener":
+            
+            let whiteboardListener: HMSInteractivityCenter.HMSWhiteboardUpdateListener = { [weak self] hmsWhiteboard, hmsWhiteBoardUpdateType in
+                
+                guard let self = self else {return}
+                
+                let args = [
+                    
+                
+                ]
+                
+            }
+            hmsSDK?.add
+        case "remove_whiteboard_update_listener":
+        
+        default:
+            
         }
     }
 
