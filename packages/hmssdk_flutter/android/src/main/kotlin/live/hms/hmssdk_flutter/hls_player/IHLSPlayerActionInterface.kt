@@ -1,6 +1,7 @@
 package live.hms.hmssdk_flutter.hls_player
 
 import io.flutter.plugin.common.MethodChannel.Result
+import live.hms.hls_player.HmsHlsLayer
 
 /**
  * [IHLSPlayerActionInterface] contains HLS Player methods
@@ -47,4 +48,10 @@ interface IHLSPlayerActionInterface {
     fun disableClosedCaptions(result: Result)
 
     fun getStreamProperties(result: Result)
+
+    fun getHLSLayers(result: Result)
+
+    fun setHLSLayer(hlsLayer:HashMap<Any,Any?>,result: Result)
+
+    fun getCurrentHLSLayer(result: Result)
 }

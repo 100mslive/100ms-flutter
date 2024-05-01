@@ -3,6 +3,8 @@ library;
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/meeting/meeting_store.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/hls_viewer_quality_selector_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -87,18 +89,38 @@ class HLSViewerHeader extends StatelessWidget {
                                   }),
 
                               ///This will be added later
-                              // const SizedBox(
-                              //   width: 16,
-                              // ),
+                              const SizedBox(
+                                width: 16,
+                              ),
 
-                              // ///This renders the settings button
-                              // SvgPicture.asset(
-                              //   "packages/hms_room_kit/lib/src/assets/icons/settings.svg",
-                              //   colorFilter: ColorFilter.mode(
-                              //       HMSThemeColors.onSurfaceHighEmphasis,
-                              //       BlendMode.srcIn),
-                              //   semanticsLabel: "caption_toggle_button",
-                              // )
+                              ///This renders the settings button
+                              GestureDetector(
+                                onTap: () {
+                                  var _meetingStore =
+                                      context.read<MeetingStore>();
+                                  var _hlsPlayerStore =
+                                      context.read<HLSPlayerStore>();
+                                  showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      context: context,
+                                      builder: (ctx) =>
+                                          ChangeNotifierProvider.value(
+                                            value: _meetingStore,
+                                            child: ChangeNotifierProvider.value(
+                                                value: _hlsPlayerStore,
+                                                child:
+                                                    HLSViewerQualitySelectorBottomSheet()),
+                                          ));
+                                },
+                                child: SvgPicture.asset(
+                                  "packages/hms_room_kit/lib/src/assets/icons/settings.svg",
+                                  colorFilter: ColorFilter.mode(
+                                      HMSThemeColors.onSurfaceHighEmphasis,
+                                      BlendMode.srcIn),
+                                  semanticsLabel: "caption_toggle_button",
+                                ),
+                              )
                             ],
                           )
                       ],
