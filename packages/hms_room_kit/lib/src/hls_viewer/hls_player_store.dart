@@ -225,7 +225,6 @@ class HLSPlayerStore extends ChangeNotifier
     var layers = await HMSHLSPlayerController.getHLSLayers();
     int layersSize = layers.length;
     if (layersSize > 0) {
-
       ///This sorts the layers in descending order of bitrate
       layers.sort((a, b) => (b.bitrate ?? 0).compareTo(a.bitrate ?? 0));
 
