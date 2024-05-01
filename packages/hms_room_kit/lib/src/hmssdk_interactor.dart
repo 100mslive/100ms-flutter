@@ -50,7 +50,9 @@ class HMSSDKInteractor {
         joinWithMutedAudio: joinWithMutedAudio,
         isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
         audioMode: audioMode,
-        isNoiseCancellationEnabled: isNoiseCancellationEnabled);
+        isNoiseCancellationEnabled: isNoiseCancellationEnabled,
+        isAutomaticGainControlEnabled: true,
+        isNoiseSuppressionEnabled: true);
 
     hmsSDK = HMSSDK(
         iOSScreenshareConfig: iOSScreenshareConfig,

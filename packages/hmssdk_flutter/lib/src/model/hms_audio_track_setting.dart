@@ -40,6 +40,10 @@ class HMSAudioTrackSetting {
   ///Refer: Read more about noise cancellation [here](///)
   final bool enableNoiseCancellation;
 
+  final bool enableAutomaticGainControl;
+
+  final bool enableNoiseSupression;
+
   HMSAudioTrackSetting(
       {this.useHardwareAcousticEchoCanceler,
       this.audioSource,
@@ -47,7 +51,9 @@ class HMSAudioTrackSetting {
       this.audioMode,
       this.phoneCallState =
           HMSAndroidPhoneCallState.DISABLE_MUTE_ON_VOIP_PHONE_CALL_RING,
-      this.enableNoiseCancellation = false});
+      this.enableNoiseCancellation = false,
+      this.enableAutomaticGainControl = false,
+      this.enableNoiseSupression = false});
 
   factory HMSAudioTrackSetting.fromMap(Map map) {
     List<HMSAudioNode> nodeList = [];
@@ -109,7 +115,9 @@ class HMSAudioTrackSetting {
       'phone_call_state':
           HMSAndroidPhoneCallStateValue.getValuefromHMSPhoneCallState(
               phoneCallState),
-      'enable_noise_cancellation': enableNoiseCancellation
+      'enable_noise_cancellation': enableNoiseCancellation,
+      'enable_automatic_gain_control': enableAutomaticGainControl,
+      'enable_noise_supression': enableNoiseSupression
     };
   }
 }
