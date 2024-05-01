@@ -67,6 +67,7 @@ class HmssdkFlutterPlugin :
     private var sessionStoreChannel: EventChannel? = null
     var hlsPlayerChannel: EventChannel? = null
     private var pollsEventChannel: EventChannel? = null
+    private var whiteboardEventChannel: EventChannel? = null
     private var eventSink: EventChannel.EventSink? = null
     private var previewSink: EventChannel.EventSink? = null
     private var logsSink: EventChannel.EventSink? = null
@@ -115,6 +116,9 @@ class HmssdkFlutterPlugin :
 
             this.pollsEventChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "polls_event_channel")
+
+            this.whiteboardEventChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger, "whiteboard_event_channel")
 
             this.meetingEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Meeting event channel not found")
             this.channel?.setMethodCallHandler(this) ?: Log.e("Channel Error", "Event channel not found")
@@ -524,6 +528,7 @@ class HmssdkFlutterPlugin :
             sessionStoreChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Session Store channel not found")
             hlsPlayerChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "HLS Player channel not found")
             pollsEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "polls event  channel not found")
+            whiteboardEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "whiteboard event channel not found")
             eventSink = null
             previewSink = null
             rtcSink = null

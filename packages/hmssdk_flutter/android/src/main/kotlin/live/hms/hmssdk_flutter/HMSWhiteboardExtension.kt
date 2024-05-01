@@ -15,10 +15,6 @@ class HMSWhiteboardExtension {
             val whiteboardMap = HashMap<String,Any?>()
 
             whiteboardMap["id"] =   hmsWhiteboard.id
-            whiteboardMap["is_admin"] = hmsWhiteboard.isAdmin
-            whiteboardMap["is_open"] = hmsWhiteboard.isOpen
-            whiteboardMap["is_owner"] = hmsWhiteboard.isOwner
-            whiteboardMap["is_presence_tracking_enabled"] = hmsWhiteboard.isPresenceTrackingEnabled
             whiteboardMap["owner"] = HMSPeerExtension.toDictionary(hmsWhiteboard.owner)
             whiteboardMap["title"] = hmsWhiteboard.title
             whiteboardMap["url"] = hmsWhiteboard.url

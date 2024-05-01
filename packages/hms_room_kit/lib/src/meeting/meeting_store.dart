@@ -36,7 +36,8 @@ class MeetingStore extends ChangeNotifier
         HMSLogListener,
         HMSKeyChangeListener,
         HMSHLSPlaybackEventsListener,
-        HMSPollListener {
+        HMSPollListener,
+        HMSWhiteboardUpdateListener {
   late HMSSDKInteractor _hmsSDKInteractor;
 
   MeetingStore({required HMSSDKInteractor hmsSDKInteractor}) {
@@ -892,6 +893,7 @@ class MeetingStore extends ChangeNotifier
     setViewControllers();
     notifyListeners();
     fetchPollList(HMSPollState.stopped);
+    HMSWhiteboardController.addHMSWhiteboardUpdateListener(listener: this);
 
     if (HMSRoomLayout.roleLayoutData?.screens?.preview?.joinForm?.joinBtnType ==
             JoinButtonType.JOIN_BTN_TYPE_JOIN_AND_GO_LIVE &&
@@ -1380,6 +1382,7 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.removeHMSLogger();
     HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(this);
     HMSPollInteractivityCenter.removePollUpdateListener();
+    HMSWhiteboardController.removeHMSWhiteboardUpdateListener();
   }
 
   ///Function to toggle screen share
@@ -2394,311 +2397,6 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-//Get onSuccess or onException callbacks for HMSActionResultListenerMethod
-  @override
-  void onSuccess(
-      {HMSActionResultListenerMethod methodType =
-          HMSActionResultListenerMethod.unknown,
-      Map<String, dynamic>? arguments}) {
-    switch (methodType) {
-      case HMSActionResultListenerMethod.leave:
-        clearRoomState();
-        break;
-      case HMSActionResultListenerMethod.changeTrackState:
-        Utilities.showToast("Track State Changed");
-        break;
-      case HMSActionResultListenerMethod.changeMetadata:
-        notifyListeners();
-        break;
-      case HMSActionResultListenerMethod.endRoom:
-        clearRoomState();
-        break;
-      case HMSActionResultListenerMethod.removePeer:
-        HMSPeer peer = arguments!['peer'];
-        Utilities.showToast("Removed ${peer.name} from room");
-        break;
-      case HMSActionResultListenerMethod.acceptChangeRole:
-        Utilities.showToast("Accept role change successful");
-        break;
-      case HMSActionResultListenerMethod.changeRoleOfPeer:
-        Utilities.showToast("Change role successful");
-        break;
-      case HMSActionResultListenerMethod.changeTrackStateForRole:
-        message = arguments!['roles'] == null
-            ? "Successfully Muted All"
-            : "Successfully Muted Role";
-        Utilities.showToast(message);
-        break;
-      case HMSActionResultListenerMethod.startRtmpOrRecording:
-        if (arguments != null) {
-          if (arguments["rtmp_urls"] != null &&
-              arguments["rtmp_urls"].length == 0 &&
-              arguments["to_record"]) {
-            Utilities.showToast("Recording Started");
-          } else if (arguments["rtmp_urls"] != null &&
-              arguments["rtmp_urls"].length != 0 &&
-              arguments["to_record"] == false) {
-            Utilities.showToast("RTMP Started");
-          }
-          notifyListeners();
-        }
-        break;
-      case HMSActionResultListenerMethod.stopRtmpAndRecording:
-        Utilities.showToast("Stopped successfully");
-        break;
-      case HMSActionResultListenerMethod.unknown:
-        break;
-      case HMSActionResultListenerMethod.changeName:
-        Utilities.showToast("Change name successful");
-        break;
-      case HMSActionResultListenerMethod.sendBroadcastMessage:
-        if (arguments != null) {
-          var message = HMSMessage.fromMap(arguments);
-          if (arguments['type'] != "metadata") {
-            addMessage(message);
-            notifyListeners();
-          }
-        }
-        break;
-      case HMSActionResultListenerMethod.sendGroupMessage:
-        if (arguments != null) {
-          var message = HMSMessage.fromMap(arguments);
-          addMessage(message);
-          notifyListeners();
-        }
-        break;
-      case HMSActionResultListenerMethod.sendDirectMessage:
-        if (arguments != null) {
-          var message = HMSMessage.fromMap(arguments);
-          addMessage(message);
-          notifyListeners();
-        }
-        break;
-      case HMSActionResultListenerMethod.hlsStreamingStarted:
-        hlsStreamingRetry = false;
-        notifyListeners();
-        break;
-      case HMSActionResultListenerMethod.hlsStreamingStopped:
-        hasHlsStarted = false;
-        notifyListeners();
-        break;
-
-      case HMSActionResultListenerMethod.startScreenShare:
-        Utilities.showToast("Screen Share Started");
-        isScreenShareActive();
-        break;
-
-      case HMSActionResultListenerMethod.stopScreenShare:
-        Utilities.showToast("Screen Share Stopped");
-        isScreenShareActive();
-        break;
-      case HMSActionResultListenerMethod.startAudioShare:
-        Utilities.showToast("Audio Share Started");
-        isAudioShareStarted = true;
-        notifyListeners();
-        break;
-      case HMSActionResultListenerMethod.stopAudioShare:
-        Utilities.showToast("Audio Share Stopped");
-        isAudioShareStarted = false;
-        notifyListeners();
-        break;
-      case HMSActionResultListenerMethod.switchCamera:
-        Utilities.showToast("Camera switched successfully");
-        break;
-      case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
-        Utilities.showToast("Change Role successful");
-        break;
-      case HMSActionResultListenerMethod.setSessionMetadataForKey:
-        break;
-      case HMSActionResultListenerMethod.sendHLSTimedMetadata:
-        Utilities.showToast("Metadata sent successfully");
-        break;
-      case HMSActionResultListenerMethod.lowerLocalPeerHand:
-        isRaisedHand = false;
-        isBRB = false;
-        notifyListeners();
-        break;
-      case HMSActionResultListenerMethod.raiseLocalPeerHand:
-        isRaisedHand = true;
-        isBRB = false;
-        notifyListeners();
-        break;
-      case HMSActionResultListenerMethod.lowerRemotePeerHand:
-        break;
-      case HMSActionResultListenerMethod.addSingleChoicePollResponse:
-        break;
-      case HMSActionResultListenerMethod.addMultiChoicePollResponse:
-        break;
-      default:
-        log("ActionResultListener onException-> method: ${methodType.toString()}Could not find a valid case while switching");
-        break;
-    }
-  }
-
-  @override
-  void onException(
-      {HMSActionResultListenerMethod methodType =
-          HMSActionResultListenerMethod.unknown,
-      Map<String, dynamic>? arguments,
-      required HMSException hmsException}) {
-    this.hmsException = hmsException;
-    log("ActionResultListener onException-> method: ${methodType.toString()} , Error code : ${hmsException.code} , Description : ${hmsException.description} , Message : ${hmsException.message}");
-    switch (methodType) {
-      case HMSActionResultListenerMethod.leave:
-        break;
-      case HMSActionResultListenerMethod.changeTrackState:
-        break;
-      case HMSActionResultListenerMethod.changeMetadata:
-        break;
-      case HMSActionResultListenerMethod.endRoom:
-        break;
-      case HMSActionResultListenerMethod.removePeer:
-        break;
-      case HMSActionResultListenerMethod.acceptChangeRole:
-        break;
-      case HMSActionResultListenerMethod.changeRoleOfPeer:
-        break;
-      case HMSActionResultListenerMethod.changeTrackStateForRole:
-        break;
-      case HMSActionResultListenerMethod.startRtmpOrRecording:
-        toasts.add(HMSToastModel(hmsException,
-            hmsToastType: HMSToastsType.recordingErrorToast));
-        recordingType["browser"] = HMSRecordingState.failed;
-        notifyListeners();
-        break;
-      case HMSActionResultListenerMethod.stopRtmpAndRecording:
-        break;
-      case HMSActionResultListenerMethod.changeName:
-        break;
-      case HMSActionResultListenerMethod.sendBroadcastMessage:
-        break;
-      case HMSActionResultListenerMethod.sendGroupMessage:
-        break;
-      case HMSActionResultListenerMethod.sendDirectMessage:
-        break;
-      case HMSActionResultListenerMethod.hlsStreamingStarted:
-        isHLSStarting = false;
-        toasts.add(HMSToastModel(hmsException,
-            hmsToastType: HMSToastsType.streamingErrorToast));
-        notifyListeners();
-        break;
-      case HMSActionResultListenerMethod.hlsStreamingStopped:
-        break;
-      case HMSActionResultListenerMethod.startScreenShare:
-        isScreenShareActive();
-        break;
-      case HMSActionResultListenerMethod.stopScreenShare:
-        isScreenShareActive();
-        break;
-      case HMSActionResultListenerMethod.unknown:
-        break;
-      case HMSActionResultListenerMethod.startAudioShare:
-        isAudioShareStarted = false;
-        notifyListeners();
-        break;
-      case HMSActionResultListenerMethod.stopAudioShare:
-        break;
-      case HMSActionResultListenerMethod.switchCamera:
-        Utilities.showToast("Camera switching failed");
-        break;
-      case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
-        Utilities.showToast("Change role failed");
-        break;
-      case HMSActionResultListenerMethod.setSessionMetadataForKey:
-        toasts.add(HMSToastModel(hmsException,
-            hmsToastType: HMSToastsType.errorToast));
-        notifyListeners();
-        break;
-      case HMSActionResultListenerMethod.sendHLSTimedMetadata:
-        // TODO: Handle this case.
-        break;
-      case HMSActionResultListenerMethod.lowerLocalPeerHand:
-        break;
-      case HMSActionResultListenerMethod.raiseLocalPeerHand:
-        break;
-      case HMSActionResultListenerMethod.lowerRemotePeerHand:
-        break;
-      case HMSActionResultListenerMethod.addSingleChoicePollResponse:
-        break;
-      case HMSActionResultListenerMethod.addMultiChoicePollResponse:
-        break;
-      default:
-        log("ActionResultListener onException-> method: ${methodType.toString()} Could not find a valid case while switching");
-        break;
-    }
-    notifyListeners();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-    if (isRoomEnded) {
-      return;
-    }
-    if (state == AppLifecycleState.resumed) {
-      // if (Platform.isAndroid) {
-      //   isPipActive = await HMSAndroidPIPController.isActive();
-      // } else if (Platform.isIOS) {
-      //   isPipActive = false;
-      // }
-      notifyListeners();
-
-      if (lastVideoStatus && !reconnecting) {
-        toggleCameraMuteState();
-        lastVideoStatus = false;
-      }
-    } else if (state == AppLifecycleState.paused) {
-      HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer != null &&
-          !(localPeer.videoTrack?.isMute ?? true) &&
-          !isPipActive) {
-        toggleCameraMuteState();
-        lastVideoStatus = true;
-      }
-
-      if (Platform.isAndroid) {
-        // isPipActive = await HMSAndroidPIPController.isActive();
-        notifyListeners();
-      }
-
-      // if (Platform.isIOS) {
-      //   if (screenShareCount == 0 || isScreenShareOn) {
-      //     int peerIndex = peerTracks.indexWhere((element) =>
-      //         (!(element.track?.isMute ?? true) && !element.peer.isLocal));
-      //     if (peerIndex != -1) {
-      //       changePIPWindowTrackOnIOS(
-      //           track: peerTracks[peerIndex].track,
-      //           alternativeText: peerTracks[peerIndex].peer.name,
-      //           ratio: [9, 16]);
-      //     } else {
-      //       changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
-      //     }
-      //   } else {
-      //     int peerIndex = peerTracks.indexWhere((element) =>
-      //         element.uid ==
-      //         element.peer.peerId + (element.track?.trackId ?? ""));
-      //     if (peerIndex != -1) {
-      //       changePIPWindowTrackOnIOS(
-      //           track: peerTracks[peerIndex].track,
-      //           alternativeText: peerTracks[peerIndex].peer.name,
-      //           ratio: [9, 16]);
-      //     }
-      //   }
-      // }
-    }
-    // else if (state == AppLifecycleState.inactive) {
-    //   if (Platform.isAndroid && !isPipActive) {
-    //     isPipActive = await HMSAndroidPIPController.isActive();
-    //   }
-    //   notifyListeners();
-    // } else if (state == AppLifecycleState.detached) {
-    //   if (Platform.isAndroid && !isPipActive) {
-    //     isPipActive = await HMSAndroidPIPController.isActive();
-    //   }
-    //   notifyListeners();
-    // }
-  }
-
   @override
   void onLogMessage({required HMSLogList hmsLogList}) {
     notifyListeners();
@@ -2902,7 +2600,328 @@ class MeetingStore extends ChangeNotifier
   }
 
   @override
-  void onCues({required List<String> subtitles}) {
-    // TODO: implement onCues
+  void onCues({required List<String> subtitles}) {}
+
+  @override
+  void onWhiteboardStart({required HMSWhiteboardModel hmsWhiteboardModel}) {
+    log("onWhiteboardStart -> url: ${hmsWhiteboardModel.url} owner: ${hmsWhiteboardModel.title}");
+  }
+
+  @override
+  void onWhiteboardStop({required HMSWhiteboardModel hmsWhiteboardModel}) {
+    log("onWhiteboardStop -> url: ${hmsWhiteboardModel.url} owner: ${hmsWhiteboardModel.title}");
+  }
+
+//Get onSuccess or onException callbacks for HMSActionResultListenerMethod
+  @override
+  void onSuccess(
+      {HMSActionResultListenerMethod methodType =
+          HMSActionResultListenerMethod.unknown,
+      Map<String, dynamic>? arguments}) {
+    switch (methodType) {
+      case HMSActionResultListenerMethod.leave:
+        clearRoomState();
+        break;
+      case HMSActionResultListenerMethod.changeTrackState:
+        Utilities.showToast("Track State Changed");
+        break;
+      case HMSActionResultListenerMethod.changeMetadata:
+        notifyListeners();
+        break;
+      case HMSActionResultListenerMethod.endRoom:
+        clearRoomState();
+        break;
+      case HMSActionResultListenerMethod.removePeer:
+        HMSPeer peer = arguments!['peer'];
+        Utilities.showToast("Removed ${peer.name} from room");
+        break;
+      case HMSActionResultListenerMethod.acceptChangeRole:
+        Utilities.showToast("Accept role change successful");
+        break;
+      case HMSActionResultListenerMethod.changeRoleOfPeer:
+        Utilities.showToast("Change role successful");
+        break;
+      case HMSActionResultListenerMethod.changeTrackStateForRole:
+        message = arguments!['roles'] == null
+            ? "Successfully Muted All"
+            : "Successfully Muted Role";
+        Utilities.showToast(message);
+        break;
+      case HMSActionResultListenerMethod.startRtmpOrRecording:
+        if (arguments != null) {
+          if (arguments["rtmp_urls"] != null &&
+              arguments["rtmp_urls"].length == 0 &&
+              arguments["to_record"]) {
+            Utilities.showToast("Recording Started");
+          } else if (arguments["rtmp_urls"] != null &&
+              arguments["rtmp_urls"].length != 0 &&
+              arguments["to_record"] == false) {
+            Utilities.showToast("RTMP Started");
+          }
+          notifyListeners();
+        }
+        break;
+      case HMSActionResultListenerMethod.stopRtmpAndRecording:
+        Utilities.showToast("Stopped successfully");
+        break;
+      case HMSActionResultListenerMethod.unknown:
+        break;
+      case HMSActionResultListenerMethod.changeName:
+        Utilities.showToast("Change name successful");
+        break;
+      case HMSActionResultListenerMethod.sendBroadcastMessage:
+        if (arguments != null) {
+          var message = HMSMessage.fromMap(arguments);
+          if (arguments['type'] != "metadata") {
+            addMessage(message);
+            notifyListeners();
+          }
+        }
+        break;
+      case HMSActionResultListenerMethod.sendGroupMessage:
+        if (arguments != null) {
+          var message = HMSMessage.fromMap(arguments);
+          addMessage(message);
+          notifyListeners();
+        }
+        break;
+      case HMSActionResultListenerMethod.sendDirectMessage:
+        if (arguments != null) {
+          var message = HMSMessage.fromMap(arguments);
+          addMessage(message);
+          notifyListeners();
+        }
+        break;
+      case HMSActionResultListenerMethod.hlsStreamingStarted:
+        hlsStreamingRetry = false;
+        notifyListeners();
+        break;
+      case HMSActionResultListenerMethod.hlsStreamingStopped:
+        hasHlsStarted = false;
+        notifyListeners();
+        break;
+
+      case HMSActionResultListenerMethod.startScreenShare:
+        Utilities.showToast("Screen Share Started");
+        isScreenShareActive();
+        break;
+
+      case HMSActionResultListenerMethod.stopScreenShare:
+        Utilities.showToast("Screen Share Stopped");
+        isScreenShareActive();
+        break;
+      case HMSActionResultListenerMethod.startAudioShare:
+        Utilities.showToast("Audio Share Started");
+        isAudioShareStarted = true;
+        notifyListeners();
+        break;
+      case HMSActionResultListenerMethod.stopAudioShare:
+        Utilities.showToast("Audio Share Stopped");
+        isAudioShareStarted = false;
+        notifyListeners();
+        break;
+      case HMSActionResultListenerMethod.switchCamera:
+        Utilities.showToast("Camera switched successfully");
+        break;
+      case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
+        Utilities.showToast("Change Role successful");
+        break;
+      case HMSActionResultListenerMethod.setSessionMetadataForKey:
+        break;
+      case HMSActionResultListenerMethod.sendHLSTimedMetadata:
+        Utilities.showToast("Metadata sent successfully");
+        break;
+      case HMSActionResultListenerMethod.lowerLocalPeerHand:
+        isRaisedHand = false;
+        isBRB = false;
+        notifyListeners();
+        break;
+      case HMSActionResultListenerMethod.raiseLocalPeerHand:
+        isRaisedHand = true;
+        isBRB = false;
+        notifyListeners();
+        break;
+      case HMSActionResultListenerMethod.lowerRemotePeerHand:
+        break;
+      case HMSActionResultListenerMethod.addSingleChoicePollResponse:
+        break;
+      case HMSActionResultListenerMethod.addMultiChoicePollResponse:
+        break;
+      case HMSActionResultListenerMethod.startWhiteboard:
+        break;
+      case HMSActionResultListenerMethod.stopWhiteboard:
+        break;
+      default:
+        log("ActionResultListener onException-> method: ${methodType.toString()}Could not find a valid case while switching");
+        break;
+    }
+  }
+
+  @override
+  void onException(
+      {HMSActionResultListenerMethod methodType =
+          HMSActionResultListenerMethod.unknown,
+      Map<String, dynamic>? arguments,
+      required HMSException hmsException}) {
+    this.hmsException = hmsException;
+    log("ActionResultListener onException-> method: ${methodType.toString()} , Error code : ${hmsException.code} , Description : ${hmsException.description} , Message : ${hmsException.message}");
+    switch (methodType) {
+      case HMSActionResultListenerMethod.leave:
+        break;
+      case HMSActionResultListenerMethod.changeTrackState:
+        break;
+      case HMSActionResultListenerMethod.changeMetadata:
+        break;
+      case HMSActionResultListenerMethod.endRoom:
+        break;
+      case HMSActionResultListenerMethod.removePeer:
+        break;
+      case HMSActionResultListenerMethod.acceptChangeRole:
+        break;
+      case HMSActionResultListenerMethod.changeRoleOfPeer:
+        break;
+      case HMSActionResultListenerMethod.changeTrackStateForRole:
+        break;
+      case HMSActionResultListenerMethod.startRtmpOrRecording:
+        toasts.add(HMSToastModel(hmsException,
+            hmsToastType: HMSToastsType.recordingErrorToast));
+        recordingType["browser"] = HMSRecordingState.failed;
+        notifyListeners();
+        break;
+      case HMSActionResultListenerMethod.stopRtmpAndRecording:
+        break;
+      case HMSActionResultListenerMethod.changeName:
+        break;
+      case HMSActionResultListenerMethod.sendBroadcastMessage:
+        break;
+      case HMSActionResultListenerMethod.sendGroupMessage:
+        break;
+      case HMSActionResultListenerMethod.sendDirectMessage:
+        break;
+      case HMSActionResultListenerMethod.hlsStreamingStarted:
+        isHLSStarting = false;
+        toasts.add(HMSToastModel(hmsException,
+            hmsToastType: HMSToastsType.streamingErrorToast));
+        notifyListeners();
+        break;
+      case HMSActionResultListenerMethod.hlsStreamingStopped:
+        break;
+      case HMSActionResultListenerMethod.startScreenShare:
+        isScreenShareActive();
+        break;
+      case HMSActionResultListenerMethod.stopScreenShare:
+        isScreenShareActive();
+        break;
+      case HMSActionResultListenerMethod.unknown:
+        break;
+      case HMSActionResultListenerMethod.startAudioShare:
+        isAudioShareStarted = false;
+        notifyListeners();
+        break;
+      case HMSActionResultListenerMethod.stopAudioShare:
+        break;
+      case HMSActionResultListenerMethod.switchCamera:
+        Utilities.showToast("Camera switching failed");
+        break;
+      case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
+        Utilities.showToast("Change role failed");
+        break;
+      case HMSActionResultListenerMethod.setSessionMetadataForKey:
+        toasts.add(HMSToastModel(hmsException,
+            hmsToastType: HMSToastsType.errorToast));
+        notifyListeners();
+        break;
+      case HMSActionResultListenerMethod.sendHLSTimedMetadata:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.lowerLocalPeerHand:
+        break;
+      case HMSActionResultListenerMethod.raiseLocalPeerHand:
+        break;
+      case HMSActionResultListenerMethod.lowerRemotePeerHand:
+        break;
+      case HMSActionResultListenerMethod.addSingleChoicePollResponse:
+        break;
+      case HMSActionResultListenerMethod.addMultiChoicePollResponse:
+        break;
+      case HMSActionResultListenerMethod.startWhiteboard:
+        break;
+      case HMSActionResultListenerMethod.stopWhiteboard:
+        break;
+      default:
+        log("ActionResultListener onException-> method: ${methodType.toString()} Could not find a valid case while switching");
+        break;
+    }
+    notifyListeners();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+    if (isRoomEnded) {
+      return;
+    }
+    if (state == AppLifecycleState.resumed) {
+      // if (Platform.isAndroid) {
+      //   isPipActive = await HMSAndroidPIPController.isActive();
+      // } else if (Platform.isIOS) {
+      //   isPipActive = false;
+      // }
+      notifyListeners();
+
+      if (lastVideoStatus && !reconnecting) {
+        toggleCameraMuteState();
+        lastVideoStatus = false;
+      }
+    } else if (state == AppLifecycleState.paused) {
+      HMSLocalPeer? localPeer = await getLocalPeer();
+      if (localPeer != null &&
+          !(localPeer.videoTrack?.isMute ?? true) &&
+          !isPipActive) {
+        toggleCameraMuteState();
+        lastVideoStatus = true;
+      }
+
+      if (Platform.isAndroid) {
+        // isPipActive = await HMSAndroidPIPController.isActive();
+        notifyListeners();
+      }
+
+      // if (Platform.isIOS) {
+      //   if (screenShareCount == 0 || isScreenShareOn) {
+      //     int peerIndex = peerTracks.indexWhere((element) =>
+      //         (!(element.track?.isMute ?? true) && !element.peer.isLocal));
+      //     if (peerIndex != -1) {
+      //       changePIPWindowTrackOnIOS(
+      //           track: peerTracks[peerIndex].track,
+      //           alternativeText: peerTracks[peerIndex].peer.name,
+      //           ratio: [9, 16]);
+      //     } else {
+      //       changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
+      //     }
+      //   } else {
+      //     int peerIndex = peerTracks.indexWhere((element) =>
+      //         element.uid ==
+      //         element.peer.peerId + (element.track?.trackId ?? ""));
+      //     if (peerIndex != -1) {
+      //       changePIPWindowTrackOnIOS(
+      //           track: peerTracks[peerIndex].track,
+      //           alternativeText: peerTracks[peerIndex].peer.name,
+      //           ratio: [9, 16]);
+      //     }
+      //   }
+      // }
+    }
+    // else if (state == AppLifecycleState.inactive) {
+    //   if (Platform.isAndroid && !isPipActive) {
+    //     isPipActive = await HMSAndroidPIPController.isActive();
+    //   }
+    //   notifyListeners();
+    // } else if (state == AppLifecycleState.detached) {
+    //   if (Platform.isAndroid && !isPipActive) {
+    //     isPipActive = await HMSAndroidPIPController.isActive();
+    //   }
+    //   notifyListeners();
+    // }
   }
 }

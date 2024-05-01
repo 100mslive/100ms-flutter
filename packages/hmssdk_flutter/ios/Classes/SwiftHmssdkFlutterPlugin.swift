@@ -17,7 +17,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var sessionEventChannel: FlutterEventChannel?
     var hlsPlayerChannel: FlutterEventChannel?
     var pollsEventChannel: FlutterEventChannel?
-
+    var whiteboardEventChannel: FlutterEventChannel?
+    
     var eventSink: FlutterEventSink?
     var previewSink: FlutterEventSink?
     var logsSink: FlutterEventSink?
@@ -57,7 +58,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let sessionChannel = FlutterEventChannel(name: "session_event_channel", binaryMessenger: registrar.messenger())
         let hlsChannel = FlutterEventChannel(name: "hls_player_channel", binaryMessenger: registrar.messenger())
         let pollsChannel = FlutterEventChannel(name: "polls_event_channel", binaryMessenger: registrar.messenger())
-
+        let whiteboardChannel = FlutterEventChannel(name: "whiteboard_event_channel", binaryMessenger: registrar.messenger())
+        
         let instance = SwiftHmssdkFlutterPlugin(channel: channel,
                                                 meetingEventChannel: eventChannel,
                                                 previewEventChannel: previewChannel,
@@ -65,7 +67,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                                                 rtcStatsEventChannel: rtcChannel,
                                                 sessionEventChannel: sessionChannel,
                                                 hlsPlayerChannel: hlsChannel,
-                                                pollsEventChannel: pollsChannel)
+                                                pollsEventChannel: pollsChannel,
+                                                whiteboardEventChannel: whiteboardChannel)
 
         let videoViewFactory = HMSFlutterPlatformViewFactory(plugin: instance)
         registrar.register(videoViewFactory, withId: "HMSFlutterPlatformView")
@@ -91,7 +94,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 rtcStatsEventChannel: FlutterEventChannel,
                 sessionEventChannel: FlutterEventChannel,
                 hlsPlayerChannel: FlutterEventChannel,
-                pollsEventChannel: FlutterEventChannel) {
+                pollsEventChannel: FlutterEventChannel,
+                whiteboardEventChannel: FlutterEventChannel) {
 
         self.channel = channel
         self.meetingEventChannel = meetingEventChannel
@@ -101,6 +105,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         self.sessionEventChannel = sessionEventChannel
         self.hlsPlayerChannel = hlsPlayerChannel
         self.pollsEventChannel = pollsEventChannel
+        self.whiteboardEventChannel = whiteboardEventChannel
     }
 
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
@@ -178,6 +183,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             pollsEventSink = nil
         } else {
             print(#function, "pollsEventChannel not found")
+        }
+        if whiteboardEventChannel != nil {
+            whiteboardEventChannel!.setStreamHandler(nil)
+            whiteboardEventChannel = nil
+        } else {
+            print(#function, "whiteboardEventChannel not found")
         }
     }
 
@@ -474,17 +485,31 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 
                 guard let self = self else {return}
                 
-                let args = [
+                switch hmsWhiteBoardUpdateType{
                     
-                
-                ]
+                case .started:
+                    let args = [
+                        "event_name": "on_whiteboard_start",
+                        "data": HMSWhiteboardExtension.toDictionary(hmsWhiteboard: hmsWhiteboard)
+                    ]
+                    self.eventSink
+                    break
+                case .stopped:
+                    let args = [
+                        "event_name": "on_whiteboard_stop",
+                        "data": HMSWhiteboardExtension.toDictionary(hmsWhiteboard: hmsWhiteboard)
+                    ]
+                    break
+                default:
+                    break
+                }
                 
             }
-            hmsSDK?.add
+            hmsSDK?.interactivityCenter.addWhiteboardUpdateListener(whiteboardListener)
         case "remove_whiteboard_update_listener":
-        
+            break
         default:
-            
+            HMSWhiteboardAction.whiteboardActions(call, result, hmsSDK)
         }
     }
 

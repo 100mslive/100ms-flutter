@@ -19,7 +19,10 @@ class HMSWhiteboardExtension{
         var args = [String: Any?]()
         
         args["id"] = hmsWhiteboard?.id
-        hmsWhiteboard?.state
+        args["owner"] = HMSPeerExtension.toDictionary(hmsWhiteboard?.owner)
+        args["title"] = hmsWhiteboard?.title
+        args["url"] = hmsWhiteboard?.url?.absoluteString
         
+        return args
     }
 }

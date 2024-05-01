@@ -1,6 +1,8 @@
 package live.hms.hmssdk_flutter.hms_role_components
 
+import live.hms.video.sdk.models.role.HMSWhiteBoardPermission
 import live.hms.video.sdk.models.role.PermissionsParams
+import live.hms.video.whiteboard.HMSWhiteboardPermissions
 
 class PermissionParamsExtension {
     companion object {
@@ -17,7 +19,18 @@ class PermissionParamsExtension {
             args["un_mute"] = permissionsParams.unmute
             args["poll_read"] = permissionsParams.pollRead
             args["poll_write"] = permissionsParams.pollWrite
+            args["whiteboard_permission"] = getMapFromHMSWhiteboardPermission(permissionsParams.whiteboard)
             return args
+        }
+
+        private fun getMapFromHMSWhiteboardPermission(hmsWhiteboardPermission: HMSWhiteBoardPermission):HashMap<String,Any?>{
+            val permission = HashMap<String,Any?>()
+
+            permission["admin"] = hmsWhiteboardPermission.admin
+            permission["write"] = hmsWhiteboardPermission.write
+            permission["read"] = hmsWhiteboardPermission.read
+
+            return permission
         }
     }
 }

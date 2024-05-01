@@ -229,7 +229,13 @@ enum PlatformMethod {
   enableNoiseCancellation,
   disableNoiseCancellation,
   isNoiseCancellationEnabled,
-  isNoiseCancellationAvailable
+  isNoiseCancellationAvailable,
+
+  ///Whiteboard methods
+  startWhiteboard,
+  stopWhiteboard,
+  addWhiteboardUpdateListener,
+  removeWhiteboardUpdateListener,
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -578,6 +584,17 @@ extension PlatformMethodValues on PlatformMethod {
         return "is_noise_cancellation_enabled";
       case PlatformMethod.isNoiseCancellationAvailable:
         return "is_noise_cancellation_available";
+
+      ///Whiteboard Methods
+      case PlatformMethod.startWhiteboard:
+        return "start_whiteboard";
+      case PlatformMethod.stopWhiteboard:
+        return "stop_whiteboard";
+      case PlatformMethod.addWhiteboardUpdateListener:
+        return "add_whiteboard_update_listener";
+      case PlatformMethod.removeWhiteboardUpdateListener:
+        return "remove_whiteboard_update_listener";
+      
       default:
         return 'unknown';
     }
@@ -926,6 +943,16 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.isNoiseCancellationEnabled;
       case "is_noise_cancellation_available":
         return PlatformMethod.isNoiseCancellationAvailable;
+
+      ///Whiteboard Methods
+      case "start_whiteboard":
+        return PlatformMethod.startWhiteboard;
+      case "stop_whiteboard":
+        return PlatformMethod.stopWhiteboard;
+      case "add_whiteboard_update_listener":
+        return PlatformMethod.addWhiteboardUpdateListener;
+      case "remove_whiteboard_update_listener":
+        return PlatformMethod.removeWhiteboardUpdateListener;
 
       default:
         return PlatformMethod.unknown;

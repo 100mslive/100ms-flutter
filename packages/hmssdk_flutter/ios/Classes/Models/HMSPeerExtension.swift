@@ -10,7 +10,12 @@ import HMSSDK
 
 class  HMSPeerExtension {
 
-    static func toDictionary(_ peer: HMSPeer) -> [String: Any] {
+    static func toDictionary(_ peer: HMSPeer?) -> [String: Any]? {
+        
+        guard let peer = peer
+        else{
+            return nil
+        }
 
         var dict = [
             "peer_id": peer.peerID,

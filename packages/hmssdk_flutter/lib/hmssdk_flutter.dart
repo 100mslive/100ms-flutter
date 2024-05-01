@@ -25,6 +25,7 @@ export 'src/enum/hms_hls_playback_state.dart';
 export 'src/enum/hms_poll_enum.dart';
 export 'src/enum/hms_peer_type.dart';
 export 'src/enum/hms_hls_playlist_type.dart';
+export 'src/enum/hms_whiteboard_listener_method.dart';
 
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';
@@ -59,7 +60,6 @@ export 'src/model/hms_video_resolution.dart';
 export 'src/model/hms_video_setting.dart';
 export 'src/model/hms_video_track.dart';
 export 'src/model/hms_video_track_setting.dart';
-export 'src/model/platform_method_response.dart';
 export 'src/model/hms_track_change_request.dart';
 export 'src/model/hms_peer_removed_from_room.dart';
 export 'src/model/hms_message_recipient.dart';
@@ -116,7 +116,10 @@ export 'src/model/polls/hms_poll_leaderboard_summary.dart';
 export 'src/model/polls/hms_poll_peer_info_response.dart';
 export 'src/model/hms_noise_cancellation_controller.dart';
 export 'src/model/hls_stream_properties.dart';
-
+export 'src/model/whiteboard/hms_whiteboard_controller.dart';
+export 'src/model/whiteboard/hms_whiteboard_model.dart';
+export 'src/model/whiteboard/hms_whiteboard_permission.dart';
+export 'src/model/whiteboard/hms_whiteboard_update_listener.dart';
 //Views
 export 'src/ui/meeting/hms_texture_view.dart';
 export 'src/ui/meeting/hms_video_view.dart';
