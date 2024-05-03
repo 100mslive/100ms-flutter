@@ -12,30 +12,48 @@ class HMSWhiteboardAction{
     
     static func whiteboardActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?){
         switch call.method{
-            "start_whiteboard":
+            case "start_whiteboard":
+                startWhiteboard(call, result, hmsSDK)
             
-            "stop_whiteboard":
+            case "stop_whiteboard":
+                stopWhiteboard(result, hmsSDK)
             
-        default:
-            result(FlutterMethodNotImplemented)
+            default:
+                result(FlutterMethodNotImplemented)
         }
     }
     
-    private static func startWhiteboard(_call: FlutterMethodCall, _ result: FlutterResult, _ hmsSDK: HMSSDK?){
+    private static func startWhiteboard(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?){
         let arguments = call.arguments as![AnyHashable: Any]
         
+        /*
+         title is not used as of now
+         */
         guard let title = arguments["title"] as? String else{
             HMSErrorLogger.returnArgumentsError("title can't be empty")
             return
         }
-        hmsSDK?.interactivityCenter.startWhiteboard(completion: {
-            
-        })
+        hmsSDK?.interactivityCenter.startWhiteboard{
+            _,error in
+            if let error = error {
+                result(HMSErrorExtension.toDictionary(error))
+            }else{
+                result(nil)
+            }
+        }
         
     }
     
-    private static func stopWhiteboard(_ result: FlutterResult, _ hmsSDK: HMSSDK?){
+    private static func stopWhiteboard(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?){
         
+        hmsSDK?.interactivityCenter.stopWhiteboard{
+            _, error in
+            if let error = error{
+                result(HMSErrorExtension.toDictionary(error))
+            }else{
+                result(nil)
+            }
+        }
     }
     
     static func getWhiteboardUpdateType(updateType: HMSWhiteboardUpdateType) -> String?{

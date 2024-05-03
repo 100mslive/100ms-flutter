@@ -381,6 +381,38 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       optionText: meetingStore.isNoiseCancellationEnabled
                           ? "Noise Reduced"
                           : "Reduce Noise"),
+
+                if (meetingStore
+                        .localPeer?.role.permissions.whiteboard?.admin ??
+                    false)
+                  MoreOptionItem(
+                      onTap: () async {
+                        meetingStore.toggleWhiteboard();
+                        Navigator.pop(context);
+                      },
+                      isActive: false,
+                      optionIcon: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
+                        height: 20,
+                        width: 20,
+                        colorFilter: ColorFilter.mode(
+                            meetingStore.isWhiteboardEnabled
+                                ? meetingStore.whiteboardModel?.owner?.peerId ==
+                                        meetingStore.localPeer?.peerId
+                                    ? HMSThemeColors.onSurfaceHighEmphasis
+                                    : HMSThemeColors.onSurfaceLowEmphasis
+                                : HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
+                      ),
+                      optionTextColor: meetingStore.isWhiteboardEnabled
+                          ? meetingStore.whiteboardModel?.owner?.peerId ==
+                                  meetingStore.localPeer?.peerId
+                              ? HMSThemeColors.onSurfaceHighEmphasis
+                              : HMSThemeColors.onSurfaceLowEmphasis
+                          : HMSThemeColors.onSurfaceHighEmphasis,
+                      optionText: meetingStore.isWhiteboardEnabled
+                          ? "Close Whiteboard"
+                          : "Open Whiteboard"),
               ],
             ),
           ],

@@ -264,6 +264,12 @@ class MeetingStore extends ChangeNotifier
   ///Boolean to track whether noise cancellation is enabled or not
   bool isNoiseCancellationEnabled = false;
 
+  ///Boolean to track whether whiteboard is enabled or not
+  bool isWhiteboardEnabled = false;
+
+  ///variable to store whiteboard model
+  HMSWhiteboardModel? whiteboardModel;
+
   Future<HMSException?> join(String userName, String? tokenData) async {
     late HMSConfig joinConfig;
 
@@ -2397,6 +2403,17 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
+  void toggleWhiteboard() async {
+    if (isWhiteboardEnabled) {
+      if(localPeer?.peerId == whiteboardModel?.owner?.peerId){
+        await HMSWhiteboardController.stop();
+      }
+    } else {
+      await HMSWhiteboardController.start(title: "Whiteboard From Flutter");
+    }
+    notifyListeners();
+  }
+
   @override
   void onLogMessage({required HMSLogList hmsLogList}) {
     notifyListeners();
@@ -2604,12 +2621,18 @@ class MeetingStore extends ChangeNotifier
 
   @override
   void onWhiteboardStart({required HMSWhiteboardModel hmsWhiteboardModel}) {
-    log("onWhiteboardStart -> url: ${hmsWhiteboardModel.url} owner: ${hmsWhiteboardModel.title}");
+    isWhiteboardEnabled = true;
+    whiteboardModel = hmsWhiteboardModel;
+    log("onWhiteboardStart -> url: ${hmsWhiteboardModel.url} title: ${hmsWhiteboardModel.title}");
+    notifyListeners();
   }
 
   @override
   void onWhiteboardStop({required HMSWhiteboardModel hmsWhiteboardModel}) {
-    log("onWhiteboardStop -> url: ${hmsWhiteboardModel.url} owner: ${hmsWhiteboardModel.title}");
+    isWhiteboardEnabled = false;
+    whiteboardModel = null;
+    log("onWhiteboardStop -> url: ${hmsWhiteboardModel.url} title: ${hmsWhiteboardModel.title}");
+    notifyListeners();
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod

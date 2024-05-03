@@ -583,7 +583,7 @@ abstract class PlatformService {
       }
     });
 
-    _whiteboardEventChannel.receiveBroadcastStream({'name': 'whiteboard_event_channel'}).map((event) {
+    _whiteboardEventChannel.receiveBroadcastStream({'name': 'whiteboard'}).map((event) {
       HMSWhiteboardListenerMethod method =
           HMSWhiteboardListenerMethodValues.getHMSWhiteboardListenerMethodFromString(event['event_name']);
       Map data = event['data'];

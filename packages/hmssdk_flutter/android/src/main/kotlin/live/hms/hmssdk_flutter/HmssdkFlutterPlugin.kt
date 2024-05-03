@@ -75,6 +75,7 @@ class HmssdkFlutterPlugin :
     private var sessionStoreSink: EventChannel.EventSink? = null
     var hlsPlayerSink: EventChannel.EventSink? = null
     private var pollsSink: EventChannel.EventSink? = null
+    private var whiteboardSink: EventChannel.EventSink? = null
     private lateinit var activity: Activity
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
@@ -128,6 +129,7 @@ class HmssdkFlutterPlugin :
             this.sessionStoreChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Session Store channel not found")
             this.hlsPlayerChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "HLS Player channel not found")
             this.pollsEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "polls events channel not found")
+            this.whiteboardEventChannel?.setStreamHandler(this)?:Log.e("Channel Error", "whiteboard events channel not found")
             this.hmsVideoFactory = HMSVideoViewFactory(this)
             this.hmsHLSPlayerFactory = HMSHLSPlayerFactory(this)
 
@@ -536,6 +538,7 @@ class HmssdkFlutterPlugin :
             sessionStoreSink = null
             hlsPlayerSink = null
             pollsSink = null
+            whiteboardSink = null
             hmssdkFlutterPlugin = null
             hmsBinaryMessenger = null
             hmsTextureRegistry = null
@@ -668,6 +671,8 @@ class HmssdkFlutterPlugin :
             this.hlsPlayerSink = events
         } else if (nameOfEventSink == "polls") {
             this.pollsSink = events
+        } else if(nameOfEventSink == "whiteboard") {
+            this.whiteboardSink = events
         }
     }
 
@@ -2205,7 +2210,7 @@ class HmssdkFlutterPlugin :
 
                         if (args["data"] != null) {
                             CoroutineScope(Dispatchers.Main).launch {
-                                eventSink?.success(args)
+                                whiteboardSink?.success(args)
                             }
                         }
                     }
@@ -2219,7 +2224,7 @@ class HmssdkFlutterPlugin :
 
                             if (args["data"] != null) {
                                 CoroutineScope(Dispatchers.Main).launch {
-                                    eventSink?.success(args)
+                                    whiteboardSink?.success(args)
                                 }
                             }
                         }

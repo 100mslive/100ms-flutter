@@ -39,6 +39,7 @@ class  HMSPermissionExtension {
         permission["write"] = hmsWhiteboardPermission.write
         permission["read"] = hmsWhiteboardPermission.read
         
+        return permission
     }
         
 }
