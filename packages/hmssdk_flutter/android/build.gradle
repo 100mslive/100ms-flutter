@@ -47,7 +47,6 @@ android {
 }
 
 dependencies {
-    //
     implementation "com.github.100mslive.android-sdk:video-view:AN-1558-whiteboard-permission-fix-SNAPSHOT"
     implementation "com.github.100mslive.android-sdk:hls-player:AN-1558-whiteboard-permission-fix-SNAPSHOT"
     implementation 'com.github.100mslive.android-sdk:android-sdk:AN-1558-whiteboard-permission-fix-SNAPSHOT'

@@ -2403,13 +2403,13 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  void toggleWhiteboard() async {
+  void toggleWhiteboard() {
     if (isWhiteboardEnabled) {
       if(localPeer?.peerId == whiteboardModel?.owner?.peerId){
-        await HMSWhiteboardController.stop();
+        HMSWhiteboardController.stop();
       }
-    } else {
-      await HMSWhiteboardController.start(title: "Whiteboard From Flutter");
+    } else if(!isScreenShareOn && screenShareCount == 0){
+       HMSWhiteboardController.start(title: "Whiteboard From Flutter");
     }
     notifyListeners();
   }
