@@ -39,8 +39,10 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
     ///The number of pages in the [PageView] is equal to [numberOfPeers/6 + (if number of peers is not divisible by 6 then we add 1 else we add 0)]
     ///One thing to note here is that in this view we filter out the local peer since we are rendering the local peer in the inset tile
     ///The inset tile is rendered at the top of the grid view
-    return Selector<MeetingStore,
-            Tuple5<List<PeerTrackNode>, int, PeerTrackNode, int, HMSWhiteboardModel?>>(
+    return Selector<
+            MeetingStore,
+            Tuple5<List<PeerTrackNode>, int, PeerTrackNode, int,
+                HMSWhiteboardModel?>>(
         selector: (_, meetingStore) => Tuple5(
             meetingStore.peerTracks,
             meetingStore.peerTracks.length,
@@ -53,12 +55,13 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
               (numberOfPeers ~/ 6) + (numberOfPeers % 6 == 0 ? 0 : 1);
 
           var screenshareStore = WhiteboardScreenshareStore();
+
           ///If the remote peer is sharing screen then we render the [ScreenshareGridLayout] with inset tile
           ///Else we render the normal layout with inset tile
           return data.item4 > 0 || data.item5 != null
               ? ChangeNotifierProvider.value(
-                value: screenshareStore,
-                child: ScreenshareGridLayout(
+                  value: screenshareStore,
+                  child: ScreenshareGridLayout(
                     peerTracks: widget.isLocalInsetPresent
                         ? data.item1
                             .where((element) =>
@@ -69,20 +72,13 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
                     screenshareCount: data.item4,
                     whiteboardModel: data.item5,
                   ),
-              )
+                )
               :
+
               ///If no screen is being shared we render the normal layout with inset tile
               Column(
                   children: [
                     Expanded(
-                      // child: TextureViewGrid(
-                      //     peerTracks: widget.isLocalInsetPresent
-                      //         ? data.item1
-                      //             .where((element) =>
-                      //                 !(element.peer.isLocal) ||
-                      //                 element.track?.source == "SCREEN")
-                      //             .toList()
-                      //         : data.item1),
                       child: PageView.builder(
                           physics: const PageScrollPhysics(),
                           controller: controller,

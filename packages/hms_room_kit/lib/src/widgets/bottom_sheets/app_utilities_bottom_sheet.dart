@@ -42,6 +42,24 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
     super.deactivate();
   }
 
+  Color geWhiteboardStatusColor(MeetingStore meetingStore) {
+    ///If whiteboard is enabled and the local peer is the owner of the whiteboard
+    ///we return high emphasis color since the local peer can close the whiteboard
+    ///else we return low emphasis color since local peer can't close the whiteboard
+    ///
+    ///In other case if whiteboard is not enabled and screen share is ON
+    ///we return low emphasis color since whiteboard can't be turned ON
+    ///In other cases we return high emphasis color
+    return meetingStore.isWhiteboardEnabled
+        ? meetingStore.whiteboardModel?.owner?.customerUserId ==
+                meetingStore.localPeer?.customerUserId
+            ? HMSThemeColors.onSurfaceHighEmphasis
+            : HMSThemeColors.onSurfaceLowEmphasis
+        : meetingStore.screenShareCount > 0 || meetingStore.isScreenShareOn
+            ? HMSThemeColors.onSurfaceLowEmphasis
+            : HMSThemeColors.onSurfaceHighEmphasis;
+  }
+
   @override
   Widget build(BuildContext context) {
     MeetingStore meetingStore = context.read<MeetingStore>();
@@ -396,20 +414,10 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
-                            meetingStore.isWhiteboardEnabled
-                                ? meetingStore.whiteboardModel?.owner?.peerId ==
-                                        meetingStore.localPeer?.peerId
-                                    ? HMSThemeColors.onSurfaceHighEmphasis
-                                    : HMSThemeColors.onSurfaceLowEmphasis
-                                : HMSThemeColors.onSurfaceHighEmphasis,
+                            geWhiteboardStatusColor(meetingStore),
                             BlendMode.srcIn),
                       ),
-                      optionTextColor: meetingStore.isWhiteboardEnabled
-                          ? meetingStore.whiteboardModel?.owner?.peerId ==
-                                  meetingStore.localPeer?.peerId
-                              ? HMSThemeColors.onSurfaceHighEmphasis
-                              : HMSThemeColors.onSurfaceLowEmphasis
-                          : HMSThemeColors.onSurfaceHighEmphasis,
+                      optionTextColor: geWhiteboardStatusColor(meetingStore),
                       optionText: meetingStore.isWhiteboardEnabled
                           ? "Close Whiteboard"
                           : "Open Whiteboard"),

@@ -46,15 +46,24 @@ class _ScreenshareGridLayoutState extends State<ScreenshareGridLayout> {
         builder: (_, isFullScreen, __) {
           return Column(
             children: [
-              ///This renders the screenshare at the top half of the screen
+              ///This renders the screenshare or whiteboard at the top 2/3 of the screen
               Flexible(
                   flex: 2,
                   child: Column(
+                    ///There will not be a case where whiteboard and screenshare are enabled at the same time
+                    ///So we check if the whiteboard is enabled and render the whiteboard tile
+                    ///Else we render the screenshare tile
                     children: [
+                      ///If the whiteboard is enabled we
+                      ///render the whiteboard tile we check this with the whiteboardeModel
                       if (widget.whiteboardModel != null &&
                           widget.whiteboardModel?.url != null)
                         Expanded(child: const WhiteboardTile()),
 
+                      ///This renders the screenshare tile based on the
+                      ///screenshare count
+                      ///Note: This doesn't account for local screenshare since
+                      ///we don't render a tile for local screenshare
                       if (widget.screenshareCount > 0)
                         Expanded(
                           child: PageView.builder(

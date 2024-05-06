@@ -46,6 +46,8 @@ class MeetingStore extends ChangeNotifier
 
   bool isSpeakerOn = true;
 
+  ///Integer to store the number of screenshare in the meeting
+  ///This does not count the local screenshare
   int screenShareCount = 0;
 
   HMSException? hmsException;
@@ -1711,6 +1713,16 @@ class MeetingStore extends ChangeNotifier
     switch (update) {
       case HMSTrackUpdate.trackAdded:
         if (track.source != "REGULAR") {
+          ///whenever a screen is shared and if the whiteboard is enabled
+          ///we check whether the whiteboard is started by us and if yes
+          ///we stop the whiteboard
+          if (isWhiteboardEnabled) {
+            if (whiteboardModel?.owner?.customerUserId ==
+                localPeer?.customerUserId) {
+              HMSWhiteboardController.stop();
+            }
+          }
+
           if (!peer.isLocal) {
             int peerIndex = peerTracks.indexWhere(
                 (element) => element.uid == peer.peerId + track.trackId);
@@ -2405,11 +2417,11 @@ class MeetingStore extends ChangeNotifier
 
   void toggleWhiteboard() {
     if (isWhiteboardEnabled) {
-      if(localPeer?.peerId == whiteboardModel?.owner?.peerId){
+      if (localPeer?.peerId == whiteboardModel?.owner?.peerId) {
         HMSWhiteboardController.stop();
       }
-    } else if(!isScreenShareOn && screenShareCount == 0){
-       HMSWhiteboardController.start(title: "Whiteboard From Flutter");
+    } else if (!isScreenShareOn && screenShareCount == 0) {
+      HMSWhiteboardController.start(title: "Whiteboard From Flutter");
     }
     notifyListeners();
   }
@@ -2623,7 +2635,7 @@ class MeetingStore extends ChangeNotifier
   void onWhiteboardStart({required HMSWhiteboardModel hmsWhiteboardModel}) {
     isWhiteboardEnabled = true;
     whiteboardModel = hmsWhiteboardModel;
-    log("onWhiteboardStart -> url: ${hmsWhiteboardModel.url} title: ${hmsWhiteboardModel.title}");
+    log("onWhiteboardStart -> peerId: ${hmsWhiteboardModel.owner?.peerId} localPeer: ${localPeer?.peerId} title: ${hmsWhiteboardModel.title}");
     notifyListeners();
   }
 
@@ -2631,7 +2643,7 @@ class MeetingStore extends ChangeNotifier
   void onWhiteboardStop({required HMSWhiteboardModel hmsWhiteboardModel}) {
     isWhiteboardEnabled = false;
     whiteboardModel = null;
-    log("onWhiteboardStop -> url: ${hmsWhiteboardModel.url} title: ${hmsWhiteboardModel.title}");
+    log("onWhiteboardStop -> peerId: ${hmsWhiteboardModel.owner?.peerId} localPeer: ${localPeer?.peerId} title: ${hmsWhiteboardModel.title}");
     notifyListeners();
   }
 
