@@ -1,18 +1,12 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 
-- Added Captions in HLS Player
-https://100ms.atlassian.net/browse/FLUT-265
+- Add Quality Selector sheet in HLS Player
+https://100ms.atlassian.net/browse/FLUT-297
 
-- Pinch & Zoom on HLS Player
-https://100ms.atlassian.net/browse/FLUT-268
+- Whiteboard Support in flutter
+https://100ms.atlassian.net/browse/FLUT-298
 
-- Full Screen Landscape UI
-https://100ms.atlassian.net/browse/FLUT-269
-
-- Seek Bar + Go Live Button behaviour (Polling)
-https://100ms.atlassian.net/browse/FLUT-272
-
-Room Kit: 1.1.1
-Core SDK: 1.10.1
-Android SDK: 2.9.54
+Room Kit: 1.1.2
+Core SDK: 1.10.2
+Android SDK: 2.9.55
 iOS SDK: 1.9.0
