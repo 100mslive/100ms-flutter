@@ -412,6 +412,27 @@ abstract class PlatformService {
                     : null
           });
           break;
+        case HMSPreviewUpdateListenerMethod.onPeerListUpdate:
+          List<HMSPeer> addedPeers = [];
+          List<HMSPeer> removedPeers = [];
+
+          if (event.data.containsKey("added_peers") &&
+              event.data["added_peers"] != null) {
+            for (var peer in event.data["added_peers"]) {
+              addedPeers.add(HMSPeer.fromMap(peer));
+            }
+          }
+
+          if (event.data.containsKey("removed_peers") &&
+              event.data["removed_peers"] != null) {
+            for (var peer in event.data["removed_peers"]) {
+              removedPeers.add(HMSPeer.fromMap(peer));
+            }
+          }
+
+          notifyPreviewListeners(method,
+              {"added_peers": addedPeers, "removed_peers": removedPeers});
+          break;
       }
     });
 
@@ -614,6 +635,12 @@ abstract class PlatformService {
               availableAudioDevice: arguments["available_audio_device"]);
         });
         break;
+      case HMSPreviewUpdateListenerMethod.onPeerListUpdate:
+        previewListeners.forEach((e) {
+          e.onPeerListUpdate(
+              addedPeers: arguments["added_peers"],
+              removedPeers: arguments["removed_peers"]);
+        });
     }
   }
 
