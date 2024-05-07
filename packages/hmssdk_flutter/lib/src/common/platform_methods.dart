@@ -188,6 +188,9 @@ enum PlatformMethod {
   enableClosedCaptions,
   disableClosedCaptions,
   getStreamProperties,
+  getHLSLayers,
+  setHLSLayer,
+  getCurrentHLSLayer,
 
   switchAudioOutputUsingiOSUI,
   sendHLSTimedMetadata,
@@ -515,6 +518,12 @@ extension PlatformMethodValues on PlatformMethod {
         return "disable_closed_captions";
       case PlatformMethod.getStreamProperties:
         return "get_stream_properties";
+      case PlatformMethod.getHLSLayers:
+        return "get_hls_layers";
+      case PlatformMethod.setHLSLayer:
+        return "set_hls_layer";
+      case PlatformMethod.getCurrentHLSLayer:
+        return "get_current_hls_layer";
 
       case PlatformMethod.switchAudioOutputUsingiOSUI:
         return "switch_audio_output_using_ios_ui";
@@ -873,6 +882,12 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.disableClosedCaptions;
       case "get_stream_properties":
         return PlatformMethod.getStreamProperties;
+      case "get_hls_layers":
+        return PlatformMethod.getHLSLayers;
+      case "set_hls_layer":
+        return PlatformMethod.setHLSLayer;
+      case "get_current_hls_layer":
+        return PlatformMethod.getCurrentHLSLayer;
 
       case "switch_audio_output_using_ios_ui":
         return PlatformMethod.switchAudioOutputUsingiOSUI;

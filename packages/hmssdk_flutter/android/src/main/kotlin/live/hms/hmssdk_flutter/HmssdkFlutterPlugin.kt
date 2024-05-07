@@ -260,7 +260,7 @@ class HmssdkFlutterPlugin :
             "remove_key_change_listener" -> {
                 removeKeyChangeListener(call, result)
             }
-            "start_hls_player", "stop_hls_player", "pause_hls_player", "resume_hls_player", "seek_to_live_position", "seek_forward", "seek_backward", "set_hls_player_volume", "add_hls_stats_listener", "remove_hls_stats_listener", "are_closed_captions_supported", "enable_closed_captions", "disable_closed_captions", "get_stream_properties" -> {
+            "start_hls_player", "stop_hls_player", "pause_hls_player", "resume_hls_player", "seek_to_live_position", "seek_forward", "seek_backward", "set_hls_player_volume", "add_hls_stats_listener", "remove_hls_stats_listener", "are_closed_captions_supported", "enable_closed_captions", "disable_closed_captions", "get_stream_properties","get_hls_layers", "set_hls_layer", "get_current_hls_layer" -> {
                 HMSHLSPlayerAction.hlsPlayerAction(call, result)
             }
             "toggle_always_screen_on" -> {

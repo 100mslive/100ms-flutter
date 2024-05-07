@@ -120,6 +120,8 @@ export 'src/model/whiteboard/hms_whiteboard_controller.dart';
 export 'src/model/whiteboard/hms_whiteboard_model.dart';
 export 'src/model/whiteboard/hms_whiteboard_permission.dart';
 export 'src/model/whiteboard/hms_whiteboard_update_listener.dart';
+export 'src/model/hls_player/hms_hls_layer.dart';
+
 //Views
 export 'src/ui/meeting/hms_texture_view.dart';
 export 'src/ui/meeting/hms_video_view.dart';

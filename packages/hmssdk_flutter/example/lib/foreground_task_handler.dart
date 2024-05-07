@@ -13,11 +13,6 @@ class ForegroundTaskHandler extends TaskHandler {
   @override
   void onStart(DateTime timestamp, SendPort? sendPort) async {
     _sendPort = sendPort;
-
-    // You can use the getData function to get the stored data.
-    final customData =
-        await FlutterForegroundTask.getData<String>(key: 'customData');
-    print('customData: $customData');
   }
 
   // Called every [interval] milliseconds in [ForegroundTaskOptions].
@@ -51,6 +46,7 @@ class ForegroundTaskHandler extends TaskHandler {
   }
 }
 
+///[initForegroundTask] initializes the foreground task
 Future<bool> initForegroundTask() async {
   bool isPermissionsGiven = await Utilities.getPermissions();
   if (isPermissionsGiven) {

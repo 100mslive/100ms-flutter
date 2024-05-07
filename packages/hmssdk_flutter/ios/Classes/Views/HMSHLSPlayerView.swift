@@ -231,6 +231,17 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
                 map["stream_duration"] = duration.seconds
             }
             result?(map)
+        
+        case "set_hls_layer":
+            
+            let result = notification.userInfo?["result"] as? FlutterResult
+            if let bitrate = notification.userInfo?["bitrate"] as? Int{
+                hlsPlayer?._nativePlayer.currentItem?.preferredPeakBitRate = Double(bitrate)
+                result?(nil)
+            } else{
+                HMSErrorLogger.logError("setHLSLayer", "bitrate is null", "NULL ERROR")
+                result?(nil)
+            }
             
         default:
             return

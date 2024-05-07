@@ -8,6 +8,7 @@ import 'dart:io';
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:collection/collection.dart';
 
 ///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
@@ -74,6 +75,10 @@ class HLSPlayerStore extends ChangeNotifier
   Timer? _timer;
 
   String? caption;
+
+  Map<String, HMSHLSLayer> layerMap = {};
+
+  HMSHLSLayer? selectedLayer;
 
   ///This method starts a timer for 5 seconds and then hides the buttons
   ///
@@ -215,6 +220,56 @@ class HLSPlayerStore extends ChangeNotifier
     notifyListeners();
   }
 
+  ///[getHLSLayers] gets the HLS Layers
+  void getHLSLayers() async {
+    var layers = await HMSHLSPlayerController.getHLSLayers();
+    int layersSize = layers.length;
+    if (layersSize > 0) {
+      ///This sorts the layers in descending order of bitrate
+      layers.sort((a, b) => (b.bitrate ?? 0).compareTo(a.bitrate ?? 0));
+
+      ///This checks for layer with zero or null bitrate and sets it to
+      ///"AUTO" key
+      if (layers[layersSize - 1].bitrate == 0 ||
+          layers[layersSize - 1].bitrate == null) {
+        layerMap["AUTO"] = layers[layersSize - 1];
+      }
+
+      ///This picks up the highest bitrate layer from the sorted layers
+      layerMap["HIGH"] = layers[0];
+
+      ///This picks up the mid layer from the sorted layers
+      layerMap["MEDIUM"] = layers[layersSize ~/ 2];
+
+      ///This picks up the lowest bitrate layer from the sorted layers
+      if (layersSize > 1) {
+        layerMap["LOW"] = layers[layersSize - 2];
+      }
+    }
+  }
+
+  ///[getCurrentHLSLayer] gets the current HLS Layer
+  void getCurrentHLSLayer() async {
+    var layer = await HMSHLSPlayerController.getCurrentHLSLayer();
+
+    ///Here we are finding the layer with the same bitrate as the current layer
+    var layerSelected = layerMap.entries.firstWhereIndexedOrNull(
+        (index, element) => (element.value.bitrate == layer?.bitrate));
+
+    ///If the layer is found we set the selected layer to that layer
+    if (layerSelected != null) {
+      selectedLayer = layerSelected.value;
+    }
+    notifyListeners();
+  }
+
+  ///[setHLSLayer] sets the HLS Layer
+  void setHLSLayer(HMSHLSLayer hmsHLSLayer) async {
+    selectedLayer = hmsHLSLayer;
+    await HMSHLSPlayerController.setHLSLayer(hmsHLSLayer: hmsHLSLayer);
+    notifyListeners();
+  }
+
   @override
   void onCue({required HMSHLSCue hlsCue}) {}
 
@@ -223,7 +278,7 @@ class HLSPlayerStore extends ChangeNotifier
 
   @override
   void onHLSEventUpdate({required HMSHLSPlayerStats playerStats}) {
-    log("onHLSEventUpdate-> distanceFromLive: ${playerStats.distanceFromLive} buffered duration: ${playerStats.bufferedDuration}");
+    log("onHLSEventUpdate-> distanceFromLive: ${playerStats.distanceFromLive}ms buffered duration: ${playerStats.bufferedDuration}ms bitrate: ${playerStats.averageBitrate}");
     isLive = playerStats.distanceFromLive < timeBeforeLive;
     timeFromLive = Duration(milliseconds: playerStats.distanceFromLive.toInt());
     hlsPlayerStats = playerStats;
@@ -244,6 +299,8 @@ class HLSPlayerStore extends ChangeNotifier
         areClosedCaptionsSupported();
         setHLSPlayerStats(true);
         startTimer();
+        getHLSLayers();
+        getCurrentHLSLayer();
         isStreamPlaying = true;
         isPlayerFailed = false;
         break;
