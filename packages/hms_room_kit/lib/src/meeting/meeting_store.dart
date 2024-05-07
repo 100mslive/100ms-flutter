@@ -2415,13 +2415,19 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  void toggleWhiteboard() {
+  void toggleWhiteboard() async{
     if (isWhiteboardEnabled) {
       if (localPeer?.peerId == whiteboardModel?.owner?.peerId) {
-        HMSWhiteboardController.stop();
+        HMSException? error =  await HMSWhiteboardController.stop();
+        if(error != null){
+          log("HMSWhiteboardController.stop error: ${error.description}");
+        }
       }
     } else if (!isScreenShareOn && screenShareCount == 0) {
-      HMSWhiteboardController.start(title: "Whiteboard From Flutter");
+      HMSException? error = await HMSWhiteboardController.start(title: "Whiteboard From Flutter");
+      if(error != null){
+        log("HMSWhiteboardController.start error: ${error.description}");
+      }
     }
     notifyListeners();
   }
@@ -2782,10 +2788,6 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSActionResultListenerMethod.addMultiChoicePollResponse:
         break;
-      case HMSActionResultListenerMethod.startWhiteboard:
-        break;
-      case HMSActionResultListenerMethod.stopWhiteboard:
-        break;
       default:
         log("ActionResultListener onException-> method: ${methodType.toString()}Could not find a valid case while switching");
         break;
@@ -2878,10 +2880,6 @@ class MeetingStore extends ChangeNotifier
       case HMSActionResultListenerMethod.addSingleChoicePollResponse:
         break;
       case HMSActionResultListenerMethod.addMultiChoicePollResponse:
-        break;
-      case HMSActionResultListenerMethod.startWhiteboard:
-        break;
-      case HMSActionResultListenerMethod.stopWhiteboard:
         break;
       default:
         log("ActionResultListener onException-> method: ${methodType.toString()} Could not find a valid case while switching");
