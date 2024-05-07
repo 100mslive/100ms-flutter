@@ -50,7 +50,7 @@ abstract class PlatformService {
   ///used to get poll event updates
   static const EventChannel _pollsEventChannel =
       const EventChannel("polls_event_channel");
-  
+
   ///used to get whiteboard events
   static const EventChannel _whiteboardEventChannel =
       const EventChannel("whiteboard_event_channel");
@@ -116,7 +116,8 @@ abstract class PlatformService {
     PlatformService.invokeMethod(PlatformMethod.addPollUpdateListener);
   }
 
-  static void addWhiteboardUpdateListener(HMSWhiteboardUpdateListener listener) {
+  static void addWhiteboardUpdateListener(
+      HMSWhiteboardUpdateListener listener) {
     _whiteboardListener = listener;
     PlatformService.invokeMethod(PlatformMethod.addWhiteboardUpdateListener);
   }
@@ -583,27 +584,28 @@ abstract class PlatformService {
       }
     });
 
-    _whiteboardEventChannel.receiveBroadcastStream({'name': 'whiteboard'}).map((event) {
-      HMSWhiteboardListenerMethod method =
-          HMSWhiteboardListenerMethodValues.getHMSWhiteboardListenerMethodFromString(event['event_name']);
+    _whiteboardEventChannel
+        .receiveBroadcastStream({'name': 'whiteboard'}).map((event) {
+      HMSWhiteboardListenerMethod method = HMSWhiteboardListenerMethodValues
+          .getHMSWhiteboardListenerMethodFromString(event['event_name']);
       Map data = event['data'];
       return HMSWhiteboardListenerMethodResponse(method: method, data: data);
     }).listen((event) {
       HMSWhiteboardListenerMethod method = event.method;
       switch (method) {
         case HMSWhiteboardListenerMethod.onWhiteboardStart:
-          _whiteboardListener?.onWhiteboardStart(hmsWhiteboardModel: HMSWhiteboardModel.fromMap(event.data));
+          _whiteboardListener?.onWhiteboardStart(
+              hmsWhiteboardModel: HMSWhiteboardModel.fromMap(event.data));
           break;
         case HMSWhiteboardListenerMethod.onWhiteboardStop:
-          _whiteboardListener?.onWhiteboardStop(hmsWhiteboardModel: HMSWhiteboardModel.fromMap(event.data));
+          _whiteboardListener?.onWhiteboardStop(
+              hmsWhiteboardModel: HMSWhiteboardModel.fromMap(event.data));
           break;
         case HMSWhiteboardListenerMethod.unknown:
           break;
       }
     });
   }
-
-
 
   static void notifyLogsUpdateListeners(
       HMSLogsUpdateListenerMethod method, List<dynamic> arguments) {

@@ -3,7 +3,6 @@ import 'package:hmssdk_flutter/src/model/hms_peer.dart';
 
 ///[HMSWhiteboardModel] is a class which includes the properties of a whiteboard
 class HMSWhiteboardModel {
-
   ///[id] is the unique identifier of the whiteboard
   final String id;
 
@@ -16,11 +15,7 @@ class HMSWhiteboardModel {
   ///[url] is the url of the whiteboard which can be used to display whiteboard
   final String? url;
 
-  HMSWhiteboardModel(
-      {required this.id,
-      this.owner,
-      this.title,
-      this.url});
+  HMSWhiteboardModel({required this.id, this.owner, this.title, this.url});
 
   factory HMSWhiteboardModel.fromMap(Map map) {
     return HMSWhiteboardModel(

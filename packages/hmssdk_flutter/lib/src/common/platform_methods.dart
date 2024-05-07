@@ -603,7 +603,7 @@ extension PlatformMethodValues on PlatformMethod {
         return "add_whiteboard_update_listener";
       case PlatformMethod.removeWhiteboardUpdateListener:
         return "remove_whiteboard_update_listener";
-      
+
       default:
         return 'unknown';
     }

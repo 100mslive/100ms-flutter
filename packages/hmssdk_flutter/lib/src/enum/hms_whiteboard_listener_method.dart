@@ -1,7 +1,12 @@
-enum HMSWhiteboardListenerMethod {onWhiteboardStart,onWhiteboardStop,unknown}
+enum HMSWhiteboardListenerMethod {
+  onWhiteboardStart,
+  onWhiteboardStop,
+  unknown
+}
 
 extension HMSWhiteboardListenerMethodValues on HMSWhiteboardListenerMethod {
-  static HMSWhiteboardListenerMethod getHMSWhiteboardListenerMethodFromString(String whiteboardMethod) {
+  static HMSWhiteboardListenerMethod getHMSWhiteboardListenerMethodFromString(
+      String whiteboardMethod) {
     switch (whiteboardMethod) {
       case 'on_whiteboard_start':
         return HMSWhiteboardListenerMethod.onWhiteboardStart;
