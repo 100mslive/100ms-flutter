@@ -1277,28 +1277,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         previewSink?(data)
     }
     
-    public func peerListUpdate(added: [HMSPeer], removed: [HMSPeer]) {
-        var parameters = [String: Any]()
-
-        var addedPeers = [Any]()
-        var removedPeers = [Any]()
-
-        added.forEach {
-            addedPeers.append(HMSPeerExtension.toDictionary($0))
-        }
-
-        removed.forEach {
-            removedPeers.append(HMSPeerExtension.toDictionary($0))
-        }
-
-        parameters["added_peers"] = addedPeers
-        parameters["removed_peers"] = removedPeers
-
-        let data = ["event_name": "on_peer_list_update", "data": parameters] as [String: Any]
-
-        previewSink?(data)
-    }
-    
     var previewEnded = false
     public func on(join room: HMSRoom) {
         previewEnded = true
@@ -1519,7 +1497,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         let data = ["event_name": "on_peer_list_update", "data": parameters] as [String: Any]
 
-        eventSink?(data)
+        if(previewEnded){
+            eventSink?(data)
+        }else{
+            previewSink?(data)
+        }
     }
 
     // MARK: - RTC Stats Listeners
