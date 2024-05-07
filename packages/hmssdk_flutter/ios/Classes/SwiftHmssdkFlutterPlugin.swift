@@ -1276,6 +1276,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         previewEnded = false
         previewSink?(data)
     }
+    
     var previewEnded = false
     public func on(join room: HMSRoom) {
         previewEnded = true
@@ -1496,7 +1497,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         let data = ["event_name": "on_peer_list_update", "data": parameters] as [String: Any]
 
-        eventSink?(data)
+        if(previewEnded){
+            eventSink?(data)
+        }else{
+            previewSink?(data)
+        }
     }
 
     // MARK: - RTC Stats Listeners

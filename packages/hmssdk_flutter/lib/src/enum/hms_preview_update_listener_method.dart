@@ -4,6 +4,7 @@ enum HMSPreviewUpdateListenerMethod {
   onPeerUpdate,
   onRoomUpdate,
   onAudioDeviceChanged,
+  onPeerListUpdate,
   unknown
 }
 
@@ -21,6 +22,8 @@ extension HMSPreviewUpdateListenerMethodValues
         return HMSPreviewUpdateListenerMethod.onRoomUpdate;
       case 'on_audio_device_changed':
         return HMSPreviewUpdateListenerMethod.onAudioDeviceChanged;
+      case 'on_peer_list_update':
+        return HMSPreviewUpdateListenerMethod.onPeerListUpdate;
       default:
         return HMSPreviewUpdateListenerMethod.unknown;
     }
