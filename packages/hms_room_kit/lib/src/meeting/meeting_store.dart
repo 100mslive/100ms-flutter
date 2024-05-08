@@ -2415,17 +2415,18 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  void toggleWhiteboard() async{
+  void toggleWhiteboard() async {
     if (isWhiteboardEnabled) {
       if (localPeer?.peerId == whiteboardModel?.owner?.peerId) {
-        HMSException? error =  await HMSWhiteboardController.stop();
-        if(error != null){
+        HMSException? error = await HMSWhiteboardController.stop();
+        if (error != null) {
           log("HMSWhiteboardController.stop error: ${error.description}");
         }
       }
     } else if (!isScreenShareOn && screenShareCount == 0) {
-      HMSException? error = await HMSWhiteboardController.start(title: "Whiteboard From Flutter");
-      if(error != null){
+      HMSException? error =
+          await HMSWhiteboardController.start(title: "Whiteboard From Flutter");
+      if (error != null) {
         log("HMSWhiteboardController.start error: ${error.description}");
       }
     }
