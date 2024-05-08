@@ -29,7 +29,5 @@ enum HMSActionResultListenerMethod {
   quickStartPoll,
   addSingleChoicePollResponse,
   addMultiChoicePollResponse,
-  startWhiteboard,
-  stopWhiteboard,
   unknown
 }

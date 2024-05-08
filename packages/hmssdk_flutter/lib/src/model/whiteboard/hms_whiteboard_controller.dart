@@ -2,40 +2,28 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 class HMSWhiteboardController {
-  static Future<void> start(
-      {required String title,
-      HMSActionResultListener? hmsActionResultListener}) async {
+  static Future<HMSException?> start(
+      {required String title}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.startWhiteboard,
         arguments: {"title": title});
 
-    if (hmsActionResultListener != null) {
-      if (result != null) {
-        hmsActionResultListener.onException(
-            hmsException: HMSException.fromMap(result["error"]),
-            methodType: HMSActionResultListenerMethod.startWhiteboard);
-      } else {
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.startWhiteboard);
-      }
+    if (result != null) {
+      return HMSException.fromMap(result["error"]);
+    } else {
+      return null;
     }
   }
 
-  static Future<void> stop(
-      {HMSActionResultListener? hmsActionResultListener}) async {
+  static Future<HMSException?> stop() async {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.stopWhiteboard);
 
-    if (hmsActionResultListener != null) {
       if (result != null) {
-        hmsActionResultListener.onException(
-            hmsException: HMSException.fromMap(result["error"]),
-            methodType: HMSActionResultListenerMethod.stopWhiteboard);
+        return HMSException.fromMap(result["error"]);
       } else {
-        hmsActionResultListener.onSuccess(
-            methodType: HMSActionResultListenerMethod.stopWhiteboard);
+        return null;
       }
-    }
   }
 
   static void addHMSWhiteboardUpdateListener(
