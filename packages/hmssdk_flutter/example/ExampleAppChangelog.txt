@@ -3,6 +3,9 @@ Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 - Add Quality Selector sheet in HLS Player
 https://100ms.atlassian.net/browse/FLUT-297
 
+- Add support for Music Mode
+https://100ms.atlassian.net/browse/FLUT-306
+
 Room Kit: 1.1.2
 Core SDK: 1.10.2
 Android SDK: 2.9.55
