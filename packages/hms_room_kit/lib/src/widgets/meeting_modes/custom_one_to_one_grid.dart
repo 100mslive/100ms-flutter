@@ -3,10 +3,12 @@ library;
 
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 ///Project imports
+import 'package:hms_room_kit/src/widgets/whiteboard_screenshare/whiteboard_screenshare_store.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
@@ -37,30 +39,39 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
     ///The number of pages in the [PageView] is equal to [numberOfPeers/6 + (if number of peers is not divisible by 6 then we add 1 else we add 0)]
     ///One thing to note here is that in this view we filter out the local peer since we are rendering the local peer in the inset tile
     ///The inset tile is rendered at the top of the grid view
-    return Selector<MeetingStore,
-            Tuple4<List<PeerTrackNode>, int, PeerTrackNode, int>>(
-        selector: (_, meetingStore) => Tuple4(
+    return Selector<
+            MeetingStore,
+            Tuple5<List<PeerTrackNode>, int, PeerTrackNode, int,
+                HMSWhiteboardModel?>>(
+        selector: (_, meetingStore) => Tuple5(
             meetingStore.peerTracks,
             meetingStore.peerTracks.length,
             meetingStore.peerTracks[0],
-            meetingStore.screenShareCount),
+            meetingStore.screenShareCount,
+            meetingStore.whiteboardModel),
         builder: (_, data, __) {
           int numberOfPeers = data.item2 - (widget.isLocalInsetPresent ? 1 : 0);
           int pageCount =
               (numberOfPeers ~/ 6) + (numberOfPeers % 6 == 0 ? 0 : 1);
 
+          var screenshareStore = WhiteboardScreenshareStore();
+
           ///If the remote peer is sharing screen then we render the [ScreenshareGridLayout] with inset tile
           ///Else we render the normal layout with inset tile
-          return data.item4 > 0
-              ? ScreenshareGridLayout(
-                  peerTracks: widget.isLocalInsetPresent
-                      ? data.item1
-                          .where((element) =>
-                              !element.peer.isLocal ||
-                              element.track?.source == "SCREEN")
-                          .toList()
-                      : data.item1,
-                  screenshareCount: data.item4,
+          return data.item4 > 0 || data.item5 != null
+              ? ChangeNotifierProvider.value(
+                  value: screenshareStore,
+                  child: ScreenshareGridLayout(
+                    peerTracks: widget.isLocalInsetPresent
+                        ? data.item1
+                            .where((element) =>
+                                !element.peer.isLocal ||
+                                element.track?.source == "SCREEN")
+                            .toList()
+                        : data.item1,
+                    screenshareCount: data.item4,
+                    whiteboardModel: data.item5,
+                  ),
                 )
               :
 
@@ -68,14 +79,6 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
               Column(
                   children: [
                     Expanded(
-                      // child: TextureViewGrid(
-                      //     peerTracks: widget.isLocalInsetPresent
-                      //         ? data.item1
-                      //             .where((element) =>
-                      //                 !(element.peer.isLocal) ||
-                      //                 element.track?.source == "SCREEN")
-                      //             .toList()
-                      //         : data.item1),
                       child: PageView.builder(
                           physics: const PageScrollPhysics(),
                           controller: controller,
