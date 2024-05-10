@@ -28,6 +28,8 @@ dependencies:
   uuid:
   flutter_foreground_task: ^6.1.3
 
+  flutter_svg: any
+  provider: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
