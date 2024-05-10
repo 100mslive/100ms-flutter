@@ -3,7 +3,13 @@ Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 - Add Quality Selector sheet in HLS Player
 https://100ms.atlassian.net/browse/FLUT-297
 
+- Whiteboard Support in flutter
+https://100ms.atlassian.net/browse/FLUT-298
+
+- Add `peerListUpdated` callback shows the peers in the room
+https://100ms.atlassian.net/browse/FLUT-284
+
 Room Kit: 1.1.2
 Core SDK: 1.10.2
 Android SDK: 2.9.55
-iOS SDK: 1.9.0
+iOS SDK: 1.10.0

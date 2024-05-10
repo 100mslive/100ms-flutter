@@ -8,16 +8,15 @@ import live.hms.video.sdk.models.role.HMSRole
 
 class HMSRoleExtension {
     companion object {
-        @SuppressLint("LongLogTag")
         fun toDictionary(role: HMSRole?): HashMap<String, Any?>? {
             val hashMap = HashMap<String, Any?>()
             if (role == null)return null
 
-            hashMap["name"] = role?.name ?: "unknown"
-            hashMap["publish_settings"] = PublishParamsExtension.toDictionary(role?.publishParams ?: null)
-            hashMap["subscribe_settings"] = SubscribeSettings.toDictionary(role?.subscribeParams ?: null)
-            hashMap["priority"] = role?.priority!!
-            hashMap["permissions"] = PermissionParamsExtension.toDictionary(role.permission ?: null)
+            hashMap["name"] = role.name
+            hashMap["publish_settings"] = PublishParamsExtension.toDictionary(role.publishParams)
+            hashMap["subscribe_settings"] = SubscribeSettings.toDictionary(role.subscribeParams)
+            hashMap["priority"] = role.priority
+            hashMap["permissions"] = PermissionParamsExtension.toDictionary(role.permission)
 
             return hashMap
         }

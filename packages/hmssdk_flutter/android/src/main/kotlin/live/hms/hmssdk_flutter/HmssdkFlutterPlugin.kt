@@ -50,6 +50,8 @@ import live.hms.video.sessionstore.HmsSessionStore
 import live.hms.video.signal.init.*
 import live.hms.video.utils.HMSLogger
 import live.hms.video.utils.HmsUtilities
+import live.hms.video.whiteboard.HMSWhiteboardUpdate
+import live.hms.video.whiteboard.HMSWhiteboardUpdateListener
 
 /** HmssdkFlutterPlugin */
 class HmssdkFlutterPlugin :
@@ -65,6 +67,7 @@ class HmssdkFlutterPlugin :
     private var sessionStoreChannel: EventChannel? = null
     var hlsPlayerChannel: EventChannel? = null
     private var pollsEventChannel: EventChannel? = null
+    private var whiteboardEventChannel: EventChannel? = null
     private var eventSink: EventChannel.EventSink? = null
     private var previewSink: EventChannel.EventSink? = null
     private var logsSink: EventChannel.EventSink? = null
@@ -72,6 +75,7 @@ class HmssdkFlutterPlugin :
     private var sessionStoreSink: EventChannel.EventSink? = null
     var hlsPlayerSink: EventChannel.EventSink? = null
     private var pollsSink: EventChannel.EventSink? = null
+    private var whiteboardSink: EventChannel.EventSink? = null
     private lateinit var activity: Activity
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
@@ -114,6 +118,9 @@ class HmssdkFlutterPlugin :
             this.pollsEventChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "polls_event_channel")
 
+            this.whiteboardEventChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger, "whiteboard_event_channel")
+
             this.meetingEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Meeting event channel not found")
             this.channel?.setMethodCallHandler(this) ?: Log.e("Channel Error", "Event channel not found")
             this.previewChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Preview channel not found")
@@ -122,6 +129,7 @@ class HmssdkFlutterPlugin :
             this.sessionStoreChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Session Store channel not found")
             this.hlsPlayerChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "HLS Player channel not found")
             this.pollsEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "polls events channel not found")
+            this.whiteboardEventChannel?.setStreamHandler(this)?:Log.e("Channel Error", "whiteboard events channel not found")
             this.hmsVideoFactory = HMSVideoViewFactory(this)
             this.hmsHLSPlayerFactory = HMSHLSPlayerFactory(this)
 
@@ -291,6 +299,10 @@ class HmssdkFlutterPlugin :
 
             "enable_noise_cancellation", "disable_noise_cancellation", "is_noise_cancellation_enabled", "is_noise_cancellation_available" -> {
                 HMSNoiseCancellationControllerAction.noiseCancellationActions(call, result, hmssdk!!)
+            }
+
+            "start_whiteboard", "stop_whiteboard", "add_whiteboard_update_listener", "remove_whiteboard_update_listener" -> {
+                whiteboardActions(call,result)
             }
 
             else -> {
@@ -472,6 +484,22 @@ class HmssdkFlutterPlugin :
 
     private var currentPolls = ArrayList<HmsPoll>()
 
+    private fun whiteboardActions(
+        call: MethodCall,
+        result: Result
+    ){
+        when(call.method){
+            "add_whiteboard_update_listener" ->
+                hmssdk?.getHmsInteractivityCenter()?.setWhiteboardUpdateListener(whiteboardListener)
+            "remove_whiteboard_update_listener" ->
+                hmssdk?.getHmsInteractivityCenter()?.removeWhiteboardUpdateListener(whiteboardListener)
+            else ->
+                hmssdk?.let {
+                    HMSWhiteboardAction.whiteboardActions(call,result,it)
+                }
+        }
+    }
+
     private fun pollActions(
         call: MethodCall,
         result: Result,
@@ -502,6 +530,7 @@ class HmssdkFlutterPlugin :
             sessionStoreChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "Session Store channel not found")
             hlsPlayerChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "HLS Player channel not found")
             pollsEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "polls event  channel not found")
+            whiteboardEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "whiteboard event channel not found")
             eventSink = null
             previewSink = null
             rtcSink = null
@@ -509,6 +538,7 @@ class HmssdkFlutterPlugin :
             sessionStoreSink = null
             hlsPlayerSink = null
             pollsSink = null
+            whiteboardSink = null
             hmssdkFlutterPlugin = null
             hmsBinaryMessenger = null
             hmsTextureRegistry = null
@@ -641,6 +671,8 @@ class HmssdkFlutterPlugin :
             this.hlsPlayerSink = events
         } else if (nameOfEventSink == "polls") {
             this.pollsSink = events
+        } else if(nameOfEventSink == "whiteboard") {
+            this.whiteboardSink = events
         }
     }
 
@@ -2190,5 +2222,42 @@ class HmssdkFlutterPlugin :
                     pollsSink?.success(args)
                 }
             }
+        }
+
+    private val whiteboardListener =
+        object: HMSWhiteboardUpdateListener{
+            override fun onUpdate(hmsWhiteboardUpdate: HMSWhiteboardUpdate) {
+                when(hmsWhiteboardUpdate){
+                    is HMSWhiteboardUpdate.Start -> {
+
+                        val args = HashMap<String,Any?>()
+
+                        args["event_name"] = "on_whiteboard_start"
+
+                        args["data"] = HMSWhiteboardExtension.toDictionary(hmsWhiteboardUpdate.hmsWhiteboard)
+
+                        if (args["data"] != null) {
+                            CoroutineScope(Dispatchers.Main).launch {
+                                whiteboardSink?.success(args)
+                            }
+                        }
+                    }
+                    is HMSWhiteboardUpdate.Stop ->
+                        {
+                            val args = HashMap<String,Any?>()
+
+                            args["event_name"] = "on_whiteboard_stop"
+
+                            args["data"] = HMSWhiteboardExtension.toDictionary(hmsWhiteboardUpdate.hmsWhiteboard)
+
+                            if (args["data"] != null) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    whiteboardSink?.success(args)
+                                }
+                            }
+                        }
+                }
+            }
+
         }
 }

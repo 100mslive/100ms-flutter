@@ -34,6 +34,8 @@ dependencies:
   share_plus: ^7.0.2
   collection: ^1.17.0
   dots_indicator: ^3.0.0
+  webview_flutter: ^4.5.0
+  pointer_interceptor: ^0.10.1
 
 dev_dependencies:
   flutter_test:
