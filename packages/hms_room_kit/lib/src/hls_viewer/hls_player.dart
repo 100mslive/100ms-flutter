@@ -6,6 +6,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
+import 'package:hms_room_kit/src/hls_viewer/hls_stats_view.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player_overlay_options.dart';
@@ -67,6 +68,8 @@ class HLSPlayer extends StatelessWidget {
                         );
                       })
                   : Center(child: const HLSWaitingUI()),
+
+              const HLSStatsView(),
 
               ///This renders the overlay controls for HLS Player
               Align(
