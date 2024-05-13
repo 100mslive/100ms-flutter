@@ -51,8 +51,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
     ///we return low emphasis color since whiteboard can't be turned ON
     ///In other cases we return high emphasis color
     return meetingStore.isWhiteboardEnabled
-        ? meetingStore.whiteboardModel?.owner?.customerUserId ==
-                meetingStore.localPeer?.customerUserId
+        ? meetingStore.whiteboardModel?.isOwner ?? false
             ? HMSThemeColors.onSurfaceHighEmphasis
             : HMSThemeColors.onSurfaceLowEmphasis
         : meetingStore.screenShareCount > 0 || meetingStore.isScreenShareOn
