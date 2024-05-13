@@ -58,6 +58,11 @@ class HMSTrackSettingsExtension {
                         hmsAudioTrackSettings.enableNoiseCancellation(true)
                     }
                 }
+
+                val audioMode = audioHashMap["audio_mode"] as? String
+                audioMode?.let {mode ->
+                    hmsAudioTrackSettings.setAudioMode(getAudioModeFromString(mode))
+                }
             }
 
             var hmsVideoTrackSettings = HMSVideoTrackSettings.Builder()
@@ -92,6 +97,14 @@ class HMSTrackSettingsExtension {
                 "back" -> HMSVideoTrackSettings.CameraFacing.BACK
                 "front" -> HMSVideoTrackSettings.CameraFacing.FRONT
                 else -> HMSVideoTrackSettings.CameraFacing.FRONT
+            }
+        }
+
+        private fun getAudioModeFromString(audioMode: String): HMSAudioTrackSettings.HMSAudioMode{
+            return when(audioMode){
+                "voice" -> HMSAudioTrackSettings.HMSAudioMode.HMSAUDIOMODEVOICE
+                "music" -> HMSAudioTrackSettings.HMSAudioMode.HMSAUDIOMODEMUSIC
+                else -> HMSAudioTrackSettings.HMSAudioMode.HMSAUDIOMODEVOICE
             }
         }
     }

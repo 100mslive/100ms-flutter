@@ -86,6 +86,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     AppDebugConfig.skipPreview = skipPreview;
     AppDebugConfig.isDebugMode = isDebugMode;
     AppDebugConfig.nameChangeOnPreview = true;
+    AppDebugConfig.audioMode = currentAudioMode;
   }
 
   Future<void> _launchUrl() async {
@@ -431,6 +432,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               currentAudioMode: currentAudioMode,
                               changeAudioMode: (newMode) {
                                 setAudioMode(newMode);
+                                AppDebugConfig.audioMode = newMode;
                                 Utilities.saveIntData(
                                     key: "audio-mode", value: newMode.index);
                               }));

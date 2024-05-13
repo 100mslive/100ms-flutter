@@ -13,6 +13,7 @@ class AppDebugConfig {
   static bool isAudioMixerDisabled = true;
   static bool isAutoSimulcast = true;
   static bool nameChangeOnPreview = true;
+  static HMSAudioMode audioMode = HMSAudioMode.VOICE;
 
   static bool isDebugMode = false;
   static bool isProdRoom = true;
@@ -30,5 +31,6 @@ class AppDebugConfig {
     isAutoSimulcast = true;
     isProdRoom = true;
     nameChangeOnPreview = true;
+    audioMode = HMSAudioMode.VOICE;
   }
 }

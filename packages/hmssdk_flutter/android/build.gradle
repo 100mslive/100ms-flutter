@@ -47,10 +47,10 @@ android {
 }
 
 dependencies {
-    implementation "com.github.100mslive.android-sdk:video-view:dev-v2-SNAPSHOT"
-    implementation "com.github.100mslive.android-sdk:hls-player:dev-v2-SNAPSHOT"
-    implementation 'com.github.100mslive.android-sdk:android-sdk:dev-v2-SNAPSHOT'
-    implementation "com.github.100mslive.android-sdk:hms-noise-cancellation-android:dev-v2-SNAPSHOT"
+    implementation "com.github.100mslive.android-sdk:video-view:feature~music-mode-SNAPSHOT"
+    implementation "com.github.100mslive.android-sdk:hls-player:feature~music-mode-SNAPSHOT"
+    implementation 'com.github.100mslive.android-sdk:android-sdk:feature~music-mode-SNAPSHOT'
+    implementation "com.github.100mslive.android-sdk:hms-noise-cancellation-android:feature~music-mode-SNAPSHOT"
 //    implementation "live.100ms:android-sdk:${sdkVersions['android']}"
 //    implementation "live.100ms:video-view:${sdkVersions['android']}"
 //    implementation "live.100ms:hls-player:${sdkVersions['android']}"

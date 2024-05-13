@@ -145,6 +145,7 @@ class _ScreenControllerState extends State<ScreenController> {
         joinWithMutedVideo: true,
         isSoftwareDecoderDisabled: AppDebugConfig.isSoftwareDecoderDisabled,
         isAudioMixerDisabled: AppDebugConfig.isAudioMixerDisabled,
+        audioMode: AppDebugConfig.audioMode,
         isNoiseCancellationEnabled:
             widget.options?.enableNoiseCancellation ?? false,
         isPrebuilt: true);
