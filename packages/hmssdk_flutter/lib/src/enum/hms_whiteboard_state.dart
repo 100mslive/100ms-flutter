@@ -1,15 +1,15 @@
-///[hmsWhiteboardState] enum is used to define the state of the whiteboard
-enum hmsWhiteboardState { started, stopped }
+///[HMSWhiteboardState] enum is used to define the state of the whiteboard
+enum HMSWhiteboardState { started, stopped }
 
-extension HMSWhiteboardStateValues on hmsWhiteboardState {
-  static hmsWhiteboardState getWhiteboardStateFromName(String name) {
+extension HMSWhiteboardStateValues on HMSWhiteboardState {
+  static HMSWhiteboardState getWhiteboardStateFromName(String name) {
     switch (name) {
       case "started":
-        return hmsWhiteboardState.started;
+        return HMSWhiteboardState.started;
       case "stopped":
-        return hmsWhiteboardState.stopped;
+        return HMSWhiteboardState.stopped;
       default:
-        return hmsWhiteboardState.stopped;
+        return HMSWhiteboardState.stopped;
     }
   }
 }

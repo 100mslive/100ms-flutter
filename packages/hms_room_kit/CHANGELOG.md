@@ -5,6 +5,25 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+## 1.1.2 - 2024-05-14
+
+| Package        | Version                                                                                                |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| hms_room_kit   | 1.1.2    |
+| hmssdk_flutter | 1.10.2   |
+
+### 🚀 Added
+
+- Whiteboard support in Prebuilt
+
+  Prebuilt now supports whiteboard for better collaboration. Users can create, manage, and stop whiteboards directly from the prebuilt interface.
+
+- Introducing option to select layers in HLS Player
+
+  HLS Player now supports layer selection from HLS Player Settings.
+
+Uses `hmssdk_flutter` package version 1.10.2
+
 ## 1.1.1 - 2024-04-26
 
 | Package        | Version                                                                                                |

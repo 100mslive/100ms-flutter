@@ -20,7 +20,7 @@ class HMSWhiteboardModel {
   final bool? isOwner;
 
   ///[state] is an enum of type [WhiteboardState] which tells the state of the whiteboard
-  final hmsWhiteboardState state;
+  final HMSWhiteboardState state;
 
   HMSWhiteboardModel(
       {required this.id,

@@ -5,6 +5,31 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+# 1.10.2 - 2024-05-14
+
+| Package                                | Version                                                                                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| hms_room_kit                | 1.1.2 |
+| hmssdk_flutter              | 1.10.2 |
+
+### ✨ Added
+
+- Introducing Whiteboard support in HMSSDK
+
+  HMSSDK now provides support for Whiteboard. You can now start/stop a whiteboard using `HMSWhiteboardController` methods. HMSSDK provides also provides callbacks for whiteboard start/stop events. Learn more about it [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/whiteboard)
+
+- HLS Layer methods
+
+  HLS Stream Layers can be controlled using the HMSHLSPlayerController's `getHLSLayers` and `setHLSLayer` methods. Learn more about the methods [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/record-and-live-stream/hls-player)
+
+- `onPeerListUpdate` event on `HMSPreviewListener`
+
+  The `onPeerListUpdate` event is now available on `HMSPreviewListener` to get updates on the peer list. Learn more about it [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/preview#supplementary-bytes)
+
+Uses Android SDK 2.9.56 & iOS SDK 1.10.0
+
+**Full Changelog**: [1.10.1...1.10.2](https://github.com/100mslive/100ms-flutter/compare/1.10.1...1.10.2)
+
 # 1.10.1 - 2024-04-26
 
 | Package                                | Version                                                                                                                                  |
