@@ -571,9 +571,8 @@ class _HomePageState extends State<HomePage> {
                         shadowColor: WidgetStateProperty.all(hmsdefaultColor),
                         backgroundColor:
                             WidgetStateProperty.all(hmsdefaultColor),
-                        shape:
-                            WidgetStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
+                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ))),
                     onPressed: () async {
