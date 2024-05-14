@@ -36,6 +36,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool res = false;
 
+  void navigate() {
+    Navigator.push(
+        context, CupertinoPageRoute(builder: (_) => const MeetingPage()));
+  }
+
   static Future<bool> getPermissions() async {
     if (Platform.isIOS) return true;
 
@@ -65,9 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ))),
             onPressed: () async => {
               res = await getPermissions(),
-              if (res)
-                Navigator.push(context,
-                    CupertinoPageRoute(builder: (_) => const MeetingPage()))
+              if (res) {navigate()}
             },
             child: const Padding(
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
