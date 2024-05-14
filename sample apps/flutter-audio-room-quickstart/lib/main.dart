@@ -95,8 +95,8 @@ class _MeetingPageState extends State<MeetingPage>
   late HMSSDK _hmsSDK;
 
   //Enter the username and authToken from dashboard for the corresponding role here.
-  String userName = "Enter Username Here";
-  String authToken = "Enter AuthToken Here";
+  String userName = "Enter username here";
+  String roomCode = "Enter room code here";
   Offset position = const Offset(5, 5);
   bool isJoinSuccessful = false;
   final List<PeerTrackNode> _listeners = [];
@@ -115,7 +115,12 @@ class _MeetingPageState extends State<MeetingPage>
     _hmsSDK = HMSSDK();
     await _hmsSDK.build();
     _hmsSDK.addUpdateListener(listener: this);
-    _hmsSDK.join(config: HMSConfig(authToken: authToken, userName: userName));
+    var authToken = await _hmsSDK.getAuthTokenByRoomCode(roomCode: roomCode);
+    if ((authToken is String?) && authToken != null) {
+      _hmsSDK.join(config: HMSConfig(authToken: authToken, userName: userName));
+    } else {
+      log("Error in getting auth token");
+    }
   }
 
   @override
@@ -271,6 +276,9 @@ class _MeetingPageState extends State<MeetingPage>
       case HMSPeerUpdate.networkQualityUpdated:
         // TODO: Handle this case.
         break;
+      case HMSPeerUpdate.handRaiseUpdated:
+        // TODO: Handle this case.
+        break;
     }
   }
 
@@ -397,6 +405,18 @@ class _MeetingPageState extends State<MeetingPage>
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
     // Checkout the docs for room updates here: https://www.100ms.live/docs/flutter/v2/how--to-guides/listen-to-room-updates/update-listeners
+  }
+
+  @override
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {
+    // TODO: implement onPeerListUpdate
+  }
+
+  @override
+  void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
+    // TODO: implement onSessionStoreAvailable
   }
 
   @override
