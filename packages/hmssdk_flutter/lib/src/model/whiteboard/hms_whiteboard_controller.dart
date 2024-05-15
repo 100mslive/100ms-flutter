@@ -9,7 +9,7 @@ class HMSWhiteboardController {
   ///
   /// **title** - title of the whiteboard
   ///
-  /// Refer [Start Whiteboard](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/whiteboard#start-whiteboard)
+  /// Refer [Start Whiteboard](https://www.100ms.live/docs/flutter/v2/how-to-guides/extend-capabilities/whiteboard#start-whiteboard)
   static Future<HMSException?> start({required String title}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.startWhiteboard,
@@ -24,7 +24,7 @@ class HMSWhiteboardController {
 
   /// Stops the Whiteboard.
   ///
-  /// Refer [Stop Whiteboard](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/whiteboard#stop-whiteboard)
+  /// Refer [Stop Whiteboard](https://www.100ms.live/docs/flutter/v2/how-to-guides/extend-capabilities/whiteboard#stop-whiteboard)
   static Future<HMSException?> stop() async {
     var result =
         await PlatformService.invokeMethod(PlatformMethod.stopWhiteboard);
@@ -42,7 +42,7 @@ class HMSWhiteboardController {
   ///
   /// **listener** - whiteboard update listener to be attached
   ///
-  /// Refer [Whiteboard Update Listener](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/whiteboard#how-to-display-whiteboard)
+  /// Refer [Whiteboard Update Listener](https://www.100ms.live/docs/flutter/v2/how-to-guides/extend-capabilities/whiteboard#how-to-display-whiteboard)
   static void addHMSWhiteboardUpdateListener(
       {required HMSWhiteboardUpdateListener listener}) {
     PlatformService.addWhiteboardUpdateListener(listener);
@@ -50,7 +50,7 @@ class HMSWhiteboardController {
 
   /// Removes an [HMSWhiteboardUpdateListener] that was previously added.
   ///
-  /// Refer [Whiteboard Update Listener](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/whiteboard#how-to-display-whiteboard)
+  /// Refer [Whiteboard Update Listener](https://www.100ms.live/docs/flutter/v2/how-to-guides/extend-capabilities/whiteboard#how-to-display-whiteboard)
   static void removeHMSWhiteboardUpdateListener() {
     PlatformService.removeWhiteboardUpdateListener();
   }
