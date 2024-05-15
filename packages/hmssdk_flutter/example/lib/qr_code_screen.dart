@@ -162,13 +162,15 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                   width: width * 0.95,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(themeSurfaceColor),
+                        shadowColor:
+                            WidgetStateProperty.all(themeSurfaceColor),
                         backgroundColor:
-                            MaterialStateProperty.all(Colors.transparent),
-                        side: MaterialStateProperty.all(
+                            WidgetStateProperty.all(Colors.transparent),
+                        side: WidgetStateProperty.all(
                             BorderSide(color: borderColor)),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
+                        shape:
+                            WidgetStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ))),
                     onPressed: () {

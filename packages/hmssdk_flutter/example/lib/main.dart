@@ -487,15 +487,15 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                   child: ElevatedButton(
                                 style: ButtonStyle(
-                                    shadowColor: MaterialStateProperty.all(
+                                    shadowColor: WidgetStateProperty.all(
                                         themeSurfaceColor),
                                     backgroundColor:
                                         meetingLinkController.text.isEmpty
-                                            ? MaterialStateProperty.all(
+                                            ? WidgetStateProperty.all(
                                                 themeSurfaceColor)
-                                            : MaterialStateProperty.all(
+                                            : WidgetStateProperty.all(
                                                 hmsdefaultColor),
-                                    shape: MaterialStateProperty.all<
+                                    shape: WidgetStateProperty.all<
                                             RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8.0),
@@ -568,11 +568,12 @@ class _HomePageState extends State<HomePage> {
                   width: width * 0.95,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(hmsdefaultColor),
+                        shadowColor: WidgetStateProperty.all(hmsdefaultColor),
                         backgroundColor:
-                            MaterialStateProperty.all(hmsdefaultColor),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
+                            WidgetStateProperty.all(hmsdefaultColor),
+                        shape:
+                            WidgetStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ))),
                     onPressed: () async {
