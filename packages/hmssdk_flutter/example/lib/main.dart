@@ -487,15 +487,15 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                   child: ElevatedButton(
                                 style: ButtonStyle(
-                                    shadowColor: WidgetStateProperty.all(
+                                    shadowColor: MaterialStateProperty.all(
                                         themeSurfaceColor),
                                     backgroundColor:
                                         meetingLinkController.text.isEmpty
-                                            ? WidgetStateProperty.all(
+                                            ? MaterialStateProperty.all(
                                                 themeSurfaceColor)
-                                            : WidgetStateProperty.all(
+                                            : MaterialStateProperty.all(
                                                 hmsdefaultColor),
-                                    shape: WidgetStateProperty.all<
+                                    shape: MaterialStateProperty.all<
                                             RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8.0),
@@ -568,11 +568,11 @@ class _HomePageState extends State<HomePage> {
                   width: width * 0.95,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        shadowColor: WidgetStateProperty.all(hmsdefaultColor),
+                        shadowColor: MaterialStateProperty.all(hmsdefaultColor),
                         backgroundColor:
-                            WidgetStateProperty.all(hmsdefaultColor),
+                            MaterialStateProperty.all(hmsdefaultColor),
                         shape:
-                            WidgetStateProperty.all<RoundedRectangleBorder>(
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ))),
