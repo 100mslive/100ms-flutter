@@ -11,5 +11,5 @@ https://100ms.atlassian.net/browse/FLUT-284
 
 Room Kit: 1.1.2
 Core SDK: 1.10.2
-Android SDK: 2.9.55
+Android SDK: 2.9.56
 iOS SDK: 1.10.0

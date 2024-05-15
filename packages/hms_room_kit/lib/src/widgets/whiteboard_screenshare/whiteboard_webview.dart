@@ -12,8 +12,42 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 
 ///[WhiteboardWebView] is a widget that renders the whiteboard webview
-class WhiteboardWebView extends StatelessWidget {
+class WhiteboardWebView extends StatefulWidget {
   const WhiteboardWebView({Key? key}) : super(key: key);
+
+  @override
+  State<WhiteboardWebView> createState() => _WhiteboardWebViewState();
+}
+
+class _WhiteboardWebViewState extends State<WhiteboardWebView> {
+  late WebViewController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onNavigationRequest: (_) {
+            return NavigationDecision.navigate;
+          },
+          onProgress: (int progress) {},
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {},
+          onWebResourceError: (WebResourceError error) {
+            log("Error occured in whiteboard tile: ${error.description}");
+          },
+        ),
+      );
+  }
+
+  @override
+  void dispose() {
+    _controller.loadHtmlString("https://www.100ms.live/");
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,23 +57,7 @@ class WhiteboardWebView extends StatelessWidget {
           ///If the url is not null we render the webview
           return url != null
               ? WebViewWidget(
-                  controller: WebViewController()
-                    ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                    ..setBackgroundColor(const Color(0x00000000))
-                    ..setNavigationDelegate(
-                      NavigationDelegate(
-                        onNavigationRequest: (_) {
-                          return NavigationDecision.navigate;
-                        },
-                        onProgress: (int progress) {},
-                        onPageStarted: (String url) {},
-                        onPageFinished: (String url) {},
-                        onWebResourceError: (WebResourceError error) {
-                          log("Error occured in whiteboard tile: ${error.description}");
-                        },
-                      ),
-                    )
-                    ..loadRequest(Uri.parse(url)))
+                  controller: _controller..loadRequest(Uri.parse(url)))
               : const SizedBox();
         });
   }

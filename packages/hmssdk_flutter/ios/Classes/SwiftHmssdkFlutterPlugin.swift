@@ -495,14 +495,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 case .started:
                     let args = [
                         "event_name": "on_whiteboard_start",
-                        "data": HMSWhiteboardExtension.toDictionary(hmsWhiteboard: hmsWhiteboard)
+                        "data": HMSWhiteboardExtension.toDictionary(hmsWhiteboard: hmsWhiteboard, hmsSDK: hmsSDK)
                     ]
                     self.whiteboardEventSink?(args)
                     break
                 case .stopped:
                     let args = [
                         "event_name": "on_whiteboard_stop",
-                        "data": HMSWhiteboardExtension.toDictionary(hmsWhiteboard: hmsWhiteboard)
+                        "data": HMSWhiteboardExtension.toDictionary(hmsWhiteboard: hmsWhiteboard, hmsSDK: hmsSDK)
                     ]
                     self.whiteboardEventSink?(args)
                     break
