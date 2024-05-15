@@ -10,7 +10,7 @@ import HMSSDK
 
 class HMSWhiteboardExtension{
     
-    static func toDictionary(hmsWhiteboard: HMSWhiteboard?) -> [String: Any?]?{
+    static func toDictionary(hmsWhiteboard: HMSWhiteboard?,hmsSDK: HMSSDK?) -> [String: Any?]?{
             
         guard let whiteboard = hmsWhiteboard else{
             return nil
@@ -25,7 +25,20 @@ class HMSWhiteboardExtension{
         }
         args["title"] = hmsWhiteboard?.title
         args["url"] = hmsWhiteboard?.url?.absoluteString
+        args["is_owner"] = hmsWhiteboard?.owner?.customerUserID == hmsSDK?.localPeer?.customerUserID
+        args["state"] = getStateFromString(state: hmsWhiteboard?.state)
         
         return args
+    }
+    
+    private static func getStateFromString(state: HMSWhiteboard.WhiteboardState?) -> String{
+        switch(state){
+        case .started:
+            return "started"
+        case .stopped:
+            return "stopped"
+        default:
+            return "stopped"
+        }
     }
 }

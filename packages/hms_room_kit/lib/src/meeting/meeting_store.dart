@@ -2417,7 +2417,7 @@ class MeetingStore extends ChangeNotifier
 
   void toggleWhiteboard() async {
     if (isWhiteboardEnabled) {
-      if (localPeer?.peerId == whiteboardModel?.owner?.peerId) {
+      if (whiteboardModel?.isOwner ?? false) {
         HMSException? error = await HMSWhiteboardController.stop();
         if (error != null) {
           log("HMSWhiteboardController.stop error: ${error.description}");

@@ -26,6 +26,7 @@ export 'src/enum/hms_poll_enum.dart';
 export 'src/enum/hms_peer_type.dart';
 export 'src/enum/hms_hls_playlist_type.dart';
 export 'src/enum/hms_whiteboard_listener_method.dart';
+export 'src/enum/hms_whiteboard_state.dart';
 
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';
