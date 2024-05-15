@@ -43,6 +43,7 @@ class HMSHLSPlayer(
     private var hlsPlayerView: PlayerView? = null
     private var actions: IHLSPlayerActionInterface? = null
     private var areCaptionsEnabled = false
+
     /**
      *  Inflate the HLS player view and initialize the HLS player.
      *  Set the HLS player view and player if the inflation is successful.
@@ -77,8 +78,8 @@ class HMSHLSPlayer(
             // Set the native player of the HLS player view.
             it.player = hlsPlayer?.getNativePlayer()
 
-            ///Hiding Subtitles
-            if(!showHLSControls){
+            // /Hiding Subtitles
+            if (!showHLSControls) {
                 it.subtitleView?.visibility = View.GONE
             }
             it.player?.addListener(
@@ -121,13 +122,13 @@ class HMSHLSPlayer(
                     }
 
                     override fun onCues(cueGroup: CueGroup) {
-                        if(areCaptionsEnabled){
+                        if (areCaptionsEnabled) {
                             val hashMap = HashMap<String, Any>()
                             val args = HashMap<String, Any>()
 
                             hashMap["event_name"] = "on_cues"
                             val cues = ArrayList<Any>()
-                            cueGroup.cues.forEach {_cues ->
+                            cueGroup.cues.forEach { _cues ->
                                 _cues.text?.let { cue ->
                                     cues.add(cue.toString())
                                 }
@@ -265,8 +266,8 @@ class HMSHLSPlayer(
             }
         }
 
-    private fun areClosedCaptionSupported(): Boolean{
-        return hlsPlayer?.areClosedCaptionsSupported()?:false
+    private fun areClosedCaptionSupported(): Boolean {
+        return hlsPlayer?.areClosedCaptionsSupported() ?: false
     }
 
     /**
@@ -357,10 +358,10 @@ class HMSHLSPlayer(
                 }
 
                 override fun enableClosedCaptions(result: Result) {
-                    if(areClosedCaptionSupported()){
+                    if (areClosedCaptionSupported()) {
                         areCaptionsEnabled = true
                         result.success(null)
-                    }else{
+                    } else {
                         HMSErrorLogger.logError("enableClosedCaptions", "Closed Captions are not supported", "SUPPORT ERROR")
                         result.success(null)
                     }
@@ -372,10 +373,10 @@ class HMSHLSPlayer(
                 }
 
                 override fun getStreamProperties(result: Result) {
-                    val map = HashMap<String,Any?>()
+                    val map = HashMap<String, Any?>()
 
                     map["rolling_window_time"] =
-                        hlsPlayer?.getNativePlayer()?.seekParameters?.toleranceAfterUs?.div(1000000);
+                        hlsPlayer?.getNativePlayer()?.seekParameters?.toleranceAfterUs?.div(1000000)
                     map["stream_duration"] = hlsPlayer?.getNativePlayer()?.duration?.div(1000)
 
                     result.success(map)
@@ -383,8 +384,8 @@ class HMSHLSPlayer(
 
                 override fun getHLSLayers(result: Result) {
                     val layers = hlsPlayer?.getHmsHlsLayers()
-                    val map = HashMap<Any,Any>()
-                    val layersList = ArrayList<HashMap<Any,Any?>>()
+                    val map = HashMap<Any, Any>()
+                    val layersList = ArrayList<HashMap<Any, Any?>>()
                     layers?.forEach { layer ->
                         val args = HMSHLSLayerExtension.toDictionary(layer)
                         args?.let {
@@ -395,11 +396,14 @@ class HMSHLSPlayer(
                     result.success(map)
                 }
 
-                override fun setHLSLayer(hlsLayer:HashMap<Any,Any?>, result: Result) {
+                override fun setHLSLayer(
+                    hlsLayer: HashMap<Any, Any?>,
+                    result: Result,
+                ) {
                     val layers = hlsPlayer?.getHmsHlsLayers()
                     layers?.forEach { layer ->
                         (layer as HmsHlsLayer.LayerInfo?)?.let {
-                            if(it.bitrate == hlsLayer["bitrate"]){
+                            if (it.bitrate == hlsLayer["bitrate"]) {
                                 hlsPlayer?.setHmsHlsLayer(it)
                                 result.success(null)
                                 return

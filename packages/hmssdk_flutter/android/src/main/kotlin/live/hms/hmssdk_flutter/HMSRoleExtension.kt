@@ -1,6 +1,5 @@
 package live.hms.hmssdk_flutter
 
-import android.annotation.SuppressLint
 import live.hms.hmssdk_flutter.hms_role_components.PermissionParamsExtension
 import live.hms.hmssdk_flutter.hms_role_components.PublishParamsExtension
 import live.hms.hmssdk_flutter.hms_role_components.SubscribeSettings

@@ -1,6 +1,6 @@
 name: hmssdk_flutter
 description: Add Real Time Audio & Video calls, Interactive Live Streaming & Recording, Chat, HLS, RTMP,  PiP, CallKit, VoIP, Video conferencing, Stream Player & WebRTC-based communications API
-version: 1.10.2
+version: 1.10.3
 homepage: https://www.100ms.live/
 repository: https://github.com/100mslive/100ms-flutter
 issue_tracker: https://github.com/100mslive/100ms-flutter/issues

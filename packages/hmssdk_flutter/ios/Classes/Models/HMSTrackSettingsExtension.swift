@@ -83,7 +83,7 @@ class HMSTrackSettingsExtension {
                         if let mode = getAudioMode(from: audioSettingsDict["audio_mode"] as? String) {
                             builder.audioMode = mode
                         }
-                        
+
                         /*
                          Here we set the noise cancellation controller based on the parameter passed in audio track
                          settings
