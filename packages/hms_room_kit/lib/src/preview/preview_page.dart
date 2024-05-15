@@ -275,12 +275,12 @@ class _PreviewPageState extends State<PreviewPage> {
                                                       nameController,
                                                   width: width * 0.38,
                                                   onPressed: () {
-                                                    nameController.text
-                                                            .trim()
-                                                            .isEmpty
-                                                        ? null
-                                                        : _navigateToMeeting(
-                                                            previewStore);
+                                                    if (nameController.text
+                                                        .trim()
+                                                        .isNotEmpty) {
+                                                      _navigateToMeeting(
+                                                          previewStore);
+                                                    }
                                                   },
                                                   childWidget:
                                                       PreviewJoinButton(
