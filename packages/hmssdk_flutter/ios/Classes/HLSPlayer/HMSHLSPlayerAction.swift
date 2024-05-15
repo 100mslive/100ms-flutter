@@ -13,10 +13,10 @@ import HMSSDK
  * We use notifications to forward the request to HMSHLSPlayer
  */
 class HMSHLSPlayerAction {
-    
+
     static let HLS_PLAYER_METHOD = "HLS_PLAYER"
     static let METHOD_CALL = "method_name"
-    
+
     static func hlsPlayerAction(
         _ call: FlutterMethodCall,
         _ result: @escaping FlutterResult
@@ -27,92 +27,92 @@ class HMSHLSPlayerAction {
                 call,
                 result
             )
-            
+
         case "stop_hls_player":
             stop(
                 result
             )
-            
+
         case "pause_hls_player":
             pause(
                 result
             )
-            
+
         case "resume_hls_player":
             resume(
                 result
             )
-            
+
         case "seek_to_live_position":
             seekToLivePosition(
                 result
             )
-            
+
         case "seek_forward":
             seekForward(
                 call,
                 result
             )
-            
+
         case "seek_backward":
             seekBackward(
                 call,
                 result
             )
-            
+
         case "set_hls_player_volume":
             setVolume(
                 call,
                 result
             )
-            
+
         case "add_hls_stats_listener":
             addHLSStatsListener(
                 result
             )
-            
+
         case "remove_hls_stats_listener":
             removeHLSStatsListener(
                 result
             )
-            
+
         case "are_closed_captions_supported":
             areClosedCaptionsSupported(
                 result
             )
-            
+
         case "enable_closed_captions":
             enableClosedCaptions(
                 result
             )
-            
+
         case "disable_closed_captions":
             disableClosedCaptions(
                 result
             )
-            
+
         case "get_stream_properties":
             getStreamProperties(
                 result
             )
-            
+
         case "get_hls_layers":
             getHLSLayers(result)
-            
+
         case "set_hls_layer":
             setHLSLayer(call, result)
-            
+
         case "get_current_hls_layer":
             getCurrentHLSLayer(result)
-            
+
         default:
             result(
                 FlutterMethodNotImplemented
             )
         }
-        
+
     }
-    
+
     /**
      * Starts the HLS player by posting a notification with the specified method call and HLS URL.
      *
@@ -124,7 +124,7 @@ class HMSHLSPlayerAction {
         _ call: FlutterMethodCall,
         _ result: @escaping FlutterResult
     ) {
-        
+
         guard let arguments = call.arguments as? [AnyHashable: Any] else {
             HMSErrorLogger.logError(
                 #function,
@@ -136,9 +136,9 @@ class HMSHLSPlayerAction {
             )
             return
         }
-        
+
         let hlsUrl = arguments["hls_url"] as? String
-        
+
         NotificationCenter.default.post(
             name: NSNotification.Name(
                 HLS_PLAYER_METHOD
@@ -153,7 +153,7 @@ class HMSHLSPlayerAction {
             nil
         )
     }
-    
+
     /**
      * Stops the HLS player by posting a notification with the specified method call.
      *
@@ -173,7 +173,7 @@ class HMSHLSPlayerAction {
             nil
         )
     }
-    
+
     /**
      * Pauses the HLS player by posting a notification with the specified method call.
      *
@@ -193,7 +193,7 @@ class HMSHLSPlayerAction {
             nil
         )
     }
-    
+
     /**
      * Resumes the HLS player by posting a notification with the specified method call.
      *
@@ -213,7 +213,7 @@ class HMSHLSPlayerAction {
             nil
         )
     }
-    
+
     /**
      * Seeks to the live position in the HLS player by posting a notification with the specified method call.
      *
@@ -233,7 +233,7 @@ class HMSHLSPlayerAction {
             nil
         )
     }
-    
+
     /**
      * Seeks forward in the HLS player by the specified number of seconds, posting a notification with the seek duration.
      *
@@ -245,7 +245,7 @@ class HMSHLSPlayerAction {
         _ call: FlutterMethodCall,
         _ result: @escaping FlutterResult
     ) {
-        
+
         guard let arguments = call.arguments as? [AnyHashable: Any],
               let seconds = arguments["seconds"] as? Int else {
             HMSErrorLogger.logError(
@@ -258,7 +258,7 @@ class HMSHLSPlayerAction {
             )
             return
         }
-        
+
         NotificationCenter.default.post(
             name: NSNotification.Name(
                 HLS_PLAYER_METHOD
@@ -273,7 +273,7 @@ class HMSHLSPlayerAction {
             nil
         )
     }
-    
+
     /**
      * Seeks backward in the HLS player by the specified number of seconds, posting a notification with the seek duration.
      *
@@ -285,7 +285,7 @@ class HMSHLSPlayerAction {
         _ call: FlutterMethodCall,
         _ result: @escaping FlutterResult
     ) {
-        
+
         guard let arguments = call.arguments as? [AnyHashable: Any],
               let seconds = arguments["seconds"] as? Int else {
             HMSErrorLogger.logError(
@@ -298,7 +298,7 @@ class HMSHLSPlayerAction {
             )
             return
         }
-        
+
         NotificationCenter.default.post(
             name: NSNotification.Name(
                 HLS_PLAYER_METHOD
@@ -313,7 +313,7 @@ class HMSHLSPlayerAction {
             nil
         )
     }
-    
+
     /**
      * Sets the volume level of the HLS player by posting a notification with the specified volume value.
      *
@@ -325,7 +325,7 @@ class HMSHLSPlayerAction {
         _ call: FlutterMethodCall,
         _ result: @escaping FlutterResult
     ) {
-        
+
         guard let arguments = call.arguments as? [AnyHashable: Any],
               let volume = arguments["volume"] as? Int else {
             HMSErrorLogger.logError(
@@ -338,7 +338,7 @@ class HMSHLSPlayerAction {
             )
             return
         }
-        
+
         NotificationCenter.default.post(
             name: NSNotification.Name(
                 HLS_PLAYER_METHOD
@@ -372,7 +372,7 @@ class HMSHLSPlayerAction {
             nil
         )
     }
-    
+
     /**
      * Removes the listener for HLS player statistics by posting a notification with the corresponding method call.
      *
@@ -392,10 +392,10 @@ class HMSHLSPlayerAction {
             nil
         )
     }
-    
+
     static private func areClosedCaptionsSupported(
         _ result: @escaping FlutterResult
-    ){
+    ) {
         NotificationCenter.default.post(
             name: NSNotification.Name(
                 HLS_PLAYER_METHOD
@@ -407,10 +407,10 @@ class HMSHLSPlayerAction {
             ]
         )
     }
-    
+
     static private func enableClosedCaptions(
         _ result: @escaping FlutterResult
-    ){
+    ) {
         NotificationCenter.default.post(
             name: NSNotification.Name(
                 HLS_PLAYER_METHOD
@@ -422,10 +422,10 @@ class HMSHLSPlayerAction {
             nil
         )
     }
-    
+
     static private func disableClosedCaptions(
         _ result: @escaping FlutterResult
-    ){
+    ) {
         NotificationCenter.default.post(
             name: NSNotification.Name(
                 HLS_PLAYER_METHOD
@@ -437,10 +437,10 @@ class HMSHLSPlayerAction {
             nil
         )
     }
-    
+
     static private func getStreamProperties(
         _ result: @escaping FlutterResult
-    ){
+    ) {
         NotificationCenter.default.post(
             name: NSNotification.Name(
                 HLS_PLAYER_METHOD
@@ -452,9 +452,9 @@ class HMSHLSPlayerAction {
             ]
         )
     }
-    
+
     static private var layersMap = [
-        
+
         [
             "resolution": [
                 "height": 1080.0,
@@ -507,31 +507,31 @@ class HMSHLSPlayerAction {
         [
             "bitrate": nil
         ]
-        
+
     ]
-    
-    static private var currentBitrate : Any? =  [
+
+    static private var currentBitrate: Any? =  [
         "bitrate": nil
     ]
-    
+
     static private func getHLSLayers(
         _ result: @escaping FlutterResult
-    ){
-        var layers = [String:Any]()
+    ) {
+        var layers = [String: Any]()
         layers["layers"] = layersMap
         result(layers)
     }
-    
+
     static private func setHLSLayer(
         _ call: FlutterMethodCall,
         _ result: @escaping FlutterResult
-    ){
+    ) {
         guard let arguments = call.arguments as? [AnyHashable: Any],
-              let layer = arguments["layer"] as? [String:Any] else {
+              let layer = arguments["layer"] as? [String: Any] else {
                   HMSErrorLogger.returnArgumentsError("hmsHLSLayer parameter is null")
                   return
               }
-        
+
         /*
          Here if the bitrate is nil
          we set it as zero otherwise the given bitrate is applied
@@ -549,11 +549,10 @@ class HMSHLSPlayerAction {
                 ]
             )
     }
-    
-    
+
     static private func getCurrentHLSLayer(
         _ result: @escaping FlutterResult
-    ){
+    ) {
         if let currentBitrate = currentBitrate as? Int {
             let layer = layersMap.first { $0["bitrate"] as? Int == currentBitrate
             }

@@ -2,7 +2,6 @@ package live.hms.hmssdk_flutter.hls_player
 
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
-import live.hms.hls_player.HmsHlsLayer
 import live.hms.hmssdk_flutter.HMSErrorLogger
 import java.lang.ref.WeakReference
 
@@ -34,7 +33,7 @@ class HMSHLSPlayerAction {
                 "disable_closed_captions" -> disableClosedCaptions(result)
                 "get_stream_properties" -> getStreamProperties(result)
                 "get_hls_layers" -> getHLSLayers(result)
-                 "set_hls_layer" -> setHLSLayer(call,result)
+                "set_hls_layer" -> setHLSLayer(call, result)
                 "get_current_hls_layer" -> getCurrentHLSLayer(result)
                 else -> {
                     result.notImplemented()
@@ -257,7 +256,7 @@ class HMSHLSPlayerAction {
             }
         }
 
-        private fun getStreamProperties(result:Result){
+        private fun getStreamProperties(result: Result) {
             hlsActions?.let {
                 it.get()?.getStreamProperties(result)
             } ?: run {
@@ -265,7 +264,7 @@ class HMSHLSPlayerAction {
             }
         }
 
-        private fun getHLSLayers(result: Result){
+        private fun getHLSLayers(result: Result) {
             hlsActions?.let {
                 it.get()?.getHLSLayers(result)
             } ?: run {
@@ -273,24 +272,26 @@ class HMSHLSPlayerAction {
             }
         }
 
-        private fun setHLSLayer(call: MethodCall,result: Result){
-
-            val layerMap = call.argument<HashMap<Any,Any?>?>("layer")
+        private fun setHLSLayer(
+            call: MethodCall,
+            result: Result,
+        ) {
+            val layerMap = call.argument<HashMap<Any, Any?>?>("layer")
 
             layerMap?.let {
-                if(layerMap["resolution"] != null && layerMap["bitrate"] != null){
+                if (layerMap["resolution"] != null && layerMap["bitrate"] != null) {
                     hlsActions?.let {
-                        it.get()?.setHLSLayer(layerMap,result)
+                        it.get()?.setHLSLayer(layerMap, result)
                     } ?: run {
                         HMSErrorLogger.logError("getCurrentHLSLayer", "hlsActions is NULL", "NULL Error")
                     }
                 }
-            }?:run {
+            } ?: run {
                 HMSErrorLogger.returnArgumentsError("hmsHLSLayer is null in setHLSLayer")
             }
         }
 
-        private fun getCurrentHLSLayer(result: Result){
+        private fun getCurrentHLSLayer(result: Result) {
             hlsActions?.let {
                 it.get()?.getCurrentHLSLayer(result)
             } ?: run {

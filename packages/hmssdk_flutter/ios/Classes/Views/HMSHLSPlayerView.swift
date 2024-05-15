@@ -126,24 +126,23 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
         // Set the hlsPlayer to nil to release its resources
         hlsPlayer = nil
     }
-    
-    private func areClosedCaptionsSupported() -> Bool{
+
+    private func areClosedCaptionsSupported() -> Bool {
         guard let playerItem = hlsPlayer?._nativePlayer.currentItem else {
             return false
         }
-        
+
         guard let availableSubtitleTracks = playerItem.asset.mediaSelectionGroup(forMediaCharacteristic: .legible) else {
             return false
         }
-        
+
         guard let firstOption = availableSubtitleTracks.options.first else {
             return false
         }
-        
+
         if firstOption.mediaType == .subtitle {
             return true
-        }
-        else {
+        } else {
             return false
         }
     }
@@ -185,21 +184,21 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
         case "are_closed_captions_supported":
             let result = notification.userInfo?["result"] as? FlutterResult
             result?(areClosedCaptionsSupported())
-        
+
         case "enable_closed_captions":
             let result = notification.userInfo?["result"] as? FlutterResult
-            if(areClosedCaptionsSupported()){
+            if areClosedCaptionsSupported() {
                 let player = hlsPlayer?._nativePlayer
                 guard let playerItem = player?.currentItem else {return }
-                
+
                 guard let availableSubtitleTracks = playerItem.asset.mediaSelectionGroup(forMediaCharacteristic: .legible) else { return }
-                
+
                 if let firstSubtitle = availableSubtitleTracks.options.first(where: {$0.mediaType == .subtitle}) {
-                    
+
                     playerItem.select(firstSubtitle, in: availableSubtitleTracks)
-                    
+
                 }
-            }else{
+            } else {
                 HMSErrorLogger.logError("\(#function)", "Closed Captions are not supported", "SUPPORT ERROR")
             }
             result?(nil)
@@ -207,9 +206,9 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
             let result = notification.userInfo?["result"] as? FlutterResult
             let player = hlsPlayer?._nativePlayer
             guard let playerItem = player?.currentItem else {return }
-            
+
             guard let availableSubtitleTracks = playerItem.asset.mediaSelectionGroup(forMediaCharacteristic: .legible) else { return }
-            
+
             if let _ = playerItem.currentMediaSelection.selectedMediaOption(in: availableSubtitleTracks) {
                 playerItem.select(nil, in: availableSubtitleTracks)
             }
@@ -218,31 +217,31 @@ class HMSHLSPlayerView: NSObject, FlutterPlatformView {
             let result = notification.userInfo?["result"] as? FlutterResult
             let player = hlsPlayer?._nativePlayer
             guard let playerItem = player?.currentItem else {return }
-            
-            var map = [String:Any?]()
-            
+
+            var map = [String: Any?]()
+
             let duration = playerItem.duration
-        
+
             if duration.isIndefinite {
                 guard let timeRange = playerItem.seekableTimeRanges.last as? CMTimeRange else { return }
-                
+
                 map["rolling_window_time"] = timeRange.duration.seconds
-            }else{
+            } else {
                 map["stream_duration"] = duration.seconds
             }
             result?(map)
-        
+
         case "set_hls_layer":
-            
+
             let result = notification.userInfo?["result"] as? FlutterResult
-            if let bitrate = notification.userInfo?["bitrate"] as? Int{
+            if let bitrate = notification.userInfo?["bitrate"] as? Int {
                 hlsPlayer?._nativePlayer.currentItem?.preferredPeakBitRate = Double(bitrate)
                 result?(nil)
-            } else{
+            } else {
                 HMSErrorLogger.logError("setHLSLayer", "bitrate is null", "NULL ERROR")
                 result?(nil)
             }
-            
+
         default:
             return
         }
