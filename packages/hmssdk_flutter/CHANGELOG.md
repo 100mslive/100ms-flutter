@@ -16,7 +16,7 @@
 
 - Introducing Whiteboard support in HMSSDK
 
-  HMSSDK now provides support for Whiteboard. You can now start/stop a whiteboard using `HMSWhiteboardController` methods. HMSSDK provides also provides callbacks for whiteboard start/stop events. Learn more about it [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/set-up-video-conferencing/whiteboard)
+  HMSSDK now provides support for Whiteboard. You can now start/stop a whiteboard using `HMSWhiteboardController` methods. HMSSDK provides also provides callbacks for whiteboard start/stop events. Learn more about it [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/extend-capabilities/whiteboard)
 
 - HLS Layer methods
 
