@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -35,6 +36,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool res = false;
 
+  void navigate() {
+    Navigator.push(
+        context, CupertinoPageRoute(builder: (_) => const MeetingPage()));
+  }
+
   static Future<bool> getPermissions() async {
     if (Platform.isIOS) return true;
     await Permission.camera.request();
@@ -70,9 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ))),
             onPressed: () async => {
               res = await getPermissions(),
-              if (res)
-                Navigator.push(context,
-                    CupertinoPageRoute(builder: (_) => const MeetingPage()))
+              if (res) {navigate()}
             },
             child: const Padding(
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -99,7 +103,7 @@ class _MeetingPageState extends State<MeetingPage>
     implements HMSUpdateListener {
   late HMSSDK hmsSDK;
   String userName = "Enter username here";
-  String authToken = "Enter token here";
+  String roomCode = "zhr-seow-tuj"; //Enter your room code here
   Offset position = const Offset(5, 5);
   bool isJoinSuccessful = false;
   HMSPeer? localPeer, remotePeer;
@@ -115,7 +119,14 @@ class _MeetingPageState extends State<MeetingPage>
     hmsSDK = HMSSDK();
     await hmsSDK.build();
     hmsSDK.addUpdateListener(listener: this);
-    hmsSDK.join(config: HMSConfig(authToken: authToken, userName: userName));
+    var authToken =
+        await hmsSDK.getAuthTokenByRoomCode(roomCode: roomCode);
+    if ((authToken is String?) && authToken != null) {
+      hmsSDK.join(
+          config: HMSConfig(authToken: authToken, userName: userName));
+    } else {
+      log("Error in getting auth token");
+    }
   }
 
   @override
@@ -271,6 +282,13 @@ class _MeetingPageState extends State<MeetingPage>
   @override
   void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
     // Checkout the docs for sessions store here: https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store
+  }
+
+  @override
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {
+    // TODO: implement onPeerListUpdate
   }
 
   @override
