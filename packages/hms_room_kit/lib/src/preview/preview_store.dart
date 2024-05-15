@@ -316,4 +316,11 @@ class PreviewStore extends ChangeNotifier
     }
     notifyListeners();
   }
+
+  @override
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {
+    log("onPeerListUpdate -> addedPeers: $addedPeers removedPeers: $removedPeers");
+  }
 }

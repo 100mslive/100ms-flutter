@@ -18,6 +18,7 @@ import 'package:hmssdk_flutter/src/enum/hms_hls_playback_event_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_key_change_listener_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
 import 'package:hmssdk_flutter/src/model/hms_key_change_observer.dart';
+import 'package:hmssdk_flutter/src/model/platform_method_response.dart';
 
 abstract class PlatformService {
   ///used to pass data to platform using methods
@@ -46,8 +47,13 @@ abstract class PlatformService {
   static const EventChannel _hlsPlayerChannel =
       const EventChannel("hls_player_channel");
 
+  ///used to get poll event updates
   static const EventChannel _pollsEventChannel =
       const EventChannel("polls_event_channel");
+
+  ///used to get whiteboard events
+  static const EventChannel _whiteboardEventChannel =
+      const EventChannel("whiteboard_event_channel");
 
   ///add meeting listeners.
   static List<HMSUpdateListener> updateListeners = [];
@@ -62,6 +68,8 @@ abstract class PlatformService {
   static List<HMSHLSPlaybackEventsListener> hlsPlaybackEventListener = [];
 
   static HMSPollListener? _pollListener;
+
+  static HMSWhiteboardUpdateListener? _whiteboardListener;
 
   ///List for event Listener
   static List<HMSStatsListener> statsListeners = [];
@@ -106,6 +114,17 @@ abstract class PlatformService {
   static void addPollUpdateListener(HMSPollListener listener) {
     _pollListener = listener;
     PlatformService.invokeMethod(PlatformMethod.addPollUpdateListener);
+  }
+
+  static void addWhiteboardUpdateListener(
+      HMSWhiteboardUpdateListener listener) {
+    _whiteboardListener = listener;
+    PlatformService.invokeMethod(PlatformMethod.addWhiteboardUpdateListener);
+  }
+
+  static void removeWhiteboardUpdateListener() {
+    _whiteboardListener = null;
+    PlatformService.invokeMethod(PlatformMethod.removeWhiteboardUpdateListener);
   }
 
   static void removePollUpdateListener() {
@@ -412,6 +431,27 @@ abstract class PlatformService {
                     : null
           });
           break;
+        case HMSPreviewUpdateListenerMethod.onPeerListUpdate:
+          List<HMSPeer> addedPeers = [];
+          List<HMSPeer> removedPeers = [];
+
+          if (event.data.containsKey("added_peers") &&
+              event.data["added_peers"] != null) {
+            for (var peer in event.data["added_peers"]) {
+              addedPeers.add(HMSPeer.fromMap(peer));
+            }
+          }
+
+          if (event.data.containsKey("removed_peers") &&
+              event.data["removed_peers"] != null) {
+            for (var peer in event.data["removed_peers"]) {
+              removedPeers.add(HMSPeer.fromMap(peer));
+            }
+          }
+
+          notifyPreviewListeners(method,
+              {"added_peers": addedPeers, "removed_peers": removedPeers});
+          break;
       }
     });
 
@@ -564,6 +604,28 @@ abstract class PlatformService {
           break;
       }
     });
+
+    _whiteboardEventChannel
+        .receiveBroadcastStream({'name': 'whiteboard'}).map((event) {
+      HMSWhiteboardListenerMethod method = HMSWhiteboardListenerMethodValues
+          .getHMSWhiteboardListenerMethodFromString(event['event_name']);
+      Map data = event['data'];
+      return HMSWhiteboardListenerMethodResponse(method: method, data: data);
+    }).listen((event) {
+      HMSWhiteboardListenerMethod method = event.method;
+      switch (method) {
+        case HMSWhiteboardListenerMethod.onWhiteboardStart:
+          _whiteboardListener?.onWhiteboardStart(
+              hmsWhiteboardModel: HMSWhiteboardModel.fromMap(event.data));
+          break;
+        case HMSWhiteboardListenerMethod.onWhiteboardStop:
+          _whiteboardListener?.onWhiteboardStop(
+              hmsWhiteboardModel: HMSWhiteboardModel.fromMap(event.data));
+          break;
+        case HMSWhiteboardListenerMethod.unknown:
+          break;
+      }
+    });
   }
 
   static void notifyLogsUpdateListeners(
@@ -614,6 +676,12 @@ abstract class PlatformService {
               availableAudioDevice: arguments["available_audio_device"]);
         });
         break;
+      case HMSPreviewUpdateListenerMethod.onPeerListUpdate:
+        previewListeners.forEach((e) {
+          e.onPeerListUpdate(
+              addedPeers: arguments["added_peers"],
+              removedPeers: arguments["removed_peers"]);
+        });
     }
   }
 

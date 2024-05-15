@@ -1,3 +1,5 @@
+import 'package:hmssdk_flutter/src/model/whiteboard/hms_whiteboard_permission.dart';
+
 ///100ms HMSPermissions
 ///
 ///[HMSPermissions] contains permissions for local peer like end room, remove others, mute and unmute other peers, role change and other permissions.
@@ -12,6 +14,7 @@ class HMSPermissions {
   final bool? unMute;
   final bool? pollRead;
   final bool? pollWrite;
+  final HMSWhiteboardPermission? whiteboard;
 
   HMSPermissions(
       {this.endRoom,
@@ -23,7 +26,8 @@ class HMSPermissions {
       this.unMute,
       this.changeRole,
       this.pollRead,
-      this.pollWrite});
+      this.pollWrite,
+      this.whiteboard});
 
   factory HMSPermissions.fromMap(Map map) {
     return HMSPermissions(
@@ -36,21 +40,9 @@ class HMSPermissions {
         rtmpStreaming: map['rtmp_streaming'],
         unMute: map['un_mute'],
         pollRead: map['poll_read'],
-        pollWrite: map['poll_write']);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'end_room': endRoom,
-      'browser_recording': browserRecording,
-      'remove_others': removeOthers,
-      'mute': mute,
-      'un_mute': unMute,
-      'hls_streaming': hlsStreaming,
-      'rtmp_streaming': rtmpStreaming,
-      'change_role': changeRole,
-      'poll_read': pollRead,
-      'poll_write': pollWrite
-    };
+        pollWrite: map['poll_write'],
+        whiteboard: map['whiteboard_permission'] != null
+            ? HMSWhiteboardPermission.fromMap(map['whiteboard_permission'])
+            : null);
   }
 }

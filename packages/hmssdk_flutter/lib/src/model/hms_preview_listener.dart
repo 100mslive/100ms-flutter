@@ -50,4 +50,13 @@ abstract class HMSPreviewListener {
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice});
+
+  ///Upon joining a room with existing peers, onPeerListUpdated will be called with the list of peers present
+  ///in the room instead of getting onPeerUpdate for each peer in the room.
+  ///Subsequent peer joins/leaves would be notified via both onPeerUpdate and onPeerListUpdated
+  /// - Parameters:
+  ///  - addedPeers: List of peers who joined the room
+  ///  - removedPeers: List of peers who left the room
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers, required List<HMSPeer> removedPeers});
 }

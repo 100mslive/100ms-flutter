@@ -92,3 +92,14 @@ class HMSPollListenerMethodResponse {
 
   HMSPollListenerMethodResponse({required this.method, required this.data});
 }
+
+///HMSWhiteboardListenerMethodResponse contains all the responses sent from the whiteboard channel
+///
+/// Checkout different responses in [HMSWhiteboardListenerMethod] enum
+class HMSWhiteboardListenerMethodResponse {
+  final HMSWhiteboardListenerMethod method;
+  final Map<dynamic, dynamic> data;
+
+  HMSWhiteboardListenerMethodResponse(
+      {required this.method, required this.data});
+}

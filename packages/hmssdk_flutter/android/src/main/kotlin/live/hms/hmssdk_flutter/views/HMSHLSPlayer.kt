@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import live.hms.hls_player.*
 import live.hms.hmssdk_flutter.HMSErrorLogger
+import live.hms.hmssdk_flutter.HMSHLSLayerExtension
 import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 import live.hms.hmssdk_flutter.R
 import live.hms.hmssdk_flutter.hls_player.HLSStatsHandler
@@ -378,6 +379,37 @@ class HMSHLSPlayer(
                     map["stream_duration"] = hlsPlayer?.getNativePlayer()?.duration?.div(1000)
 
                     result.success(map)
+                }
+
+                override fun getHLSLayers(result: Result) {
+                    val layers = hlsPlayer?.getHmsHlsLayers()
+                    val map = HashMap<Any,Any>()
+                    val layersList = ArrayList<HashMap<Any,Any?>>()
+                    layers?.forEach { layer ->
+                        val args = HMSHLSLayerExtension.toDictionary(layer)
+                        args?.let {
+                            layersList.add(it)
+                        }
+                    }
+                    map["layers"] = layersList
+                    result.success(map)
+                }
+
+                override fun setHLSLayer(hlsLayer:HashMap<Any,Any?>, result: Result) {
+                    val layers = hlsPlayer?.getHmsHlsLayers()
+                    layers?.forEach { layer ->
+                        (layer as HmsHlsLayer.LayerInfo?)?.let {
+                            if(it.bitrate == hlsLayer["bitrate"]){
+                                hlsPlayer?.setHmsHlsLayer(it)
+                                result.success(null)
+                                return
+                            }
+                        }
+                    }
+                }
+
+                override fun getCurrentHLSLayer(result: Result) {
+                    result.success(HMSHLSLayerExtension.toDictionary(hlsPlayer?.getCurrentHmsHlsLayer()))
                 }
             }
     }
