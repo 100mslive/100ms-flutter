@@ -41,6 +41,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          flutter-version: 3.13.9
           cache: true
       - name: Get Flutter dependencies in Core SDK
         run: flutter pub get

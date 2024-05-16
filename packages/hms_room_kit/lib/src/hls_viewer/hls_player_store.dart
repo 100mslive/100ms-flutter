@@ -266,7 +266,7 @@ class HLSPlayerStore extends ChangeNotifier
   ///[setHLSLayer] sets the HLS Layer
   void setHLSLayer(HMSHLSLayer hmsHLSLayer) async {
     selectedLayer = hmsHLSLayer;
-    await HMSHLSPlayerController.setHLSLayer(hmsHLSLayer: hmsHLSLayer);
+    HMSHLSPlayerController.setHLSLayer(hmsHLSLayer: hmsHLSLayer);
     notifyListeners();
   }
 

@@ -18,9 +18,8 @@ class HMSHLSVariantExtension {
             return args
         }
 
-        private fun getHMSHLSVariantToString(hmsHlsVariantType: HMSHLSPlaylistType?): String{
-
-            return when(hmsHlsVariantType){
+        private fun getHMSHLSVariantToString(hmsHlsVariantType: HMSHLSPlaylistType?): String {
+            return when (hmsHlsVariantType) {
                 HMSHLSPlaylistType.dvr -> {
                     "dvr"
                 }
