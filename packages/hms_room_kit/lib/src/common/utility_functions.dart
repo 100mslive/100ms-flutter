@@ -420,6 +420,7 @@ class Utilities {
               ? HMSTrackInitState.MUTED
               : HMSTrackInitState.UNMUTED,
           forceSoftwareDecoder: isSoftwareDecoderDisabled,
+          isVirtualBackgroundEnabled: AppDebugConfig.isVirtualBackgroundEnabled
         ));
   }
 

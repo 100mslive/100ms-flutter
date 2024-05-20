@@ -9,6 +9,9 @@ import Foundation
 import HMSSDK
 
 class HMSTrackSettingsExtension {
+    
+    static var videoSettings: HMSVideoTrackSettings?
+    
     static func toDictionary(_ hmssdk: HMSSDK, _ audioMixerSourceMap: [String: HMSAudioNode]?) -> [String: Any] {
 
         let hmsTrackSettings = hmssdk.trackSettings
@@ -130,10 +133,23 @@ class HMSTrackSettingsExtension {
             }
         }
 
-        var videoSettings: HMSVideoTrackSettings?
         if let videoSettingsDict = settingsDict["video_track_setting"] as? [AnyHashable: Any] {
             if let cameraFacing = videoSettingsDict["camera_facing"] as? String,
+               let isVirtualBackgroundEnabled = videoSettingsDict["is_virtual_background_enabled"] as? Bool,
                let initialMuteState = videoSettingsDict["track_initial_state"] as? String {
+                
+                var videoPlugins : [HMSVideoPlugin]?
+                if(isVirtualBackgroundEnabled){
+                    if #available(iOS 15.0, *) {
+                    
+                        if let virtualbackground = HMSVirtualBackgroundAction.getPlugin(){
+                            videoPlugins = []
+                            videoPlugins?.append(virtualbackground)
+                        }
+                    } else {
+                        HMSErrorLogger.logError("\(#function)", "Virtual Background is not supported below iOS 15", "Plugin not supported error")
+                    }
+                }
                 videoSettings = HMSVideoTrackSettings(codec: HMSCodec.VP8,
                                                       resolution: .init(width: 320, height: 180),
                                                       maxBitrate: 32,
@@ -142,8 +158,7 @@ class HMSTrackSettingsExtension {
                                                       simulcastSettings: nil,
                                                       trackDescription: "track_description",
                                                       initialMuteState: getinitialMuteState(from: initialMuteState),
-                                                      videoPlugins: nil)
-
+                                                      videoPlugins: videoPlugins)
             }
         }
 

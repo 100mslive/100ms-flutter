@@ -420,6 +420,29 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       optionText: meetingStore.isWhiteboardEnabled
                           ? "Close Whiteboard"
                           : "Open Whiteboard"),
+                if (AppDebugConfig.isVirtualBackgroundEnabled)
+                  MoreOptionItem(
+                      onTap: () async {
+                        if(AppDebugConfig.isVBEnabled){
+                          HMSVideoFilter.disableBlur();
+                        }else{
+                          HMSVideoFilter.enableBlur(blurRadius: 100);
+                        }
+                        AppDebugConfig.isVBEnabled = !AppDebugConfig.isVBEnabled;
+                        Navigator.pop(context);
+                      },
+                      isActive: AppDebugConfig.isVBEnabled,
+                      optionIcon: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/src/assets/icons/local_capture.svg",
+                        height: 20,
+                        width: 20,
+                        colorFilter: ColorFilter.mode(
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
+                      ),
+                      optionText: AppDebugConfig.isVBEnabled
+                          ? "Disable Blur Background"
+                          : "Enable Blur Background"),
               ],
             ),
           ],
