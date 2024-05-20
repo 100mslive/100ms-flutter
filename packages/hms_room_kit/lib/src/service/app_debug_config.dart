@@ -16,6 +16,8 @@ class AppDebugConfig {
 
   static bool isDebugMode = false;
   static bool isProdRoom = true;
+  static bool isVirtualBackgroundEnabled = false;
+  static bool isVBEnabled = false;
 
   /// The [iOSScreenshareConfig] contains the configuration for the iOS screenshare
   static HMSIOSScreenshareConfig? iOSScreenshareConfig;
@@ -30,5 +32,6 @@ class AppDebugConfig {
     isAutoSimulcast = true;
     isProdRoom = true;
     nameChangeOnPreview = true;
+    isVirtualBackgroundEnabled = false;
   }
 }
