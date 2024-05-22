@@ -74,7 +74,6 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     isVirtualBackgroundEnabled =
         await Utilities.getBoolData(key: 'is_virtual_background_enabled') ??
             false;
-    
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
@@ -454,7 +453,8 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                         onChanged: (value) => {
                               isVirtualBackgroundEnabled = value,
                               Utilities.saveBoolData(
-                                  key: 'is_virtual_background_enabled', value: value),
+                                  key: 'is_virtual_background_enabled',
+                                  value: value),
                               AppDebugConfig.isVirtualBackgroundEnabled = value,
                               setState(() {})
                             }),

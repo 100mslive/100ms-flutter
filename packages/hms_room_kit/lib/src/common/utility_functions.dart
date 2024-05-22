@@ -420,12 +420,12 @@ class Utilities {
             enableAutomaticGainControl: isAutomaticGainControlEnabled,
             enableNoiseSupression: isNoiseSuppressionEnabled),
         videoTrackSetting: HMSVideoTrackSetting(
-          trackInitialState: joinWithMutedVideo
-              ? HMSTrackInitState.MUTED
-              : HMSTrackInitState.UNMUTED,
-          forceSoftwareDecoder: isSoftwareDecoderDisabled,
-          isVirtualBackgroundEnabled: AppDebugConfig.isVirtualBackgroundEnabled
-        ));
+            trackInitialState: joinWithMutedVideo
+                ? HMSTrackInitState.MUTED
+                : HMSTrackInitState.UNMUTED,
+            forceSoftwareDecoder: isSoftwareDecoderDisabled,
+            isVirtualBackgroundEnabled:
+                AppDebugConfig.isVirtualBackgroundEnabled));
   }
 
   static String getTimedMetadataEmojiFromId(String emojiId) {

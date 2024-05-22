@@ -7,7 +7,6 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///[HMSVideoPlugin] is the entry point for the plugin.
 abstract class HMSVideoPlugin {
-
   static Future<void> enable({required Uint8List? image}) async {
     if (Platform.isAndroid) {
       return PlatformService.invokeMethod(PluginMethod.enableVirtualBackground,
@@ -17,7 +16,8 @@ abstract class HMSVideoPlugin {
     }
   }
 
-  static Future<void> changeVirtualBackground({required Uint8List? image}) async {
+  static Future<void> changeVirtualBackground(
+      {required Uint8List? image}) async {
     if (Platform.isAndroid) {
       return PlatformService.invokeMethod(PluginMethod.changeVirtualBackground,
           arguments: {"image": image});
@@ -50,5 +50,5 @@ abstract class HMSVideoPlugin {
     } else {
       return HMSVideoFilter.disableBlur();
     }
-  }  
+  }
 }
