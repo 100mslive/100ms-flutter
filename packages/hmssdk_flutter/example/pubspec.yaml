@@ -26,7 +26,7 @@ dependencies:
   mobile_scanner:
   app_links:
   uuid:
-  flutter_foreground_task: ^6.1.3
+  flutter_foreground_task: 6.1.3
 
   flutter_svg: any
   provider: any

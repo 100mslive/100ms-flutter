@@ -1,11 +1,21 @@
+///Package imports
+import 'package:flutter/foundation.dart';
+
+///Project imports
 import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
+///[HMSVideoFilter] is used to apply video effects like virtual background and blur
 abstract class HMSVideoFilter {
   
-  static Future<void> enable({required String imagePath}) async{
+  static Future<void> enable({required Uint8List? image}) async{
       PlatformService.invokeMethod(PlatformMethod.enableVirtualBackground, 
-      arguments: {"image_path": imagePath});
+      arguments: {"image": image});
+  }
+
+  static Future<void> changeVirtualBackground({required Uint8List? image}) async{
+      PlatformService.invokeMethod(PlatformMethod.changeVirtualBackground, 
+      arguments: {"image": image});
   }
 
   static Future<void> disable() async{

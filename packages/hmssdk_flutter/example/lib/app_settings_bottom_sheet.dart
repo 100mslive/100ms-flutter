@@ -75,7 +75,6 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
         await Utilities.getBoolData(key: 'is_virtual_background_enabled') ??
             false;
     
-    AppDebugConfig.isVirtualBackgroundEnabled = isVirtualBackgroundEnabled;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
@@ -93,7 +92,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     AppDebugConfig.skipPreview = skipPreview;
     AppDebugConfig.isDebugMode = isDebugMode;
     AppDebugConfig.nameChangeOnPreview = true;
-    AppDebugConfig.isVirtualBackgroundEnabled = false;
+    AppDebugConfig.isVirtualBackgroundEnabled = isVirtualBackgroundEnabled;
   }
 
   Future<void> _launchUrl() async {

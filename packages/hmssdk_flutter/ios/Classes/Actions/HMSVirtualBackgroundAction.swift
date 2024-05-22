@@ -23,6 +23,8 @@ class HMSVirtualBackgroundAction{
             enableBlurBackground(call,result)
         case "disable_blur_background":
             disableBlurBackground(result)
+        case "change_virtual_background":
+            changeBackground(call, result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -38,14 +40,14 @@ class HMSVirtualBackgroundAction{
         
         let arguments = call.arguments as! [AnyHashable: Any]
         
-        guard let imagePath = arguments["image_path"] as? String
+        guard let image = arguments["image"] as? FlutterStandardTypedData
         else{
             HMSErrorLogger.returnArgumentsError("Image can't be null")
             return
         }
         
         if #available(iOS 15.0, *) {
-            virtualBackgroundPlugin?.backgroundImage = UIImage(named: imagePath)
+            virtualBackgroundPlugin?.backgroundImage = UIImage(data: image.data)
             virtualBackgroundPlugin?.activate()
         }else {
             HMSErrorLogger.logError("\(#function)", "Virtual Background is not supported below iOS 15", "Plugin not supported error")
@@ -73,6 +75,7 @@ class HMSVirtualBackgroundAction{
         }
         
         if #available(iOS 15.0, *) {
+            virtualBackgroundPlugin?.backgroundImage = nil
             virtualBackgroundPlugin?.activate()
         }else {
             HMSErrorLogger.logError("\(#function)", "Virtual Background is not supported below iOS 15", "Plugin not supported error")
@@ -94,14 +97,14 @@ class HMSVirtualBackgroundAction{
         
         let arguments = call.arguments as! [AnyHashable: Any]
         
-        guard let imagePath = arguments["image_path"] as? String
+        guard let image = arguments["image"] as? FlutterStandardTypedData
         else{
             HMSErrorLogger.returnArgumentsError("Image can't be null")
             return
         }
         
         if #available(iOS 15.0, *) {
-            virtualBackgroundPlugin?.backgroundImage = UIImage(named: imagePath)
+            virtualBackgroundPlugin?.backgroundImage = UIImage(data: image.data)
         }else {
             HMSErrorLogger.logError("\(#function)", "Virtual Background is not supported below iOS 15", "Plugin not supported error")
         }
