@@ -40,7 +40,8 @@ class HMSVideoTrackSetting {
         forceSoftwareDecoder: map.containsKey('force_software_decoder')
             ? map['force_software_decoder']
             : false,
-        isVirtualBackgroundEnabled: map["is_virtual_background_enabled"] ?? false);
+        isVirtualBackgroundEnabled:
+            map["is_virtual_background_enabled"] ?? false);
   }
 
   Map<String, dynamic> toMap() {
