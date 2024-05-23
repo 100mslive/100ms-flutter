@@ -104,7 +104,11 @@ class HMSVirtualBackgroundAction {
         }
 
         private fun isSupported(result: Result){
-           result.success(HMSResultExtension.toDictionary(true,virtualBackgroundPlugin?.isSupported()))
+            virtualBackgroundPlugin?.let {_virtualBackgroundPlugin ->
+                result.success(HMSResultExtension.toDictionary(true,_virtualBackgroundPlugin.isSupported()))
+            }?:run{
+                result.success(HMSResultExtension.toDictionary(true,false))
+            }
         }
     }
 }
