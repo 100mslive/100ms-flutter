@@ -92,6 +92,7 @@ class HMSVirtualBackgroundAction{
         } else {
             HMSErrorLogger.logError("\(#function)", "Virtual Background is not supported below iOS 15", "Plugin not supported error")
         }
+        result(nil)
 
     }
     
