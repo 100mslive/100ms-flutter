@@ -142,7 +142,7 @@ class _VideoEffectsBottomSheetState extends State<VideoEffectsBottomSheet> {
                           HMSVideoPlugin.disable();
                           AppDebugConfig.isVBEnabled = false;
                         }
-                        changeBlur(80);
+                        changeBlur(100);
                       },
                       optionIcon: SvgPicture.asset(
                         "packages/hms_room_kit/lib/src/assets/icons/max_blur.svg",

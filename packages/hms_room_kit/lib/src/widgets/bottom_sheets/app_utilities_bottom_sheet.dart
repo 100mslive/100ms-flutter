@@ -4,11 +4,7 @@ library;
 import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/src/widgets/bottom_sheets/poll_and_quiz_bottom_sheet.dart';
-import 'package:hms_room_kit/src/widgets/bottom_sheets/video_effects_bottom_sheet.dart';
-import 'package:hms_video_plugin/hms_video_plugin.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -21,6 +17,8 @@ import 'package:hms_room_kit/src/widgets/bottom_sheets/overlay_participants_bott
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/poll_and_quiz_bottom_sheet.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/video_effects_bottom_sheet.dart';
 
 ///This renders the app utilities bottom sheet for webRTC or broadcaster
 ///It contains the participants, screen share, brb, raise hand and recording

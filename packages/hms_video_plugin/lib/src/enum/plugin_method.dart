@@ -2,6 +2,7 @@ enum PluginMethod {
   enableVirtualBackground,
   disableVirtualBackground,
   changeVirtualBackground,
+  isVirtualBackgroundSupported,
   enableBlurBackground,
   disableBlurBackground,
 }
@@ -19,6 +20,8 @@ extension PlatformMethodValues on PluginMethod {
         return "enable_blur_background";
       case PluginMethod.disableBlurBackground:
         return "disable_blur_background";
+      case PluginMethod.isVirtualBackgroundSupported:
+        return "is_virtual_background_supported";
     }
   }
 }

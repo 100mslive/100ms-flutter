@@ -245,7 +245,8 @@ enum PlatformMethod {
   disableVirtualBackground,
   changeVirtualBackground,
   enableBlurBackground,
-  disableBlurBackground
+  disableBlurBackground,
+  isVirtualBackgroundSupported
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -622,6 +623,8 @@ extension PlatformMethodValues on PlatformMethod {
         return "enable_blur_background";
       case PlatformMethod.disableBlurBackground:
         return "disable_blur_background";
+      case PlatformMethod.isVirtualBackgroundSupported:
+        return "is_virtual_background_supported";
 
       default:
         return 'unknown';
@@ -988,6 +991,7 @@ extension PlatformMethodValues on PlatformMethod {
       case "remove_whiteboard_update_listener":
         return PlatformMethod.removeWhiteboardUpdateListener;
 
+      ///Virtual Background Methods
       case "enable_virtual_background":
         return PlatformMethod.enableVirtualBackground;
       case "disable_virtual_background":
@@ -998,6 +1002,8 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.enableBlurBackground;
       case "disable_blur_background":
         return PlatformMethod.disableBlurBackground;
+      case "is_virtual_background_supported":
+        return PlatformMethod.isVirtualBackgroundSupported;
 
       default:
         return PlatformMethod.unknown;
