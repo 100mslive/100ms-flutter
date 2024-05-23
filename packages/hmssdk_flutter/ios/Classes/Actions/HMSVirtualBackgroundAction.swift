@@ -8,21 +8,33 @@
 import Foundation
 import HMSSDK
 
-class HMSVirtualBackgroundAction{
-    
+internal protocol HMSVirtualBackgroundActionPluginProtocol {
     @available(iOS 15.0, *)
-    private static var virtualBackgroundPlugin: HMSVirtualBackgroundPlugin?
-    
-    static func virtualBackgroundActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+    var plugin: HMSVirtualBackgroundPlugin? { get }
+}
+
+class HMSVirtualBackgroundAction: HMSVirtualBackgroundActionPluginProtocol {
+
+    internal var _plugin: Any?
+
+    @available(iOS 15.0, *)
+    internal var plugin: HMSVirtualBackgroundPlugin? {
+        if _plugin == nil {
+            _plugin = HMSVirtualBackgroundPlugin(backgroundImage: nil, blurRadius: 100)
+        }
+        return _plugin as? HMSVirtualBackgroundPlugin
+    }
+
+    internal func performActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "enable_virtual_background":
-            enableVirtualBackground(call,result)
+            enable(call, result)
         case "disable_virtual_background":
-            disableVirtualBackground(result)
+            disable(result)
         case "enable_blur_background":
-            enableBlurBackground(call,result)
+            enableBlur(call, result)
         case "disable_blur_background":
-            disableBlurBackground(result)
+            disableBlur(result)
         case "change_virtual_background":
             changeBackground(call, result)
         case "is_virtual_background_supported":
@@ -31,94 +43,88 @@ class HMSVirtualBackgroundAction{
             result(FlutterMethodNotImplemented)
         }
     }
-    
-    @available(iOS 15.0, *)
-    static func getPlugin() -> HMSVirtualBackgroundPlugin?{
-        virtualBackgroundPlugin = HMSVirtualBackgroundPlugin(backgroundImage: nil,blurRadius: 100)
-        return virtualBackgroundPlugin
-    }
-    
-    static func enableVirtualBackground(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
-        
+
+    func enable(_ call: FlutterMethodCall, _ result: @escaping FlutterResult ) {
+
         let arguments = call.arguments as! [AnyHashable: Any]
-        
+
         guard let image = arguments["image"] as? FlutterStandardTypedData
-        else{
+        els e{
             HMSErrorLogger.returnArgumentsError("Image can't be null")
             return
         }
-        
+
         if #available(iOS 15.0, *) {
-            virtualBackgroundPlugin?.backgroundImage = UIImage(data: image.data)
-            virtualBackgroundPlugin?.activate()
-        }else {
+            plugin?.backgroundImage = UIImage(data: image.data)
+            plugin?.activate()
+        } else {
             HMSErrorLogger.logError("\(#function)", "Virtual Background is not supported below iOS 15", "Plugin not supported error")
         }
         result(nil)
     }
-    
-    static func disableVirtualBackground(_ result: @escaping FlutterResult){
+
+    func disable(_ result: @escaping FlutterResult ) {
         if #available(iOS 15.0, *) {
-            virtualBackgroundPlugin?.deactivate()
-        }else{
+            plugin?.deactivate()
+        } else {
             HMSErrorLogger.logError("\(#function)", "Virtual Background is not supported below iOS 15", "Plugin not supported error")
         }
         result(nil)
     }
-    
-    static func enableBlurBackground(_ call: FlutterMethodCall,_ result: @escaping FlutterResult){
-        
+
+    func enableBlur(_ call: FlutterMethodCall, _ result: @escaping FlutterResult ) {
+
         let arguments = call.arguments as! [AnyHashable: Any]
-        
+
         guard let blurRadius = arguments["blur_radius"] as? Int
-        else{
+        els e{
             HMSErrorLogger.returnArgumentsError("blur radius not found")
             return
         }
-        
+
         if #available(iOS 15.0, *) {
-            virtualBackgroundPlugin?.backgroundImage = nil
-            virtualBackgroundPlugin?.activate()
-        }else {
+            plugin?.backgroundImage = nil
+            plugin?.activate()
+        } else {
             HMSErrorLogger.logError("\(#function)", "Virtual Background is not supported below iOS 15", "Plugin not supported error")
         }
         result(nil)
     }
-    
-    static func disableBlurBackground(_ result: @escaping FlutterResult){
-        
+
+    func disableBlur(_ result: @escaping FlutterResult ) {
+
         if #available(iOS 15.0, *) {
-            virtualBackgroundPlugin?.deactivate()
+            plugin?.deactivate()
         } else {
             HMSErrorLogger.logError("\(#function)", "Virtual Background is not supported below iOS 15", "Plugin not supported error")
         }
         result(nil)
 
     }
-    
-    static func changeBackground(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
-        
+
+    func changeBackground(_ call: FlutterMethodCall, _ result: @escaping FlutterResult ) {
+
         let arguments = call.arguments as! [AnyHashable: Any]
-        
+
         guard let image = arguments["image"] as? FlutterStandardTypedData
-        else{
+        els e{
             HMSErrorLogger.returnArgumentsError("Image can't be null")
             return
         }
-        
+
         if #available(iOS 15.0, *) {
-            virtualBackgroundPlugin?.backgroundImage = UIImage(data: image.data)
-        }else {
+            plugin?.backgroundImage = UIImage(data: image.data)
+        } else {
             HMSErrorLogger.logError("\(#function)", "Virtual Background is not supported below iOS 15", "Plugin not supported error")
         }
         result(nil)
     }
-    
-    static func isSupported(_ result: @escaping FlutterResult){
+
+    func isSupported(_ result: @escaping FlutterResult ) {
         if #available(iOS 15.0, *) {
-            result(HMSResultExtension.toDictionary(true,true))
-        }else {
-            result(HMSResultExtension.toDictionary(true,false))
+            result(HMSResultExtension.toDictionary(true, true))
+        } else {
+            result(HMSResultExtension.toDictionary(true, false))
         }
     }
 }
