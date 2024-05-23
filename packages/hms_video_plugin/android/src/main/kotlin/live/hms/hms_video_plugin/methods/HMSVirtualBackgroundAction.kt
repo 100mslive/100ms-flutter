@@ -19,11 +19,12 @@ class HMSVirtualBackgroundAction {
             hmssdk: HMSSDK?,
         ){
             when(call.method){
+                "is_virtual_background_supported" -> isSupported(result)
                 "enable_virtual_background" -> enable(call, result, hmssdk)
                 "disable_virtual_background" -> disable(result, hmssdk)
                 "enable_blur_background" -> enableBlur(call, result, hmssdk)
                 "disable_blur_background" -> disableBlur(result, hmssdk)
-                "change_virtual_background" -> changeVirtualBackground(call,result,hmssdk)
+                "change_virtual_background" -> changeVirtualBackground(call,result)
                 else -> result.notImplemented()
             }
         }
@@ -33,8 +34,8 @@ class HMSVirtualBackgroundAction {
          */
         private var virtualBackgroundPlugin: HMSVirtualBackground? = null
         private fun enable(call: MethodCall, result: Result, hmssdk: HMSSDK?){
-            val imageUint: ByteArray? = call.argument<ByteArray?>("image")
-            imageUint?.let { imageBitmap ->
+            val imageByteArray: ByteArray? = call.argument<ByteArray?>("image")
+            imageByteArray?.let { imageBitmap ->
                 val vbImage = BitmapFactory.decodeByteArray(imageBitmap, 0, imageBitmap.size)
                 hmssdk?.let {_hmssdk ->
                     virtualBackgroundPlugin = HMSVirtualBackground(_hmssdk, vbImage)
@@ -47,14 +48,15 @@ class HMSVirtualBackgroundAction {
             }
         }
 
-        private fun changeVirtualBackground(call: MethodCall, result: Result, hmssdk: HMSSDK?){
-            val imageUint: ByteArray? = call.argument<ByteArray?>("image")
-            imageUint?.let { imageBitmap ->
+        private fun changeVirtualBackground(call: MethodCall, result: Result){
+            val imageByteArray: ByteArray? = call.argument<ByteArray?>("image")
+            imageByteArray?.let { imageBitmap ->
                 val vbImage = BitmapFactory.decodeByteArray(imageBitmap, 0, imageBitmap.size)
                 virtualBackgroundPlugin?.setBackground(vbImage)
             }?:run{
                 HMSErrorLogger.returnArgumentsError("image can't be null")
             }
+            result.success(null)
         }
 
         private fun disable(result: Result, hmssdk: HMSSDK?){
@@ -99,6 +101,10 @@ class HMSVirtualBackgroundAction {
             }?:run{
                 HMSErrorLogger.logError("disableBlur","hmssdk is null","NULL ERROR")
             }
+        }
+
+        private fun isSupported(result: Result){
+           result.success(HMSResultExtension.toDictionary(true,virtualBackgroundPlugin?.isSupported()))
         }
     }
 }

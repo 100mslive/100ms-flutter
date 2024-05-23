@@ -25,6 +25,8 @@ class HMSVirtualBackgroundAction{
             disableBlurBackground(result)
         case "change_virtual_background":
             changeBackground(call, result)
+        case "is_virtual_background_supported":
+            isSupported(result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -109,5 +111,13 @@ class HMSVirtualBackgroundAction{
             HMSErrorLogger.logError("\(#function)", "Virtual Background is not supported below iOS 15", "Plugin not supported error")
         }
         result(nil)
+    }
+    
+    static func isSupported(_ result: @escaping FlutterResult){
+        if #available(iOS 15.0, *) {
+            result(HMSResultExtension.toDictionary(true,true))
+        }else {
+            result(HMSResultExtension.toDictionary(true,false))
+        }
     }
 }

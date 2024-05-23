@@ -342,7 +342,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "start_whiteboard", "stop_whiteboard", "add_whiteboard_update_listener", "remove_whiteboard_update_listener":
             whiteboardActions(call, result)
             
-        case "enable_virtual_background", "disable_virtual_background", "enable_blur_background", "disable_blur_background","change_virtual_background":
+        case "enable_virtual_background", "disable_virtual_background", "enable_blur_background", "disable_blur_background","change_virtual_background", "is_virtual_background_supported":
             HMSVirtualBackgroundAction.virtualBackgroundActions(call, result)
 
         default:
