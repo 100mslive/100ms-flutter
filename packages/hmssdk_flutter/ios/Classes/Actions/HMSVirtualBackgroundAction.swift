@@ -44,7 +44,7 @@ class HMSVirtualBackgroundAction: HMSVirtualBackgroundActionPluginProtocol {
         }
     }
 
-    func enable(_ call: FlutterMethodCall, _ result: @escaping FlutterResult ) {
+    func enable(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
         let arguments = call.arguments as! [AnyHashable: Any]
 
@@ -72,7 +72,7 @@ class HMSVirtualBackgroundAction: HMSVirtualBackgroundActionPluginProtocol {
         result(nil)
     }
 
-    func enableBlur(_ call: FlutterMethodCall, _ result: @escaping FlutterResult ) {
+    func enableBlur(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
         let arguments = call.arguments as! [AnyHashable: Any]
 
@@ -91,7 +91,7 @@ class HMSVirtualBackgroundAction: HMSVirtualBackgroundActionPluginProtocol {
         result(nil)
     }
 
-    func disableBlur(_ result: @escaping FlutterResult ) {
+    func disableBlur(_ result: @escaping FlutterResult) {
 
         if #available(iOS 15.0, *) {
             plugin?.deactivate()
@@ -101,7 +101,7 @@ class HMSVirtualBackgroundAction: HMSVirtualBackgroundActionPluginProtocol {
 
     }
 
-    func changeBackground(_ call: FlutterMethodCall, _ result: @escaping FlutterResult ) {
+    func changeBackground(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
 
         let arguments = call.arguments as! [AnyHashable: Any]
 
@@ -119,7 +119,7 @@ class HMSVirtualBackgroundAction: HMSVirtualBackgroundActionPluginProtocol {
         result(nil)
     }
 
-    func isSupported(_ result: @escaping FlutterResult ) {
+    func isSupported(_ result: @escaping FlutterResult) {
         if #available(iOS 15.0, *) {
             result(HMSResultExtension.toDictionary(true, true))
         } else {
