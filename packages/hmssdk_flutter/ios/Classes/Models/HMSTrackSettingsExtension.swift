@@ -9,9 +9,9 @@ import Foundation
 import HMSSDK
 
 class HMSTrackSettingsExtension {
-    
+
     static var videoSettings: HMSVideoTrackSettings?
-    
+
     static func toDictionary(_ hmssdk: HMSSDK, _ audioMixerSourceMap: [String: HMSAudioNode]?) -> [String: Any] {
 
         let hmsTrackSettings = hmssdk.trackSettings
@@ -60,7 +60,10 @@ class HMSTrackSettingsExtension {
         return dict
     }
 
-    static func setTrackSetting(_ settingsDict: [AnyHashable: Any], _ audioMixerSourceMap: [String: HMSAudioNode], _ result: @escaping FlutterResult) -> HMSTrackSettings? {
+    static func setTrackSetting(_ settingsDict: [AnyHashable: Any],
+                                _ audioMixerSourceMap: [String: HMSAudioNode],
+                                _ vbConformer: HMSVirtualBackgroundActionPluginProtocol,
+                                _ result: @escaping FlutterResult) -> HMSTrackSettings? {
 
         var audioSettings: HMSAudioTrackSettings?
 
@@ -137,12 +140,11 @@ class HMSTrackSettingsExtension {
             if let cameraFacing = videoSettingsDict["camera_facing"] as? String,
                let isVirtualBackgroundEnabled = videoSettingsDict["is_virtual_background_enabled"] as? Bool,
                let initialMuteState = videoSettingsDict["track_initial_state"] as? String {
-                
-                var videoPlugins : [HMSVideoPlugin]?
-                if(isVirtualBackgroundEnabled){
+
+                var videoPlugins: [HMSVideoPlugin]?
+                if isVirtualBackgroundEnabled {
                     if #available(iOS 15.0, *) {
-                    
-                        if let virtualbackground = HMSVirtualBackgroundAction.getPlugin(){
+                        if let virtualbackground = vbConformer.plugin {
                             videoPlugins = []
                             videoPlugins?.append(virtualbackground)
                         }
