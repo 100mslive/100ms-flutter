@@ -49,7 +49,7 @@ class HMSVirtualBackgroundAction: HMSVirtualBackgroundActionPluginProtocol {
         let arguments = call.arguments as! [AnyHashable: Any]
 
         guard let image = arguments["image"] as? FlutterStandardTypedData
-        els e{
+        else{
             HMSErrorLogger.returnArgumentsError("Image can't be null")
             return
         }
