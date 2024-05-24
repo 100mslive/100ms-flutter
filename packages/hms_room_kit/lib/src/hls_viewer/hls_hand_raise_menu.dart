@@ -21,31 +21,33 @@ class HLSHandRaiseMenu extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Selector<MeetingStore, bool>(
-            selector: (_, meetingStore) => meetingStore.isRaisedHand,
-            builder: (_, isRaisedHand, __) {
-              return HMSEmbeddedButton(
-                onTap: () => {
-                  context.read<MeetingStore>().toggleLocalPeerHandRaise(),
-                },
-                enabledBorderColor: HMSThemeColors.surfaceBrighter,
-                offColor: HMSThemeColors.surfaceDefault,
-                disabledBorderColor: HMSThemeColors.surfaceDefault,
-                onColor: HMSThemeColors.surfaceBrighter,
-                isActive: isRaisedHand,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SvgPicture.asset(
-                    isRaisedHand
-                        ? "packages/hms_room_kit/lib/src/assets/icons/hand_off.svg"
-                        : "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
-                    colorFilter: ColorFilter.mode(
-                        HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
-                    semanticsLabel: "hand_raise_button",
+        if (HMSRoomLayout.isHandRaiseEnabled)
+          Selector<MeetingStore, bool>(
+              selector: (_, meetingStore) => meetingStore.isRaisedHand,
+              builder: (_, isRaisedHand, __) {
+                return HMSEmbeddedButton(
+                  onTap: () => {
+                    context.read<MeetingStore>().toggleLocalPeerHandRaise(),
+                  },
+                  enabledBorderColor: HMSThemeColors.surfaceBrighter,
+                  offColor: HMSThemeColors.surfaceDefault,
+                  disabledBorderColor: HMSThemeColors.surfaceDefault,
+                  onColor: HMSThemeColors.surfaceBrighter,
+                  isActive: isRaisedHand,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SvgPicture.asset(
+                      isRaisedHand
+                          ? "packages/hms_room_kit/lib/src/assets/icons/hand_off.svg"
+                          : "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
+                      colorFilter: ColorFilter.mode(
+                          HMSThemeColors.onSurfaceHighEmphasis,
+                          BlendMode.srcIn),
+                      semanticsLabel: "hand_raise_button",
+                    ),
                   ),
-                ),
-              );
-            }),
+                );
+              }),
         const SizedBox(
           width: 8,
         ),
