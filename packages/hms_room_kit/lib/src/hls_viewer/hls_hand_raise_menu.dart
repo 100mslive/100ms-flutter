@@ -21,6 +21,7 @@ class HLSHandRaiseMenu extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
+        if(HMSRoomLayout.isHandRaiseEnabled)
         Selector<MeetingStore, bool>(
             selector: (_, meetingStore) => meetingStore.isRaisedHand,
             builder: (_, isRaisedHand, __) {

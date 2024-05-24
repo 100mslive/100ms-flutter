@@ -213,7 +213,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                           meetingStore.isBRB ? "I'm Back" : "Be Right Back"),
 
                 ///This renders the raise hand option
-
+                if(HMSRoomLayout.isHandRaiseEnabled)
                 MoreOptionItem(
                     onTap: () async {
                       context.read<MeetingStore>().toggleLocalPeerHandRaise();

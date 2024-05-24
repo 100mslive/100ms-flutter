@@ -109,6 +109,7 @@ class Elements {
   Map<String, dynamic>? emojiReactions;
   OnStageExp? onStageExp;
   Map<String, dynamic>? brb;
+  Map<String, dynamic>? handRaise;
 
   Elements(
       {this.header,
@@ -117,7 +118,8 @@ class Elements {
       this.videoTileLayout,
       this.emojiReactions,
       this.onStageExp,
-      this.brb});
+      this.brb,
+      this.handRaise});
 
   Elements.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
@@ -128,6 +130,7 @@ class Elements {
       emojiReactions = null;
       onStageExp = null;
       brb = null;
+      handRaise = null;
       return;
     }
 
@@ -146,6 +149,7 @@ class Elements {
         ? OnStageExp.fromJson(json['on_stage_exp'])
         : null;
     brb = json.containsKey("brb") ? json["brb"] : null;
+    handRaise = json.containsKey("hand_raise") ? json["hand_raise"] : null;
   }
 
   Map<String, dynamic> toJson() {

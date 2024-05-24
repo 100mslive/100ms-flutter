@@ -45,11 +45,7 @@ class _ChatTextUtilityState extends State<ChatTextUtility>
   void didChangeMetrics() {
     final bool isKeyboardOpen =
         (MediaQuery.of(context).viewInsets.bottom).toInt() > 0;
-    if (Platform.isAndroid) {
-      showMenu = isKeyboardOpen;
-    } else {
-      showMenu = !isKeyboardOpen;
-    }
+    showMenu = !isKeyboardOpen;
     setState(() {});
   }
 
