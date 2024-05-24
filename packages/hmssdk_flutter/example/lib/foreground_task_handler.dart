@@ -52,6 +52,7 @@ Future<bool> initForegroundTask() async {
   if (isPermissionsGiven) {
     FlutterForegroundTask.init(
       androidNotificationOptions: AndroidNotificationOptions(
+          foregroundServiceType: AndroidForegroundServiceType.CAMERA,
           channelId: '100ms_flutter_notification',
           channelName: '100ms Flutter Notification',
           channelDescription:
