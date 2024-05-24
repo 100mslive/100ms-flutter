@@ -266,9 +266,9 @@ class HMSRoomLayout {
       isBRBEnabled =
           roleLayoutData?.screens?.conferencing?.defaultConf?.elements?.brb !=
               null;
-      isHandRaiseEnabled = 
-          roleLayoutData?.screens?.conferencing?.defaultConf?.elements?.handRaise !=
-              null;
+      isHandRaiseEnabled = roleLayoutData
+              ?.screens?.conferencing?.defaultConf?.elements?.handRaise !=
+          null;
       offStageRoles = roleLayoutData?.screens?.conferencing?.defaultConf
           ?.elements?.onStageExp?.offStageRoles;
       skipPreviewForRole = roleLayoutData?.screens?.conferencing?.defaultConf
