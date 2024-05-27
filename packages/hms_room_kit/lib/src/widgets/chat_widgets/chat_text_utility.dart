@@ -1,8 +1,5 @@
 library;
 
-///Dart imports
-import 'dart:io';
-
 ///Package imports
 import 'package:flutter/material.dart';
 
