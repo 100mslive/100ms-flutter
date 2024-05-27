@@ -19,11 +19,14 @@ class HMSVideoTrackSetting {
   /// [forceSoftwareDecoder] property to use software decoder. By default it's set to false. This property is available only on Android.
   final bool? forceSoftwareDecoder;
 
+  final bool? isVirtualBackgroundEnabled;
+
   HMSVideoTrackSetting(
       {this.cameraFacing = HMSCameraFacing.FRONT,
       this.disableAutoResize = false,
       this.trackInitialState = HMSTrackInitState.UNMUTED,
-      this.forceSoftwareDecoder = false});
+      this.forceSoftwareDecoder = false,
+      this.isVirtualBackgroundEnabled = false});
 
   factory HMSVideoTrackSetting.fromMap(Map map) {
     return HMSVideoTrackSetting(
@@ -36,7 +39,9 @@ class HMSVideoTrackSetting {
             : HMSTrackInitState.UNMUTED,
         forceSoftwareDecoder: map.containsKey('force_software_decoder')
             ? map['force_software_decoder']
-            : false);
+            : false,
+        isVirtualBackgroundEnabled:
+            map["is_virtual_background_enabled"] ?? false);
   }
 
   Map<String, dynamic> toMap() {
@@ -48,7 +53,8 @@ class HMSVideoTrackSetting {
       'track_initial_state':
           HMSTrackInitStateValue.getValuefromHMSTrackInitState(
               trackInitialState),
-      'force_software_decoder': forceSoftwareDecoder ?? false
+      'force_software_decoder': forceSoftwareDecoder ?? false,
+      'is_virtual_background_enabled': isVirtualBackgroundEnabled ?? false,
     };
   }
 }

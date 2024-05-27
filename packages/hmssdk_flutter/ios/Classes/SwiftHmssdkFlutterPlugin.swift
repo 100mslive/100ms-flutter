@@ -45,6 +45,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var hlsStreamUrl: String?
 
     private var isRoomAudioUnmutedLocally = true
+    
 
     // MARK: - Flutter Setup
 
@@ -341,10 +342,17 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "start_whiteboard", "stop_whiteboard", "add_whiteboard_update_listener", "remove_whiteboard_update_listener":
             whiteboardActions(call, result)
 
+        case "enable_virtual_background", "disable_virtual_background", "enable_blur_background", "disable_blur_background", "change_virtual_background", "is_virtual_background_supported":
+            vbAction.performActions(call, result)
+
         default:
             result(FlutterMethodNotImplemented)
         }
     }
+
+    private lazy var vbAction: HMSVirtualBackgroundAction = {
+       HMSVirtualBackgroundAction()
+    }()
 
     // MARK: - Build Actions
     private func buildActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
@@ -845,7 +853,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             var trackSettings: HMSTrackSettings?
             if let settingsDict = arguments?["hms_track_setting"] as? [AnyHashable: Any] {
                 self.audioMixerSourceInit(settingsDict, sdk, result)
-                trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict, self.audioMixerSourceMap, result)
+                trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict, self.audioMixerSourceMap, vbAction, result)
             }
 
             if let settings = trackSettings {

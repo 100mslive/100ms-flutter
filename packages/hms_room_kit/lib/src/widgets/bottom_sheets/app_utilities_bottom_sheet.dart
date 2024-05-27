@@ -4,7 +4,6 @@ library;
 import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/src/widgets/bottom_sheets/poll_and_quiz_bottom_sheet.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +17,8 @@ import 'package:hms_room_kit/src/widgets/bottom_sheets/overlay_participants_bott
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/poll_and_quiz_bottom_sheet.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/video_effects_bottom_sheet.dart';
 
 ///This renders the app utilities bottom sheet for webRTC or broadcaster
 ///It contains the participants, screen share, brb, raise hand and recording
@@ -421,6 +422,38 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       optionText: meetingStore.isWhiteboardEnabled
                           ? "Close Whiteboard"
                           : "Open Whiteboard"),
+                if (AppDebugConfig.isVirtualBackgroundEnabled)
+                  MoreOptionItem(
+                      onTap: () async {
+                        Navigator.pop(context);
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: HMSThemeColors.surfaceDim,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16)),
+                          ),
+                          context: context,
+                          builder: (ctx) => ChangeNotifierProvider.value(
+                              value: meetingStore,
+                              child: Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom:
+                                          MediaQuery.of(ctx).viewInsets.bottom),
+                                  child: VideoEffectsBottomSheet())),
+                        );
+                      },
+                      isActive: false,
+                      optionIcon: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/src/assets/icons/video_effects.svg",
+                        height: 20,
+                        width: 20,
+                        colorFilter: ColorFilter.mode(
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
+                      ),
+                      optionText: "Virtual Background"),
               ],
             ),
           ],
