@@ -379,7 +379,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                   ? "Recording"
                                   : "Record",
                         ),
-                if (meetingStore.isNoiseCancellationAvailable &&
+                if (meetingStore.isNoiseCancellationAvailable && meetingStore.localPeer?.audioTrack != null &&
                     meetingStore.isMicOn)
                   MoreOptionItem(
                       onTap: () async {
