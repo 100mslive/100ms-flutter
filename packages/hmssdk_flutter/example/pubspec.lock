@@ -266,10 +266,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_foreground_task
-      sha256: "9bcfcb43bba4a5446a056e723d21118ff6e184926b5557365c32c13caca157c2"
+      sha256: d40a1ddd5f275450d2e32055e7f884796c028a02ac26c751c20916576f79e132
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.3"
+    version: "6.2.0"
   flutter_linkify:
     dependency: transitive
     description:
@@ -338,16 +338,20 @@ packages:
   hms_video_plugin:
     dependency: transitive
     description:
-      path: "../../hms_video_plugin"
-      relative: true
-    source: path
+      path: "."
+      ref: main
+      resolved-ref: "13f011c1329a23c5da8ce38f92175e8aced1e43c"
+      url: "https://github.com/100mslive/hms_video_plugin.git"
+    source: git
     version: "0.0.1"
   hmssdk_flutter:
     dependency: transitive
     description:
-      path: ".."
-      relative: true
-    source: path
+      path: "packages/hmssdk_flutter"
+      ref: FLUT-318
+      resolved-ref: "5f6e588e2cebe477e0934833fa4876fa538ef8c7"
+      url: "https://github.com/100mslive/100ms-flutter.git"
+    source: git
     version: "1.10.3"
   http:
     dependency: transitive
