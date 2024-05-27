@@ -138,10 +138,6 @@ class _VideoEffectsBottomSheetState extends State<VideoEffectsBottomSheet> {
                   child: MoreOptionItem(
                       onTap: () {
                         Navigator.pop(context);
-                        if (AppDebugConfig.isVBEnabled) {
-                          HMSVideoPlugin.disable();
-                          AppDebugConfig.isVBEnabled = false;
-                        }
                         changeBlur(100);
                       },
                       optionIcon: SvgPicture.asset(
@@ -162,10 +158,6 @@ class _VideoEffectsBottomSheetState extends State<VideoEffectsBottomSheet> {
                   child: MoreOptionItem(
                       onTap: () async {
                         Navigator.pop(context);
-                        if (AppDebugConfig.isBlurEnabled) {
-                          HMSVideoPlugin.disableBlur();
-                          AppDebugConfig.isBlurEnabled = false;
-                        }
                         setEffect("background");
                         XFile? result = await ImagePicker()
                             .pickImage(source: ImageSource.gallery);
