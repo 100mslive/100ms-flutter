@@ -103,7 +103,10 @@ class _OneToOneModeState extends State<OneToOneMode> {
                       ///we show the empty room screen
                       ///This is the case when the local peer is the only peer in the room
                       ///else we show the normal grid view
-                      (widget.peerTracks.length == 1 && oneToOnePeer != null && HMSRoomLayout.peerType==PeerRoleType.conferencing)
+                      (widget.peerTracks.length == 1 &&
+                              oneToOnePeer != null &&
+                              HMSRoomLayout.peerType ==
+                                  PeerRoleType.conferencing)
                           ? Center(child: EmptyRoomScreen())
                           : CustomOneToOneGrid(
                               peerTracks: widget.peerTracks,
