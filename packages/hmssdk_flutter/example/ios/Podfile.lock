@@ -130,7 +130,7 @@ PODS:
   - HMSHLSPlayerSDK (0.0.2):
     - HMSAnalyticsSDK (= 0.0.2)
   - HMSNoiseCancellationModels (1.0.0)
-  - HMSSDK (1.10.0):
+  - HMSSDK (1.11.0):
     - HMSAnalyticsSDK (= 0.0.2)
     - HMSWebRTC (= 1.0.6169)
   - hmssdk_flutter (1.10.2):
@@ -138,7 +138,7 @@ PODS:
     - HMSBroadcastExtensionSDK (= 0.0.9)
     - HMSHLSPlayerSDK (= 0.0.2)
     - HMSNoiseCancellationModels (= 1.0.0)
-    - HMSSDK (= 1.10.0)
+    - HMSSDK (= 1.11.0)
   - HMSWebRTC (1.0.6169)
   - MLImage (1.0.0-beta4)
   - MLKitBarcodeScanning (3.0.0):
@@ -310,8 +310,8 @@ SPEC CHECKSUMS:
   HMSBroadcastExtensionSDK: d80fe325f6c928bd8e5176290b5a4b7ae15d6fbb
   HMSHLSPlayerSDK: 6a54ad4d12f3dc2270d1ecd24019d71282a4f6a3
   HMSNoiseCancellationModels: a3bda1405a16015632f4bcabd46ce48f35103b02
-  HMSSDK: fbbdebf673baba7f98f3fa13241b4249929ad681
-  hmssdk_flutter: 9be13b77e2a55dba665e154cae026d2b5cdfa053
+  HMSSDK: cdba5b12c080832d135af7bbc4ca6282b0e171ac
+  hmssdk_flutter: 3813b9229fdd6437041d970a449a64575fb1cbd1
   HMSWebRTC: 8f51ba33a0e505e17ebf3d7b37bcdca266751a13
   MLImage: 7bb7c4264164ade9bf64f679b40fb29c8f33ee9b
   MLKitBarcodeScanning: 04e264482c5f3810cb89ebc134ef6b61e67db505
