@@ -13,7 +13,6 @@ import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 ///This is rendered when the user is waiting for the host to join
 ///or when the user has only screenshare option
 class WaitingRoomScreen extends StatelessWidget {
-
   ///[showScreenshareOption] is a function that returns true if the user has only screenshare option
   bool showScreenshareOption(MeetingStore meetingStore) {
     return (!(meetingStore.localPeer?.role.publishSettings?.allowed
