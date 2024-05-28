@@ -221,7 +221,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "13f011c1329a23c5da8ce38f92175e8aced1e43c"
+      resolved-ref: d7914ba92ff43a09dbddfb299d3b41ff32ad17f2
       url: "https://github.com/100mslive/hms_video_plugin.git"
     source: git
     version: "0.0.1"
