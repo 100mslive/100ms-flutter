@@ -61,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
         context,
         CupertinoPageRoute(
             builder: (_) => HLSViewerPage(
-                roomCode: "bhp-ndtf-rzv",
+                roomCode: "luh-piuh-now",
                 /*
                 * Paste room code for your Room from 100ms Dashboard here
                 * https://dashboard.100ms.live/
@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
         context,
         CupertinoPageRoute(
             builder: (_) => MeetingPage(
-                roomCode: "rrs-nste-dhb",
+                roomCode: "trp-lzec-yoc",
                 /*
                 * Paste room code for your Room from 100ms Dashboard here
                 * https://dashboard.100ms.live/
@@ -86,6 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue,
         title: Text(widget.title),
       ),
       body: Container(
@@ -97,6 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
             //Button to join as broadcaster
             ElevatedButton(
               style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
@@ -109,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Text(
                   'Join as Broadcaster',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
               ),
             ),
@@ -119,6 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
             //Button to join as HLSViewer
             ElevatedButton(
               style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
@@ -131,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Text(
                   'Join as HLS Viewer',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
               ),
             ),
