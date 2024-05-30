@@ -265,10 +265,11 @@ packages:
   flutter_foreground_task:
     dependency: "direct main"
     description:
-      name: flutter_foreground_task
-      sha256: d40a1ddd5f275450d2e32055e7f884796c028a02ac26c751c20916576f79e132
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: gradle-8-error-fix
+      resolved-ref: "625c0ff3abeb0642f7583fd5183e14e027eaa6cc"
+      url: "https://github.com/100mslive/flutter-foreground-task-v2.git"
+    source: git
     version: "6.2.0"
   flutter_linkify:
     dependency: transitive
