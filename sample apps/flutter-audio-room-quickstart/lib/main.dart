@@ -64,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Center(
           child: ElevatedButton(
             style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
@@ -76,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
               child: Text(
                 'Join Audio Room',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 20,color: Colors.white),
               ),
             ),
           ),
@@ -99,7 +100,10 @@ class _MeetingPageState extends State<MeetingPage>
 
   //Enter the username and authToken from dashboard for the corresponding role here.
   String userName = "Enter username here";
-  String roomCode = "Enter room code here";
+
+  ///For speaker role roomCode: "yim-wofo-ytk"
+  ///For listener role roomCode: "iai-nkis-oob"
+  String roomCode = "yim-wofo-ytk";
   Offset position = const Offset(5, 5);
   bool isJoinSuccessful = false;
   final List<PeerTrackNode> _listeners = [];
