@@ -64,12 +64,14 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        backgroundColor: Colors.blue,
       ),
       body: Container(
         color: Colors.black,
         child: Center(
           child: ElevatedButton(
             style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
@@ -288,7 +290,7 @@ class _MeetingPageState extends State<MeetingPage>
   void onPeerListUpdate(
       {required List<HMSPeer> addedPeers,
       required List<HMSPeer> removedPeers}) {
-    // TODO: implement onPeerListUpdate
+    // Checkout the docs for onPeerListUpdate here: https://www.100ms.live/docs/flutter/v2/how--to-guides/listen-to-room-updates/update-listeners
   }
 
   @override
