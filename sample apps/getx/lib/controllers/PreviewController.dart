@@ -22,7 +22,7 @@ class PreviewController extends GetxController
   void onInit() async {
     await hmsSdk.build();
     hmsSdk.addPreviewListener(listener: this);
-    String? token = await RoomService().getToken(user: name, room: url);
+    var token = await hmsSdk.getAuthTokenByRoomCode(roomCode: url);
     if (token == null) return;
 
     HMSConfig config = Get.put(
@@ -108,5 +108,10 @@ class PreviewController extends GetxController
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice}) {
     // Checkout the docs about handling onAudioDeviceChanged updates in preview here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/preview
+  }
+  
+  @override
+  void onPeerListUpdate({required List<HMSPeer> addedPeers, required List<HMSPeer> removedPeers}) {
+    // TODO: implement onPeerListUpdate
   }
 }
