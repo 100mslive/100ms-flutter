@@ -5,6 +5,7 @@ import 'dart:io';
 
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/meeting/waiting_room_screen.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -43,6 +44,7 @@ class MeetingGridComponent extends StatelessWidget {
                   color: Colors.transparent,
                   height: double.infinity,
                   width: double.infinity,
+                  child: WaitingRoomScreen(),
                 ));
           }
           return Selector<MeetingStore, Tuple2<MeetingMode, HMSPeer?>>(

@@ -213,24 +213,24 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                           meetingStore.isBRB ? "I'm Back" : "Be Right Back"),
 
                 ///This renders the raise hand option
-
-                MoreOptionItem(
-                    onTap: () async {
-                      context.read<MeetingStore>().toggleLocalPeerHandRaise();
-                      Navigator.pop(context);
-                    },
-                    isActive: meetingStore.isRaisedHand,
-                    optionIcon: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
-                      height: 20,
-                      width: 20,
-                      colorFilter: ColorFilter.mode(
-                          HMSThemeColors.onSurfaceHighEmphasis,
-                          BlendMode.srcIn),
-                    ),
-                    optionText: meetingStore.isRaisedHand
-                        ? "Lower Hand"
-                        : "Raise Hand"),
+                if (HMSRoomLayout.isHandRaiseEnabled)
+                  MoreOptionItem(
+                      onTap: () async {
+                        context.read<MeetingStore>().toggleLocalPeerHandRaise();
+                        Navigator.pop(context);
+                      },
+                      isActive: meetingStore.isRaisedHand,
+                      optionIcon: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
+                        height: 20,
+                        width: 20,
+                        colorFilter: ColorFilter.mode(
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
+                      ),
+                      optionText: meetingStore.isRaisedHand
+                          ? "Lower Hand"
+                          : "Raise Hand"),
 
                 ///This renders the polls and quizzes option
                 if ((meetingStore.localPeer?.role.permissions.pollRead ??
@@ -380,6 +380,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                   : "Record",
                         ),
                 if (meetingStore.isNoiseCancellationAvailable &&
+                    meetingStore.localPeer?.audioTrack != null &&
                     meetingStore.isMicOn)
                   MoreOptionItem(
                       onTap: () async {

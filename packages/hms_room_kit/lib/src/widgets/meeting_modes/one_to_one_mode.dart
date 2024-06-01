@@ -11,9 +11,10 @@ import 'package:provider/provider.dart';
 ///Project imports
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/inset_tile.dart';
-import 'package:hms_room_kit/src/widgets/grid_layouts/listenable_peer_widget.dart';
 import 'package:hms_room_kit/src/widgets/meeting_modes/custom_one_to_one_grid.dart';
 import 'package:hms_room_kit/src/widgets/peer_widgets/inset_collapsed_view.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
+import 'package:hms_room_kit/src/meeting/empty_room_screen.dart';
 
 ///[OneToOneMode] is used to render the meeting screen in inset Tile mode
 class OneToOneMode extends StatefulWidget {
@@ -88,43 +89,52 @@ class _OneToOneModeState extends State<OneToOneMode> {
                   )
 
                 ///This handles the case where local peer is the only peer in the room with audio or video track
-                : (oneToOnePeer != null && widget.peerTracks.length == 1)
-                    ? ListenablePeerWidget(
-                        peerTracks: [oneToOnePeer!],
-                        index: 0,
-                      )
+                // : (oneToOnePeer != null && widget.peerTracks.length == 1)
+                //     ? ListenablePeerWidget(
+                //         peerTracks: [oneToOnePeer!],
+                //         index: 0,
+                //       )
 
-                    ///This handles when the local peer is also present as well as the other peers are also there.
-                    ///i.e. this handles the normal flow
-                    : Stack(
-                        children: [
-                          CustomOneToOneGrid(
-                            peerTracks: widget.peerTracks,
-                          ),
-                          DraggableWidget(
-                              dragAnimationScale: 1,
-                              topMargin: 10,
-                              bottomMargin: Platform.isIOS
-                                  ? widget.bottomMargin + 20
-                                  : widget.bottomMargin,
-                              horizontalSpace: 8,
-                              child: isMinimized
-                                  ? InsetCollapsedView(
+                ///This handles when the local peer is also present as well as the other peers are also there.
+                ///i.e. this handles the normal flow
+                : Stack(
+                    children: [
+                      ///If there is only one peer in the room and the peer is local peer
+                      ///we show the empty room screen
+                      ///This is the case when the local peer is the only peer in the room
+                      ///else we show the normal grid view
+                      (widget.peerTracks.length == 1 &&
+                              oneToOnePeer != null &&
+                              HMSRoomLayout.peerType ==
+                                  PeerRoleType.conferencing)
+                          ? Center(child: EmptyRoomScreen())
+                          : CustomOneToOneGrid(
+                              peerTracks: widget.peerTracks,
+                            ),
+                      DraggableWidget(
+                          dragAnimationScale: 1,
+                          topMargin: 10,
+                          bottomMargin: Platform.isIOS
+                              ? widget.bottomMargin + 20
+                              : widget.bottomMargin,
+                          horizontalSpace: 8,
+                          child: isMinimized
+                              ? InsetCollapsedView(
+                                  callbackFunction: toggleMinimizedView,
+                                )
+                              : ClipRRect(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  child: ChangeNotifierProvider.value(
+                                    key: ValueKey(
+                                        oneToOnePeer?.uid ?? "" "video_view"),
+                                    value: oneToOnePeer,
+                                    child: InsetTile(
                                       callbackFunction: toggleMinimizedView,
-                                    )
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.circular(16.0),
-                                      child: ChangeNotifierProvider.value(
-                                        key: ValueKey(oneToOnePeer?.uid ??
-                                            "" "video_view"),
-                                        value: oneToOnePeer,
-                                        child: InsetTile(
-                                          callbackFunction: toggleMinimizedView,
-                                        ),
-                                      ),
-                                    ))
-                        ],
-                      ),
+                                    ),
+                                  ),
+                                ))
+                    ],
+                  ),
       ),
     );
   }

@@ -217,6 +217,7 @@ class HMSRoomLayout {
   static Chat? chatData;
   static bool isParticipantsListEnabled = true;
   static bool isBRBEnabled = true;
+  static bool isHandRaiseEnabled = true;
   static List<String>? offStageRoles = [];
   static bool skipPreviewForRole = false;
   static bool skipPreview = false;
@@ -265,6 +266,9 @@ class HMSRoomLayout {
       isBRBEnabled =
           roleLayoutData?.screens?.conferencing?.defaultConf?.elements?.brb !=
               null;
+      isHandRaiseEnabled = roleLayoutData
+              ?.screens?.conferencing?.defaultConf?.elements?.handRaise !=
+          null;
       offStageRoles = roleLayoutData?.screens?.conferencing?.defaultConf
           ?.elements?.onStageExp?.offStageRoles;
       skipPreviewForRole = roleLayoutData?.screens?.conferencing?.defaultConf
@@ -278,6 +282,9 @@ class HMSRoomLayout {
           null;
       isBRBEnabled = roleLayoutData
               ?.screens?.conferencing?.hlsLiveStreaming?.elements?.brb !=
+          null;
+      isHandRaiseEnabled = roleLayoutData
+              ?.screens?.conferencing?.hlsLiveStreaming?.elements?.handRaise !=
           null;
       offStageRoles = roleLayoutData?.screens?.conferencing?.hlsLiveStreaming
           ?.elements?.onStageExp?.offStageRoles;
