@@ -1,8 +1,6 @@
 import 'package:get/get.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
-import '../services/RoomService.dart';
-
 class PreviewController extends GetxController
     implements HMSPreviewListener, HMSActionResultListener {
   RxBool isLocalVideoOn = true.obs;

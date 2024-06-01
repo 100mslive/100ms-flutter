@@ -7,7 +7,6 @@ import 'package:mobx/mobx.dart';
 
 //Project imports
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:mobx_example/service/room_service.dart';
 import 'package:mobx_example/setup/hms_sdk_interactor.dart';
 import 'package:mobx_example/setup/peer_track_node.dart';
 
@@ -20,8 +19,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
     implements HMSUpdateListener, HMSActionResultListener {
   late HMSSDKInteractor _hmsSDKInteractor;
 
-  MeetingStoreBase() {
-    _hmsSDKInteractor = HMSSDKInteractor();
+  MeetingStoreBase({required HMSSDKInteractor hmssdkInteractor}) {
+    _hmsSDKInteractor = hmssdkInteractor;
   }
 
   @observable
@@ -68,7 +67,8 @@ abstract class MeetingStoreBase extends ChangeNotifier
 
   @action
   Future<bool> join(String user, String roomUrl) async {
-    String? token = await RoomService().getToken(user: user, room: roomUrl);
+    var token =
+        await _hmsSDKInteractor.getAuthTokenFromRoomCode(roomCode: roomUrl);
     if (token == null) return false;
     HMSConfig config = HMSConfig(
       authToken: token,
@@ -237,6 +237,18 @@ abstract class MeetingStoreBase extends ChangeNotifier
       {HMSAudioDevice? currentAudioDevice,
       List<HMSAudioDevice>? availableAudioDevice}) {
     // Checkout the docs about handling onAudioDeviceChanged updates here: https://www.100ms.live/docs/flutter/v2/how--to-guides/listen-to-room-updates/update-listeners
+  }
+
+  @override
+  void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
+    // Checkout the docs for sessions store here: https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/room/session-store
+  }
+
+  @override
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {
+    // Checkout the docs for onPeerListUpdate here: https://www.100ms.live/docs/flutter/v2/how--to-guides/listen-to-room-updates/update-listeners
   }
 
   @override
