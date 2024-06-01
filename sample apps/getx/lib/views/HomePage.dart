@@ -11,8 +11,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final roomCode = TextEditingController(
-        text: "zhr-seow-tuj");
+    final roomCode = TextEditingController(text: "zhr-seow-tuj");
     final nameTextController = TextEditingController();
 
     return SafeArea(

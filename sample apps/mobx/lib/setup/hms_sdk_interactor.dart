@@ -8,7 +8,7 @@ class HMSSDKInteractor {
   late HMSSDK hmsSDK;
 
   HMSSDKInteractor({required HMSSDK hmssdk}) {
-    _initHMSSDK(hmssdk:hmssdk);
+    _initHMSSDK(hmssdk: hmssdk);
   }
 
   Future<void> _initHMSSDK({required HMSSDK hmssdk}) async {

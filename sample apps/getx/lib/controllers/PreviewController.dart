@@ -107,9 +107,11 @@ class PreviewController extends GetxController
       List<HMSAudioDevice>? availableAudioDevice}) {
     // Checkout the docs about handling onAudioDeviceChanged updates in preview here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/preview
   }
-  
+
   @override
-  void onPeerListUpdate({required List<HMSPeer> addedPeers, required List<HMSPeer> removedPeers}) {
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {
     // TODO: implement onPeerListUpdate
   }
 }

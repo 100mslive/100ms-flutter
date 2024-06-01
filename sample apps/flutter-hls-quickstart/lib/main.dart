@@ -98,11 +98,12 @@ class _MyHomePageState extends State<MyHomePage> {
             //Button to join as broadcaster
             ElevatedButton(
               style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ))),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ))),
               onPressed: () async => {
                 res = await getPermissions(),
                 if (res) {navigateBroadcaster()}
@@ -121,11 +122,12 @@ class _MyHomePageState extends State<MyHomePage> {
             //Button to join as HLSViewer
             ElevatedButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ))),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ))),
               onPressed: () async => {
                 res = await getPermissions(),
                 if (res) {navigateHLSUser()}
@@ -342,10 +344,12 @@ class _MeetingPageState extends State<MeetingPage>
   }
 
   @override
-  void onPeerListUpdate({required List<HMSPeer> addedPeers, required List<HMSPeer> removedPeers}) {
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {
     // TODO: implement onPeerListUpdate
   }
-  
+
   @override
   void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
     // TODO: implement onSessionStoreAvailable
@@ -671,10 +675,12 @@ class _HLSViewerPageState extends State<HLSViewerPage>
   }
 
   @override
-  void onPeerListUpdate({required List<HMSPeer> addedPeers, required List<HMSPeer> removedPeers}) {
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {
     // TODO: implement onPeerListUpdate
   }
-  
+
   @override
   void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
     // TODO: implement onSessionStoreAvailable
@@ -783,5 +789,4 @@ class _HLSViewerPageState extends State<HLSViewerPage>
       )),
     );
   }
-
 }

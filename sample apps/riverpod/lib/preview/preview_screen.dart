@@ -34,7 +34,8 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
   }
 
   Future<void> initPreview() async {
-    await widget.previewStore.startPreview(user: widget.name, roomId: widget.roomLink);
+    await widget.previewStore
+        .startPreview(user: widget.name, roomId: widget.roomLink);
   }
 
   @override

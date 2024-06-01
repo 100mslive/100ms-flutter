@@ -67,8 +67,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ))),
+                  borderRadius: BorderRadius.circular(8.0),
+                ))),
             onPressed: () async => {
               res = await getPermissions(),
               if (res) {navigate()}
@@ -77,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
               child: Text(
                 'Join Audio Room',
-                style: TextStyle(fontSize: 20,color: Colors.white),
+                style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),
           ),

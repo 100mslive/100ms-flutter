@@ -71,11 +71,11 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Center(
           child: ElevatedButton(
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ))),
+                  borderRadius: BorderRadius.circular(8.0),
+                ))),
             onPressed: () async => {
               res = await getPermissions(),
               if (res) {navigate()}
@@ -121,11 +121,9 @@ class _MeetingPageState extends State<MeetingPage>
     hmsSDK = HMSSDK();
     await hmsSDK.build();
     hmsSDK.addUpdateListener(listener: this);
-    var authToken =
-        await hmsSDK.getAuthTokenByRoomCode(roomCode: roomCode);
+    var authToken = await hmsSDK.getAuthTokenByRoomCode(roomCode: roomCode);
     if ((authToken is String?) && authToken != null) {
-      hmsSDK.join(
-          config: HMSConfig(authToken: authToken, userName: userName));
+      hmsSDK.join(config: HMSConfig(authToken: authToken, userName: userName));
     } else {
       log("Error in getting auth token");
     }

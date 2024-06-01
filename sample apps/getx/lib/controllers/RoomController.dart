@@ -398,12 +398,14 @@ class RoomController extends GetxController
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     // Checkout the docs for handling the updates regarding who is currently speaking here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/render-video/show-audio-level
   }
-  
+
   @override
-  void onPeerListUpdate({required List<HMSPeer> addedPeers, required List<HMSPeer> removedPeers}) {
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {
     // TODO: implement onPeerListUpdate
   }
-  
+
   @override
   void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
     // TODO: implement onSessionStoreAvailable
