@@ -17,12 +17,12 @@ dependencies:
   hmssdk_flutter:
     git:
       url: https://github.com/100mslive/100ms-flutter.git
-      ref: FLUT-318
+      ref: release-1.10.3
       path: packages/hmssdk_flutter
   hms_video_plugin:
     git:
       url: https://github.com/100mslive/hms_video_plugin.git
-      ref: main
+      ref: develop
   intl: ^0.18.0
   permission_handler: ^11.0.0
   provider: ^6.0.5
