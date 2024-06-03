@@ -7,13 +7,16 @@ class HMSSDKInteractor {
   late List<HMSMessage> messages;
   late HMSSDK hmsSDK;
 
-  HMSSDKInteractor() {
-    _initHMSSDK();
+  HMSSDKInteractor({required HMSSDK hmssdk}) {
+    _initHMSSDK(hmssdk: hmssdk);
   }
 
-  void _initHMSSDK() async {
-    hmsSDK = HMSSDK();
-    await hmsSDK.build();
+  Future<void> _initHMSSDK({required HMSSDK hmssdk}) async {
+    hmsSDK = hmssdk;
+  }
+
+  Future<dynamic> getAuthTokenFromRoomCode({required String roomCode}) async {
+    return await hmsSDK.getAuthTokenByRoomCode(roomCode: roomCode);
   }
 
   Future<void> join({required HMSConfig config}) async {
@@ -124,7 +127,7 @@ class HMSSDKInteractor {
   Future<HMSPeer?> getPeer({required String peerId}) async {
     List<HMSPeer>? peers = await hmsSDK.getPeers();
 
-    return peers.firstWhere((element) => element.peerId == peerId);
+    return peers?.firstWhere((element) => element.peerId == peerId);
   }
 
   void changeTrackState(HMSTrack forRemoteTrack, bool mute,

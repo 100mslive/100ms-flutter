@@ -1,7 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:mobx_example/meeting.dart';
+import 'package:mobx_example/setup/hms_sdk_interactor.dart';
+import 'package:mobx_example/setup/meeting_store.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() {
@@ -54,8 +57,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   TextEditingController nameTextController = TextEditingController(text: "");
-  TextEditingController meetingTextController = TextEditingController(
-      text: "https://yogi-live.app.100ms.live/streaming/preview/qii-tow-sjq");
+  TextEditingController roomCode = TextEditingController(text: "zhr-seow-tuj");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,13 +79,13 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               width: 300.0,
               child: TextField(
-                controller: meetingTextController,
+                controller: roomCode,
                 autofocus: true,
                 keyboardType: TextInputType.url,
                 decoration: InputDecoration(
                     hintText: 'Enter Room URL',
                     suffixIcon: IconButton(
-                      onPressed: meetingTextController.clear,
+                      onPressed: roomCode.clear,
                       icon: const Icon(Icons.clear),
                     ),
                     border: const OutlineInputBorder(
@@ -121,17 +123,28 @@ class _HomePageState extends State<HomePage> {
                   borderRadius: BorderRadius.circular(16.0),
                 ))),
                 onPressed: () async {
-                  if (meetingTextController.text.isNotEmpty &&
+                  if (roomCode.text.isNotEmpty &&
                       nameTextController.text.isNotEmpty) {
                     bool res = await getPermissions();
                     if (res) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Meeting(
-                                    name: nameTextController.text,
-                                    roomLink: meetingTextController.text,
-                                  )));
+                      HMSSDK hmssdk = HMSSDK();
+                      await hmssdk.build();
+                      var _hmssdkInteractor = HMSSDKInteractor(hmssdk: hmssdk);
+                      var _meetingStore =
+                          MeetingStore(hmssdkInteractor: _hmssdkInteractor);
+                      _meetingStore.addUpdateListener();
+                      bool ans = await _meetingStore.join(
+                          nameTextController.text, roomCode.text);
+                      if (!ans) {
+                        const SnackBar(content: Text("Unable to Join"));
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Meeting(
+                                      meetingStore: _meetingStore,
+                                    )));
+                      }
                     }
                   }
                 },

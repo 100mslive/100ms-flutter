@@ -384,4 +384,11 @@ class _MeetingPageState extends State<MeetingPage>
   void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
     // TODO: implement onSessionStoreAvailable
   }
+
+  @override
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {
+    // TODO: implement onPeerListUpdate
+  }
 }
