@@ -36,6 +36,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool res = false;
 
+  void navigate() {
+    Navigator.push(
+        context, CupertinoPageRoute(builder: (_) => const MeetingPage()));
+  }
+
   static Future<bool> getPermissions() async {
     if (Platform.isIOS) return true;
 
@@ -59,21 +64,20 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Center(
           child: ElevatedButton(
             style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ))),
+                  borderRadius: BorderRadius.circular(8.0),
+                ))),
             onPressed: () async => {
               res = await getPermissions(),
-              if (res)
-                Navigator.push(context,
-                    CupertinoPageRoute(builder: (_) => const MeetingPage()))
+              if (res) {navigate()}
             },
             child: const Padding(
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
               child: Text(
                 'Join Audio Room',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),
           ),
@@ -95,8 +99,11 @@ class _MeetingPageState extends State<MeetingPage>
   late HMSSDK _hmsSDK;
 
   //Enter the username and authToken from dashboard for the corresponding role here.
-  String userName = "Enter Username Here";
-  String authToken = "Enter AuthToken Here";
+  String userName = "Enter username here";
+
+  ///For speaker role roomCode: "yim-wofo-ytk"
+  ///For listener role roomCode: "iai-nkis-oob"
+  String roomCode = "yim-wofo-ytk";
   Offset position = const Offset(5, 5);
   bool isJoinSuccessful = false;
   final List<PeerTrackNode> _listeners = [];
@@ -115,7 +122,12 @@ class _MeetingPageState extends State<MeetingPage>
     _hmsSDK = HMSSDK();
     await _hmsSDK.build();
     _hmsSDK.addUpdateListener(listener: this);
-    _hmsSDK.join(config: HMSConfig(authToken: authToken, userName: userName));
+    var authToken = await _hmsSDK.getAuthTokenByRoomCode(roomCode: roomCode);
+    if ((authToken is String?) && authToken != null) {
+      _hmsSDK.join(config: HMSConfig(authToken: authToken, userName: userName));
+    } else {
+      log("Error in getting auth token");
+    }
   }
 
   @override
@@ -271,6 +283,9 @@ class _MeetingPageState extends State<MeetingPage>
       case HMSPeerUpdate.networkQualityUpdated:
         // TODO: Handle this case.
         break;
+      case HMSPeerUpdate.handRaiseUpdated:
+        // TODO: Handle this case.
+        break;
     }
   }
 
@@ -397,6 +412,18 @@ class _MeetingPageState extends State<MeetingPage>
   @override
   void onRoomUpdate({required HMSRoom room, required HMSRoomUpdate update}) {
     // Checkout the docs for room updates here: https://www.100ms.live/docs/flutter/v2/how--to-guides/listen-to-room-updates/update-listeners
+  }
+
+  @override
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {
+    // TODO: implement onPeerListUpdate
+  }
+
+  @override
+  void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
+    // TODO: implement onSessionStoreAvailable
   }
 
   @override

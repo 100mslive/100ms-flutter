@@ -3,8 +3,6 @@ import 'package:demo_with_getx_and_100ms/views/HomePage.dart';
 import 'package:get/get.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
-import '../services/RoomService.dart';
-
 class RoomController extends GetxController
     implements HMSUpdateListener, HMSActionResultListener {
   RxList<Rx<PeerTrackNode>> peerTrackList = <Rx<PeerTrackNode>>[].obs;
@@ -21,7 +19,7 @@ class RoomController extends GetxController
   @override
   void onInit() async {
     hmsSdk.addUpdateListener(listener: this);
-    String? token = await RoomService().getToken(user: name, room: url);
+    var token = await hmsSdk.getAuthTokenByRoomCode(roomCode: url);
 
     if (token == null) return;
 
@@ -149,6 +147,93 @@ class RoomController extends GetxController
         Get.snackbar("stopScreenShare Error", hmsException.message ?? "");
 
         break;
+      case HMSActionResultListenerMethod.changeTrackState:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.changeMetadata:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.endRoom:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.removePeer:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.acceptChangeRole:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.changeRoleOfPeer:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.changeTrackStateForRole:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.startRtmpOrRecording:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.stopRtmpAndRecording:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.changeName:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.sendBroadcastMessage:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.sendGroupMessage:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.sendDirectMessage:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.hlsStreamingStarted:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.hlsStreamingStopped:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.startAudioShare:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.stopAudioShare:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.switchCamera:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.setSessionMetadataForKey:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.sendHLSTimedMetadata:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.lowerLocalPeerHand:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.lowerRemotePeerHand:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.raiseLocalPeerHand:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.quickStartPoll:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.addSingleChoicePollResponse:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.addMultiChoicePollResponse:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.unknown:
+        // TODO: Handle this case.
+        break;
+      case null:
+        // TODO: Handle this case.
+        break;
     }
     Get.snackbar("Error", hmsException.message ?? "");
   }
@@ -169,6 +254,93 @@ class RoomController extends GetxController
         break;
       case HMSActionResultListenerMethod.stopScreenShare:
         isScreenShareActive.toggle();
+        break;
+      case HMSActionResultListenerMethod.changeTrackState:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.changeMetadata:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.endRoom:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.removePeer:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.acceptChangeRole:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.changeRoleOfPeer:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.changeTrackStateForRole:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.startRtmpOrRecording:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.stopRtmpAndRecording:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.changeName:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.sendBroadcastMessage:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.sendGroupMessage:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.sendDirectMessage:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.hlsStreamingStarted:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.hlsStreamingStopped:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.startAudioShare:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.stopAudioShare:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.switchCamera:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.changeRoleOfPeersWithRoles:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.setSessionMetadataForKey:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.sendHLSTimedMetadata:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.lowerLocalPeerHand:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.lowerRemotePeerHand:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.raiseLocalPeerHand:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.quickStartPoll:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.addSingleChoicePollResponse:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.addMultiChoicePollResponse:
+        // TODO: Handle this case.
+        break;
+      case HMSActionResultListenerMethod.unknown:
+        // TODO: Handle this case.
+        break;
+      case null:
+        // TODO: Handle this case.
         break;
     }
   }
@@ -225,5 +397,17 @@ class RoomController extends GetxController
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     // Checkout the docs for handling the updates regarding who is currently speaking here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/render-video/show-audio-level
+  }
+
+  @override
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {
+    // TODO: implement onPeerListUpdate
+  }
+
+  @override
+  void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
+    // TODO: implement onSessionStoreAvailable
   }
 }

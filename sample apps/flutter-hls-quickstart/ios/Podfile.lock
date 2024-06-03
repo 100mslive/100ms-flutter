@@ -1,15 +1,20 @@
 PODS:
   - Flutter (1.0.0)
   - HMSAnalyticsSDK (0.0.2)
-  - HMSBroadcastExtensionSDK (0.0.8)
-  - HMSSDK (0.9.1):
+  - HMSBroadcastExtensionSDK (0.0.9)
+  - HMSHLSPlayerSDK (0.0.2):
     - HMSAnalyticsSDK (= 0.0.2)
-    - HMSWebRTC (= 1.0.5115)
-  - hmssdk_flutter (1.4.0):
+  - HMSNoiseCancellationModels (1.0.0)
+  - HMSSDK (1.10.0):
+    - HMSAnalyticsSDK (= 0.0.2)
+    - HMSWebRTC (= 1.0.6169)
+  - hmssdk_flutter (1.10.2):
     - Flutter
-    - HMSBroadcastExtensionSDK (= 0.0.8)
-    - HMSSDK (= 0.9.1)
-  - HMSWebRTC (1.0.5115)
+    - HMSBroadcastExtensionSDK (= 0.0.9)
+    - HMSHLSPlayerSDK (= 0.0.2)
+    - HMSNoiseCancellationModels (= 1.0.0)
+    - HMSSDK (= 1.10.0)
+  - HMSWebRTC (1.0.6169)
   - permission_handler_apple (9.0.4):
     - Flutter
   - video_player_avfoundation (0.0.1):
@@ -25,6 +30,8 @@ SPEC REPOS:
   trunk:
     - HMSAnalyticsSDK
     - HMSBroadcastExtensionSDK
+    - HMSHLSPlayerSDK
+    - HMSNoiseCancellationModels
     - HMSSDK
     - HMSWebRTC
 
@@ -39,15 +46,17 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/video_player_avfoundation/ios"
 
 SPEC CHECKSUMS:
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   HMSAnalyticsSDK: 4d2a88a729b1eb42f3d25f217c28937ec318a5b7
-  HMSBroadcastExtensionSDK: 4393faac38999d01bae8e411d0564a577ad9d89a
-  HMSSDK: e1a2d6dc4f4881b7e6a854de61a06e2cc0afc848
-  hmssdk_flutter: c8ba76a719d8b9bd2b98b40fbf4cbe2332029ea8
-  HMSWebRTC: d74cd5e5ecfe701219dd4042ec67fed02ea5d6db
+  HMSBroadcastExtensionSDK: d80fe325f6c928bd8e5176290b5a4b7ae15d6fbb
+  HMSHLSPlayerSDK: 6a54ad4d12f3dc2270d1ecd24019d71282a4f6a3
+  HMSNoiseCancellationModels: a3bda1405a16015632f4bcabd46ce48f35103b02
+  HMSSDK: fbbdebf673baba7f98f3fa13241b4249929ad681
+  hmssdk_flutter: 9be13b77e2a55dba665e154cae026d2b5cdfa053
+  HMSWebRTC: 8f51ba33a0e505e17ebf3d7b37bcdca266751a13
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
   video_player_avfoundation: 81e49bb3d9fb63dccf9fa0f6d877dc3ddbeac126
 
 PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
 
-COCOAPODS: 1.12.0
+COCOAPODS: 1.14.3

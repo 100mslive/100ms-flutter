@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:example_riverpod/hms_sdk_interactor.dart';
 import 'package:example_riverpod/preview/preview_screen.dart';
+import 'package:example_riverpod/preview/preview_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() {
@@ -55,8 +58,8 @@ Future<bool> getPermissions() async {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController nameTextController = TextEditingController(text: "");
-  TextEditingController meetingTextController = TextEditingController(
-      text: "https://yogi-live.app.100ms.live/streaming/preview/qii-tow-sjq");
+  TextEditingController roomCodeController =
+      TextEditingController(text: "zhr-seow-tuj");
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -78,13 +81,13 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               width: 300.0,
               child: TextField(
-                controller: meetingTextController,
+                controller: roomCodeController,
                 autofocus: true,
                 keyboardType: TextInputType.url,
                 decoration: InputDecoration(
                     hintText: 'Enter Room URL',
                     suffixIcon: IconButton(
-                      onPressed: meetingTextController.clear,
+                      onPressed: roomCodeController.clear,
                       icon: const Icon(Icons.clear),
                     ),
                     border: const OutlineInputBorder(
@@ -122,16 +125,23 @@ class _HomePageState extends State<HomePage> {
                   borderRadius: BorderRadius.circular(16.0),
                 ))),
                 onPressed: () async {
-                  if (meetingTextController.text.isNotEmpty &&
+                  if (roomCodeController.text.isNotEmpty &&
                       nameTextController.text.isNotEmpty) {
                     bool res = await getPermissions();
                     if (res) {
+                      var hmssdk = HMSSDK();
+                      await hmssdk.build();
+                      var hmssdkInteractor = HMSSDKInteractor(hmsSDK: hmssdk);
+                      var previewStore =
+                          PreviewStore(hmssdkInteractor: hmssdkInteractor);
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => PreviewScreen(
                                   name: nameTextController.text,
-                                  roomLink: meetingTextController.text,
+                                  roomLink: roomCodeController.text,
+                                  previewStore: previewStore,
                                 )),
                       );
                     }

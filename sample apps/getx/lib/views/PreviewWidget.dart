@@ -6,8 +6,8 @@ import 'package:get/get.dart';
 import 'RoomWidget.dart';
 
 class PreviewWidget extends StatelessWidget {
-  String meetingUrl;
-  String userName;
+  final String meetingUrl;
+  final String userName;
 
   late PreviewController previewController;
 

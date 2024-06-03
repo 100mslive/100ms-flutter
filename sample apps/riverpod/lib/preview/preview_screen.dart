@@ -8,8 +8,13 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 class PreviewScreen extends ConsumerStatefulWidget {
   final String roomLink;
   final String name;
+  final PreviewStore previewStore;
 
-  const PreviewScreen({Key? key, required this.name, required this.roomLink})
+  const PreviewScreen(
+      {Key? key,
+      required this.name,
+      required this.roomLink,
+      required this.previewStore})
       : super(key: key);
 
   @override
@@ -17,23 +22,20 @@ class PreviewScreen extends ConsumerStatefulWidget {
 }
 
 class _PreviewScreenState extends ConsumerState<PreviewScreen> {
-  final previewStoreProvider = ChangeNotifierProvider<PreviewStore>((ref) {
-    return PreviewStore();
-  });
+  late final ChangeNotifierProvider<PreviewStore> previewStoreProvider;
 
   @override
   void initState() {
     super.initState();
+    previewStoreProvider = ChangeNotifierProvider<PreviewStore>((ref) {
+      return widget.previewStore;
+    });
     initPreview();
   }
 
-  void initPreview() async {
-    bool ans = await ref
-        .read(previewStoreProvider)
+  Future<void> initPreview() async {
+    await widget.previewStore
         .startPreview(user: widget.name, roomId: widget.roomLink);
-    if (ans == false) {
-      Navigator.of(context).pop();
-    }
   }
 
   @override
@@ -42,6 +44,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
     final double itemHeight = size.height;
     final double itemWidth = size.width;
     final _previewStore = ref.watch(previewStoreProvider);
+
     return WillPopScope(
       onWillPop: () async {
         _previewStore.removePreviewListener();

@@ -14,8 +14,7 @@ class MainActivity : FlutterActivity() {
     ) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == Constants.SCREEN_SHARE_INTENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            HmssdkFlutterPlugin.hmssdkFlutterPlugin?.requestScreenShare(data)
-        }
+        data?.action = Constants.HMSSDK_RECEIVER
+        activity.sendBroadcast(data?.putExtra(Constants.METHOD_CALL, Constants.SCREEN_SHARE_REQUEST))
     }
 }

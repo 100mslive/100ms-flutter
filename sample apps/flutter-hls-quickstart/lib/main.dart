@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -55,10 +56,37 @@ class _MyHomePageState extends State<MyHomePage> {
     return true;
   }
 
+  void navigateHLSUser() {
+    Navigator.push(
+        context,
+        CupertinoPageRoute(
+            builder: (_) => HLSViewerPage(
+                roomCode: "luh-piuh-now",
+                /*
+                * Paste room code for your Room from 100ms Dashboard here
+                * https://dashboard.100ms.live/
+                */
+                userName: userName)));
+  }
+
+  void navigateBroadcaster() {
+    Navigator.push(
+        context,
+        CupertinoPageRoute(
+            builder: (_) => MeetingPage(
+                roomCode: "trp-lzec-yoc",
+                /*
+                * Paste room code for your Room from 100ms Dashboard here
+                * https://dashboard.100ms.live/
+                */
+                userName: userName)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue,
         title: Text(widget.title),
       ),
       body: Container(
@@ -70,29 +98,21 @@ class _MyHomePageState extends State<MyHomePage> {
             //Button to join as broadcaster
             ElevatedButton(
               style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ))),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ))),
               onPressed: () async => {
                 res = await getPermissions(),
-                if (res)
-                  Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (_) => MeetingPage(
-                              authToken: "ENTER YOUR AUTH TOKEN HERE",
-                              /*
-                                  * Paste Auth Token for your Room from 100ms Dashboard here
-                                  * https://dashboard.100ms.live/
-                                  */
-                              userName: userName)))
+                if (res) {navigateBroadcaster()}
               },
               child: const Padding(
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Text(
                   'Join as Broadcaster',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
               ),
             ),
@@ -102,29 +122,21 @@ class _MyHomePageState extends State<MyHomePage> {
             //Button to join as HLSViewer
             ElevatedButton(
               style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ))),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ))),
               onPressed: () async => {
                 res = await getPermissions(),
-                if (res)
-                  Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (_) => HLSViewerPage(
-                              authToken: "ENTER YOUR AUTH TOKEN HERE",
-                              /*
-                                  * Paste Auth Token for your Room from 100ms Dashboard here
-                                  * https://dashboard.100ms.live/
-                                  */
-                              userName: userName)))
+                if (res) {navigateHLSUser()}
               },
               child: const Padding(
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Text(
                   'Join as HLS Viewer',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
               ),
             ),
@@ -136,10 +148,10 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class MeetingPage extends StatefulWidget {
-  final String authToken;
+  final String roomCode;
   final String userName;
   const MeetingPage(
-      {super.key, required this.authToken, required this.userName});
+      {super.key, required this.roomCode, required this.userName});
 
   @override
   State<MeetingPage> createState() => _MeetingPageState();
@@ -162,9 +174,14 @@ class _MeetingPageState extends State<MeetingPage>
     _hmsSDK = HMSSDK();
     await _hmsSDK.build();
     _hmsSDK.addUpdateListener(listener: this);
-    _hmsSDK.join(
-        config:
-            HMSConfig(authToken: widget.authToken, userName: widget.userName));
+    var authToken =
+        await _hmsSDK.getAuthTokenByRoomCode(roomCode: widget.roomCode);
+    if ((authToken is String?) && authToken != null) {
+      _hmsSDK.join(
+          config: HMSConfig(authToken: authToken, userName: widget.userName));
+    } else {
+      log("Error in getting auth token");
+    }
   }
 
   @override
@@ -324,6 +341,18 @@ class _MeetingPageState extends State<MeetingPage>
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     // Checkout the docs for handling the updates regarding who is currently speaking here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/render-video/show-audio-level
+  }
+
+  @override
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {
+    // TODO: implement onPeerListUpdate
+  }
+
+  @override
+  void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
+    // TODO: implement onSessionStoreAvailable
   }
 
   void _leaveRoom() {
@@ -508,10 +537,10 @@ class _MeetingPageState extends State<MeetingPage>
 }
 
 class HLSViewerPage extends StatefulWidget {
-  final String authToken;
+  final String roomCode;
   final String userName;
   const HLSViewerPage(
-      {super.key, required this.authToken, required this.userName});
+      {super.key, required this.roomCode, required this.userName});
 
   @override
   State<HLSViewerPage> createState() => _HLSViewerPageState();
@@ -534,9 +563,14 @@ class _HLSViewerPageState extends State<HLSViewerPage>
     _hmsSDK = HMSSDK();
     await _hmsSDK.build();
     _hmsSDK.addUpdateListener(listener: this);
-    _hmsSDK.join(
-        config:
-            HMSConfig(authToken: widget.authToken, userName: widget.userName));
+    var authToken =
+        await _hmsSDK.getAuthTokenByRoomCode(roomCode: widget.roomCode);
+    if ((authToken is String?) && authToken != null) {
+      _hmsSDK.join(
+          config: HMSConfig(authToken: authToken, userName: widget.userName));
+    } else {
+      log("Error in getting auth token");
+    }
   }
 
   @override
@@ -638,6 +672,18 @@ class _HLSViewerPageState extends State<HLSViewerPage>
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {
     // Checkout the docs for handling the updates regarding who is currently speaking here: https://www.100ms.live/docs/flutter/v2/how--to-guides/set-up-video-conferencing/render-video/show-audio-level
+  }
+
+  @override
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {
+    // TODO: implement onPeerListUpdate
+  }
+
+  @override
+  void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
+    // TODO: implement onSessionStoreAvailable
   }
 
   void _leaveRoom() {

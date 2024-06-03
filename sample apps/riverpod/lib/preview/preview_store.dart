@@ -1,14 +1,13 @@
 //Package imports
 import 'package:example_riverpod/hms_sdk_interactor.dart';
-import 'package:example_riverpod/service/room_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class PreviewStore extends ChangeNotifier implements HMSPreviewListener {
   late HMSSDKInteractor hmsSDKInteractor;
 
-  PreviewStore() {
-    hmsSDKInteractor = HMSSDKInteractor();
+  PreviewStore({required HMSSDKInteractor hmssdkInteractor}) {
+    hmsSDKInteractor = hmssdkInteractor;
   }
 
   List<HMSVideoTrack> localTracks = [];
@@ -49,7 +48,8 @@ class PreviewStore extends ChangeNotifier implements HMSPreviewListener {
 
   Future<bool> startPreview(
       {required String user, required String roomId}) async {
-    String? token = await RoomService().getToken(user: user, room: roomId);
+    String? token =
+        await hmsSDKInteractor.getAuthTokenFromRoomCode(roomCode: roomId);
 
     if (token == null) return false;
     HMSConfig config = HMSConfig(authToken: token, userName: user);
@@ -86,6 +86,14 @@ class PreviewStore extends ChangeNotifier implements HMSPreviewListener {
   }
 
   void leave() {
+    hmsSDKInteractor.removePreviewListener(this);
     hmsSDKInteractor.leave();
+  }
+
+  @override
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {
+    // TODO: implement onPeerListUpdate
   }
 }

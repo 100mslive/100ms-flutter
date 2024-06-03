@@ -8,10 +8,9 @@ import 'package:mobx_example/setup/meeting_store.dart';
 import 'package:mobx_example/setup/peer_track_node.dart';
 
 class Meeting extends StatefulWidget {
-  final String name, roomLink;
+  final MeetingStore meetingStore;
 
-  const Meeting({Key? key, required this.name, required this.roomLink})
-      : super(key: key);
+  const Meeting({Key? key, required this.meetingStore}) : super(key: key);
 
   @override
   _MeetingState createState() => _MeetingState();
@@ -20,30 +19,19 @@ class Meeting extends StatefulWidget {
 class _MeetingState extends State<Meeting> {
   late MeetingStore _meetingStore;
   bool raisedHand = false;
-  bool selfLeave = false;
 
   @override
   void initState() {
     super.initState();
-    _meetingStore = MeetingStore();
-    initMeeting();
-  }
-
-  initMeeting() async {
-    _meetingStore.addUpdateListener();
-    bool ans = await _meetingStore.join(widget.name, widget.roomLink);
-    if (!ans) {
-      const SnackBar(content: Text("Unable to Join"));
-      Navigator.of(context).pop();
-    }
+    _meetingStore = widget.meetingStore;
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        bool ans = await _onBackPressed();
-        return ans;
+        _meetingStore.leave();
+        return true;
       },
       child: SafeArea(
         child: Scaffold(
@@ -54,9 +42,9 @@ class _MeetingState extends State<Meeting> {
               child: Observer(
                 name: "MeetingStore",
                 builder: (context) {
-                  if (_meetingStore.isRoomEnded && !selfLeave) {
+                  if (_meetingStore.isRoomEnded) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      Navigator.pop(context);
+                      Navigator.popUntil(context, (route) => route.isFirst);
                     });
                   }
                   if (_meetingStore.peerTracks.isEmpty) {
@@ -125,38 +113,15 @@ class _MeetingState extends State<Meeting> {
         break;
       case 2:
         if (Platform.isIOS) {
-          _onBackPressed();
+          _meetingStore.leave();
           return;
         }
         _meetingStore.toggleScreenShare();
         break;
       case 3:
-        _onBackPressed();
+        _meetingStore.leave();
         break;
     }
-  }
-
-  Future<dynamic> _onBackPressed() {
-    return showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-              title: const Text('Leave the Meeting?',
-                  style: TextStyle(fontSize: 24)),
-              actions: [
-                ElevatedButton(
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                    onPressed: () => {
-                          _meetingStore.leave(),
-                          Navigator.pop(context, true),
-                        },
-                    child: const Text('Yes', style: TextStyle(fontSize: 24))),
-                ElevatedButton(
-                    onPressed: () => Navigator.pop(context, false),
-                    child:
-                        const Text('Cancel', style: TextStyle(fontSize: 24))),
-              ],
-            ));
   }
 
   Widget videoPageView({required List<PeerTrackNode> filteredList}) {
