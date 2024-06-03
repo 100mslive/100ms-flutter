@@ -340,8 +340,8 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: main
-      resolved-ref: d7914ba92ff43a09dbddfb299d3b41ff32ad17f2
+      ref: develop
+      resolved-ref: "3ea3e5d0b31fc8ab2653f169f957fafd4766a6c0"
       url: "https://github.com/100mslive/hms_video_plugin.git"
     source: git
     version: "0.0.1"
@@ -349,8 +349,8 @@ packages:
     dependency: transitive
     description:
       path: "packages/hmssdk_flutter"
-      ref: FLUT-318
-      resolved-ref: "5f6e588e2cebe477e0934833fa4876fa538ef8c7"
+      ref: "release-1.10.3"
+      resolved-ref: c168c6620db7ba9eaeaaf9c11f82942d977a2565
       url: "https://github.com/100mslive/100ms-flutter.git"
     source: git
     version: "1.10.3"
