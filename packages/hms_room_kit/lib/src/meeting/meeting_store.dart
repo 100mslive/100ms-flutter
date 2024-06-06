@@ -6,6 +6,7 @@ import 'dart:developer';
 import 'dart:io';
 
 //Package imports
+import 'package:hms_video_plugin/hms_video_plugin.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -1351,6 +1352,14 @@ class MeetingStore extends ChangeNotifier
     // clearPIPState();
     removeListeners();
     toggleAlwaysScreenOn();
+    if (AppDebugConfig.isBlurEnabled) {
+      HMSVideoPlugin.disableBlur();
+      AppDebugConfig.isBlurEnabled = false;
+    }
+    if (AppDebugConfig.isVBEnabled) {
+      HMSVideoPlugin.disable();
+      AppDebugConfig.isVBEnabled = false;
+    }
     _hmsSDKInteractor.destroy();
     _hmsSessionStore = null;
     peerTracks.clear();

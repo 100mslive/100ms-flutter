@@ -3,7 +3,9 @@ library;
 ///Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_video_plugin/hms_video_plugin.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 ///Project imports
@@ -11,9 +13,13 @@ import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/more_option_item.dart';
+import 'package:provider/provider.dart';
 
 ///[VideoEffectsBottomSheet] is a bottom sheet that is used to change the video effects
 class VideoEffectsBottomSheet extends StatefulWidget {
+  final HMSVideoTrack? localVideoTrack;
+
+  const VideoEffectsBottomSheet({super.key, this.localVideoTrack});
   @override
   State<VideoEffectsBottomSheet> createState() =>
       _VideoEffectsBottomSheetState();
@@ -31,6 +37,13 @@ class _VideoEffectsBottomSheetState extends State<VideoEffectsBottomSheet> {
     } else if (AppDebugConfig.isVBEnabled) {
       setEffect("background");
     }
+    context.read<MeetingStore>().addBottomSheet(context);
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
   }
 
   void changeBlur(int blurRadius) {
@@ -114,7 +127,7 @@ class _VideoEffectsBottomSheetState extends State<VideoEffectsBottomSheet> {
                         if (AppDebugConfig.isBlurEnabled) {
                           HMSVideoPlugin.disableBlur();
                           AppDebugConfig.isBlurEnabled = false;
-                        } else if (AppDebugConfig.isVirtualBackgroundEnabled) {
+                        } else if (AppDebugConfig.isVBEnabled) {
                           HMSVideoPlugin.disable();
                           AppDebugConfig.isVBEnabled = false;
                         }
@@ -138,6 +151,7 @@ class _VideoEffectsBottomSheetState extends State<VideoEffectsBottomSheet> {
                   child: MoreOptionItem(
                       onTap: () {
                         Navigator.pop(context);
+                        AppDebugConfig.isVBEnabled = false;
                         changeBlur(100);
                       },
                       optionIcon: SvgPicture.asset(
@@ -157,6 +171,7 @@ class _VideoEffectsBottomSheetState extends State<VideoEffectsBottomSheet> {
                 Expanded(
                   child: MoreOptionItem(
                       onTap: () async {
+                        AppDebugConfig.isBlurEnabled = false;
                         Navigator.pop(context);
                         setEffect("background");
                         XFile? result = await ImagePicker()

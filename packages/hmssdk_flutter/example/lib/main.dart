@@ -501,6 +501,9 @@ class _HomePageState extends State<HomePage> {
                                       borderRadius: BorderRadius.circular(8.0),
                                     ))),
                                 onPressed: () async {
+                                  bool isVBEnabled = await Utilities.getBoolData(
+                                      key: "is_virtual_background_enabled")??false;
+                                  AppDebugConfig.isVirtualBackgroundEnabled = isVBEnabled;
                                   joinMeeting();
                                 },
                                 child: Container(
