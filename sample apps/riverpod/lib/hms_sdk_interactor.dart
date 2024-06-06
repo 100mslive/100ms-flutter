@@ -9,14 +9,17 @@ class HMSSDKInteractor {
   late List<HMSMessage> messages;
   late HMSSDK hmsSDK;
 
-  HMSSDKInteractor() {
+  HMSSDKInteractor({required HMSSDK hmsSDK}) {
     //To know more about HMSSDK setup and initialization checkout the docs here: https://www.100ms.live/docs/flutter/v2/how--to-guides/install-the-sdk/hmssdk
-    initHMSSDK();
+    initHMSSDK(hmssdk: hmsSDK);
   }
 
-  void initHMSSDK() async {
-    hmsSDK = HMSSDK();
-    await hmsSDK.build();
+  void initHMSSDK({required HMSSDK hmssdk}) async {
+    hmsSDK = hmssdk;
+  }
+
+  Future<dynamic> getAuthTokenFromRoomCode({required String roomCode}) async {
+    return await hmsSDK.getAuthTokenByRoomCode(roomCode: roomCode);
   }
 
   void join({required HMSConfig config}) async {

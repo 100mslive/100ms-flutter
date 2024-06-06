@@ -2,7 +2,6 @@
 
 import 'package:example_riverpod/hms_sdk_interactor.dart';
 import 'package:example_riverpod/meeting/peer_track_node.dart';
-import 'package:example_riverpod/service/room_service.dart';
 import 'package:flutter/material.dart';
 
 //Project imports
@@ -39,7 +38,8 @@ class MeetingStore extends ChangeNotifier
 // Function calls*******************************************
 
   Future<bool> join(String user, String roomUrl) async {
-    String? token = await RoomService().getToken(user: user, room: roomUrl);
+    var token =
+        await _hmsSDKInteractor.getAuthTokenFromRoomCode(roomCode: roomUrl);
     if (token == null) return false;
     HMSConfig config = HMSConfig(authToken: token, userName: user);
 
@@ -270,6 +270,11 @@ class MeetingStore extends ChangeNotifier
         PeerTrackNode peerTrackNode = peerTracks[index];
         peerTrackNode.audioTrack = track as HMSAudioTrack;
         peerTrackNode.notify();
+      } else {
+        peerTracks.add(PeerTrackNode(
+            peer: peer,
+            uid: peer.peerId + "mainVideo",
+            audioTrack: track as HMSAudioTrack));
       }
       return;
     }
@@ -282,7 +287,10 @@ class MeetingStore extends ChangeNotifier
         peerTrackNode.track = track as HMSVideoTrack;
         peerTrackNode.notify();
       } else {
-        return;
+        peerTracks.add(PeerTrackNode(
+            peer: peer,
+            uid: peer.peerId + "mainVideo",
+            track: track as HMSVideoTrack));
       }
     } else {
       if (trackUpdate == HMSTrackUpdate.trackAdded) {
@@ -369,6 +377,7 @@ class MeetingStore extends ChangeNotifier
     switch (methodType) {
       case HMSActionResultListenerMethod.leave:
         peerTracks.clear();
+        _hmsSDKInteractor.removeUpdateListener(this);
         break;
       case HMSActionResultListenerMethod.switchCamera:
         break;
@@ -398,5 +407,15 @@ class MeetingStore extends ChangeNotifier
       Map<String, dynamic>? arguments,
       required HMSException hmsException}) {
     this.hmsException = hmsException;
+  }
+
+  @override
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {}
+
+  @override
+  void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
+    // TODO: implement onSessionStoreAvailable
   }
 }

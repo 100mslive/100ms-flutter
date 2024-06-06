@@ -11,8 +11,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final meetingTextController = TextEditingController(
-        text: "https://yogi-live.app.100ms.live/streaming/meeting/qii-tow-sjq");
+    final roomCode = TextEditingController(text: "zhr-seow-tuj");
     final nameTextController = TextEditingController();
 
     return SafeArea(
@@ -34,13 +33,13 @@ class HomePage extends StatelessWidget {
             SizedBox(
               width: 300.0,
               child: TextField(
-                controller: meetingTextController,
+                controller: roomCode,
                 autofocus: true,
                 keyboardType: TextInputType.url,
                 decoration: InputDecoration(
                     hintText: 'Enter Room URL',
                     suffixIcon: IconButton(
-                      onPressed: meetingTextController.clear,
+                      onPressed: roomCode.clear,
                       icon: const Icon(Icons.clear),
                     ),
                     border: const OutlineInputBorder(
@@ -78,16 +77,16 @@ class HomePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16.0),
                 ))),
                 onPressed: () async {
-                  if (!(GetUtils.isBlank(meetingTextController.text) ?? true) &&
+                  if (!(GetUtils.isBlank(roomCode.text) ?? true) &&
                       !(GetUtils.isBlank(nameTextController.text) ?? true)) {
                     if (kDebugMode) {
                       print(
-                          "RaisedButton ${meetingTextController.text} ${nameTextController.text}");
+                          "RaisedButton ${roomCode.text} ${nameTextController.text}");
                     }
                     bool res = await getPermissions();
                     if (res) {
                       Get.to(() => PreviewWidget(
-                          meetingTextController.text, nameTextController.text));
+                          roomCode.text, nameTextController.text));
                     }
                   }
                 },
