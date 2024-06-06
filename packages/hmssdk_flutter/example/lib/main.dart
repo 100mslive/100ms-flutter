@@ -502,8 +502,11 @@ class _HomePageState extends State<HomePage> {
                                     ))),
                                 onPressed: () async {
                                   bool isVBEnabled = await Utilities.getBoolData(
-                                      key: "is_virtual_background_enabled")??false;
-                                  AppDebugConfig.isVirtualBackgroundEnabled = isVBEnabled;
+                                          key:
+                                              "is_virtual_background_enabled") ??
+                                      false;
+                                  AppDebugConfig.isVirtualBackgroundEnabled =
+                                      isVBEnabled;
                                   joinMeeting();
                                 },
                                 child: Container(
