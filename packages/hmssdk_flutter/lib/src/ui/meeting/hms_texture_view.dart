@@ -118,6 +118,14 @@ class _PlatformViewState extends State<_PlatformView> {
                 widget.disableAutoSimulcastLayerSelect);
       } else {
         viewController = widget.controller;
+
+        ///Calling Add Track with new track in case where the addTrack is not called by the app
+        if (!widget.track.isMute) {
+          viewController?.addTrack(
+              track: widget.track as HMSVideoTrack,
+              disableAutoSimulcastLayerSelect:
+                  widget.disableAutoSimulcastLayerSelect);
+        }
       }
 
       ///Here we set the callback method which gets called to set the view
