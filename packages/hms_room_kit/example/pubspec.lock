@@ -244,7 +244,7 @@ packages:
     description:
       path: "."
       ref: develop
-      resolved-ref: "4b37433ddf0144b01806d51d40a05aec0b754b00"
+      resolved-ref: "8db1d9dd0b560fbceba35a081fb18d2d9cb6269e"
       url: "https://github.com/100mslive/hms_video_plugin.git"
     source: git
     version: "0.0.1"
