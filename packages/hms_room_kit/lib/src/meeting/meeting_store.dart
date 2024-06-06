@@ -1755,11 +1755,11 @@ class MeetingStore extends ChangeNotifier
             int peerIndex = peerTracks.indexWhere(
                 (element) => element.uid == peer.peerId + track.trackId);
             if (peerIndex != -1) {
-
               ///This is done to handle the case when the screen share is stopped
               ///and the user is on the last page of the screen share
-              ///we need to move the user to the previous page 
-              if (((screenShareCount - 1) == currentScreenSharePage) && currentScreenSharePage > 0) {
+              ///we need to move the user to the previous page
+              if (((screenShareCount - 1) == currentScreenSharePage) &&
+                  currentScreenSharePage > 0) {
                 currentScreenSharePage--;
               }
               screenShareCount--;

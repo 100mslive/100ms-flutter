@@ -17,7 +17,6 @@ import 'package:hms_room_kit/src/widgets/whiteboard_screenshare/whiteboard_scree
 ///[ScreenshareTile] is a widget that is used to render the screenshare tile
 ///It is used to render the screenshare of the peer
 class ScreenshareTile extends StatelessWidget {
-
   const ScreenshareTile({Key? key}) : super(key: key);
 
   @override

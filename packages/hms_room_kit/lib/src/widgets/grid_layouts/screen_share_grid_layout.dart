@@ -67,7 +67,9 @@ class _ScreenshareGridLayoutState extends State<ScreenshareGridLayout> {
                       if (widget.screenshareCount > 0)
                         Expanded(
                           child: PageView.builder(
-                            physics: isFullScreen? const NeverScrollableScrollPhysics() :const PageScrollPhysics(),
+                            physics: isFullScreen
+                                ? const NeverScrollableScrollPhysics()
+                                : const PageScrollPhysics(),
                             allowImplicitScrolling: true,
                             itemCount: widget.screenshareCount,
                             onPageChanged: (newPage) {
