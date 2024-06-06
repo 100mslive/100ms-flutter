@@ -1763,6 +1763,9 @@ class MeetingStore extends ChangeNotifier
                 currentScreenSharePage--;
               }
               screenShareCount--;
+              if (screenShareCount == 0) {
+                isScreenshareWhiteboardFullScreen = false;
+              }
               peerTracks.removeAt(peerIndex);
               notifyListeners();
               // changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
