@@ -132,7 +132,7 @@ PODS:
   - HMSHLSPlayerSDK (0.0.2):
     - HMSAnalyticsSDK (= 0.0.2)
   - HMSNoiseCancellationModels (1.0.0)
-  - HMSSDK (1.12.0):
+  - HMSSDK (1.11.0):
     - HMSAnalyticsSDK (= 0.0.2)
     - HMSWebRTC (= 1.0.6169)
   - hmssdk_flutter (1.10.2):
@@ -140,7 +140,7 @@ PODS:
     - HMSBroadcastExtensionSDK (= 0.0.9)
     - HMSHLSPlayerSDK (= 0.0.2)
     - HMSNoiseCancellationModels (= 1.0.0)
-    - HMSSDK (= 1.12.0)
+    - HMSSDK (= 1.11.0)
   - HMSWebRTC (1.0.6169)
   - image_picker_ios (0.0.1):
     - Flutter
@@ -321,8 +321,8 @@ SPEC CHECKSUMS:
   HMSBroadcastExtensionSDK: d80fe325f6c928bd8e5176290b5a4b7ae15d6fbb
   HMSHLSPlayerSDK: 6a54ad4d12f3dc2270d1ecd24019d71282a4f6a3
   HMSNoiseCancellationModels: a3bda1405a16015632f4bcabd46ce48f35103b02
-  HMSSDK: 137107663eedc276c22639b2ec941c1f14f75d23
-  hmssdk_flutter: c0c621052818420aa182a69576ba9d1c576f06f3
+  HMSSDK: cdba5b12c080832d135af7bbc4ca6282b0e171ac
+  hmssdk_flutter: 3813b9229fdd6437041d970a449a64575fb1cbd1
   HMSWebRTC: 8f51ba33a0e505e17ebf3d7b37bcdca266751a13
   image_picker_ios: 99dfe1854b4fa34d0364e74a78448a0151025425
   MLImage: 7bb7c4264164ade9bf64f679b40fb29c8f33ee9b
