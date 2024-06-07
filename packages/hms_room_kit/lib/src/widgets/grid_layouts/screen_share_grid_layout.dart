@@ -67,7 +67,9 @@ class _ScreenshareGridLayoutState extends State<ScreenshareGridLayout> {
                       if (widget.screenshareCount > 0)
                         Expanded(
                           child: PageView.builder(
-                            physics: const PageScrollPhysics(),
+                            physics: isFullScreen
+                                ? const NeverScrollableScrollPhysics()
+                                : const PageScrollPhysics(),
                             allowImplicitScrolling: true,
                             itemCount: widget.screenshareCount,
                             onPageChanged: (newPage) {
@@ -92,7 +94,7 @@ class _ScreenshareGridLayoutState extends State<ScreenshareGridLayout> {
                       ///The number of dots is equal to [number of screens being shared]
                       ///The active dot is the current page
                       ///The inactive dots are the pages other than the current page
-                      if (widget.screenshareCount > 1)
+                      if (!isFullScreen && widget.screenshareCount > 1)
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Selector<MeetingStore, int>(
