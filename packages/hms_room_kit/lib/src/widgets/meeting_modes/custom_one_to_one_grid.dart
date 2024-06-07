@@ -54,7 +54,8 @@ class _CustomOneToOneGridState extends State<CustomOneToOneGrid> {
           int pageCount =
               (numberOfPeers ~/ 6) + (numberOfPeers % 6 == 0 ? 0 : 1);
 
-          var screenshareStore = WhiteboardScreenshareStore();
+          var screenshareStore = WhiteboardScreenshareStore(
+              meetingStore: context.read<MeetingStore>());
 
           ///If the remote peer is sharing screen then we render the [ScreenshareGridLayout] with inset tile
           ///Else we render the normal layout with inset tile
