@@ -422,7 +422,10 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       optionText: meetingStore.isWhiteboardEnabled
                           ? "Close Whiteboard"
                           : "Open Whiteboard"),
-                if (AppDebugConfig.isVirtualBackgroundEnabled)
+                if (AppDebugConfig.isVirtualBackgroundEnabled &&
+                    (meetingStore.localPeer?.role.publishSettings?.allowed
+                            .contains("video") ??
+                        false))
                   MoreOptionItem(
                       onTap: () async {
                         Navigator.pop(context);
