@@ -26,7 +26,7 @@ class  HMSPermissionExtension {
         ]
     }
 
-    static func getMapFromHMSWhiteboardPermission(hmsWhiteboardPermission: HMSWhiteboardPermission?) -> [String: Any?]? {
+    static func getMapFromHMSWhiteboardPermission(hmsWhiteboardPermission: HMSWhiteboardPermissions?) -> [String: Any?]? {
 
         guard let hmsWhiteboardPermission = hmsWhiteboardPermission
         else {
