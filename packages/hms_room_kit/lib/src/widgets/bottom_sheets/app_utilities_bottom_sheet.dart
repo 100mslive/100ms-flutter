@@ -422,41 +422,43 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       optionText: meetingStore.isWhiteboardEnabled
                           ? "Close Whiteboard"
                           : "Open Whiteboard"),
-                if (AppDebugConfig.isVirtualBackgroundEnabled &&
-                    (meetingStore.localPeer?.role.publishSettings?.allowed
-                            .contains("video") ??
-                        false))
-                  MoreOptionItem(
-                      onTap: () async {
-                        Navigator.pop(context);
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: HMSThemeColors.surfaceDim,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16)),
-                          ),
-                          context: context,
-                          builder: (ctx) => ChangeNotifierProvider.value(
-                              value: meetingStore,
-                              child: Padding(
-                                  padding: EdgeInsets.only(
-                                      bottom:
-                                          MediaQuery.of(ctx).viewInsets.bottom),
-                                  child: VideoEffectsBottomSheet())),
-                        );
-                      },
-                      isActive: false,
-                      optionIcon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/video_effects.svg",
-                        height: 20,
-                        width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
-                      ),
-                      optionText: "Virtual Background"),
+                
+                ///Virtual background is not supported out of the box in prebuilt as of now
+                // if (AppDebugConfig.isVirtualBackgroundEnabled &&
+                //     (meetingStore.localPeer?.role.publishSettings?.allowed
+                //             .contains("video") ??
+                //         false))
+                //   MoreOptionItem(
+                //       onTap: () async {
+                //         Navigator.pop(context);
+                //         showModalBottomSheet(
+                //           isScrollControlled: true,
+                //           backgroundColor: HMSThemeColors.surfaceDim,
+                //           shape: const RoundedRectangleBorder(
+                //             borderRadius: BorderRadius.only(
+                //                 topLeft: Radius.circular(16),
+                //                 topRight: Radius.circular(16)),
+                //           ),
+                //           context: context,
+                //           builder: (ctx) => ChangeNotifierProvider.value(
+                //               value: meetingStore,
+                //               child: Padding(
+                //                   padding: EdgeInsets.only(
+                //                       bottom:
+                //                           MediaQuery.of(ctx).viewInsets.bottom),
+                //                   child: VideoEffectsBottomSheet())),
+                //         );
+                //       },
+                //       isActive: false,
+                //       optionIcon: SvgPicture.asset(
+                //         "packages/hms_room_kit/lib/src/assets/icons/video_effects.svg",
+                //         height: 20,
+                //         width: 20,
+                //         colorFilter: ColorFilter.mode(
+                //             HMSThemeColors.onSurfaceHighEmphasis,
+                //             BlendMode.srcIn),
+                //       ),
+                //       optionText: "Virtual Background"),
               ],
             ),
           ],
