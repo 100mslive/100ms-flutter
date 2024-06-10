@@ -5,11 +5,18 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+# 1.10.3 - 2024-06-11
+
+| Package                                | Version                                                                                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| hms_room_kit                | 1.1.3  |
+| hmssdk_flutter              | 1.10.3 |
+
 # 1.10.2 - 2024-05-15
 
 | Package                                | Version                                                                                                                                  |
 | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| hms_room_kit                | 1.1.2 |
+| hms_room_kit                | 1.1.2  |
 | hmssdk_flutter              | 1.10.2 |
 
 ### ✨ Added
