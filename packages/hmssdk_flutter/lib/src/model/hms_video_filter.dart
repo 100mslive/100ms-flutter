@@ -9,7 +9,6 @@ import 'package:hmssdk_flutter/src/service/platform_service.dart';
 ///This is an internal library class and should not be used by the user
 ///To use the video filters, use the [HMSVideoPlugin] package
 abstract class HMSVideoFilter {
-
   ///[enable] enables virtual background with the given image
   ///
   ///**parameters
