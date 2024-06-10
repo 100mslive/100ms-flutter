@@ -422,7 +422,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       optionText: meetingStore.isWhiteboardEnabled
                           ? "Close Whiteboard"
                           : "Open Whiteboard"),
-                
+
                 ///Virtual background is not supported out of the box in prebuilt as of now
                 // if (AppDebugConfig.isVirtualBackgroundEnabled &&
                 //     (meetingStore.localPeer?.role.publishSettings?.allowed
