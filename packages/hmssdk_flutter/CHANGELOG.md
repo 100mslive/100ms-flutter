@@ -12,6 +12,10 @@
 | hms_room_kit                | 1.1.3  |
 | hmssdk_flutter              | 1.10.3 |
 
+Uses Android SDK 2.9.59 & iOS SDK 1.12.0
+
+**Full Changelog**: [1.10.2...1.10.3](https://github.com/100mslive/100ms-flutter/compare/1.10.2...1.10.3)
+
 # 1.10.2 - 2024-05-15
 
 | Package                                | Version                                                                                                                                  |
