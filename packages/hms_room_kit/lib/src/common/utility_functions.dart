@@ -416,11 +416,12 @@ class Utilities {
             audioMode: audioMode,
             enableNoiseCancellation: isNoiseCancellationEnabled),
         videoTrackSetting: HMSVideoTrackSetting(
-          trackInitialState: joinWithMutedVideo
-              ? HMSTrackInitState.MUTED
-              : HMSTrackInitState.UNMUTED,
-          forceSoftwareDecoder: isSoftwareDecoderDisabled,
-        ));
+            trackInitialState: joinWithMutedVideo
+                ? HMSTrackInitState.MUTED
+                : HMSTrackInitState.UNMUTED,
+            forceSoftwareDecoder: isSoftwareDecoderDisabled,
+            isVirtualBackgroundEnabled:
+                AppDebugConfig.isVirtualBackgroundEnabled));
   }
 
   static String getTimedMetadataEmojiFromId(String emojiId) {

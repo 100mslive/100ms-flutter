@@ -239,6 +239,14 @@ enum PlatformMethod {
   stopWhiteboard,
   addWhiteboardUpdateListener,
   removeWhiteboardUpdateListener,
+
+  ///Virtual background methods
+  enableVirtualBackground,
+  disableVirtualBackground,
+  changeVirtualBackground,
+  enableBlurBackground,
+  disableBlurBackground,
+  isVirtualBackgroundSupported
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -604,6 +612,20 @@ extension PlatformMethodValues on PlatformMethod {
       case PlatformMethod.removeWhiteboardUpdateListener:
         return "remove_whiteboard_update_listener";
 
+      ///Virtual background methods
+      case PlatformMethod.enableVirtualBackground:
+        return "enable_virtual_background";
+      case PlatformMethod.disableVirtualBackground:
+        return "disable_virtual_background";
+      case PlatformMethod.changeVirtualBackground:
+        return "change_virtual_background";
+      case PlatformMethod.enableBlurBackground:
+        return "enable_blur_background";
+      case PlatformMethod.disableBlurBackground:
+        return "disable_blur_background";
+      case PlatformMethod.isVirtualBackgroundSupported:
+        return "is_virtual_background_supported";
+
       default:
         return 'unknown';
     }
@@ -968,6 +990,20 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.addWhiteboardUpdateListener;
       case "remove_whiteboard_update_listener":
         return PlatformMethod.removeWhiteboardUpdateListener;
+
+      ///Virtual Background Methods
+      case "enable_virtual_background":
+        return PlatformMethod.enableVirtualBackground;
+      case "disable_virtual_background":
+        return PlatformMethod.disableVirtualBackground;
+      case "change_virtual_background":
+        return PlatformMethod.changeVirtualBackground;
+      case "enable_blur_background":
+        return PlatformMethod.enableBlurBackground;
+      case "disable_blur_background":
+        return PlatformMethod.disableBlurBackground;
+      case "is_virtual_background_supported":
+        return PlatformMethod.isVirtualBackgroundSupported;
 
       default:
         return PlatformMethod.unknown;

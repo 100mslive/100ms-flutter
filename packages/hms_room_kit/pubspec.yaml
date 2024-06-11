@@ -36,6 +36,7 @@ dependencies:
   dots_indicator: ^3.0.0
   webview_flutter: ^4.5.0
   pointer_interceptor: ^0.10.1
+  image_picker: ^1.0.8
 
 dev_dependencies:
   flutter_test:
