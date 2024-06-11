@@ -18,7 +18,7 @@
 
   Hand Raise feature can now be enabled or disabled from the dashboard prebuilt customiser.
 
-Uses `hmssdk_flutter` package version 1.10.3  
+Uses `hmssdk_flutter` package version 1.10.3
 
 ## 1.1.2 - 2024-05-15
 
