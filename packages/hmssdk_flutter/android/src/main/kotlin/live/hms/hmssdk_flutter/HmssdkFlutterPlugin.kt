@@ -129,7 +129,7 @@ class HmssdkFlutterPlugin :
             this.sessionStoreChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Session Store channel not found")
             this.hlsPlayerChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "HLS Player channel not found")
             this.pollsEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "polls events channel not found")
-            this.whiteboardEventChannel?.setStreamHandler(this)?:Log.e("Channel Error", "whiteboard events channel not found")
+            this.whiteboardEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "whiteboard events channel not found")
             this.hmsVideoFactory = HMSVideoViewFactory(this)
             this.hmsHLSPlayerFactory = HMSHLSPlayerFactory(this)
 
@@ -260,7 +260,7 @@ class HmssdkFlutterPlugin :
             "remove_key_change_listener" -> {
                 removeKeyChangeListener(call, result)
             }
-            "start_hls_player", "stop_hls_player", "pause_hls_player", "resume_hls_player", "seek_to_live_position", "seek_forward", "seek_backward", "set_hls_player_volume", "add_hls_stats_listener", "remove_hls_stats_listener", "are_closed_captions_supported", "enable_closed_captions", "disable_closed_captions", "get_stream_properties","get_hls_layers", "set_hls_layer", "get_current_hls_layer" -> {
+            "start_hls_player", "stop_hls_player", "pause_hls_player", "resume_hls_player", "seek_to_live_position", "seek_forward", "seek_backward", "set_hls_player_volume", "add_hls_stats_listener", "remove_hls_stats_listener", "are_closed_captions_supported", "enable_closed_captions", "disable_closed_captions", "get_stream_properties", "get_hls_layers", "set_hls_layer", "get_current_hls_layer" -> {
                 HMSHLSPlayerAction.hlsPlayerAction(call, result)
             }
             "toggle_always_screen_on" -> {
@@ -302,7 +302,7 @@ class HmssdkFlutterPlugin :
             }
 
             "start_whiteboard", "stop_whiteboard", "add_whiteboard_update_listener", "remove_whiteboard_update_listener" -> {
-                whiteboardActions(call,result)
+                whiteboardActions(call, result)
             }
 
             else -> {
@@ -486,16 +486,16 @@ class HmssdkFlutterPlugin :
 
     private fun whiteboardActions(
         call: MethodCall,
-        result: Result
-    ){
-        when(call.method){
+        result: Result,
+    ) {
+        when (call.method) {
             "add_whiteboard_update_listener" ->
                 hmssdk?.getHmsInteractivityCenter()?.setWhiteboardUpdateListener(whiteboardListener)
             "remove_whiteboard_update_listener" ->
                 hmssdk?.getHmsInteractivityCenter()?.removeWhiteboardUpdateListener(whiteboardListener)
             else ->
                 hmssdk?.let {
-                    HMSWhiteboardAction.whiteboardActions(call,result,it)
+                    HMSWhiteboardAction.whiteboardActions(call, result, it)
                 }
         }
     }
@@ -671,7 +671,7 @@ class HmssdkFlutterPlugin :
             this.hlsPlayerSink = events
         } else if (nameOfEventSink == "polls") {
             this.pollsSink = events
-        } else if(nameOfEventSink == "whiteboard") {
+        } else if (nameOfEventSink == "whiteboard") {
             this.whiteboardSink = events
         }
     }
@@ -1204,7 +1204,7 @@ class HmssdkFlutterPlugin :
         isRoomAudioUnmutedLocally = isRoomAudioUnmuted
     }
 
-    fun build(
+    private fun build(
         activity: Activity,
         call: MethodCall,
         result: Result,
@@ -1549,7 +1549,10 @@ class HmssdkFlutterPlugin :
                 }
             }
 
-            override  fun peerListUpdated(addedPeers: ArrayList<HMSPeer>?, removedPeers: ArrayList<HMSPeer>?){
+            override fun peerListUpdated(
+                addedPeers: ArrayList<HMSPeer>?,
+                removedPeers: ArrayList<HMSPeer>?,
+            ) {
                 val args = HashMap<String, Any?>()
                 args["event_name"] = "on_peer_list_update"
                 val parameters = HashMap<String, Any?>()
@@ -2225,12 +2228,11 @@ class HmssdkFlutterPlugin :
         }
 
     private val whiteboardListener =
-        object: HMSWhiteboardUpdateListener{
+        object : HMSWhiteboardUpdateListener {
             override fun onUpdate(hmsWhiteboardUpdate: HMSWhiteboardUpdate) {
-                when(hmsWhiteboardUpdate){
+                when (hmsWhiteboardUpdate) {
                     is HMSWhiteboardUpdate.Start -> {
-
-                        val args = HashMap<String,Any?>()
+                        val args = HashMap<String, Any?>()
 
                         args["event_name"] = "on_whiteboard_start"
 
@@ -2244,7 +2246,7 @@ class HmssdkFlutterPlugin :
                     }
                     is HMSWhiteboardUpdate.Stop ->
                         {
-                            val args = HashMap<String,Any?>()
+                            val args = HashMap<String, Any?>()
 
                             args["event_name"] = "on_whiteboard_stop"
 
@@ -2258,6 +2260,5 @@ class HmssdkFlutterPlugin :
                         }
                 }
             }
-
         }
 }

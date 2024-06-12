@@ -24,8 +24,8 @@ class PermissionParamsExtension {
             return args
         }
 
-        private fun getMapFromHMSWhiteboardPermission(hmsWhiteboardPermission: HMSWhiteBoardPermission):HashMap<String,Any?>{
-            val permission = HashMap<String,Any?>()
+        private fun getMapFromHMSWhiteboardPermission(hmsWhiteboardPermission: HMSWhiteBoardPermission): HashMap<String, Any?> {
+            val permission = HashMap<String, Any?>()
 
             permission["admin"] = hmsWhiteboardPermission.admin
             permission["write"] = hmsWhiteboardPermission.write

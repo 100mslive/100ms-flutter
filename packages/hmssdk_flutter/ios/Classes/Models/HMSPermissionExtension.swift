@@ -9,7 +9,7 @@ import Foundation
 import HMSSDK
 
 class  HMSPermissionExtension {
-    
+
     static func toDictionary(_ permission: HMSPermissions) -> [String: Any?] {
         [
             "browser_recording": permission.browserRecording ?? false,
@@ -25,21 +25,21 @@ class  HMSPermissionExtension {
             "whiteboard_permission": getMapFromHMSWhiteboardPermission(hmsWhiteboardPermission: permission.whiteboard)
         ]
     }
-    
-    static func getMapFromHMSWhiteboardPermission(hmsWhiteboardPermission: HMSWhiteboardPermission?) -> [String:Any?]?{
-        
+
+    static func getMapFromHMSWhiteboardPermission(hmsWhiteboardPermission: HMSWhiteboardPermissions?) -> [String: Any?]? {
+
         guard let hmsWhiteboardPermission = hmsWhiteboardPermission
-        else{
+        else {
             return nil
         }
-        
-        var permission = [String:Any?]()
-        
+
+        var permission = [String: Any?]()
+
         permission["admin"] = hmsWhiteboardPermission.admin
         permission["write"] = hmsWhiteboardPermission.write
         permission["read"] = hmsWhiteboardPermission.read
-        
+
         return permission
     }
-        
+
 }

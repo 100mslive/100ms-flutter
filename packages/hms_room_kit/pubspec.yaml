@@ -1,6 +1,6 @@
 name: hms_room_kit
 description: 100ms Room Kit provides simple & easy to use UI components to build Live Streaming & Video Conferencing experiences in your apps.
-version: 1.1.2
+version: 1.1.3
 homepage: https://www.100ms.live/
 repository: https://github.com/100mslive/100ms-flutter
 issue_tracker: https://github.com/100mslive/100ms-flutter/issues
@@ -14,7 +14,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  hmssdk_flutter: 1.10.2
+  hmssdk_flutter: 1.10.3
   intl: ^0.18.0
   permission_handler: ^11.0.0
   provider: ^6.0.5
@@ -35,6 +35,7 @@ dependencies:
   dots_indicator: ^3.0.0
   webview_flutter: ^4.5.0
   pointer_interceptor: ^0.10.1
+  image_picker: ^1.0.8
 
 dev_dependencies:
   flutter_test:

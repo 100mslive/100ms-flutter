@@ -9,6 +9,9 @@ import Foundation
 import HMSSDK
 
 class HMSTrackSettingsExtension {
+
+    static var videoSettings: HMSVideoTrackSettings?
+
     static func toDictionary(_ hmssdk: HMSSDK, _ audioMixerSourceMap: [String: HMSAudioNode]?) -> [String: Any] {
 
         let hmsTrackSettings = hmssdk.trackSettings
@@ -57,7 +60,10 @@ class HMSTrackSettingsExtension {
         return dict
     }
 
-    static func setTrackSetting(_ settingsDict: [AnyHashable: Any], _ audioMixerSourceMap: [String: HMSAudioNode], _ result: @escaping FlutterResult) -> HMSTrackSettings? {
+    static func setTrackSetting(_ settingsDict: [AnyHashable: Any],
+                                _ audioMixerSourceMap: [String: HMSAudioNode],
+                                _ vbConformer: HMSVirtualBackgroundActionPluginProtocol,
+                                _ result: @escaping FlutterResult) -> HMSTrackSettings? {
 
         var audioSettings: HMSAudioTrackSettings?
 
@@ -83,7 +89,7 @@ class HMSTrackSettingsExtension {
                         if let mode = getAudioMode(from: audioSettingsDict["audio_mode"] as? String) {
                             builder.audioMode = mode
                         }
-                        
+
                         /*
                          Here we set the noise cancellation controller based on the parameter passed in audio track
                          settings
@@ -130,10 +136,22 @@ class HMSTrackSettingsExtension {
             }
         }
 
-        var videoSettings: HMSVideoTrackSettings?
         if let videoSettingsDict = settingsDict["video_track_setting"] as? [AnyHashable: Any] {
             if let cameraFacing = videoSettingsDict["camera_facing"] as? String,
+               let isVirtualBackgroundEnabled = videoSettingsDict["is_virtual_background_enabled"] as? Bool,
                let initialMuteState = videoSettingsDict["track_initial_state"] as? String {
+
+                var videoPlugins: [HMSVideoPlugin]?
+                if isVirtualBackgroundEnabled {
+                    if #available(iOS 15.0, *) {
+                        if let virtualbackground = vbConformer.plugin {
+                            videoPlugins = []
+                            videoPlugins?.append(virtualbackground)
+                        }
+                    } else {
+                        HMSErrorLogger.logError("\(#function)", "Virtual Background is not supported below iOS 15", "Plugin not supported error")
+                    }
+                }
                 videoSettings = HMSVideoTrackSettings(codec: HMSCodec.VP8,
                                                       resolution: .init(width: 320, height: 180),
                                                       maxBitrate: 32,
@@ -142,8 +160,7 @@ class HMSTrackSettingsExtension {
                                                       simulcastSettings: nil,
                                                       trackDescription: "track_description",
                                                       initialMuteState: getinitialMuteState(from: initialMuteState),
-                                                      videoPlugins: nil)
-
+                                                      videoPlugins: videoPlugins)
             }
         }
 

@@ -6,6 +6,7 @@ import 'dart:developer';
 import 'dart:io';
 
 //Package imports
+// import 'package:hms_video_plugin/hms_video_plugin.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -226,6 +227,9 @@ class MeetingStore extends ChangeNotifier
   int currentPage = 0;
 
   int currentScreenSharePage = 0;
+
+  ///This stores whether whiteboard or screenshare is in full screen mode
+  bool isScreenshareWhiteboardFullScreen = false;
 
   ///PeerList iterators
   ///This is a map with key as role and value as the iterator for that role
@@ -1351,6 +1355,17 @@ class MeetingStore extends ChangeNotifier
     // clearPIPState();
     removeListeners();
     toggleAlwaysScreenOn();
+
+    ///********************VB Code *************************************** */
+    // if (AppDebugConfig.isBlurEnabled) {
+    //   HMSVideoPlugin.disableBlur();
+    //   AppDebugConfig.isBlurEnabled = false;
+    // }
+    // if (AppDebugConfig.isVBEnabled) {
+    //   HMSVideoPlugin.disable();
+    //   AppDebugConfig.isVBEnabled = false;
+    // }
+    ///******************************************************************* */
     _hmsSDKInteractor.destroy();
     _hmsSessionStore = null;
     peerTracks.clear();
@@ -1752,10 +1767,17 @@ class MeetingStore extends ChangeNotifier
             int peerIndex = peerTracks.indexWhere(
                 (element) => element.uid == peer.peerId + track.trackId);
             if (peerIndex != -1) {
-              if ((screenShareCount - 1) == currentScreenSharePage) {
+              ///This is done to handle the case when the screen share is stopped
+              ///and the user is on the last page of the screen share
+              ///we need to move the user to the previous page
+              if (((screenShareCount - 1) == currentScreenSharePage) &&
+                  currentScreenSharePage > 0) {
                 currentScreenSharePage--;
               }
               screenShareCount--;
+              if (screenShareCount == 0) {
+                isScreenshareWhiteboardFullScreen = false;
+              }
               peerTracks.removeAt(peerIndex);
               notifyListeners();
               // changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);

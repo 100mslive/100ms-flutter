@@ -18,7 +18,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var hlsPlayerChannel: FlutterEventChannel?
     var pollsEventChannel: FlutterEventChannel?
     var whiteboardEventChannel: FlutterEventChannel?
-    
+
     var eventSink: FlutterEventSink?
     var previewSink: FlutterEventSink?
     var logsSink: FlutterEventSink?
@@ -45,6 +45,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var hlsStreamUrl: String?
 
     private var isRoomAudioUnmutedLocally = true
+    
 
     // MARK: - Flutter Setup
 
@@ -60,7 +61,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let hlsChannel = FlutterEventChannel(name: "hls_player_channel", binaryMessenger: registrar.messenger())
         let pollsChannel = FlutterEventChannel(name: "polls_event_channel", binaryMessenger: registrar.messenger())
         let whiteboardChannel = FlutterEventChannel(name: "whiteboard_event_channel", binaryMessenger: registrar.messenger())
-        
+
         let instance = SwiftHmssdkFlutterPlugin(channel: channel,
                                                 meetingEventChannel: eventChannel,
                                                 previewEventChannel: previewChannel,
@@ -339,12 +340,19 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             HMSNoiseCancellationController.noiseCancellationActions(call, result)
 
         case "start_whiteboard", "stop_whiteboard", "add_whiteboard_update_listener", "remove_whiteboard_update_listener":
-            whiteboardActions(call,result)
-            
+            whiteboardActions(call, result)
+
+        case "enable_virtual_background", "disable_virtual_background", "enable_blur_background", "disable_blur_background", "change_virtual_background", "is_virtual_background_supported":
+            vbAction.performActions(call, result)
+
         default:
             result(FlutterMethodNotImplemented)
         }
     }
+
+    private lazy var vbAction: HMSVirtualBackgroundAction = {
+       HMSVirtualBackgroundAction()
+    }()
 
     // MARK: - Build Actions
     private func buildActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
@@ -482,16 +490,16 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         }
     }
 
-    private func whiteboardActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
-        switch call.method{
+    private func whiteboardActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        switch call.method {
         case "add_whiteboard_update_listener":
-            
+
             let whiteboardListener: HMSInteractivityCenter.HMSWhiteboardUpdateListener = { [weak self] hmsWhiteboard, hmsWhiteBoardUpdateType in
-                
+
                 guard let self = self else {return}
-                
-                switch hmsWhiteBoardUpdateType{
-                    
+
+                switch hmsWhiteBoardUpdateType {
+
                 case .started:
                     let args = [
                         "event_name": "on_whiteboard_start",
@@ -845,7 +853,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             var trackSettings: HMSTrackSettings?
             if let settingsDict = arguments?["hms_track_setting"] as? [AnyHashable: Any] {
                 self.audioMixerSourceInit(settingsDict, sdk, result)
-                trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict, self.audioMixerSourceMap, result)
+                trackSettings = HMSTrackSettingsExtension.setTrackSetting(settingsDict, self.audioMixerSourceMap, vbAction, result)
             }
 
             if let settings = trackSettings {
@@ -1330,7 +1338,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         previewEnded = false
         previewSink?(data)
     }
-    
+
     var previewEnded = false
     public func on(join room: HMSRoom) {
         previewEnded = true
@@ -1551,9 +1559,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         let data = ["event_name": "on_peer_list_update", "data": parameters] as [String: Any]
 
-        if(previewEnded){
+        if previewEnded {
             eventSink?(data)
-        }else{
+        } else {
             previewSink?(data)
         }
     }

@@ -27,6 +27,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
   HMSAudioMode currentAudioMode = HMSAudioMode.VOICE;
   bool isStreamingFlow = true;
   bool nameChangeOnPreview = true;
+  bool isVirtualBackgroundEnabled = false;
 
   var versions = {};
 
@@ -70,6 +71,10 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     nameChangeOnPreview =
         await Utilities.getBoolData(key: 'name-change-on-preview') ?? true;
 
+    isVirtualBackgroundEnabled =
+        await Utilities.getBoolData(key: 'is_virtual_background_enabled') ??
+            false;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
     });
@@ -86,6 +91,7 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     AppDebugConfig.skipPreview = skipPreview;
     AppDebugConfig.isDebugMode = isDebugMode;
     AppDebugConfig.nameChangeOnPreview = true;
+    AppDebugConfig.isVirtualBackgroundEnabled = isVirtualBackgroundEnabled;
   }
 
   Future<void> _launchUrl() async {
@@ -420,6 +426,36 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
                               Utilities.saveBoolData(
                                   key: 'is-auto-simulcast', value: value),
                               AppDebugConfig.isAutoSimulcast = value,
+                              setState(() {})
+                            }),
+                  ),
+                  ListTile(
+                    horizontalTitleGap: 2,
+                    enabled: true,
+                    contentPadding: EdgeInsets.zero,
+                    leading: SvgPicture.asset(
+                      'packages/hms_room_kit/lib/src/assets/icons/local_capture.svg',
+                      colorFilter:
+                          ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
+                    ),
+                    title: Text(
+                      "Enable Virtual Background",
+                      semanticsLabel: "fl_virtual_background",
+                      style: HMSTextStyle.setTextStyle(
+                          fontSize: 14,
+                          color: themeDefaultColor,
+                          letterSpacing: 0.25,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    trailing: CupertinoSwitch(
+                        activeColor: hmsdefaultColor,
+                        value: isVirtualBackgroundEnabled,
+                        onChanged: (value) => {
+                              isVirtualBackgroundEnabled = value,
+                              Utilities.saveBoolData(
+                                  key: 'is_virtual_background_enabled',
+                                  value: value),
+                              AppDebugConfig.isVirtualBackgroundEnabled = value,
                               setState(() {})
                             }),
                   ),

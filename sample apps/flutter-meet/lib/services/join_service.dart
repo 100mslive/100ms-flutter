@@ -5,8 +5,8 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 class JoinService {
   static Future<bool> join(HMSSDK hmssdk) async {
-    String? roomCode = getCode(
-        "https://mobilevideoconference.app.100ms.live/meeting/rky-hzlr-ybr");
+    String? roomCode =
+        getCode("https://fluttersampleapp.app.100ms.live/meeting/zhr-seow-tuj");
 
     if (roomCode == null) return false;
     dynamic authToken = await hmssdk.getAuthTokenByRoomCode(roomCode: roomCode);

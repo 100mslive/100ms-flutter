@@ -263,4 +263,11 @@ class _PreviewPageState extends State<PreviewPage>
       NavigationService.instance.pushNamedIfNotCurrent(AppRoute.homePage);
     }
   }
+
+  @override
+  void onPeerListUpdate(
+      {required List<HMSPeer> addedPeers,
+      required List<HMSPeer> removedPeers}) {
+    // TODO: implement onPeerListUpdate
+  }
 }

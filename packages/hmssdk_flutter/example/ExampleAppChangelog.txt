@@ -1,15 +1,27 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 
-- Add Quality Selector sheet in HLS Player
-https://100ms.atlassian.net/browse/FLUT-297
+- Implement Background Blur effects
+https://100ms.atlassian.net/browse/FLUT-318
 
-- Whiteboard Support in flutter
-https://100ms.atlassian.net/browse/FLUT-298
+- Expose SDK APIs for Virtual Backgrounds
+https://100ms.atlassian.net/browse/FLUT-319
 
-- Add `peerListUpdated` callback shows the peers in the room
-https://100ms.atlassian.net/browse/FLUT-284
+- Create separate package on pub for Virtual Background
+https://100ms.atlassian.net/browse/FLUT-317
 
-Room Kit: 1.1.2
-Core SDK: 1.10.2
-Android SDK: 2.9.56
-iOS SDK: 1.10.0
+- Hand Raise as a Layout Config
+https://100ms.atlassian.net/browse/FLUT-275
+
+- Empty screen scenarios on Prebuilt
+https://100ms.atlassian.net/browse/FLUT-304
+
+- Resolve issue where VRT is not able to subscribe to host
+https://100ms.atlassian.net/browse/FLUT-329
+
+- Remove use of Popup in screen share while in full screen
+https://100ms.atlassian.net/browse/FLUT-326
+
+Room Kit: 1.1.3
+Core SDK: 1.10.3
+Android SDK: 2.9.59
+iOS SDK: 1.12.0

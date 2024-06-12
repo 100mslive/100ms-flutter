@@ -20,9 +20,11 @@ class VideoWidget extends StatelessWidget {
         });
       },
       onFocusLost: () {
-        roomController.peerTrackList[index].update((val) {
-          val?.isOffScreen = true;
-        });
+        if (roomController.peerTrackList.length > index) {
+          roomController.peerTrackList[index].update((val) {
+            val?.isOffScreen = true;
+          });
+        }
       },
       child: Obx(() {
         var user = roomController.peerTrackList[index];

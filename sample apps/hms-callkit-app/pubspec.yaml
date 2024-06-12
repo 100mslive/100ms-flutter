@@ -39,7 +39,7 @@ dependencies:
   firebase_messaging_platform_interface: 4.5.1
   uuid: 3.0.6
   http: 0.13.4
-  hmssdk_flutter: 1.6.0
+  hmssdk_flutter: 1.10.2
   permission_handler: 10.2.0
   flutter_callkit_incoming: 2.0.0
   cloud_functions: 4.3.1

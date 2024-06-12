@@ -4,7 +4,6 @@ library;
 import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hms_room_kit/src/widgets/bottom_sheets/poll_and_quiz_bottom_sheet.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +17,7 @@ import 'package:hms_room_kit/src/widgets/bottom_sheets/overlay_participants_bott
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/tab_widgets/chat_participants_tab_bar.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/poll_and_quiz_bottom_sheet.dart';
 
 ///This renders the app utilities bottom sheet for webRTC or broadcaster
 ///It contains the participants, screen share, brb, raise hand and recording
@@ -213,24 +213,24 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                           meetingStore.isBRB ? "I'm Back" : "Be Right Back"),
 
                 ///This renders the raise hand option
-
-                MoreOptionItem(
-                    onTap: () async {
-                      context.read<MeetingStore>().toggleLocalPeerHandRaise();
-                      Navigator.pop(context);
-                    },
-                    isActive: meetingStore.isRaisedHand,
-                    optionIcon: SvgPicture.asset(
-                      "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
-                      height: 20,
-                      width: 20,
-                      colorFilter: ColorFilter.mode(
-                          HMSThemeColors.onSurfaceHighEmphasis,
-                          BlendMode.srcIn),
-                    ),
-                    optionText: meetingStore.isRaisedHand
-                        ? "Lower Hand"
-                        : "Raise Hand"),
+                if (HMSRoomLayout.isHandRaiseEnabled)
+                  MoreOptionItem(
+                      onTap: () async {
+                        context.read<MeetingStore>().toggleLocalPeerHandRaise();
+                        Navigator.pop(context);
+                      },
+                      isActive: meetingStore.isRaisedHand,
+                      optionIcon: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
+                        height: 20,
+                        width: 20,
+                        colorFilter: ColorFilter.mode(
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
+                      ),
+                      optionText: meetingStore.isRaisedHand
+                          ? "Lower Hand"
+                          : "Raise Hand"),
 
                 ///This renders the polls and quizzes option
                 if ((meetingStore.localPeer?.role.permissions.pollRead ??
@@ -380,6 +380,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                   : "Record",
                         ),
                 if (meetingStore.isNoiseCancellationAvailable &&
+                    meetingStore.localPeer?.audioTrack != null &&
                     meetingStore.isMicOn)
                   MoreOptionItem(
                       onTap: () async {
@@ -420,6 +421,43 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       optionText: meetingStore.isWhiteboardEnabled
                           ? "Close Whiteboard"
                           : "Open Whiteboard"),
+
+                ///Virtual background is not supported out of the box in prebuilt as of now
+                // if (AppDebugConfig.isVirtualBackgroundEnabled &&
+                //     (meetingStore.localPeer?.role.publishSettings?.allowed
+                //             .contains("video") ??
+                //         false))
+                //   MoreOptionItem(
+                //       onTap: () async {
+                //         Navigator.pop(context);
+                //         showModalBottomSheet(
+                //           isScrollControlled: true,
+                //           backgroundColor: HMSThemeColors.surfaceDim,
+                //           shape: const RoundedRectangleBorder(
+                //             borderRadius: BorderRadius.only(
+                //                 topLeft: Radius.circular(16),
+                //                 topRight: Radius.circular(16)),
+                //           ),
+                //           context: context,
+                //           builder: (ctx) => ChangeNotifierProvider.value(
+                //               value: meetingStore,
+                //               child: Padding(
+                //                   padding: EdgeInsets.only(
+                //                       bottom:
+                //                           MediaQuery.of(ctx).viewInsets.bottom),
+                //                   child: VideoEffectsBottomSheet())),
+                //         );
+                //       },
+                //       isActive: false,
+                //       optionIcon: SvgPicture.asset(
+                //         "packages/hms_room_kit/lib/src/assets/icons/video_effects.svg",
+                //         height: 20,
+                //         width: 20,
+                //         colorFilter: ColorFilter.mode(
+                //             HMSThemeColors.onSurfaceHighEmphasis,
+                //             BlendMode.srcIn),
+                //       ),
+                //       optionText: "Virtual Background"),
               ],
             ),
           ],

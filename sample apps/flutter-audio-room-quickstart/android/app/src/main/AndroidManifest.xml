@@ -1,5 +1,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flutter_audio_room_quickstart">
+
+
+<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+
+<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+
+<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
+<uses-permission android:name="android.permission.INTERNET"/>
+
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
    <application
         android:label="flutter_audio_room_quickstart"
         android:name="${applicationName}"

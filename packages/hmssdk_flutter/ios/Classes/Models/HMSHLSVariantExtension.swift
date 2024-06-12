@@ -27,16 +27,16 @@ class HMSHLSVariantExtension {
         if let startedAt = hmshlsVariant.startedAt {
             dict["started_at"] =  Int(startedAt.timeIntervalSince1970 * 1000)
         }
-        
+
         if let playlistType = hmshlsVariant.playlistType {
             dict["playlist_type"] = getStringFromHMSHLSPlaylistType(playlistType: playlistType)
         }
 
         return dict
     }
-    
-    private static func getStringFromHMSHLSPlaylistType(playlistType: HMSHLSPlaylistType) -> String{
-        switch playlistType{
+
+    private static func getStringFromHMSHLSPlaylistType(playlistType: HMSHLSPlaylistType) -> String {
+        switch playlistType {
             case .dvr:
                 return "dvr"
             case .noDVR:
