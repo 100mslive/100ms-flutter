@@ -1,25 +1,7 @@
 Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
 
-- Implement Background Blur effects
-https://100ms.atlassian.net/browse/FLUT-318
-
-- Expose SDK APIs for Virtual Backgrounds
-https://100ms.atlassian.net/browse/FLUT-319
-
-- Create separate package on pub for Virtual Background
-https://100ms.atlassian.net/browse/FLUT-317
-
-- Hand Raise as a Layout Config
-https://100ms.atlassian.net/browse/FLUT-275
-
-- Empty screen scenarios on Prebuilt
-https://100ms.atlassian.net/browse/FLUT-304
-
-- Resolve issue where VRT is not able to subscribe to host
-https://100ms.atlassian.net/browse/FLUT-329
-
-- Remove use of Popup in screen share while in full screen
-https://100ms.atlassian.net/browse/FLUT-326
+- Move all the permissions from app to sdk
+https://100ms.atlassian.net/browse/FLUT-253
 
 Room Kit: 1.1.3
 Core SDK: 1.10.3
