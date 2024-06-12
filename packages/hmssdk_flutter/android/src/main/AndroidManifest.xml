@@ -9,12 +9,12 @@
 
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
 
-    <!--Required for android 14 and above -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+    <!-Required for android 14 and above -->
+    <!-- <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" /> -->
 
     <!-- This is required if the application uses foreground service for android 14 and above-->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" /> -->
+    <!-- <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />  -->
     
     <application>
         <activity android:name=".SecondActivity"></activity>
