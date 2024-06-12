@@ -14,13 +14,10 @@ class HMSPollAction {
         switch call.method {
         case "quick_start_poll":
             quickStartPoll(call, result, hmsSDK)
-            break
-        case "add_single_choice_poll_response":
+            case "add_single_choice_poll_response":
             addSingleChoicePollResponse(call, result, hmsSDK, polls)
-            break
-        case "add_multi_choice_poll_response":
+            case "add_multi_choice_poll_response":
             addMultiChoicePollResponse(call, result, hmsSDK, polls)
-            break
         case "stop_poll":
             stopPoll(call, result, hmsSDK, polls)
         case "fetch_leaderboard":

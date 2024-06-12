@@ -178,12 +178,12 @@ class _PreviewForRoleBottomSheetState extends State<PreviewForRoleBottomSheet> {
                 ///We show the join now and decline buttons
                 ElevatedButton(
                     style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(
+                        shadowColor: WidgetStateProperty.all(
                             HMSThemeColors.surfaceDim),
-                        backgroundColor: MaterialStateProperty.all(
+                        backgroundColor: WidgetStateProperty.all(
                             HMSThemeColors.primaryDefault),
                         shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                            WidgetStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ))),
@@ -208,12 +208,12 @@ class _PreviewForRoleBottomSheetState extends State<PreviewForRoleBottomSheet> {
                 ),
                 ElevatedButton(
                     style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all(
+                        shadowColor: WidgetStateProperty.all(
                             HMSThemeColors.surfaceDim),
-                        backgroundColor: MaterialStateProperty.all(
+                        backgroundColor: WidgetStateProperty.all(
                             HMSThemeColors.surfaceDim),
                         shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                            WidgetStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                           side: BorderSide(
                               color: HMSThemeColors.secondaryDefault),

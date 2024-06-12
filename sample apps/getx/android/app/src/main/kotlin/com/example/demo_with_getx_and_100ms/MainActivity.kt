@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import io.flutter.embedding.android.FlutterActivity
 import live.hms.hmssdk_flutter.Constants
-import live.hms.hmssdk_flutter.HmssdkFlutterPlugin
 
 class MainActivity : FlutterActivity() {
     override fun onActivityResult(

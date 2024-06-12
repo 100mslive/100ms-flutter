@@ -422,14 +422,14 @@ class _CreatePollFormState extends State<CreatePollForm> {
                 // ),
                 ElevatedButton(
                     style: ButtonStyle(
-                        elevation: MaterialStateProperty.all(0),
+                        elevation: WidgetStateProperty.all(0),
                         backgroundColor: (_questionController.text.isNotEmpty)
-                            ? MaterialStateProperty.all(
+                            ? WidgetStateProperty.all(
                                 HMSThemeColors.secondaryDefault)
-                            : MaterialStateProperty.all(
+                            : WidgetStateProperty.all(
                                 HMSThemeColors.secondaryDim),
                         shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                            WidgetStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ))),

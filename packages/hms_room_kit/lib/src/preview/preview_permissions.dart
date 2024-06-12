@@ -102,10 +102,10 @@ class _PreviewPermissionsState extends State<PreviewPermissions> {
                         _getPermissions();
                       },
                       style: ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll(
+                          backgroundColor: WidgetStatePropertyAll(
                               HMSThemeColors.primaryDefault),
                           shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                              WidgetStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8)))),
                       child: Padding(

@@ -225,10 +225,10 @@ class _StatsForNerdsState extends State<StatsForNerds> {
         Center(
           child: ElevatedButton(
               style: ButtonStyle(
-                  shadowColor: MaterialStateProperty.all(themeSurfaceColor),
+                  shadowColor: WidgetStateProperty.all(themeSurfaceColor),
                   backgroundColor:
-                      MaterialStateProperty.all(themeBottomSheetColor),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      WidgetStateProperty.all(themeBottomSheetColor),
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                     side: const BorderSide(
                         width: 1, color: Color.fromRGBO(107, 125, 153, 1)),

@@ -193,11 +193,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         .outlinedButtonTheme
                         .style!
                         .copyWith(
-                            side: MaterialStateProperty.all(
+                            side: WidgetStateProperty.all(
                                 const BorderSide(color: Colors.white)),
-                            backgroundColor: MaterialStateColor.resolveWith(
+                            backgroundColor: WidgetStateColor.resolveWith(
                                 (states) => Colors.transparent),
-                            foregroundColor: MaterialStateColor.resolveWith(
+                            foregroundColor: WidgetStateColor.resolveWith(
                                 (states) => Colors.white)),
                     onPressed: () {},
                     child: const Text('Join with a code'))

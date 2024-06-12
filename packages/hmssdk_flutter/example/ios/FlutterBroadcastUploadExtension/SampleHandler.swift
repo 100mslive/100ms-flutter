@@ -40,10 +40,8 @@ class SampleHandler: RPBroadcastSampleHandler {
                     finishBroadcastWithError(NSError(domain: "ScreenShare", code: error.code.rawValue, userInfo: [NSLocalizedFailureReasonErrorKey: "You are not in a meeting."]))
                 }
             }
-            break
-        case RPSampleBufferType.audioApp:
+            case RPSampleBufferType.audioApp:
             _ = self.screenRenderer.process(audioSampleBuffer: sampleBuffer)
-            break
         case RPSampleBufferType.audioMic:
             // Handle audio sample buffer for mic audio
             break

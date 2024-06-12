@@ -45,7 +45,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var hlsStreamUrl: String?
 
     private var isRoomAudioUnmutedLocally = true
-    
 
     // MARK: - Flutter Setup
 
@@ -262,12 +261,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         case "start_screen_share", "stop_screen_share", "is_screen_share_active":
             screenShareActions(call, result)
+// MARK: - Track Settings
 
-            // MARK: - Track Settings
-
-        case "get_track_settings":
+                    case "get_track_settings":
             trackSettingsAction(call, result)
-            break
 
             // MARK: - Local Audio Share
 
@@ -460,7 +457,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "add_poll_update_listener":
             let listener: HMSInteractivityCenter.HMSPollListener = { [weak self] hmsPoll, hmsPollUpdateType in
 
-                guard let self = self else { return }
+                guard let self = self else {
+                    return
+                }
 
                 let map = ["event_name": "on_poll_update",
                 "data": [
@@ -475,14 +474,14 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                         $0.pollID == hmsPoll.pollID
                     })
                 } else if hmsPollUpdateType == .resultsUpdated {
-                    if let index = currentPolls.firstIndex(where: {$0.pollID == hmsPoll.pollID}) {
+                    if let index = currentPolls.firstIndex(where: { $0.pollID == hmsPoll.pollID
+                        }) {
                         currentPolls[index] = hmsPoll
                     }
                 }
                 self.pollsEventSink?(map)
             }
             hmsSDK?.interactivityCenter.addPollUpdateListner(listener)
-            break
         case "remove_poll_update_listener":
             break
         default:
@@ -499,21 +498,18 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 guard let self = self else {return}
 
                 switch hmsWhiteBoardUpdateType {
-
                 case .started:
                     let args = [
                         "event_name": "on_whiteboard_start",
                         "data": HMSWhiteboardExtension.toDictionary(hmsWhiteboard: hmsWhiteboard, hmsSDK: hmsSDK)
                     ]
                     self.whiteboardEventSink?(args)
-                    break
-                case .stopped:
+                    case .stopped:
                     let args = [
                         "event_name": "on_whiteboard_stop",
                         "data": HMSWhiteboardExtension.toDictionary(hmsWhiteboard: hmsWhiteboard, hmsSDK: hmsSDK)
                     ]
                     self.whiteboardEventSink?(args)
-                    break
                 default:
                     break
                 }
@@ -532,7 +528,6 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         switch call.method {
         case "get_track_settings":
             result(HMSTrackSettingsExtension.toDictionary(hmsSDK!, audioMixerSourceMap))
-            break
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -546,32 +541,24 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             switch call.method {
             case "play_audio_share":
                 HMSAudioFilePlayerNodeExtension.play(arguments, audioNode as! HMSAudioFilePlayerNode, result)
-                break
-            case "stop_audio_share":
+                case "stop_audio_share":
                 HMSAudioFilePlayerNodeExtension.stop(audioNode as! HMSAudioFilePlayerNode, result)
-                break
-            case "pause_audio_share":
+                case "pause_audio_share":
                 HMSAudioFilePlayerNodeExtension.pause(audioNode as! HMSAudioFilePlayerNode, result)
-                break
-            case "resume_audio_share":
+                case "resume_audio_share":
                 HMSAudioFilePlayerNodeExtension.resume(audioNode as! HMSAudioFilePlayerNode, result)
-                break
-            case "set_audio_share_volume":
+                case "set_audio_share_volume":
                 if arguments["name"] as! String != "mic_node" {
                     HMSAudioFilePlayerNodeExtension.setVolume(arguments, audioNode as! HMSAudioFilePlayerNode, result)
                 } else {
                     HMSMicNodeExtension.setVolume(arguments, audioNode as! HMSMicNode)
                 }
-                break
-            case "audio_share_playing":
+                case "audio_share_playing":
                 HMSAudioFilePlayerNodeExtension.isPlaying(audioNode as! HMSAudioFilePlayerNode, result)
-                break
-            case "audio_share_current_time":
+                case "audio_share_current_time":
                 HMSAudioFilePlayerNodeExtension.currentDuration(audioNode as! HMSAudioFilePlayerNode, result)
-                break
-            case "audio_share_duration":
+                case "audio_share_duration":
                 HMSAudioFilePlayerNodeExtension.duration(audioNode as! HMSAudioFilePlayerNode, result)
-                break
             default:
                 result(FlutterMethodNotImplemented)
             }

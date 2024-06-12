@@ -111,12 +111,12 @@ class HMSLeftRoomScreen extends StatelessWidget {
 
                   ElevatedButton(
                       style: ButtonStyle(
-                          shadowColor: MaterialStateProperty.all(
+                          shadowColor: WidgetStateProperty.all(
                               HMSThemeColors.surfaceDim),
-                          backgroundColor: MaterialStateProperty.all(
+                          backgroundColor: WidgetStateProperty.all(
                               HMSThemeColors.primaryDefault),
                           shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                              WidgetStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ))),

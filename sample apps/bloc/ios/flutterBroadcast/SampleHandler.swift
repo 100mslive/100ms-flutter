@@ -33,7 +33,6 @@ class SampleHandler: RPBroadcastSampleHandler {
                                                      userInfo: [NSLocalizedFailureReasonErrorKey: "You are not in a meeting."]))
                 }
             }
-            break
         case RPSampleBufferType.audioApp:
             // Handle audio sample buffer for app audio
             break

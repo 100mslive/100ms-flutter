@@ -94,11 +94,11 @@ class _EndServiceBottomSheetState extends State<EndServiceBottomSheet> {
               ElevatedButton(
                   style: ButtonStyle(
                       shadowColor:
-                          MaterialStateProperty.all(HMSThemeColors.surfaceDim),
-                      backgroundColor: MaterialStateProperty.all(
+                          WidgetStateProperty.all(HMSThemeColors.surfaceDim),
+                      backgroundColor: WidgetStateProperty.all(
                           widget.buttonColor ??
                               HMSThemeColors.alertErrorDefault),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ))),

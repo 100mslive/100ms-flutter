@@ -285,9 +285,9 @@ class _HomePageState extends State<HomePage> {
                     ElevatedButton(
                       style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(hmsdefaultColor),
+                              WidgetStateProperty.all(hmsdefaultColor),
                           shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                              WidgetStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ))),

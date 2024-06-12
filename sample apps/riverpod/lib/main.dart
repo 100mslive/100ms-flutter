@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
               width: 300.0,
               child: ElevatedButton(
                 style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16.0),
                 ))),

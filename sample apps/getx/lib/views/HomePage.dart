@@ -72,7 +72,7 @@ class HomePage extends StatelessWidget {
               width: 300.0,
               child: ElevatedButton(
                 style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16.0),
                 ))),

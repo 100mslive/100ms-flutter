@@ -351,14 +351,14 @@ class _PollQuestionBottomSheetState extends State<PollQuestionBottomSheet> {
                       children: [
                         ElevatedButton(
                           style: ButtonStyle(
-                              shadowColor: MaterialStateProperty.all(
+                              shadowColor: WidgetStateProperty.all(
                                   HMSThemeColors.surfaceDim),
                               backgroundColor: _isQuestionValid
-                                  ? MaterialStateProperty.all(
+                                  ? WidgetStateProperty.all(
                                       HMSThemeColors.primaryDefault)
-                                  : MaterialStateProperty.all(
+                                  : WidgetStateProperty.all(
                                       HMSThemeColors.primaryDisabled),
-                              shape: MaterialStateProperty.all<
+                              shape: WidgetStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),

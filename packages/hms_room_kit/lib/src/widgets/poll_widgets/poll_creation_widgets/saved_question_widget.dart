@@ -117,11 +117,11 @@ class SavedQuestionWidget extends StatelessWidget {
                 ),
                 ElevatedButton(
                     style: ButtonStyle(
-                        elevation: MaterialStateProperty.all(0),
-                        backgroundColor: MaterialStateProperty.all(
+                        elevation: WidgetStateProperty.all(0),
+                        backgroundColor: WidgetStateProperty.all(
                             HMSThemeColors.secondaryDefault),
                         shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                            WidgetStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ))),
