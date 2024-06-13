@@ -222,7 +222,7 @@ packages:
       path: "../hmssdk_flutter"
       relative: true
     source: path
-    version: "1.10.3"
+    version: "1.10.4"
   http:
     dependency: transitive
     description:
