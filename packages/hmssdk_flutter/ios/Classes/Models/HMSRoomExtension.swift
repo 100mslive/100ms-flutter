@@ -49,6 +49,8 @@ class  HMSRoomExtension {
 
         dict["hls_recording_state"] = HMSStreamingStateExtension.toDictionary(hlsRecording: room.hlsRecordingState)
 
+        dict["transcriptions"] = HMSTranscriptExtension.getMapFromTranscriptionsStateList(transcriptionStates: room.transcriptionStates)
+        
         return dict
     }
 

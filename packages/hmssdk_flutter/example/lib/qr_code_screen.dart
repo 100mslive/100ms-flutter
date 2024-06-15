@@ -37,64 +37,62 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
       if (barcodes.isNotEmpty) {
         log(barcodes[0].rawValue ?? "");
         String? rawValue = barcodes[0].rawValue;
-        if (rawValue != null) {
-          FocusManager.instance.primaryFocus?.unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
 
-          Map<String, String>? endPoints;
-          if (rawValue.trim().contains("app.100ms.live")) {
-            List<String?>? roomData = RoomService.getCode(rawValue.trim());
+        Map<String, String>? endPoints;
+        if (rawValue.trim().contains("app.100ms.live")) {
+          List<String?>? roomData = RoomService.getCode(rawValue.trim());
 
-            //If the link is not valid then we might not get the code and whether the link is a
-            //PROD or QA so we return the error in this case
-            if (roomData == null || roomData.isEmpty) {
-              return;
-            }
-
-            ///************************************************************************************************** */
-
-            ///This section can be safely commented out as it's only required for 100ms internal usage
-
-            //qaTokenEndPoint is only required for 100ms internal testing
-            //It can be removed and should not affect the join method call
-            //For _endPoint just pass it as null
-            //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
-            //Pass the layoutAPIEndPoint as null the qa endPoint is only for 100ms internal testing
-
-            ///If you wish to set your own token end point then you can pass it in the endPoints map
-            ///The key for the token end point is "tokenEndPointKey"
-            ///The key for the init end point is "initEndPointKey"
-            ///The key for the layout api end point is "layoutAPIEndPointKey"
-            if (roomData[1] == "false") {
-              endPoints = RoomService.setEndPoints();
-            }
-
-            ///************************************************************************************************** */
-
-            Constant.roomCode = roomData[0] ?? '';
-          } else {
-            Constant.roomCode = rawValue.trim();
+          //If the link is not valid then we might not get the code and whether the link is a
+          //PROD or QA so we return the error in this case
+          if (roomData == null || roomData.isEmpty) {
+            return;
           }
-          Utilities.saveStringData(key: "meetingLink", value: rawValue.trim());
-          await initForegroundTask();
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (_) => WithForegroundTask(
-                    child: HMSPrebuilt(
-                        roomCode: Constant.roomCode,
-                        onLeave: stopForegroundTask,
-                        options: HMSPrebuiltOptions(
-                            userName: AppDebugConfig.nameChangeOnPreview
-                                ? null
-                                : "Flutter User",
-                            userId: widget.uuidString,
-                            endPoints: endPoints,
-                            iOSScreenshareConfig: HMSIOSScreenshareConfig(
-                                appGroup: "group.flutterhms",
-                                preferredExtension:
-                                    "live.100ms.flutter.FlutterBroadcastUploadExtension"),
-                            enableNoiseCancellation: true)),
-                  )));
+
+          ///************************************************************************************************** */
+
+          ///This section can be safely commented out as it's only required for 100ms internal usage
+
+          //qaTokenEndPoint is only required for 100ms internal testing
+          //It can be removed and should not affect the join method call
+          //For _endPoint just pass it as null
+          //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
+          //Pass the layoutAPIEndPoint as null the qa endPoint is only for 100ms internal testing
+
+          ///If you wish to set your own token end point then you can pass it in the endPoints map
+          ///The key for the token end point is "tokenEndPointKey"
+          ///The key for the init end point is "initEndPointKey"
+          ///The key for the layout api end point is "layoutAPIEndPointKey"
+          if (roomData[1] == "false") {
+            endPoints = RoomService.setEndPoints();
+          }
+
+          ///************************************************************************************************** */
+
+          Constant.roomCode = roomData[0] ?? '';
+        } else {
+          Constant.roomCode = rawValue.trim();
         }
-      }
+        Utilities.saveStringData(key: "meetingLink", value: rawValue.trim());
+        await initForegroundTask();
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (_) => WithForegroundTask(
+                  child: HMSPrebuilt(
+                      roomCode: Constant.roomCode,
+                      onLeave: stopForegroundTask,
+                      options: HMSPrebuiltOptions(
+                          userName: AppDebugConfig.nameChangeOnPreview
+                              ? null
+                              : "Flutter User",
+                          userId: widget.uuidString,
+                          endPoints: endPoints,
+                          iOSScreenshareConfig: HMSIOSScreenshareConfig(
+                              appGroup: "group.flutterhms",
+                              preferredExtension:
+                                  "live.100ms.flutter.FlutterBroadcastUploadExtension"),
+                          enableNoiseCancellation: true)),
+                )));
+            }
     } catch (e) {
       log(e.toString());
     }

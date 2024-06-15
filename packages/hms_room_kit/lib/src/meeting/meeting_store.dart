@@ -38,7 +38,8 @@ class MeetingStore extends ChangeNotifier
         HMSKeyChangeListener,
         HMSHLSPlaybackEventsListener,
         HMSPollListener,
-        HMSWhiteboardUpdateListener {
+        HMSWhiteboardUpdateListener,
+        HMSTranscriptListener {
   late HMSSDKInteractor _hmsSDKInteractor;
 
   MeetingStore({required HMSSDKInteractor hmsSDKInteractor}) {
@@ -906,6 +907,7 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
     fetchPollList(HMSPollState.stopped);
     HMSWhiteboardController.addHMSWhiteboardUpdateListener(listener: this);
+    HMSTranscriptionController.addListener(listener: this);
 
     if (HMSRoomLayout.roleLayoutData?.screens?.preview?.joinForm?.joinBtnType ==
             JoinButtonType.JOIN_BTN_TYPE_JOIN_AND_GO_LIVE &&
@@ -1406,6 +1408,7 @@ class MeetingStore extends ChangeNotifier
     HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(this);
     HMSPollInteractivityCenter.removePollUpdateListener();
     HMSWhiteboardController.removeHMSWhiteboardUpdateListener();
+    HMSTranscriptionController.removeListener();
   }
 
   ///Function to toggle screen share
@@ -2979,5 +2982,12 @@ class MeetingStore extends ChangeNotifier
     //   }
     //   notifyListeners();
     // }
+  }
+
+  @override
+  void onTranscripts({required List<HMSTranscription> transcriptions}) {
+    transcriptions.forEach((element) {
+      log("onTranscripts -> text: ${element.transcript}");
+    });
   }
 }

@@ -18,7 +18,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var hlsPlayerChannel: FlutterEventChannel?
     var pollsEventChannel: FlutterEventChannel?
     var whiteboardEventChannel: FlutterEventChannel?
-
+    var transcriptionEventChannel: FlutterEventChannel?
+    
     var eventSink: FlutterEventSink?
     var previewSink: FlutterEventSink?
     var logsSink: FlutterEventSink?
@@ -27,6 +28,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
     var hlsPlayerSink: FlutterEventSink?
     var pollsEventSink: FlutterEventSink?
     var whiteboardEventSink: FlutterEventSink?
+    var transcriptionSink: FlutterEventSink?
 
     var roleChangeRequest: HMSRoleChangeRequest?
 
@@ -61,7 +63,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         let hlsChannel = FlutterEventChannel(name: "hls_player_channel", binaryMessenger: registrar.messenger())
         let pollsChannel = FlutterEventChannel(name: "polls_event_channel", binaryMessenger: registrar.messenger())
         let whiteboardChannel = FlutterEventChannel(name: "whiteboard_event_channel", binaryMessenger: registrar.messenger())
-
+        let transcriptionChannel = FlutterEventChannel(name: "transcription_event_channel", binaryMessenger: registrar.messenger())
+        
         let instance = SwiftHmssdkFlutterPlugin(channel: channel,
                                                 meetingEventChannel: eventChannel,
                                                 previewEventChannel: previewChannel,
@@ -70,7 +73,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                                                 sessionEventChannel: sessionChannel,
                                                 hlsPlayerChannel: hlsChannel,
                                                 pollsEventChannel: pollsChannel,
-                                                whiteboardEventChannel: whiteboardChannel)
+                                                whiteboardEventChannel: whiteboardChannel,
+                                                transcriptionEventChannel: transcriptionChannel)
 
         let videoViewFactory = HMSFlutterPlatformViewFactory(plugin: instance)
         registrar.register(videoViewFactory, withId: "HMSFlutterPlatformView")
@@ -98,7 +102,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                 sessionEventChannel: FlutterEventChannel,
                 hlsPlayerChannel: FlutterEventChannel,
                 pollsEventChannel: FlutterEventChannel,
-                whiteboardEventChannel: FlutterEventChannel) {
+                whiteboardEventChannel: FlutterEventChannel,
+                transcriptionEventChannel: FlutterEventChannel) {
 
         self.channel = channel
         self.meetingEventChannel = meetingEventChannel
@@ -109,6 +114,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         self.hlsPlayerChannel = hlsPlayerChannel
         self.pollsEventChannel = pollsEventChannel
         self.whiteboardEventChannel = whiteboardEventChannel
+        self.transcriptionEventChannel = transcriptionEventChannel
     }
 
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
@@ -135,6 +141,8 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             pollsEventSink = events
         case "whiteboard":
             whiteboardEventSink = events
+        case "transcription":
+            transcriptionSink = events
         default:
             return FlutterError(code: #function, message: "invalid event sink name", details: arguments)
         }
@@ -194,6 +202,12 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             whiteboardEventSink = nil
         } else {
             print(#function, "whiteboardEventChannel not found")
+        }
+        if transcriptionEventChannel != nil {
+            transcriptionEventChannel!.setStreamHandler(nil)
+            transcriptionSink = nil
+        } else {
+            print(#function, "transcriptionEventChannel not found")
         }
     }
 
@@ -345,6 +359,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         case "enable_virtual_background", "disable_virtual_background", "enable_blur_background", "disable_blur_background", "change_virtual_background", "is_virtual_background_supported":
             vbAction.performActions(call, result)
 
+        case "start_real_time_transcription", "stop_real_time_transcription","add_transcript_listener", "remove_transcript_listener":
+            transcriptionActions(call, result)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -523,6 +540,20 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             break
         default:
             HMSWhiteboardAction.whiteboardActions(call, result, hmsSDK)
+        }
+    }
+    
+    private var isTranscriptionListenerAdded = false
+    private func transcriptionActions(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+        switch call.method{
+            case "add_transcript_listener":
+                isTranscriptionListenerAdded = true
+                result(nil)
+            case "remove_transcript_listener":
+                isTranscriptionListenerAdded = false
+                result(nil)
+            default:
+                HMSTranscriptionAction.transcriptionActions(call, result, hmsSDK)
         }
     }
 
@@ -1565,6 +1596,30 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             previewSink?(data)
         }
     }
+    
+    public func on(transcripts: HMSTranscripts){
+        
+        /**
+         * If transcription listener is added in the application
+         * then only we send data from here
+         */
+        if(isTranscriptionListenerAdded){
+            var transcriptList = [[String:Any?]]()
+            
+            transcripts.transcripts.forEach{
+                transcriptList.append(HMSTranscriptExtension.toDictionary(hmsTranscript: $0))
+            }
+            
+            var data = [String:Any?]()
+            
+            data["event_name"] = "on_transcripts"
+            data["data"] = transcriptList
+            
+            print(transcriptionSink==nil)
+            transcriptionSink?(data)
+        }
+    }
+    
 
     // MARK: - RTC Stats Listeners
 
