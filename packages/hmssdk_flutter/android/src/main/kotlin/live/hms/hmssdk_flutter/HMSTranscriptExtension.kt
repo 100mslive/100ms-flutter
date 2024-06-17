@@ -18,6 +18,7 @@ class HMSTranscriptExtension {
             args["end"] = hmsTranscript.end
             args["transcript"] = hmsTranscript.transcript
             args["peer_id"] = hmsTranscript.peerId
+            args["peer_name"] = hmsTranscript.peer?.name
             args["is_final"] = hmsTranscript.isFinal
             return args
         }
@@ -80,7 +81,7 @@ class HMSTranscriptExtension {
             }
         }
 
-        private fun getStringFromTranscriptionMode(transcriptionMode: TranscriptionsMode?): String?{
+        fun getStringFromTranscriptionMode(transcriptionMode: TranscriptionsMode?): String?{
             return when(transcriptionMode){
                 TranscriptionsMode.CAPTION -> "caption"
                 TranscriptionsMode.LIVE -> "live"

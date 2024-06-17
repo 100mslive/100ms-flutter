@@ -277,6 +277,13 @@ class MeetingStore extends ChangeNotifier
   ///variable to store whiteboard model
   HMSWhiteboardModel? whiteboardModel;
 
+  ///variable to store whether transcription is enabled or not
+  bool isTranscriptionEnabled = false;
+
+  bool isTranscriptionDisplayed = false;
+
+  List<HMSTranscription> captions = [];
+
   Future<HMSException?> join(String userName, String? tokenData) async {
     late HMSConfig joinConfig;
 
@@ -476,6 +483,9 @@ class MeetingStore extends ChangeNotifier
       case HMSToastsType.streamingErrorToast:
         toasts.removeWhere(
             (toast) => toast.hmsToastType == HMSToastsType.streamingErrorToast);
+      case HMSToastsType.transcriptionToast:
+        toasts.removeWhere(
+            (toast) => toast.hmsToastType == HMSToastsType.transcriptionToast);
     }
     notifyListeners();
   }
@@ -825,6 +835,35 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
+  ///This method is used to toggle the transcription
+  ///for the peer who has admin permissions
+  void toggleTranscription() async {
+    HMSException? result;
+    toasts.add(HMSToastModel(
+        isTranscriptionEnabled
+            ? "Disabling Closed Captioning for everyone"
+            : "Enabling Closed Captioning for everyone",
+        hmsToastType: HMSToastsType.transcriptionToast));
+    if (isTranscriptionEnabled) {
+      result = await HMSTranscriptionController.stopTranscription();
+    } else {
+      result = await HMSTranscriptionController.startTranscription();
+    }
+    if (result == null) {
+      isTranscriptionEnabled = !isTranscriptionEnabled;
+    } else {
+      removeToast(HMSToastsType.transcriptionToast);
+      toasts.add(HMSToastModel(result.message,
+          hmsToastType: HMSToastsType.errorToast));
+    }
+    notifyListeners();
+  }
+
+  void toggleTranscriptionDisplay() {
+    isTranscriptionDisplayed = !isTranscriptionDisplayed;
+    notifyListeners();
+  }
+
 // Override Methods
 
   @override
@@ -1002,6 +1041,16 @@ class MeetingStore extends ChangeNotifier
             ? room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl
             : null;
         break;
+      case HMSRoomUpdate.transcriptionsUpdated:
+        if (room.transcriptions?.isNotEmpty ?? false) {
+          if (room.transcriptions?[0].state == HMSTranscriptionState.started ||
+              room.transcriptions?[0].state == HMSTranscriptionState.stopped) {
+            removeToast(HMSToastsType.transcriptionToast);
+          }
+          room.transcriptions?[0].state == HMSTranscriptionState.started
+              ? isTranscriptionEnabled = true
+              : isTranscriptionEnabled = false;
+        }
       default:
         break;
     }
@@ -2679,6 +2728,15 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
+  @override
+  void onTranscripts({required List<HMSTranscription> transcriptions}) {
+    captions = transcriptions;
+    transcriptions.forEach((element) {
+      log("onTranscripts -> text: ${element.transcript}");
+    });
+    notifyListeners();
+  }
+
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
   @override
   void onSuccess(
@@ -2982,12 +3040,5 @@ class MeetingStore extends ChangeNotifier
     //   }
     //   notifyListeners();
     // }
-  }
-
-  @override
-  void onTranscripts({required List<HMSTranscription> transcriptions}) {
-    transcriptions.forEach((element) {
-      log("onTranscripts -> text: ${element.transcript}");
-    });
   }
 }

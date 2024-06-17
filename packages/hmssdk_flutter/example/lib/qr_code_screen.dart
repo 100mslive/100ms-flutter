@@ -39,6 +39,9 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
         String? rawValue = barcodes[0].rawValue;
         FocusManager.instance.primaryFocus?.unfocus();
 
+        if (rawValue == null) {
+          return;
+        }
         Map<String, String>? endPoints;
         if (rawValue.trim().contains("app.100ms.live")) {
           List<String?>? roomData = RoomService.getCode(rawValue.trim());
@@ -92,7 +95,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                                   "live.100ms.flutter.FlutterBroadcastUploadExtension"),
                           enableNoiseCancellation: true)),
                 )));
-            }
+      }
     } catch (e) {
       log(e.toString());
     }

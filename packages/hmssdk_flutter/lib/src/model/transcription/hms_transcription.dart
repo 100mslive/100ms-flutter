@@ -3,6 +3,7 @@ class HMSTranscription {
   final int end;
   final String transcript;
   final String peerId;
+  final String? peerName;
   final bool isFinal;
 
   HMSTranscription(
@@ -10,6 +11,7 @@ class HMSTranscription {
       required this.end,
       required this.transcript,
       required this.peerId,
+      required this.peerName,
       required this.isFinal});
 
   factory HMSTranscription.fromMap(Map map) {
@@ -18,6 +20,7 @@ class HMSTranscription {
         end: map['end'],
         transcript: map['transcript'],
         peerId: map['peer_id'],
+        peerName: map['peer_name'],
         isFinal: map['is_final']);
   }
 }

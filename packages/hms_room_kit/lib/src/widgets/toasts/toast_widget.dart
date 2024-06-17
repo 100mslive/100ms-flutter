@@ -2,6 +2,8 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_reconnection_toast.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_transcription_toast.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -73,6 +75,11 @@ class ToastWidget extends StatelessWidget {
               meetingStore: meetingStore,
             ),
           ),
+        );
+      case HMSToastsType.transcriptionToast:
+        return HMSTranscriptionToast(
+          message: toast.toastData,
+          meetingStore: meetingStore,
         );
       default:
         return const SizedBox();

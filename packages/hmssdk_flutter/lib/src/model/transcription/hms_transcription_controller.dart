@@ -1,5 +1,4 @@
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:hmssdk_flutter/src/enum/hms_transcription_mode.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
 
 abstract class HMSTranscriptionController {
@@ -14,7 +13,7 @@ abstract class HMSTranscriptionController {
   }
 
   static Future<HMSException?> startTranscription(
-      {required HMSTranscriptionMode mode}) async {
+      {HMSTranscriptionMode mode = HMSTranscriptionMode.caption}) async {
     var result = await PlatformService.invokeMethod(
         PlatformMethod.startRealTimeTranscription,
         arguments: {'mode': mode.name});
@@ -26,9 +25,11 @@ abstract class HMSTranscriptionController {
     }
   }
 
-  static Future<HMSException?> stopTranscription() async {
+  static Future<HMSException?> stopTranscription(
+      {HMSTranscriptionMode mode = HMSTranscriptionMode.caption}) async {
     var result = await PlatformService.invokeMethod(
-        PlatformMethod.stopRealTimeTranscription);
+        PlatformMethod.stopRealTimeTranscription,
+        arguments: {'mode': mode.name});
 
     if (result != null) {
       return HMSException.fromMap(result["error"]);

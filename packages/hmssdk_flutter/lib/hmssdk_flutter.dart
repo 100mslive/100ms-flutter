@@ -27,6 +27,8 @@ export 'src/enum/hms_peer_type.dart';
 export 'src/enum/hms_hls_playlist_type.dart';
 export 'src/enum/hms_whiteboard_listener_method.dart';
 export 'src/enum/hms_whiteboard_state.dart';
+export 'src/enum/hms_transcription_mode.dart';
+export 'src/enum/hms_transcription_state.dart';
 
 //EXCEPTIONS
 export 'src/exceptions/hms_exception.dart';
@@ -123,9 +125,10 @@ export 'src/model/whiteboard/hms_whiteboard_permission.dart';
 export 'src/model/whiteboard/hms_whiteboard_update_listener.dart';
 export 'src/model/hls_player/hms_hls_layer.dart';
 export 'src/model/hms_video_filter.dart';
-export 'src/model/hms_transcript_listener.dart';
-export 'src/model/hms_transcription.dart';
-export 'src/model/hms_transcription_controller.dart';
+export 'src/model/transcription/hms_transcription_permission.dart';
+export 'src/model/transcription//hms_transcript_listener.dart';
+export 'src/model/transcription/hms_transcription.dart';
+export 'src/model/transcription/hms_transcription_controller.dart';
 
 //Views
 export 'src/ui/meeting/hms_texture_view.dart';

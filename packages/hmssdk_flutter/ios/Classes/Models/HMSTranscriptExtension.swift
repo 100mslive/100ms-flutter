@@ -18,6 +18,7 @@ class HMSTranscriptExtension{
         args["end"] = hmsTranscript.end
         args["transcript"] = hmsTranscript.transcript
         args["peer_id"] = hmsTranscript.peer.peerID
+        args["peer_name"] = hmsTranscript.peer.name
         args["is_final"] = hmsTranscript.isFinal
         
         return args

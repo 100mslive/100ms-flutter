@@ -2,8 +2,11 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:draggable_widget/draggable_widget.dart';
+
 ///Package imports
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/transcription_view.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -151,6 +154,10 @@ class _MeetingPageState extends State<MeetingPage> {
                                                       const MeetingBottomNavigationBar())),
                                         ],
                                       ),
+
+                                      ChangeNotifierProvider.value(
+                                          value: _visibilityController,
+                                          child: const TranscriptionView()),
 
                                       ///This gets rendered when the previewForRole method is called
                                       ///This is used to show the preview for role component
