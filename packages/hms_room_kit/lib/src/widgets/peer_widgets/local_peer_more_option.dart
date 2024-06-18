@@ -35,7 +35,7 @@ class LocalPeerMoreOption extends StatelessWidget {
                 var meetingStore = context.read<MeetingStore>();
                 showModalBottomSheet(
                   isScrollControlled: true,
-                  backgroundColor: HMSThemeColors.surfaceDim,
+                  backgroundColor: Colors.transparent,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(16),

@@ -17,7 +17,7 @@
 		D18F570DD3255ED3EA289977 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41B8003D2A87475893EBDC35 /* Pods_Runner.framework */; };
 		EC1052B22858A77D005EAB9E /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC1052B12858A77D005EAB9E /* ReplayKit.framework */; };
 		EC1052B52858A77D005EAB9E /* SampleHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1052B42858A77D005EAB9E /* SampleHandler.swift */; };
-		EC1052B92858A77D005EAB9E /* FlutterBroadcastUploadExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EC1052B02858A77D005EAB9E /* FlutterBroadcastUploadExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		EC1052B92858A77D005EAB9E /* FlutterBroadcastUploadExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EC1052B02858A77D005EAB9E /* FlutterBroadcastUploadExtension.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EC9BCD2B26B1CFDB00D378A0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EC9BCD2A26B1CFDB00D378A0 /* GoogleService-Info.plist */; };
 		ECAB35012BC53D4000AC25F4 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = ECAB35002BC53D4000AC25F4 /* PrivacyInfo.xcprivacy */; };
 		ECAB35022BC53D4000AC25F4 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = ECAB35002BC53D4000AC25F4 /* PrivacyInfo.xcprivacy */; };
@@ -459,6 +459,7 @@
 /* Begin PBXTargetDependency section */
 		EC1052B82858A77D005EAB9E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilter = ios;
 			target = EC1052AF2858A77D005EAB9E /* FlutterBroadcastUploadExtension */;
 			targetProxy = EC1052B72858A77D005EAB9E /* PBXContainerItemProxy */;
 		};
@@ -566,6 +567,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -714,6 +716,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -752,6 +755,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -799,6 +803,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -848,6 +853,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -895,6 +901,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

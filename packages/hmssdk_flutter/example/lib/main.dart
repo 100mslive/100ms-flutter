@@ -117,7 +117,7 @@ class _HMSExampleAppState extends State<HMSExampleApp>
           return;
         }
         _appLinks = AppLinks();
-        _currentURI = await _appLinks?.getInitialAppLink();
+        _currentURI = await _appLinks?.getInitialLink();
         if (_currentURI != null) {
           if (!mounted) {
             return;
@@ -579,12 +579,12 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () async {
                       bool res = await Utilities.getCameraPermissions();
                       if (res) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => QRCodeScreen(
-                                      uuidString: uuidString,
-                                    )));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (_) => QRCodeScreen(
+                        //               uuidString: uuidString,
+                        //             )));
                       }
                     },
                     child: Container(

@@ -64,19 +64,7 @@ class MeetingGridComponent extends StatelessWidget {
                           ///height of video grid by 140 else it covers the whole screen
                           ///
                           ///Here we also check for the platform and reduce the height accordingly
-                          height: showControls
-                              ? MediaQuery.of(context).size.height -
-                                  MediaQuery.of(context).padding.top -
-                                  MediaQuery.of(context).padding.bottom -
-                                  (Platform.isAndroid
-                                      ? 160
-                                      : Platform.isIOS
-                                          ? 230
-                                          : 160)
-                              : MediaQuery.of(context).size.height -
-                                  MediaQuery.of(context).padding.top -
-                                  MediaQuery.of(context).padding.bottom -
-                                  20,
+                          height: MediaQuery.of(context).size.height,
                           child: GestureDetector(
                             onTap: () => visibilityController
                                 ?.toggleControlsVisibility(),

@@ -112,7 +112,7 @@ class _MeetingBottomNavigationBarState
                                           .read<MeetingStore>()
                                           .toggleMicMuteState()
                                     },
-                                    onColor: HMSThemeColors.backgroundDim,
+                                    onColor: Colors.transparent,
                                     isActive: isMicOn,
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -154,7 +154,7 @@ class _MeetingBottomNavigationBarState
                                               .read<MeetingStore>()
                                               .toggleCameraMuteState(),
                                     },
-                                    onColor: HMSThemeColors.backgroundDim,
+                                    onColor: Colors.transparent,
                                     isActive: data.item1,
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -216,7 +216,7 @@ class _MeetingBottomNavigationBarState
                                           )
                                         }
                                     },
-                                    onColor: HMSThemeColors.backgroundDim,
+                                    onColor: Colors.transparent,
                                     isActive: !(chatState.item2 &&
                                         (HMSRoomLayout.chatData?.isOverlay ??
                                             false)),
@@ -264,7 +264,7 @@ class _MeetingBottomNavigationBarState
                                     child: const AppUtilitiesBottomSheet()),
                               )
                             },
-                            onColor: HMSThemeColors.backgroundDim,
+                            onColor: Colors.transparent,
                             isActive: true,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),

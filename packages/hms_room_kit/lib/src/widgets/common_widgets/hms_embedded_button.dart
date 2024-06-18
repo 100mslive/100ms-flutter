@@ -1,6 +1,8 @@
 ///Package imports
 library;
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 
@@ -48,29 +50,32 @@ class HMSEmbeddedButton extends StatelessWidget {
           width: width,
           height: height,
           decoration: BoxDecoration(
-              /**
+            /**
                * Here we set the border color based on whether the button is active or not
                * If the button is active, we use the enabledBorderColor if it's not null
                * If it's null, we use the default color which is borderBright
                * 
                * Similarly if the button is not active, we use the disabledBorderColor if it's not null
                */
-              border: isActive
-                  ? Border.all(
-                      color: enabledBorderColor ?? HMSThemeColors.borderBright,
-                      width: 1)
-                  : Border.all(
-                      color:
-                          disabledBorderColor ?? HMSThemeColors.surfaceBrighter,
-                      width: 1),
-              borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-              /**
+            // border: isActive
+            //     ? Border.all(
+            //         color:
+            //             enabledBorderColor ?? HMSThemeColors.borderBright,
+            //         width: 1)
+            //     : Border.all(
+            //         color: disabledBorderColor ??
+            //             HMSThemeColors.surfaceBrighter,
+            //         width: 1),
+            borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+            /**
                * The color of icon is set using the iconColor property
                * If the iconColor is not set, we use the default color which is onSurfaceHighEmphasis
                */
-              color: isActive
-                  ? (onColor ?? (HMSThemeColors.backgroundDefault))
-                  : (offColor ?? HMSThemeColors.surfaceBrighter)),
+            color: Colors.transparent.withOpacity(0.4),
+          ),
+          // isActive
+          //     ? (onColor ?? (HMSThemeColors.backgroundDefault))
+          //     : (offColor ?? HMSThemeColors.surfaceBrighter)),
           child: child),
     );
   }

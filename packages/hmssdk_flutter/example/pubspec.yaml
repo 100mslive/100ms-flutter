@@ -23,7 +23,7 @@ dependencies:
   package_info_plus:
   google_fonts:
   url_launcher:
-  mobile_scanner:
+  # mobile_scanner:
   app_links:
   uuid:
   flutter_foreground_task:
