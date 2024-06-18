@@ -2,8 +2,6 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_reconnection_toast.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_transcription_toast.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -18,6 +16,7 @@ import 'package:hms_room_kit/src/widgets/toasts/hms_recording_error_toast.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_role_change_decline_toast.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toast_model.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_transcription_toast.dart';
 
 ///[ToastWidget] returns toast based on the toast type
 class ToastWidget extends StatelessWidget {
