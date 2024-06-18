@@ -2,6 +2,9 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_error_toast.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_streaming_error_toast.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -80,8 +83,19 @@ class ToastWidget extends StatelessWidget {
           message: toast.toastData,
           meetingStore: meetingStore,
         );
+      // default:
+      //   return const SizedBox();
+      case HMSToastsType.errorToast:
+        if (toast.toastData is HMSException) {
+          return HMSErrorToast(
+              error: toast.toastData, meetingStore: meetingStore);
+        }
+        return SizedBox();
+      case HMSToastsType.streamingErrorToast:
+        return HMSStreamingErrorToast(
+            streamingError: toast.toastData, meetingStore: meetingStore);
       default:
-        return const SizedBox();
+        return SizedBox();
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:draggable_widget/draggable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
@@ -25,7 +27,6 @@ class _TranscriptionViewState extends State<TranscriptionView> {
                       meetingStore.captions, meetingStore.captions.length),
                   builder: (_, data, __) {
                     String transcript = "";
-
                     for (var i = 0; i < data.item2; i++) {
                       transcript +=
                           "${data.item1[i].peerName}: ${data.item1[i].transcript}\n";
@@ -37,8 +38,15 @@ class _TranscriptionViewState extends State<TranscriptionView> {
                                     meetingNavigationVisibilityController
                                         .showControls,
                             builder: (_, showControls, __) {
+                              double topMargin = showControls
+                                  ? Platform.isIOS
+                                      ? 250
+                                      : 180
+                                  : Platform.isIOS
+                                      ? 200
+                                      : 110;
                               return DraggableWidget(
-                                bottomMargin: showControls ? 160 : 90,
+                                bottomMargin: topMargin,
                                 topMargin: showControls ? 80 : 40,
                                 horizontalSpace: 8,
                                 dragAnimationScale: 1,
@@ -58,7 +66,7 @@ class _TranscriptionViewState extends State<TranscriptionView> {
                                             Radius.circular(10))),
                                     child: HMSSubtitleText(
                                         text: transcript,
-                                        maxLines: 4,
+                                        maxLines: 5,
                                         textColor: HMSThemeColors
                                             .onSurfaceHighEmphasis)),
                               );

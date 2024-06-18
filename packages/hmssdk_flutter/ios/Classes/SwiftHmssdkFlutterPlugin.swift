@@ -90,6 +90,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
         hlsChannel.setStreamHandler(instance)
         pollsChannel.setStreamHandler(instance)
         whiteboardChannel.setStreamHandler(instance)
+        transcriptionChannel.setStreamHandler(instance)
 
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
@@ -121,9 +122,11 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         guard let tempArg = arguments as? [AnyHashable: Any],
               let name =  tempArg["name"] as? String else {
+            print("Error occured")
             return FlutterError(code: #function, message: "invalid event sink name", details: arguments)
         }
 
+        print(name)
         switch name {
         case "meeting":
             eventSink = events
@@ -1614,9 +1617,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             
             data["event_name"] = "on_transcripts"
             data["data"] = transcriptList
-            
-            print(transcriptionSink==nil)
-            transcriptionSink?(data)
+            self.transcriptionSink?(data)
         }
     }
     

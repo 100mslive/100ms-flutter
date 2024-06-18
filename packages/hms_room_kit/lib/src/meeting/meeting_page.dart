@@ -2,11 +2,8 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:draggable_widget/draggable_widget.dart';
-
 ///Package imports
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/transcription_view.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -29,6 +26,7 @@ import 'package:hms_room_kit/src/preview_for_role/preview_for_role_bottom_sheet.
 import 'package:hms_room_kit/src/preview_for_role/preview_for_role_header.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_left_room_screen.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/transcription_view.dart';
 
 ///[MeetingPage] is the main page of the meeting
 ///It takes the following parameters:

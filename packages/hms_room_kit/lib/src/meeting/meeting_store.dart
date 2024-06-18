@@ -1,6 +1,7 @@
 ///Dart imports
 library;
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -851,9 +852,10 @@ class MeetingStore extends ChangeNotifier
     }
     if (result == null) {
       isTranscriptionEnabled = !isTranscriptionEnabled;
+      toggleTranscriptionDisplay();
     } else {
       removeToast(HMSToastsType.transcriptionToast);
-      toasts.add(HMSToastModel(result.message,
+      toasts.add(HMSToastModel(result,
           hmsToastType: HMSToastsType.errorToast));
     }
     notifyListeners();
@@ -861,6 +863,11 @@ class MeetingStore extends ChangeNotifier
 
   void toggleTranscriptionDisplay() {
     isTranscriptionDisplayed = !isTranscriptionDisplayed;
+    if (isTranscriptionDisplayed) {
+      HMSTranscriptionController.addListener(listener: this);
+    } else {
+      HMSTranscriptionController.removeListener();
+    }
     notifyListeners();
   }
 
@@ -889,6 +896,16 @@ class MeetingStore extends ChangeNotifier
         room.hmsRtmpStreamingState?.state ?? HMSStreamingState.none;
     streamingType["hls"] =
         room.hmshlsStreamingState?.state ?? HMSStreamingState.none;
+
+    int index = room.transcriptions?.indexWhere(
+            (element) => element.mode == HMSTranscriptionMode.caption) ??
+        -1;
+
+    if (index != -1) {
+      room.transcriptions?[index].state == HMSTranscriptionState.started
+          ? isTranscriptionEnabled = true
+          : isTranscriptionEnabled = false;
+    }
 
     checkNoiseCancellationAvailability();
     setParticipantsList(roles);
@@ -1043,13 +1060,24 @@ class MeetingStore extends ChangeNotifier
         break;
       case HMSRoomUpdate.transcriptionsUpdated:
         if (room.transcriptions?.isNotEmpty ?? false) {
-          if (room.transcriptions?[0].state == HMSTranscriptionState.started ||
-              room.transcriptions?[0].state == HMSTranscriptionState.stopped) {
-            removeToast(HMSToastsType.transcriptionToast);
+          int index = room.transcriptions?.indexWhere(
+                  (element) => element.mode == HMSTranscriptionMode.caption) ??
+              -1;
+
+          if (index != -1) {
+            if (room.transcriptions?[index].state ==
+                    HMSTranscriptionState.started ||
+                room.transcriptions?[index].state ==
+                    HMSTranscriptionState.stopped) {
+              removeToast(HMSToastsType.transcriptionToast);
+            }
+            if (room.transcriptions?[index].state ==
+                HMSTranscriptionState.started) {
+              isTranscriptionEnabled = true;
+            } else {
+              isTranscriptionEnabled = false;
+            }
           }
-          room.transcriptions?[0].state == HMSTranscriptionState.started
-              ? isTranscriptionEnabled = true
-              : isTranscriptionEnabled = false;
         }
       default:
         break;
@@ -2728,13 +2756,27 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
+  bool areCaptionsEmpty = true;
+  Timer? transcriptionTimerObj;
+
   @override
   void onTranscripts({required List<HMSTranscription> transcriptions}) {
+    areCaptionsEmpty = false;
     captions = transcriptions;
+    startTranscriptionHideTimer();
     transcriptions.forEach((element) {
       log("onTranscripts -> text: ${element.transcript}");
     });
     notifyListeners();
+  }
+
+  void startTranscriptionHideTimer() {
+    transcriptionTimerObj?.cancel();
+    transcriptionTimerObj = Timer(Duration(seconds: 4), () {
+      areCaptionsEmpty = true;
+      captions = [];
+      notifyListeners();
+    });
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
