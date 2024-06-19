@@ -855,8 +855,7 @@ class MeetingStore extends ChangeNotifier
       toggleTranscriptionDisplay();
     } else {
       removeToast(HMSToastsType.transcriptionToast);
-      toasts.add(HMSToastModel(result,
-          hmsToastType: HMSToastsType.errorToast));
+      toasts.add(HMSToastModel(result, hmsToastType: HMSToastsType.errorToast));
     }
     notifyListeners();
   }

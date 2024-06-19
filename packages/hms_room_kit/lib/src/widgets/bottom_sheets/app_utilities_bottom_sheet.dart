@@ -433,60 +433,85 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                           ? "Close Whiteboard"
                           : "Open Whiteboard"),
 
-                if (getTranscriptionPermission(meetingStore))
+                ///This renders the closed captions option
+                ///This option is only rendered if the local peer has the permission to
+                ///enable/disable transcription(will see the popup to enable caption)
+                ///else the local peer can only see the option to Show/Hide captions
+                if (getTranscriptionPermission(meetingStore) ||
+                    meetingStore.isTranscriptionEnabled)
                   MoreOptionItem(
                       onTap: () async {
                         Navigator.pop(context);
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: HMSThemeColors.surfaceDim,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16)),
-                          ),
-                          context: context,
-                          builder: (ctx) => ChangeNotifierProvider.value(
-                            value: meetingStore,
-                            child: meetingStore.isTranscriptionEnabled
-                                ? ClosedCaptionControlBottomSheet(
-                                    meetingStore: meetingStore,
-                                  )
-                                : ClosedCaptionBottomSheet(
-                                    onButtonPressed: () =>
-                                        meetingStore.toggleTranscription(),
-                                    title: HMSTitleText(
-                                      text:
-                                          "Enable Closed Captions (CC) for this session?",
-                                      maxLines: 5,
-                                      textColor: HMSThemeColors
-                                          .onSecondaryHighEmphasis,
-                                      letterSpacing: 0.15,
-                                      fontSize: 20,
-                                    ),
-                                    subTitle: HMSSubheadingText(
-                                      text:
-                                          "This will enable Closed Captions for everyone in this room. You can disable it later.",
-                                      maxLines: 2,
-                                      textColor: HMSThemeColors
-                                          .onSurfaceMediumEmphasis,
-                                    ),
-                                    buttonText: "Enable for Everyone",
-                                  ),
-                          ),
-                        );
+
+                        ///If the local peer has the permission to enable/disable transcription
+                        ///we show the popup to enable/disable transcription
+                        ///else we call the method to show/hide captions
+                        (getTranscriptionPermission(meetingStore))
+                            ? showModalBottomSheet(
+                                isScrollControlled: true,
+                                backgroundColor: HMSThemeColors.surfaceDim,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(16),
+                                      topRight: Radius.circular(16)),
+                                ),
+                                context: context,
+                                builder: (ctx) => ChangeNotifierProvider.value(
+                                  value: meetingStore,
+                                  child: meetingStore.isTranscriptionEnabled
+                                      ? ClosedCaptionControlBottomSheet(
+                                          meetingStore: meetingStore,
+                                        )
+                                      : ClosedCaptionBottomSheet(
+                                          onButtonPressed: () => meetingStore
+                                              .toggleTranscription(),
+                                          title: HMSTitleText(
+                                            text:
+                                                "Enable Closed Captions (CC) for this session?",
+                                            maxLines: 5,
+                                            textColor: HMSThemeColors
+                                                .onSecondaryHighEmphasis,
+                                            letterSpacing: 0.15,
+                                            fontSize: 20,
+                                          ),
+                                          subTitle: HMSSubheadingText(
+                                            text:
+                                                "This will enable Closed Captions for everyone in this room. You can disable it later.",
+                                            maxLines: 2,
+                                            textColor: HMSThemeColors
+                                                .onSurfaceMediumEmphasis,
+                                          ),
+                                          buttonText: "Enable for Everyone",
+                                        ),
+                                ),
+                              )
+                            : meetingStore.toggleTranscriptionDisplay();
                       },
-                      isActive: meetingStore.isTranscriptionEnabled,
+
+                      ///Here we check if the local peer has the permission to enable/disable
+                      ///transcription if yes we use the isTranscriptionEnabled flag
+                      ///else we use the isTranscriptionDisplayed flag
+                      isActive: getTranscriptionPermission(meetingStore)
+                          ? meetingStore.isTranscriptionEnabled
+                          : meetingStore.isTranscriptionDisplayed,
                       optionIcon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/${meetingStore.isTranscriptionEnabled ? "cc-filled" : "cc"}.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/${(getTranscriptionPermission(meetingStore) ? meetingStore.isTranscriptionEnabled : meetingStore.isTranscriptionDisplayed) ? "cc-filled" : "cc"}.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
-                            getWhiteboardStatusColor(meetingStore),
+                            HMSThemeColors.onSurfaceHighEmphasis,
                             BlendMode.srcIn),
                       ),
-                      optionTextColor: getWhiteboardStatusColor(meetingStore),
-                      optionText: "Closed Captions"),
+                      optionTextColor: HMSThemeColors.onSurfaceHighEmphasis,
+
+                      ///If the local peer has the permission to enable/disable transcription
+                      ///we show the option to enable/disable transcription
+                      ///else we show the option to show/hide captions
+                      optionText: getTranscriptionPermission(meetingStore)
+                          ? "Closed Captions"
+                          : meetingStore.isTranscriptionDisplayed
+                              ? "Hide Captions"
+                              : "Show Captions"),
 
                 ///Virtual background is not supported out of the box in prebuilt as of now
                 // if (AppDebugConfig.isVirtualBackgroundEnabled &&
