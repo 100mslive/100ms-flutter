@@ -1,3 +1,4 @@
+///[HMSTranscriptionState] is an enum class which defines the state of the transcription
 enum HMSTranscriptionState { started, stopped, initialized, failed, unknown }
 
 extension HMSTranscriptionStateValues on HMSTranscriptionState {

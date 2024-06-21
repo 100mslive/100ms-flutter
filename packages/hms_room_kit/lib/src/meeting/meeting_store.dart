@@ -1078,6 +1078,7 @@ class MeetingStore extends ChangeNotifier
             }
           }
         }
+        break;
       default:
         break;
     }

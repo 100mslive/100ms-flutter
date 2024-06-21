@@ -1,3 +1,4 @@
+///[HMSTranscriptionListenerMethod] contains method for `HMSTranscriptionListener`
 enum HMSTranscriptionListenerMethod { onTranscripts, unknown }
 
 extension HMSTranscriptionListenerMethodValues

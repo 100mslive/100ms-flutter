@@ -1,3 +1,4 @@
+///[HMSTranscriptionMode] is an enum class that defines the transcription mode of the meeting.
 enum HMSTranscriptionMode { caption, live, unknown }
 
 extension HMSTranscriptionModeValues on HMSTranscriptionMode {

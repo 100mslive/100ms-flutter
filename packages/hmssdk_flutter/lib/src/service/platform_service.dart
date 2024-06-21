@@ -17,7 +17,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_hls_playback_event_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_key_change_listener_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
-import 'package:hmssdk_flutter/src/enum/hms_trancription_listener_method.dart';
+import 'package:hmssdk_flutter/src/enum/hms_transcription_listener_method.dart';
 import 'package:hmssdk_flutter/src/model/hms_key_change_observer.dart';
 import 'package:hmssdk_flutter/src/model/platform_method_response.dart';
 
@@ -56,6 +56,7 @@ abstract class PlatformService {
   static const EventChannel _whiteboardEventChannel =
       const EventChannel("whiteboard_event_channel");
 
+  ///used to get transcription events
   static const EventChannel _transcriptionEventChannel =
       const EventChannel("transcription_event_channel");
 
