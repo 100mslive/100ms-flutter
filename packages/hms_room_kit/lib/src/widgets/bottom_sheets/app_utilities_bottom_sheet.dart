@@ -488,14 +488,10 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                             : meetingStore.toggleTranscriptionDisplay();
                       },
 
-                      ///Here we check if the local peer has the permission to enable/disable
-                      ///transcription if yes we use the isTranscriptionEnabled flag
-                      ///else we use the isTranscriptionDisplayed flag
-                      isActive: getTranscriptionPermission(meetingStore)
-                          ? meetingStore.isTranscriptionEnabled
-                          : meetingStore.isTranscriptionDisplayed,
+                      ///The button is active if the transcription is enabled and getting displayed
+                      isActive: meetingStore.isTranscriptionDisplayed,
                       optionIcon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/${(getTranscriptionPermission(meetingStore) ? meetingStore.isTranscriptionEnabled : meetingStore.isTranscriptionDisplayed) ? "cc-filled" : "cc"}.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/${meetingStore.isTranscriptionDisplayed ? "cc-filled" : "cc"}.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(

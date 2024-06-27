@@ -122,11 +122,9 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
 
         guard let tempArg = arguments as? [AnyHashable: Any],
               let name =  tempArg["name"] as? String else {
-            print("Error occured")
             return FlutterError(code: #function, message: "invalid event sink name", details: arguments)
         }
 
-        print(name)
         switch name {
         case "meeting":
             eventSink = events
