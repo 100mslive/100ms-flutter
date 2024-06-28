@@ -5,6 +5,29 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+# 1.10.4 - 2024-06-28
+
+| Package                                | Version                                                                                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| hms_room_kit                | 1.1.4  |
+| hmssdk_flutter              | 1.10.4 |
+| hms_video_plugin            | 0.0.1 |
+
+### ✨ Added
+
+- Live Transcription in webRTC calls
+  
+  HMSSDK now provides support for transcription in webRTC calls. You can now start/stop transcription using `HMSTranscriptionController` methods. HMSSDK provides also provides callbacks for transcription start/stop events. Learn more about it [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/extend-capabilities/live-captions)
+
+### 🛠️ Changed
+
+- Applications no longer need to request permissions for camera, microphone etc. HMSSDK handles the permissions internally.Checkout the [permissions guide](https://www.100ms.live/docs/flutter/v2/quickstart/quickstart#add-permissions)
+
+Uses Android SDK 2.9.59 & iOS SDK 1.12.0
+
+**Full Changelog**: [1.10.3...1.10.4](https://github.com/100mslive/100ms-flutter/compare/1.10.3...1.10.4)
+
+
 # 1.10.3 - 2024-06-12
 
 | Package                                | Version                                                                                                                                  |
