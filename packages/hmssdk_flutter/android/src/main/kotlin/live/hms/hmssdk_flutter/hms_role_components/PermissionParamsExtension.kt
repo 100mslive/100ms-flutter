@@ -1,5 +1,7 @@
 package live.hms.hmssdk_flutter.hms_role_components
 
+import live.hms.hmssdk_flutter.HMSTranscriptExtension
+import live.hms.video.sdk.models.role.HMSTranscriptionPermissions
 import live.hms.video.sdk.models.role.HMSWhiteBoardPermission
 import live.hms.video.sdk.models.role.PermissionsParams
 
@@ -21,6 +23,7 @@ class PermissionParamsExtension {
             permissionsParams.whiteboard.let {
                 args["whiteboard_permission"] = getMapFromHMSWhiteboardPermission(it)
             }
+            args["transcription_permission"] = getMapFromHMSTranscriptionPermissionsList(permissionsParams.transcriptions)
             return args
         }
 
@@ -32,6 +35,19 @@ class PermissionParamsExtension {
             permission["read"] = hmsWhiteboardPermission.read
 
             return permission
+        }
+
+        private fun getMapFromHMSTranscriptionPermissionsList(hmsTranscriptionPermission: List<HMSTranscriptionPermissions>): ArrayList<HashMap<String,Any?>>{
+            val transcriptionPermissionList = ArrayList<HashMap<String, Any?>>()
+
+            hmsTranscriptionPermission.forEach {transcriptionPermission ->
+                val transcriptionPermissionMap = HashMap<String,Any?>()
+                transcriptionPermissionMap["mode"] = HMSTranscriptExtension.getStringFromTranscriptionMode(transcriptionPermission.mode)
+                transcriptionPermissionMap["admin"] = transcriptionPermission.admin
+
+                transcriptionPermissionList.add(transcriptionPermissionMap)
+            }
+            return transcriptionPermissionList
         }
     }
 }
