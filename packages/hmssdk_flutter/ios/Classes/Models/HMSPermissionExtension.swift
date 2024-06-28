@@ -22,11 +22,12 @@ class  HMSPermissionExtension {
             "un_mute": permission.unmute ?? false,
             "poll_read": permission.pollRead ?? false,
             "poll_write": permission.pollWrite ?? false,
-            "whiteboard_permission": getMapFromHMSWhiteboardPermission(hmsWhiteboardPermission: permission.whiteboard)
+            "whiteboard_permission": getMapFromHMSWhiteboardPermission(hmsWhiteboardPermission: permission.whiteboard),
+            "transcription_permission": getMapFromHMSTranscriptionPermissionList(hmsTranscriptionPermissions: permission.transcriptions)
         ]
     }
 
-    static func getMapFromHMSWhiteboardPermission(hmsWhiteboardPermission: HMSWhiteboardPermissions?) -> [String: Any?]? {
+    private static func getMapFromHMSWhiteboardPermission(hmsWhiteboardPermission: HMSWhiteboardPermissions?) -> [String: Any?]? {
 
         guard let hmsWhiteboardPermission = hmsWhiteboardPermission
         else {
@@ -41,5 +42,27 @@ class  HMSPermissionExtension {
 
         return permission
     }
+    
+    private static func getMapFromHMSTranscriptionPermissionList(hmsTranscriptionPermissions: [HMSTranscriptionPermissions]?) -> [[String:Any?]]?{
+        
+        
+        guard let hmsTranscriptionPermissions = hmsTranscriptionPermissions
+        else{
+            return nil
+        }
+        
+        var transcriptionPermissions = [[String:Any?]]()
+        
+        hmsTranscriptionPermissions.forEach{
+            var permission = [String:Any?]()
+            
+            permission["mode"] = $0.mode
+            permission["admin"] = $0.admin
+            transcriptionPermissions.append(permission)
+        }
+        
+        return transcriptionPermissions
+    }
+    
 
 }

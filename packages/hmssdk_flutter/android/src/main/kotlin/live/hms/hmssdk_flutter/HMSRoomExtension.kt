@@ -1,6 +1,7 @@
 package live.hms.hmssdk_flutter
 
 import live.hms.video.sdk.models.HMSRoom
+import live.hms.video.sdk.models.Transcriptions
 import live.hms.video.sdk.models.enums.HMSRoomUpdate
 
 class HMSRoomExtension {
@@ -18,6 +19,7 @@ class HMSRoomExtension {
                 args.add(HMSPeerExtension.toDictionary(it)!!)
             }
 
+            hashMap["transcriptions"] = HMSTranscriptExtension.getMapFromTranscriptionsList(room.transcriptions)
             hashMap["is_large"] = room.isLargeRoom
             hashMap["local_peer"] = HMSPeerExtension.toDictionary(room.localPeer)
             hashMap["peers"] = args
@@ -44,6 +46,7 @@ class HMSRoomExtension {
                 HMSRoomUpdate.BROWSER_RECORDING_STATE_UPDATED -> "browser_recording_state_updated"
                 HMSRoomUpdate.HLS_RECORDING_STATE_UPDATED -> "hls_recording_state_updated"
                 HMSRoomUpdate.ROOM_PEER_COUNT_UPDATED -> "room_peer_count_updated"
+                HMSRoomUpdate.TRANSCRIPTIONS_UPDATED -> "transcriptions_updated"
                 else -> "defaultUpdate"
             }
         }

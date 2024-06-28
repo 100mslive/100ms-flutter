@@ -2,6 +2,9 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_error_toast.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_streaming_error_toast.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -16,6 +19,7 @@ import 'package:hms_room_kit/src/widgets/toasts/hms_recording_error_toast.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_role_change_decline_toast.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toast_model.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_transcription_toast.dart';
 
 ///[ToastWidget] returns toast based on the toast type
 class ToastWidget extends StatelessWidget {
@@ -74,8 +78,24 @@ class ToastWidget extends StatelessWidget {
             ),
           ),
         );
+      case HMSToastsType.transcriptionToast:
+        return HMSTranscriptionToast(
+          message: toast.toastData,
+          meetingStore: meetingStore,
+        );
+      // default:
+      //   return const SizedBox();
+      case HMSToastsType.errorToast:
+        if (toast.toastData is HMSException) {
+          return HMSErrorToast(
+              error: toast.toastData, meetingStore: meetingStore);
+        }
+        return SizedBox();
+      case HMSToastsType.streamingErrorToast:
+        return HMSStreamingErrorToast(
+            streamingError: toast.toastData, meetingStore: meetingStore);
       default:
-        return const SizedBox();
+        return SizedBox();
     }
   }
 }

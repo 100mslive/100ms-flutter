@@ -7,5 +7,6 @@ enum HMSToastsType {
   chatPauseResumeToast,
   errorToast,
   pollStartedToast,
-  streamingErrorToast
+  streamingErrorToast,
+  transcriptionToast
 }

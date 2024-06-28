@@ -23,6 +23,9 @@ enum HMSRoomUpdate {
   //When peer Count is changed
   roomPeerCountUpdated,
 
+  ///When transcription state is updated
+  transcriptionsUpdated,
+
   ///Default Update
   defaultUpdate
 }
@@ -54,6 +57,9 @@ extension HMSRoomUpdateValues on HMSRoomUpdate {
       case 'room_peer_count_updated':
         return HMSRoomUpdate.roomPeerCountUpdated;
 
+      case 'transcriptions_updated':
+        return HMSRoomUpdate.transcriptionsUpdated;
+
       default:
         return HMSRoomUpdate.defaultUpdate;
     }
@@ -84,6 +90,9 @@ extension HMSRoomUpdateValues on HMSRoomUpdate {
 
       case HMSRoomUpdate.roomPeerCountUpdated:
         return 'room_peer_count_updated';
+
+      case HMSRoomUpdate.transcriptionsUpdated:
+        return 'transcriptions_updated';
 
       default:
         return 'defaultUpdate';
