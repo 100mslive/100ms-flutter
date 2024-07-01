@@ -8,6 +8,7 @@ import 'dart:io';
 
 //Package imports
 // import 'package:hms_video_plugin/hms_video_plugin.dart';
+import 'package:hms_room_kit/src/model/transcript_store.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -283,7 +284,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isTranscriptionDisplayed = false;
 
-  List<HMSTranscription> captions = [];
+  List<TranscriptStore> captions = [];
 
   Future<HMSException?> join(String userName, String? tokenData) async {
     late HMSConfig joinConfig;
@@ -2762,10 +2763,34 @@ class MeetingStore extends ChangeNotifier
   @override
   void onTranscripts({required List<HMSTranscription> transcriptions}) {
     areCaptionsEmpty = false;
-    captions = transcriptions;
     startTranscriptionHideTimer();
+
+    ///Remove the first element if the length is greater than 3
+    if (captions.length >= 3) {
+      captions.removeRange(0, 1);
+    }
     transcriptions.forEach((element) {
       log("onTranscripts -> text: ${element.transcript}");
+
+      ///
+      if (captions.isEmpty) {
+        captions.add(TranscriptStore(
+            transcript: element.transcript,
+            peerId: element.peerId,
+            start: element.start,
+            peerName: element.peerName));
+      } else {
+        if (captions.last.peerId == element.peerId &&
+            captions.last.start == element.start) {
+          captions.last.setTranscript(element.transcript);
+        } else {
+          captions.add(TranscriptStore(
+              transcript: element.transcript,
+              peerId: element.peerId,
+              start: element.start,
+              peerName: element.peerName));
+        }
+      }
     });
     notifyListeners();
   }

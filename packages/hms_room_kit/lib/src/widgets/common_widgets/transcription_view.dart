@@ -5,7 +5,7 @@ import 'dart:io';
 
 ///Package imports
 import 'package:flutter/material.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hms_room_kit/src/model/transcript_store.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -28,15 +28,15 @@ class _TranscriptionViewState extends State<TranscriptionView> {
         selector: (_, meetingStore) => meetingStore.isTranscriptionDisplayed,
         builder: (_, isTranscriptionDisplayed, __) {
           return isTranscriptionDisplayed
-              ? Selector<MeetingStore, Tuple2<List<HMSTranscription>, int>>(
+              ? Selector<MeetingStore, Tuple2<List<TranscriptStore>, int>>(
                   selector: (_, meetingStore) => Tuple2(
                       meetingStore.captions, meetingStore.captions.length),
                   builder: (_, data, __) {
-                    String transcript = "";
-                    for (var i = 0; i < data.item2; i++) {
-                      transcript +=
-                          "${data.item1[i].peerName}: ${data.item1[i].transcript}\n";
-                    }
+                    // String transcript = "";
+                    // for (var i = 0; i < data.item2; i++) {
+                    //   transcript +=
+                    //       "${data.item1[i].peerName}: ${data.item1[i].transcript}\n";
+                    // }
                     return data.item2 > 0
                         ? Selector<MeetingStore, Tuple2<bool, bool>>(
                             selector: (_, meetingStore) => Tuple2(
@@ -86,6 +86,7 @@ class _TranscriptionViewState extends State<TranscriptionView> {
                                                       .size
                                                       .width -
                                                   10,
+                                              height: 80,
                                               padding: const EdgeInsets.all(5),
                                               margin: const EdgeInsets.all(2),
                                               decoration: BoxDecoration(
@@ -95,11 +96,69 @@ class _TranscriptionViewState extends State<TranscriptionView> {
                                                   borderRadius:
                                                       const BorderRadius.all(
                                                           Radius.circular(10))),
-                                              child: HMSSubtitleText(
-                                                  text: transcript,
-                                                  maxLines: 5,
-                                                  textColor: HMSThemeColors
-                                                      .onSurfaceHighEmphasis)),
+
+                                              ///Here we render the list of transcriptions
+                                              child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  physics:
+                                                      NeverScrollableScrollPhysics(),
+                                                  itemCount: data.item2,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return ChangeNotifierProvider
+                                                        .value(
+                                                      value: data.item1[index],
+                                                      child: Selector<
+                                                              TranscriptStore,
+                                                              String>(
+                                                          selector: (_,
+                                                                  transcriptStore) =>
+                                                              transcriptStore
+                                                                  .transcript,
+                                                          builder: (_,
+                                                              transcript, __) {
+                                                            ///Here we render the transcriptions
+                                                            ///with peer name in bold and transcript in normal font
+                                                            return RichText(
+                                                              text: TextSpan(
+                                                                children: [
+                                                                  TextSpan(
+                                                                    text:
+                                                                        "${data.item1[index].peerName}: ",
+                                                                    style: TextStyle(
+                                                                        color: HMSThemeColors
+                                                                            .onSurfaceHighEmphasis,
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        height:
+                                                                            20 /
+                                                                                14,
+                                                                        letterSpacing:
+                                                                            0.25),
+                                                                  ),
+                                                                  TextSpan(
+                                                                    text:
+                                                                        transcript,
+                                                                    style: TextStyle(
+                                                                        color: HMSThemeColors
+                                                                            .onSurfaceHighEmphasis,
+                                                                        fontSize:
+                                                                            14,
+                                                                        height:
+                                                                            20 /
+                                                                                14,
+                                                                        letterSpacing:
+                                                                            0.25),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            );
+                                                          }),
+                                                    );
+                                                  })),
                                         ],
                                       ),
                                     );
