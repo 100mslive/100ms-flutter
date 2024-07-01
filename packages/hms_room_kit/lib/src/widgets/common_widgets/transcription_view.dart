@@ -86,7 +86,7 @@ class _TranscriptionViewState extends State<TranscriptionView> {
                                                       .size
                                                       .width -
                                                   10,
-                                              height: 80,
+                                              height: 100,
                                               padding: const EdgeInsets.all(5),
                                               margin: const EdgeInsets.all(2),
                                               decoration: BoxDecoration(
