@@ -2,6 +2,7 @@ package live.hms.hmssdk_flutter.methods
 
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import live.hms.hmssdk_flutter.HMSCommonAction
 import live.hms.hmssdk_flutter.HMSErrorLogger
 import live.hms.hmssdk_flutter.HMSResultExtension
 import live.hms.video.factories.noisecancellation.AvailabilityStatus
@@ -40,8 +41,7 @@ class HMSNoiseCancellationControllerAction {
             result: MethodChannel.Result,
             hmssdk: HMSSDK,
         ) {
-            hmssdk.setNoiseCancellationEnabled(true)
-            result.success(null)
+            hmssdk.enableNoiseCancellation(true,HMSCommonAction.getActionListener(result))
         }
 
         /**
@@ -51,8 +51,7 @@ class HMSNoiseCancellationControllerAction {
             result: MethodChannel.Result,
             hmssdk: HMSSDK,
         ) {
-            hmssdk.setNoiseCancellationEnabled(false)
-            result.success(null)
+            hmssdk.enableNoiseCancellation(false, HMSCommonAction.getActionListener(result))
         }
 
         /**
@@ -62,7 +61,7 @@ class HMSNoiseCancellationControllerAction {
             result: MethodChannel.Result,
             hmssdk: HMSSDK,
         ) {
-            val isEnabled = hmssdk.getNoiseCancellationEnabled()
+            val isEnabled = hmssdk.isNoiseCancellationEnabled()
             result.success(HMSResultExtension.toDictionary(true, isEnabled))
         }
 
@@ -73,7 +72,7 @@ class HMSNoiseCancellationControllerAction {
             result: MethodChannel.Result,
             hmssdk: HMSSDK,
         ) {
-            val availabilityStatus = hmssdk.isNoiseCancellationAvailable()
+            val availabilityStatus = hmssdk.isNoiseCancellationSupported()
             if (availabilityStatus == AvailabilityStatus.Available) {
                 result.success(HMSResultExtension.toDictionary(true, data = true))
             } else {
