@@ -1,13 +1,20 @@
+library;
+
+///Dart imports
 import 'dart:io';
 
+///Package imports
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
-import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
+///Project imports
+import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
+import 'package:hms_room_kit/src/meeting/meeting_store.dart';
+
+///[TranscriptionView] is a widget that displays the transcription of the meeting
 class TranscriptionView extends StatefulWidget {
   const TranscriptionView({Key? key}) : super(key: key);
   @override
