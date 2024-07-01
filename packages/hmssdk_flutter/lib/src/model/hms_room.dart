@@ -3,6 +3,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/model/hms_browser_recording_state.dart';
 import 'package:hmssdk_flutter/src/model/hms_hls_recording_state.dart';
 import 'package:hmssdk_flutter/src/model/hms_server_recording_state.dart';
+import 'package:hmssdk_flutter/src/model/transcription.dart';
 import 'hms_hls_streaming_state.dart';
 import 'hms_rtmp_streaming_state.dart';
 
@@ -22,6 +23,7 @@ class HMSRoom {
   String? name;
   String? metaData;
   bool isLarge;
+  List<Transcription>? transcriptions;
   HMSBrowserRecordingState? hmsBrowserRecordingState;
   HMSRtmpStreamingState? hmsRtmpStreamingState;
   HMSServerRecordingState? hmsServerRecordingState;
@@ -39,6 +41,7 @@ class HMSRoom {
       this.name,
       required this.peers,
       required this.isLarge,
+      this.transcriptions,
       this.metaData,
       this.hmsServerRecordingState,
       this.hmsRtmpStreamingState,
@@ -60,6 +63,17 @@ class HMSRoom {
           print("HMSRoom map: $map error: $e");
         }
       }
+    }
+
+    List<Transcription>? transcriptions;
+
+    if (map["transcriptions"] != null) {
+      map["transcriptions"].forEach((element) {
+        if (transcriptions == null) {
+          transcriptions = [];
+        }
+        transcriptions?.add(Transcription.fromMap(element));
+      });
     }
 
     return HMSRoom(
@@ -85,7 +99,8 @@ class HMSRoom {
         metaData: map['meta_data'],
         peerCount: map["peer_count"] != null ? map["peer_count"] : 0,
         startedAt: map["started_at"] != null ? map["started_at"] : 0,
-        sessionId: map["session_id"] != null ? map["session_id"] : "");
+        sessionId: map["session_id"] != null ? map["session_id"] : "",
+        transcriptions: transcriptions);
   }
 
   @override

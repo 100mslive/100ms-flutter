@@ -246,7 +246,13 @@ enum PlatformMethod {
   changeVirtualBackground,
   enableBlurBackground,
   disableBlurBackground,
-  isVirtualBackgroundSupported
+  isVirtualBackgroundSupported,
+
+  ///Transcription methods
+  startRealTimeTranscription,
+  stopRealTimeTranscription,
+  addTranscriptListener,
+  removeTranscriptListener
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -626,6 +632,15 @@ extension PlatformMethodValues on PlatformMethod {
       case PlatformMethod.isVirtualBackgroundSupported:
         return "is_virtual_background_supported";
 
+      case PlatformMethod.startRealTimeTranscription:
+        return "start_real_time_transcription";
+      case PlatformMethod.stopRealTimeTranscription:
+        return "stop_real_time_transcription";
+      case PlatformMethod.addTranscriptListener:
+        return "add_transcript_listener";
+      case PlatformMethod.removeTranscriptListener:
+        return "remove_transcript_listener";
+
       default:
         return 'unknown';
     }
@@ -1004,6 +1019,15 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.disableBlurBackground;
       case "is_virtual_background_supported":
         return PlatformMethod.isVirtualBackgroundSupported;
+
+      case "start_real_time_transcription":
+        return PlatformMethod.startRealTimeTranscription;
+      case "stop_real_time_transcription":
+        return PlatformMethod.stopRealTimeTranscription;
+      case "add_transcript_listener":
+        return PlatformMethod.addTranscriptListener;
+      case "remove_transcript_listener":
+        return PlatformMethod.removeTranscriptListener;
 
       default:
         return PlatformMethod.unknown;

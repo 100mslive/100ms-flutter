@@ -45,6 +45,7 @@ import live.hms.video.sdk.models.*
 import live.hms.video.sdk.models.enums.*
 import live.hms.video.sdk.models.role.HMSRole
 import live.hms.video.sdk.models.trackchangerequest.HMSChangeTrackStateRequest
+import live.hms.video.sdk.transcripts.HmsTranscripts
 import live.hms.video.sessionstore.HMSKeyChangeListener
 import live.hms.video.sessionstore.HmsSessionStore
 import live.hms.video.signal.init.*
@@ -68,6 +69,7 @@ class HmssdkFlutterPlugin :
     var hlsPlayerChannel: EventChannel? = null
     private var pollsEventChannel: EventChannel? = null
     private var whiteboardEventChannel: EventChannel? = null
+    private var transcriptionEventChannel: EventChannel? = null
     private var eventSink: EventChannel.EventSink? = null
     private var previewSink: EventChannel.EventSink? = null
     private var logsSink: EventChannel.EventSink? = null
@@ -76,6 +78,7 @@ class HmssdkFlutterPlugin :
     var hlsPlayerSink: EventChannel.EventSink? = null
     private var pollsSink: EventChannel.EventSink? = null
     private var whiteboardSink: EventChannel.EventSink? = null
+    private var transcriptionSink : EventChannel.EventSink? = null
     private lateinit var activity: Activity
     var hmssdk: HMSSDK? = null
     private lateinit var hmsVideoFactory: HMSVideoViewFactory
@@ -121,6 +124,9 @@ class HmssdkFlutterPlugin :
             this.whiteboardEventChannel =
                 EventChannel(flutterPluginBinding.binaryMessenger, "whiteboard_event_channel")
 
+            this.transcriptionEventChannel =
+                EventChannel(flutterPluginBinding.binaryMessenger, "transcription_event_channel")
+
             this.meetingEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Meeting event channel not found")
             this.channel?.setMethodCallHandler(this) ?: Log.e("Channel Error", "Event channel not found")
             this.previewChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "Preview channel not found")
@@ -130,6 +136,7 @@ class HmssdkFlutterPlugin :
             this.hlsPlayerChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "HLS Player channel not found")
             this.pollsEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "polls events channel not found")
             this.whiteboardEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "whiteboard events channel not found")
+            this.transcriptionEventChannel?.setStreamHandler(this) ?: Log.e("Channel Error", "transcription event channel not found")
             this.hmsVideoFactory = HMSVideoViewFactory(this)
             this.hmsHLSPlayerFactory = HMSHLSPlayerFactory(this)
 
@@ -303,6 +310,10 @@ class HmssdkFlutterPlugin :
 
             "start_whiteboard", "stop_whiteboard", "add_whiteboard_update_listener", "remove_whiteboard_update_listener" -> {
                 whiteboardActions(call, result)
+            }
+
+            "start_real_time_transcription", "stop_real_time_transcription","add_transcript_listener", "remove_transcript_listener" ->{
+                transcriptionActions(call,result)
             }
 
             else -> {
@@ -500,6 +511,26 @@ class HmssdkFlutterPlugin :
         }
     }
 
+    private var isTranscriptionListenerAdded = false
+    private fun transcriptionActions(
+        call: MethodCall,
+        result: Result
+    ){
+        when(call.method){
+            "add_transcript_listener" -> {
+                isTranscriptionListenerAdded = true
+                result.success(null)
+            }
+            "remove_transcript_listener" -> {
+                isTranscriptionListenerAdded = false
+                result.success(null)
+            }
+            else -> hmssdk?.let {
+                HMSTranscriptionAction.transcriptionAction(call,result,it)
+            }
+        }
+    }
+
     private fun pollActions(
         call: MethodCall,
         result: Result,
@@ -531,6 +562,7 @@ class HmssdkFlutterPlugin :
             hlsPlayerChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "HLS Player channel not found")
             pollsEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "polls event  channel not found")
             whiteboardEventChannel?.setStreamHandler(null) ?: Log.e("Channel Error", "whiteboard event channel not found")
+            transcriptionEventChannel?.setStreamHandler(null)?: Log.e("Channel Error", "transcription event channel not found")
             eventSink = null
             previewSink = null
             rtcSink = null
@@ -539,6 +571,7 @@ class HmssdkFlutterPlugin :
             hlsPlayerSink = null
             pollsSink = null
             whiteboardSink = null
+            transcriptionSink = null
             hmssdkFlutterPlugin = null
             hmsBinaryMessenger = null
             hmsTextureRegistry = null
@@ -657,22 +690,21 @@ class HmssdkFlutterPlugin :
     ) {
         val nameOfEventSink = (arguments as HashMap<String, Any>)["name"]
 
-        if (nameOfEventSink!! == "meeting") {
-            this.eventSink = events
-        } else if (nameOfEventSink == "preview") {
-            this.previewSink = events
-        } else if (nameOfEventSink == "logs") {
-            this.logsSink = events
-        } else if (nameOfEventSink == "rtc_stats") {
-            this.rtcSink = events
-        } else if (nameOfEventSink == "session_store") {
-            this.sessionStoreSink = events
-        } else if (nameOfEventSink == "hls_player") {
-            this.hlsPlayerSink = events
-        } else if (nameOfEventSink == "polls") {
-            this.pollsSink = events
-        } else if (nameOfEventSink == "whiteboard") {
-            this.whiteboardSink = events
+        nameOfEventSink?.let { eventSink ->
+            when(eventSink){
+                "meeting" -> this.eventSink = events
+                "preview" -> this.previewSink = events
+                "logs" -> this.logsSink = events
+                "rtc_stats" -> this.rtcSink = events
+                "session_store" -> this.sessionStoreSink = events
+                "hls_player" -> this.hlsPlayerSink = events
+                "polls" -> this.pollsSink = events
+                "whiteboard" -> this.whiteboardSink = events
+                "transcription" -> this.transcriptionSink = events
+                else -> Log.e("Event Sink Error", "No sink with given name found")
+            }
+        }?:run{
+            HMSErrorLogger.logError("onListen", "name of event sink is null", "NULL ERROR")
         }
     }
 
@@ -1477,6 +1509,28 @@ class HmssdkFlutterPlugin :
 
                 CoroutineScope(Dispatchers.Main).launch {
                     eventSink?.success(args)
+                }
+            }
+
+            override fun onTranscripts(transcripts: HmsTranscripts) {
+                super.onTranscripts(transcripts)
+
+                /**
+                 * If transcription listener is added in the application
+                 * then only we send data from here
+                 */
+                if(isTranscriptionListenerAdded){
+                    val args = HashMap<String,Any?>()
+                    args["event_name"] = "on_transcripts"
+
+                    val transcriptsList = ArrayList<HashMap<String,Any?>>()
+                    transcripts.transcripts.forEach { _transcript ->
+                        transcriptsList.add(HMSTranscriptExtension.toDictionary(_transcript))
+                    }
+                    args["data"] = transcriptsList
+                    CoroutineScope(Dispatchers.Main).launch {
+                        transcriptionSink?.success(args)
+                    }
                 }
             }
         }

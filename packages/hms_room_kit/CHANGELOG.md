@@ -5,12 +5,29 @@
 | hms_room_kit   | [![Pub Version](https://img.shields.io/pub/v/hms_room_kit)](https://pub.dev/packages/hms_room_kit)     |
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 
+## 1.1.4 - 2024-07-01
+
+| Package                                | Version                                                                                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| hms_room_kit                | 1.1.4  |
+| hmssdk_flutter              | 1.10.4 |
+| hms_video_plugin            | 0.0.2  |
+
+### 🚀 Added
+
+- Introducing live transcription options in prebuilt
+
+  Prebuilt now supports live transcription for better accessibility. Users can enable or disable live transcription from the prebuilt interface.
+
+Uses `hmssdk_flutter` package version 1.10.4
+
 ## 1.1.3 - 2024-06-12
 
 | Package                                | Version                                                                                                                                  |
 | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | hms_room_kit                | 1.1.3  |
 | hmssdk_flutter              | 1.10.3 |
+| hms_video_plugin            | 0.0.1 |
 
 ### 🚀 Added
 

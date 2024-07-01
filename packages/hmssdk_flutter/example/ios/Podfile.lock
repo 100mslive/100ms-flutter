@@ -133,7 +133,7 @@ PODS:
   - HMSSDK (1.12.0):
     - HMSAnalyticsSDK (= 0.0.2)
     - HMSWebRTC (= 1.0.6169)
-  - hmssdk_flutter (1.10.3):
+  - hmssdk_flutter (1.10.4):
     - Flutter
     - HMSBroadcastExtensionSDK (= 0.0.9)
     - HMSHLSPlayerSDK (= 0.0.2)
@@ -316,7 +316,7 @@ SPEC CHECKSUMS:
   HMSHLSPlayerSDK: 6a54ad4d12f3dc2270d1ecd24019d71282a4f6a3
   HMSNoiseCancellationModels: a3bda1405a16015632f4bcabd46ce48f35103b02
   HMSSDK: 137107663eedc276c22639b2ec941c1f14f75d23
-  hmssdk_flutter: cb46ccd6b59efc2f0b9ab9548b7addc95b3002ac
+  hmssdk_flutter: 869c38a41e8fae0bf78d47740beb7889b4b5837a
   HMSWebRTC: 8f51ba33a0e505e17ebf3d7b37bcdca266751a13
   image_picker_ios: 99dfe1854b4fa34d0364e74a78448a0151025425
   MLImage: 7bb7c4264164ade9bf64f679b40fb29c8f33ee9b

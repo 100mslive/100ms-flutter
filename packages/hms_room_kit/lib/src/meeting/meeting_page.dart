@@ -26,6 +26,7 @@ import 'package:hms_room_kit/src/preview_for_role/preview_for_role_bottom_sheet.
 import 'package:hms_room_kit/src/preview_for_role/preview_for_role_header.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_left_room_screen.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/transcription_view.dart';
 
 ///[MeetingPage] is the main page of the meeting
 ///It takes the following parameters:
@@ -151,6 +152,10 @@ class _MeetingPageState extends State<MeetingPage> {
                                                       const MeetingBottomNavigationBar())),
                                         ],
                                       ),
+
+                                      ChangeNotifierProvider.value(
+                                          value: _visibilityController,
+                                          child: const TranscriptionView()),
 
                                       ///This gets rendered when the previewForRole method is called
                                       ///This is used to show the preview for role component

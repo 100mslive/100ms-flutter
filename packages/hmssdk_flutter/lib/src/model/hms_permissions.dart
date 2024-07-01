@@ -1,3 +1,4 @@
+import 'package:hmssdk_flutter/src/model/transcription/hms_transcription_permission.dart';
 import 'package:hmssdk_flutter/src/model/whiteboard/hms_whiteboard_permission.dart';
 
 ///100ms HMSPermissions
@@ -15,6 +16,7 @@ class HMSPermissions {
   final bool? pollRead;
   final bool? pollWrite;
   final HMSWhiteboardPermission? whiteboard;
+  final List<HMSTranscriptionPermission>? transcription;
 
   HMSPermissions(
       {this.endRoom,
@@ -27,7 +29,8 @@ class HMSPermissions {
       this.changeRole,
       this.pollRead,
       this.pollWrite,
-      this.whiteboard});
+      this.whiteboard,
+      this.transcription});
 
   factory HMSPermissions.fromMap(Map map) {
     return HMSPermissions(
@@ -43,6 +46,12 @@ class HMSPermissions {
         pollWrite: map['poll_write'],
         whiteboard: map['whiteboard_permission'] != null
             ? HMSWhiteboardPermission.fromMap(map['whiteboard_permission'])
+            : null,
+        transcription: map['transcription_permission'] != null
+            ? map['transcription_permission']
+                .map<HMSTranscriptionPermission>(
+                    (e) => HMSTranscriptionPermission.fromMap(e))
+                .toList()
             : null);
   }
 }

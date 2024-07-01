@@ -1,27 +1,12 @@
-Board: https://100ms.atlassian.net/jira/software/projects/FLUT/boards/34/
+Board: https://app.devrev.ai/100ms/vistas/vista-250
 
-- Implement Background Blur effects
-https://100ms.atlassian.net/browse/FLUT-318
+- Move all the permissions from app to SDK
+https://app.devrev.ai/100ms/works/ISS-10106
 
-- Expose SDK APIs for Virtual Backgrounds
-https://100ms.atlassian.net/browse/FLUT-319
+- Live transcription in WebRTC mode
+https://app.devrev.ai/100ms/works/ISS-22680
 
-- Create separate package on pub for Virtual Background
-https://100ms.atlassian.net/browse/FLUT-317
-
-- Hand Raise as a Layout Config
-https://100ms.atlassian.net/browse/FLUT-275
-
-- Empty screen scenarios on Prebuilt
-https://100ms.atlassian.net/browse/FLUT-304
-
-- Resolve issue where VRT is not able to subscribe to host
-https://100ms.atlassian.net/browse/FLUT-329
-
-- Remove use of Popup in screen share while in full screen
-https://100ms.atlassian.net/browse/FLUT-326
-
-Room Kit: 1.1.3
-Core SDK: 1.10.3
+Room Kit: 1.1.4
+Core SDK: 1.10.4
 Android SDK: 2.9.59
 iOS SDK: 1.12.0

@@ -17,6 +17,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_hls_playback_event_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_key_change_listener_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
+import 'package:hmssdk_flutter/src/enum/hms_transcription_listener_method.dart';
 import 'package:hmssdk_flutter/src/model/hms_key_change_observer.dart';
 import 'package:hmssdk_flutter/src/model/platform_method_response.dart';
 
@@ -55,6 +56,10 @@ abstract class PlatformService {
   static const EventChannel _whiteboardEventChannel =
       const EventChannel("whiteboard_event_channel");
 
+  ///used to get transcription events
+  static const EventChannel _transcriptionEventChannel =
+      const EventChannel("transcription_event_channel");
+
   ///add meeting listeners.
   static List<HMSUpdateListener> updateListeners = [];
 
@@ -70,6 +75,8 @@ abstract class PlatformService {
   static HMSPollListener? _pollListener;
 
   static HMSWhiteboardUpdateListener? _whiteboardListener;
+
+  static HMSTranscriptListener? _transcriptListener;
 
   ///List for event Listener
   static List<HMSStatsListener> statsListeners = [];
@@ -144,6 +151,14 @@ abstract class PlatformService {
 
   static void addKeyChangeObserver(HMSKeyChangeObserver hmsKeyChangeObserver) {
     keyChangeObservers.add(hmsKeyChangeObserver);
+  }
+
+  static void addTranscriptListener(HMSTranscriptListener transcriptListener) {
+    _transcriptListener = transcriptListener;
+  }
+
+  static void removeTranscriptListener() {
+    _transcriptListener = null;
   }
 
   static Future<HMSException?> removeKeyChangeObserver(
@@ -623,6 +638,27 @@ abstract class PlatformService {
               hmsWhiteboardModel: HMSWhiteboardModel.fromMap(event.data));
           break;
         case HMSWhiteboardListenerMethod.unknown:
+          break;
+      }
+    });
+
+    _transcriptionEventChannel
+        .receiveBroadcastStream({'name': 'transcription'}).map((event) {
+      HMSTranscriptionListenerMethod method =
+          HMSTranscriptionListenerMethodValues
+              .getHMSTranscriptionListenerMethodFromString(event['event_name']);
+      var data = event['data'];
+      return HMSTranscriptionListenerMethodResponse(method: method, data: data);
+    }).listen((event) {
+      HMSTranscriptionListenerMethod method = event.method;
+      switch (method) {
+        case HMSTranscriptionListenerMethod.onTranscripts:
+          _transcriptListener?.onTranscripts(
+              transcriptions: (event.data)
+                  .map((e) => HMSTranscription.fromMap(e))
+                  .toList());
+          break;
+        case HMSTranscriptionListenerMethod.unknown:
           break;
       }
     });

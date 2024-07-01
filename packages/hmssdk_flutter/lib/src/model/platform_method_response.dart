@@ -3,6 +3,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hmssdk_flutter/src/enum/hms_hls_playback_event_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_key_change_listener_method.dart';
 import 'package:hmssdk_flutter/src/enum/hms_logs_update_listener.dart';
+import 'package:hmssdk_flutter/src/enum/hms_transcription_listener_method.dart';
 
 ///PlatformMethodResponse contains all the responses sent back from the platform
 ///
@@ -101,5 +102,13 @@ class HMSWhiteboardListenerMethodResponse {
   final Map<dynamic, dynamic> data;
 
   HMSWhiteboardListenerMethodResponse(
+      {required this.method, required this.data});
+}
+
+class HMSTranscriptionListenerMethodResponse {
+  final HMSTranscriptionListenerMethod method;
+  final List<dynamic> data;
+
+  HMSTranscriptionListenerMethodResponse(
       {required this.method, required this.data});
 }

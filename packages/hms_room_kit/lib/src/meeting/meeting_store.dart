@@ -1,6 +1,7 @@
 ///Dart imports
 library;
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -38,7 +39,8 @@ class MeetingStore extends ChangeNotifier
         HMSKeyChangeListener,
         HMSHLSPlaybackEventsListener,
         HMSPollListener,
-        HMSWhiteboardUpdateListener {
+        HMSWhiteboardUpdateListener,
+        HMSTranscriptListener {
   late HMSSDKInteractor _hmsSDKInteractor;
 
   MeetingStore({required HMSSDKInteractor hmsSDKInteractor}) {
@@ -276,6 +278,13 @@ class MeetingStore extends ChangeNotifier
   ///variable to store whiteboard model
   HMSWhiteboardModel? whiteboardModel;
 
+  ///variable to store whether transcription is enabled or not
+  bool isTranscriptionEnabled = false;
+
+  bool isTranscriptionDisplayed = false;
+
+  List<HMSTranscription> captions = [];
+
   Future<HMSException?> join(String userName, String? tokenData) async {
     late HMSConfig joinConfig;
 
@@ -475,6 +484,9 @@ class MeetingStore extends ChangeNotifier
       case HMSToastsType.streamingErrorToast:
         toasts.removeWhere(
             (toast) => toast.hmsToastType == HMSToastsType.streamingErrorToast);
+      case HMSToastsType.transcriptionToast:
+        toasts.removeWhere(
+            (toast) => toast.hmsToastType == HMSToastsType.transcriptionToast);
     }
     notifyListeners();
   }
@@ -824,6 +836,40 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
+  ///This method is used to toggle the transcription
+  ///for the peer who has admin permissions
+  void toggleTranscription() async {
+    HMSException? result;
+    toasts.add(HMSToastModel(
+        isTranscriptionEnabled
+            ? "Disabling Closed Captioning for everyone"
+            : "Enabling Closed Captioning for everyone",
+        hmsToastType: HMSToastsType.transcriptionToast));
+    if (isTranscriptionEnabled) {
+      result = await HMSTranscriptionController.stopTranscription();
+    } else {
+      result = await HMSTranscriptionController.startTranscription();
+    }
+    if (result == null) {
+      isTranscriptionEnabled = !isTranscriptionEnabled;
+      toggleTranscriptionDisplay();
+    } else {
+      removeToast(HMSToastsType.transcriptionToast);
+      toasts.add(HMSToastModel(result, hmsToastType: HMSToastsType.errorToast));
+    }
+    notifyListeners();
+  }
+
+  void toggleTranscriptionDisplay() {
+    isTranscriptionDisplayed = !isTranscriptionDisplayed;
+    if (isTranscriptionDisplayed) {
+      HMSTranscriptionController.addListener(listener: this);
+    } else {
+      HMSTranscriptionController.removeListener();
+    }
+    notifyListeners();
+  }
+
 // Override Methods
 
   @override
@@ -849,6 +895,16 @@ class MeetingStore extends ChangeNotifier
         room.hmsRtmpStreamingState?.state ?? HMSStreamingState.none;
     streamingType["hls"] =
         room.hmshlsStreamingState?.state ?? HMSStreamingState.none;
+
+    int index = room.transcriptions?.indexWhere(
+            (element) => element.mode == HMSTranscriptionMode.caption) ??
+        -1;
+
+    if (index != -1) {
+      room.transcriptions?[index].state == HMSTranscriptionState.started
+          ? isTranscriptionEnabled = true
+          : isTranscriptionEnabled = false;
+    }
 
     checkNoiseCancellationAvailability();
     setParticipantsList(roles);
@@ -906,6 +962,7 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
     fetchPollList(HMSPollState.stopped);
     HMSWhiteboardController.addHMSWhiteboardUpdateListener(listener: this);
+    HMSTranscriptionController.addListener(listener: this);
 
     if (HMSRoomLayout.roleLayoutData?.screens?.preview?.joinForm?.joinBtnType ==
             JoinButtonType.JOIN_BTN_TYPE_JOIN_AND_GO_LIVE &&
@@ -999,6 +1056,28 @@ class MeetingStore extends ChangeNotifier
         streamUrl = hasHlsStarted
             ? room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl
             : null;
+        break;
+      case HMSRoomUpdate.transcriptionsUpdated:
+        if (room.transcriptions?.isNotEmpty ?? false) {
+          int index = room.transcriptions?.indexWhere(
+                  (element) => element.mode == HMSTranscriptionMode.caption) ??
+              -1;
+
+          if (index != -1) {
+            if (room.transcriptions?[index].state ==
+                    HMSTranscriptionState.started ||
+                room.transcriptions?[index].state ==
+                    HMSTranscriptionState.stopped) {
+              removeToast(HMSToastsType.transcriptionToast);
+            }
+            if (room.transcriptions?[index].state ==
+                HMSTranscriptionState.started) {
+              isTranscriptionEnabled = true;
+            } else {
+              isTranscriptionEnabled = false;
+            }
+          }
+        }
         break;
       default:
         break;
@@ -1406,6 +1485,7 @@ class MeetingStore extends ChangeNotifier
     HMSHLSPlayerController.removeHMSHLSPlaybackEventsListener(this);
     HMSPollInteractivityCenter.removePollUpdateListener();
     HMSWhiteboardController.removeHMSWhiteboardUpdateListener();
+    HMSTranscriptionController.removeListener();
   }
 
   ///Function to toggle screen share
@@ -2674,6 +2754,29 @@ class MeetingStore extends ChangeNotifier
     whiteboardModel = null;
     log("onWhiteboardStop -> peerId: ${hmsWhiteboardModel.owner?.peerId} localPeer: ${localPeer?.peerId} title: ${hmsWhiteboardModel.title}");
     notifyListeners();
+  }
+
+  bool areCaptionsEmpty = true;
+  Timer? transcriptionTimerObj;
+
+  @override
+  void onTranscripts({required List<HMSTranscription> transcriptions}) {
+    areCaptionsEmpty = false;
+    captions = transcriptions;
+    startTranscriptionHideTimer();
+    transcriptions.forEach((element) {
+      log("onTranscripts -> text: ${element.transcript}");
+    });
+    notifyListeners();
+  }
+
+  void startTranscriptionHideTimer() {
+    transcriptionTimerObj?.cancel();
+    transcriptionTimerObj = Timer(Duration(seconds: 4), () {
+      areCaptionsEmpty = true;
+      captions = [];
+      notifyListeners();
+    });
   }
 
 //Get onSuccess or onException callbacks for HMSActionResultListenerMethod
