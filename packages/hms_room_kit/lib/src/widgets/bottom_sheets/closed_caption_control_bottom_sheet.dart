@@ -1,10 +1,16 @@
+library;
+
+///Package imports
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
-import 'package:provider/provider.dart';
 
+///[ClosedCaptionControlBottomSheet] is a widget that displays the closed caption control bottom sheet
 class ClosedCaptionControlBottomSheet extends StatefulWidget {
   final MeetingStore meetingStore;
 

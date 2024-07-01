@@ -1,9 +1,15 @@
+library;
+
+///Package imports
 import 'package:flutter/material.dart';
+
+///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toast.dart';
 
+///[HMSTranscriptionToast] is a widget that displays the transcription toast
 class HMSTranscriptionToast extends StatelessWidget {
   final String message;
   final MeetingStore meetingStore;
