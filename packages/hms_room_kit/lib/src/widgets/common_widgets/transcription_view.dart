@@ -71,6 +71,7 @@ class _TranscriptionViewState extends State<TranscriptionView> {
                                               ? 80
                                               : 50
                                           : null,
+                                      left: 5,
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         mainAxisAlignment:
@@ -80,7 +81,7 @@ class _TranscriptionViewState extends State<TranscriptionView> {
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width -
-                                                  10,
+                                                  15,
                                               height: 100,
                                               padding: const EdgeInsets.all(5),
                                               margin: const EdgeInsets.all(2),
@@ -91,7 +92,7 @@ class _TranscriptionViewState extends State<TranscriptionView> {
                                                   borderRadius:
                                                       const BorderRadius.all(
                                                           Radius.circular(10))),
-
+                                          
                                               ///Here we render the list of transcriptions
                                               child: ListView.builder(
                                                   shrinkWrap: true,
