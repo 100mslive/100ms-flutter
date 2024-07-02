@@ -3,6 +3,9 @@ Board: https://app.devrev.ai/100ms/vistas/vista-250
 - Caption text is not in sync with other app
 https://app.devrev.ai/100ms/works/ISS-22834
 
+- Noise cancellation layout API
+https://app.devrev.ai/100ms/works/ISS-22858
+
 Room Kit: 1.1.5
 Core SDK: 1.10.5
 Android SDK: 2.9.62
