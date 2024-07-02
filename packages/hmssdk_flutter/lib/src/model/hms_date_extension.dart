@@ -7,11 +7,6 @@
 import 'dart:developer';
 
 class HMSDateExtension {
-  ///Returns DateTime object from String
-  static DateTime convertDateFromString(String date) {
-    DateTime _dateTime = DateTime.parse(date).toLocal();
-    return _dateTime;
-  }
 
   ///Returns optional DateTime object from epoch in milliseconds
   static DateTime? convertDateFromEpoch(int date) {

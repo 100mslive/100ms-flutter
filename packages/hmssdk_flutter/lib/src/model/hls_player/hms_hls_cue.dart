@@ -10,7 +10,7 @@ class HMSHLSCue {
   final String? id;
 
   // startDate of the timed event
-  final DateTime startDate;
+  final DateTime? startDate;
 
   // endDate of the timed event
   final DateTime? endDate;
@@ -22,10 +22,10 @@ class HMSHLSCue {
 
   factory HMSHLSCue.fromMap(Map map) {
     return HMSHLSCue(
-        startDate: HMSDateExtension.convertDateFromString(map["start_date"]),
+        startDate: HMSDateExtension.convertDateFromEpoch(map["start_date"]),
         endDate: map["end_date"] == null
             ? null
-            : HMSDateExtension.convertDateFromString(map["end_date"]),
+            : HMSDateExtension.convertDateFromEpoch(map["end_date"]),
         id: map["id"],
         payload: map["payload"]);
   }
