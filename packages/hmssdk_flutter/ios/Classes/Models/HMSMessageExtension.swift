@@ -20,7 +20,7 @@ class HMSMessageExtension {
 
         dict["type"] = message.type
 
-        dict["time"] = "\(message.time)"
+        dict["time"] = Int(message.time.timeIntervalSince1970 * 1000)
 
         dict["hms_message_recipient"] = HMSMessageRecipientExtension.toDictionary(message.recipient)
 

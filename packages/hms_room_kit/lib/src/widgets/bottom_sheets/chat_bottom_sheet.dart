@@ -153,9 +153,19 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                                             child: const HMSEmptyChatWidget())))
                                 : Expanded(
                                     child: Column(children: [
-                                      Expanded(
-                                          flex: 1,
-                                          child: const PinChatWidget()),
+                                      Selector<MeetingStore, int>(
+                                          selector: (_, meetingStore) =>
+                                              meetingStore
+                                                  .pinnedMessages.length,
+                                          builder:
+                                              (_, pinnedMessageLength, __) {
+                                            return pinnedMessageLength > 0
+                                                ? Expanded(
+                                                    flex: 1,
+                                                    child:
+                                                        const PinChatWidget())
+                                                : const SizedBox();
+                                          }),
 
                                       /// List containing chats
                                       Expanded(

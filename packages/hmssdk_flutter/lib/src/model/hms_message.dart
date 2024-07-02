@@ -31,7 +31,7 @@ class HMSMessage {
   final String type;
 
   ///[time] at which [sender] sent the [message]
-  final DateTime time;
+  final DateTime? time;
 
   HMSMessageRecipient? hmsMessageRecipient;
   HMSMessage(
@@ -56,7 +56,7 @@ class HMSMessage {
         sender: sender,
         message: messageMap['message'] as String,
         type: messageMap['type'] as String,
-        time: HMSDateExtension.convertDateFromString(messageMap['time']),
+        time: HMSDateExtension.convertDateFromEpoch(messageMap['time']),
         hmsMessageRecipient: recipient);
   }
 
