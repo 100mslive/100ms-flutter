@@ -32,11 +32,6 @@ class _TranscriptionViewState extends State<TranscriptionView> {
                   selector: (_, meetingStore) => Tuple2(
                       meetingStore.captions, meetingStore.captions.length),
                   builder: (_, data, __) {
-                    // String transcript = "";
-                    // for (var i = 0; i < data.item2; i++) {
-                    //   transcript +=
-                    //       "${data.item1[i].peerName}: ${data.item1[i].transcript}\n";
-                    // }
                     return data.item2 > 0
                         ? Selector<MeetingStore, Tuple2<bool, bool>>(
                             selector: (_, meetingStore) => Tuple2(
@@ -122,23 +117,39 @@ class _TranscriptionViewState extends State<TranscriptionView> {
                                                             return RichText(
                                                               text: TextSpan(
                                                                 children: [
-                                                                  TextSpan(
-                                                                    text:
-                                                                        "${data.item1[index].peerName}: ",
-                                                                    style: TextStyle(
-                                                                        color: HMSThemeColors
-                                                                            .onSurfaceHighEmphasis,
-                                                                        fontSize:
-                                                                            14,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
-                                                                        height:
-                                                                            20 /
-                                                                                14,
-                                                                        letterSpacing:
-                                                                            0.25),
-                                                                  ),
+                                                                  if (index !=
+                                                                          0 &&
+                                                                      data.item1[index].peerName ==
+                                                                          data.item1[index - 1]
+                                                                              .peerName)
+                                                                    TextSpan(
+                                                                      text: "",
+                                                                      style: TextStyle(
+                                                                          color: HMSThemeColors
+                                                                              .onSurfaceHighEmphasis,
+                                                                          fontSize:
+                                                                              14,
+                                                                          height: 20 /
+                                                                              14,
+                                                                          letterSpacing:
+                                                                              0.25),
+                                                                    )
+                                                                  else
+                                                                    TextSpan(
+                                                                      text:
+                                                                          "${data.item1[index].peerName}: ",
+                                                                      style: TextStyle(
+                                                                          color: HMSThemeColors
+                                                                              .onSurfaceHighEmphasis,
+                                                                          fontSize:
+                                                                              14,
+                                                                          fontWeight: FontWeight
+                                                                              .bold,
+                                                                          height: 20 /
+                                                                              14,
+                                                                          letterSpacing:
+                                                                              0.25),
+                                                                    ),
                                                                   TextSpan(
                                                                     text:
                                                                         transcript,
