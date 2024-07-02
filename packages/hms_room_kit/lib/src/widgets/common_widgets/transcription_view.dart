@@ -92,7 +92,7 @@ class _TranscriptionViewState extends State<TranscriptionView> {
                                                   borderRadius:
                                                       const BorderRadius.all(
                                                           Radius.circular(10))),
-                                          
+
                                               ///Here we render the list of transcriptions
                                               child: ListView.builder(
                                                   shrinkWrap: true,
