@@ -1,10 +1,7 @@
 Board: https://app.devrev.ai/100ms/vistas/vista-250
 
-- Move all the permissions from app to SDK
-https://app.devrev.ai/100ms/works/ISS-10106
-
-- Live transcription in WebRTC mode
-https://app.devrev.ai/100ms/works/ISS-22680
+- Caption text is not in sync with other app
+https://app.devrev.ai/100ms/works/ISS-22834
 
 Room Kit: 1.1.5
 Core SDK: 1.10.5
