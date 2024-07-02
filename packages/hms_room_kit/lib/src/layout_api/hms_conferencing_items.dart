@@ -1,3 +1,8 @@
+library;
+
+///Project imports
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
+
 class Conferencing {
   Default? defaultConf;
   HlsLiveStreaming? hlsLiveStreaming;
@@ -110,7 +115,7 @@ class Elements {
   OnStageExp? onStageExp;
   Map<String, dynamic>? brb;
   Map<String, dynamic>? handRaise;
-
+  NoiseCancellation? noiseCancellation;
   Elements(
       {this.header,
       this.chat,
@@ -119,7 +124,8 @@ class Elements {
       this.emojiReactions,
       this.onStageExp,
       this.brb,
-      this.handRaise});
+      this.handRaise,
+      this.noiseCancellation});
 
   Elements.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
@@ -131,6 +137,7 @@ class Elements {
       onStageExp = null;
       brb = null;
       handRaise = null;
+      noiseCancellation = null;
       return;
     }
 
@@ -150,6 +157,9 @@ class Elements {
         : null;
     brb = json.containsKey("brb") ? json["brb"] : null;
     handRaise = json.containsKey("hand_raise") ? json["hand_raise"] : null;
+    noiseCancellation = json.containsKey("noise_cancellation")
+        ? NoiseCancellation.fromJson(json["noise_cancellation"])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
