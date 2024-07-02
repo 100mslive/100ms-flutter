@@ -54,12 +54,29 @@ class ScreenElements {
   }
 }
 
+class NoiseCancellation {
+  final bool? enabledByDefault;
+
+  NoiseCancellation({this.enabledByDefault = false});
+  factory NoiseCancellation.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return NoiseCancellation(enabledByDefault: false);
+    }
+    return NoiseCancellation(enabledByDefault: json['enabled_by_default']);
+  }
+}
+
 class Preview {
   final ScreenElements? previewHeader;
   final JoinForm? joinForm;
+  final NoiseCancellation? noiseCancellation;
   final bool? skipPreviewScreen;
 
-  Preview({this.previewHeader, this.joinForm, this.skipPreviewScreen = false});
+  Preview(
+      {this.previewHeader,
+      this.joinForm,
+      this.skipPreviewScreen = false,
+      this.noiseCancellation});
 
   factory Preview.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
@@ -69,7 +86,9 @@ class Preview {
         previewHeader: ScreenElements.fromJson(
             json['default']?['elements']?['preview_header']),
         joinForm: JoinForm.fromJson(json['default']?['elements']?['join_form']),
-        skipPreviewScreen: json["skip_preview_screen"]);
+        skipPreviewScreen: json["skip_preview_screen"],
+        noiseCancellation: NoiseCancellation.fromJson(
+            json['default']?['elements']?['noise_cancellation']));
   }
 }
 
