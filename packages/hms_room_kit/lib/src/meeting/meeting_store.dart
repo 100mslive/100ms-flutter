@@ -2512,8 +2512,16 @@ class MeetingStore extends ChangeNotifier
     isNoiseCancellationAvailable =
         await _hmsSDKInteractor.isNoiseCancellationAvailable();
     if (isNoiseCancellationAvailable) {
-      isNoiseCancellationEnabled =
-          await _hmsSDKInteractor.isNoiseCancellationEnabled();
+      if (HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf
+              ?.elements?.noiseCancellation?.enabledByDefault ??
+          false) {
+        if (!isNoiseCancellationEnabled) {
+          toggleNoiseCancellation();
+        }
+      } else {
+        isNoiseCancellationEnabled =
+            await _hmsSDKInteractor.isNoiseCancellationEnabled();
+      }
     }
     notifyListeners();
   }
