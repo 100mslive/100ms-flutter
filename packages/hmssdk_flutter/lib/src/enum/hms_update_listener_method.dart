@@ -14,6 +14,7 @@ enum HMSUpdateListenerMethod {
   onAudioDeviceChanged,
   onSessionStoreAvailable,
   onPeerListUpdate,
+  onPermissionsRequested,
   unknown
 }
 
@@ -50,6 +51,8 @@ extension HMSUpdateListenerMethodValues on HMSUpdateListenerMethod {
         return HMSUpdateListenerMethod.onSessionStoreAvailable;
       case 'on_peer_list_update':
         return HMSUpdateListenerMethod.onPeerListUpdate;
+      case 'on_permissions_requested':
+        return HMSUpdateListenerMethod.onPermissionsRequested;
       default:
         return HMSUpdateListenerMethod.unknown;
     }

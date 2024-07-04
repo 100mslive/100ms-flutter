@@ -335,4 +335,10 @@ class PreviewStore extends ChangeNotifier
       required List<HMSPeer> removedPeers}) {
     log("onPeerListUpdate -> addedPeers: $addedPeers removedPeers: $removedPeers");
   }
+  
+  @override
+  void onPermissionsRequested({required List<String> permissions}) {
+    // TODO: implement onPermissionsRequested
+  }
+
 }

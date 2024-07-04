@@ -3108,4 +3108,9 @@ class MeetingStore extends ChangeNotifier
     //   notifyListeners();
     // }
   }
+  
+  @override
+  void onPermissionsRequested({required List<String> permissions}) {
+    // TODO: implement onPermissionsRequested
+  }
 }
