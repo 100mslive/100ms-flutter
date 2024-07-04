@@ -6,6 +6,9 @@ https://app.devrev.ai/100ms/works/ISS-22834
 - Noise cancellation layout API
 https://app.devrev.ai/100ms/works/ISS-22858
 
+- Sample application not able to access microphone from background in android 14.
+https://app.devrev.ai/100ms/works/ISS-22907
+
 Room Kit: 1.1.5
 Core SDK: 1.10.5
 Android SDK: 2.9.62
