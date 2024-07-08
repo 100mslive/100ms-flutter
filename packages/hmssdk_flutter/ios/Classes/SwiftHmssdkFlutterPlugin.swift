@@ -924,7 +924,7 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
             return
         }
 
-        hmsSDK?.preview(role: role) { tracks, error in
+        hmsSDK?.preview(role: role) { [self] tracks, error in
 
             if let error = error {
                 print(#function, error)
