@@ -2517,10 +2517,12 @@ class MeetingStore extends ChangeNotifier
     ///If yes we enable it.
     ///Else we check the noise cancellation status to update the UI
     if (isNoiseCancellationAvailable) {
-      isNoiseCancellationEnabled = await _hmsSDKInteractor.isNoiseCancellationEnabled();
+      isNoiseCancellationEnabled =
+          await _hmsSDKInteractor.isNoiseCancellationEnabled();
       if ((HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf
-              ?.elements?.noiseCancellation?.enabledByDefault ??
-          false) && !isNoiseCancellationEnabled) {
+                  ?.elements?.noiseCancellation?.enabledByDefault ??
+              false) &&
+          !isNoiseCancellationEnabled) {
         _hmsSDKInteractor.enableNoiseCancellation();
         isNoiseCancellationEnabled = true;
       }
