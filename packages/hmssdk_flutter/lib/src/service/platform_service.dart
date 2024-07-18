@@ -358,8 +358,12 @@ abstract class PlatformService {
               {"added_peers": addedPeers, "removed_peers": removedPeers});
           break;
         case HMSUpdateListenerMethod.onPermissionsRequested:
-          notifyUpdateListeners(method,
-              {"permissions": event.data["permissions"] as List<String>});
+          List<String> permissions = [];
+
+          event.data["permissions"].forEach((e) {
+            permissions.add(e as String);
+          });
+          notifyUpdateListeners(method, {"permissions": permissions});
           break;
         case HMSUpdateListenerMethod.unknown:
           break;
@@ -472,8 +476,13 @@ abstract class PlatformService {
               {"added_peers": addedPeers, "removed_peers": removedPeers});
           break;
         case HMSPreviewUpdateListenerMethod.onPermissionsRequested:
-          notifyPreviewListeners(method,
-              {"permissions": event.data["permissions"] as List<String>});
+          List<String> permissions = [];
+
+          event.data["permissions"].forEach((e) {
+            permissions.add(e as String);
+          });
+
+          notifyPreviewListeners(method, {"permissions": permissions});
           break;
       }
     });

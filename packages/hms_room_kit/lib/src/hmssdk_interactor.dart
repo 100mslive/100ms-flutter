@@ -58,7 +58,8 @@ class HMSSDKInteractor {
         hmsLogSettings: hmsLogSettings,
         hmsTrackSetting: trackSetting,
         isPrebuilt: isPrebuilt,
-        haltPreviewJoinForPermissionRequest: haltPreviewJoinForPermissionRequest);
+        haltPreviewJoinForPermissionRequest:
+            haltPreviewJoinForPermissionRequest);
   }
 
   Future<void> build() async {
@@ -496,5 +497,9 @@ class HMSSDKInteractor {
 
   Future<bool> isNoiseCancellationEnabled() {
     return HMSNoiseCancellationController.isEnabled();
+  }
+
+  void setPermissionsAccepted() {
+    return hmsSDK.setPermissionsAccepted();
   }
 }

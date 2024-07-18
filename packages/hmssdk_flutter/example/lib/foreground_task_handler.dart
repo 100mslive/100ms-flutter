@@ -1,7 +1,6 @@
 import 'dart:isolate';
 
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter_example/main.dart';
 
 ///[ForegroundTaskHandler] is a class that extends [TaskHandler]
@@ -48,7 +47,8 @@ class ForegroundTaskHandler extends TaskHandler {
 
 ///[initForegroundTask] initializes the foreground task
 Future<bool> initForegroundTask() async {
-  bool isPermissionsGiven = await Utilities.getPermissions();
+  bool isPermissionsGiven = true;
+  // await Utilities.getPermissions();
   if (isPermissionsGiven) {
     FlutterForegroundTask.init(
       androidNotificationOptions: AndroidNotificationOptions(

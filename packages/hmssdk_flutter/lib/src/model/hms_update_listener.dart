@@ -116,7 +116,7 @@ abstract class HMSUpdateListener {
   ///This is only called if [haltPreviewJoinForPermissionRequest] is set as [true] in [HMSSDK] constructor.
   /// - Parameters:
   ///  - permissions: List of permissions requested by the app
-    void onPermissionsRequested({required List<String> permissions}) {
+  void onPermissionsRequested({required List<String> permissions}) {
     // Default implementation does nothing.
     // Implementing classes can override this method to handle permissions as needed.
   }

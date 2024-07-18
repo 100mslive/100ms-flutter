@@ -77,7 +77,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
           Constant.roomCode = rawValue.trim();
         }
         Utilities.saveStringData(key: "meetingLink", value: rawValue.trim());
-        await initForegroundTask();
+        // await initForegroundTask();
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (_) => WithForegroundTask(
                   child: HMSPrebuilt(

@@ -252,7 +252,10 @@ enum PlatformMethod {
   startRealTimeTranscription,
   stopRealTimeTranscription,
   addTranscriptListener,
-  removeTranscriptListener
+  removeTranscriptListener,
+
+  ///Permissions methods
+  setPermissionsAccepted
 }
 
 extension PlatformMethodValues on PlatformMethod {
@@ -641,6 +644,9 @@ extension PlatformMethodValues on PlatformMethod {
       case PlatformMethod.removeTranscriptListener:
         return "remove_transcript_listener";
 
+      case PlatformMethod.setPermissionsAccepted:
+        return "set_permissions_accepted";
+
       default:
         return 'unknown';
     }
@@ -1028,6 +1034,9 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.addTranscriptListener;
       case "remove_transcript_listener":
         return PlatformMethod.removeTranscriptListener;
+
+      case "set_permissions_accepted":
+        return PlatformMethod.setPermissionsAccepted;
 
       default:
         return PlatformMethod.unknown;

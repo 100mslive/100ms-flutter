@@ -1,5 +1,6 @@
 //Dart imports
 import 'dart:developer';
+import 'dart:io';
 
 ///Package imports
 import 'package:flutter/cupertino.dart';
@@ -55,6 +56,10 @@ class PreviewStore extends ChangeNotifier
 
   bool isNoiseCancellationEnabled = false;
 
+  bool isPermissionGranted = false;
+
+  List<String> permissions = [];
+
   @override
   void onHMSError({required HMSException error}) {
     this.error = error;
@@ -62,10 +67,12 @@ class PreviewStore extends ChangeNotifier
   }
 
   @override
-  void onPreview({required HMSRoom room, required List<HMSTrack> localTracks}) {
+  void onPreview(
+      {required HMSRoom room, required List<HMSTrack> localTracks}) async {
     log("onPreview-> room: ${room.toString()}");
     this.room = room;
     checkNoiseCancellationAvailablility();
+    isPermissionGranted = await Utilities.checkPermissions(permissions);
     for (HMSPeer each in room.peers!) {
       if (each.isLocal) {
         HMSRoomLayout.resetLayout(each.role.name);
@@ -335,10 +342,24 @@ class PreviewStore extends ChangeNotifier
       required List<HMSPeer> removedPeers}) {
     log("onPeerListUpdate -> addedPeers: $addedPeers removedPeers: $removedPeers");
   }
-  
+
   @override
   void onPermissionsRequested({required List<String> permissions}) {
-    // TODO: implement onPermissionsRequested
+    log("onPermissionsRequested -> permissions: $permissions");
+    this.permissions = permissions;
+    getPermissions();
   }
 
+  void getPermissions() async {
+    if (Platform.isAndroid) {
+      isPermissionGranted =
+          await Utilities.askRequiredPermissionsForAndroid(this.permissions);
+    } else {
+      isPermissionGranted = await Utilities.getiOSPermissions();
+    }
+    if (isPermissionGranted) {
+      hmsSDKInteractor.setPermissionsAccepted();
+    }
+    notifyListeners();
+  }
 }

@@ -286,6 +286,10 @@ class MeetingStore extends ChangeNotifier
 
   List<TranscriptStore> captions = [];
 
+  bool isPermissionGranted = false;
+
+  List<String> permissions = [];
+
   Future<HMSException?> join(String userName, String? tokenData) async {
     late HMSConfig joinConfig;
 
@@ -742,13 +746,14 @@ class MeetingStore extends ChangeNotifier
         true, HMSTrackKind.kHMSTrackKindAudio, "regular", roles, this);
   }
 
-  void setSettings() async {
+  void setSettings(bool isPermissionGranted) async {
     isStatsVisible = await Utilities.getBoolData(key: 'show-stats') ?? false;
     isAutoSimulcast =
         await Utilities.getBoolData(key: 'is-auto-simulcast') ?? true;
     if (isStatsVisible) {
       _hmsSDKInteractor.addStatsListener(this);
     }
+    this.isPermissionGranted = isPermissionGranted;
   }
 
   void nextPeersForRole(String role) async {
@@ -876,6 +881,10 @@ class MeetingStore extends ChangeNotifier
   @override
   void onJoin({required HMSRoom room}) async {
     log("onJoin-> room: ${room.toString()}");
+    if (!isPermissionGranted) {
+      isPermissionGranted = await Utilities.checkPermissions(permissions);
+      notifyListeners();
+    }
     isMeetingStarted = true;
     hmsRoom = room;
     if (room.hmshlsStreamingState?.state == HMSStreamingState.started) {
@@ -3108,9 +3117,25 @@ class MeetingStore extends ChangeNotifier
     //   notifyListeners();
     // }
   }
-  
+
   @override
   void onPermissionsRequested({required List<String> permissions}) {
-    // TODO: implement onPermissionsRequested
+    log("onPermissionsRequested -> permissions: $permissions");
+    this.permissions = permissions;
+    getPermissions();
+  }
+
+  void getPermissions() async {
+    if (Platform.isAndroid) {
+      isPermissionGranted =
+          await Utilities.askRequiredPermissionsForAndroid(this.permissions);
+    } else {
+      isPermissionGranted = await Utilities.getiOSPermissions();
+    }
+
+    if (isPermissionGranted) {
+      _hmsSDKInteractor.setPermissionsAccepted();
+    }
+    notifyListeners();
   }
 }

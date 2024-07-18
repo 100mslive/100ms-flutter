@@ -1,5 +1,7 @@
 library;
 
+import 'dart:developer';
+
 ///Dart imports
 import 'dart:io';
 import 'dart:math' as math;
@@ -165,56 +167,74 @@ class Utilities {
     return _toastColors[2 - index];
   }
 
-  ///This function gets permissions for the camera,microphone and bluetooth headphones
-  static Future<bool> getPermissions() async {
-    ///We request the permissions for the camera,microphone and bluetooth
-    await Permission.camera.request();
-    await Permission.microphone.request();
-    if (Platform.isIOS) {
-      await Permission.bluetooth.request();
-    }
-    await Permission.phone.request();
+  static List<Permission> getPermissionsFromString(List<String> permissions) {
+    List<Permission> requiredPermissions = [];
+    permissions.forEach((permission) async {
+      if (permission == "android.permission.RECORD_AUDIO") {
+        requiredPermissions.add(Permission.microphone);
+      } else if (permission == "android.permission.CAMERA") {
+        requiredPermissions.add(Permission.camera);
+      }
+    });
+    return requiredPermissions;
+  }
 
-    ///We check if the permissions are granted
-    ///If they are granted we return true
-    ///Else we return false
-    if (Platform.isIOS) {
-      if (await Permission.camera.isGranted &&
-          await Permission.microphone.isGranted &&
-          await Permission.bluetooth.isGranted) {
-        return true;
+  ///This method is used to get the required permissions for Android
+  static Future<bool> askRequiredPermissionsForAndroid(
+      List<String> permissions) async {
+    List<Permission> requiredPermissions =
+        getPermissionsFromString(permissions);
+
+    await Future.forEach(requiredPermissions, (permission) async {
+      if (await permission.isDenied) {
+        await permission.request();
       }
-    } else if (Platform.isAndroid) {
-      if (await Permission.camera.isGranted &&
-          await Permission.microphone.isGranted &&
-          await Permission.phone.isGranted) {
-        return true;
-      }
+    });
+
+    ///We take an extra permission required by the app to keep the microphone unmuted while receiving a call
+    if (await Permission.phone.isDenied) {
+      await Permission.phone.request();
     }
+
+    bool isPermissionGranted = await Permission.phone.isGranted;
+    await Future.forEach(requiredPermissions, (permission) async {
+      log("Fetching permissions for ${permission.toString()}");
+      isPermissionGranted &= await permission.isGranted;
+    });
 
     ///We open the app settings if the user has permanently denied the permissions
     ///This is done because the user can't grant the permissions from the app now
-    bool isCameraPermissionsDenied = (await Permission.camera.isDenied &&
-        !await Permission.camera.shouldShowRequestRationale);
-    bool isMicrophonePermissionsDenied =
-        (await Permission.microphone.isDenied &&
-            !await Permission.microphone.shouldShowRequestRationale);
+    await Future.forEach(requiredPermissions, (permission) async {
+      bool isPermanentlyDenied = await permission.isPermanentlyDenied;
+      if (isPermanentlyDenied) {
+        log("Permission permanently denied ${permission.toString()}");
+        await openAppSettings();
+      }
+    });
+
+    return isPermissionGranted;
+  }
+
+  ///This function is used to get the permissions for the camera,microphone and bluetooth headphones for iOS
+  static Future<bool> getiOSPermissions() async {
+    await Permission.bluetooth.request();
+
+    ///We check if the permissions are granted
+    if (await Permission.bluetooth.isGranted) {
+      return true;
+    }
+
+    ///We open the app settings if the user has permanently denied the permissions
+    // bool isCameraPermissionsDenied = (await Permission.camera.isPermanentlyDenied);
+    // bool isMicrophonePermissionsDenied =
+    //     (await Permission.microphone.isPermanentlyDenied);
     bool isBluetoothPermissionsDenied = false;
-    bool isPhonePermissionDenied = Platform.isAndroid
-        ? (await Permission.phone.isDenied &&
-            !await Permission.phone.shouldShowRequestRationale)
-        : false;
     if (Platform.isIOS) {
       isBluetoothPermissionsDenied =
           await Permission.bluetooth.isPermanentlyDenied;
     }
 
-    ///We open the app settings if the user has permanently denied the permissions
-    ///based on the platform
-    if (isCameraPermissionsDenied ||
-        isMicrophonePermissionsDenied ||
-        isBluetoothPermissionsDenied ||
-        isPhonePermissionDenied) {
+    if (isBluetoothPermissionsDenied) {
       await openAppSettings();
       return false;
     }
@@ -224,14 +244,12 @@ class Utilities {
 
   ///This method checks for the permissions for the camera,microphone and bluetooth
   ///Based on this we route the screens.
-  static Future<bool> checkPermissions() async {
-    if (await Permission.camera.isGranted &&
-        await Permission.microphone.isGranted &&
-        (await Permission.bluetoothConnect.isGranted ||
-            await Permission.bluetooth.isGranted)) {
-      return true;
+  static Future<bool> checkPermissions(List<String>? permission) async {
+    if (Platform.isAndroid && permission != null) {
+      return askRequiredPermissionsForAndroid(permission);
+    } else {
+      return getiOSPermissions();
     }
-    return false;
   }
 
   ///This method is used to get names for the audio devices

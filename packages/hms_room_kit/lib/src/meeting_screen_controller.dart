@@ -56,7 +56,11 @@ class MeetingScreenController extends StatefulWidget {
   ///[hmsSDKInteractor] is used to interact with the SDK
   final HMSSDKInteractor hmsSDKInteractor;
 
+  ///[isNoiseCancellationEnabled] is the flag to enable noise cancellation
   final bool isNoiseCancellationEnabled;
+
+  ///[isPermissionGranted] is the flag to check if the permission is granted on preview or not
+  final bool isPermissionGranted;
 
   const MeetingScreenController(
       {Key? key,
@@ -71,7 +75,8 @@ class MeetingScreenController extends StatefulWidget {
       this.options,
       this.tokenData,
       required this.hmsSDKInteractor,
-      this.isNoiseCancellationEnabled = false})
+      this.isNoiseCancellationEnabled = false,
+      this.isPermissionGranted = false})
       : super(key: key);
 
   @override
@@ -123,7 +128,7 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
 
   ///This function sets the initial values of the meeting
   void _setInitValues() async {
-    _meetingStore.setSettings();
+    _meetingStore.setSettings(widget.isPermissionGranted);
   }
 
   void setScreenRotation() {
@@ -158,8 +163,7 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
                           isRoomMute: widget.isRoomMute,
                           currentAudioDeviceMode: widget.currentAudioDeviceMode,
                           isNoiseCancellationEnabled:
-                              widget.isNoiseCancellationEnabled,
-                        );
+                              widget.isNoiseCancellationEnabled);
                 }),
           );
   }

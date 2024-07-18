@@ -316,6 +316,10 @@ class HmssdkFlutterPlugin :
                 transcriptionActions(call,result)
             }
 
+            "set_permissions_accepted" -> {
+                setPermissionsAccepted(result)
+            }
+
             else -> {
                 result.notImplemented()
             }
@@ -966,6 +970,11 @@ class HmssdkFlutterPlugin :
         }
     }
 
+    private fun setPermissionsAccepted(result: Result){
+        hmssdk?.setPermissionsAccepted()
+        result.success(null)
+    }
+
     fun getLocalPeer(): HMSLocalPeer? {
         return hmssdk!!.getLocalPeer()
     }
@@ -1290,7 +1299,11 @@ class HmssdkFlutterPlugin :
                 super.onPermissionsRequested(permissions)
                 val args = HashMap<String, Any?>()
                 args["event_name"] = "on_permissions_requested"
-                args["data"] = permissions
+
+                val map = HashMap<String, Any?>()
+                map["permissions"] = permissions
+
+                args["data"] = map
 
                 if (args["data"] != null) {
                     CoroutineScope(Dispatchers.Main).launch {
