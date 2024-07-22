@@ -9,7 +9,10 @@ https://app.devrev.ai/100ms/works/ISS-22858
 - Sample application not able to access microphone from background in android 14.
 https://app.devrev.ai/100ms/works/ISS-22907
 
+- Transciption replaces older transcription from view
+https://app.devrev.ai/100ms/works/ISS-22845
+
 Room Kit: 1.1.5
 Core SDK: 1.10.5
-Android SDK: 2.9.62
-iOS SDK: 1.13.0
+Android SDK: 2.9.64
+iOS SDK: 1.15.0
