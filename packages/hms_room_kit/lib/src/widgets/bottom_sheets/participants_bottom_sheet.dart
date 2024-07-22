@@ -14,6 +14,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/change_role_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/model/participant_store.dart';
@@ -177,6 +178,34 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                   break;
                 case 5:
 
+                  ///This is called when someone clicks on switch Role
+                  Navigator.pop(context);
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    backgroundColor: HMSThemeColors.surfaceDim,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16)),
+                    ),
+                    context: context,
+                    builder: (ctx) => ChangeNotifierProvider.value(
+                        value: meetingStore,
+                        child: Padding(
+                            padding: EdgeInsets.only(
+                                bottom: MediaQuery.of(ctx).viewInsets.bottom),
+                            child: ChangeRoleBottomSheet(
+                                peerName: peer.name,
+                                roles: meetingStore.roles,
+                                peer: peer,
+                                changeRole: (newRole, isForceChange) =>
+                                    meetingStore.changeRoleOfPeer(
+                                        peer: peer,
+                                        roleName: newRole,
+                                        forceChange: true)))),
+                  );
+                case 6:
+
                   ///This is called when someone clicks on remove Participant
                   meetingStore.removePeerFromRoom(peer);
                   break;
@@ -299,9 +328,30 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                         ),
                       ]),
                     ),
-                  if (removePeerPermission)
+                  if (changeRolePermission)
                     PopupMenuItem(
                       value: 5,
+                      child: Row(children: [
+                        SvgPicture.asset(
+                            "packages/hms_room_kit/lib/src/assets/icons/peer_settings.svg",
+                            colorFilter: ColorFilter.mode(
+                                HMSThemeColors.onSurfaceHighEmphasis,
+                                BlendMode.srcIn)),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        HMSTitleText(
+                          text: "Switch Role",
+                          textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                          fontSize: 14,
+                          lineHeight: 20,
+                          letterSpacing: 0.1,
+                        ),
+                      ]),
+                    ),
+                  if (removePeerPermission)
+                    PopupMenuItem(
+                      value: 6,
                       child: Row(children: [
                         SvgPicture.asset(
                             "packages/hms_room_kit/lib/src/assets/icons/peer_remove.svg",
