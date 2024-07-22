@@ -26,7 +26,7 @@ class HMSAndroidPIPController {
       return HMSException.fromMap(result["error"]);
     }
     return null;
-  }
+  } 
 
   ///Method to activate pipMode in the application
   ///

@@ -200,7 +200,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isPipActive = false;
 
-  // bool isPipAutoEnabled = true;
+  bool isPipAutoEnabled = true;
 
   bool lastVideoStatus = false;
 
@@ -208,7 +208,7 @@ class MeetingStore extends ChangeNotifier
 
   bool showNotification = false;
 
-  // HMSVideoTrack? currentPIPtrack;
+  HMSVideoTrack? currentPIPtrack;
 
   HMSLogList applicationLogs = HMSLogList(hmsLog: []);
 
@@ -971,16 +971,19 @@ class MeetingStore extends ChangeNotifier
       notifyListeners();
       startHLSStreaming(false, false);
     }
-    // if (Platform.isIOS &&
-    //     HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf !=
-    //         null) {
-    //   HMSIOSPIPController.setup(
-    //       autoEnterPip: true,
-    //       aspectRatio: [9, 16],
-    //       backgroundColor: Colors.black);
-    // } else if (Platform.isAndroid) {
-    //   HMSAndroidPIPController.setup();
-    // }
+    if (Platform.isIOS &&
+        HMSRoomLayout.roleLayoutData?.screens?.conferencing?.defaultConf !=
+            null) {
+      HMSIOSPIPController.setup(
+          autoEnterPip: true,
+          aspectRatio: [9, 16],
+          backgroundColor: Colors.black);
+    } else if (Platform.isAndroid) {
+      HMSAndroidPIPController.setup(
+        autoEnterPip: true,
+          aspectRatio: [9, 16],
+      );
+    }
   }
 
   void setViewControllers() {
@@ -1263,21 +1266,21 @@ class MeetingStore extends ChangeNotifier
     }
 
     // Below code for change track and text in PIP mode iOS and android.
-    // if (updateSpeakers.isNotEmpty) {
-    //   if (Platform.isIOS && (screenShareCount == 0 || isScreenShareOn)) {
-    //     if (updateSpeakers[0].peer.videoTrack != null) {
-    //       changePIPWindowTrackOnIOS(
-    //           track: updateSpeakers[0].peer.videoTrack,
-    //           alternativeText: updateSpeakers[0].peer.name,
-    //           ratio: [9, 16]);
-    //     } else {
-    //       changePIPWindowTextOnIOS(
-    //           text: updateSpeakers[0].peer.name, ratio: [9, 16]);
-    //     }
-    //   } else if (Platform.isAndroid) {
-    //     changePIPWindowOnAndroid("${updateSpeakers[0].peer.peerId}mainVideo");
-    //   }
-    // }
+    if (updateSpeakers.isNotEmpty) {
+      if (Platform.isIOS && (screenShareCount == 0 || isScreenShareOn)) {
+        if (updateSpeakers[0].peer.videoTrack != null) {
+          changePIPWindowTrackOnIOS(
+              track: updateSpeakers[0].peer.videoTrack,
+              alternativeText: updateSpeakers[0].peer.name,
+              ratio: [9, 16]);
+        } else {
+          changePIPWindowTextOnIOS(
+              text: updateSpeakers[0].peer.name, ratio: [9, 16]);
+        }
+      } else if (Platform.isAndroid) {
+        changePIPWindowOnAndroid("${updateSpeakers[0].peer.peerId}mainVideo");
+      }
+    }
   }
 
   @override
@@ -1431,7 +1434,7 @@ class MeetingStore extends ChangeNotifier
 // Helper Methods
 
   void clearRoomState() async {
-    // clearPIPState();
+    clearPIPState();
     removeListeners();
     toggleAlwaysScreenOn();
 
@@ -1469,13 +1472,13 @@ class MeetingStore extends ChangeNotifier
     allowScreenRotation(false);
   }
 
-  // void clearPIPState() {
-  //   if (Platform.isAndroid) {
-  //     HMSAndroidPIPController.destroy();
-  //   } else if (Platform.isIOS) {
-  //     HMSIOSPIPController.destroy();
-  //   }
-  // }
+  void clearPIPState() {
+    if (Platform.isAndroid) {
+      HMSAndroidPIPController.destroy();
+    } else if (Platform.isIOS) {
+      HMSIOSPIPController.destroy();
+    }
+  }
 
   void removeListeners() {
     _hmsSDKInteractor.removeUpdateListener(this);
@@ -1688,20 +1691,20 @@ class MeetingStore extends ChangeNotifier
           }
         }
 
-        // if (peer.isLocal) {
-        //   if (Platform.isIOS) {
-        //     if (HMSRoomLayout
-        //             .roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
-        //         null) {
-        //       HMSIOSPIPController.destroy();
-        //     } else {
-        //       HMSIOSPIPController.setup(
-        //           autoEnterPip: true,
-        //           aspectRatio: [9, 16],
-        //           backgroundColor: Colors.black);
-        //     }
-        //   }
-        // }
+        if (peer.isLocal) {
+          if (Platform.isIOS) {
+            if (HMSRoomLayout
+                    .roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
+                null) {
+              HMSIOSPIPController.destroy();
+            } else {
+              HMSIOSPIPController.setup(
+                  autoEnterPip: true,
+                  aspectRatio: [9, 16],
+                  backgroundColor: Colors.black);
+            }
+          }
+        }
 
         Utilities.showToast("${peer.name}'s role changed to ${peer.role.name}");
         int index = peers.indexOf(peer);
@@ -1831,10 +1834,10 @@ class MeetingStore extends ChangeNotifier
                       track: track as HMSVideoTrack,
                       stats: RTCStats()));
               notifyListeners();
-              // changePIPWindowTrackOnIOS(
-              //     track: track,
-              //     ratio: [9, 16],
-              //     alternativeText: "${peer.name} Screen share");
+              changePIPWindowTrackOnIOS(
+                  track: track,
+                  ratio: [9, 16],
+                  alternativeText: "${peer.name} Screen share");
             }
           } else {
             isScreenShareActive();
@@ -1860,7 +1863,7 @@ class MeetingStore extends ChangeNotifier
               }
               peerTracks.removeAt(peerIndex);
               notifyListeners();
-              // changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
+              changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
             }
 
             //pop the full screen screenshare when the screenshare is stopped
@@ -1886,9 +1889,9 @@ class MeetingStore extends ChangeNotifier
               peerTracks[peerIndex].audioTrack = null;
             } else if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
               peerTracks[peerIndex].track = null;
-              // if (currentPIPtrack == track) {
-              //   changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
-              // }
+              if (currentPIPtrack == track) {
+                changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
+              }
             }
             if (peerTracks[peerIndex].track == null &&
                 peerTracks[peerIndex].audioTrack == null) {
@@ -1900,22 +1903,22 @@ class MeetingStore extends ChangeNotifier
         }
         break;
       case HMSTrackUpdate.trackMuted:
-        // if (currentPIPtrack == track &&
-        //     track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-        //   changePIPWindowTrackOnIOS(
-        //       track: track as HMSVideoTrack,
-        //       alternativeText: peer.name,
-        //       ratio: [9, 16]);
-        // }
+        if (currentPIPtrack == track &&
+            track.kind == HMSTrackKind.kHMSTrackKindVideo) {
+          changePIPWindowTrackOnIOS(
+              track: track as HMSVideoTrack,
+              alternativeText: peer.name,
+              ratio: [9, 16]);
+        }
         break;
       case HMSTrackUpdate.trackUnMuted:
-        // if (currentPIPtrack == track &&
-        //     track.kind == HMSTrackKind.kHMSTrackKindVideo) {
-        //   changePIPWindowTrackOnIOS(
-        //       track: track as HMSVideoTrack,
-        //       alternativeText: peer.name,
-        //       ratio: [9, 16]);
-        // }
+        if (currentPIPtrack == track &&
+            track.kind == HMSTrackKind.kHMSTrackKindVideo) {
+          changePIPWindowTrackOnIOS(
+              track: track as HMSVideoTrack,
+              alternativeText: peer.name,
+              ratio: [9, 16]);
+        }
         break;
       case HMSTrackUpdate.trackDescriptionChanged:
         break;
@@ -2249,39 +2252,39 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  // void enterPipModeOnAndroid() async {
-  //   //to check whether pip is available in android
-  //   if (Platform.isAndroid) {
-  //     bool isPipAvailable = await HMSAndroidPIPController.isAvailable();
-  //     if (isPipAvailable) {
-  //       //[isPipActive] method can also be used to check whether application is in pip Mode or not
-  //       isPipActive = await HMSAndroidPIPController.start();
-  //       notifyListeners();
-  //     }
-  //   }
-  // }
+  void enterPipModeOnAndroid() async {
+    //to check whether pip is available in android
+    if (Platform.isAndroid) {
+      bool isPipAvailable = await HMSAndroidPIPController.isAvailable();
+      if (isPipAvailable) {
+        //[isPipActive] method can also be used to check whether application is in pip Mode or not
+        isPipActive = await HMSAndroidPIPController.start();
+        notifyListeners();
+      }
+    }
+  }
 
-  // Future<bool> isPIPActive() async {
-  //   if (Platform.isAndroid) {
-  //     isPipActive = await HMSAndroidPIPController.isActive();
-  //   } else if (Platform.isIOS) {
-  //     isPipActive = await HMSIOSPIPController.isActive();
-  //   }
-  //   return isPipActive;
-  // }
+  Future<bool> isPIPActive() async {
+    if (Platform.isAndroid) {
+      isPipActive = await HMSAndroidPIPController.isActive();
+    } else if (Platform.isIOS) {
+      isPipActive = await HMSIOSPIPController.isActive();
+    }
+    return isPipActive;
+  }
 
-  // void changePIPWindowOnAndroid(String uid) {
-  //   if (Platform.isAndroid && isPipActive) {
-  //     int index = -1;
-  //     index = peerTracks.indexWhere((element) => element.uid == uid);
-  //     if (index != -1) {
-  //       PeerTrackNode node = peerTracks[index];
-  //       peerTracks.removeAt(index);
-  //       peerTracks.insert(screenShareCount, node);
-  //     }
-  //     notifyListeners();
-  //   }
-  // }
+  void changePIPWindowOnAndroid(String uid) {
+    if (Platform.isAndroid && isPipActive) {
+      int index = -1;
+      index = peerTracks.indexWhere((element) => element.uid == uid);
+      if (index != -1) {
+        PeerTrackNode node = peerTracks[index];
+        peerTracks.removeAt(index);
+        peerTracks.insert(screenShareCount, node);
+      }
+      notifyListeners();
+    }
+  }
 
   void switchAudioOutputUsingiOSUI() {
     if (!isSpeakerOn) {
@@ -2290,35 +2293,35 @@ class MeetingStore extends ChangeNotifier
     _hmsSDKInteractor.switchAudioOutputUsingiOSUI();
   }
 
-  // void changePIPWindowTrackOnIOS(
-  //     {HMSVideoTrack? track,
-  //     required String alternativeText,
-  //     required List<int> ratio}) async {
-  //   if (Platform.isIOS && track != null) {
-  //     isPipActive = await isPIPActive();
-  //     if (isPipActive) {
-  //       HMSIOSPIPController.changeVideoTrack(
-  //           track: track,
-  //           aspectRatio: ratio,
-  //           alternativeText: alternativeText,
-  //           scaleType: ScaleType.SCALE_ASPECT_FILL,
-  //           backgroundColor: Colors.black);
-  //       currentPIPtrack = track;
-  //     }
-  //   }
-  // }
+  void changePIPWindowTrackOnIOS(
+      {HMSVideoTrack? track,
+      required String alternativeText,
+      required List<int> ratio}) async {
+    if (Platform.isIOS && track != null) {
+      isPipActive = await isPIPActive();
+      if (isPipActive) {
+        HMSIOSPIPController.changeVideoTrack(
+            track: track,
+            aspectRatio: ratio,
+            alternativeText: alternativeText,
+            scaleType: ScaleType.SCALE_ASPECT_FILL,
+            backgroundColor: Colors.black);
+        currentPIPtrack = track;
+      }
+    }
+  }
 
-  // void changePIPWindowTextOnIOS(
-  //     {String? text, required List<int> ratio}) async {
-  //   if (Platform.isIOS && text != null) {
-  //     isPipActive = await isPIPActive();
-  //     if (isPipActive) {
-  //       HMSIOSPIPController.changeText(
-  //           text: text, aspectRatio: ratio, backgroundColor: Colors.black);
-  //       currentPIPtrack = null;
-  //     }
-  //   }
-  // }
+  void changePIPWindowTextOnIOS(
+      {String? text, required List<int> ratio}) async {
+    if (Platform.isIOS && text != null) {
+      isPipActive = await isPIPActive();
+      if (isPipActive) {
+        HMSIOSPIPController.changeText(
+            text: text, aspectRatio: ratio, backgroundColor: Colors.black);
+        currentPIPtrack = null;
+      }
+    }
+  }
 
   void setAspectRatio(double ratio) {
     hlsAspectRatio = ratio;
@@ -3021,11 +3024,11 @@ class MeetingStore extends ChangeNotifier
       return;
     }
     if (state == AppLifecycleState.resumed) {
-      // if (Platform.isAndroid) {
-      //   isPipActive = await HMSAndroidPIPController.isActive();
-      // } else if (Platform.isIOS) {
-      //   isPipActive = false;
-      // }
+      if (Platform.isAndroid) {
+        isPipActive = await HMSAndroidPIPController.isActive();
+      } else if (Platform.isIOS) {
+        isPipActive = false;
+      }
       notifyListeners();
 
       if (lastVideoStatus && !reconnecting) {
@@ -3042,45 +3045,47 @@ class MeetingStore extends ChangeNotifier
       }
 
       if (Platform.isAndroid) {
-        // isPipActive = await HMSAndroidPIPController.isActive();
+        isPipActive = await HMSAndroidPIPController.isActive();
         notifyListeners();
       }
 
-      // if (Platform.isIOS) {
-      //   if (screenShareCount == 0 || isScreenShareOn) {
-      //     int peerIndex = peerTracks.indexWhere((element) =>
-      //         (!(element.track?.isMute ?? true) && !element.peer.isLocal));
-      //     if (peerIndex != -1) {
-      //       changePIPWindowTrackOnIOS(
-      //           track: peerTracks[peerIndex].track,
-      //           alternativeText: peerTracks[peerIndex].peer.name,
-      //           ratio: [9, 16]);
-      //     } else {
-      //       changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
-      //     }
-      //   } else {
-      //     int peerIndex = peerTracks.indexWhere((element) =>
-      //         element.uid ==
-      //         element.peer.peerId + (element.track?.trackId ?? ""));
-      //     if (peerIndex != -1) {
-      //       changePIPWindowTrackOnIOS(
-      //           track: peerTracks[peerIndex].track,
-      //           alternativeText: peerTracks[peerIndex].peer.name,
-      //           ratio: [9, 16]);
-      //     }
-      //   }
-      // }
+      if (Platform.isIOS) {
+        if (screenShareCount == 0 || isScreenShareOn) {
+          int peerIndex = peerTracks.indexWhere((element) =>
+              (!(element.track?.isMute ?? true) && !element.peer.isLocal));
+          if (peerIndex != -1) {
+            changePIPWindowTrackOnIOS(
+                track: peerTracks[peerIndex].track,
+                alternativeText: peerTracks[peerIndex].peer.name,
+                ratio: [9, 16]);
+          } else {
+            changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
+          }
+        } else {
+          int peerIndex = peerTracks.indexWhere((element) =>
+              element.uid ==
+              element.peer.peerId + (element.track?.trackId ?? ""));
+          if (peerIndex != -1) {
+            changePIPWindowTrackOnIOS(
+                track: peerTracks[peerIndex].track,
+                alternativeText: peerTracks[peerIndex].peer.name,
+                ratio: [9, 16]);
+          }
+        }
+      }
+    } else if (state == AppLifecycleState.inactive) {
+      if (Platform.isAndroid && !isPipActive) {
+        isPipActive = await HMSAndroidPIPController.isActive();
+        if(!isPipActive && isPipAutoEnabled){
+          HMSAndroidPIPController.start();
+        }
+      }
+      notifyListeners();
+    } else if (state == AppLifecycleState.detached) {
+      if (Platform.isAndroid && !isPipActive) {
+        isPipActive = await HMSAndroidPIPController.isActive();
+      }
+      notifyListeners();
     }
-    // else if (state == AppLifecycleState.inactive) {
-    //   if (Platform.isAndroid && !isPipActive) {
-    //     isPipActive = await HMSAndroidPIPController.isActive();
-    //   }
-    //   notifyListeners();
-    // } else if (state == AppLifecycleState.detached) {
-    //   if (Platform.isAndroid && !isPipActive) {
-    //     isPipActive = await HMSAndroidPIPController.isActive();
-    //   }
-    //   notifyListeners();
-    // }
   }
 }
