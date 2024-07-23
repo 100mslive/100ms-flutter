@@ -6,10 +6,10 @@ https://app.devrev.ai/100ms/works/ISS-22834
 - Noise cancellation layout API
 https://app.devrev.ai/100ms/works/ISS-22858
 
-- Sample application not able to access microphone from background in android 14.
+- Sample application not able to access microphone from a background in Android 14.
 https://app.devrev.ai/100ms/works/ISS-22907
 
-- Transciption replaces older transcription from view
+- Transcription replaces older transcription from view
 https://app.devrev.ai/100ms/works/ISS-22845
 
 Room Kit: 1.1.5
