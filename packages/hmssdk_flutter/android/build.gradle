@@ -47,14 +47,10 @@ android {
 }
 
 dependencies {
-   implementation "com.github.100mslive.android-sdk:video-view:dev-v2-SNAPSHOT"
-   implementation "com.github.100mslive.android-sdk:hls-player:dev-v2-SNAPSHOT"
-   implementation "com.github.100mslive.android-sdk:android-sdk:dev-v2-SNAPSHOT"
-   implementation "live.100ms:hms-noise-cancellation-android:${sdkVersions['android']}"
-    // implementation "com.github.100mslive.android-sdk:hms-noise-cancellation:dev-v2-SNAPSHOT"
-    // implementation "live.100ms:android-sdk:${sdkVersions['android']}"
-    // implementation "live.100ms:video-view:${sdkVersions['android']}"
-    // implementation "live.100ms:hls-player:${sdkVersions['android']}"
+    implementation "live.100ms:android-sdk:${sdkVersions['android']}"
+    implementation "live.100ms:video-view:${sdkVersions['android']}"
+    implementation "live.100ms:hls-player:${sdkVersions['android']}"
+    implementation "live.100ms:hms-noise-cancellation-android:${sdkVersions['android']}"
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
