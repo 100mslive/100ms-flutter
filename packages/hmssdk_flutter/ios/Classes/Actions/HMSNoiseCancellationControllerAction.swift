@@ -33,7 +33,7 @@ class HMSNoiseCancellationController {
     static func createPlugin() {
         noiseCancellationController = {
             if let pathForNCModel = HMSNoiseCancellationModels.path(for: .smallFullBand) {
-                 return HMSNoiseCancellationPlugin(modelPath: pathForNCModel, initialState: .enabled)
+                return HMSNoiseCancellationPlugin(modelPath: pathForNCModel, initialState: .disabled)
             } else {
                  assertionFailure("Noise cancellation model was not found")
             }

@@ -31,11 +31,17 @@ This package provides developers with a comprehensive set of tools and component
 
 🤖 Download the Sample Android app here: <https://appdistribution.firebase.dev/i/b623e5310929ab70>
 
-100ms Flutter apps are also released on the App Stores, you can download them here:
+100ms Flutter apps are also available on the App Stores, do download them and try it out.
 
-📲 iOS app on Apple App Store: <https://apps.apple.com/app/100ms-live/id1576541989>
+<div>
+  <a href="https://apps.apple.com/app/100ms-live/id1576541989">
+    <img height="40" src="https://raw.githubusercontent.com/100mslive/100ms-flutter/develop/docs/static/img/appstore.svg" />
+  </a>
+  <a href="https://play.google.com/store/apps/details?id=live.hms.flutter">
+    <img height="40" src="https://raw.githubusercontent.com/100mslive/100ms-flutter/develop/docs/static/img/googleplay.svg" />
+  </a>
+</div>
 
-🤖 Android app on Google Play Store: <https://play.google.com/store/apps/details?id=live.hms.flutter>
 
 ## 🚂 Setup Guide
 
