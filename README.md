@@ -35,7 +35,7 @@ With support for HLS and RTMP Live Streaming and Recording, Picture-in-Picture (
 
 🤖 Download the Sample Android app here: <https://appdistribution.firebase.dev/i/b623e5310929ab70>
 
-100ms Flutter apps are also released on the App Stores, do download them and try it out.
+100ms Flutter apps are also available on the App Stores, do download them and try it out.
 
 <div>
   <a href="https://apps.apple.com/app/100ms-live/id1576541989">
