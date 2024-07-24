@@ -32,12 +32,19 @@ class _ChatParticipantsTabBarState extends State<ChatParticipantsTabBar>
   @override
   void initState() {
     super.initState();
+    context.read<MeetingStore>().addBottomSheet(context);
     _controller =
         TabController(length: 2, vsync: this, initialIndex: widget.tabIndex);
 
     _controller.addListener(() {
       setState(() {});
     });
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
   }
 
   @override
