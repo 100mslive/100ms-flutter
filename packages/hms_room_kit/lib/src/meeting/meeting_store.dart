@@ -1433,6 +1433,7 @@ class MeetingStore extends ChangeNotifier
 
   void clearRoomState() async {
     // clearPIPState();
+    removeAllBottomSheets();
     removeListeners();
     toggleAlwaysScreenOn();
 
