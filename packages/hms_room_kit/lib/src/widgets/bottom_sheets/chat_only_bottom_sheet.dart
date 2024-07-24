@@ -24,7 +24,6 @@ class ChatOnlyBottomSheet extends StatefulWidget {
 }
 
 class _ChatOnlyBottomSheetState extends State<ChatOnlyBottomSheet> {
-  
   @override
   void initState() {
     super.initState();
