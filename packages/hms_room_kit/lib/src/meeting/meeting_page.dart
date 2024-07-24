@@ -93,6 +93,7 @@ class _MeetingPageState extends State<MeetingPage> {
               meetingStore.localPeer?.role.permissions.hlsStreaming ?? false),
           builder: (_, failureErrors, __) {
             if (failureErrors.item1) {
+              context.read<MeetingStore>().removeAllBottomSheets();
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => HMSLeftRoomScreen(
