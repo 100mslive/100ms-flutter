@@ -36,10 +36,10 @@ With support for HLS and RTMP Live Streaming and Recording, Picture-in-Picture (
 
 <div>
   <a href="https://apps.apple.com/app/100ms-live/id1576541989">
-    <img height="40" src="docs/static/img/appstore.svg" />
+    <img height="40" src="https://raw.githubusercontent.com/100mslive/100ms-flutter/develop/docs/static/img/appstore.svg" />
   </a>
   <a href="https://play.google.com/store/apps/details?id=live.hms.flutter">
-    <img height="40" src="docs/static/img/googleplay.svg" />
+    <img height="40" src="https://raw.githubusercontent.com/100mslive/100ms-flutter/develop/docs/static/img/googleplay.svg" />
   </a>
 </div>
 
