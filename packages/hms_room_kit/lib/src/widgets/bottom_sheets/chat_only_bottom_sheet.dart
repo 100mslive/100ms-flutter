@@ -24,6 +24,19 @@ class ChatOnlyBottomSheet extends StatefulWidget {
 }
 
 class _ChatOnlyBottomSheetState extends State<ChatOnlyBottomSheet> {
+  
+  @override
+  void initState() {
+    super.initState();
+    context.read<MeetingStore>().addBottomSheet(context);
+  }
+
+  @override
+  void deactivate() {
+    context.read<MeetingStore>().removeBottomSheet(context);
+    super.deactivate();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
