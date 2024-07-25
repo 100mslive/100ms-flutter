@@ -106,6 +106,7 @@ class _EndServiceBottomSheetState extends State<EndServiceBottomSheet> {
                     if (widget.onButtonPressed != null) {
                       widget.onButtonPressed!();
                     }
+                    context.read<MeetingStore>().removeBottomSheet(context);
                     Navigator.pop(context);
                   },
                   child: SizedBox(
