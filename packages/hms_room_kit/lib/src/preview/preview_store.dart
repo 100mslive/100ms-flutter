@@ -211,9 +211,21 @@ class PreviewStore extends ChangeNotifier
   void checkNoiseCancellationAvailablility() async {
     isNoiseCancellationAvailable =
         await hmsSDKInteractor.isNoiseCancellationAvailable();
+
+    ///Here we check if noise cancellation is available, if its available
+    ///then we check if its enabled from dashboard in preview
+    ///If yes we enable it.
+    ///Else we check the noise cancellation status to update the UI
     if (isNoiseCancellationAvailable) {
-      isNoiseCancellationEnabled =
-          await hmsSDKInteractor.isNoiseCancellationEnabled();
+      if (HMSRoomLayout.roleLayoutData?.screens?.preview?.noiseCancellation
+              ?.enabledByDefault ??
+          false) {
+        hmsSDKInteractor.enableNoiseCancellation();
+        isNoiseCancellationEnabled = true;
+      } else {
+        isNoiseCancellationEnabled =
+            await hmsSDKInteractor.isNoiseCancellationEnabled();
+      }
     }
     notifyListeners();
   }
