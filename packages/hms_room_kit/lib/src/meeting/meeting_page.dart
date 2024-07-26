@@ -95,6 +95,7 @@ class _MeetingPageState extends State<MeetingPage> {
           builder: (_, failureErrors, __) {
             if (failureErrors.item1) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.read<MeetingStore>().removeAllBottomSheets();
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => HMSLeftRoomScreen(
                           isEndRoomCalled: failureErrors.item3,

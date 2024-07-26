@@ -1,8 +1,8 @@
 {
-  "flutter": "1.10.5",
-  "ios": "1.13.0",
+  "flutter": "1.10.6",
+  "ios": "1.15.0",
   "iOSBroadcastExtension": "0.0.9",
   "iOSHLSPlayerSDK": "0.0.2",
   "iOSNoiseCancellationModels": "1.0.0",
-  "android": "2.9.62"
+  "android": "2.9.64"
 }
