@@ -5,7 +5,10 @@ import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/poll_and_quiz_bottom_sheet.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/video_effects_bottom_sheet.dart';
+import 'package:hms_video_plugin/hms_video_plugin.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -424,26 +427,35 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                 if (AppDebugConfig.isVirtualBackgroundEnabled)
                   MoreOptionItem(
                       onTap: () async {
-                        if(AppDebugConfig.isVBEnabled){
-                          HMSVideoFilter.disableBlur();
-                        }else{
-                          HMSVideoFilter.enableBlur(blurRadius: 100);
-                        }
-                        AppDebugConfig.isVBEnabled = !AppDebugConfig.isVBEnabled;
                         Navigator.pop(context);
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: HMSThemeColors.surfaceDim,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16)),
+                          ),
+                          context: context,
+                          builder: (ctx) => ChangeNotifierProvider.value(
+                              value: meetingStore,
+                              child: Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom:
+                                          MediaQuery.of(ctx).viewInsets.bottom),
+                                  child: VideoEffectsBottomSheet())),
+                        );
                       },
-                      isActive: AppDebugConfig.isVBEnabled,
+                      isActive: false,
                       optionIcon: SvgPicture.asset(
-                        "packages/hms_room_kit/lib/src/assets/icons/local_capture.svg",
+                        "packages/hms_room_kit/lib/src/assets/icons/video_effects.svg",
                         height: 20,
                         width: 20,
                         colorFilter: ColorFilter.mode(
                             HMSThemeColors.onSurfaceHighEmphasis,
                             BlendMode.srcIn),
                       ),
-                      optionText: AppDebugConfig.isVBEnabled
-                          ? "Disable Blur Background"
-                          : "Enable Blur Background"),
+                      optionText: "Virtual Background"),
               ],
             ),
           ],

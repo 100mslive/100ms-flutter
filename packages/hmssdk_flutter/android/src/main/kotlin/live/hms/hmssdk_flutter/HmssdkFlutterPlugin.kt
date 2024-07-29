@@ -1204,7 +1204,7 @@ class HmssdkFlutterPlugin :
         isRoomAudioUnmutedLocally = isRoomAudioUnmuted
     }
 
-    fun build(
+    private fun build(
         activity: Activity,
         call: MethodCall,
         result: Result,

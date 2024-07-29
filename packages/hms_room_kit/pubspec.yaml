@@ -16,6 +16,8 @@ dependencies:
 
   hmssdk_flutter:
     path: ../hmssdk_flutter
+  hms_video_plugin:
+    path: ../hms_video_plugin
   intl: ^0.18.0
   permission_handler: ^11.0.0
   provider: ^6.0.5
@@ -36,6 +38,7 @@ dependencies:
   dots_indicator: ^3.0.0
   webview_flutter: ^4.5.0
   pointer_interceptor: ^0.10.1
+  image_picker: ^1.0.8
 
 dev_dependencies:
   flutter_test:
