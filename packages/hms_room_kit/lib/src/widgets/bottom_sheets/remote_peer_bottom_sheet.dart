@@ -221,9 +221,9 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                             textColor: widget.peerTrackNode.track == null
                                 ? HMSThemeColors.onSurfaceLowEmphasis
                                 : HMSThemeColors.onSurfaceHighEmphasis)),
-                  if (widget.meetingStore.localPeer?.role.permissions
+                  if ((widget.meetingStore.localPeer?.role.permissions
                           .changeRole ??
-                      false)
+                      false) && (widget.meetingStore.roles.length > 1))
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {

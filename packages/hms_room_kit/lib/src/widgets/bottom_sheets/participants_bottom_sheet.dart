@@ -328,7 +328,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                         ),
                       ]),
                     ),
-                  if (changeRolePermission)
+                  if (changeRolePermission && meetingStore.roles.length > 1)
                     PopupMenuItem(
                       value: 5,
                       child: Row(children: [
