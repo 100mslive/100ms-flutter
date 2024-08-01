@@ -222,8 +222,9 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                                 ? HMSThemeColors.onSurfaceLowEmphasis
                                 : HMSThemeColors.onSurfaceHighEmphasis)),
                   if ((widget.meetingStore.localPeer?.role.permissions
-                          .changeRole ??
-                      false) && (widget.meetingStore.roles.length > 1))
+                              .changeRole ??
+                          false) &&
+                      (widget.meetingStore.roles.length > 1))
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
