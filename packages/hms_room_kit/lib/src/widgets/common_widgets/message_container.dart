@@ -97,7 +97,9 @@ class MessageContainer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       HMSSubtitleText(
-                        text: formatter.format(message.time),
+                        text: message.time == null
+                            ? ""
+                            : formatter.format(message.time!),
                         textColor: HMSThemeColors.onSurfaceMediumEmphasis,
                       ),
                       const SizedBox(
