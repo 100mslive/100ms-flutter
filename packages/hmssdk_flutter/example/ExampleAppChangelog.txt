@@ -9,6 +9,9 @@ https://app.devrev.ai/100ms/works/ISS-22778
 - Add runtime permission flow on android
 https://app.devrev.ai/100ms/works/ISS-22846
 
+- Remove noise cancellation dependency from hmssdk and move it to application
+https://app.devrev.ai/100ms/works/ISS-23156
+
 Room Kit: 1.1.6
 Core SDK: 1.10.6
 Android SDK: 2.9.64
