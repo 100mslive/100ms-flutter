@@ -15,7 +15,12 @@ class HmsSdkManager {
       String? appGroup,
       String? preferredExtension,
       HMSLogSettings? hmsLogSettings,
-      bool isPrebuilt) async {
+      bool isPrebuilt,
+
+      ///[Android Only]
+      ///If set to true, the preview will be halted until the permission is granted.
+      ///If set to false, the application will need to handle permissions.
+      bool haltPreviewJoinForPermissionRequest) async {
     final String sdkVersions = await rootBundle
         .loadString('packages/hmssdk_flutter/lib/assets/sdk-versions.json');
     var versions = json.decode(sdkVersions);
@@ -32,7 +37,9 @@ class HmsSdkManager {
         "dart_sdk_version":
             dartSDKVersion.isNotEmpty ? dartSDKVersion[0] : "null",
         "hmssdk_version": versions['flutter'],
-        "is_prebuilt": isPrebuilt
+        "is_prebuilt": isPrebuilt,
+        "halt_preview_join_for_permission_request":
+            haltPreviewJoinForPermissionRequest
       };
       return await PlatformService.invokeMethod(PlatformMethod.build,
           arguments: arguments);

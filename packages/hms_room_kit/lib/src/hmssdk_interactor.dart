@@ -38,7 +38,8 @@ class HMSSDKInteractor {
       bool isAudioMixerDisabled = true,
       HMSAudioMode audioMode = HMSAudioMode.VOICE,
       bool isPrebuilt = false,
-      bool isNoiseCancellationEnabled = false}) {
+      bool isNoiseCancellationEnabled = false,
+      bool haltPreviewJoinForPermissionRequest = true}) {
     HMSLogSettings hmsLogSettings = HMSLogSettings(
         maxDirSizeInBytes: 1000000,
         isLogStorageEnabled: true,
@@ -56,7 +57,9 @@ class HMSSDKInteractor {
         iOSScreenshareConfig: iOSScreenshareConfig,
         hmsLogSettings: hmsLogSettings,
         hmsTrackSetting: trackSetting,
-        isPrebuilt: isPrebuilt);
+        isPrebuilt: isPrebuilt,
+        haltPreviewJoinForPermissionRequest:
+            haltPreviewJoinForPermissionRequest);
   }
 
   Future<void> build() async {
@@ -494,5 +497,9 @@ class HMSSDKInteractor {
 
   Future<bool> isNoiseCancellationEnabled() {
     return HMSNoiseCancellationController.isEnabled();
+  }
+
+  void setPermissionsAccepted() {
+    return hmsSDK.setPermissionsAccepted();
   }
 }

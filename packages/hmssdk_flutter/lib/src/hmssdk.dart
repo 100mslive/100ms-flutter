@@ -51,6 +51,8 @@ class HMSSDK {
   ///
   /// `Note: [appGroup] and [preferredExtension] are deprecated use iOSScreenshareConfig instead.`
   ///
+  /// **haltPreviewJoinForPermissionRequest** - [Android Only] If set to true, the preview will be halted until the permission is granted. If set to false, the application will need to handle permissions.
+  ///
   /// **Key Concepts**
   ///
   /// **Room** - A room represents real-time audio, and video sessions, the basic building block of the 100mslive Video SDK
@@ -70,14 +72,21 @@ class HMSSDK {
       this.hmsLogSettings,
       @Deprecated("Use iOSScreenshareConfig") this.appGroup,
       @Deprecated("Use iOSScreenshareConfig") this.preferredExtension,
-      this.isPrebuilt = false});
+      this.isPrebuilt = false,
+      this.haltPreviewJoinForPermissionRequest = false});
 
   /// The build function should be called after creating an instance of the [HMSSDK].
   ///
   /// Await the result & if true then create [HMSConfig] object to join or preview a room.
   Future<void> build() async {
-    await HmsSdkManager().createHMSSdk(hmsTrackSetting, iOSScreenshareConfig,
-        appGroup, preferredExtension, hmsLogSettings, isPrebuilt);
+    await HmsSdkManager().createHMSSdk(
+        hmsTrackSetting,
+        iOSScreenshareConfig,
+        appGroup,
+        preferredExtension,
+        hmsLogSettings,
+        isPrebuilt,
+        haltPreviewJoinForPermissionRequest);
   }
 
   ///[getAuthTokenByRoomCode] is used to get the authentication token to join the room
@@ -1496,6 +1505,14 @@ class HMSSDK {
     }
   }
 
+  ///Android Only
+  ///[setPermissionsAccepted] is used to notify the SDK that the required permissions are accepted by the user.
+  void setPermissionsAccepted() {
+    if (Platform.isAndroid) {
+      PlatformService.invokeMethod(PlatformMethod.setPermissionsAccepted);
+    }
+  }
+
   /// To modify local peer's audio & video tracks settings use the [hmsTrackSetting]. Only required for advanced use cases.
   HMSTrackSetting? hmsTrackSetting;
 
@@ -1520,4 +1537,6 @@ class HMSSDK {
   bool previewState = false;
 
   final bool isPrebuilt;
+
+  final bool haltPreviewJoinForPermissionRequest;
 }

@@ -10,7 +10,6 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/hmssdk_interactor.dart';
-import 'package:hms_room_kit/src/preview/preview_permissions.dart';
 
 ///[ScreenController] is the controller for the preview screen
 ///It takes following parameters:
@@ -68,7 +67,7 @@ class _ScreenControllerState extends State<ScreenController> {
       Constant.tokenEndPoint = null;
       Constant.layoutAPIEndPoint = null;
     }
-    _checkPermissions();
+    _initHMSSDK();
   }
 
   ///This function sets the end points for the app
@@ -84,18 +83,6 @@ class _ScreenControllerState extends State<ScreenController> {
         (endPoints.containsKey(Constant.layoutAPIEndPointKey))
             ? endPoints[Constant.layoutAPIEndPointKey]
             : null;
-  }
-
-  ///This function checks the permissions for the app
-  void _checkPermissions() async {
-    isPermissionGranted = await Utilities.checkPermissions();
-    if (isPermissionGranted) {
-      _initPreview();
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-    }
   }
 
   ///[_getAuthTokenAndSetLayout] gets the auth token and set the room layout
@@ -131,7 +118,7 @@ class _ScreenControllerState extends State<ScreenController> {
   ///- Start the preview
   ///  - If preview fails then we show the error dialog
   ///  - If successful we show the preview page
-  void _initPreview() async {
+  void _initHMSSDK() async {
     Constant.roomCode = widget.roomCode;
     if (mounted) {
       setState(() {
@@ -172,36 +159,20 @@ class _ScreenControllerState extends State<ScreenController> {
     }
   }
 
-  ///This function is called when the permissions are granted
-  ///This is called when user grants the permissions from PreviewPermissions widget
-  ///Here we initialize the preview if the permissions are granted
-  ///and set the [isPermissionGranted] to true
-  void _isPermissionGrantedCallback() {
-    _initPreview();
-    setState(() {
-      isPermissionGranted = true;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: (isLoading)
-          ? Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: HMSThemeColors.primaryDefault,
-              ),
-            )
-          : isPermissionGranted
-              ? PreviewMeetingFlow(
-                  prebuiltOptions: widget.options,
-                  hmsSDKInteractor: _hmsSDKInteractor,
-                  tokenData: tokenData,
-                )
-              : PreviewPermissions(
-                  options: widget.options,
-                  callback: _isPermissionGrantedCallback),
-    );
+        body: (isLoading)
+            ? Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: HMSThemeColors.primaryDefault,
+                ),
+              )
+            : PreviewMeetingFlow(
+                prebuiltOptions: widget.options,
+                hmsSDKInteractor: _hmsSDKInteractor,
+                tokenData: tokenData,
+              ));
   }
 }

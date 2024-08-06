@@ -357,6 +357,14 @@ abstract class PlatformService {
           notifyUpdateListeners(method,
               {"added_peers": addedPeers, "removed_peers": removedPeers});
           break;
+        case HMSUpdateListenerMethod.onPermissionsRequested:
+          List<String> permissions = [];
+
+          event.data["permissions"].forEach((e) {
+            permissions.add(e as String);
+          });
+          notifyUpdateListeners(method, {"permissions": permissions});
+          break;
         case HMSUpdateListenerMethod.unknown:
           break;
       }
@@ -466,6 +474,15 @@ abstract class PlatformService {
 
           notifyPreviewListeners(method,
               {"added_peers": addedPeers, "removed_peers": removedPeers});
+          break;
+        case HMSPreviewUpdateListenerMethod.onPermissionsRequested:
+          List<String> permissions = [];
+
+          event.data["permissions"].forEach((e) {
+            permissions.add(e as String);
+          });
+
+          notifyPreviewListeners(method, {"permissions": permissions});
           break;
       }
     });
@@ -718,6 +735,12 @@ abstract class PlatformService {
               addedPeers: arguments["added_peers"],
               removedPeers: arguments["removed_peers"]);
         });
+        break;
+      case HMSPreviewUpdateListenerMethod.onPermissionsRequested:
+        previewListeners.forEach((e) {
+          e.onPermissionsRequested(permissions: arguments["permissions"]);
+        });
+        break;
     }
   }
 
@@ -828,6 +851,12 @@ abstract class PlatformService {
           e.onPeerListUpdate(
               addedPeers: arguments["added_peers"],
               removedPeers: arguments["removed_peers"]);
+        });
+        break;
+
+      case HMSUpdateListenerMethod.onPermissionsRequested:
+        updateListeners.forEach((e) {
+          e.onPermissionsRequested(permissions: arguments["permissions"]);
         });
         break;
 

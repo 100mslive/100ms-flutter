@@ -1,4 +1,5 @@
 // Project imports:
+import 'package:flutter/foundation.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///[HMSPreviewListener] listens to updates when you preview.
@@ -7,6 +8,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 ///
 /// Check out the [Sample App](https://github.com/100mslive/100ms-flutter/blob/main/example/lib/preview/preview_store.dart) how we are using it.
 
+@optionalTypeArgs
 abstract class HMSPreviewListener {
   ///when an error is caught [onError] will be called
   ///
@@ -59,4 +61,12 @@ abstract class HMSPreviewListener {
   ///  - removedPeers: List of peers who left the room
   void onPeerListUpdate(
       {required List<HMSPeer> addedPeers, required List<HMSPeer> removedPeers});
+
+  ///This callback is triggered when the app requests for permissions.
+  ///This is only called if [haltPreviewJoinForPermissionRequest] is set as [true] in [HMSSDK] constructor.
+  /// - Parameters:
+  ///  - permissions: List of permissions requested by the app
+  void onPermissionsRequested({required List<String> permissions}) {
+    // Default implementation
+  }
 }

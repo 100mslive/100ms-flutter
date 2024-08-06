@@ -329,7 +329,7 @@ class _HomePageState extends State<HomePage> {
     Utilities.saveStringData(
         key: "meetingLink", value: meetingLinkController.text.trim());
     FocusManager.instance.primaryFocus?.unfocus();
-    await initForegroundTask();
+    // await initForegroundTask();
     Navigator.push(
         context,
         MaterialPageRoute(

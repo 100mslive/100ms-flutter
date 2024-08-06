@@ -316,6 +316,10 @@ class HmssdkFlutterPlugin :
                 transcriptionActions(call,result)
             }
 
+            "set_permissions_accepted" -> {
+                setPermissionsAccepted(result)
+            }
+
             else -> {
                 result.notImplemented()
             }
@@ -966,6 +970,11 @@ class HmssdkFlutterPlugin :
         }
     }
 
+    private fun setPermissionsAccepted(result: Result){
+        hmssdk?.setPermissionsAccepted()
+        result.success(null)
+    }
+
     fun getLocalPeer(): HMSLocalPeer? {
         return hmssdk!!.getLocalPeer()
     }
@@ -1244,6 +1253,7 @@ class HmssdkFlutterPlugin :
         val dartSDKVersion = call.argument<String>("dart_sdk_version")
         val hmsSDKVersion = call.argument<String>("hmssdk_version")
         val isPrebuilt = call.argument<Boolean>("is_prebuilt") ?: false
+        val haltPreviewJoinForPermissionRequest = call.argument<Boolean>("halt_preview_join_for_permission_request")?:false
         val framework =
             FrameworkInfo(
                 framework = AgentType.FLUTTER,
@@ -1274,16 +1284,38 @@ class HmssdkFlutterPlugin :
             builder.setLogSettings(logSettings)
         }
 
+        if(haltPreviewJoinForPermissionRequest){
+            builder.haltPreviewJoinForPermissionsRequest(true)
+        }
+
         hmssdk = builder.build()
         result.success(true)
     }
 
     private val hmsUpdateListener =
         object : HMSUpdateListener {
+
+            override fun onPermissionsRequested(permissions: List<String>) {
+                super.onPermissionsRequested(permissions)
+                val args = HashMap<String, Any?>()
+                args["event_name"] = "on_permissions_requested"
+
+                val map = HashMap<String, Any?>()
+                map["permissions"] = permissions
+
+                args["data"] = map
+
+                if (args["data"] != null) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        eventSink?.success(args)
+                    }
+                }
+            }
+
             override fun onChangeTrackStateRequest(details: HMSChangeTrackStateRequest) {
                 val args = HashMap<String, Any?>()
-                args.put("event_name", "on_change_track_state_request")
-                args.put("data", HMSChangeTrackStateRequestExtension.toDictionary(details)!!)
+                args["event_name"] = "on_change_track_state_request"
+                args["data"] = HMSChangeTrackStateRequestExtension.toDictionary(details)!!
 
                 if (args["data"] != null) {
                     CoroutineScope(Dispatchers.Main).launch {
@@ -1294,8 +1326,8 @@ class HmssdkFlutterPlugin :
 
             override fun onError(error: HMSException) {
                 val args = HashMap<String, Any?>()
-                args.put("event_name", "on_error")
-                args.put("data", HMSExceptionExtension.toDictionary(error))
+                args["event_name"] = "on_error"
+                args["data"] = HMSExceptionExtension.toDictionary(error)
 
                 if (args["data"] != null) {
                     CoroutineScope(Dispatchers.Main).launch {
@@ -1324,11 +1356,11 @@ class HmssdkFlutterPlugin :
                 }
 
                 val args = HashMap<String, Any?>()
-                args.put("event_name", "on_join_room")
+                args["event_name"] = "on_join_room"
 
                 val roomArgs = HashMap<String, Any?>()
-                roomArgs.put("room", HMSRoomExtension.toDictionary(room))
-                args.put("data", roomArgs)
+                roomArgs["room"] = HMSRoomExtension.toDictionary(room)
+                args["data"] = roomArgs
                 if (roomArgs["room"] != null) {
                     CoroutineScope(Dispatchers.Main).launch {
                         eventSink?.success(args)
@@ -1338,8 +1370,8 @@ class HmssdkFlutterPlugin :
 
             override fun onMessageReceived(message: HMSMessage) {
                 val args = HashMap<String, Any?>()
-                args.put("event_name", "on_message")
-                args.put("data", HMSMessageExtension.toDictionary(message))
+                args["event_name"] = "on_message"
+                args["data"] = HMSMessageExtension.toDictionary(message)
 
                 if (args["data"] != null) {
                     CoroutineScope(Dispatchers.Main).launch {
@@ -1382,7 +1414,7 @@ class HmssdkFlutterPlugin :
                  * the stream URL.
                  */
                 if (type == HMSRoomUpdate.HLS_STREAMING_STATE_UPDATED) {
-                    hmsRoom.hlsStreamingState?.let { streamingState ->
+                    hmsRoom.hlsStreamingState.let { streamingState ->
                         if (streamingState.state == HMSStreamingState.STARTED) {
                             streamingState.variants?.let { variants ->
                                 if (variants.isNotEmpty()) {
@@ -1537,10 +1569,29 @@ class HmssdkFlutterPlugin :
 
     private val hmsPreviewListener =
         object : HMSPreviewListener {
+
+            override fun onPermissionsRequested(permissions: List<String>) {
+                super.onPermissionsRequested(permissions)
+                val args = HashMap<String, Any?>()
+                args["event_name"] = "on_permissions_requested"
+
+                val map = HashMap<String, Any?>()
+                map["permissions"] = permissions
+
+
+                args["data"] = map
+
+                if (args["data"] != null) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        previewSink?.success(args)
+                    }
+                }
+            }
+
             override fun onError(error: HMSException) {
                 val args = HashMap<String, Any?>()
-                args.put("event_name", "on_error")
-                args.put("data", HMSExceptionExtension.toDictionary(error))
+                args["event_name"] = "on_error"
+                args["data"] = HMSExceptionExtension.toDictionary(error)
 
                 if (args["data"] != null) {
                     CoroutineScope(Dispatchers.Main).launch {

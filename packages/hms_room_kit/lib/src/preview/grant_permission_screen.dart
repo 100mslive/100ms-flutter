@@ -14,29 +14,29 @@ import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subtitle_text.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 import 'package:hms_room_kit/src/widgets/hms_buttons/hms_back_button.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 ///This renders the preview permissions screen
-class PreviewPermissions extends StatefulWidget {
+class GrantPermissionScreen extends StatefulWidget {
   final HMSPrebuiltOptions? options;
-  final void Function() callback;
+  final Function onPermissionRequested;
 
-  const PreviewPermissions({super.key, this.options, required this.callback});
+  const GrantPermissionScreen(
+      {super.key, this.options, required this.onPermissionRequested});
 
   @override
-  State<PreviewPermissions> createState() => _PreviewPermissionsState();
+  State<GrantPermissionScreen> createState() => _GrantPermissionScreenState();
 }
 
-class _PreviewPermissionsState extends State<PreviewPermissions> {
+class _GrantPermissionScreenState extends State<GrantPermissionScreen> {
+  bool isPermissionDeniedPermanently = false;
+
   ///This function gets the permissions
   ///If the permissions are granted then we call the callback provided
   ///
   ///For more details checkout the [Utilities.getPermissions] function
   void _getPermissions() async {
-    var res = await Utilities.getPermissions();
-
-    if (res) {
-      widget.callback();
-    }
+    widget.onPermissionRequested();
   }
 
   @override
@@ -74,7 +74,9 @@ class _PreviewPermissionsState extends State<PreviewPermissions> {
                       height: 20,
                     ),
                     HMSTitleText(
-                      text: "Enable permissions",
+                      text: isPermissionDeniedPermanently
+                          ? "Grant permissions"
+                          : "Enable permissions",
                       textColor: HMSThemeColors.onSurfaceHighEmphasis,
                       fontSize: 24,
                       lineHeight: 32,
@@ -99,7 +101,12 @@ class _PreviewPermissionsState extends State<PreviewPermissions> {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: () {
-                        _getPermissions();
+                        if (isPermissionDeniedPermanently) {
+                          openAppSettings();
+                          return;
+                        } else {
+                          _getPermissions();
+                        }
                       },
                       style: ButtonStyle(
                           backgroundColor: MaterialStatePropertyAll(
@@ -111,7 +118,9 @@ class _PreviewPermissionsState extends State<PreviewPermissions> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: HMSTitleText(
-                            text: "Grant Permissions",
+                            text: isPermissionDeniedPermanently
+                                ? "Open Settings"
+                                : "Grant Permissions",
                             textColor: HMSThemeColors.onPrimaryHighEmphasis),
                       ),
                     ),
