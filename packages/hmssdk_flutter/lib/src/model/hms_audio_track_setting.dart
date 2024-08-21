@@ -94,7 +94,7 @@ class HMSAudioTrackSetting {
     if (map.containsKey("enable_noise_cancellation")) {
       isNoiseCancellationEnabled = map["enable_noise_cancellation"];
     }
-    
+
     return HMSAudioTrackSetting(
         useHardwareAcousticEchoCanceler:
             map['user_hardware_acoustic_echo_canceler'] ?? null,
