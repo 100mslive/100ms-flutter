@@ -396,6 +396,8 @@ class Utilities {
     required bool joinWithMutedAudio,
     required bool isSoftwareDecoderDisabled,
     required bool isNoiseCancellationEnabled,
+    required bool isAutomaticGainControlEnabled,
+    required bool isNoiseSuppressionEnabled,
     HMSAudioMode? audioMode,
   }) {
     return HMSTrackSetting(
@@ -414,7 +416,9 @@ class Utilities {
                 ? HMSTrackInitState.MUTED
                 : HMSTrackInitState.UNMUTED,
             audioMode: audioMode,
-            enableNoiseCancellation: isNoiseCancellationEnabled),
+            enableNoiseCancellation: isNoiseCancellationEnabled,
+            enableAutomaticGainControl: isAutomaticGainControlEnabled,
+            enableNoiseSupression: isNoiseSuppressionEnabled),
         videoTrackSetting: HMSVideoTrackSetting(
             trackInitialState: joinWithMutedVideo
                 ? HMSTrackInitState.MUTED

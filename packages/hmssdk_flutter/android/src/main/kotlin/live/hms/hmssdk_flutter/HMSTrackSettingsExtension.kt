@@ -58,6 +58,20 @@ class HMSTrackSettingsExtension {
                         hmsAudioTrackSettings.enableNoiseCancellation(true)
                     }
                 }
+
+                val enableAutomaticGainControl = audioHashMap["enable_automatic_gain_control"] as? Boolean
+                enableAutomaticGainControl?.let {
+                    if(it){
+                        hmsAudioTrackSettings.enableAutomaticGainControl(true)
+                    }
+                }
+
+                val enableNoiseSupression = audioHashMap["enable_noise_supression"] as? Boolean
+                enableNoiseSupression?.let {
+                    if(it){
+                        hmsAudioTrackSettings.enableNoiseSupression(true)
+                    }
+                }
             }
 
             var hmsVideoTrackSettings = HMSVideoTrackSettings.Builder()

@@ -40,6 +40,16 @@ class HMSAudioTrackSetting {
   ///Refer: Read more about noise cancellation [here](///)
   final bool enableNoiseCancellation;
 
+  ///[enableAutomaticGainControl] property sets the automatic gain control status in the room whether is enabled or not.
+  ///
+  ///Refer: Read more about automatic gain control [here](///)
+  final bool enableAutomaticGainControl;
+
+  ///[enableNoiseSupression] property sets the noise suppression status in the room whether is enabled or not.
+  ///
+  ///Refer: Read more about noise suppression [here](///)
+  final bool enableNoiseSupression;
+
   HMSAudioTrackSetting(
       {this.useHardwareAcousticEchoCanceler,
       this.audioSource,
@@ -47,7 +57,9 @@ class HMSAudioTrackSetting {
       this.audioMode,
       this.phoneCallState =
           HMSAndroidPhoneCallState.DISABLE_MUTE_ON_VOIP_PHONE_CALL_RING,
-      this.enableNoiseCancellation = false});
+      this.enableNoiseCancellation = false,
+      this.enableAutomaticGainControl = false,
+      this.enableNoiseSupression = false});
 
   factory HMSAudioTrackSetting.fromMap(Map map) {
     List<HMSAudioNode> nodeList = [];
@@ -82,7 +94,7 @@ class HMSAudioTrackSetting {
     if (map.containsKey("enable_noise_cancellation")) {
       isNoiseCancellationEnabled = map["enable_noise_cancellation"];
     }
-
+    
     return HMSAudioTrackSetting(
         useHardwareAcousticEchoCanceler:
             map['user_hardware_acoustic_echo_canceler'] ?? null,
@@ -109,7 +121,9 @@ class HMSAudioTrackSetting {
       'phone_call_state':
           HMSAndroidPhoneCallStateValue.getValuefromHMSPhoneCallState(
               phoneCallState),
-      'enable_noise_cancellation': enableNoiseCancellation
+      'enable_noise_cancellation': enableNoiseCancellation,
+      'enable_automatic_gain_control': enableAutomaticGainControl,
+      'enable_noise_supression': enableNoiseSupression
     };
   }
 }
