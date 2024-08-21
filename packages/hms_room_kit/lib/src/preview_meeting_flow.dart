@@ -42,7 +42,9 @@ class _PreviewMeetingFlowState extends State<PreviewMeetingFlow> {
   Widget build(BuildContext context) {
     return HMSRoomLayout.skipPreview
         ? MeetingScreenController(
-            user: widget.prebuiltOptions?.userName ?? widget.prebuiltOptions?.userId ?? "",
+            user: widget.prebuiltOptions?.userName ??
+                widget.prebuiltOptions?.userId ??
+                "",
             localPeerNetworkQuality: null,
             options: widget.prebuiltOptions,
             tokenData: widget.tokenData,
