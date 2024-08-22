@@ -353,8 +353,10 @@ class _HomePageState extends State<HomePage> {
                               preferredExtension:
                                   "live.100ms.flutter.FlutterBroadcastUploadExtension"),
                           enableNoiseCancellation: true,
-                          isNoiseSuppressionEnabled: audioMode == HMSAudioMode.MUSIC,
-                          isAutomaticGainControlEnabled: audioMode == HMSAudioMode.MUSIC)),
+                          isNoiseSuppressionEnabled:
+                              audioMode == HMSAudioMode.MUSIC,
+                          isAutomaticGainControlEnabled:
+                              audioMode == HMSAudioMode.MUSIC)),
                 )));
   }
 
