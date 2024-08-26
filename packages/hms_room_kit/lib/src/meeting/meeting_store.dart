@@ -694,7 +694,7 @@ class MeetingStore extends ChangeNotifier
   }
 
   int _getTimestampFromPeerMetadata(String? metadata) {
-    if(metadata == null) {
+    if (metadata == null) {
       return 0;
     }
     try {
@@ -1634,7 +1634,8 @@ class MeetingStore extends ChangeNotifier
           participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
         }
         participantsInMeetingMap["Hand Raised"]?.sort((a, b) {
-           return _getTimestampFromPeerMetadata(a.peer.metadata).compareTo(_getTimestampFromPeerMetadata(b.peer.metadata));
+          return _getTimestampFromPeerMetadata(a.peer.metadata)
+              .compareTo(_getTimestampFromPeerMetadata(b.peer.metadata));
         });
         notifyListeners();
       } else if (peerUpdate == HMSPeerUpdate.metadataChanged) {

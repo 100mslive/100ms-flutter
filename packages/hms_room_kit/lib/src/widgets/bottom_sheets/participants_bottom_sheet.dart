@@ -546,17 +546,17 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                                               __) {
                                                                             return isSIPPeer
                                                                                 ? Padding(
-                                                                                  padding: const EdgeInsets.only(right:4.0),
-                                                                                  child: CircleAvatar(
-                                                                                      radius: 12,
-                                                                                      backgroundColor: HMSThemeColors.surfaceDefault,
-                                                                                      child: SvgPicture.asset(
-                                                                                        "packages/hms_room_kit/lib/src/assets/icons/sip_call.svg",
-                                                                                        height: 12,
-                                                                                        width: 12,
-                                                                                        colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
-                                                                                      )),
-                                                                                )
+                                                                                    padding: const EdgeInsets.only(right: 4.0),
+                                                                                    child: CircleAvatar(
+                                                                                        radius: 12,
+                                                                                        backgroundColor: HMSThemeColors.surfaceDefault,
+                                                                                        child: SvgPicture.asset(
+                                                                                          "packages/hms_room_kit/lib/src/assets/icons/sip_call.svg",
+                                                                                          height: 12,
+                                                                                          width: 12,
+                                                                                          colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
+                                                                                        )),
+                                                                                  )
                                                                                 : const SizedBox();
                                                                           },
                                                                           selector: (_, participantsStore) =>
@@ -570,8 +570,7 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                                               participantsStore.peer.networkQuality?.quality ?? -1,
                                                                               participantsStore.peer.type != HMSPeerType.sip),
                                                                           builder: (_, participantData, __) {
-                                                                            return 
-                                                                            participantData.item1 != -1 && participantData.item1 < 3 && participantData.item2
+                                                                            return participantData.item1 != -1 && participantData.item1 < 3 && participantData.item2
                                                                                 ? Padding(
                                                                                     padding: const EdgeInsets.only(right: 4.0),
                                                                                     child: CircleAvatar(
