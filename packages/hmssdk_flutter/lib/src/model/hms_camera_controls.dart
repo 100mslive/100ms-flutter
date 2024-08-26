@@ -61,4 +61,49 @@ class HMSCameraControls {
       return HMSException.fromMap(result["data"]["error"]);
     }
   }
+
+  static Future<bool> isZoomSupported() async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.isZoomSupported);
+    if (result["success"]) {
+      return result["data"];
+    } else {
+      return false;
+    }
+  }
+
+  static Future<dynamic> setZoom() async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.setZoom);
+    if (result["success"]) {
+      return result["data"];
+    } else {
+      return HMSException.fromMap(result["data"]["error"]);
+    }
+  }
+
+    static Future<dynamic> resetZoom() async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.resetZoom);
+    if (result["success"]) {
+      return result["data"];
+    } else {
+      return HMSException.fromMap(result["data"]["error"]);
+    }
+  }
+
+  static Future<dynamic> getMinZoom() async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.getMinZoom);
+    if (result["success"]) {
+      return result["data"];
+    } else {
+      return HMSException.fromMap(result["data"]["error"]);
+    }
+  }
+
+  static Future<dynamic> getMaxZoom() async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.getMaxZoom);
+    if (result["success"]) {
+      return result["data"];
+    } else {
+      return HMSException.fromMap(result["data"]["error"]);
+    }
+  }
 }
