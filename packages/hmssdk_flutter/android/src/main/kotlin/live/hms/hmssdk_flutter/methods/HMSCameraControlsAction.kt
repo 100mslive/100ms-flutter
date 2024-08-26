@@ -216,14 +216,13 @@ class HMSCameraControlsAction {
             result: Result,
             hmssdk: HMSSDK
         ){
-            val zoomValue = call.argument<Float>("zoom_value")
+            val zoomValue = call.argument<Double>("zoom_value")
             zoomValue?.let { _zoomValue ->
                 hmssdk.getLocalPeer()?.let { localPeer ->
                     localPeer.videoTrack?.let { localVideoTrack ->
-                        localVideoTrack.getCameraControl()?.setZoom(_zoomValue) ?: run {
-                            result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("cameraControl is null")))
-                            return
-                        }
+                        localVideoTrack.getCameraControl()?.setZoom(
+                            _zoomValue.toFloat()
+                        )
                     } ?: run {
                         result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("local video track is null")))
                         return
@@ -232,6 +231,9 @@ class HMSCameraControlsAction {
                     result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("local peer is null")))
                     return
                 }
+            }?:run{
+                HMSErrorLogger.returnArgumentsError("zoom value parameter is null in setZoom method")
+                return
             }
         }
 
@@ -241,10 +243,7 @@ class HMSCameraControlsAction {
         ){
             hmssdk.getLocalPeer()?.let { localPeer ->
                 localPeer.videoTrack?.let { localVideoTrack ->
-                    localVideoTrack.getCameraControl()?.let { cameraControl ->
-                        result.success(HMSResultExtension.toDictionary(true, cameraControl.resetZoom()))
-                        return
-                    } ?: run {
+                    localVideoTrack.getCameraControl()?.resetZoom() ?: run {
                         result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("cameraControl is null")))
                         return
                     }
