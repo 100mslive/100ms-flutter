@@ -63,7 +63,8 @@ class HMSCameraControls {
   }
 
   static Future<bool> isZoomSupported() async {
-    var result = await PlatformService.invokeMethod(PlatformMethod.isZoomSupported);
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.isZoomSupported);
     if (result["success"]) {
       return result["data"];
     } else {
@@ -80,7 +81,7 @@ class HMSCameraControls {
     }
   }
 
-    static Future<dynamic> resetZoom() async {
+  static Future<dynamic> resetZoom() async {
     var result = await PlatformService.invokeMethod(PlatformMethod.resetZoom);
     if (result["success"]) {
       return result["data"];
