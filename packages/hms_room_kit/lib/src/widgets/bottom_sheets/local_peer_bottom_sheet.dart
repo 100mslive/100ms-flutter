@@ -233,7 +233,11 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                         horizontalTitleGap: 2,
                         onTap: () async {
                           Navigator.pop(context);
-                          HMSCameraControls.setZoom(zoomValue: 2);
+                          bool isZoomSupported =
+                              await HMSCameraControls.isZoomSupported();
+                          if (isZoomSupported) {
+                            HMSCameraControls.setZoom(zoomValue: 2);
+                          }
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(

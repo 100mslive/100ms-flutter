@@ -58,7 +58,7 @@ class HMSCameraControlsAction {
             hmssdk.getLocalPeer()?.let { localPeer ->
                 localPeer.videoTrack?.let { localVideoTrack ->
                     localVideoTrack.getCameraControl()?.let { cameraControl ->
-                        HMSResultExtension.toDictionary(true, cameraControl.isZoomSupported())
+                        result.success(HMSResultExtension.toDictionary(true, cameraControl.isZoomSupported()))
                         return
                     }
                 }
