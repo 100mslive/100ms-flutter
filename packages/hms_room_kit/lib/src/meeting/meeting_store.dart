@@ -666,14 +666,43 @@ class MeetingStore extends ChangeNotifier
   void toggleLocalPeerHandRaise() {
     if (isRaisedHand) {
       _hmsSDKInteractor.lowerLocalPeerHand(hmsActionResultListener: this);
+      resetTimestampWhenHandDown();
     } else {
       _hmsSDKInteractor.raiseLocalPeerHand(hmsActionResultListener: this);
+      setTimestampWhenHandRaise();
     }
+  }
+
+  void setTimestampWhenHandRaise() {
+    int currentTime = DateTime.now().millisecondsSinceEpoch;
+    log("Vkohli Setting timestamp for hand raise $currentTime");
+    _hmsSDKInteractor.changeMetadata(
+        metadata:
+            "{\"isBRBOn\":false,\"prevRole\":\"$previousRole\",\"handRaisedAt\":${currentTime}}",
+        hmsActionResultListener: this);
+  }
+
+  void resetTimestampWhenHandDown() {
+    _hmsSDKInteractor.changeMetadata(
+        metadata: "{\"isBRBOn\":false,\"prevRole\":\"$previousRole\"}",
+        hmsActionResultListener: this);
   }
 
   void lowerRemotePeerHand(HMSPeer forPeer) {
     _hmsSDKInteractor.lowerRemotePeerHand(
         forPeer: forPeer, hmsActionResultListener: this);
+  }
+
+  int _getTimestampFromPeerMetadata(String? metadata) {
+    if (metadata == null) {
+      return 0;
+    }
+    try {
+      Map<String, dynamic> metadataMap = jsonDecode(metadata);
+      return metadataMap["handRaisedAt"];
+    } catch (e) {
+      return 0;
+    }
   }
 
   bool isBRB = false;
@@ -1604,6 +1633,10 @@ class MeetingStore extends ChangeNotifier
               (handDownPeer) => handDownPeer.peer.peerId == peer.peerId);
           participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);
         }
+        participantsInMeetingMap["Hand Raised"]?.sort((a, b) {
+          return _getTimestampFromPeerMetadata(a.peer.metadata)
+              .compareTo(_getTimestampFromPeerMetadata(b.peer.metadata));
+        });
         notifyListeners();
       } else if (peerUpdate == HMSPeerUpdate.metadataChanged) {
         participantsInMeetingMap[peer.role.name]?[index].updatePeer(peer);

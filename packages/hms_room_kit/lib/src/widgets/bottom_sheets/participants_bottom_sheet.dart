@@ -69,6 +69,10 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
     );
   }
 
+  bool isHandRaisedRow(String role) {
+    return role == "Hand Raised";
+  }
+
   Widget _kebabMenu(HMSPeer peer) {
     final meetingStore = context.read<MeetingStore>();
     PeerTrackNode? peerTrackNode;
@@ -410,12 +414,13 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                         .keys
                         .elementAt(index);
                     return Selector<MeetingStore,
-                            Tuple2<int, List<ParticipantsStore>?>>(
-                        selector: (_, meetingStore) => Tuple2(
+                            Tuple3<int, List<ParticipantsStore>?, String>>(
+                        selector: (_, meetingStore) => Tuple3(
                             meetingStore
                                     .participantsInMeetingMap[role]?.length ??
                                 0,
-                            meetingStore.participantsInMeetingMap[role]),
+                            meetingStore.participantsInMeetingMap[role],
+                            role),
                         builder: (_, participantsPerRole, __) {
                           return (participantsPerRole.item2?.isNotEmpty ??
                                   false)
@@ -458,7 +463,9 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                     null
                                                 ? 0
                                                 : (participantsPerRole.item1) *
-                                                    54,
+                                                    (isHandRaisedRow(role)
+                                                        ? 60
+                                                        : 54),
                                             child: Center(
                                               child: ListView.builder(
                                                   physics:
@@ -538,15 +545,18 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                                               isSIPPeer,
                                                                               __) {
                                                                             return isSIPPeer
-                                                                                ? CircleAvatar(
-                                                                                    radius: 16,
-                                                                                    backgroundColor: HMSThemeColors.surfaceBright,
-                                                                                    child: SvgPicture.asset(
-                                                                                      "packages/hms_room_kit/lib/src/assets/icons/sip_call.svg",
-                                                                                      height: 12,
-                                                                                      width: 12,
-                                                                                      colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
-                                                                                    ))
+                                                                                ? Padding(
+                                                                                    padding: const EdgeInsets.only(right: 4.0),
+                                                                                    child: CircleAvatar(
+                                                                                        radius: 12,
+                                                                                        backgroundColor: HMSThemeColors.surfaceDefault,
+                                                                                        child: SvgPicture.asset(
+                                                                                          "packages/hms_room_kit/lib/src/assets/icons/sip_call.svg",
+                                                                                          height: 12,
+                                                                                          width: 12,
+                                                                                          colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
+                                                                                        )),
+                                                                                  )
                                                                                 : const SizedBox();
                                                                           },
                                                                           selector: (_, participantsStore) =>
@@ -562,14 +572,14 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                                           builder: (_, participantData, __) {
                                                                             return participantData.item1 != -1 && participantData.item1 < 3 && participantData.item2
                                                                                 ? Padding(
-                                                                                    padding: const EdgeInsets.only(right: 16.0),
+                                                                                    padding: const EdgeInsets.only(right: 4.0),
                                                                                     child: CircleAvatar(
-                                                                                      radius: 16,
+                                                                                      radius: 12,
                                                                                       backgroundColor: HMSThemeColors.surfaceDefault,
                                                                                       child: SvgPicture.asset(
                                                                                         "packages/hms_room_kit/lib/src/assets/icons/network_${participantData.item1}.svg",
-                                                                                        height: 16,
-                                                                                        width: 16,
+                                                                                        height: 12,
+                                                                                        width: 12,
                                                                                       ),
                                                                                     ),
                                                                                   )
@@ -588,12 +598,12 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                                                 ? Padding(
                                                                                     padding: const EdgeInsets.only(right: 16.0),
                                                                                     child: CircleAvatar(
-                                                                                      radius: 16,
+                                                                                      radius: 12,
                                                                                       backgroundColor: HMSThemeColors.surfaceDefault,
                                                                                       child: SvgPicture.asset(
                                                                                         "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
-                                                                                        height: 16,
-                                                                                        width: 16,
+                                                                                        height: 12,
+                                                                                        width: 12,
                                                                                         colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                                                                                       ),
                                                                                     ),
