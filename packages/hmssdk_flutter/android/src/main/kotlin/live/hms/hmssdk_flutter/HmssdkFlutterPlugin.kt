@@ -255,7 +255,7 @@ class HmssdkFlutterPlugin :
             "capture_snapshot" -> {
                 captureSnapshot(call, result)
             }
-            "is_tap_to_focus_supported", "capture_image_at_max_supported_resolution", "is_zoom_supported", "is_flash_supported", "toggle_flash" -> {
+            "is_tap_to_focus_supported", "capture_image_at_max_supported_resolution", "is_zoom_supported", "is_flash_supported", "toggle_flash", "set_zoom", "reset_zoom", "get_max_zoom", "get_min_zoom" -> {
                 HMSCameraControlsAction.cameraControlsAction(call, result, hmssdk!!, activity.applicationContext)
             }
             "get_session_metadata_for_key", "set_session_metadata_for_key" -> {

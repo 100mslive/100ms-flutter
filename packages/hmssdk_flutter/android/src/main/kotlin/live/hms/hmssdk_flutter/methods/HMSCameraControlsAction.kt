@@ -24,6 +24,10 @@ class HMSCameraControlsAction {
                 "capture_image_at_max_supported_resolution" -> captureImageAtMaxSupportedResolution(call, result, hmssdk, context)
                 "is_flash_supported" -> isFlashSupported(result, hmssdk)
                 "toggle_flash" -> toggleFlash(result, hmssdk)
+                "set_zoom" -> setZoom(call, result, hmssdk)
+                "reset_zoom" -> resetZoom(result, hmssdk)
+                "get_max_zoom" -> getMaxZoom(result, hmssdk)
+                "get_min_zoom" -> getMinZoom(result, hmssdk)
                 else -> {
                     result.notImplemented()
                 }
@@ -54,7 +58,7 @@ class HMSCameraControlsAction {
             hmssdk.getLocalPeer()?.let { localPeer ->
                 localPeer.videoTrack?.let { localVideoTrack ->
                     localVideoTrack.getCameraControl()?.let { cameraControl ->
-                        HMSResultExtension.toDictionary(true, cameraControl.isZoomSupported())
+                        result.success(HMSResultExtension.toDictionary(true, cameraControl.isZoomSupported()))
                         return
                     }
                 }
@@ -193,6 +197,98 @@ class HMSCameraControlsAction {
                             )
                             return
                         }
+                    } ?: run {
+                        result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("cameraControl is null")))
+                        return
+                    }
+                } ?: run {
+                    result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("local video track is null")))
+                    return
+                }
+            } ?: run {
+                result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("local peer is null")))
+                return
+            }
+        }
+
+        private fun setZoom(
+            call: MethodCall,
+            result: Result,
+            hmssdk: HMSSDK
+        ){
+            val zoomValue = call.argument<Double>("zoom_value")
+            zoomValue?.let { _zoomValue ->
+                hmssdk.getLocalPeer()?.let { localPeer ->
+                    localPeer.videoTrack?.let { localVideoTrack ->
+                        localVideoTrack.getCameraControl()?.setZoom(
+                            _zoomValue.toFloat()
+                        )
+                    } ?: run {
+                        result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("local video track is null")))
+                        return
+                    }
+                } ?: run {
+                    result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("local peer is null")))
+                    return
+                }
+            }?:run{
+                HMSErrorLogger.returnArgumentsError("zoom value parameter is null in setZoom method")
+                return
+            }
+        }
+
+        private fun resetZoom(
+            result: Result,
+            hmssdk: HMSSDK,
+        ){
+            hmssdk.getLocalPeer()?.let { localPeer ->
+                localPeer.videoTrack?.let { localVideoTrack ->
+                    localVideoTrack.getCameraControl()?.resetZoom() ?: run {
+                        result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("cameraControl is null")))
+                        return
+                    }
+                } ?: run {
+                    result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("local video track is null")))
+                    return
+                }
+            } ?: run {
+                result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("local peer is null")))
+                return
+            }
+        }
+
+        private fun getMinZoom(
+            result: Result,
+            hmssdk: HMSSDK,
+        ){
+            hmssdk.getLocalPeer()?.let { localPeer ->
+                localPeer.videoTrack?.let { localVideoTrack ->
+                    localVideoTrack.getCameraControl()?.let { cameraControl ->
+                        result.success(HMSResultExtension.toDictionary(true, cameraControl.getMinZoom()))
+                        return
+                    } ?: run {
+                        result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("cameraControl is null")))
+                        return
+                    }
+                } ?: run {
+                    result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("local video track is null")))
+                    return
+                }
+            } ?: run {
+                result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("local peer is null")))
+                return
+            }
+        }
+
+        private fun getMaxZoom(
+            result: Result,
+            hmssdk: HMSSDK,
+        ){
+            hmssdk.getLocalPeer()?.let { localPeer ->
+                localPeer.videoTrack?.let { localVideoTrack ->
+                    localVideoTrack.getCameraControl()?.let { cameraControl ->
+                        result.success(HMSResultExtension.toDictionary(true, cameraControl.getMaxZoom()))
+                        return
                     } ?: run {
                         result.success(HMSResultExtension.toDictionary(false, HMSExceptionExtension.getError("cameraControl is null")))
                         return

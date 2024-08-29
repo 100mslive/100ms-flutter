@@ -32,9 +32,15 @@ class HMSCameraControlsAction {
 
         case "toggle_flash":
             toggleFlash(result, hmsSDK)
+            
+        case "set_zoom":
+            setZoom(call, result, hmsSDK)
+            
+        case "reset_zoom":
+            resetZoom(result, hmsSDK)
 
         // these method calls return FlutterMethodNotImplemented to indicate that the requested functionality is not yet implemented.
-        case "is_tap_to_focus_supported", "is_zoom_supported":
+        case "is_tap_to_focus_supported", "is_zoom_supported", "get_max_zoom", "get_min_zoom":
             result(FlutterMethodNotImplemented)
 
         // If the method call does not match any of the above cases, also return FlutterMethodNotImplemented.
@@ -169,5 +175,52 @@ class HMSCameraControlsAction {
 
         formatter.timeStyle = .medium
         return formatter.string(from: Date())
+    }
+    
+    static private func setZoom(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?){
+        guard let localPeer = hmsSDK?.localPeer else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) An instance of Local Peer could not be found. Please check if a Room is joined.")))
+            return
+        }
+
+        guard let localVideoTrack = localPeer.localVideoTrack()
+        else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Video Track of Local Peer could not be found. Please check if the Local Peer has permission to publish video & video is unmuted currently.")))
+            return
+        }
+        
+        let arguments = call.arguments as? [AnyHashable: Any]
+        
+        guard let zoomValue = arguments?["zoom_value"] as? CGFloat
+        else{
+            HMSErrorLogger.returnArgumentsError("zoom value can't be empty")
+            return
+        }
+        
+        localVideoTrack.modifyCaptureDevice { device in
+
+            guard let device = device else { return }
+            
+            device.videoZoomFactor = zoomValue
+        }
+    }
+    
+    static private func resetZoom(_ result: @escaping FlutterResult, _ hmsSDK: HMSSDK?){
+        guard let localPeer = hmsSDK?.localPeer else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) An instance of Local Peer could not be found. Please check if a Room is joined.")))
+            return
+        }
+
+        guard let localVideoTrack = localPeer.localVideoTrack()
+        else {
+            result(HMSResultExtension.toDictionary(false, HMSErrorExtension.getError("\(#function) Video Track of Local Peer could not be found. Please check if the Local Peer has permission to publish video & video is unmuted currently.")))
+            return
+        }
+        
+        localVideoTrack.modifyCaptureDevice { device in
+
+            guard let device = device else { return }
+            device.videoZoomFactor = 1.0
+        }
     }
 }
