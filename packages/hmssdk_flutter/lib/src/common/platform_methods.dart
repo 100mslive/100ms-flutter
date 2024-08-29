@@ -165,9 +165,17 @@ enum PlatformMethod {
   captureSnapshot,
   getAllLogs,
   getAuthTokenByRoomCode,
+
+  ///Camera Controls
   captureImageAtMaxSupportedResolution,
   isFlashSupported,
   toggleFlash,
+  isZoomSupported,
+  setZoom,
+  resetZoom,
+  getMaxZoom,
+  getMinZoom,
+
   getSessionMetadataForKey,
   setSessionMetadataForKey,
   addKeyChangeListener,
@@ -494,6 +502,16 @@ extension PlatformMethodValues on PlatformMethod {
         return "is_flash_supported";
       case PlatformMethod.toggleFlash:
         return "toggle_flash";
+      case PlatformMethod.isZoomSupported:
+        return "is_zoom_supported";
+      case PlatformMethod.setZoom:
+        return "set_zoom";
+      case PlatformMethod.resetZoom:
+        return "reset_zoom";
+      case PlatformMethod.getMaxZoom:
+        return "get_max_zoom";
+      case PlatformMethod.getMinZoom:
+        return "get_min_zoom";
       case PlatformMethod.getSessionMetadataForKey:
         return "get_session_metadata_for_key";
       case PlatformMethod.setSessionMetadataForKey:
@@ -881,6 +899,16 @@ extension PlatformMethodValues on PlatformMethod {
         return PlatformMethod.isFlashSupported;
       case "toggle_flash":
         return PlatformMethod.toggleFlash;
+      case "is_zoom_supported":
+        return PlatformMethod.isZoomSupported;
+      case "set_zoom":
+        return PlatformMethod.setZoom;
+      case "reset_zoom":
+        return PlatformMethod.resetZoom;
+      case "get_max_zoom":
+        return PlatformMethod.getMaxZoom;
+      case "get_min_zoom":
+        return PlatformMethod.getMinZoom;
       case "get_session_metadata_for_key":
         return PlatformMethod.getSessionMetadataForKey;
       case "set_session_metadata_for_key":

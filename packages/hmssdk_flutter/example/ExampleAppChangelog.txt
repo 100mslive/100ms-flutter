@@ -1,10 +1,7 @@
 Board: https://app.devrev.ai/100ms/vistas/vista-250
 
-- Change Role on Prebuilt
-https://app.devrev.ai/100ms/works/ISS-22877
-
-- Update DateTime parsing with `convertDateFromEpoch` in SDK
-https://app.devrev.ai/100ms/works/ISS-22778
+- Add support for zoom in camera controls
+https://app.devrev.ai/100ms/works/ISS-23282
 
 Room Kit: 1.1.6
 Core SDK: 1.10.6

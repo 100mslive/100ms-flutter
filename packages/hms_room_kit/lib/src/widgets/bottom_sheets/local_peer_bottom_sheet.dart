@@ -4,6 +4,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -51,7 +52,10 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: widget.isInsetTile ? 0.26 : 0.2,
+      heightFactor:
+          (AppDebugConfig.isDebugMode && widget.meetingStore.isVideoOn)
+              ? (widget.isInsetTile ? 0.46 : 0.4)
+              : (widget.isInsetTile ? 0.26 : 0.2),
       child: Padding(
           padding: const EdgeInsets.only(top: 16.0, left: 24, right: 24),
           child: Column(
@@ -228,6 +232,53 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                                   widget.meetingStore.peerTracks.length > 1
                                       ? HMSThemeColors.onSurfaceHighEmphasis
                                       : HMSThemeColors.onSurfaceLowEmphasis)),
+                    if (AppDebugConfig.isDebugMode &&
+                        widget.meetingStore.isVideoOn)
+                      ListTile(
+                          horizontalTitleGap: 2,
+                          onTap: () async {
+                            Navigator.pop(context);
+                            bool isZoomSupported =
+                                await HMSCameraControls.isZoomSupported();
+                            if (isZoomSupported) {
+                              HMSCameraControls.setZoom(zoomValue: 2);
+                            }
+                          },
+                          contentPadding: EdgeInsets.zero,
+                          leading: SvgPicture.asset(
+                            "packages/hms_room_kit/lib/src/assets/icons/maximize.svg",
+                            semanticsLabel: "fl_local_pin_tile",
+                            height: 20,
+                            width: 20,
+                            colorFilter: ColorFilter.mode(
+                                HMSThemeColors.onSurfaceHighEmphasis,
+                                BlendMode.srcIn),
+                          ),
+                          title: HMSSubheadingText(
+                              text: "Zoom In (2x)",
+                              textColor: HMSThemeColors.onSurfaceHighEmphasis)),
+
+                    if (AppDebugConfig.isDebugMode &&
+                        widget.meetingStore.isVideoOn)
+                      ListTile(
+                          horizontalTitleGap: 2,
+                          onTap: () async {
+                            Navigator.pop(context);
+                            HMSCameraControls.resetZoom();
+                          },
+                          contentPadding: EdgeInsets.zero,
+                          leading: SvgPicture.asset(
+                            "packages/hms_room_kit/lib/src/assets/icons/minimize.svg",
+                            semanticsLabel: "fl_local_pin_tile",
+                            height: 20,
+                            width: 20,
+                            colorFilter: ColorFilter.mode(
+                                HMSThemeColors.onSurfaceHighEmphasis,
+                                BlendMode.srcIn),
+                          ),
+                          title: HMSSubheadingText(
+                              text: "Reset zoom",
+                              textColor: HMSThemeColors.onSurfaceHighEmphasis)),
                   ],
                 ),
               ),
