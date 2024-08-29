@@ -235,6 +235,7 @@ class _HomePageState extends State<HomePage> {
   TextEditingController meetingLinkController = TextEditingController();
   Uuid? uuid;
   String uuidString = "";
+  HMSAudioMode audioMode = HMSAudioMode.VOICE;
 
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -264,6 +265,9 @@ class _HomePageState extends State<HomePage> {
     } else {
       meetingLinkController.text = widget.deepLinkURL ?? "";
     }
+
+    int audioModeInt = await Utilities.getIntData(key: "audio-mode");
+    audioMode = HMSAudioMode.values[audioModeInt];
   }
 
   Future<bool> _closeApp() {
@@ -348,7 +352,11 @@ class _HomePageState extends State<HomePage> {
                               appGroup: "group.flutterhms",
                               preferredExtension:
                                   "live.100ms.flutter.FlutterBroadcastUploadExtension"),
-                          enableNoiseCancellation: true)),
+                          enableNoiseCancellation: true,
+                          isNoiseSuppressionEnabled:
+                              audioMode == HMSAudioMode.MUSIC,
+                          isAutomaticGainControlEnabled:
+                              audioMode == HMSAudioMode.MUSIC)),
                 )));
   }
 
