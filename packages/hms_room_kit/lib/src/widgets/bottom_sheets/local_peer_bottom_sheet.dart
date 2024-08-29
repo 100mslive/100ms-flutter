@@ -52,7 +52,7 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: widget.isInsetTile ? 0.46 : 0.4,
+      heightFactor: (AppDebugConfig.isDebugMode && widget.meetingStore.isVideoOn)?(widget.isInsetTile ? 0.46 : 0.4):(widget.isInsetTile ? 0.26 : 0.2),
       child: Padding(
           padding: const EdgeInsets.only(top: 16.0, left: 24, right: 24),
           child: Column(
@@ -229,6 +229,7 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                                   widget.meetingStore.peerTracks.length > 1
                                       ? HMSThemeColors.onSurfaceHighEmphasis
                                       : HMSThemeColors.onSurfaceLowEmphasis)),
+                    if(AppDebugConfig.isDebugMode && widget.meetingStore.isVideoOn)
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
@@ -252,6 +253,8 @@ class _LocalPeerBottomSheetState extends State<LocalPeerBottomSheet> {
                         title: HMSSubheadingText(
                             text: "Zoom In (2x)",
                             textColor: HMSThemeColors.onSurfaceHighEmphasis)),
+                    
+                    if(AppDebugConfig.isDebugMode && widget.meetingStore.isVideoOn)
                     ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
