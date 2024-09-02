@@ -9,7 +9,13 @@ https://app.devrev.ai/100ms/works/ISS-22859
 - Support for long running sessions
 https://app.devrev.ai/100ms/works/ISS-23134
 
+- Hand Raise sorting based on Time
+https://app.devrev.ai/100ms/works/ISS-23102
+
+- Change Role on Prebuilt
+https://app.devrev.ai/100ms/works/ISS-22877
+
 Room Kit: 1.1.6
 Core SDK: 1.10.6
-Android SDK: 2.9.65
-iOS SDK: 1.15.0
+Android SDK: 2.9.66
+iOS SDK: 1.16.1
