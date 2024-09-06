@@ -15,9 +15,9 @@ class HMSHLSCueExtension {
         var dict = [String: Any?]()
 
         dict["id"] = hmsHlsCue.id
-        dict["start_date"] = (hmsHlsCue.startDate.timeIntervalSince1970 * 1000)
+        dict["start_date"] = "\(hmsHlsCue.startDate)"
         if let endDate = hmsHlsCue.endDate {
-            dict["end_date"] = (endDate.timeIntervalSince1970 * 1000)
+            dict["end_date"] = "\(endDate)"
         }
         dict["payload"] = hmsHlsCue.payload
 
