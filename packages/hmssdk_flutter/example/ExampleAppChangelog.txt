@@ -17,5 +17,5 @@ https://app.devrev.ai/100ms/works/ISS-22877
 
 Room Kit: 1.1.6
 Core SDK: 1.10.6
-Android SDK: 2.9.66
+Android SDK: 2.9.67
 iOS SDK: 1.16.1
