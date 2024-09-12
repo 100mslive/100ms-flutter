@@ -15,6 +15,8 @@ https://app.devrev.ai/100ms/works/ISS-23102
 - Change Role on Prebuilt
 https://app.devrev.ai/100ms/works/ISS-22877
 
+- Resolved crash when performing Role Change to VNRT
+
 Room Kit: 1.1.6
 Core SDK: 1.10.6
 Android SDK: 2.9.67
