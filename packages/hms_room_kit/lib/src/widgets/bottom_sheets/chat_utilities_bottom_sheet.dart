@@ -30,6 +30,7 @@ class ChatUtilitiesBottomSheet extends StatefulWidget {
 class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
   bool isPinned = false;
   bool isBlocked = false;
+  bool isLocalBlocked = false;
 
   @override
   initState() {
@@ -39,14 +40,32 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
             (element) => element["id"] == widget.message.messageId) !=
         -1;
 
-    isBlocked = context.read<MeetingStore>().blackListedUserIds.indexWhere(
-            (userId) => userId == widget.message.sender?.customerUserId) !=
-        -1;
+    // Initial check for isBlocked
+    updateIsBlocked();
+
+    // Add listener to update isBlocked when blackListedUserIds changes
+    context.read<MeetingStore>().addListener(updateIsBlocked);
+  }
+
+  void updateIsBlocked() {
+    setState(() {
+      isBlocked = context.read<MeetingStore>().blackListedUserIds.indexWhere(
+              (userId) => userId == widget.message.sender?.customerUserId) !=
+          -1;
+      isLocalBlocked = context
+              .read<MeetingStore>()
+              .blackListedUserIds
+              .indexWhere((userId) =>
+                  userId ==
+                  context.read<MeetingStore>().localPeer?.customerUserId) !=
+          -1;
+    });
   }
 
   @override
   void deactivate() {
     context.read<MeetingStore>().removeBottomSheet(context);
+    context.read<MeetingStore>().removeListener(updateIsBlocked);
     super.deactivate();
   }
 
@@ -156,7 +175,8 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
 
             if ((HMSRoomLayout.chatData?.realTimeControls?.canBlockUser ??
                     false) &&
-                !(widget.message.sender?.isLocal ?? true))
+                !(widget.message.sender?.isLocal ?? true) &&
+                !isLocalBlocked)
               ListTile(
                   horizontalTitleGap: 2,
                   onTap: () async {

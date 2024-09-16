@@ -10,7 +10,8 @@ class HMSMessageExtension {
             if (message == null)return null
             args["message_id"] = message.messageId
             args["message"] = message.message
-            args["time"] = message.serverReceiveTime
+            args["time"] =
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(message.serverReceiveTime).toString()
             args["type"] = message.type
             if (message.sender != null) {
                 args["sender"] = HMSPeerExtension.toDictionary(message.sender)!!
