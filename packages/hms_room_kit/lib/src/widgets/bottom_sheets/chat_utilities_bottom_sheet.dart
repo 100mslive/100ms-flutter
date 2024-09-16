@@ -52,8 +52,12 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
       isBlocked = context.read<MeetingStore>().blackListedUserIds.indexWhere(
               (userId) => userId == widget.message.sender?.customerUserId) !=
           -1;
-      isLocalBlocked = context.read<MeetingStore>().blackListedUserIds.indexWhere(
-              (userId) => userId == context.read<MeetingStore>().localPeer?.customerUserId) !=
+      isLocalBlocked = context
+              .read<MeetingStore>()
+              .blackListedUserIds
+              .indexWhere((userId) =>
+                  userId ==
+                  context.read<MeetingStore>().localPeer?.customerUserId) !=
           -1;
     });
   }
@@ -196,8 +200,7 @@ class _ChatUtilitiesBottomSheetState extends State<ChatUtilitiesBottomSheet> {
                       text: isBlocked ? "Unblock from Chat" : "Block from Chat",
                       letterSpacing: 0.1,
                       fontWeight: FontWeight.w600,
-                      textColor: HMSThemeColors.alertErrorDefault)
-              ),
+                      textColor: HMSThemeColors.alertErrorDefault)),
 
             if ((context
                         .read<MeetingStore>()
