@@ -147,6 +147,10 @@ class _ScreenControllerState extends State<ScreenController> {
         isAudioMixerDisabled: AppDebugConfig.isAudioMixerDisabled,
         isNoiseCancellationEnabled:
             widget.options?.enableNoiseCancellation ?? false,
+        isAutomaticGainControlEnabled:
+            widget.options?.isAutomaticGainControlEnabled ?? false,
+        isNoiseSuppressionEnabled:
+            widget.options?.isNoiseSuppressionEnabled ?? false,
         isPrebuilt: true);
     await _hmsSDKInteractor.build();
 

@@ -38,7 +38,9 @@ class HMSSDKInteractor {
       bool isAudioMixerDisabled = true,
       HMSAudioMode audioMode = HMSAudioMode.VOICE,
       bool isPrebuilt = false,
-      bool isNoiseCancellationEnabled = false}) {
+      bool isNoiseCancellationEnabled = false,
+      bool isAutomaticGainControlEnabled = false,
+      bool isNoiseSuppressionEnabled = false}) {
     HMSLogSettings hmsLogSettings = HMSLogSettings(
         maxDirSizeInBytes: 1000000,
         isLogStorageEnabled: true,
@@ -50,7 +52,9 @@ class HMSSDKInteractor {
         joinWithMutedAudio: joinWithMutedAudio,
         isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
         audioMode: audioMode,
-        isNoiseCancellationEnabled: isNoiseCancellationEnabled);
+        isNoiseCancellationEnabled: isNoiseCancellationEnabled,
+        isAutomaticGainControlEnabled: isAutomaticGainControlEnabled,
+        isNoiseSuppressionEnabled: isNoiseSuppressionEnabled);
 
     hmsSDK = HMSSDK(
         iOSScreenshareConfig: iOSScreenshareConfig,

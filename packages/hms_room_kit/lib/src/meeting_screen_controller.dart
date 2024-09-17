@@ -92,12 +92,7 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
     _meetingStore = MeetingStore(hmsSDKInteractor: widget.hmsSDKInteractor);
     _setInitValues();
     _joinMeeting();
-
-    ///If the role is hlsStreaming we set the HLS Player store
-    if (HMSRoomLayout.roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
-        null) {
-      _setHLSPlayerStore();
-    }
+    _setHLSPlayerStore();
   }
 
   ///This function joins the room only if the name is not empty

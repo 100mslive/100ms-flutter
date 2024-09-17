@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:hmssdk_flutter/src/common/platform_methods.dart';
 import 'package:hmssdk_flutter/src/exceptions/hms_exception.dart';
 import 'package:hmssdk_flutter/src/service/platform_service.dart';
@@ -59,6 +62,69 @@ class HMSCameraControls {
       return result["data"];
     } else {
       return HMSException.fromMap(result["data"]["error"]);
+    }
+  }
+
+  static Future<bool> isZoomSupported() async {
+    if (Platform.isAndroid) {
+      var result =
+          await PlatformService.invokeMethod(PlatformMethod.isZoomSupported);
+      if (result["success"]) {
+        return result["data"];
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
+  }
+
+  static Future<dynamic> setZoom({required double zoomValue}) async {
+    var result =
+        await PlatformService.invokeMethod(PlatformMethod.setZoom, arguments: {
+      "zoom_value": zoomValue,
+    });
+    if (result["success"]) {
+      return result["data"];
+    } else {
+      return HMSException.fromMap(result["data"]["error"]);
+    }
+  }
+
+  static Future<dynamic> resetZoom() async {
+    var result = await PlatformService.invokeMethod(PlatformMethod.resetZoom);
+    if (result["success"]) {
+      return result["data"];
+    } else {
+      return HMSException.fromMap(result["data"]["error"]);
+    }
+  }
+
+  static Future<dynamic> getMinZoom() async {
+    if (Platform.isAndroid) {
+      var result =
+          await PlatformService.invokeMethod(PlatformMethod.getMinZoom);
+      if (result["success"]) {
+        return result["data"];
+      } else {
+        return HMSException.fromMap(result["data"]["error"]);
+      }
+    } else {
+      log("getMinZoom is only available on android");
+    }
+  }
+
+  static Future<dynamic> getMaxZoom() async {
+    if (Platform.isAndroid) {
+      var result =
+          await PlatformService.invokeMethod(PlatformMethod.getMaxZoom);
+      if (result["success"]) {
+        return result["data"];
+      } else {
+        return HMSException.fromMap(result["data"]["error"]);
+      }
+    } else {
+      log("getMaxZoom is only available on android");
     }
   }
 }

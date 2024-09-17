@@ -30,8 +30,16 @@ class HMSPrebuiltOptions {
   final HMSIOSScreenshareConfig? iOSScreenshareConfig;
 
   ///To enable noise cancellation in prebuilt.
-  ///Default value is true
+  ///Default value is false
   final bool enableNoiseCancellation;
+
+  ///To enable automatic gain control in prebuilt.
+  ///Default value is false
+  final bool isAutomaticGainControlEnabled;
+
+  ///To enable noise suppression in prebuilt.
+  ///Default value is false
+  final bool isNoiseSuppressionEnabled;
 
   ///[HMSPrebuiltOptions] is a class that is used to pass the options to the prebuilt
   HMSPrebuiltOptions(
@@ -40,5 +48,7 @@ class HMSPrebuiltOptions {
       this.endPoints,
       this.debugInfo = false,
       this.iOSScreenshareConfig,
-      this.enableNoiseCancellation = false});
+      this.enableNoiseCancellation = false,
+      this.isAutomaticGainControlEnabled = false,
+      this.isNoiseSuppressionEnabled = false});
 }

@@ -88,7 +88,6 @@ class _AppSettingsBottomSheetState extends State<AppSettingsBottomSheet> {
     AppDebugConfig.isSoftwareDecoderDisabled = isSoftwareDecoderDisabled;
     AppDebugConfig.mirrorCamera = mirrorCamera;
     AppDebugConfig.showStats = showStats;
-    AppDebugConfig.skipPreview = skipPreview;
     AppDebugConfig.isDebugMode = isDebugMode;
     AppDebugConfig.nameChangeOnPreview = true;
     AppDebugConfig.isVirtualBackgroundEnabled = isVirtualBackgroundEnabled;
