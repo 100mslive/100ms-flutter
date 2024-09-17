@@ -674,7 +674,7 @@ class MeetingStore extends ChangeNotifier
 
   void setTimestampWhenHandRaise() {
     int currentTime = DateTime.now().millisecondsSinceEpoch;
-    log("Vkohli Setting timestamp for hand raise $currentTime");
+    
     _hmsSDKInteractor.changeMetadata(
         metadata:
             "{\"isBRBOn\":false,\"prevRole\":\"$previousRole\",\"handRaisedAt\":${currentTime}}",
