@@ -238,7 +238,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.1.6"
+    version: "1.1.7"
   hmssdk_flutter:
     dependency: transitive
     description:
