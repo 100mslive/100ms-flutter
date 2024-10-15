@@ -6,6 +6,52 @@
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 | hms_video_plugin | [![Pub Version](https://img.shields.io/pub/v/hms_video_plugin)](https://pub.dev/packages/hms_video_plugin) |
 
+# 1.10.6 - 2024-09-17
+
+| Package                     | Version                                                                                                                                  |
+| ----------------------------| ------ |
+| hms_room_kit                | 1.1.6  |
+| hmssdk_flutter              | 1.10.6 |
+
+### Breaking Changes in hms_room_kit
+
+- Removed Noise Cancellation dependency from Prebuilt on Android
+
+    Noise Cancellation dependency is removed from Prebuilt on Android.
+    Users will have to add the dependency manually in their Android project to use Noise Cancellation.
+    This change is made to reduce the size of the Prebuilt package.
+    Refer to the [Noise Cancellation](https://www.100ms.live/docs/flutter/v2/how-to-guides/extend-capabilities/noise-cancellation) documentation for more details.
+
+
+### hmssdk_flutter
+
+- Added Camera Zoom Controls in `HMSCameraControls`
+
+    Users can now control the camera zoom using the `HMSCameraControls` class. The `setZoom` method can be used to set the zoom level of the camera.
+
+    Learn more about Camera Zoom Controls [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/configure-your-device/camera/camera-controls).
+
+### hms_room_kit
+
+- Added support to control Automatic Gain Control and Noise Suppresion in Prebuilt
+
+    Prebuilt now supports toggling Automatic Gain Control (AGC) and Noise Suppresion for better audio quality. Users can enable or disable AGC and Noise Suppresion from the prebuilt interface.
+
+- Resolved an issue where the Prebuilt UI was not updating on performing End Session
+
+- Hand Raise sorting based on Time
+
+    Hand Raise list is now sorted based on the time of raising the hand. Refer to the [Hand Raise](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/peer/large-room) documentation for more details.
+
+- Added support to perform Switch Role of any user on Prebuilt
+
+    Users can now switch the role of any user, if they have necessary permissions, from the Prebuilt interface. Refer to the [Change Role](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/peer/change-role) documentation for more details.
+
+Uses Android SDK 2.9.67 & iOS SDK 1.16.1
+
+**Full Changelog**: [1.10.5...1.10.6](https://github.com/100mslive/100ms-flutter/compare/1.10.5...1.10.6)
+
+
 ## 1.1.5 - 2024-07-25
 
 | Package                                | Version                                                                                                                                  |

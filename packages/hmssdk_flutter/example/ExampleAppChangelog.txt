@@ -1,18 +1,23 @@
 Board: https://app.devrev.ai/100ms/vistas/vista-250
 
-- Caption text is not in sync with other app
-https://app.devrev.ai/100ms/works/ISS-22834
+- Add support for zoom in camera controls
+https://app.devrev.ai/100ms/works/ISS-23282
 
-- Noise cancellation layout API
-https://app.devrev.ai/100ms/works/ISS-22858
+- Add support for Music Mode
+https://app.devrev.ai/100ms/works/ISS-22859
 
-- Sample application not able to access microphone from a background in Android 14.
-https://app.devrev.ai/100ms/works/ISS-22907
+- Support for long running sessions
+https://app.devrev.ai/100ms/works/ISS-23134
 
-- Transcription replaces older transcription from view
-https://app.devrev.ai/100ms/works/ISS-22845
+- Hand Raise sorting based on Time
+https://app.devrev.ai/100ms/works/ISS-23102
 
-Room Kit: 1.1.5
-Core SDK: 1.10.5
-Android SDK: 2.9.64
-iOS SDK: 1.15.0
+- Change Role on Prebuilt
+https://app.devrev.ai/100ms/works/ISS-22877
+
+- Resolved crash when performing Role Change to VNRT
+
+Room Kit: 1.1.6
+Core SDK: 1.10.6
+Android SDK: 2.9.67
+iOS SDK: 1.16.1

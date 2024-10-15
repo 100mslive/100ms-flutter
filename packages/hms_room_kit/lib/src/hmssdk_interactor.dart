@@ -18,7 +18,7 @@ import 'package:hms_room_kit/src/common/utility_functions.dart';
 ///
 ///[isSoftwareDecoderDisabled] - This is used to disable the software decode. By default it's true.
 ///[isAudioMixerDisabled] - This is used to disable the audio mixer for iOS. By default it's true.
-///[audioMode] - This is used to set the audio mode. By default it's VOICE.
+///[audioMode] - This is used to set the audio mode. By default it's MUSIC.
 ///[isPrebuilt] - This is used to set the prebuilt mode. By default it's false.
 ///[isNoiseCancellationEnabled] - This is used to set the noise cancellation status in a call. Default value is false
 class HMSSDKInteractor {
@@ -36,9 +36,11 @@ class HMSSDKInteractor {
       bool joinWithMutedVideo = false,
       bool isSoftwareDecoderDisabled = true,
       bool isAudioMixerDisabled = true,
-      HMSAudioMode audioMode = HMSAudioMode.VOICE,
+      HMSAudioMode audioMode = HMSAudioMode.MUSIC,
       bool isPrebuilt = false,
-      bool isNoiseCancellationEnabled = false}) {
+      bool isNoiseCancellationEnabled = true,
+      bool isAutomaticGainControlEnabled = true,
+      bool isNoiseSuppressionEnabled = true}) {
     HMSLogSettings hmsLogSettings = HMSLogSettings(
         maxDirSizeInBytes: 1000000,
         isLogStorageEnabled: true,
@@ -50,7 +52,7 @@ class HMSSDKInteractor {
         joinWithMutedAudio: joinWithMutedAudio,
         isSoftwareDecoderDisabled: isSoftwareDecoderDisabled,
         audioMode: audioMode,
-        isNoiseCancellationEnabled: isNoiseCancellationEnabled,
+        isNoiseCancellationEnabled: true,
         isAutomaticGainControlEnabled: true,
         isNoiseSuppressionEnabled: true);
 

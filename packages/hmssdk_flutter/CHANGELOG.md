@@ -6,6 +6,36 @@
 | hmssdk_flutter | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter) |
 | hms_video_plugin | [![Pub Version](https://img.shields.io/pub/v/hms_video_plugin)](https://pub.dev/packages/hms_video_plugin) |
 
+# 1.10.6 - 2024-09-17
+
+| Package                     | Version  |
+| ----------------------------|----------|
+| hms_room_kit                | 1.1.6    |
+| hmssdk_flutter              | 1.10.6   |
+
+### Breaking Changes
+
+- Removed Noise Cancellation dependency
+
+  Noise Cancellation dependency is removed from Prebuilt on Android.
+  Users will have to add the dependency manually in their Android project to use Noise Cancellation.
+  This change is made to reduce the size of the package.
+  Refer to the [Noise Cancellation](https://www.100ms.live/docs/flutter/v2/how-to-guides/extend-capabilities/noise-cancellation) documentation for more details.
+
+
+### hmssdk_flutter
+
+- Added Camera Zoom Controls in `HMSCameraControls`
+
+  Users can now control the camera zoom using the `HMSCameraControls` class. The `setZoom` method can be used to set the zoom level of the camera.
+
+  Learn more about Camera Zoom Controls [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/configure-your-device/camera/camera-controls).
+
+Uses Android SDK 2.9.67 & iOS SDK 1.16.1
+
+**Full Changelog**: [1.10.5...1.10.6](https://github.com/100mslive/100ms-flutter/compare/1.10.5...1.10.6)
+
+
 # 1.10.5 - 2024-07-25
 
 | Package                                | Version                                                                                                                                  |

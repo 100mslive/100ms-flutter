@@ -6,7 +6,6 @@ class AppDebugConfig {
   Setting these values to defaults and can be toggled from the application
   This will not be shipped with the ui_kit package and only used for internal testing
   */
-  static bool skipPreview = false;
   static bool mirrorCamera = true;
   static bool showStats = false;
   static bool isSoftwareDecoderDisabled = true;
@@ -25,7 +24,6 @@ class AppDebugConfig {
 
   /// Resets the debug configuration to default values
   static void resetToDefault() {
-    skipPreview = false;
     mirrorCamera = true;
     showStats = false;
     isSoftwareDecoderDisabled = true;

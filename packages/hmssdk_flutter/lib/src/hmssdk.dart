@@ -1430,7 +1430,7 @@ class HMSSDK {
   ///
   ///**hmsActionResultListener** - [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess] and [HMSActionResultListener.onException] will be called.
   ///
-  ///TODO: Add docs link
+  /// Refer the guide [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/peer/large-room)
   void lowerLocalPeerHand(
       {HMSActionResultListener? hmsActionResultListener}) async {
     final dynamic result =
@@ -1453,7 +1453,7 @@ class HMSSDK {
   ///
   ///**hmsActionResultListener** - [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess] and [HMSActionResultListener.onException] will be called.
   ///
-  ///TODO: Add docs link
+  /// Refer the guide [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/peer/large-room)
   void raiseLocalPeerHand(
       {HMSActionResultListener? hmsActionResultListener}) async {
     final dynamic result =
@@ -1477,7 +1477,7 @@ class HMSSDK {
   ///**forPeer** - [forPeer] the peer whose hand you wish to lower
   ///**hmsActionResultListener** - [hmsActionResultListener] is a callback instance on which [HMSActionResultListener.onSuccess] and [HMSActionResultListener.onException] will be called.
   ///
-  ///TODO: Add docs link
+  /// Refer the guide [here](https://www.100ms.live/docs/flutter/v2/how-to-guides/interact-with-room/peer/large-room)
   void lowerRemotePeerHand(
       {required HMSPeer forPeer,
       HMSActionResultListener? hmsActionResultListener}) async {

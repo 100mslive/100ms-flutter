@@ -40,8 +40,14 @@ class HMSAudioTrackSetting {
   ///Refer: Read more about noise cancellation [here](///)
   final bool enableNoiseCancellation;
 
+  ///[enableAutomaticGainControl] property sets the automatic gain control status in the room whether is enabled or not.
+  ///
+  ///Refer: Read more about automatic gain control [here](///)
   final bool enableAutomaticGainControl;
 
+  ///[enableNoiseSupression] property sets the noise suppression status in the room whether is enabled or not.
+  ///
+  ///Refer: Read more about noise suppression [here](///)
   final bool enableNoiseSupression;
 
   HMSAudioTrackSetting(

@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/model/peer_track_node.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/change_role_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_cross_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
@@ -220,6 +221,56 @@ class _RemotePeerBottomSheetState extends State<RemotePeerBottomSheet> {
                             textColor: widget.peerTrackNode.track == null
                                 ? HMSThemeColors.onSurfaceLowEmphasis
                                 : HMSThemeColors.onSurfaceHighEmphasis)),
+                  if ((widget.meetingStore.localPeer?.role.permissions
+                              .changeRole ??
+                          false) &&
+                      (widget.meetingStore.roles.length > 1))
+                    ListTile(
+                        horizontalTitleGap: 2,
+                        onTap: () async {
+                          Navigator.pop(context);
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: HMSThemeColors.surfaceDim,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  topRight: Radius.circular(16)),
+                            ),
+                            context: context,
+                            builder: (ctx) => ChangeNotifierProvider.value(
+                                value: widget.meetingStore,
+                                child: Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: MediaQuery.of(ctx)
+                                            .viewInsets
+                                            .bottom),
+                                    child: ChangeRoleBottomSheet(
+                                        peerName:
+                                            widget.peerTrackNode.peer.name,
+                                        roles: widget.meetingStore.roles,
+                                        peer: widget.peerTrackNode.peer,
+                                        changeRole: (newRole, isForceChange) =>
+                                            widget.meetingStore
+                                                .changeRoleOfPeer(
+                                                    peer: widget
+                                                        .peerTrackNode.peer,
+                                                    roleName: newRole,
+                                                    forceChange:
+                                                        isForceChange)))),
+                          );
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        leading: SvgPicture.asset(
+                          "packages/hms_room_kit/lib/src/assets/icons/peer_settings.svg",
+                          semanticsLabel: "fl_change_role",
+                          colorFilter: ColorFilter.mode(
+                              HMSThemeColors.onSurfaceHighEmphasis,
+                              BlendMode.srcIn),
+                        ),
+                        title: HMSSubheadingText(
+                            text: "Switch Role",
+                            textColor: HMSThemeColors.onSurfaceHighEmphasis)),
                   // ListTile(
                   //     horizontalTitleGap: 2,
                   //     onTap: () async {

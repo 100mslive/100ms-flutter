@@ -14,6 +14,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/change_role_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/model/participant_store.dart';
@@ -66,6 +67,10 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
           value: meetingStore,
           child: ParticipantsViewAllBottomSheet(role: role)),
     );
+  }
+
+  bool isHandRaisedRow(String role) {
+    return role == "Hand Raised";
   }
 
   Widget _kebabMenu(HMSPeer peer) {
@@ -176,6 +181,34 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                       !peerTrackNode.audioTrack!.isMute);
                   break;
                 case 5:
+
+                  ///This is called when someone clicks on switch Role
+                  Navigator.pop(context);
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    backgroundColor: HMSThemeColors.surfaceDim,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16)),
+                    ),
+                    context: context,
+                    builder: (ctx) => ChangeNotifierProvider.value(
+                        value: meetingStore,
+                        child: Padding(
+                            padding: EdgeInsets.only(
+                                bottom: MediaQuery.of(ctx).viewInsets.bottom),
+                            child: ChangeRoleBottomSheet(
+                                peerName: peer.name,
+                                roles: meetingStore.roles,
+                                peer: peer,
+                                changeRole: (newRole, isForceChange) =>
+                                    meetingStore.changeRoleOfPeer(
+                                        peer: peer,
+                                        roleName: newRole,
+                                        forceChange: true)))),
+                  );
+                case 6:
 
                   ///This is called when someone clicks on remove Participant
                   meetingStore.removePeerFromRoom(peer);
@@ -299,9 +332,30 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                         ),
                       ]),
                     ),
-                  if (removePeerPermission)
+                  if (changeRolePermission && meetingStore.roles.length > 1)
                     PopupMenuItem(
                       value: 5,
+                      child: Row(children: [
+                        SvgPicture.asset(
+                            "packages/hms_room_kit/lib/src/assets/icons/peer_settings.svg",
+                            colorFilter: ColorFilter.mode(
+                                HMSThemeColors.onSurfaceHighEmphasis,
+                                BlendMode.srcIn)),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        HMSTitleText(
+                          text: "Switch Role",
+                          textColor: HMSThemeColors.onSurfaceHighEmphasis,
+                          fontSize: 14,
+                          lineHeight: 20,
+                          letterSpacing: 0.1,
+                        ),
+                      ]),
+                    ),
+                  if (removePeerPermission)
+                    PopupMenuItem(
+                      value: 6,
                       child: Row(children: [
                         SvgPicture.asset(
                             "packages/hms_room_kit/lib/src/assets/icons/peer_remove.svg",
@@ -360,12 +414,13 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                         .keys
                         .elementAt(index);
                     return Selector<MeetingStore,
-                            Tuple2<int, List<ParticipantsStore>?>>(
-                        selector: (_, meetingStore) => Tuple2(
+                            Tuple3<int, List<ParticipantsStore>?, String>>(
+                        selector: (_, meetingStore) => Tuple3(
                             meetingStore
                                     .participantsInMeetingMap[role]?.length ??
                                 0,
-                            meetingStore.participantsInMeetingMap[role]),
+                            meetingStore.participantsInMeetingMap[role],
+                            role),
                         builder: (_, participantsPerRole, __) {
                           return (participantsPerRole.item2?.isNotEmpty ??
                                   false)
@@ -408,7 +463,9 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                     null
                                                 ? 0
                                                 : (participantsPerRole.item1) *
-                                                    54,
+                                                    (isHandRaisedRow(role)
+                                                        ? 60
+                                                        : 54),
                                             child: Center(
                                               child: ListView.builder(
                                                   physics:
@@ -488,15 +545,18 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                                               isSIPPeer,
                                                                               __) {
                                                                             return isSIPPeer
-                                                                                ? CircleAvatar(
-                                                                                    radius: 16,
-                                                                                    backgroundColor: HMSThemeColors.surfaceBright,
-                                                                                    child: SvgPicture.asset(
-                                                                                      "packages/hms_room_kit/lib/src/assets/icons/sip_call.svg",
-                                                                                      height: 12,
-                                                                                      width: 12,
-                                                                                      colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
-                                                                                    ))
+                                                                                ? Padding(
+                                                                                    padding: const EdgeInsets.only(right: 4.0),
+                                                                                    child: CircleAvatar(
+                                                                                        radius: 12,
+                                                                                        backgroundColor: HMSThemeColors.surfaceDefault,
+                                                                                        child: SvgPicture.asset(
+                                                                                          "packages/hms_room_kit/lib/src/assets/icons/sip_call.svg",
+                                                                                          height: 12,
+                                                                                          width: 12,
+                                                                                          colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
+                                                                                        )),
+                                                                                  )
                                                                                 : const SizedBox();
                                                                           },
                                                                           selector: (_, participantsStore) =>
@@ -512,14 +572,14 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                                           builder: (_, participantData, __) {
                                                                             return participantData.item1 != -1 && participantData.item1 < 3 && participantData.item2
                                                                                 ? Padding(
-                                                                                    padding: const EdgeInsets.only(right: 16.0),
+                                                                                    padding: const EdgeInsets.only(right: 4.0),
                                                                                     child: CircleAvatar(
-                                                                                      radius: 16,
+                                                                                      radius: 12,
                                                                                       backgroundColor: HMSThemeColors.surfaceDefault,
                                                                                       child: SvgPicture.asset(
                                                                                         "packages/hms_room_kit/lib/src/assets/icons/network_${participantData.item1}.svg",
-                                                                                        height: 16,
-                                                                                        width: 16,
+                                                                                        height: 12,
+                                                                                        width: 12,
                                                                                       ),
                                                                                     ),
                                                                                   )
@@ -538,12 +598,12 @@ class _ParticipantsBottomSheetState extends State<ParticipantsBottomSheet> {
                                                                                 ? Padding(
                                                                                     padding: const EdgeInsets.only(right: 16.0),
                                                                                     child: CircleAvatar(
-                                                                                      radius: 16,
+                                                                                      radius: 12,
                                                                                       backgroundColor: HMSThemeColors.surfaceDefault,
                                                                                       child: SvgPicture.asset(
                                                                                         "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
-                                                                                        height: 16,
-                                                                                        width: 16,
+                                                                                        height: 12,
+                                                                                        width: 12,
                                                                                         colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                                                                                       ),
                                                                                     ),
