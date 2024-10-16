@@ -111,11 +111,11 @@ The default [Example app](https://github.com/100mslive/100ms-flutter/tree/main/p
 
 ## 🤝 Recommended Configuration
 
-- Flutter 3.7.0 or above
-- Android API level 33 or above
+- Flutter 3.13.0 or above
+- Android API level 34 or above
 - Java 17 or above
 - iOS 16 or above
-- Xcode 14 or above
+- Xcode 15 or above
 
 ## 📱 Supported Devices
 
