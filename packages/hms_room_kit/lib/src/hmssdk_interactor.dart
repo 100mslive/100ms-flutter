@@ -36,10 +36,10 @@ class HMSSDKInteractor {
       bool joinWithMutedVideo = false,
       bool isSoftwareDecoderDisabled = true,
       bool isAudioMixerDisabled = true,
-      HMSAudioMode audioMode = HMSAudioMode.VOICE,
+      HMSAudioMode audioMode = HMSAudioMode.MUSIC,
       bool isPrebuilt = false,
       bool isNoiseCancellationEnabled = false,
-      bool isAutomaticGainControlEnabled = false,
+      bool isAutomaticGainControlEnabled = true,
       bool isNoiseSuppressionEnabled = false}) {
     HMSLogSettings hmsLogSettings = HMSLogSettings(
         maxDirSizeInBytes: 1000000,

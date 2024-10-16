@@ -49,6 +49,6 @@ class HMSPrebuiltOptions {
       this.debugInfo = false,
       this.iOSScreenshareConfig,
       this.enableNoiseCancellation = false,
-      this.isAutomaticGainControlEnabled = false,
+      this.isAutomaticGainControlEnabled = true,
       this.isNoiseSuppressionEnabled = false});
 }
