@@ -1,23 +1,8 @@
 Board: https://app.devrev.ai/100ms/vistas/vista-250
 
-- Add support for zoom in camera controls
-https://app.devrev.ai/100ms/works/ISS-23282
+- Fixed Native Android SDK crashes
 
-- Add support for Music Mode
-https://app.devrev.ai/100ms/works/ISS-22859
-
-- Support for long running sessions
-https://app.devrev.ai/100ms/works/ISS-23134
-
-- Hand Raise sorting based on Time
-https://app.devrev.ai/100ms/works/ISS-23102
-
-- Change Role on Prebuilt
-https://app.devrev.ai/100ms/works/ISS-22877
-
-- Resolved crash when performing Role Change to VNRT
-
-Room Kit: 1.1.6
-Core SDK: 1.10.6
-Android SDK: 2.9.67
-iOS SDK: 1.16.1
+Room Kit: 1.1.7
+Core SDK: 1.10.7
+Android SDK: 2.9.68
+iOS SDK: 1.16.4
