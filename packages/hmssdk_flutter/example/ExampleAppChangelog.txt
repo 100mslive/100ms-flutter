@@ -1,6 +1,7 @@
 Board: https://app.devrev.ai/100ms/vistas/vista-250
 
-- Fixed Native Android SDK crashes
+- Fix implementation of Music Mode on Android
+https://app.devrev.ai/100ms/works/ISS-23557
 
 Room Kit: 1.1.7
 Core SDK: 1.10.7
