@@ -54,22 +54,25 @@ class HMSTrackSettingsExtension {
 
                 val enableNoiseCancellation = audioHashMap["enable_noise_cancellation"] as? Boolean
                 enableNoiseCancellation?.let {
-                    if (it) {
-                        hmsAudioTrackSettings.enableNoiseCancellation(true)
-                    }
+                    hmsAudioTrackSettings.enableNoiseCancellation(it)
                 }
 
                 val enableAutomaticGainControl = audioHashMap["enable_automatic_gain_control"] as? Boolean
                 enableAutomaticGainControl?.let {
-                    if(it){
-                        hmsAudioTrackSettings.enableAutomaticGainControl(true)
-                    }
+                    hmsAudioTrackSettings.enableAutomaticGainControl(it)
                 }
 
                 val enableNoiseSupression = audioHashMap["enable_noise_supression"] as? Boolean
                 enableNoiseSupression?.let {
-                    if(it){
-                        hmsAudioTrackSettings.enableNoiseSupression(true)
+                    hmsAudioTrackSettings.enableNoiseSupression(it)
+                }
+
+                val audioMode = audioHashMap["audio_mode"] as? String
+                audioMode?.let {
+                    if (it.contains("music")) {
+                        hmsAudioTrackSettings.setAudioMode(HMSAudioTrackSettings.HMSAudioMode.HMSAUDIOMODEMUSIC)
+                    } else {
+                        hmsAudioTrackSettings.setAudioMode(HMSAudioTrackSettings.HMSAudioMode.HMSAUDIOMODEVOICE)
                     }
                 }
             }
