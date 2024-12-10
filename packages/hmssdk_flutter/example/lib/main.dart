@@ -117,7 +117,7 @@ class _HMSExampleAppState extends State<HMSExampleApp>
           return;
         }
         _appLinks = AppLinks();
-        _currentURI = await _appLinks?.getInitialAppLink();
+        _currentURI = await _appLinks?.getInitialLink();
         if (_currentURI != null) {
           if (!mounted) {
             return;
