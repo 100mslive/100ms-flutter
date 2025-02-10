@@ -22,7 +22,7 @@ release_android() {
 
 	bundle install --verbose
 
-	bundle exec fastlane release_on_firebase
+	fastlane release_on_firebase
 }
 
 release_iOS() {
@@ -32,7 +32,7 @@ release_iOS() {
 
 	bundle install --verbose
 
-	bundle exec fastlane distribute_app
+	fastlane distribute_app
 }
 
 perform_git_actions() {
