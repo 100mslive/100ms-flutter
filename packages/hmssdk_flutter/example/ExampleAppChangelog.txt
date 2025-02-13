@@ -1,9 +1,6 @@
 Board: https://app.devrev.ai/100ms/vistas/vista-250
 
-- Fixed an issue on iOS where no audio was sent when changing role from non-publishing to publishing
-- Native Android Crash fixes
-- Resolved an issue where incorrect audio mode was being applied on Android
-- Removed references to Discord support channels
+- Resolved VAPT reported issues
 
 Room Kit: 1.1.7
 Core SDK: 1.10.7
