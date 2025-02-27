@@ -2,7 +2,6 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 ///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
@@ -11,6 +10,7 @@ import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/meeting_screen_controller.dart';
 import 'package:hms_room_kit/src/preview/preview_page.dart';
 import 'package:hms_room_kit/src/preview/preview_store.dart';
+import 'package:provider/provider.dart';
 
 ///[PreviewMeetingFlow] decides whether to render preview or meeting
 class PreviewMeetingFlow extends StatefulWidget {
@@ -19,8 +19,16 @@ class PreviewMeetingFlow extends StatefulWidget {
   final String tokenData;
   final Widget? appBar;
   final Function(BuildContext)? onTapped;
-  final Function(String roomId)? onRoomIdAvailable;
-  const PreviewMeetingFlow({super.key, required this.prebuiltOptions, required this.hmsSDKInteractor, this.appBar, this.onTapped, required this.tokenData, required this.onRoomIdAvailable,});
+  final Function(String roomId) onRoomIdAvailable;
+  const PreviewMeetingFlow({
+    super.key,
+    required this.prebuiltOptions,
+    required this.hmsSDKInteractor,
+    this.appBar,
+    this.onTapped,
+    required this.tokenData,
+    required this.onRoomIdAvailable,
+  });
 
   @override
   State<PreviewMeetingFlow> createState() => _PreviewMeetingFlowState();
@@ -33,9 +41,11 @@ class _PreviewMeetingFlowState extends State<PreviewMeetingFlow> {
   void initState() {
     super.initState();
     if (!HMSRoomLayout.skipPreview) {
-      store = PreviewStore(hmsSDKInteractor: widget.hmsSDKInteractor, onRoomIdAvailable: (roomId) {
-        widget.onRoomIdAvailable!(roomId);
-      });
+      store = PreviewStore(
+          hmsSDKInteractor: widget.hmsSDKInteractor,
+          onRoomIdAvailable: (roomId) {
+            widget.onRoomIdAvailable(roomId);
+          });
     }
   }
 
@@ -52,6 +62,9 @@ class _PreviewMeetingFlowState extends State<PreviewMeetingFlow> {
             onTapped: (value) {
               widget.onTapped!(value);
             },
+            onRoomIdAvailable: (roomId) {
+              widget.onRoomIdAvailable(roomId);
+            },
           )
         : ListenableProvider.value(
             value: store,
@@ -62,6 +75,9 @@ class _PreviewMeetingFlowState extends State<PreviewMeetingFlow> {
               appBar: widget.appBar,
               onTapped: (value) {
                 widget.onTapped!(value);
+              },
+              onRoomIdAvailable: (roomId) {
+                widget.onRoomIdAvailable(roomId);
               },
             ));
   }

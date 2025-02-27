@@ -5,22 +5,22 @@ import 'dart:io';
 
 ///Package imports
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/common/utility_components.dart';
 
 ///Project imports
 import 'package:hms_room_kit/src/meeting_screen_controller.dart';
-import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/preview/preview_bottom_button_section.dart';
 import 'package:hms_room_kit/src/preview/preview_header.dart';
 import 'package:hms_room_kit/src/preview/preview_join_button.dart';
 import 'package:hms_room_kit/src/preview/preview_network_indicator.dart';
+import 'package:hms_room_kit/src/preview/preview_store.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_listenable_button.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_loader.dart';
 import 'package:hms_room_kit/src/widgets/hms_buttons/hms_back_button.dart';
-import 'package:hms_room_kit/src/preview/preview_store.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_listenable_button.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:provider/provider.dart';
 
 ///This renders the Preview Screen
 class PreviewPage extends StatefulWidget {
@@ -29,14 +29,17 @@ class PreviewPage extends StatefulWidget {
   final String tokenData;
   final Widget? appBar;
   final Function(BuildContext)? onTapped;
+  final Function(String roomId) onRoomIdAvailable;
 
-  const PreviewPage(
-      {super.key,
-      required this.name,
-      required this.options,
-      this.appBar,
-      this.onTapped,
-      required this.tokenData});
+  const PreviewPage({
+    super.key,
+    required this.name,
+    required this.options,
+    this.appBar,
+    this.onTapped,
+    required this.tokenData,
+    required this.onRoomIdAvailable,
+  });
   @override
   State<PreviewPage> createState() => _PreviewPageState();
 }
@@ -48,9 +51,7 @@ class _PreviewPageState extends State<PreviewPage> {
   void initState() {
     super.initState();
     nameController = TextEditingController(text: widget.name);
-    context
-        .read<PreviewStore>()
-        .startPreview(userName: widget.name, tokenData: widget.tokenData);
+    context.read<PreviewStore>().startPreview(userName: widget.name, tokenData: widget.tokenData);
   }
 
   @override
@@ -80,11 +81,13 @@ class _PreviewPageState extends State<PreviewPage> {
               currentAudioDeviceMode: currentAudioDeviceMode,
               tokenData: widget.tokenData,
               hmsSDKInteractor: previewStore.hmsSDKInteractor,
-              isNoiseCancellationEnabled:
-                  previewStore.isNoiseCancellationEnabled,
+              isNoiseCancellationEnabled: previewStore.isNoiseCancellationEnabled,
               appBar: widget.appBar,
               onTapped: (value) {
                 widget.onTapped!(value);
+              },
+              onRoomIdAvailable: (roomId) {
+                widget.onRoomIdAvailable(roomId);
               },
             )));
   }
@@ -117,8 +120,7 @@ class _PreviewPageState extends State<PreviewPage> {
                     */
                   : Stack(
                       children: [
-                        ((!previewStore.peer!.role.publishSettings!.allowed
-                                .contains("video")))
+                        ((!previewStore.peer!.role.publishSettings!.allowed.contains("video")))
                             ? SizedBox(
                                 height: height,
                                 width: width,
@@ -137,18 +139,13 @@ class _PreviewPageState extends State<PreviewPage> {
                                     child: (previewStore.isVideoOn)
                                         ? Center(
                                             child: HMSTextureView(
-                                              scaleType:
-                                                  ScaleType.SCALE_ASPECT_FILL,
-                                              track:
-                                                  previewStore.localTracks[0],
+                                              scaleType: ScaleType.SCALE_ASPECT_FILL,
+                                              track: previewStore.localTracks[0],
                                               setMirror: true,
                                             ),
                                           )
                                         : Center(
-                                            child: HMSCircularAvatar(
-                                                avatarTitleTextColor:
-                                                    Colors.white,
-                                                name: nameController.text),
+                                            child: HMSCircularAvatar(avatarTitleTextColor: Colors.white, name: nameController.text),
                                           ),
                                   ),
 
@@ -161,18 +158,10 @@ class _PreviewPageState extends State<PreviewPage> {
                                 ],
                               ),
 
-                        PreviewHeader(
-                            previewStore: previewStore, width: width),
+                        PreviewHeader(previewStore: previewStore, width: width),
 
                         ///This renders the back button at top left
-                        Positioned(
-                            top: Platform.isIOS ? 50 : 35,
-                            left: 10,
-                            child: HMSBackButton(
-                                onPressed: () => {
-                                      previewStore.leave(),
-                                      Navigator.pop(context)
-                                    })),
+                        Positioned(top: Platform.isIOS ? 50 : 35, left: 10, child: HMSBackButton(onPressed: () => {previewStore.leave(), Navigator.pop(context)})),
 
                         ///This renders the bottom sheet with microphone, camera and audio device settings
                         ///This also contains text field for entering the name
@@ -184,114 +173,64 @@ class _PreviewPageState extends State<PreviewPage> {
                           child: (previewStore.peer != null)
                               ? Container(
                                   decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(16),
-                                        topRight: Radius.circular(16)),
+                                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
                                     color: HMSThemeColors.backgroundDefault,
                                   ),
                                   width: width,
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0, vertical: 16),
+                                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
                                     child: Column(
                                       children: [
                                         ///This renders the preview page bottom buttons
-                                        PreviewBottomButtonSection(
-                                            previewStore: previewStore),
+                                        PreviewBottomButtonSection(previewStore: previewStore),
                                         const SizedBox(
                                           height: 16,
                                         ),
 
                                         ///This renders the name text field and join button
                                         Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 24.0),
+                                          padding: const EdgeInsets.only(bottom: 24.0),
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               SizedBox(
                                                 height: 48,
                                                 width: width * 0.50,
                                                 child: TextField(
-                                                  enabled: widget.name
-                                                      .trim()
-                                                      .isEmpty,
-                                                  cursorColor: HMSThemeColors
-                                                      .onSurfaceHighEmphasis,
-                                                  onTapOutside: (event) =>
-                                                      FocusManager.instance
-                                                          .primaryFocus
-                                                          ?.unfocus(),
-                                                  textInputAction:
-                                                      TextInputAction.done,
-                                                  textCapitalization:
-                                                      TextCapitalization
-                                                          .words,
-                                                  style: HMSTextStyle.setTextStyle(
-                                                      color: HMSThemeColors
-                                                          .onSurfaceHighEmphasis),
+                                                  enabled: widget.name.trim().isEmpty,
+                                                  cursorColor: HMSThemeColors.onSurfaceHighEmphasis,
+                                                  onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
+                                                  textInputAction: TextInputAction.done,
+                                                  textCapitalization: TextCapitalization.words,
+                                                  style: HMSTextStyle.setTextStyle(color: HMSThemeColors.onSurfaceHighEmphasis),
                                                   controller: nameController,
-                                                  keyboardType:
-                                                      TextInputType.text,
+                                                  keyboardType: TextInputType.text,
                                                   onChanged: (value) {
                                                     setState(() {});
                                                   },
                                                   decoration: InputDecoration(
-                                                      contentPadding:
-                                                          const EdgeInsets.symmetric(
-                                                              vertical: 12,
-                                                              horizontal: 16),
-                                                      fillColor: HMSThemeColors
-                                                          .surfaceDefault,
+                                                      contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                                                      fillColor: HMSThemeColors.surfaceDefault,
                                                       filled: true,
 
                                                       ///This renders the hint text
-                                                      hintText:
-                                                          'Enter Name...',
-                                                      hintStyle: HMSTextStyle.setTextStyle(
-                                                          color: HMSThemeColors
-                                                              .onSurfaceLowEmphasis,
-                                                          height: 1.5,
-                                                          fontSize: 16,
-                                                          letterSpacing: 0.5,
-                                                          fontWeight: FontWeight
-                                                              .w400),
-                                                      focusedBorder: OutlineInputBorder(
-                                                          borderSide: BorderSide(
-                                                              width: 2,
-                                                              color: HMSThemeColors
-                                                                  .primaryDefault),
-                                                          borderRadius:
-                                                              const BorderRadius.all(
-                                                                  Radius.circular(
-                                                                      8))),
-                                                      enabledBorder: const OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide.none,
-                                                          borderRadius:
-                                                              BorderRadius.all(Radius.circular(8))),
+                                                      hintText: 'Enter Name...',
+                                                      hintStyle: HMSTextStyle.setTextStyle(color: HMSThemeColors.onSurfaceLowEmphasis, height: 1.5, fontSize: 16, letterSpacing: 0.5, fontWeight: FontWeight.w400),
+                                                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 2, color: HMSThemeColors.primaryDefault), borderRadius: const BorderRadius.all(Radius.circular(8))),
+                                                      enabledBorder: const OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.all(Radius.circular(8))),
                                                       border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(8)))),
                                                 ),
                                               ),
                                               HMSListenableButton(
-                                                textController:
-                                                    nameController,
+                                                textController: nameController,
                                                 width: width * 0.38,
                                                 onPressed: () {
-                                                  if (nameController.text
-                                                      .trim()
-                                                      .isNotEmpty) {
-                                                    _navigateToMeeting(
-                                                        previewStore);
+                                                  if (nameController.text.trim().isNotEmpty) {
+                                                    _navigateToMeeting(previewStore);
                                                   }
                                                 },
-                                                childWidget:
-                                                    PreviewJoinButton(
-                                                  isEmpty: nameController.text
-                                                      .trim()
-                                                      .isEmpty,
+                                                childWidget: PreviewJoinButton(
+                                                  isEmpty: nameController.text.trim().isEmpty,
                                                   previewStore: previewStore,
                                                 ),
                                               ),
@@ -304,12 +243,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                 )
                               : const SizedBox(),
                         ),
-                        if (error != null)
-                          UtilityComponents.showFailureError(
-                              error,
-                              context,
-                              () => Navigator.of(context)
-                                  .popUntil((route) => route.isFirst)),
+                        if (error != null) UtilityComponents.showFailureError(error, context, () => Navigator.of(context).popUntil((route) => route.isFirst)),
                       ],
                     ),
             );
