@@ -2,18 +2,18 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:provider/provider.dart';
 
 ///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/hmssdk_interactor.dart';
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_loader.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_player_store.dart';
 import 'package:hms_room_kit/src/hls_viewer/hls_viewer_page.dart';
+import 'package:hms_room_kit/src/hmssdk_interactor.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
 import 'package:hms_room_kit/src/meeting/meeting_page.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_loader.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:provider/provider.dart';
 
 ///[MeetingScreenController] is the controller for the meeting screen
 ///It is used to join the room
@@ -63,27 +63,29 @@ class MeetingScreenController extends StatefulWidget {
 
   final Function(BuildContext)? onTapped;
 
-  const MeetingScreenController(
-      {Key? key,
-      required this.user,
-      required this.localPeerNetworkQuality,
-      this.isRoomMute = false,
-      this.showStats = false,
-      this.mirrorCamera = true,
-      this.role,
-      this.config,
-      this.currentAudioDeviceMode = HMSAudioDevice.AUTOMATIC,
-      this.options,
-      this.tokenData,
-      required this.hmsSDKInteractor,
-      this.appBar,
-      this.onTapped,
-      this.isNoiseCancellationEnabled = false})
-      : super(key: key);
+  final Function(String roomId) onRoomIdAvailable;
+
+  const MeetingScreenController({
+    Key? key,
+    required this.user,
+    required this.localPeerNetworkQuality,
+    this.isRoomMute = false,
+    this.showStats = false,
+    this.mirrorCamera = true,
+    this.role,
+    this.config,
+    this.currentAudioDeviceMode = HMSAudioDevice.AUTOMATIC,
+    this.options,
+    this.tokenData,
+    required this.hmsSDKInteractor,
+    this.appBar,
+    this.onTapped,
+    this.isNoiseCancellationEnabled = false,
+    required this.onRoomIdAvailable,
+  }) : super(key: key);
 
   @override
-  State<MeetingScreenController> createState() =>
-      _MeetingScreenControllerState();
+  State<MeetingScreenController> createState() => _MeetingScreenControllerState();
 }
 
 class _MeetingScreenControllerState extends State<MeetingScreenController> {
@@ -130,9 +132,7 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
 
   void setScreenRotation() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (HMSRoomLayout
-              .roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
-          null) {
+      if (HMSRoomLayout.roleLayoutData?.screens?.conferencing?.hlsLiveStreaming != null) {
         _meetingStore.allowScreenRotation(true);
       } else {
         _meetingStore.allowScreenRotation(false);
@@ -147,24 +147,20 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
         : ListenableProvider.value(
             value: _meetingStore,
             child: Selector<MeetingStore, String?>(
-                selector: (_, meetingStore) =>
-                    meetingStore.localPeer?.role.name,
+                selector: (_, meetingStore) => meetingStore.localPeer?.role.name,
                 builder: (_, data, __) {
                   setScreenRotation();
-                  return (HMSRoomLayout.roleLayoutData?.screens?.conferencing
-                              ?.hlsLiveStreaming !=
-                          null)
-                      ? ListenableProvider.value(
-                          value: _hlsPlayerStore, child: const HLSViewerPage())
+                  return (HMSRoomLayout.roleLayoutData?.screens?.conferencing?.hlsLiveStreaming != null)
+                      ? ListenableProvider.value(value: _hlsPlayerStore, child: const HLSViewerPage())
                       : MeetingPage(
                           isRoomMute: widget.isRoomMute,
                           currentAudioDeviceMode: widget.currentAudioDeviceMode,
-                          isNoiseCancellationEnabled:
-                              widget.isNoiseCancellationEnabled,
-                              appBar: widget.appBar,
+                          isNoiseCancellationEnabled: widget.isNoiseCancellationEnabled,
+                          appBar: widget.appBar,
                           onTapped: (value) {
                             widget.onTapped!(value);
                           },
+                          onRoomIdAvailable: widget.onRoomIdAvailable,
                         );
                 }),
           );

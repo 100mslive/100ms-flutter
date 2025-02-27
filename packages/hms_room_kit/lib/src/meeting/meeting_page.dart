@@ -4,29 +4,29 @@ import 'dart:math';
 
 ///Package imports
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
-import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-
-///Project imports
-import 'package:hms_room_kit/src/widgets/common_widgets/hms_hls_starting_overlay.dart';
-import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart' as HMSTheme;
-import 'package:hms_room_kit/src/widgets/toasts/toast_widget.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
-import 'package:hms_room_kit/src/meeting/meeting_grid_component.dart';
-import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
-import 'package:hms_room_kit/src/meeting/meeting_bottom_navigation_bar.dart';
-import 'package:hms_room_kit/src/meeting/meeting_header.dart';
-import 'package:hms_room_kit/src/widgets/toasts/hms_toast_model.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
-import 'package:hms_room_kit/src/widgets/app_dialogs/audio_device_change_dialog.dart';
+import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart' as HMSTheme;
+import 'package:hms_room_kit/src/meeting/meeting_bottom_navigation_bar.dart';
+import 'package:hms_room_kit/src/meeting/meeting_grid_component.dart';
+import 'package:hms_room_kit/src/meeting/meeting_header.dart';
+import 'package:hms_room_kit/src/meeting/meeting_navigation_visibility_controller.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/meeting/pip_view.dart';
 import 'package:hms_room_kit/src/preview_for_role/preview_for_role_bottom_sheet.dart';
 import 'package:hms_room_kit/src/preview_for_role/preview_for_role_header.dart';
+import 'package:hms_room_kit/src/widgets/app_dialogs/audio_device_change_dialog.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_circular_avatar.dart';
+
+///Project imports
+import 'package:hms_room_kit/src/widgets/common_widgets/hms_hls_starting_overlay.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_left_room_screen.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/transcription_view.dart';
+import 'package:hms_room_kit/src/widgets/toasts/hms_toast_model.dart';
+import 'package:hms_room_kit/src/widgets/toasts/toast_widget.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 ///[MeetingPage] is the main page of the meeting
 ///It takes the following parameters:
@@ -37,8 +37,17 @@ class MeetingPage extends StatefulWidget {
   final bool isNoiseCancellationEnabled;
   final Widget? appBar;
   final Function(BuildContext)? onTapped;
+  final Function(String roomId) onRoomIdAvailable;
 
-  const MeetingPage({Key? key, this.isRoomMute = true, required this.currentAudioDeviceMode, this.appBar, this.onTapped, this.isNoiseCancellationEnabled = false}) : super(key: key);
+  const MeetingPage({
+    Key? key,
+    this.isRoomMute = true,
+    required this.currentAudioDeviceMode,
+    this.appBar,
+    this.onTapped,
+    this.isNoiseCancellationEnabled = false,
+    required this.onRoomIdAvailable,
+  }) : super(key: key);
 
   @override
   State<MeetingPage> createState() => _MeetingPageState();
@@ -99,6 +108,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                     doesRoleHasStreamPermission: failureErrors.item4,
                                     appBar: widget.appBar,
                                     onTapped: widget.onTapped,
+                                    onRoomIdAvailable: widget.onRoomIdAvailable,
                                   )));
                         });
                       }

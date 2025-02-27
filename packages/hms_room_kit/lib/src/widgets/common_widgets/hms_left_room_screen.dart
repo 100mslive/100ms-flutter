@@ -15,12 +15,15 @@ class HMSLeftRoomScreen extends StatelessWidget {
   final bool doesRoleHasStreamPermission;
   final Widget? appBar;
   final Function(BuildContext)? onTapped;
-  const HMSLeftRoomScreen(
-      {super.key,
-      this.isEndRoomCalled = false,
-      this.appBar,
-      this.onTapped,
-      this.doesRoleHasStreamPermission = false});
+  final Function(String roomId) onRoomIdAvailable;
+  const HMSLeftRoomScreen({
+    super.key,
+    this.isEndRoomCalled = false,
+    this.appBar,
+    this.onTapped,
+    this.doesRoleHasStreamPermission = false,
+    required this.onRoomIdAvailable,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +31,7 @@ class HMSLeftRoomScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: HMSThemeColors.backgroundDim,
         body: Theme(
-          data: ThemeData(
-              brightness: Brightness.dark,
-              primaryColor: HMSThemeColors.primaryDefault,
-              scaffoldBackgroundColor: HMSThemeColors.backgroundDim),
+          data: ThemeData(brightness: Brightness.dark, primaryColor: HMSThemeColors.primaryDefault, scaffoldBackgroundColor: HMSThemeColors.backgroundDim),
           child: Column(
             children: [
               Row(
@@ -50,9 +50,7 @@ class HMSLeftRoomScreen extends StatelessWidget {
                         "packages/hms_room_kit/lib/src/assets/icons/close.svg",
                         height: 24,
                         width: 24,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
                     ),
                   ),
@@ -76,9 +74,7 @@ class HMSLeftRoomScreen extends StatelessWidget {
                     ///If the room end is called, and peer role type is conferencing the text is "Session ended"
                     ///If you leave the room, and peer role type is hlsViewer the text is "You left the stream"
                     ///If tyou leave the room, and peer role type is conferencing the text is "You left the meeting"
-                    text: (doesRoleHasStreamPermission ||
-                            roomlayout.HMSRoomLayout.peerType ==
-                                roomlayout.PeerRoleType.hlsViewer)
+                    text: (doesRoleHasStreamPermission || roomlayout.HMSRoomLayout.peerType == roomlayout.PeerRoleType.hlsViewer)
                         ? "You left the stream"
                         : isEndRoomCalled
                             ? "Session ended"
@@ -105,9 +101,7 @@ class HMSLeftRoomScreen extends StatelessWidget {
                       ///The text is different if the room is ended by you or by someone else
                       ///If the room end is called, and peer role type is conferencing the text is "Ended by mistake?"
                       ///If you leave the room, the text is "Left by mistake?"
-                      text: (doesRoleHasStreamPermission || !(isEndRoomCalled))
-                          ? "Left by mistake?"
-                          : "Ended by mistake?",
+                      text: (doesRoleHasStreamPermission || !(isEndRoomCalled)) ? "Left by mistake?" : "Ended by mistake?",
                       textColor: HMSThemeColors.onSurfaceMediumEmphasis),
                   const SizedBox(
                     height: 16,
@@ -115,13 +109,9 @@ class HMSLeftRoomScreen extends StatelessWidget {
 
                   ElevatedButton(
                       style: ButtonStyle(
-                          shadowColor: MaterialStateProperty.all(
-                              HMSThemeColors.surfaceDim),
-                          backgroundColor: MaterialStateProperty.all(
-                              HMSThemeColors.primaryDefault),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
+                          shadowColor: WidgetStateProperty.all(HMSThemeColors.surfaceDim),
+                          backgroundColor: WidgetStateProperty.all(HMSThemeColors.primaryDefault),
+                          shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ))),
                       onPressed: () => {
@@ -138,14 +128,14 @@ class HMSLeftRoomScreen extends StatelessWidget {
                                           onTapped: (value) {
                                             onTapped!(value);
                                           },
+                                          onRoomIdAvailable: (roomId) {
+                                            onRoomIdAvailable(roomId);
+                                          },
                                         ))),
                           },
                       child: SizedBox(
                         height: 48,
-                        width:
-                            (doesRoleHasStreamPermission || !(isEndRoomCalled))
-                                ? 91
-                                : 100,
+                        width: (doesRoleHasStreamPermission || !(isEndRoomCalled)) ? 91 : 100,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -153,9 +143,7 @@ class HMSLeftRoomScreen extends StatelessWidget {
                               "packages/hms_room_kit/lib/src/assets/icons/login.svg",
                               height: 24,
                               width: 24,
-                              colorFilter: ColorFilter.mode(
-                                  HMSThemeColors.onPrimaryHighEmphasis,
-                                  BlendMode.srcIn),
+                              colorFilter: ColorFilter.mode(HMSThemeColors.onPrimaryHighEmphasis, BlendMode.srcIn),
                             ),
                             const SizedBox(
                               width: 8,
@@ -164,10 +152,7 @@ class HMSLeftRoomScreen extends StatelessWidget {
                               ///The text is different if the room is ended or not
                               ///If the room end is called, the text is "Restart"
                               ///If you leave the room, the text is "Rejoin"
-                              text: (doesRoleHasStreamPermission ||
-                                      !(isEndRoomCalled))
-                                  ? "Rejoin"
-                                  : "Restart",
+                              text: (doesRoleHasStreamPermission || !(isEndRoomCalled)) ? "Rejoin" : "Restart",
                               textColor: HMSThemeColors.onPrimaryHighEmphasis,
                             )
                           ],
