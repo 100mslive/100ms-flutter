@@ -34,21 +34,24 @@ class HMSPrebuilt extends StatelessWidget {
 
   ///The app bar to be shown on the screen
   final Widget? appBar;
+  final Widget? appBar2;
 
   final Function(BuildContext)? onTapped;
 
   final Function(String roomId)? onRoomIdAvailable;
 
   ///The key for the widget
-  HMSPrebuilt(
-      {super.key,
-      required this.roomCode,
-      this.options,
-      this.onLeave,
-      this.appBar,
-      this.onTapped,
-      this.onRoomIdAvailable,
-      this.authToken}) {
+  HMSPrebuilt({
+    super.key,
+    required this.roomCode,
+    this.options,
+    this.onLeave,
+    this.appBar,
+    this.appBar2,
+    this.onTapped,
+    this.onRoomIdAvailable,
+    this.authToken,
+  }) {
     if (roomCode == null && authToken == null) {
       throw ArgumentError.notNull(
           "At least one parameter roomCode or authToken must be provided.");
@@ -75,7 +78,8 @@ class HMSPrebuilt extends StatelessWidget {
       options: options,
       onLeave: onLeave,
       appBar: appBar,
-      onTapped: (value){
+      appBar2: appBar2,
+      onTapped: (value) {
         onTapped!(value);
       },
       onRoomIdAvailable: (roomId) {
