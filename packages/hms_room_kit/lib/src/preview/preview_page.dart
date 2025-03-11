@@ -27,7 +27,8 @@ class PreviewPage extends StatefulWidget {
   final String name;
   final HMSPrebuiltOptions? options;
   final String tokenData;
-  final Widget? appBar;
+  final Widget? meetingScreenAppBar;
+  final Widget? preViewScreenAppBar;
   final Function(BuildContext)? onTapped;
   final Function(String roomId) onRoomIdAvailable;
 
@@ -35,7 +36,8 @@ class PreviewPage extends StatefulWidget {
     super.key,
     required this.name,
     required this.options,
-    this.appBar,
+    this.meetingScreenAppBar,
+    this.preViewScreenAppBar,
     this.onTapped,
     required this.tokenData,
     required this.onRoomIdAvailable,
@@ -82,7 +84,7 @@ class _PreviewPageState extends State<PreviewPage> {
               tokenData: widget.tokenData,
               hmsSDKInteractor: previewStore.hmsSDKInteractor,
               isNoiseCancellationEnabled: previewStore.isNoiseCancellationEnabled,
-              appBar: widget.appBar,
+              meetingScreenAppBar: widget.meetingScreenAppBar,
               onTapped: (value) {
                 widget.onTapped!(value);
               },
@@ -158,7 +160,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                 ],
                               ),
 
-                        PreviewHeader(previewStore: previewStore, width: width),
+                        PreviewHeader(previewStore: previewStore, width: width, preViewScreenAppBar: widget.preViewScreenAppBar),
 
                         ///This renders the back button at top left
                         Positioned(top: Platform.isIOS ? 50 : 35, left: 10, child: HMSBackButton(onPressed: () => {previewStore.leave(), Navigator.pop(context)})),

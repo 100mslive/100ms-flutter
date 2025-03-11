@@ -17,14 +17,16 @@ class PreviewMeetingFlow extends StatefulWidget {
   final HMSPrebuiltOptions? prebuiltOptions;
   final HMSSDKInteractor hmsSDKInteractor;
   final String tokenData;
-  final Widget? appBar;
+  final Widget? meetingScreenAppBar;
+  final Widget? preViewScreenAppBar;
   final Function(BuildContext)? onTapped;
   final Function(String roomId) onRoomIdAvailable;
   const PreviewMeetingFlow({
     super.key,
     required this.prebuiltOptions,
     required this.hmsSDKInteractor,
-    this.appBar,
+    this.meetingScreenAppBar,
+    this.preViewScreenAppBar,
     this.onTapped,
     required this.tokenData,
     required this.onRoomIdAvailable,
@@ -58,7 +60,8 @@ class _PreviewMeetingFlowState extends State<PreviewMeetingFlow> {
             options: widget.prebuiltOptions,
             tokenData: widget.tokenData,
             hmsSDKInteractor: widget.hmsSDKInteractor,
-            appBar: widget.appBar,
+            meetingScreenAppBar: widget.meetingScreenAppBar,
+            preViewScreenAppBar: widget.preViewScreenAppBar,
             onTapped: (value) {
               widget.onTapped!(value);
             },
@@ -72,7 +75,8 @@ class _PreviewMeetingFlowState extends State<PreviewMeetingFlow> {
               name: widget.prebuiltOptions?.userName ?? "",
               options: widget.prebuiltOptions,
               tokenData: widget.tokenData,
-              appBar: widget.appBar,
+              meetingScreenAppBar: widget.meetingScreenAppBar,
+              preViewScreenAppBar: widget.preViewScreenAppBar,
               onTapped: (value) {
                 widget.onTapped!(value);
               },
