@@ -13,14 +13,14 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_subheading_text.dart
 class HMSLeftRoomScreen extends StatelessWidget {
   final bool isEndRoomCalled;
   final bool doesRoleHasStreamPermission;
-  final Widget? appBar;
+  final Widget? meetingScreenAppBar;
   final Widget? preViewScreenAppBar;
   final Function(BuildContext)? onTapped;
   final Function(String roomId) onRoomIdAvailable;
   const HMSLeftRoomScreen({
     super.key,
     this.isEndRoomCalled = false,
-    this.appBar,
+    this.meetingScreenAppBar,
     this.preViewScreenAppBar,
     this.onTapped,
     this.doesRoleHasStreamPermission = false,
@@ -126,7 +126,7 @@ class HMSLeftRoomScreen extends StatelessWidget {
                                           authToken: Constant.authToken,
                                           options: Constant.prebuiltOptions,
                                           onLeave: Constant.onLeave,
-                                          appBar: appBar,
+                                          meetingScreenAppBar: meetingScreenAppBar,
                                           preViewScreenAppBar: preViewScreenAppBar,
                                           onTapped: (value) {
                                             onTapped!(value);

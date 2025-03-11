@@ -34,14 +34,14 @@ class ScreenController extends StatefulWidget {
   final Function? onLeave;
 
   ///The app bar to be shown on the screen
-  final Widget? appBar;
+  final Widget? meetingScreenAppBar;
   final Widget? preViewScreenAppBar;
 
   final Function(BuildContext)? onTapped;
 
   final Function(String roomId)? onRoomIdAvailable;
 
-  const ScreenController({super.key, required this.roomCode, this.options, this.onLeave, this.appBar, this.onTapped, this.onRoomIdAvailable, this.authToken, this.preViewScreenAppBar});
+  const ScreenController({super.key, required this.roomCode, this.options, this.onLeave, this.meetingScreenAppBar, this.onTapped, this.onRoomIdAvailable, this.authToken, this.preViewScreenAppBar});
   @override
   State<ScreenController> createState() => _ScreenControllerState();
 }
@@ -177,7 +177,7 @@ class _ScreenControllerState extends State<ScreenController> {
                   prebuiltOptions: widget.options,
                   hmsSDKInteractor: _hmsSDKInteractor,
                   tokenData: tokenData,
-                  appBar: widget.appBar,
+                  meetingScreenAppBar: widget.meetingScreenAppBar,
                   preViewScreenAppBar: widget.preViewScreenAppBar,
                   onTapped: (value) {
                     widget.onTapped!(value);

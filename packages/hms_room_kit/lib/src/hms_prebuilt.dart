@@ -33,7 +33,7 @@ class HMSPrebuilt extends StatelessWidget {
   final Function? onLeave;
 
   ///The app bar to be shown on the screen
-  final Widget? appBar;
+  final Widget? meetingScreenAppBar;
   final Widget? preViewScreenAppBar;
 
   final Function(BuildContext)? onTapped;
@@ -46,7 +46,7 @@ class HMSPrebuilt extends StatelessWidget {
     required this.roomCode,
     this.options,
     this.onLeave,
-    this.appBar,
+    this.meetingScreenAppBar,
     this.preViewScreenAppBar,
     this.onTapped,
     this.onRoomIdAvailable,
@@ -76,7 +76,7 @@ class HMSPrebuilt extends StatelessWidget {
       authToken: authToken,
       options: options,
       onLeave: onLeave,
-      appBar: appBar,
+      meetingScreenAppBar: meetingScreenAppBar,
       preViewScreenAppBar: preViewScreenAppBar,
       onTapped: (value) {
         onTapped!(value);

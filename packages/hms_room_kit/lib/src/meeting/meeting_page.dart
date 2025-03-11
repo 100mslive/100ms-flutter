@@ -35,7 +35,7 @@ class MeetingPage extends StatefulWidget {
   final bool isRoomMute;
   final HMSAudioDevice currentAudioDeviceMode;
   final bool isNoiseCancellationEnabled;
-  final Widget? appBar;
+  final Widget? meetingScreenAppBar;
   final Widget? preViewScreenAppBar;
   final Function(BuildContext)? onTapped;
   final Function(String roomId) onRoomIdAvailable;
@@ -44,7 +44,7 @@ class MeetingPage extends StatefulWidget {
     Key? key,
     this.isRoomMute = true,
     required this.currentAudioDeviceMode,
-    this.appBar,
+    this.meetingScreenAppBar,
     this.preViewScreenAppBar,
     this.onTapped,
     this.isNoiseCancellationEnabled = false,
@@ -96,7 +96,7 @@ class _MeetingPageState extends State<MeetingPage> {
         child: Scaffold(
           body: Column(
             children: [
-              widget.appBar ?? const SizedBox(),
+              widget.meetingScreenAppBar ?? const SizedBox(),
               Expanded(
                 child: Selector<MeetingStore, Tuple4<bool, HMSException?, bool, bool>>(
                     selector: (_, meetingStore) => Tuple4(meetingStore.isRoomEnded, meetingStore.hmsException, meetingStore.isEndRoomCalled, meetingStore.localPeer?.role.permissions.hlsStreaming ?? false),
@@ -108,7 +108,7 @@ class _MeetingPageState extends State<MeetingPage> {
                               builder: (context) => HMSLeftRoomScreen(
                                     isEndRoomCalled: failureErrors.item3,
                                     doesRoleHasStreamPermission: failureErrors.item4,
-                                    appBar: widget.appBar,
+                                    meetingScreenAppBar: widget.meetingScreenAppBar,
                                     preViewScreenAppBar: widget.preViewScreenAppBar,
                                     onTapped: widget.onTapped,
                                     onRoomIdAvailable: widget.onRoomIdAvailable,
