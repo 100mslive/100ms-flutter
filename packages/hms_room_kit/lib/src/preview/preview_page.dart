@@ -28,7 +28,7 @@ class PreviewPage extends StatefulWidget {
   final HMSPrebuiltOptions? options;
   final String tokenData;
   final Widget? appBar;
-  final Widget? appBar2;
+  final Widget? preViewScreenAppBar;
   final Function(BuildContext)? onTapped;
   final Function(String roomId) onRoomIdAvailable;
 
@@ -37,7 +37,7 @@ class PreviewPage extends StatefulWidget {
     required this.name,
     required this.options,
     this.appBar,
-    this.appBar2,
+    this.preViewScreenAppBar,
     this.onTapped,
     required this.tokenData,
     required this.onRoomIdAvailable,
@@ -160,7 +160,7 @@ class _PreviewPageState extends State<PreviewPage> {
                                 ],
                               ),
 
-                        PreviewHeader(previewStore: previewStore, width: width, appBar2: widget.appBar2),
+                        PreviewHeader(previewStore: previewStore, width: width, preViewScreenAppBar: widget.preViewScreenAppBar),
 
                         ///This renders the back button at top left
                         Positioned(top: Platform.isIOS ? 50 : 35, left: 10, child: HMSBackButton(onPressed: () => {previewStore.leave(), Navigator.pop(context)})),

@@ -60,7 +60,7 @@ class MeetingScreenController extends StatefulWidget {
 
   ///[appBar] are the appBar to be shown on the screen
   final Widget? appBar;
-  final Widget? appBar2;
+  final Widget? preViewScreenAppBar;
 
   final Function(BuildContext)? onTapped;
 
@@ -80,7 +80,7 @@ class MeetingScreenController extends StatefulWidget {
     this.tokenData,
     required this.hmsSDKInteractor,
     this.appBar,
-    this.appBar2,
+    this.preViewScreenAppBar,
     this.onTapped,
     this.isNoiseCancellationEnabled = false,
     required this.onRoomIdAvailable,
@@ -159,7 +159,7 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
                           currentAudioDeviceMode: widget.currentAudioDeviceMode,
                           isNoiseCancellationEnabled: widget.isNoiseCancellationEnabled,
                           appBar: widget.appBar,
-                          appBar2: widget.appBar2,
+                          preViewScreenAppBar: widget.preViewScreenAppBar,
                           onTapped: (value) {
                             widget.onTapped!(value);
                           },

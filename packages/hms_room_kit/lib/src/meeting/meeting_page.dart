@@ -36,7 +36,7 @@ class MeetingPage extends StatefulWidget {
   final HMSAudioDevice currentAudioDeviceMode;
   final bool isNoiseCancellationEnabled;
   final Widget? appBar;
-  final Widget? appBar2;
+  final Widget? preViewScreenAppBar;
   final Function(BuildContext)? onTapped;
   final Function(String roomId) onRoomIdAvailable;
 
@@ -45,7 +45,7 @@ class MeetingPage extends StatefulWidget {
     this.isRoomMute = true,
     required this.currentAudioDeviceMode,
     this.appBar,
-    this.appBar2,
+    this.preViewScreenAppBar,
     this.onTapped,
     this.isNoiseCancellationEnabled = false,
     required this.onRoomIdAvailable,
@@ -109,7 +109,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                     isEndRoomCalled: failureErrors.item3,
                                     doesRoleHasStreamPermission: failureErrors.item4,
                                     appBar: widget.appBar,
-                                    appBar2: widget.appBar2,
+                                    preViewScreenAppBar: widget.preViewScreenAppBar,
                                     onTapped: widget.onTapped,
                                     onRoomIdAvailable: widget.onRoomIdAvailable,
                                   )));

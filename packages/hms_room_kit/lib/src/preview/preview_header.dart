@@ -22,16 +22,16 @@ import 'package:hms_room_kit/src/widgets/common_widgets/hms_title_text.dart';
 ///and the peer list is not empty and the peer role has the permission to receive room state
 class PreviewHeader extends StatelessWidget {
   final PreviewStore previewStore;
-  final Widget? appBar2;
+  final Widget? preViewScreenAppBar;
   final double width;
-  const PreviewHeader({super.key, required this.previewStore, required this.width, this.appBar2});
+  const PreviewHeader({super.key, required this.previewStore, required this.width, this.preViewScreenAppBar});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Container(
-          child: appBar2,
+          child: preViewScreenAppBar,
         ),
         Container(
           width: width,
