@@ -94,28 +94,6 @@ class _MeetingBottomNavigationBarState
                             ),
                           ),
 
-                          if(Platform.isAndroid)
-                          HMSEmbeddedButton(
-                            onTap: () async  {
-                               MeetingStore meetingStore = context.read<MeetingStore>();
-                               meetingStore.enterPipModeOnAndroid();
-                            },
-                            offColor: HMSThemeColors.alertErrorDefault,
-                            disabledBorderColor:
-                                HMSThemeColors.alertErrorDefault,
-                            isActive: false,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SvgPicture.asset(
-                                "packages/hms_room_kit/lib/src/assets/icons/pin.svg",
-                                colorFilter: ColorFilter.mode(
-                                    HMSThemeColors.alertErrorBrighter,
-                                    BlendMode.srcIn),
-                                semanticsLabel: "leave_room_button",
-                              ),
-                            ),
-                          ),
-
                           ///Microphone button
                           ///This button is only rendered if the local peer has the permission to
                           ///publish audio
