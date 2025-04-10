@@ -22,21 +22,17 @@ import 'package:provider/provider.dart';
 class MoreSettingsBottomSheet extends StatefulWidget {
   final bool isAudioMixerDisabled;
 
-  const MoreSettingsBottomSheet({Key? key, this.isAudioMixerDisabled = true})
-      : super(key: key);
+  const MoreSettingsBottomSheet({Key? key, this.isAudioMixerDisabled = true}) : super(key: key);
   @override
-  State<MoreSettingsBottomSheet> createState() =>
-      _MoreSettingsBottomSheetState();
+  State<MoreSettingsBottomSheet> createState() => _MoreSettingsBottomSheetState();
 }
 
 class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
-  void _showRoleList(
-      {required List<HMSRole> roles, required MeetingStore meetingStore}) {
+  void _showRoleList({required List<HMSRole> roles, required MeetingStore meetingStore}) {
     UtilityComponents.showRoleListForMute(context, roles, meetingStore);
   }
 
-  void _showDialogForBulkRoleChange(
-      {required List<HMSRole> roles, required MeetingStore meetingStore}) {
+  void _showDialogForBulkRoleChange({required List<HMSRole> roles, required MeetingStore meetingStore}) {
     UtilityComponents.showDialogForBulkRoleChange(context, roles, meetingStore);
   }
 
@@ -103,39 +99,27 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             context: context,
-                            builder: (ctx) => ChangeNotifierProvider.value(
-                                value: context.read<MeetingStore>(),
-                                child: const ParticipantsBottomSheet()),
+                            builder: (ctx) => ChangeNotifierProvider.value(value: context.read<MeetingStore>(), child: const ParticipantsBottomSheet()),
                           );
                         },
                         child: Container(
-                          decoration: BoxDecoration(
-                              color: moreSettingsButtonColor,
-                              borderRadius: BorderRadius.circular(10)),
+                          decoration: BoxDecoration(color: moreSettingsButtonColor, borderRadius: BorderRadius.circular(10)),
                           height: 100,
                           width: 150,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               badge.Badge(
-                                badgeStyle: badge.BadgeStyle(
-                                    badgeColor: hmsdefaultColor),
+                                badgeStyle: badge.BadgeStyle(badgeColor: hmsdefaultColor),
                                 badgeContent: Text(
-                                  context
-                                      .read<MeetingStore>()
-                                      .peers
-                                      .length
-                                      .toString(),
-                                  style: TextStyle(
-                                      color:
-                                          HMSThemeColors.onSurfaceHighEmphasis),
+                                  context.read<MeetingStore>().peers.length.toString(),
+                                  style: TextStyle(color: HMSThemeColors.onSurfaceHighEmphasis),
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: SvgPicture.asset(
                                     "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
-                                    colorFilter: ColorFilter.mode(
-                                        themeDefaultColor, BlendMode.srcIn),
+                                    colorFilter: ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                                   ),
                                 ),
                               ),
@@ -143,11 +127,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               Text(
                                 "Participants",
                                 semanticsLabel: "participants_button",
-                                style: HMSTextStyle.setTextStyle(
-                                    fontSize: 14,
-                                    color: themeDefaultColor,
-                                    letterSpacing: 0.25,
-                                    fontWeight: FontWeight.w600),
+                                style: HMSTextStyle.setTextStyle(fontSize: 14, color: themeDefaultColor, letterSpacing: 0.25, fontWeight: FontWeight.w600),
                               )
                             ],
                           ),
@@ -161,18 +141,14 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               isScrollControlled: true,
                               backgroundColor: Colors.transparent,
                               context: context,
-                              builder: (ctx) => ChangeNotifierProvider.value(
-                                  value: meetingStore,
-                                  child: const AudioSettingsBottomSheet()),
+                              builder: (ctx) => ChangeNotifierProvider.value(value: meetingStore, child: const AudioSettingsBottomSheet()),
                             );
                           } else {
                             meetingStore.switchAudioOutputUsingiOSUI();
                           }
                         },
                         child: Container(
-                          decoration: BoxDecoration(
-                              color: moreSettingsButtonColor,
-                              borderRadius: BorderRadius.circular(10)),
+                          decoration: BoxDecoration(color: moreSettingsButtonColor, borderRadius: BorderRadius.circular(10)),
                           height: 100,
                           width: 150,
                           child: Column(
@@ -180,8 +156,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                             children: [
                               SvgPicture.asset(
                                 "packages/hms_room_kit/lib/src/assets/icons/settings.svg",
-                                colorFilter: ColorFilter.mode(
-                                    themeDefaultColor, BlendMode.srcIn),
+                                colorFilter: ColorFilter.mode(themeDefaultColor, BlendMode.srcIn),
                               ),
                               const SizedBox(
                                 height: 10,
@@ -189,11 +164,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               Text(
                                 "Audio Settings",
                                 semanticsLabel: "fl_audio_settings",
-                                style: HMSTextStyle.setTextStyle(
-                                    fontSize: 14,
-                                    color: themeDefaultColor,
-                                    letterSpacing: 0.25,
-                                    fontWeight: FontWeight.w600),
+                                style: HMSTextStyle.setTextStyle(fontSize: 14, color: themeDefaultColor, letterSpacing: 0.25, fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
@@ -204,12 +175,9 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                   const SizedBox(
                     height: 10,
                   ),
-                  if (meetingStore.localPeer?.role.publishSettings?.allowed
-                          .contains("screen") ??
-                      false)
+                  if (meetingStore.localPeer?.role.publishSettings?.allowed.contains("screen") ?? false)
                     Selector<MeetingStore, bool>(
-                        selector: ((_, meetingStore) =>
-                            meetingStore.isScreenShareOn),
+                        selector: ((_, meetingStore) => meetingStore.isScreenShareOn),
                         builder: (_, isScreenShareOn, __) {
                           return ListTile(
                             horizontalTitleGap: 2,
@@ -226,14 +194,10 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                               "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
                               height: 20,
                               width: 20,
-                              colorFilter: ColorFilter.mode(
-                                  HMSThemeColors.onSurfaceHighEmphasis,
-                                  BlendMode.srcIn),
+                              colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                             ),
                             title: HMSSubheadingText(
-                              text: isScreenShareOn
-                                  ? "Stop Screen Share"
-                                  : "Share Screen",
+                              text: isScreenShareOn ? "Stop Screen Share" : "Share Screen",
                               textColor: HMSThemeColors.onSurfaceHighEmphasis,
                               letterSpacing: 0.15,
                               fontWeight: FontWeight.w600,
@@ -245,15 +209,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                     onTap: () async {
                       Navigator.pop(context);
                       FocusManager.instance.primaryFocus?.unfocus();
-                      String name =
-                          await UtilityComponents.showNameChangeDialog(
-                              context: context,
-                              placeholder: "Enter Name",
-                              prefilledValue: context
-                                      .read<MeetingStore>()
-                                      .localPeer
-                                      ?.name ??
-                                  "");
+                      String name = await UtilityComponents.showNameChangeDialog(context: context, placeholder: "Enter Name", prefilledValue: context.read<MeetingStore>().localPeer?.name ?? "");
                       if (name.isNotEmpty) {
                         meetingStore.changeName(name: name);
                       }
@@ -263,9 +219,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
                       height: 20,
                       width: 20,
-                      colorFilter: ColorFilter.mode(
-                          HMSThemeColors.onSurfaceHighEmphasis,
-                          BlendMode.srcIn),
+                      colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                     ),
                     title: HMSSubheadingText(
                       text: "Change Name",
@@ -282,19 +236,13 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                     },
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
-                      meetingStore.isSpeakerOn
-                          ? "packages/hms_room_kit/lib/src/assets/icons/speaker_state_on.svg"
-                          : "packages/hms_room_kit/lib/src/assets/icons/speaker_state_off.svg",
+                      meetingStore.isSpeakerOn ? "packages/hms_room_kit/lib/src/assets/icons/speaker_state_on.svg" : "packages/hms_room_kit/lib/src/assets/icons/speaker_state_off.svg",
                       height: 20,
                       width: 20,
-                      colorFilter: ColorFilter.mode(
-                          HMSThemeColors.onSurfaceHighEmphasis,
-                          BlendMode.srcIn),
+                      colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                     ),
                     title: HMSSubheadingText(
-                      text: meetingStore.isSpeakerOn
-                          ? "Mute Room"
-                          : "Unmute Room",
+                      text: meetingStore.isSpeakerOn ? "Mute Room" : "Unmute Room",
                       textColor: HMSThemeColors.onSurfaceHighEmphasis,
                       letterSpacing: 0.15,
                       fontWeight: FontWeight.w600,
@@ -311,14 +259,10 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
                         height: 20,
                         width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
                       title: HMSSubheadingText(
-                        text: meetingStore.isRaisedHand
-                            ? "Lower Hand"
-                            : "Raise Hand",
+                        text: meetingStore.isRaisedHand ? "Lower Hand" : "Raise Hand",
                         textColor: HMSThemeColors.onSurfaceHighEmphasis,
                         fontWeight: FontWeight.w600,
                       )),
@@ -331,15 +275,11 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                     contentPadding: EdgeInsets.zero,
                     leading: SvgPicture.asset(
                       "packages/hms_room_kit/lib/src/assets/icons/brb.svg",
-                      colorFilter: ColorFilter.mode(
-                          HMSThemeColors.onSurfaceHighEmphasis,
-                          BlendMode.srcIn),
+                      colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                     ),
                     title: HMSSubheadingText(
                       text: "BRB",
-                      textColor: meetingStore.isBRB
-                          ? HMSThemeColors.alertErrorDefault
-                          : HMSThemeColors.onSurfaceHighEmphasis,
+                      textColor: meetingStore.isBRB ? HMSThemeColors.alertErrorDefault : HMSThemeColors.onSurfaceHighEmphasis,
                       letterSpacing: 0.15,
                       fontWeight: FontWeight.w600,
                     ),
@@ -363,9 +303,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         "packages/hms_room_kit/lib/src/assets/icons/stats.svg",
                         height: 20,
                         width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
                       title: HMSSubheadingText(
                         text: "Stats for nerds",
@@ -375,26 +313,20 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       ),
                     ),
                   if (Constant.debugMode)
-                    if ((meetingStore.localPeer?.role.permissions.mute ??
-                            false) &&
-                        (meetingStore.localPeer?.role.permissions.unMute ??
-                            false))
+                    if ((meetingStore.localPeer?.role.permissions.mute ?? false) && (meetingStore.localPeer?.role.permissions.unMute ?? false))
                       ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
                           Navigator.pop(context);
                           List<HMSRole> roles = await meetingStore.getRoles();
-                          _showRoleList(
-                              roles: roles, meetingStore: meetingStore);
+                          _showRoleList(roles: roles, meetingStore: meetingStore);
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(
                           "packages/hms_room_kit/lib/src/assets/icons/mic_state_off.svg",
                           height: 20,
                           width: 20,
-                          colorFilter: ColorFilter.mode(
-                              HMSThemeColors.onSurfaceHighEmphasis,
-                              BlendMode.srcIn),
+                          colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                         ),
                         title: HMSSubheadingText(
                           text: "Mute Role",
@@ -404,24 +336,20 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         ),
                       ),
                   if (Constant.debugMode)
-                    if (meetingStore.localPeer?.role.permissions.changeRole ??
-                        false)
+                    if (meetingStore.localPeer?.role.permissions.changeRole ?? false)
                       ListTile(
                         horizontalTitleGap: 2,
                         onTap: () async {
                           Navigator.pop(context);
                           List<HMSRole> roles = await meetingStore.getRoles();
-                          _showDialogForBulkRoleChange(
-                              roles: roles, meetingStore: meetingStore);
+                          _showDialogForBulkRoleChange(roles: roles, meetingStore: meetingStore);
                         },
                         contentPadding: EdgeInsets.zero,
                         leading: SvgPicture.asset(
                           "packages/hms_room_kit/lib/src/assets/icons/role_change.svg",
                           height: 20,
                           width: 20,
-                          colorFilter: ColorFilter.mode(
-                              HMSThemeColors.onSurfaceHighEmphasis,
-                              BlendMode.srcIn),
+                          colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                         ),
                         title: HMSSubheadingText(
                           text: "Bulk Role Change",
@@ -431,13 +359,9 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         ),
                       ),
                   if (Constant.debugMode)
-                    if (meetingStore
-                            .localPeer?.role.permissions.rtmpStreaming ??
-                        false)
+                    if (meetingStore.localPeer?.role.permissions.rtmpStreaming ?? false)
                       Selector<MeetingStore, bool>(
-                          selector: (_, meetingStore) =>
-                              meetingStore.streamingType["rtmp"] ==
-                              HMSStreamingState.started,
+                          selector: (_, meetingStore) => meetingStore.streamingType["rtmp"] == HMSStreamingState.started,
                           builder: (_, isRTMPRunning, __) {
                             return ListTile(
                               horizontalTitleGap: 2,
@@ -447,28 +371,15 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                   Navigator.pop(context);
                                 } else {
                                   Navigator.pop(context);
-                                  Map<String, dynamic> data =
-                                      await UtilityComponents.showRTMPInputDialog(
-                                          context: context,
-                                          placeholder:
-                                              "Enter Comma separated RTMP Urls",
-                                          isRecordingEnabled: meetingStore
-                                                  .recordingType["browser"] ==
-                                              HMSRecordingState.started);
+                                  Map<String, dynamic> data = await UtilityComponents.showRTMPInputDialog(context: context, placeholder: "Enter Comma separated RTMP Urls", isRecordingEnabled: meetingStore.recordingType["browser"] == HMSRecordingState.started);
                                   List<String>? urls;
                                   if (data["url"]!.isNotEmpty) {
                                     urls = data["url"]!.split(",");
                                   }
                                   if (urls != null) {
-                                    meetingStore.startRtmpOrRecording(
-                                        meetingUrl: Constant.streamingUrl,
-                                        toRecord: data["toRecord"] ?? false,
-                                        rtmpUrls: urls);
+                                    meetingStore.startRtmpOrRecording(meetingUrl: Constant.streamingUrl, toRecord: data["toRecord"] ?? false, rtmpUrls: urls);
                                   } else if (data["toRecord"] ?? false) {
-                                    meetingStore.startRtmpOrRecording(
-                                        meetingUrl: Constant.streamingUrl,
-                                        toRecord: data["toRecord"] ?? false,
-                                        rtmpUrls: null);
+                                    meetingStore.startRtmpOrRecording(meetingUrl: Constant.streamingUrl, toRecord: data["toRecord"] ?? false, rtmpUrls: null);
                                   }
                                 }
                               },
@@ -477,31 +388,20 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 "packages/hms_room_kit/lib/src/assets/icons/stream.svg",
                                 height: 20,
                                 width: 20,
-                                colorFilter: ColorFilter.mode(
-                                    isRTMPRunning
-                                        ? HMSThemeColors.alertErrorDefault
-                                        : HMSThemeColors.onSurfaceHighEmphasis,
-                                    BlendMode.srcIn),
+                                colorFilter: ColorFilter.mode(isRTMPRunning ? HMSThemeColors.alertErrorDefault : HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                               ),
                               title: HMSSubheadingText(
-                                text:
-                                    isRTMPRunning ? "Stop RTMP" : "Start RTMP",
-                                textColor: isRTMPRunning
-                                    ? HMSThemeColors.alertErrorDefault
-                                    : HMSThemeColors.onSurfaceHighEmphasis,
+                                text: isRTMPRunning ? "Stop RTMP" : "Start RTMP",
+                                textColor: isRTMPRunning ? HMSThemeColors.alertErrorDefault : HMSThemeColors.onSurfaceHighEmphasis,
                                 letterSpacing: 0.15,
                                 fontWeight: FontWeight.w600,
                               ),
                             );
                           }),
                   if (Constant.debugMode)
-                    if (meetingStore
-                            .localPeer?.role.permissions.browserRecording ??
-                        false)
+                    if (meetingStore.localPeer?.role.permissions.browserRecording ?? false)
                       Selector<MeetingStore, bool>(
-                          selector: (_, meetingStore) =>
-                              meetingStore.recordingType["browser"] ==
-                              HMSRecordingState.started,
+                          selector: (_, meetingStore) => meetingStore.recordingType["browser"] == HMSRecordingState.started,
                           builder: (_, isBrowserRecording, __) {
                             return ListTile(
                               horizontalTitleGap: 2,
@@ -509,10 +409,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 if (isBrowserRecording) {
                                   meetingStore.stopRtmpAndRecording();
                                 } else {
-                                  meetingStore.startRtmpOrRecording(
-                                      meetingUrl: Constant.streamingUrl,
-                                      toRecord: true,
-                                      rtmpUrls: []);
+                                  meetingStore.startRtmpOrRecording(meetingUrl: Constant.streamingUrl, toRecord: true, rtmpUrls: []);
                                 }
                                 Navigator.pop(context);
                               },
@@ -521,30 +418,20 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                 "packages/hms_room_kit/lib/src/assets/icons/record.svg",
                                 height: 20,
                                 width: 20,
-                                colorFilter: ColorFilter.mode(
-                                    isBrowserRecording
-                                        ? HMSThemeColors.alertErrorDefault
-                                        : HMSThemeColors.onSurfaceHighEmphasis,
-                                    BlendMode.srcIn),
+                                colorFilter: ColorFilter.mode(isBrowserRecording ? HMSThemeColors.alertErrorDefault : HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                               ),
                               title: HMSSubheadingText(
-                                text: isBrowserRecording
-                                    ? "Stop Recording"
-                                    : "Start Recording",
-                                textColor: isBrowserRecording
-                                    ? HMSThemeColors.alertErrorDefault
-                                    : HMSThemeColors.onSurfaceHighEmphasis,
+                                text: isBrowserRecording ? "Stop Recording" : "Start Recording",
+                                textColor: isBrowserRecording ? HMSThemeColors.alertErrorDefault : HMSThemeColors.onSurfaceHighEmphasis,
                                 letterSpacing: 0.15,
                                 fontWeight: FontWeight.w600,
                               ),
                             );
                           }),
                   if (Constant.debugMode)
-                    if (meetingStore.localPeer?.role.permissions.hlsStreaming ??
-                        false)
+                    if (meetingStore.localPeer?.role.permissions.hlsStreaming ?? false)
                       Selector<MeetingStore, bool>(
-                          selector: ((_, meetingStore) =>
-                              meetingStore.hasHlsStarted),
+                          selector: ((_, meetingStore) => meetingStore.hasHlsStarted),
                           builder: (_, hasHLSStarted, __) {
                             return ListTile(
                               horizontalTitleGap: 2,
@@ -562,28 +449,14 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   context: context,
-                                  builder: (ctx) =>
-                                      ChangeNotifierProvider.value(
-                                          value: meetingStore,
-                                          child: const StartHLSBottomSheet()),
+                                  builder: (ctx) => ChangeNotifierProvider.value(value: meetingStore, child: const StartHLSBottomSheet()),
                                 );
                               },
                               contentPadding: EdgeInsets.zero,
-                              leading: SvgPicture.asset(
-                                  "packages/hms_room_kit/lib/src/assets/icons/hls.svg",
-                                  height: 20,
-                                  width: 20,
-                                  colorFilter: ColorFilter.mode(
-                                      hasHLSStarted
-                                          ? HMSThemeColors.alertErrorDefault
-                                          : HMSThemeColors
-                                              .onSurfaceHighEmphasis,
-                                      BlendMode.srcIn)),
+                              leading: SvgPicture.asset("packages/hms_room_kit/lib/src/assets/icons/hls.svg", height: 20, width: 20, colorFilter: ColorFilter.mode(hasHLSStarted ? HMSThemeColors.alertErrorDefault : HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn)),
                               title: HMSSubheadingText(
                                 text: hasHLSStarted ? "Stop HLS" : "Start HLS",
-                                textColor: hasHLSStarted
-                                    ? HMSThemeColors.alertErrorDefault
-                                    : HMSThemeColors.onSurfaceHighEmphasis,
+                                textColor: hasHLSStarted ? HMSThemeColors.alertErrorDefault : HMSThemeColors.onSurfaceHighEmphasis,
                                 letterSpacing: 0.15,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -594,16 +467,14 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                       horizontalTitleGap: 2,
                       onTap: () async {
                         Navigator.pop(context);
-                        // context.read<MeetingStore>().enterPipModeOnAndroid();
+                        context.read<MeetingStore>().enterPipModeOnAndroid();
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
                         "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
                         height: 20,
                         width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
                       title: HMSSubheadingText(
                         text: "Enter Pip Mode",
@@ -616,20 +487,14 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                     ListTile(
                       horizontalTitleGap: 2,
                       onTap: () async {
-                        showDialog(
-                            context: context,
-                            builder: (_) => ShareLinkOptionDialog(
-                                roles: meetingStore.roles,
-                                roomID: meetingStore.hmsRoom!.id));
+                        showDialog(context: context, builder: (_) => ShareLinkOptionDialog(roles: meetingStore.roles, roomID: meetingStore.hmsRoom!.id));
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
                         "packages/hms_room_kit/lib/src/assets/icons/share.svg",
                         height: 20,
                         width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
                       title: HMSSubheadingText(
                         text: "Share Link",
@@ -683,9 +548,7 @@ class _MoreSettingsBottomSheetState extends State<MoreSettingsBottomSheet> {
                         "packages/hms_room_kit/lib/src/assets/icons/end_room.svg",
                         height: 20,
                         width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
                       title: HMSSubheadingText(
                         text: "End Room",
