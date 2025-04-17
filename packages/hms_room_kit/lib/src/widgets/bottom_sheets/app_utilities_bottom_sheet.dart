@@ -27,8 +27,7 @@ import 'package:hms_room_kit/src/widgets/bottom_sheets/poll_and_quiz_bottom_shee
 class AppUtilitiesBottomSheet extends StatefulWidget {
   const AppUtilitiesBottomSheet({Key? key}) : super(key: key);
   @override
-  State<AppUtilitiesBottomSheet> createState() =>
-      _AppUtilitiesBottomSheetState();
+  State<AppUtilitiesBottomSheet> createState() => _AppUtilitiesBottomSheetState();
 }
 
 class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
@@ -62,8 +61,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
   }
 
   bool getTranscriptionPermission(MeetingStore meetingStore) {
-    int? index = meetingStore.localPeer?.role.permissions.transcription
-        ?.indexWhere((element) => element.mode == HMSTranscriptionMode.caption);
+    int? index = meetingStore.localPeer?.role.permissions.transcription?.indexWhere((element) => element.mode == HMSTranscriptionMode.caption);
     if (index == null || index == -1) {
       return false;
     }
@@ -74,11 +72,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
   Widget build(BuildContext context) {
     MeetingStore meetingStore = context.read<MeetingStore>();
     return Padding(
-      padding: EdgeInsets.only(
-          top: 16.0,
-          left: MediaQuery.of(context).size.width * 0.04,
-          right: MediaQuery.of(context).size.width * 0.04,
-          bottom: 24),
+      padding: EdgeInsets.only(top: 16.0, left: MediaQuery.of(context).size.width * 0.04, right: MediaQuery.of(context).size.width * 0.04, bottom: 24),
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -132,9 +126,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                           context: context,
                           builder: (ctx) => ChangeNotifierProvider.value(
                               value: meetingStore,
-                              child: (HMSRoomLayout.chatData == null ||
-                                      (HMSRoomLayout.chatData?.isOverlay ??
-                                          true))
+                              child: (HMSRoomLayout.chatData == null || (HMSRoomLayout.chatData?.isOverlay ?? true))
                                   ? const OverlayParticipantsBottomSheet()
                                   : const ChatParticipantsTabBar(
                                       tabIndex: 1,
@@ -146,8 +138,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                           badgeColor: HMSThemeColors.surfaceDefault,
                         ),
                         badgeContent: HMSTitleText(
-                          text: Utilities.formatNumber(
-                              context.read<MeetingStore>().peersInRoom),
+                          text: Utilities.formatNumber(context.read<MeetingStore>().peersInRoom),
                           textColor: HMSThemeColors.onSurfaceHighEmphasis,
                           fontSize: 10,
                           lineHeight: 16,
@@ -155,31 +146,23 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         ),
                         child: Padding(
                           padding: EdgeInsets.symmetric(
-                              horizontal: context
-                                          .read<MeetingStore>()
-                                          .peersInRoom <
-                                      1000
+                              horizontal: context.read<MeetingStore>().peersInRoom < 1000
                                   ? 15
-                                  : context.read<MeetingStore>().peersInRoom <
-                                          10000
+                                  : context.read<MeetingStore>().peersInRoom < 10000
                                       ? 20
                                       : 30),
                           child: SvgPicture.asset(
                             "packages/hms_room_kit/lib/src/assets/icons/participants.svg",
                             height: 20,
                             width: 20,
-                            colorFilter: ColorFilter.mode(
-                                HMSThemeColors.onSurfaceHighEmphasis,
-                                BlendMode.srcIn),
+                            colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                           ),
                         ),
                       ),
                       optionText: "Participants"),
 
                 ///This renders the screen share option
-                if (meetingStore.localPeer?.role.publishSettings?.allowed
-                        .contains("screen") ??
-                    false)
+                if (meetingStore.localPeer?.role.publishSettings?.allowed.contains("screen") ?? false)
                   MoreOptionItem(
                     onTap: () async {
                       Navigator.pop(context);
@@ -194,13 +177,9 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                       "packages/hms_room_kit/lib/src/assets/icons/screen_share.svg",
                       height: 20,
                       width: 20,
-                      colorFilter: ColorFilter.mode(
-                          HMSThemeColors.onSurfaceHighEmphasis,
-                          BlendMode.srcIn),
+                      colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                     ),
-                    optionText: meetingStore.isScreenShareOn
-                        ? "Sharing Screen"
-                        : "Share Screen",
+                    optionText: meetingStore.isScreenShareOn ? "Sharing Screen" : "Share Screen",
                   ),
 
                 ///This renders the brb option
@@ -215,13 +194,10 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         padding: const EdgeInsets.only(top: 8.0),
                         child: SvgPicture.asset(
                           "packages/hms_room_kit/lib/src/assets/icons/brb.svg",
-                          colorFilter: ColorFilter.mode(
-                              HMSThemeColors.onSurfaceHighEmphasis,
-                              BlendMode.srcIn),
+                          colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                         ),
                       ),
-                      optionText:
-                          meetingStore.isBRB ? "I'm Back" : "Be Right Back"),
+                      optionText: meetingStore.isBRB ? "I'm Back" : "Be Right Back"),
 
                 ///This renders the raise hand option
                 if (HMSRoomLayout.isHandRaiseEnabled)
@@ -235,19 +211,12 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         "packages/hms_room_kit/lib/src/assets/icons/hand_outline.svg",
                         height: 20,
                         width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
-                      optionText: meetingStore.isRaisedHand
-                          ? "Lower Hand"
-                          : "Raise Hand"),
+                      optionText: meetingStore.isRaisedHand ? "Lower Hand" : "Raise Hand"),
 
                 ///This renders the polls and quizzes option
-                if ((meetingStore.localPeer?.role.permissions.pollRead ??
-                        false) ||
-                    (meetingStore.localPeer?.role.permissions.pollWrite ??
-                        false))
+                if ((meetingStore.localPeer?.role.permissions.pollRead ?? false) || (meetingStore.localPeer?.role.permissions.pollWrite ?? false))
                   MoreOptionItem(
                       onTap: () {
                         meetingStore.fetchPollList(HMSPollState.created);
@@ -256,23 +225,17 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                           isScrollControlled: true,
                           backgroundColor: HMSThemeColors.surfaceDim,
                           shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16)),
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
                           ),
                           context: context,
-                          builder: (ctx) => ChangeNotifierProvider.value(
-                              value: meetingStore,
-                              child: const PollAndQuizBottomSheet()),
+                          builder: (ctx) => ChangeNotifierProvider.value(value: meetingStore, child: const PollAndQuizBottomSheet()),
                         );
                       },
                       optionIcon: SvgPicture.asset(
                         "packages/hms_room_kit/lib/src/assets/icons/polls.svg",
                         height: 20,
                         width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
                       optionText: "Polls and Quizzes"),
 
@@ -283,16 +246,10 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                 ///The recording permission is checked using the role of the local peer
                 ///
                 ///If Streaming is already running we disable the recording option
-                if (meetingStore.localPeer?.role.permissions.browserRecording ??
-                    false)
+                if (meetingStore.localPeer?.role.permissions.browserRecording ?? false)
 
                   ///If streaming is on or in initialising state disable the button
-                  ((meetingStore.streamingType["hls"] ==
-                              HMSStreamingState.started) ||
-                          (meetingStore.streamingType["rtmp"] ==
-                              HMSStreamingState.started) ||
-                          meetingStore.recordingType["browser"] ==
-                              HMSRecordingState.starting)
+                  ((meetingStore.streamingType["hls"] == HMSStreamingState.started) || (meetingStore.streamingType["rtmp"] == HMSStreamingState.started) || meetingStore.recordingType["browser"] == HMSRecordingState.starting)
                       ? MoreOptionItem(
                           onTap: () {},
                           isActive: false,
@@ -300,44 +257,30 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                             "packages/hms_room_kit/lib/src/assets/icons/record.svg",
                             height: 20,
                             width: 20,
-                            colorFilter: ColorFilter.mode(
-                                HMSThemeColors.onSurfaceLowEmphasis,
-                                BlendMode.srcIn),
+                            colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceLowEmphasis, BlendMode.srcIn),
                           ),
                           optionText: "Record",
                           optionTextColor: HMSThemeColors.onSurfaceLowEmphasis,
                         )
                       : MoreOptionItem(
                           onTap: () async {
-                            bool isRecordingRunning =
-                                ((meetingStore.recordingType["hls"] ==
-                                            HMSRecordingState.started) ||
-                                        meetingStore.recordingType["hls"] ==
-                                            HMSRecordingState.resumed) ||
-                                    (meetingStore.recordingType["browser"] ==
-                                            HMSRecordingState.started ||
-                                        meetingStore.recordingType["browser"] ==
-                                            HMSRecordingState.resumed);
+                            bool isRecordingRunning = ((meetingStore.recordingType["hls"] == HMSRecordingState.started) || meetingStore.recordingType["hls"] == HMSRecordingState.resumed) || (meetingStore.recordingType["browser"] == HMSRecordingState.started || meetingStore.recordingType["browser"] == HMSRecordingState.resumed);
                             if (isRecordingRunning) {
                               Navigator.pop(context);
                               showModalBottomSheet(
                                 isScrollControlled: true,
                                 backgroundColor: HMSThemeColors.surfaceDim,
                                 shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(16),
-                                      topRight: Radius.circular(16)),
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
                                 ),
                                 context: context,
                                 builder: (ctx) => ChangeNotifierProvider.value(
                                   value: meetingStore,
                                   child: EndServiceBottomSheet(
-                                    onButtonPressed: () =>
-                                        meetingStore.stopRtmpAndRecording(),
+                                    onButtonPressed: () => meetingStore.stopRtmpAndRecording(),
                                     title: HMSTitleText(
                                       text: "Stop Recording",
-                                      textColor:
-                                          HMSThemeColors.alertErrorDefault,
+                                      textColor: HMSThemeColors.alertErrorDefault,
                                       letterSpacing: 0.15,
                                       fontSize: 20,
                                     ),
@@ -345,16 +288,12 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                       "packages/hms_room_kit/lib/src/assets/icons/alert.svg",
                                       height: 20,
                                       width: 20,
-                                      colorFilter: ColorFilter.mode(
-                                          HMSThemeColors.alertErrorDefault,
-                                          BlendMode.srcIn),
+                                      colorFilter: ColorFilter.mode(HMSThemeColors.alertErrorDefault, BlendMode.srcIn),
                                     ),
                                     subTitle: HMSSubheadingText(
-                                      text:
-                                          "Are you sure you want to stop recording? You\n can’t undo this action.",
+                                      text: "Are you sure you want to stop recording? You\n can’t undo this action.",
                                       maxLines: 2,
-                                      textColor: HMSThemeColors
-                                          .onSurfaceMediumEmphasis,
+                                      textColor: HMSThemeColors.onSurfaceMediumEmphasis,
                                     ),
                                     buttonText: "Stop Recording",
                                   ),
@@ -362,10 +301,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                               );
                             } else {
                               Navigator.pop(context);
-                              meetingStore.startRtmpOrRecording(
-                                  meetingUrl: Constant.streamingUrl,
-                                  toRecord: true,
-                                  rtmpUrls: null);
+                              meetingStore.startRtmpOrRecording(meetingUrl: Constant.streamingUrl, toRecord: true, rtmpUrls: null);
                             }
                           },
                           isActive: false,
@@ -373,26 +309,15 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                             "packages/hms_room_kit/lib/src/assets/icons/${meetingStore.recordingType["browser"] == HMSRecordingState.paused ? "recording_paused" : "record"}.svg",
                             height: 20,
                             width: 20,
-                            colorFilter: ColorFilter.mode(
-                                meetingStore.recordingType["browser"] ==
-                                        HMSRecordingState.started
-                                    ? HMSThemeColors.alertErrorDefault
-                                    : HMSThemeColors.onSurfaceHighEmphasis,
-                                BlendMode.srcIn),
+                            colorFilter: ColorFilter.mode(meetingStore.recordingType["browser"] == HMSRecordingState.started ? HMSThemeColors.alertErrorDefault : HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                           ),
-                          optionText: meetingStore.recordingType["browser"] ==
-                                  HMSRecordingState.paused
+                          optionText: meetingStore.recordingType["browser"] == HMSRecordingState.paused
                               ? "Recording Paused"
-                              : ((meetingStore.recordingType["hls"] ==
-                                          HMSRecordingState.started) ||
-                                      (meetingStore.recordingType["browser"] ==
-                                          HMSRecordingState.started))
+                              : ((meetingStore.recordingType["hls"] == HMSRecordingState.started) || (meetingStore.recordingType["browser"] == HMSRecordingState.started))
                                   ? "Recording"
                                   : "Record",
                         ),
-                if (meetingStore.isNoiseCancellationAvailable &&
-                    meetingStore.localPeer?.audioTrack != null &&
-                    meetingStore.isMicOn)
+                if (meetingStore.isNoiseCancellationAvailable && meetingStore.localPeer?.audioTrack != null && meetingStore.isMicOn)
                   MoreOptionItem(
                       onTap: () async {
                         Navigator.pop(context);
@@ -403,17 +328,11 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         "packages/hms_room_kit/lib/src/assets/icons/music_wave.svg",
                         height: 20,
                         width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
-                      optionText: meetingStore.isNoiseCancellationEnabled
-                          ? "Noise Reduced"
-                          : "Reduce Noise"),
+                      optionText: meetingStore.isNoiseCancellationEnabled ? "Noise Reduced" : "Reduce Noise"),
 
-                if (meetingStore
-                        .localPeer?.role.permissions.whiteboard?.admin ??
-                    false)
+                if (meetingStore.localPeer?.role.permissions.whiteboard?.admin ?? false)
                   MoreOptionItem(
                       onTap: () async {
                         meetingStore.toggleWhiteboard();
@@ -424,21 +343,16 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         "packages/hms_room_kit/lib/src/assets/icons/pencil.svg",
                         height: 20,
                         width: 20,
-                        colorFilter: ColorFilter.mode(
-                            getWhiteboardStatusColor(meetingStore),
-                            BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(getWhiteboardStatusColor(meetingStore), BlendMode.srcIn),
                       ),
                       optionTextColor: getWhiteboardStatusColor(meetingStore),
-                      optionText: meetingStore.isWhiteboardEnabled
-                          ? "Close Whiteboard"
-                          : "Open Whiteboard"),
+                      optionText: meetingStore.isWhiteboardEnabled ? "Close Whiteboard" : "Open Whiteboard"),
 
                 ///This renders the closed captions option
                 ///This option is only rendered if the local peer has the permission to
                 ///enable/disable transcription(will see the popup to enable caption)
                 ///else the local peer can only see the option to Show/Hide captions
-                if (getTranscriptionPermission(meetingStore) ||
-                    meetingStore.isTranscriptionEnabled)
+                if (getTranscriptionPermission(meetingStore) || meetingStore.isTranscriptionEnabled)
                   MoreOptionItem(
                       onTap: () async {
                         Navigator.pop(context);
@@ -451,9 +365,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                 isScrollControlled: true,
                                 backgroundColor: HMSThemeColors.surfaceDim,
                                 shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(16),
-                                      topRight: Radius.circular(16)),
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
                                 ),
                                 context: context,
                                 builder: (ctx) => ChangeNotifierProvider.value(
@@ -463,23 +375,18 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                                           meetingStore: meetingStore,
                                         )
                                       : ClosedCaptionBottomSheet(
-                                          onButtonPressed: () => meetingStore
-                                              .toggleTranscription(),
+                                          onButtonPressed: () => meetingStore.toggleTranscription(),
                                           title: HMSTitleText(
-                                            text:
-                                                "Enable Closed Captions (CC) for this session?",
+                                            text: "Enable Closed Captions (CC) for this session?",
                                             maxLines: 5,
-                                            textColor: HMSThemeColors
-                                                .onSecondaryHighEmphasis,
+                                            textColor: HMSThemeColors.onSecondaryHighEmphasis,
                                             letterSpacing: 0.15,
                                             fontSize: 20,
                                           ),
                                           subTitle: HMSSubheadingText(
-                                            text:
-                                                "This will enable Closed Captions for everyone in this room. You can disable it later.",
+                                            text: "This will enable Closed Captions for everyone in this room. You can disable it later.",
                                             maxLines: 2,
-                                            textColor: HMSThemeColors
-                                                .onSurfaceMediumEmphasis,
+                                            textColor: HMSThemeColors.onSurfaceMediumEmphasis,
                                           ),
                                           buttonText: "Enable for Everyone",
                                         ),
@@ -494,9 +401,7 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                         "packages/hms_room_kit/lib/src/assets/icons/${meetingStore.isTranscriptionDisplayed ? "cc-filled" : "cc"}.svg",
                         height: 20,
                         width: 20,
-                        colorFilter: ColorFilter.mode(
-                            HMSThemeColors.onSurfaceHighEmphasis,
-                            BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(HMSThemeColors.onSurfaceHighEmphasis, BlendMode.srcIn),
                       ),
                       optionTextColor: HMSThemeColors.onSurfaceHighEmphasis,
 
