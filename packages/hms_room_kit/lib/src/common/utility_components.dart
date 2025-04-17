@@ -25,7 +25,7 @@ import 'package:hms_room_kit/src/widgets/toasts/hms_reconnection_toast.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_text_style.dart';
 
 ///[UtilityComponents] contains the common components used in the app
-class UtilityComponents {  
+class UtilityComponents {
   static Future<dynamic> onBackPressed(BuildContext context) {
     MeetingStore meetingStore = context.read<MeetingStore>();
     return showModalBottomSheet(
