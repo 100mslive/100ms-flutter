@@ -1008,7 +1008,7 @@ class MeetingStore extends ChangeNotifier
           aspectRatio: [9, 16],
           backgroundColor: Colors.black);
     } else if (Platform.isAndroid) {
-      HMSAndroidPIPController.setup(autoEnterPip: true,aspectRatio: [9, 16]);
+      HMSAndroidPIPController.setup();
     }
   }
 
@@ -1460,7 +1460,7 @@ class MeetingStore extends ChangeNotifier
 // Helper Methods
 
   void clearRoomState() async {
-    clearPIPState();
+    // clearPIPState();
     removeListeners();
     toggleAlwaysScreenOn();
 
@@ -3097,7 +3097,7 @@ class MeetingStore extends ChangeNotifier
       notifyListeners();
 
       if (lastVideoStatus && !reconnecting) {
-        // toggleCameraMuteState();
+        toggleCameraMuteState();
         lastVideoStatus = false;
       }
     } else if (state == AppLifecycleState.paused) {
@@ -3105,7 +3105,7 @@ class MeetingStore extends ChangeNotifier
       if (localPeer != null &&
           !(localPeer.videoTrack?.isMute ?? true) &&
           !isPipActive) {
-        // toggleCameraMuteState();
+        toggleCameraMuteState();
         lastVideoStatus = true;
       }
 
