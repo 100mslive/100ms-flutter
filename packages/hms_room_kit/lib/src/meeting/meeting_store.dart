@@ -1299,6 +1299,12 @@ class MeetingStore extends ChangeNotifier
               track: updateSpeakers[0].peer.videoTrack,
               alternativeText: updateSpeakers[0].peer.name,
               ratio: [9, 16]);
+        } else if (updateSpeakers[0].peer is HMSRemotePeer && (updateSpeakers[0].peer as HMSRemotePeer).videoRemoteTrack != null) {
+          changePIPWindowTrackOnIOS(
+            track: (updateSpeakers[0].peer as HMSRemotePeer).videoRemoteTrack,
+            alternativeText: updateSpeakers[0].peer.name,
+            ratio: [9, 16],
+          );
         } else {
           changePIPWindowTextOnIOS(
               text: updateSpeakers[0].peer.name, ratio: [9, 16]);
