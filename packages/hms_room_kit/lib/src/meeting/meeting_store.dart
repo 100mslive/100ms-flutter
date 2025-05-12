@@ -203,7 +203,7 @@ class MeetingStore extends ChangeNotifier
 
   bool isPipAutoEnabled = true;
 
-  bool lastVideoStatus = false;
+  // bool lastVideoStatus = false;
 
   double hlsAspectRatio = 9 / 16;
 
@@ -3102,18 +3102,18 @@ class MeetingStore extends ChangeNotifier
       }
       notifyListeners();
 
-      if (lastVideoStatus && !reconnecting) {
-        toggleCameraMuteState();
-        lastVideoStatus = false;
-      }
+      // if (lastVideoStatus && !reconnecting) {
+      //   toggleCameraMuteState();
+      //   lastVideoStatus = false;
+      // }
     } else if (state == AppLifecycleState.paused) {
       HMSLocalPeer? localPeer = await getLocalPeer();
-      if (localPeer != null &&
-          !(localPeer.videoTrack?.isMute ?? true) &&
-          !isPipActive) {
-        toggleCameraMuteState();
-        lastVideoStatus = true;
-      }
+      // if (localPeer != null &&
+      //     !(localPeer.videoTrack?.isMute ?? true) &&
+      //     !isPipActive) {
+      //   toggleCameraMuteState();
+      //   lastVideoStatus = true;
+      // }
 
       if (Platform.isAndroid) {
         isPipActive = await HMSAndroidPIPController.isActive();
@@ -3130,7 +3130,12 @@ class MeetingStore extends ChangeNotifier
                 alternativeText: peerTracks[peerIndex].peer.name,
                 ratio: [9, 16]);
           } else {
-            changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
+            // changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
+            if (localPeer?.videoTrack != null) {
+              changePIPWindowTrackOnIOS(track: localPeer?.videoTrack, alternativeText: localPeer?.name ?? '', ratio: [9, 16]);
+            } else {
+              changePIPWindowTextOnIOS(text: localPeer?.name, ratio: [9, 16]);
+            }
           }
         } else {
           int peerIndex = peerTracks.indexWhere((element) =>
