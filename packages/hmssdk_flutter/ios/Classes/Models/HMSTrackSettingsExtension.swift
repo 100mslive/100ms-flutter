@@ -152,15 +152,33 @@ class HMSTrackSettingsExtension {
                         HMSErrorLogger.logError("\(#function)", "Virtual Background is not supported below iOS 15", "Plugin not supported error")
                     }
                 }
-                videoSettings = HMSVideoTrackSettings(codec: HMSCodec.VP8,
-                                                      resolution: .init(width: 320, height: 180),
-                                                      maxBitrate: 32,
-                                                      maxFrameRate: 30,
-                                                      cameraFacing: getCameraFacing(from: cameraFacing),
-                                                      simulcastSettings: nil,
-                                                      trackDescription: "track_description",
-                                                      initialMuteState: getinitialMuteState(from: initialMuteState),
-                                                      videoPlugins: videoPlugins)
+                if #available(iOS 16.0, *) {
+                                    videoSettings = HMSVideoTrackSettings(
+                                        codec: .VP8,
+                                        resolution: .init(width: 320, height: 180),
+                                        maxBitrate: 32,
+                                        maxFrameRate: 30,
+                                        cameraFacing: getCameraFacing(from: cameraFacing),
+                                        simulcastSettings: nil,
+                                        trackDescription: "track_description",
+                                        initialMuteState: getinitialMuteState(from: initialMuteState),
+                                        cameraFocusMode: .focusModeAuto,
+                                        cameraOrientationLock: .all,
+                                        isMultitaskingCameraAccessEnabled: true,
+                                        videoPlugins: videoPlugins
+                                    )
+                                } else {
+                                    // Fallback on earlier versions
+                                    videoSettings = HMSVideoTrackSettings(codec: HMSCodec.VP8,
+                                                                          resolution: .init(width: 320, height: 180),
+                                                                          maxBitrate: 32,
+                                                                          maxFrameRate: 30,
+                                                                          cameraFacing: getCameraFacing(from: cameraFacing),
+                                                                          simulcastSettings: nil,
+                                                                          trackDescription: "track_description",
+                                                                          initialMuteState: getinitialMuteState(from: initialMuteState),
+                                                                          videoPlugins: videoPlugins)
+                                }
             }
         }
 
