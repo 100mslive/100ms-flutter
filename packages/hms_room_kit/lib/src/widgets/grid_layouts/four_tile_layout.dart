@@ -8,13 +8,17 @@ import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/grid_layouts/listenable_peer_widget.dart';
 
 ///This widget renders four tiles on a page
-///The four tiles are rendered in a 2x2 grid
-///The tiles look like this
-// ╔═══════╦═══════╗
-// ║   0   ║   1   ║
-// ╠═══════╬═══════╣
-// ║   2   ║   3   ║
-// ╚═══════╩═══════╝
+///Works for all scenarios:
+///- Mobile Portrait: 2x2 grid
+///- Tablet Portrait: 2x2 grid  
+///- Tablet Landscape: 2x2 grid (fits in 2 rows)
+///
+///Layout (All devices and orientations):
+/// ┌──────┬──────┐
+/// │   0  │   1  │
+/// ├──────┼──────┤
+/// │   2  │   3  │
+/// └──────┴──────┘
 class FourTileLayout extends StatelessWidget {
   final int startIndex;
   final List<PeerTrackNode> peerTracks;
@@ -23,9 +27,7 @@ class FourTileLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ///Here we render two rows with two tiles in each row
-    ///The first row contains the tiles with index [startIndex] and [startIndex+1]
-    ///The second row contains the tiles with index [startIndex+2] and [startIndex+3]
+    // 2x2 grid works perfectly for all scenarios (mobile portrait, tablet portrait, tablet landscape)
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

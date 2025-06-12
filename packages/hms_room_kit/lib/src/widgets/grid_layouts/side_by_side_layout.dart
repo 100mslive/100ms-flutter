@@ -8,7 +8,10 @@ import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/widgets/grid_layouts/listenable_peer_widget.dart';
 
 ///This widget renders the side by side layout
-///The side by side layout renders two peers in a row
+///The layout adapts based on device size and orientation:
+///- Mobile: Always vertical layout regardless of orientation
+///- Tablet/Desktop in landscape: Horizontal layout (side by side)
+///- Tablet/Desktop in portrait: Vertical layout
 ///If there are more than two peers then it renders two peers in a scrollable Pageview
 ///If there is only one peer then it renders the peer in the center of the screen
 class SideBySideLayout extends StatelessWidget {
@@ -40,28 +43,60 @@ class SideBySideLayout extends StatelessWidget {
     ///This contains the starting index of tile to be rendered
     tileStartingIndex = 2 * index;
 
+    // Get the current orientation and screen size
+    final orientation = MediaQuery.of(context).orientation;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isLandscape = orientation == Orientation.landscape;
+    
+    // Consider devices with width < 600dp as mobile
+    // On mobile, always use vertical layout regardless of orientation
+    // On larger screens (tablets/desktop), use horizontal layout in landscape
+    final isMobile = screenWidth < 600;
+    final useHorizontalLayout = !isMobile && isLandscape;
+
     ///Here we render the tile layout based on how many tiles we need to render
     ///If we need to render 1 tile then we render the [ListenablePeerWidget]
-    ///If we need to render 2 tiles then we render the two tiles in a row
-    return tilesToBeRendered == 2
-        ? Row(children: [
-            Expanded(
-              child: ListenablePeerWidget(
-                  index: tileStartingIndex, peerTracks: peerTracks),
-            ),
-            const SizedBox(
-              width: 4,
-            ),
-            Expanded(
-              child: ListenablePeerWidget(
-                  index: tileStartingIndex + 1, peerTracks: peerTracks),
-            )
-          ])
-        : Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width / 4),
+    ///If we need to render 2 tiles then we render based on device size and orientation
+    if (tilesToBeRendered == 2) {
+      if (useHorizontalLayout) {
+        // Tablet/Desktop in landscape - use horizontal layout (side by side)
+        return Row(children: [
+          Expanded(
             child: ListenablePeerWidget(
                 index: tileStartingIndex, peerTracks: peerTracks),
-          );
+          ),
+          const SizedBox(
+            width: 4,
+          ),
+          Expanded(
+            child: ListenablePeerWidget(
+                index: tileStartingIndex + 1, peerTracks: peerTracks),
+          )
+        ]);
+      } else {
+        // Mobile (any orientation) or Tablet/Desktop in portrait - use vertical layout
+        return Column(children: [
+          Expanded(
+            child: ListenablePeerWidget(
+                index: tileStartingIndex, peerTracks: peerTracks),
+          ),
+          const SizedBox(
+            height: 4,
+          ),
+          Expanded(
+            child: ListenablePeerWidget(
+                index: tileStartingIndex + 1, peerTracks: peerTracks),
+          )
+        ]);
+      }
+    } else {
+      // Single tile - render in center
+      return Padding(
+        padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width / 4),
+        child: ListenablePeerWidget(
+            index: tileStartingIndex, peerTracks: peerTracks),
+      );
+    }
   }
 }
