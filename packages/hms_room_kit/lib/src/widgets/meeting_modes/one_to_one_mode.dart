@@ -112,6 +112,8 @@ class _OneToOneModeState extends State<OneToOneMode> {
                               peerTracks: widget.peerTracks,
                             ),
                       DraggableWidget(
+                          normalShadow: BoxShadow(color: Colors.transparent),
+                          draggingShadow: BoxShadow(color: Colors.transparent),
                           dragAnimationScale: 1,
                           topMargin: 10,
                           bottomMargin: Platform.isIOS
