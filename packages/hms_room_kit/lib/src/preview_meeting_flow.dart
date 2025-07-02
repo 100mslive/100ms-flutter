@@ -21,6 +21,7 @@ class PreviewMeetingFlow extends StatefulWidget {
   final Widget? preViewScreenAppBar;
   final Function(BuildContext)? onTapped;
   final Function(String roomId) onRoomIdAvailable;
+  final Widget? dialInPopupWidget;
   const PreviewMeetingFlow({
     super.key,
     required this.prebuiltOptions,
@@ -30,6 +31,7 @@ class PreviewMeetingFlow extends StatefulWidget {
     this.onTapped,
     required this.tokenData,
     required this.onRoomIdAvailable,
+    this.dialInPopupWidget,
   });
 
   @override
@@ -83,6 +85,7 @@ class _PreviewMeetingFlowState extends State<PreviewMeetingFlow> {
               onRoomIdAvailable: (roomId) {
                 widget.onRoomIdAvailable(roomId);
               },
+              dialInPopupWidget: widget.dialInPopupWidget,
             ));
   }
 }

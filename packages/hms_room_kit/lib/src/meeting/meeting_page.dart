@@ -39,7 +39,7 @@ class MeetingPage extends StatefulWidget {
   final Widget? preViewScreenAppBar;
   final Function(BuildContext)? onTapped;
   final Function(String roomId) onRoomIdAvailable;
-
+  final Widget? dialInPopupWidget;
   const MeetingPage({
     Key? key,
     this.isRoomMute = true,
@@ -49,6 +49,7 @@ class MeetingPage extends StatefulWidget {
     this.onTapped,
     this.isNoiseCancellationEnabled = false,
     required this.onRoomIdAvailable,
+    this.dialInPopupWidget,
   }) : super(key: key);
 
   @override
@@ -97,6 +98,7 @@ class _MeetingPageState extends State<MeetingPage> {
           body: Column(
             children: [
               widget.meetingScreenAppBar ?? const SizedBox(),
+              widget.dialInPopupWidget ?? const SizedBox(),
               Expanded(
                 child: Selector<MeetingStore, Tuple4<bool, HMSException?, bool, bool>>(
                     selector: (_, meetingStore) => Tuple4(meetingStore.isRoomEnded, meetingStore.hmsException, meetingStore.isEndRoomCalled, meetingStore.localPeer?.role.permissions.hlsStreaming ?? false),
@@ -112,6 +114,7 @@ class _MeetingPageState extends State<MeetingPage> {
                                     preViewScreenAppBar: widget.preViewScreenAppBar,
                                     onTapped: widget.onTapped,
                                     onRoomIdAvailable: widget.onRoomIdAvailable,
+                                    dialInPopupWidget: widget.dialInPopupWidget,
                                   )));
                         });
                       }

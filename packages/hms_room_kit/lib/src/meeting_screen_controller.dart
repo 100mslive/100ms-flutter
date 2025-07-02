@@ -61,6 +61,7 @@ class MeetingScreenController extends StatefulWidget {
   ///[meetingScreenAppBar] are the meetingScreenAppBar to be shown on the screen
   final Widget? meetingScreenAppBar;
   final Widget? preViewScreenAppBar;
+  final Widget? dialInPopupWidget;
 
   final Function(BuildContext)? onTapped;
 
@@ -81,13 +82,15 @@ class MeetingScreenController extends StatefulWidget {
     required this.hmsSDKInteractor,
     this.meetingScreenAppBar,
     this.preViewScreenAppBar,
+    this.dialInPopupWidget,
     this.onTapped,
     this.isNoiseCancellationEnabled = false,
     required this.onRoomIdAvailable,
   }) : super(key: key);
 
   @override
-  State<MeetingScreenController> createState() => _MeetingScreenControllerState();
+  State<MeetingScreenController> createState() =>
+      _MeetingScreenControllerState();
 }
 
 class _MeetingScreenControllerState extends State<MeetingScreenController> {
@@ -134,7 +137,9 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
 
   void setScreenRotation() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (HMSRoomLayout.roleLayoutData?.screens?.conferencing?.hlsLiveStreaming != null) {
+      if (HMSRoomLayout
+              .roleLayoutData?.screens?.conferencing?.hlsLiveStreaming !=
+          null) {
         _meetingStore.allowScreenRotation(true);
       } else {
         _meetingStore.allowScreenRotation(false);
@@ -149,17 +154,23 @@ class _MeetingScreenControllerState extends State<MeetingScreenController> {
         : ListenableProvider.value(
             value: _meetingStore,
             child: Selector<MeetingStore, String?>(
-                selector: (_, meetingStore) => meetingStore.localPeer?.role.name,
+                selector: (_, meetingStore) =>
+                    meetingStore.localPeer?.role.name,
                 builder: (_, data, __) {
                   setScreenRotation();
-                  return (HMSRoomLayout.roleLayoutData?.screens?.conferencing?.hlsLiveStreaming != null)
-                      ? ListenableProvider.value(value: _hlsPlayerStore, child: const HLSViewerPage())
+                  return (HMSRoomLayout.roleLayoutData?.screens?.conferencing
+                              ?.hlsLiveStreaming !=
+                          null)
+                      ? ListenableProvider.value(
+                          value: _hlsPlayerStore, child: const HLSViewerPage())
                       : MeetingPage(
                           isRoomMute: widget.isRoomMute,
                           currentAudioDeviceMode: widget.currentAudioDeviceMode,
-                          isNoiseCancellationEnabled: widget.isNoiseCancellationEnabled,
+                          isNoiseCancellationEnabled:
+                              widget.isNoiseCancellationEnabled,
                           meetingScreenAppBar: widget.meetingScreenAppBar,
                           preViewScreenAppBar: widget.preViewScreenAppBar,
+                          dialInPopupWidget: widget.dialInPopupWidget,
                           onTapped: (value) {
                             widget.onTapped!(value);
                           },

@@ -35,6 +35,7 @@ class HMSPrebuilt extends StatelessWidget {
   ///The app bar to be shown on the screen
   final Widget? meetingScreenAppBar;
   final Widget? preViewScreenAppBar;
+  final Widget? dialInPopupWidget;
 
   final Function(BuildContext)? onTapped;
 
@@ -51,9 +52,11 @@ class HMSPrebuilt extends StatelessWidget {
     this.onTapped,
     this.onRoomIdAvailable,
     this.authToken,
+    this.dialInPopupWidget,
   }) {
     if (roomCode == null && authToken == null) {
-      throw ArgumentError.notNull("At least one parameter roomCode or authToken must be provided.");
+      throw ArgumentError.notNull(
+          "At least one parameter roomCode or authToken must be provided.");
     }
   }
 
@@ -84,6 +87,7 @@ class HMSPrebuilt extends StatelessWidget {
       onRoomIdAvailable: (roomId) {
         onRoomIdAvailable!(roomId);
       },
+      dialInPopupWidget: dialInPopupWidget,
     );
   }
 }
