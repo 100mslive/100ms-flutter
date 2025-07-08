@@ -1705,6 +1705,7 @@ class MeetingStore extends ChangeNotifier
           notifyListeners();
         }
         removePeer(peer);
+        Constant.onPeerLeft?.call(peer);
         break;
 
       case HMSPeerUpdate.roleUpdated:

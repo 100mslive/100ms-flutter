@@ -50,4 +50,7 @@ class Constant {
 
   ///[Constant.onLeave] is the function that you wish to execute while leaving the room
   static Function? onLeave;
+
+  ///[Constant.onPeerLeft] is the function that you wish to execute when a peer leaves the room
+  static Function(HMSPeer)? onPeerLeft;
 }
