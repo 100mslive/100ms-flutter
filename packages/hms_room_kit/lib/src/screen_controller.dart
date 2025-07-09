@@ -43,7 +43,9 @@ class ScreenController extends StatefulWidget {
 
   final Widget? dialInPopupWidget;
 
-  const ScreenController({super.key, required this.roomCode, this.options, this.onLeave, this.meetingScreenAppBar, this.onTapped, this.onRoomIdAvailable, this.authToken, this.preViewScreenAppBar, this.dialInPopupWidget});
+  final Function(HMSPeer)? onPeerLeft;
+
+  const ScreenController({super.key, required this.roomCode, this.options, this.onLeave, this.meetingScreenAppBar, this.onTapped, this.onRoomIdAvailable, this.authToken, this.preViewScreenAppBar, this.dialInPopupWidget, this.onPeerLeft});
   @override
   State<ScreenController> createState() => _ScreenControllerState();
 }
@@ -64,6 +66,7 @@ class _ScreenControllerState extends State<ScreenController> {
     Constant.roomCode = widget.roomCode;
     Constant.authToken = widget.authToken;
     Constant.onLeave = widget.onLeave;
+    Constant.onPeerLeft = widget.onPeerLeft;
 
     ///Here we set the endPoints if it's non-null
     if (widget.options?.endPoints != null) {

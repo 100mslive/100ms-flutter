@@ -2,6 +2,7 @@ library;
 
 ///Package imports
 import 'package:flutter/widgets.dart';
+import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
@@ -41,6 +42,8 @@ class HMSPrebuilt extends StatelessWidget {
 
   final Function(String roomId)? onRoomIdAvailable;
 
+  Function(HMSPeer)? onPeerLeft;
+
   ///The key for the widget
   HMSPrebuilt({
     super.key,
@@ -53,6 +56,7 @@ class HMSPrebuilt extends StatelessWidget {
     this.onRoomIdAvailable,
     this.authToken,
     this.dialInPopupWidget,
+    this.onPeerLeft,
   }) {
     if (roomCode == null && authToken == null) {
       throw ArgumentError.notNull(
@@ -88,6 +92,7 @@ class HMSPrebuilt extends StatelessWidget {
         onRoomIdAvailable!(roomId);
       },
       dialInPopupWidget: dialInPopupWidget,
+      onPeerLeft: onPeerLeft,
     );
   }
 }
