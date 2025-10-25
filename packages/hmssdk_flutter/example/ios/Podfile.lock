@@ -126,20 +126,20 @@ PODS:
     - GoogleUtilities/Logger
   - GTMSessionFetcher/Core (2.3.0)
   - HMSAnalyticsSDK (0.0.2)
-  - HMSBroadcastExtensionSDK (0.0.9)
+  - HMSBroadcastExtensionSDK (1.0.1)
   - HMSHLSPlayerSDK (0.0.2):
     - HMSAnalyticsSDK (= 0.0.2)
   - HMSNoiseCancellationModels (1.0.0)
-  - HMSSDK (1.16.1):
+  - HMSSDK (1.17.0):
     - HMSAnalyticsSDK (= 0.0.2)
-    - HMSWebRTC (= 1.0.6171)
+    - HMSWebRTC (= 1.0.6174)
   - hmssdk_flutter (1.10.6):
     - Flutter
-    - HMSBroadcastExtensionSDK (= 0.0.9)
+    - HMSBroadcastExtensionSDK (= 1.0.1)
     - HMSHLSPlayerSDK (= 0.0.2)
     - HMSNoiseCancellationModels (= 1.0.0)
-    - HMSSDK (= 1.16.1)
-  - HMSWebRTC (1.0.6171)
+    - HMSSDK (= 1.17.0)
+  - HMSWebRTC (1.0.6174)
   - image_picker_ios (0.0.1):
     - Flutter
   - MLImage (1.0.0-beta4)
@@ -285,12 +285,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
-  app_links: e70ca16b4b0f88253b3b3660200d4a10b4ea9795
+  app_links: c5161ac5ab5383ad046884568b4b91cb52df5d91
   Firebase: 414ad272f8d02dfbf12662a9d43f4bba9bec2a06
-  firebase_core: 0af4a2b24f62071f9bf283691c0ee41556dcb3f5
-  firebase_crashlytics: 4b91b8ad60ee7c168fe88979f84c9573a729de7a
-  firebase_dynamic_links: b626a11f5eb02033981ae377377c3f297eb4c1b0
-  firebase_performance: 2183122a3c7a650c80d8c164e9e28f13c4c62fc7
+  firebase_core: b1d3705e2b3321cebc2394d07b37eba21256d3a0
+  firebase_crashlytics: d358dfb05428de268d17e6fbdc9a8fa55e6cd4df
+  firebase_dynamic_links: a3767eee7ab8530514e44a2077769119702f455a
+  firebase_performance: a7e2dfefebcc850bfe55e676e639b5b5629f2383
   FirebaseABTesting: d87f56707159bae64e269757a6e963d490f2eebe
   FirebaseCore: 2322423314d92f946219c8791674d2f3345b598f
   FirebaseCoreExtension: 705ca5b14bf71d2564a0ddc677df1fc86ffa600f
@@ -303,8 +303,8 @@ SPEC CHECKSUMS:
   FirebaseRemoteConfigInterop: 6efda51fb5e2f15b16585197e26eaa09574e8a4d
   FirebaseSessions: dbd14adac65ce996228652c1fc3a3f576bdf3ecc
   FirebaseSharedSwift: 20530f495084b8d840f78a100d8c5ee613375f6e
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  flutter_foreground_task: 21ef182ab0a29a3005cc72cd70e5f45cb7f7f817
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_foreground_task: a159d2c2173b33699ddb3e6c2a067045d7cebb89
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleMLKit: 2bd0dc6253c4d4f227aad460f69215a504b2980e
   GoogleToolboxForMac: 8bef7c7c5cf7291c687cf5354f39f9db6399ad34
@@ -312,30 +312,30 @@ SPEC CHECKSUMS:
   GoogleUtilitiesComponents: 679b2c881db3b615a2777504623df6122dd20afe
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
   HMSAnalyticsSDK: 4d2a88a729b1eb42f3d25f217c28937ec318a5b7
-  HMSBroadcastExtensionSDK: d80fe325f6c928bd8e5176290b5a4b7ae15d6fbb
+  HMSBroadcastExtensionSDK: b32e14990cffd773fb5b5219a4dd56b05bef3b29
   HMSHLSPlayerSDK: 6a54ad4d12f3dc2270d1ecd24019d71282a4f6a3
   HMSNoiseCancellationModels: a3bda1405a16015632f4bcabd46ce48f35103b02
-  HMSSDK: 31e779fbf9c95335d88475a7f9f42fb077692e30
-  hmssdk_flutter: da118bf9558b0556b609cdc14540dca5514291ac
-  HMSWebRTC: f6f4f02a665fda6d9d8a5b223272045c3d9486fb
-  image_picker_ios: 99dfe1854b4fa34d0364e74a78448a0151025425
+  HMSSDK: 949917ebecb66845558407f8e3b3bfeef5332b02
+  hmssdk_flutter: cce9c769479f1ada786d4e097e914533a1c612fa
+  HMSWebRTC: 2a9db363e4bfb2d633ab688c04f47ec20767b4ac
+  image_picker_ios: 85f2b3c9fb98c09d63725c4d12ebd585b56ec35d
   MLImage: 7bb7c4264164ade9bf64f679b40fb29c8f33ee9b
   MLKitBarcodeScanning: 04e264482c5f3810cb89ebc134ef6b61e67db505
   MLKitCommon: c1b791c3e667091918d91bda4bba69a91011e390
   MLKitVision: 8baa5f46ee3352614169b85250574fde38c36f49
-  mobile_scanner: 38dcd8a49d7d485f632b7de65e4900010187aef2
+  mobile_scanner: b67191637a5ea7ba15652ca208069d2bae1900ab
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
-  package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
-  path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
-  permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
-  pointer_interceptor_ios: 9280618c0b2eeb80081a343924aa8ad756c21375
+  package_info_plus: 566e1b7a2f3900e4b0020914ad3fc051dcc95596
+  path_provider_foundation: 608fcb11be570ce83519b076ab6a1fffe2474f05
+  permission_handler_apple: 3787117e48f80715ff04a3830ca039283d6a4f29
+  pointer_interceptor_ios: 6c19a55ea369c3f64424c9a95441e2b0e8beb8f3
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
-  share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5
-  shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
-  url_launcher_ios: bbd758c6e7f9fd7b5b1d4cde34d2b95fcce5e812
-  webview_flutter_wkwebview: 4f3e50f7273d31e5500066ed267e3ae4309c5ae4
+  share_plus: de6030e33b4e106470e09322d87cf2a4258d2d1d
+  shared_preferences_foundation: 0b09b969fb36da5551c0bc4a2dbd9d0ff9387478
+  url_launcher_ios: a1c1f2bf89969cb13cce46d0333c7257d346e169
+  webview_flutter_wkwebview: daa94b5ed120e19439eb7f797649768d6360ebdd
 
 PODFILE CHECKSUM: 9fb9f6e431a2c6c79942252e94b241ac7972ac90
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
