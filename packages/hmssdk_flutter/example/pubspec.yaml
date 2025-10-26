@@ -16,14 +16,10 @@ dependencies:
     path: ../../hms_room_kit
 
   lottie:
-  firebase_crashlytics:
-  firebase_core:
-  firebase_performance:
   firebase_dynamic_links:
   package_info_plus:
   google_fonts:
   url_launcher:
-  mobile_scanner:
   app_links:
   uuid:
   flutter_foreground_task: 6.2.0

@@ -7,7 +7,6 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hmssdk_flutter_example/foreground_task_handler.dart';
 import 'package:hmssdk_flutter_example/room_service.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 
 ///[QRCodeScreen] is a StatefulWidget that is used to handle the scan the QR code functionality
 class QRCodeScreen extends StatefulWidget {
@@ -31,71 +30,71 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
     super.dispose();
   }
 
-  void _onQRViewCreated(BarcodeCapture barcodeCapture) async {
+  void _onQRViewCreated() async {
     try {
-      final List<Barcode> barcodes = barcodeCapture.barcodes;
-      if (barcodes.isNotEmpty) {
-        log(barcodes[0].rawValue ?? "");
-        String? rawValue = barcodes[0].rawValue;
-        FocusManager.instance.primaryFocus?.unfocus();
+      // final List<Barcode> barcodes = barcodeCapture.barcodes;
+      // if (barcodes.isNotEmpty) {
+      //   log(barcodes[0].rawValue ?? "");
+      //   String? rawValue = barcodes[0].rawValue;
+      //   FocusManager.instance.primaryFocus?.unfocus();
 
-        if (rawValue == null) {
-          return;
-        }
-        Map<String, String>? endPoints;
-        if (rawValue.trim().contains("app.100ms.live")) {
-          List<String?>? roomData = RoomService.getCode(rawValue.trim());
+      //   if (rawValue == null) {
+      //     return;
+      //   }
+      //   Map<String, String>? endPoints;
+      //   if (rawValue.trim().contains("app.100ms.live")) {
+      //     List<String?>? roomData = RoomService.getCode(rawValue.trim());
 
-          //If the link is not valid then we might not get the code and whether the link is a
-          //PROD or QA so we return the error in this case
-          if (roomData == null || roomData.isEmpty) {
-            return;
-          }
+      //     //If the link is not valid then we might not get the code and whether the link is a
+      //     //PROD or QA so we return the error in this case
+      //     if (roomData == null || roomData.isEmpty) {
+      //       return;
+      //     }
 
-          ///************************************************************************************************** */
+      //     ///************************************************************************************************** */
 
-          ///This section can be safely commented out as it's only required for 100ms internal usage
+      //     ///This section can be safely commented out as it's only required for 100ms internal usage
 
-          //qaTokenEndPoint is only required for 100ms internal testing
-          //It can be removed and should not affect the join method call
-          //For _endPoint just pass it as null
-          //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
-          //Pass the layoutAPIEndPoint as null the qa endPoint is only for 100ms internal testing
+      //     //qaTokenEndPoint is only required for 100ms internal testing
+      //     //It can be removed and should not affect the join method call
+      //     //For _endPoint just pass it as null
+      //     //the endPoint parameter in getAuthTokenByRoomCode can be passed as null
+      //     //Pass the layoutAPIEndPoint as null the qa endPoint is only for 100ms internal testing
 
-          ///If you wish to set your own token end point then you can pass it in the endPoints map
-          ///The key for the token end point is "tokenEndPointKey"
-          ///The key for the init end point is "initEndPointKey"
-          ///The key for the layout api end point is "layoutAPIEndPointKey"
-          if (roomData[1] == "false") {
-            endPoints = RoomService.setEndPoints();
-          }
+      //     ///If you wish to set your own token end point then you can pass it in the endPoints map
+      //     ///The key for the token end point is "tokenEndPointKey"
+      //     ///The key for the init end point is "initEndPointKey"
+      //     ///The key for the layout api end point is "layoutAPIEndPointKey"
+      //     if (roomData[1] == "false") {
+      //       endPoints = RoomService.setEndPoints();
+      //     }
 
-          ///************************************************************************************************** */
+      //     ///************************************************************************************************** */
 
-          Constant.roomCode = roomData[0] ?? '';
-        } else {
-          Constant.roomCode = rawValue.trim();
-        }
-        Utilities.saveStringData(key: "meetingLink", value: rawValue.trim());
-        await initForegroundTask();
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => WithForegroundTask(
-                  child: HMSPrebuilt(
-                      roomCode: Constant.roomCode,
-                      onLeave: stopForegroundTask,
-                      options: HMSPrebuiltOptions(
-                          userName: AppDebugConfig.nameChangeOnPreview
-                              ? null
-                              : "Flutter User",
-                          userId: widget.uuidString,
-                          endPoints: endPoints,
-                          iOSScreenshareConfig: HMSIOSScreenshareConfig(
-                              appGroup: "group.flutterhms",
-                              preferredExtension:
-                                  "live.100ms.flutter.FlutterBroadcastUploadExtension"),
-                          enableNoiseCancellation: true)),
-                )));
-      }
+      //     Constant.roomCode = roomData[0] ?? '';
+      //   } else {
+      //     Constant.roomCode = rawValue.trim();
+      //   }
+      //   Utilities.saveStringData(key: "meetingLink", value: rawValue.trim());
+      //   await initForegroundTask();
+      //   Navigator.of(context).pushReplacement(MaterialPageRoute(
+      //       builder: (_) => WithForegroundTask(
+      //             child: HMSPrebuilt(
+      //                 roomCode: Constant.roomCode,
+      //                 onLeave: stopForegroundTask,
+      //                 options: HMSPrebuiltOptions(
+      //                     userName: AppDebugConfig.nameChangeOnPreview
+      //                         ? null
+      //                         : "Flutter User",
+      //                     userId: widget.uuidString,
+      //                     endPoints: endPoints,
+      //                     iOSScreenshareConfig: HMSIOSScreenshareConfig(
+      //                         appGroup: "group.flutterhms",
+      //                         preferredExtension:
+      //                             "live.100ms.flutter.FlutterBroadcastUploadExtension"),
+      //                     enableNoiseCancellation: true)),
+      //           )));
+      // }
     } catch (e) {
       log(e.toString());
     }
@@ -152,11 +151,21 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                   height:
                       orientation == Orientation.portrait ? height * 0.75 : 500,
                   width: MediaQuery.of(context).size.width - 40,
-                  child: MobileScanner(
-                      controller: MobileScannerController(
-                          detectionSpeed: DetectionSpeed.noDuplicates,
-                          facing: CameraFacing.back),
-                      onDetect: (capture) => _onQRViewCreated(capture))),
+                  child: Center(
+                    child: Text(
+                      "Scan the QR code to join the meeting",
+                      style: TextStyle(
+                          color: themeDefaultColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  )
+                  // child: MobileScanner(
+                  //     controller: MobileScannerController(
+                  //         detectionSpeed: DetectionSpeed.noDuplicates,
+                  //         facing: CameraFacing.back),
+                  //     onDetect: (capture) => _onQRViewCreated(capture))
+                  ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: SizedBox(

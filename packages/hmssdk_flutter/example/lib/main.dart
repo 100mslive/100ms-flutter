@@ -5,7 +5,6 @@ import 'dart:ui';
 //Package imports
 import 'package:app_links/app_links.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +18,6 @@ import 'package:hmssdk_flutter_example/qr_code_screen.dart';
 import 'package:hmssdk_flutter_example/room_service.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uuid/uuid.dart';
 
 bool _initialURILinkHandled = false;
@@ -29,14 +27,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  //This sends all the fatal crashes in the application to crashlytics
-  FlutterError.onError = (errorDetails) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-  };
-
   //This sends all the errors in the application(be it in flutter or native layer) to crashlytics
   PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
 
@@ -237,14 +229,6 @@ class _HomePageState extends State<HomePage> {
   String uuidString = "";
   HMSAudioMode audioMode = HMSAudioMode.VOICE;
 
-  PackageInfo _packageInfo = PackageInfo(
-    appName: 'Unknown',
-    packageName: 'Unknown',
-    version: 'Unknown',
-    buildNumber: 'Unknown',
-    buildSignature: 'Unknown',
-  );
-
   @override
   void initState() {
     super.initState();
@@ -275,10 +259,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _initPackageInfo() async {
-    final info = await PackageInfo.fromPlatform();
-    setState(() {
-      _packageInfo = info;
-    });
+    // final info = await PackageInfo.fromPlatform();
+    // setState(() {
+    //   _packageInfo = info;
+    // });
   }
 
   @override
@@ -541,8 +525,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     context: context,
                                     builder: (ctx) => AppSettingsBottomSheet(
-                                          appVersion: _packageInfo.version +
-                                              " (${_packageInfo.buildNumber})",
+                                          appVersion: "1.0.0",
                                         ))),
                                 child: Padding(
                                   padding: const EdgeInsets.only(

@@ -202,7 +202,7 @@ packages:
     source: hosted
     version: "0.9.3+3"
   firebase_core:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: firebase_core
       sha256: "06537da27db981947fa535bb91ca120b4e9cb59cb87278dbdde718558cafc9ff"
@@ -225,22 +225,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.17.5"
-  firebase_crashlytics:
-    dependency: "direct main"
-    description:
-      name: firebase_crashlytics
-      sha256: "4c9872020c0d97a161362ee6af7000cfdb8666234ddc290a15252ad379bb235a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.1.0"
-  firebase_crashlytics_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_crashlytics_platform_interface
-      sha256: ede8a199ff03378857d3c8cbb7fa58d37c27bb5a6b75faf8415ff6925dcaae2a
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.6.41"
   firebase_dynamic_links:
     dependency: "direct main"
     description:
@@ -257,30 +241,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.6+41"
-  firebase_performance:
-    dependency: "direct main"
-    description:
-      name: firebase_performance
-      sha256: "66666f697ecdcca2616af99f8ccfa74d795e5819c598227f2784fc00b1c6e421"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.10.0+5"
-  firebase_performance_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_performance_platform_interface
-      sha256: ceaa026d067347cc6ea11113ba926ae450f56e305c186d1edce78f05983b481a
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.4+41"
-  firebase_performance_web:
-    dependency: transitive
-    description:
-      name: firebase_performance_web
-      sha256: "6d121cd7e27b63995998dc4039caf0cbf304c2eee6fc6ed9ac7f80860cc0e51c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.6+13"
   fixnum:
     dependency: transitive
     description:
@@ -462,14 +422,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.19.0"
-  js:
-    dependency: transitive
-    description:
-      name: js
-      sha256: f2c445dce49627136094980615a031419f7f3eb393237e4ecd97ac15dea343f3
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.6.7"
   leak_tracker:
     dependency: transitive
     description:
@@ -542,14 +494,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
-  mobile_scanner:
-    dependency: "direct main"
-    description:
-      name: mobile_scanner
-      sha256: "190506c3b0cf8a5a3c11e83de8c4f5ef4b6025a06c67d425a03f08129abf20d0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.5.6"
   nested:
     dependency: transitive
     description:

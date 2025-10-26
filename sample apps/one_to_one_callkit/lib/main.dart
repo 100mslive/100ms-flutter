@@ -3,7 +3,6 @@ import 'dart:developer';
 
 ///Package imports
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';

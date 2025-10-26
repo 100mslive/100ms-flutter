@@ -18,7 +18,9 @@ class _PipViewState extends State<PipView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Selector<MeetingStore, List<PeerTrackNode>>(
-          selector: (_, meetingStore) => meetingStore.peerTracks,
+          selector: (_, meetingStore) => meetingStore.shouldChangePIPWindow
+              ? meetingStore.peerTracks
+              : <PeerTrackNode>[],
           builder: (_, data, __) {
             return data.isNotEmpty
                 ? ChangeNotifierProvider.value(

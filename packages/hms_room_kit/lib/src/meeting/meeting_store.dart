@@ -2282,39 +2282,42 @@ class MeetingStore extends ChangeNotifier
     notifyListeners();
   }
 
-  // void enterPipModeOnAndroid() async {
-  //   //to check whether pip is available in android
-  //   if (Platform.isAndroid) {
-  //     bool isPipAvailable = await HMSAndroidPIPController.isAvailable();
-  //     if (isPipAvailable) {
-  //       //[isPipActive] method can also be used to check whether application is in pip Mode or not
-  //       isPipActive = await HMSAndroidPIPController.start();
-  //       notifyListeners();
-  //     }
-  //   }
-  // }
+  void enterPipModeOnAndroid() async {
+    //to check whether pip is available in android
+    if (Platform.isAndroid) {
+      bool isPipAvailable = await HMSAndroidPIPController.isAvailable();
+      if (isPipAvailable) {
+        //[isPipActive] method can also be used to check whether application is in pip Mode or not
+        isPipActive = await HMSAndroidPIPController.start();
+        notifyListeners();
+      }
+    }
+  }
 
-  // Future<bool> isPIPActive() async {
-  //   if (Platform.isAndroid) {
-  //     isPipActive = await HMSAndroidPIPController.isActive();
-  //   } else if (Platform.isIOS) {
-  //     isPipActive = await HMSIOSPIPController.isActive();
-  //   }
-  //   return isPipActive;
-  // }
+  Future<bool> isPIPActive() async {
+    if (Platform.isAndroid) {
+      isPipActive = await HMSAndroidPIPController.isActive();
+    } else if (Platform.isIOS) {
+      isPipActive = await HMSIOSPIPController.isActive();
+    }
+    return isPipActive;
+  }
 
-  // void changePIPWindowOnAndroid(String uid) {
-  //   if (Platform.isAndroid && isPipActive) {
-  //     int index = -1;
-  //     index = peerTracks.indexWhere((element) => element.uid == uid);
-  //     if (index != -1) {
-  //       PeerTrackNode node = peerTracks[index];
-  //       peerTracks.removeAt(index);
-  //       peerTracks.insert(screenShareCount, node);
-  //     }
-  //     notifyListeners();
-  //   }
-  // }
+  bool shouldChangePIPWindow = false;
+
+  void changePIPWindowOnAndroid(String uid) {
+    if (Platform.isAndroid && isPipActive) {
+      int index = -1;
+      index = peerTracks.indexWhere((element) => element.uid == uid);
+      if (index != -1) {
+        PeerTrackNode node = peerTracks[index];
+        peerTracks.removeAt(index);
+        peerTracks.insert(screenShareCount, node);
+        shouldChangePIPWindow = true;
+      }
+      notifyListeners();
+    }
+  }
 
   void switchAudioOutputUsingiOSUI() {
     if (!isSpeakerOn) {
