@@ -93,6 +93,9 @@ PODS:
   - GoogleUtilities/UserDefaults (8.1.0):
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
+  - hms_video_plugin (0.1.0):
+    - Flutter
+    - HMSSDK (= 1.17.0)
   - HMSAnalyticsSDK (0.0.2)
   - HMSBroadcastExtensionSDK (1.0.1)
   - HMSHLSPlayerSDK (0.0.2):
@@ -148,6 +151,7 @@ DEPENDENCIES:
   - firebase_performance (from `.symlinks/plugins/firebase_performance/ios`)
   - Flutter (from `Flutter`)
   - flutter_foreground_task (from `.symlinks/plugins/flutter_foreground_task/ios`)
+  - hms_video_plugin (from `.symlinks/plugins/hms_video_plugin/ios`)
   - HMSBroadcastExtensionSDK
   - hmssdk_flutter (from `.symlinks/plugins/hmssdk_flutter/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
@@ -200,6 +204,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_foreground_task:
     :path: ".symlinks/plugins/flutter_foreground_task/ios"
+  hms_video_plugin:
+    :path: ".symlinks/plugins/hms_video_plugin/ios"
   hmssdk_flutter:
     :path: ".symlinks/plugins/hmssdk_flutter/ios"
   image_picker_ios:
@@ -244,6 +250,7 @@ SPEC CHECKSUMS:
   flutter_foreground_task: a159d2c2173b33699ddb3e6c2a067045d7cebb89
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
+  hms_video_plugin: 95dd4e92023e522c13cf0af4c57613a57d81eda2
   HMSAnalyticsSDK: 4d2a88a729b1eb42f3d25f217c28937ec318a5b7
   HMSBroadcastExtensionSDK: b32e14990cffd773fb5b5219a4dd56b05bef3b29
   HMSHLSPlayerSDK: 6a54ad4d12f3dc2270d1ecd24019d71282a4f6a3

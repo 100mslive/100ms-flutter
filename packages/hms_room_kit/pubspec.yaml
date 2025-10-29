@@ -14,7 +14,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  hmssdk_flutter: 1.11.0
+  hmssdk_flutter:
+    path: ../hmssdk_flutter
+  hms_video_plugin:
+    path: ../../../flutter-video-plugin
   intl: ^0.20.2
   permission_handler: ^12.0.1
   provider: ^6.1.5+1
@@ -36,6 +39,7 @@ dependencies:
   webview_flutter: ^4.13.0
   pointer_interceptor: ^0.10.1+2
   image_picker: ^1.2.0
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:

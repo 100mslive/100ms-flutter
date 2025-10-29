@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/closed_caption_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/closed_caption_control_bottom_sheet.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/video_effects_bottom_sheet.dart';
+import 'package:hms_video_plugin/hms_video_plugin.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -527,42 +529,49 @@ class _AppUtilitiesBottomSheetState extends State<AppUtilitiesBottomSheet> {
                             : "Show Captions",
                   ),
 
-                ///Virtual background is not supported out of the box in prebuilt as of now
-                // if (AppDebugConfig.isVirtualBackgroundEnabled &&
-                //     (meetingStore.localPeer?.role.publishSettings?.allowed
-                //             .contains("video") ??
-                //         false))
-                //   MoreOptionItem(
-                //       onTap: () async {
-                //         Navigator.pop(context);
-                //         showModalBottomSheet(
-                //           isScrollControlled: true,
-                //           backgroundColor: HMSThemeColors.surfaceDim,
-                //           shape: const RoundedRectangleBorder(
-                //             borderRadius: BorderRadius.only(
-                //                 topLeft: Radius.circular(16),
-                //                 topRight: Radius.circular(16)),
-                //           ),
-                //           context: context,
-                //           builder: (ctx) => ChangeNotifierProvider.value(
-                //               value: meetingStore,
-                //               child: Padding(
-                //                   padding: EdgeInsets.only(
-                //                       bottom:
-                //                           MediaQuery.of(ctx).viewInsets.bottom),
-                //                   child: VideoEffectsBottomSheet())),
-                //         );
-                //       },
-                //       isActive: false,
-                //       optionIcon: SvgPicture.asset(
-                //         "packages/hms_room_kit/lib/src/assets/icons/video_effects.svg",
-                //         height: 20,
-                //         width: 20,
-                //         colorFilter: ColorFilter.mode(
-                //             HMSThemeColors.onSurfaceHighEmphasis,
-                //             BlendMode.srcIn),
-                //       ),
-                //       optionText: "Virtual Background"),
+                ///Virtual background
+                if (AppDebugConfig.isVirtualBackgroundEnabled &&
+                    (meetingStore.localPeer?.role.publishSettings?.allowed
+                            .contains("video") ??
+                        false))
+                  MoreOptionItem(
+                      onTap: () async {
+                        // Check if virtual background is supported on this device
+                        bool isSupported = await HMSVideoPlugin.isSupported();
+                        if (!isSupported) {
+                          Utilities.showToast(
+                              "Virtual background is not supported on this device");
+                          return;
+                        }
+                        Navigator.pop(context);
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: HMSThemeColors.surfaceDim,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16)),
+                          ),
+                          context: context,
+                          builder: (ctx) => ChangeNotifierProvider.value(
+                              value: meetingStore,
+                              child: Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom:
+                                          MediaQuery.of(ctx).viewInsets.bottom),
+                                  child: VideoEffectsBottomSheet())),
+                        );
+                      },
+                      isActive: false,
+                      optionIcon: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/src/assets/icons/video_effects.svg",
+                        height: 20,
+                        width: 20,
+                        colorFilter: ColorFilter.mode(
+                            HMSThemeColors.onSurfaceHighEmphasis,
+                            BlendMode.srcIn),
+                      ),
+                      optionText: "Virtual Background"),
               ],
             ),
           ],

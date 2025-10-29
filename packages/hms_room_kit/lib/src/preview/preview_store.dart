@@ -3,6 +3,7 @@ import 'dart:developer';
 
 ///Package imports
 import 'package:flutter/cupertino.dart';
+import 'package:hms_video_plugin/hms_video_plugin.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 
 ///Project imports
@@ -62,7 +63,7 @@ class PreviewStore extends ChangeNotifier
   }
 
   @override
-  void onPreview({required HMSRoom room, required List<HMSTrack> localTracks}) {
+  void onPreview({required HMSRoom room, required List<HMSTrack> localTracks}) async {
     log("onPreview-> room: ${room.toString()}");
     this.room = room;
     checkNoiseCancellationAvailablility();
@@ -95,6 +96,25 @@ class PreviewStore extends ChangeNotifier
       }
     }
     this.localTracks = videoTracks;
+
+    // Pre-initialize virtual background plugin after video track is set up
+    log("🔵 [VB] onPreview: checking conditions - isVirtualBackgroundEnabled: ${AppDebugConfig.isVirtualBackgroundEnabled}, hasVideoTracks: ${videoTracks.isNotEmpty}");
+    if (AppDebugConfig.isVirtualBackgroundEnabled && videoTracks.isNotEmpty) {
+      try {
+        log("🔵 [VB] Pre-initializing virtual background plugin in onPreview");
+        HMSException? error = await HMSVideoPlugin.preInitialize();
+        if (error != null) {
+          log("❌ [VB] Failed to pre-initialize VB plugin: ${error.message}");
+        } else {
+          log("✅ [VB] Virtual background plugin successfully pre-initialized and added to SDK pipeline");
+        }
+      } catch (e) {
+        log("❌ [VB] Error pre-initializing virtual background: $e");
+      }
+    } else {
+      log("⚠️ [VB] Skipping pre-initialization in onPreview - conditions not met");
+    }
+
     getRoles();
     getCurrentAudioDevice();
     getAudioDevicesList();

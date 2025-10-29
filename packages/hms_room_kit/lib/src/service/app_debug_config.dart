@@ -15,7 +15,7 @@ class AppDebugConfig {
 
   static bool isDebugMode = false;
   static bool isProdRoom = true;
-  static bool isVirtualBackgroundEnabled = false;
+  static bool isVirtualBackgroundEnabled = true;
   static bool isVBEnabled = false;
   static bool isBlurEnabled = false;
 

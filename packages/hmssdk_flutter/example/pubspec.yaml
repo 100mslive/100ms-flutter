@@ -15,6 +15,9 @@ dependencies:
   hms_room_kit:
     path: ../../hms_room_kit
 
+  hms_video_plugin:
+    path: ../../../../flutter-video-plugin
+
   lottie: ^3.3.2
   firebase_crashlytics: ^5.0.3
   firebase_core: ^4.2.0

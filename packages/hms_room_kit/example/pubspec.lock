@@ -247,13 +247,19 @@ packages:
       relative: true
     source: path
     version: "1.2.0"
+  hms_video_plugin:
+    dependency: transitive
+    description:
+      path: "../../../../flutter-video-plugin"
+      relative: true
+    source: path
+    version: "0.1.0"
   hmssdk_flutter:
     dependency: transitive
     description:
-      name: hmssdk_flutter
-      sha256: "2bc5a4eea8a9b719fea3ae937a78a3aea9c0795ffe25036d055a73d05475f87c"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../hmssdk_flutter"
+      relative: true
+    source: path
     version: "1.11.0"
   http:
     dependency: transitive

@@ -6,6 +6,12 @@
 
 #import "GeneratedPluginRegistrant.h"
 
+#if __has_include(<hms_video_plugin/HmsVideoFilterPlugin.h>)
+#import <hms_video_plugin/HmsVideoFilterPlugin.h>
+#else
+@import hms_video_plugin;
+#endif
+
 #if __has_include(<hmssdk_flutter/HmssdkFlutterPlugin.h>)
 #import <hmssdk_flutter/HmssdkFlutterPlugin.h>
 #else
@@ -63,6 +69,7 @@
 @implementation GeneratedPluginRegistrant
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
+  [HmsVideoFilterPlugin registerWithRegistrar:[registry registrarForPlugin:@"HmsVideoFilterPlugin"]];
   [HmssdkFlutterPlugin registerWithRegistrar:[registry registrarForPlugin:@"HmssdkFlutterPlugin"]];
   [FLTImagePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImagePickerPlugin"]];
   [PathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"PathProviderPlugin"]];
