@@ -184,13 +184,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 OutlinedButton(
                   style: Theme.of(context).outlinedButtonTheme.style!.copyWith(
-                    side: MaterialStateProperty.all(
+                    side: WidgetStateProperty.all(
                       const BorderSide(color: Colors.white),
                     ),
-                    backgroundColor: MaterialStateColor.resolveWith(
+                    backgroundColor: WidgetStateColor.resolveWith(
                       (states) => Colors.transparent,
                     ),
-                    foregroundColor: MaterialStateColor.resolveWith(
+                    foregroundColor: WidgetStateColor.resolveWith(
                       (states) => Colors.white,
                     ),
                   ),

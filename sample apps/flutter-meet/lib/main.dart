@@ -20,13 +20,13 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.grey[900],
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
-            shape: MaterialStateProperty.all(
+            shape: WidgetStateProperty.all(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
             ),
-            backgroundColor: MaterialStateColor.resolveWith(
+            backgroundColor: WidgetStateColor.resolveWith(
               (states) => Colors.blueAccent,
             ),
-            foregroundColor: MaterialStateColor.resolveWith(
+            foregroundColor: WidgetStateColor.resolveWith(
               (states) => Colors.white,
             ),
           ),

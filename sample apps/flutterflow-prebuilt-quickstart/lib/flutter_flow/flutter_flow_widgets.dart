@@ -113,8 +113,8 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
         : null;
 
     ButtonStyle style = ButtonStyle(
-      shape: MaterialStateProperty.resolveWith<OutlinedBorder>((states) {
-        if (states.contains(MaterialState.hovered) &&
+      shape: WidgetStateProperty.resolveWith<OutlinedBorder>((states) {
+        if (states.contains(WidgetState.hovered) &&
             widget.options.hoverBorderSide != null) {
           return RoundedRectangleBorder(
             borderRadius:
@@ -127,40 +127,40 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
           side: widget.options.borderSide ?? BorderSide.none,
         );
       }),
-      foregroundColor: MaterialStateProperty.resolveWith<Color?>((states) {
-        if (states.contains(MaterialState.disabled) &&
+      foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+        if (states.contains(WidgetState.disabled) &&
             widget.options.disabledTextColor != null) {
           return widget.options.disabledTextColor;
         }
-        if (states.contains(MaterialState.hovered) &&
+        if (states.contains(WidgetState.hovered) &&
             widget.options.hoverTextColor != null) {
           return widget.options.hoverTextColor;
         }
         return widget.options.textStyle?.color;
       }),
-      backgroundColor: MaterialStateProperty.resolveWith<Color?>((states) {
-        if (states.contains(MaterialState.disabled) &&
+      backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+        if (states.contains(WidgetState.disabled) &&
             widget.options.disabledColor != null) {
           return widget.options.disabledColor;
         }
-        if (states.contains(MaterialState.hovered) &&
+        if (states.contains(WidgetState.hovered) &&
             widget.options.hoverColor != null) {
           return widget.options.hoverColor;
         }
         return widget.options.color;
       }),
-      overlayColor: MaterialStateProperty.resolveWith<Color?>((states) {
-        if (states.contains(MaterialState.pressed)) {
+      overlayColor: WidgetStateProperty.resolveWith<Color?>((states) {
+        if (states.contains(WidgetState.pressed)) {
           return widget.options.splashColor;
         }
         return widget.options.hoverColor == null ? null : Colors.transparent;
       }),
-      padding: MaterialStateProperty.all(
+      padding: WidgetStateProperty.all(
         widget.options.padding ??
             const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
       ),
-      elevation: MaterialStateProperty.resolveWith<double?>((states) {
-        if (states.contains(MaterialState.hovered) &&
+      elevation: WidgetStateProperty.resolveWith<double?>((states) {
+        if (states.contains(WidgetState.hovered) &&
             widget.options.hoverElevation != null) {
           return widget.options.hoverElevation!;
         }
