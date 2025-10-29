@@ -355,16 +355,18 @@ packages:
   hms_video_plugin:
     dependency: "direct main"
     description:
-      path: "../../../../flutter-video-plugin"
-      relative: true
-    source: path
+      name: hms_video_plugin
+      sha256: "431c622e5c80b9eb37141d256915a689c8ecf385389cd0ef94d933831410ae5b"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.1.0"
   hmssdk_flutter:
     dependency: transitive
     description:
-      path: ".."
-      relative: true
-    source: path
+      name: hmssdk_flutter
+      sha256: "2bc5a4eea8a9b719fea3ae937a78a3aea9c0795ffe25036d055a73d05475f87c"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.11.0"
   http:
     dependency: transitive

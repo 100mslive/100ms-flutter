@@ -14,10 +14,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  hmssdk_flutter:
-    path: ../hmssdk_flutter
-  hms_video_plugin:
-    path: ../../../flutter-video-plugin
+  hmssdk_flutter: 1.11.0
+  hms_video_plugin: 0.1.0
   intl: ^0.20.2
   permission_handler: ^12.0.1
   provider: ^6.1.5+1
