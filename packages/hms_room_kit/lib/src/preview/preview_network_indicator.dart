@@ -17,6 +17,25 @@ class PreviewNetworkIndicator extends StatelessWidget {
   final PreviewStore previewStore;
   const PreviewNetworkIndicator({super.key, required this.previewStore});
 
+  /// Returns a human-readable network status label based on quality value
+  String _getNetworkStatusLabel(int? quality) {
+    switch (quality) {
+      case 0:
+        return "Very Poor";
+      case 1:
+      case 2:
+        return "Poor";
+      case 3:
+        return "Good";
+      case 4:
+        return "Very Good";
+      case 5:
+        return "Excellent";
+      default:
+        return "";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ((previewStore.networkQuality != null &&
@@ -40,6 +59,15 @@ class PreviewNetworkIndicator extends StatelessWidget {
                         fit: BoxFit.contain,
                         semanticsLabel: "fl_network_icon_label",
                       ),
+                    const SizedBox(width: 6),
+                    Text(
+                      _getNetworkStatusLabel(previewStore.networkQuality),
+                      style: TextStyle(
+                        color: HMSThemeColors.onSurfaceHighEmphasis,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                   ],
                 ),
               ),
