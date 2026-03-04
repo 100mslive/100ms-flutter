@@ -84,5 +84,5 @@ Room Kit: 1.2.0
 Core SDK: 1.11.0
 Android SDK: 2.9.78
 iOS SDK: 1.17.0
-Flutter version: 3.35.7
-Example App Version: 1.6.3 (533)
+Flutter version: 3.41.3
+Example App Version: 1.6.6 (536)
