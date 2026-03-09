@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Required for devices above android 12 for disabling mute while receving the call-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -73,6 +74,36 @@
     android:stopWithTask="true"
     android:foregroundServiceType="camera|microphone"
     android:exported="false" />
+
+        <!--
+            VAPT Fix: Broadcast Receiver Protection
+            The following receivers are declared as exported="true" by their respective
+            libraries in the merged manifest, making them accessible to any app on the device.
+            Since we don't use the auto-restart-on-boot feature of flutter_foreground_task,
+            and LogAlarmManager is an internal 100ms SDK component, we override both to
+            exported="false" to prevent unauthorized apps from sending intents to them.
+        -->
+
+        <!-- From flutter_foreground_task plugin: listens for BOOT_COMPLETED to auto-restart
+             the foreground service after reboot. We don't use this feature (autoRunOnBoot is
+             false by default), so it's safe to disable external access. -->
+        <receiver
+            android:name="com.pravera.flutter_foreground_task.service.BootReceiver"
+            android:enabled="true"
+            android:exported="false"
+            tools:replace="android:exported">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- From 100ms Android SDK: internal alarm manager for log scheduling.
+             No external app needs to trigger this. -->
+        <receiver
+            android:name="live.hms.video.services.LogAlarmManager"
+            android:enabled="true"
+            android:exported="false"
+            tools:replace="android:exported" />
 
         <!--Don't delete the meta-data below.
             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
