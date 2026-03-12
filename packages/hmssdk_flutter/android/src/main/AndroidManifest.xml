@@ -3,7 +3,12 @@
     package="live.hms.hmssdk_flutter">
     <uses-feature android:name="android.hardware.camera"/>
     <uses-feature android:name="android.hardware.camera.autofocus"/>
-    
+
+    <!-- Required for Bluetooth audio devices on Android 11 and below -->
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <!-- Required for Bluetooth audio devices on Android 12+ -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
     <application>
         <activity android:name=".SecondActivity"></activity>
     </application>
