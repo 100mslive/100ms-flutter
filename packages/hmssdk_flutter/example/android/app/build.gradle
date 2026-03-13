@@ -52,7 +52,10 @@ android {
 
     defaultConfig {
         applicationId "live.hms.flutter"
-        minSdkVersion 24
+        // VAPT Fix: Raised from 24 to 29 (Android 10) to ensure the app only runs
+        // on Android versions that have received recent security patches.
+        // Note: This only affects the example app, not the SDK's minSdkVersion (which remains 24).
+        minSdkVersion 29
         targetSdkVersion 36
         versionCode 532
         versionName "1.6.2"
