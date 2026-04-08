@@ -126,7 +126,7 @@ class Utilities {
 
   ///This function returns the question type for poll/quiz
   static List<Tuple2<String, HMSPollQuestionType>>
-      getQuestionTypeForPollQuiz() {
+  getQuestionTypeForPollQuiz() {
     return const [
       Tuple2("Single Choice", HMSPollQuestionType.singleChoice),
       Tuple2("Multiple Choice", HMSPollQuestionType.multiChoice),
@@ -199,15 +199,16 @@ class Utilities {
 
     ///We open the app settings if the user has permanently denied the permissions
     ///This is done because the user can't grant the permissions from the app now
-    bool isCameraPermissionsDenied = (await Permission.camera.isDenied &&
+    bool isCameraPermissionsDenied =
+        (await Permission.camera.isDenied &&
         !await Permission.camera.shouldShowRequestRationale);
     bool isMicrophonePermissionsDenied =
         (await Permission.microphone.isDenied &&
-            !await Permission.microphone.shouldShowRequestRationale);
+        !await Permission.microphone.shouldShowRequestRationale);
     bool isBluetoothPermissionsDenied = false;
     bool isPhonePermissionDenied = Platform.isAndroid
         ? (await Permission.phone.isDenied &&
-            !await Permission.phone.shouldShowRequestRationale)
+              !await Permission.phone.shouldShowRequestRationale)
         : false;
     if (Platform.isIOS) {
       isBluetoothPermissionsDenied =
