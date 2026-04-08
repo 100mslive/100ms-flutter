@@ -174,6 +174,9 @@ class Utilities {
     if (Platform.isIOS) {
       await Permission.bluetooth.request();
     }
+    if (Platform.isAndroid) {
+      await Permission.bluetoothConnect.request();
+    }
     await Permission.phone.request();
 
     ///We check if the permissions are granted
@@ -188,6 +191,7 @@ class Utilities {
     } else if (Platform.isAndroid) {
       if (await Permission.camera.isGranted &&
           await Permission.microphone.isGranted &&
+          await Permission.bluetoothConnect.isGranted &&
           await Permission.phone.isGranted) {
         return true;
       }
@@ -208,6 +212,9 @@ class Utilities {
     if (Platform.isIOS) {
       isBluetoothPermissionsDenied =
           await Permission.bluetooth.isPermanentlyDenied;
+    } else if (Platform.isAndroid) {
+      isBluetoothPermissionsDenied =
+          await Permission.bluetoothConnect.isPermanentlyDenied;
     }
 
     ///We open the app settings if the user has permanently denied the permissions
