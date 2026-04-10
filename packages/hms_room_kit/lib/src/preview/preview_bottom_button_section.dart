@@ -3,6 +3,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hms_video_plugin/hms_video_plugin.dart';
 import 'package:provider/provider.dart';
 
 ///Project imports
@@ -10,6 +11,8 @@ import 'package:hms_room_kit/src/common/utility_functions.dart';
 import 'package:hms_room_kit/src/layout_api/hms_theme_colors.dart';
 import 'package:hms_room_kit/src/preview/preview_device_settings.dart';
 import 'package:hms_room_kit/src/preview/preview_store.dart';
+import 'package:hms_room_kit/src/service/app_debug_config.dart';
+import 'package:hms_room_kit/src/widgets/bottom_sheets/video_effects_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
 
 ///This renders the bottom button section
@@ -98,6 +101,53 @@ class PreviewBottomButtonSection extends StatelessWidget {
                         ),
                         fit: BoxFit.scaleDown,
                         semanticsLabel: "switch_camera_button",
+                      ),
+                    ),
+                  const SizedBox(width: 16),
+
+                  ///This renders the [Virtual Background Button] only if the
+                  ///Peer role has the permission to publish video
+                  ///and virtual background is enabled
+                  if (AppDebugConfig.isVirtualBackgroundEnabled &&
+                      previewStore.peer != null &&
+                      previewStore.peer!.role.publishSettings!.allowed.contains(
+                        "video",
+                      ))
+                    HMSEmbeddedButton(
+                      onTap: () async {
+                        // Check if virtual background is supported on this device
+                        bool isSupported = await HMSVideoPlugin.isSupported();
+                        if (!isSupported) {
+                          Utilities.showToast(
+                              "Virtual background is not supported on this device");
+                          return;
+                        }
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: HMSThemeColors.surfaceDim,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16)),
+                          ),
+                          context: context,
+                          builder: (ctx) => const Padding(
+                            padding: EdgeInsets.only(bottom: 0),
+                            child: VideoEffectsBottomSheet(),
+                          ),
+                        );
+                      },
+                      isActive: true,
+                      child: SvgPicture.asset(
+                        "packages/hms_room_kit/lib/src/assets/icons/video_effects.svg",
+                        colorFilter: ColorFilter.mode(
+                          previewStore.isVideoOn
+                              ? HMSThemeColors.onSurfaceHighEmphasis
+                              : HMSThemeColors.onSurfaceLowEmphasis,
+                          BlendMode.srcIn,
+                        ),
+                        fit: BoxFit.scaleDown,
+                        semanticsLabel: "virtual_background_button",
                       ),
                     ),
                 ],

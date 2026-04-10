@@ -10,6 +10,7 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:hms_room_kit/hms_room_kit.dart';
 import 'package:hms_room_kit/src/hmssdk_interactor.dart';
 import 'package:hms_room_kit/src/layout_api/hms_conferencing_items.dart';
+import 'package:hms_room_kit/src/layout_api/hms_virtual_background_model.dart';
 
 class Theme {
   final String? name;
@@ -232,6 +233,7 @@ class HMSRoomLayout {
   static List<String>? offStageRoles = [];
   static bool skipPreviewForRole = false;
   static bool skipPreview = false;
+  static VirtualBackground? virtualBackgroundConfig;
 
   static Future<void> getRoomLayout({
     required HMSSDKInteractor hmsSDKInteractor,
@@ -268,6 +270,7 @@ class HMSRoomLayout {
       HMSThemeColors.applyLayoutColors(data?[0].themes?[0].palette);
       roleLayoutData = data?[0];
     }
+
     peerType = roleLayoutData?.screens?.conferencing?.hlsLiveStreaming != null
         ? PeerRoleType.hlsViewer
         : PeerRoleType.conferencing;
@@ -289,6 +292,9 @@ class HMSRoomLayout {
       skipPreviewForRole = roleLayoutData?.screens?.conferencing?.defaultConf
               ?.elements?.onStageExp?.skipPreviewForRoleChange ??
           false;
+      // Set virtual background configuration from conferencing elements
+      virtualBackgroundConfig = roleLayoutData
+          ?.screens?.conferencing?.defaultConf?.elements?.virtualBackground;
     } else {
       chatData = roleLayoutData
           ?.screens?.conferencing?.hlsLiveStreaming?.elements?.chat;
@@ -311,6 +317,9 @@ class HMSRoomLayout {
               ?.onStageExp
               ?.skipPreviewForRoleChange ??
           false;
+      // Set virtual background configuration from HLS live streaming elements
+      virtualBackgroundConfig = roleLayoutData
+          ?.screens?.conferencing?.hlsLiveStreaming?.elements?.virtualBackground;
     }
   }
 

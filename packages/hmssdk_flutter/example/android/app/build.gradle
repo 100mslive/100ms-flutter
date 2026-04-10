@@ -54,8 +54,8 @@ android {
         applicationId "live.hms.flutter"
         minSdkVersion 24
         targetSdkVersion 36
-        versionCode 532
-        versionName "1.6.2"
+        versionCode 536
+        versionName "1.6.6"
 
         ndk {
             // Only support 64-bit architectures for 16KB page size support

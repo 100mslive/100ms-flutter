@@ -31,28 +31,11 @@
 -keep class hms.webrtc.** { *; }
 -keep class live.hms.video.** { *; }
 
--dontwarn org.bouncycastle.jsse.BCSSLParameters
--dontwarn org.bouncycastle.jsse.BCSSLSocket
--dontwarn org.bouncycastle.jsse.provider.BouncyCastleJsseProvider
--dontwarn org.openjsse.javax.net.ssl.SSLParameters
--dontwarn org.openjsse.javax.net.ssl.SSLSocket
--dontwarn org.openjsse.net.ssl.OpenJSSE
--dontwarn com.google.mediapipe.proto.CalculatorOptionsProto$CalculatorOptions$Builder
--dontwarn com.google.mediapipe.proto.CalculatorOptionsProto$CalculatorOptions
--dontwarn com.google.mediapipe.proto.CalculatorProfileProto$CalculatorProfile
--dontwarn com.google.mediapipe.proto.GraphTemplateProto$CalculatorGraphTemplate
--dontwarn com.google.mediapipe.proto.MediaPipeOptionsProto$MediaPipeOptions$Builder
--dontwarn com.google.mediapipe.proto.MediaPipeOptionsProto$MediaPipeOptions
--dontwarn com.google.mediapipe.proto.StreamHandlerProto$InputStreamHandlerConfig$Builder
--dontwarn com.google.mediapipe.proto.StreamHandlerProto$InputStreamHandlerConfig
--dontwarn com.google.mediapipe.proto.StreamHandlerProto$OutputStreamHandlerConfig$Builder
--dontwarn com.google.mediapipe.proto.StreamHandlerProto$OutputStreamHandlerConfig
--dontwarn mediapipe.PacketFactory$PacketFactoryConfig$Builder
--dontwarn mediapipe.PacketFactory$PacketFactoryConfig
--dontwarn mediapipe.PacketFactory$PacketFactoryConfigOrBuilder
--dontwarn mediapipe.PacketGenerator$PacketGeneratorConfig$Builder
--dontwarn mediapipe.PacketGenerator$PacketGeneratorConfig
--dontwarn mediapipe.PacketGenerator$PacketGeneratorConfigOrBuilder
--dontwarn mediapipe.StatusHandler$StatusHandlerConfig$Builder
--dontwarn mediapipe.StatusHandler$StatusHandlerConfig
--dontwarn mediapipe.StatusHandler$StatusHandlerConfigOrBuilder
+# SSL/TLS libraries (BouncyCastle, OpenJSSE)
+-dontwarn org.bouncycastle.jsse.**
+-dontwarn org.openjsse.**
+
+# MediaPipe (used for virtual background support in 100ms SDK)
+# These classes are bundled in 100ms SDK but not exposed at compile time
+-dontwarn com.google.mediapipe.**
+-dontwarn mediapipe.**

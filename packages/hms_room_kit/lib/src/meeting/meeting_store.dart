@@ -7,7 +7,7 @@ import 'dart:developer';
 import 'dart:io';
 
 //Package imports
-// import 'package:hms_video_plugin/hms_video_plugin.dart';
+import 'package:hms_video_plugin/hms_video_plugin.dart';
 import 'package:hms_room_kit/src/model/transcript_store.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:flutter/material.dart';
@@ -1043,6 +1043,24 @@ class MeetingStore extends ChangeNotifier
       }
     }
 
+    // Pre-initialize virtual background plugin after video track is set up
+    log("🔵 [VB] onJoin: checking conditions - isVirtualBackgroundEnabled: ${AppDebugConfig.isVirtualBackgroundEnabled}, hasVideoTrack: ${localPeer?.videoTrack != null}");
+    if (AppDebugConfig.isVirtualBackgroundEnabled && localPeer?.videoTrack != null) {
+      try {
+        log("🔵 [VB] Pre-initializing virtual background plugin in onJoin");
+        HMSException? error = await HMSVideoPlugin.preInitialize();
+        if (error != null) {
+          log("❌ [VB] Failed to pre-initialize VB plugin: ${error.message}");
+        } else {
+          log("✅ [VB] Virtual background plugin successfully pre-initialized and added to SDK pipeline");
+        }
+      } catch (e) {
+        log("❌ [VB] Error pre-initializing virtual background: $e");
+      }
+    } else {
+      log("⚠️ [VB] Skipping pre-initialization in onJoin - conditions not met");
+    }
+
     if (roles.isEmpty) {
       roles = await getRoles();
       roles.removeWhere((element) => element.name == "__internal_recorder");
@@ -1574,14 +1592,15 @@ class MeetingStore extends ChangeNotifier
     toggleAlwaysScreenOn();
 
     ///********************VB Code *************************************** */
-    // if (AppDebugConfig.isBlurEnabled) {
-    //   HMSVideoPlugin.disableBlur();
-    //   AppDebugConfig.isBlurEnabled = false;
-    // }
-    // if (AppDebugConfig.isVBEnabled) {
-    //   HMSVideoPlugin.disable();
-    //   AppDebugConfig.isVBEnabled = false;
-    // }
+    if (AppDebugConfig.isBlurEnabled) {
+      await HMSVideoPlugin.disableBlur();
+      AppDebugConfig.isBlurEnabled = false;
+    }
+    if (AppDebugConfig.isVBEnabled) {
+      await HMSVideoPlugin.disable();
+      AppDebugConfig.isVBEnabled = false;
+    }
+
     ///******************************************************************* */
     _hmsSDKInteractor.destroy();
     _hmsSessionStore = null;

@@ -2,6 +2,7 @@ library;
 
 ///Project imports
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
+import 'package:hms_room_kit/src/layout_api/hms_virtual_background_model.dart';
 
 class Conferencing {
   Default? defaultConf;
@@ -116,6 +117,7 @@ class Elements {
   Map<String, dynamic>? brb;
   Map<String, dynamic>? handRaise;
   NoiseCancellation? noiseCancellation;
+  VirtualBackground? virtualBackground;
   Elements({
     this.header,
     this.chat,
@@ -126,6 +128,7 @@ class Elements {
     this.brb,
     this.handRaise,
     this.noiseCancellation,
+    this.virtualBackground,
   });
 
   Elements.fromJson(Map<String, dynamic>? json) {
@@ -139,6 +142,7 @@ class Elements {
       brb = null;
       handRaise = null;
       noiseCancellation = null;
+      virtualBackground = null;
       return;
     }
 
@@ -161,6 +165,9 @@ class Elements {
     noiseCancellation = json.containsKey("noise_cancellation")
         ? NoiseCancellation.fromJson(json["noise_cancellation"])
         : null;
+    virtualBackground = json.containsKey("virtual_background")
+        ? VirtualBackground.fromJson(json["virtual_background"])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -177,6 +184,9 @@ class Elements {
       data['on_stage_exp'] = onStageExp!.toJson();
     }
     data['brb'] = brb;
+    if (virtualBackground != null) {
+      data['virtual_background'] = virtualBackground!.toJson();
+    }
     return data;
   }
 }
