@@ -19,6 +19,7 @@ import 'package:hmssdk_flutter_example/room_service.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:safe_device/safe_device.dart';
 import 'package:uuid/uuid.dart';
 
 bool _initialURILinkHandled = false;
@@ -217,6 +218,71 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _initPackageInfo();
     getData();
+    _checkDeviceSecurity();
+  }
+
+  /// VAPT Fix: Root/Jailbreak Detection
+  /// Checks if the device is rooted (Android) or jailbroken (iOS).
+  /// Rooted/jailbroken devices have a compromised security sandbox, which means
+  /// other apps with root access could potentially read this app's private data
+  /// (auth tokens, session info) or hook into the app's runtime.
+  /// We show a warning but still allow the user to continue.
+  Future<void> _checkDeviceSecurity() async {
+    try {
+      bool isJailBroken = await SafeDevice.isJailBroken;
+      if (isJailBroken && mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => AlertDialog(
+            backgroundColor: themeSurfaceColor,
+            title: Text(
+              "Security Warning",
+              style: HMSTextStyle.setTextStyle(
+                color: themeDefaultColor,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            content: Text(
+              "This device appears to be rooted/jailbroken. "
+              "Your data may not be secure on this device. "
+              "Proceed with caution.",
+              style: HMSTextStyle.setTextStyle(
+                color: themeSubHeadingColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => SystemNavigator.pop(),
+                child: Text(
+                  "Exit",
+                  style: HMSTextStyle.setTextStyle(
+                    color: Colors.redAccent,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  "Continue Anyway",
+                  style: HMSTextStyle.setTextStyle(
+                    color: hmsdefaultColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      // If the check fails (e.g., on unsupported platforms), silently continue
+      debugPrint("Root/jailbreak detection failed: $e");
+    }
   }
 
   void getData() async {

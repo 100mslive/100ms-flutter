@@ -126,7 +126,7 @@ class Utilities {
 
   ///This function returns the question type for poll/quiz
   static List<Tuple2<String, HMSPollQuestionType>>
-      getQuestionTypeForPollQuiz() {
+  getQuestionTypeForPollQuiz() {
     return const [
       Tuple2("Single Choice", HMSPollQuestionType.singleChoice),
       Tuple2("Multiple Choice", HMSPollQuestionType.multiChoice),
@@ -174,6 +174,9 @@ class Utilities {
     if (Platform.isIOS) {
       await Permission.bluetooth.request();
     }
+    if (Platform.isAndroid) {
+      await Permission.bluetoothConnect.request();
+    }
     await Permission.phone.request();
 
     ///We check if the permissions are granted
@@ -188,6 +191,7 @@ class Utilities {
     } else if (Platform.isAndroid) {
       if (await Permission.camera.isGranted &&
           await Permission.microphone.isGranted &&
+          await Permission.bluetoothConnect.isGranted &&
           await Permission.phone.isGranted) {
         return true;
       }
@@ -195,19 +199,23 @@ class Utilities {
 
     ///We open the app settings if the user has permanently denied the permissions
     ///This is done because the user can't grant the permissions from the app now
-    bool isCameraPermissionsDenied = (await Permission.camera.isDenied &&
+    bool isCameraPermissionsDenied =
+        (await Permission.camera.isDenied &&
         !await Permission.camera.shouldShowRequestRationale);
     bool isMicrophonePermissionsDenied =
         (await Permission.microphone.isDenied &&
-            !await Permission.microphone.shouldShowRequestRationale);
+        !await Permission.microphone.shouldShowRequestRationale);
     bool isBluetoothPermissionsDenied = false;
     bool isPhonePermissionDenied = Platform.isAndroid
         ? (await Permission.phone.isDenied &&
-            !await Permission.phone.shouldShowRequestRationale)
+              !await Permission.phone.shouldShowRequestRationale)
         : false;
     if (Platform.isIOS) {
       isBluetoothPermissionsDenied =
           await Permission.bluetooth.isPermanentlyDenied;
+    } else if (Platform.isAndroid) {
+      isBluetoothPermissionsDenied =
+          await Permission.bluetoothConnect.isPermanentlyDenied;
     }
 
     ///We open the app settings if the user has permanently denied the permissions
