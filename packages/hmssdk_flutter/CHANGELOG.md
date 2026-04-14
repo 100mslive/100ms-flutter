@@ -6,6 +6,20 @@
 | hmssdk_flutter   | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)     |
 | hms_video_plugin | [![Pub Version](https://img.shields.io/pub/v/hms_video_plugin)](https://pub.dev/packages/hms_video_plugin) |
 
+# 1.11.1 - 2026-04-10
+
+| Package        | Version |
+| -------------- | ------- |
+| hms_room_kit   | 1.2.0   |
+| hmssdk_flutter | 1.11.1  |
+
+### Fixed
+
+- Fixed Bluetooth audio devices not appearing in `getAudioDevicesList()` on Android 12+.
+- Added `BLUETOOTH_CONNECT` permission to Android manifest for Bluetooth audio device discovery.
+- Added `AUTOMATIC` option to the audio device list on Android 12+.
+- Updated native Android SDK to 2.9.83.
+
 # 1.11.0 - 2025-10-29
 
 | Package        | Version |

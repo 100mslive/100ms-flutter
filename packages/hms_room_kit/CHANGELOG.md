@@ -6,6 +6,21 @@
 | hmssdk_flutter   | [![Pub Version](https://img.shields.io/pub/v/hmssdk_flutter)](https://pub.dev/packages/hmssdk_flutter)     |
 | hms_video_plugin | [![Pub Version](https://img.shields.io/pub/v/hms_video_plugin)](https://pub.dev/packages/hms_video_plugin) |
 
+# 1.2.1 - 2026-04-10
+
+| Package        | Version |
+| -------------- | ------- |
+| hms_room_kit   | 1.2.1   |
+| hmssdk_flutter | 1.11.1  |
+
+### Added
+
+- Request `BLUETOOTH_CONNECT` runtime permission on Android 12+ alongside camera and microphone for Bluetooth audio device support.
+
+### Changed
+
+- Updated `hmssdk_flutter` dependency to 1.11.1.
+
 # 1.2.0 - 2025-10-29
 
 | Package        | Version |
