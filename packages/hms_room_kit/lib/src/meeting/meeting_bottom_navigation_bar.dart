@@ -18,6 +18,7 @@ import 'package:hms_room_kit/src/enums/meeting_mode.dart';
 import 'package:hms_room_kit/src/meeting/meeting_store.dart';
 import 'package:hms_room_kit/src/widgets/bottom_sheets/app_utilities_bottom_sheet.dart';
 import 'package:hms_room_kit/src/widgets/common_widgets/hms_embedded_button.dart';
+import 'package:hms_room_kit/src/services/hms_logger.dart';
 
 ///This renders the meeting bottom navigation bar
 ///It contains the leave, mic, camera, chat and menu buttons
@@ -74,6 +75,7 @@ class _MeetingBottomNavigationBarState
                           ///Leave Button
                           HMSEmbeddedButton(
                             onTap: () async => {
+                              HMSLogger().logButtonTap('Leave Meeting'),
                               await UtilityComponents.onBackPressed(context)
                             },
                             offColor: HMSThemeColors.alertErrorDefault,
@@ -108,6 +110,7 @@ class _MeetingBottomNavigationBarState
                                 builder: (_, isMicOn, __) {
                                   return HMSEmbeddedButton(
                                     onTap: () => {
+                                      HMSLogger().logButtonTap('Microphone', additionalData: {'state': isMicOn ? 'on' : 'off'}),
                                       context
                                           .read<MeetingStore>()
                                           .toggleMicMuteState()
@@ -148,6 +151,7 @@ class _MeetingBottomNavigationBarState
                                 builder: (_, data, __) {
                                   return HMSEmbeddedButton(
                                     onTap: () => {
+                                      HMSLogger().logButtonTap('Camera', additionalData: {'state': data.item1 ? 'on' : 'off', 'enabled': !data.item2}),
                                       (data.item2)
                                           ? null
                                           : context
@@ -180,6 +184,7 @@ class _MeetingBottomNavigationBarState
                                 builder: (_, chatState, __) {
                                   return HMSEmbeddedButton(
                                     onTap: () => {
+                                      HMSLogger().logButtonTap('Chat', additionalData: {'hasNewMessage': chatState.item1}),
                                       if (HMSRoomLayout.chatData?.isOverlay ??
                                           false)
                                         {
@@ -250,6 +255,7 @@ class _MeetingBottomNavigationBarState
                           ///Menu Button
                           HMSEmbeddedButton(
                             onTap: () async => {
+                              HMSLogger().logButtonTap('Menu'),
                               showModalBottomSheet(
                                 isScrollControlled: true,
                                 backgroundColor: HMSThemeColors.surfaceDim,

@@ -26,6 +26,7 @@ import 'package:hms_room_kit/src/model/peer_track_node.dart';
 import 'package:hms_room_kit/src/model/rtc_stats.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toast_model.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
+import 'package:hms_room_kit/src/services/hms_logger.dart';
 
 ///[MeetingStore] is the store that is used to store the data of the meeting
 ///It takes the following parameters:
@@ -350,12 +351,20 @@ class MeetingStore extends ChangeNotifier
   Future<void> toggleMicMuteState() async {
     await _hmsSDKInteractor.toggleMicMuteState();
     isMicOn = !isMicOn;
+    HMSLogger().logMicrophoneToggle(
+      !isMicOn,
+      reason: 'User toggled microphone',
+    );
     notifyListeners();
   }
 
   Future<void> toggleCameraMuteState() async {
     await _hmsSDKInteractor.toggleCameraMuteState();
     isVideoOn = !isVideoOn;
+    HMSLogger().logCameraToggle(
+      isVideoOn,
+      reason: 'User toggled camera',
+    );
     notifyListeners();
   }
 
@@ -906,6 +915,7 @@ class MeetingStore extends ChangeNotifier
     log("onJoin-> room: ${room.toString()}");
     isMeetingStarted = true;
     hmsRoom = room;
+    HMSLogger().setSessionContext(roomId: room.id, sessionId: room.sessionId);
     if (room.hmshlsStreamingState?.state == HMSStreamingState.started) {
       hasHlsStarted = true;
       streamUrl = room.hmshlsStreamingState?.variants[0]?.hlsStreamUrl;
@@ -1370,6 +1380,11 @@ class MeetingStore extends ChangeNotifier
     if (index != -1) {
       peerTracks[index].setHMSLocalAudioStats(hmsLocalAudioStats);
     }
+    HMSLogger().logBitrate(
+      hmsLocalAudioStats.bitrate.toDouble(),
+      peerId: 'local',
+      quality: 'audio',
+    );
   }
 
   @override
@@ -1387,6 +1402,13 @@ class MeetingStore extends ChangeNotifier
     }
     if (index != -1) {
       peerTracks[index].setHMSLocalVideoStats(hmsLocalVideoStats);
+    }
+    for (var videoStats in hmsLocalVideoStats) {
+      HMSLogger().logBitrate(
+        videoStats.bitrate.toDouble(),
+        peerId: 'local',
+        quality: 'video',
+      );
     }
   }
 
@@ -1406,6 +1428,11 @@ class MeetingStore extends ChangeNotifier
     if (index != -1) {
       peerTracks[index].setHMSRemoteAudioStats(hmsRemoteAudioStats);
     }
+    HMSLogger().logBitrate(
+      hmsRemoteAudioStats.bitrate.toDouble(),
+      peerId: peer.peerId,
+      quality: 'audio',
+    );
   }
 
   @override
@@ -1424,6 +1451,11 @@ class MeetingStore extends ChangeNotifier
     if (index != -1) {
       peerTracks[index].setHMSRemoteVideoStats(hmsRemoteVideoStats);
     }
+    HMSLogger().logBitrate(
+      hmsRemoteVideoStats.bitrate.toDouble(),
+      peerId: peer.peerId,
+      quality: 'video',
+    );
   }
 
   @override
@@ -1468,6 +1500,7 @@ class MeetingStore extends ChangeNotifier
   void clearRoomState() async {
     // clearPIPState();
     removeListeners();
+    HMSLogger().setSessionContext(roomId: null, sessionId: null);
     toggleAlwaysScreenOn();
 
     ///********************VB Code *************************************** */
@@ -1526,8 +1559,10 @@ class MeetingStore extends ChangeNotifier
   ///Function to toggle screen share
   void toggleScreenShare() {
     if (!isScreenShareOn) {
+      HMSLogger().logScreenShare(true, reason: 'User started screen share');
       startScreenShare();
     } else {
+      HMSLogger().logScreenShare(false, reason: 'User stopped screen share');
       stopScreenShare();
     }
   }
