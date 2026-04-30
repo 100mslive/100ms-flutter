@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "example (Android emulator-5554)",
+            "cwd": "packages/hmssdk_flutter/example",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "emulator-5554"
+        },
+        {
             "name": "example",
             "cwd": "packages/hmssdk_flutter/example",
             "request": "launch",
