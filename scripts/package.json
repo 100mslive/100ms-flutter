@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "update-changelog": "node update-changelog-versions.js",
-    "generate-version-info": "node generate-version-info.js"
+    "generate-version-info": "node generate-version-info.js",
+    "update-sdk-versions": "bash update-sdk-versions.sh"
   },
   "keywords": [],
   "author": "100ms",

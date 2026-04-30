@@ -1,0 +1,133 @@
+name: Bump SDK Versions
+
+# Manually-triggered workflow to bump 100ms native SDK versions and Flutter
+# package versions in lock-step, then open a PR with the changes (including
+# refreshed pubspec.lock files).
+#
+# See scripts/update-sdk-versions.sh for the script behaviour and flag list.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ios_sdk:
+        description: "iOS HMSSDK version (leave blank to keep current)"
+        required: false
+        type: string
+      android_sdk:
+        description: "Android HMSSDK version (leave blank to keep current)"
+        required: false
+        type: string
+      ios_broadcast:
+        description: "iOSBroadcastExtension version (blank = keep)"
+        required: false
+        type: string
+      ios_hls:
+        description: "iOSHLSPlayerSDK version (blank = keep)"
+        required: false
+        type: string
+      ios_noise_cancel:
+        description: "iOSNoiseCancellationModels version (blank = keep)"
+        required: false
+        type: string
+      hmssdk_bump:
+        description: "Bump hmssdk_flutter package"
+        required: true
+        type: choice
+        default: skip
+        options: [skip, patch, minor, major]
+      room_kit_bump:
+        description: "Bump hms_room_kit package"
+        required: true
+        type: choice
+        default: skip
+        options: [skip, patch, minor, major]
+
+concurrency:
+  group: bump-sdk-versions
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Run update-sdk-versions.sh
+        run: |
+          set -euo pipefail
+          ARGS=(--hmssdk-bump "${{ inputs.hmssdk_bump }}" --room-kit-bump "${{ inputs.room_kit_bump }}" --yes --no-install)
+          [ -n "${{ inputs.ios_sdk }}" ]          && ARGS+=(--ios-sdk "${{ inputs.ios_sdk }}")
+          [ -n "${{ inputs.android_sdk }}" ]      && ARGS+=(--android-sdk "${{ inputs.android_sdk }}")
+          [ -n "${{ inputs.ios_broadcast }}" ]    && ARGS+=(--ios-broadcast "${{ inputs.ios_broadcast }}")
+          [ -n "${{ inputs.ios_hls }}" ]          && ARGS+=(--ios-hls "${{ inputs.ios_hls }}")
+          [ -n "${{ inputs.ios_noise_cancel }}" ] && ARGS+=(--ios-noise-cancel "${{ inputs.ios_noise_cancel }}")
+          echo "Running: bash scripts/update-sdk-versions.sh ${ARGS[*]}"
+          bash scripts/update-sdk-versions.sh "${ARGS[@]}"
+
+      - name: Refresh pubspec.lock files (parallel)
+        run: |
+          set -euo pipefail
+          (cd packages/hmssdk_flutter         && flutter pub get) &
+          (cd packages/hmssdk_flutter/example && flutter pub get) &
+          (cd packages/hms_room_kit           && flutter pub get) &
+          (cd packages/hms_room_kit/example   && flutter pub get) &
+          wait
+
+      - name: Show diff summary
+        run: |
+          echo "### Diff summary"
+          git diff --stat
+          echo
+          echo "### Changed files"
+          git diff --name-only
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: chore/sdk-version-bump
+          delete-branch: true
+          commit-message: "chore: bump native SDK versions and Flutter packages"
+          title: "chore: bump native SDK versions and Flutter packages"
+          body: |
+            Automated SDK version bump triggered via `workflow_dispatch`.
+
+            ### Inputs
+            - iOS HMSSDK: `${{ inputs.ios_sdk }}` (blank = unchanged)
+            - Android HMSSDK: `${{ inputs.android_sdk }}` (blank = unchanged)
+            - iOSBroadcastExtension: `${{ inputs.ios_broadcast }}`
+            - iOSHLSPlayerSDK: `${{ inputs.ios_hls }}`
+            - iOSNoiseCancellationModels: `${{ inputs.ios_noise_cancel }}`
+            - hmssdk_flutter bump: `${{ inputs.hmssdk_bump }}`
+            - hms_room_kit bump: `${{ inputs.room_kit_bump }}`
+
+            ### What changed
+            - `packages/hmssdk_flutter/lib/assets/sdk-versions.json` (native SDK versions; iOS Podspec + Android build.gradle read this programmatically)
+            - `packages/hmssdk_flutter/pubspec.yaml` + `example/pubspec.yaml`
+            - `packages/hms_room_kit/pubspec.yaml` (incl. `hmssdk_flutter` dep auto-sync) + `example/pubspec.yaml`
+            - 4 × `pubspec.lock` files refreshed by `flutter pub get`
+            - `packages/hmssdk_flutter/example/ExampleAppChangelog.txt` "Current Version Info" block
+
+            ### Reviewer checklist
+            - [ ] Verify versions match the intended 100ms SDK release
+            - [ ] If iOS native versions changed, the consumer of this PR must run `pod install` under `packages/hmssdk_flutter/example/ios` after pulling
+            - [ ] CI build passes
+
+            🤖 Generated by [`scripts/update-sdk-versions.sh`](../blob/main/scripts/update-sdk-versions.sh)

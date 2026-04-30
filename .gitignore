@@ -62,3 +62,11 @@ flutter-hms-868c1b85cd65.json
 settings.local.json
 packages/hms_room_kit/ios/Flutter/ephemeral/flutter_lldbinit
 flutter_lldb_helper.py
+
+## Claude Code project config
+# Re-include .claude/ (overrides any global .claude rule in user's gitignore)
+# so team-shared skills/agents/commands are tracked. Per-machine personal
+# files inside .claude/ are still excluded below.
+!.claude/
+.claude/settings.local.json
+.claude/.cache/
