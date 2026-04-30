@@ -80,9 +80,9 @@
 ---
 
 Current Version Info:
-Room Kit: 1.2.2
-Core SDK: 1.11.2
-Android SDK: 2.9.84
-iOS SDK: 1.17.2
-Flutter version: 3.41.3
+Room Kit: 1.2.0
+Core SDK: 1.11.0
+Android SDK: 2.9.78
+iOS SDK: 1.17.0
+Flutter version: 3.35.7
 Example App Version: 1.6.2 (532)
