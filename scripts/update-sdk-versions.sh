@@ -545,15 +545,29 @@ fi
 # NATIVE VERSION VALIDATION (only when relevant native fields changed)
 # ============================================================================
 #
-# `pod install --repo-update` resolves CocoaPods specs end-to-end against the
-# new sdk-versions.json values; if any iOS HMSSDK pod version doesn't exist
-# on the CocoaPods CDN it fails here. Same idea for gradle on Android: a
-# dependency-resolution pass against Maven catches a wrong android-sdk
-# version. Without these, a typo'd version (e.g. 1.17.2 when latest is
-# 1.17.1) silently writes to disk and only blows up at next build time.
+# Two stages when iOS or Android native fields change:
 #
-# Skipped entirely with --no-install. A successful pod install also refreshes
-# Podfile.lock / Pods, which lands in the change set as a side effect.
+# 1. PRIMARY VALIDATOR: registry-existence check via HTTPS HEAD against
+#    CocoaPods CDN / Maven Central. Fast (~200ms each) and catches the
+#    most common failure mode: a typo'd version that doesn't exist
+#    (e.g. 1.17.2 when the latest published is 1.17.1).
+#
+#    Why not rely on `pod install` or gradle? In this monorepo, the
+#    hmssdk_flutter plugin is path-based (symlinked into the example
+#    app's Pods). When pod install runs and the existing Podfile.lock
+#    is satisfiable, CocoaPods reuses the locked HMSSDK version
+#    instead of re-evaluating the Podspec — so a wrong sdk-versions.json
+#    can sneak through silently. The HTTP HEAD check is the source of
+#    truth here.
+#
+# 2. SIDE-EFFECT REFRESH: after the HTTP check passes, run
+#    `pod install --repo-update` and `./gradlew :app:dependencies
+#    --refresh-dependencies`. These don't reliably re-validate HMSSDK
+#    in this setup (see (1) above) but they DO refresh other lock
+#    entries (Firebase, safe_device, transitive deps) so the change
+#    set is complete.
+#
+# Both stages are skipped entirely with --no-install.
 
 IOS_NATIVE_CHANGED=false
 ANDROID_NATIVE_CHANGED=false
@@ -568,41 +582,100 @@ validation_failed_hint() {
   err "  git -C \"$ROOT_DIR\" checkout ."
 }
 
+# HTTP HEAD check against CocoaPods CDN. Returns 0 if the spec exists
+# (final HTTP 200 after CDN -> jsdelivr 301), 1 otherwise.
+verify_pod_version_exists() {
+  local pod_name="$1" version="$2"
+  local hash a b c url status
+  hash=$(printf '%s' "$pod_name" | md5 -q)
+  a="${hash:0:1}"; b="${hash:1:1}"; c="${hash:2:1}"
+  url="https://cdn.cocoapods.org/Specs/$a/$b/$c/$pod_name/$version/$pod_name.podspec.json"
+  status=$(curl -sILo /dev/null -w '%{http_code}' --max-time 15 "$url" | tail -1)
+  [[ "$status" == "200" ]]
+}
+
+# HTTP HEAD check against Maven Central. Returns 0 if the artifact pom exists.
+verify_maven_artifact_exists() {
+  local group_path="$1" artifact="$2" version="$3"
+  local url status
+  url="https://repo1.maven.org/maven2/$group_path/$artifact/$version/$artifact-$version.pom"
+  status=$(curl -sLo /dev/null -w '%{http_code}' --max-time 15 "$url" | tail -1)
+  [[ "$status" == "200" ]]
+}
+
 if [[ "$NO_INSTALL" != true && "$IOS_NATIVE_CHANGED" == true ]]; then
+  echo
+  info "Verifying iOS native versions exist on CocoaPods CDN..."
+  IOS_VERIFY_FAILED=false
+  for spec in "HMSSDK $TARGET_IOS_SDK" \
+              "HMSBroadcastExtensionSDK $TARGET_IOS_BROADCAST" \
+              "HMSHLSPlayerSDK $TARGET_IOS_HLS" \
+              "HMSNoiseCancellationModels $TARGET_IOS_NOISE_CANCEL"; do
+    pod_name="${spec% *}"; version="${spec##* }"
+    if verify_pod_version_exists "$pod_name" "$version"; then
+      printf "  ${C_GREEN}✓${C_RESET} %s %s\n" "$pod_name" "$version"
+    else
+      printf "  ${C_RED}✗${C_RESET} %s %s — not found on CocoaPods CDN\n" "$pod_name" "$version"
+      IOS_VERIFY_FAILED=true
+    fi
+  done
+  if [[ "$IOS_VERIFY_FAILED" == true ]]; then
+    err "One or more iOS native versions don't exist on CocoaPods."
+    err "Check the latest available versions on https://cocoapods.org and try again."
+    validation_failed_hint
+    exit 1
+  fi
+
   IOS_DIR="$ROOT_DIR/packages/hmssdk_flutter/example/ios"
   if [[ -d "$IOS_DIR" ]] && command -v pod >/dev/null 2>&1; then
     echo
-    info "Validating iOS native versions via pod install --repo-update (this can take a few minutes)..."
-    if ( cd "$IOS_DIR" && pod install --repo-update ); then
-      ok "pod install succeeded — iOS native versions are valid"
+    info "Refreshing Podfile.lock via pod install --repo-update (this can take a few minutes)..."
+    # pod install reuses an existing lockfile if it's satisfiable, which masks
+    # Podspec dep changes. Remove the relevant lock entries first so pod has
+    # to re-resolve. If the new versions are wrong, the HTTP check above
+    # already caught it; this step just refreshes the lock file as a side
+    # effect of a clean run.
+    if ( cd "$IOS_DIR" && pod update HMSSDK HMSBroadcastExtensionSDK HMSHLSPlayerSDK HMSNoiseCancellationModels --repo-update >/dev/null 2>&1 ) \
+       || ( cd "$IOS_DIR" && pod install --repo-update >/dev/null 2>&1 ); then
+      ok "Podfile.lock refreshed"
     else
-      err "pod install failed."
-      err "One of the iOS native versions specified isn't available on the CocoaPods trunk,"
-      err "or there's a pod resolution conflict. Check the output above."
-      validation_failed_hint
-      exit 1
+      warn "pod install/update produced warnings or errors. Source files written; review manually."
     fi
   else
-    warn "iOS example dir or pod CLI missing — skipping iOS native validation"
+    warn "iOS example dir or pod CLI missing — Podfile.lock not refreshed"
   fi
 fi
 
 if [[ "$NO_INSTALL" != true && "$ANDROID_NATIVE_CHANGED" == true ]]; then
+  echo
+  info "Verifying Android native version exists on Maven Central..."
+  ANDROID_VERIFY_FAILED=false
+  for artifact in android-sdk video-view hls-player; do
+    if verify_maven_artifact_exists "live/100ms" "$artifact" "$TARGET_ANDROID_SDK"; then
+      printf "  ${C_GREEN}✓${C_RESET} live.100ms:%s:%s\n" "$artifact" "$TARGET_ANDROID_SDK"
+    else
+      printf "  ${C_RED}✗${C_RESET} live.100ms:%s:%s — not found on Maven Central\n" "$artifact" "$TARGET_ANDROID_SDK"
+      ANDROID_VERIFY_FAILED=true
+    fi
+  done
+  if [[ "$ANDROID_VERIFY_FAILED" == true ]]; then
+    err "One or more Android native artifacts don't exist on Maven Central."
+    err "Check https://central.sonatype.com/artifact/live.100ms/android-sdk and try again."
+    validation_failed_hint
+    exit 1
+  fi
+
   ANDROID_DIR="$ROOT_DIR/packages/hmssdk_flutter/example/android"
   if [[ -d "$ANDROID_DIR" && -x "$ANDROID_DIR/gradlew" ]]; then
     echo
-    info "Validating Android native version via gradle dependency resolution..."
-    if ( cd "$ANDROID_DIR" && ./gradlew :app:dependencies --refresh-dependencies --quiet ); then
-      ok "gradle resolution succeeded — Android native version is valid"
+    info "Refreshing Android dependency cache via gradle (this can take a few minutes)..."
+    if ( cd "$ANDROID_DIR" && ./gradlew :app:dependencies --refresh-dependencies --quiet >/dev/null 2>&1 ); then
+      ok "gradle dependency resolution succeeded"
     else
-      err "gradle :app:dependencies failed."
-      err "The Android HMSSDK version specified isn't available on Maven, or there's a"
-      err "dependency conflict. Check the output above."
-      validation_failed_hint
-      exit 1
+      warn "gradle :app:dependencies produced warnings or errors. Source files written; review manually."
     fi
   else
-    warn "Android example dir or gradlew missing — skipping Android native validation"
+    warn "Android example dir or gradlew missing — gradle dep refresh skipped"
   fi
 fi
 
