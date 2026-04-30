@@ -61,9 +61,11 @@ Add `--ios-broadcast`, `--ios-hls`, `--ios-noise-cancel` when the user has provi
 4. **Always** sets `hms_room_kit`'s `hmssdk_flutter:` dependency to the resolved hmssdk_flutter version (preserves the existing constraint operator: `^`, `~`, or exact). Auto-corrects drift even when `--hmssdk-bump=skip`.
 5. Maintains the **lockstep invariant**: `sdk-versions.json.flutter` always matches the new `hmssdk_flutter` pubspec version (the iOS Podspec uses `sdk-versions.json.flutter` as `s.version`).
 6. Runs `flutter pub get` in 4 directories in parallel to refresh `pubspec.lock` files.
-7. Runs `node scripts/update-changelog-versions.js` to refresh the version block at the bottom of `ExampleAppChangelog.txt`.
-8. Prints a suggested conventional-commit message.
-9. Reminds you to `pod install` if any iOS native version changed (`pubspec.lock` is refreshed by pub get, but `Podfile.lock` is not).
+7. **Validates iOS native versions** by running `pod install --repo-update` in `packages/hmssdk_flutter/example/ios` (only if any iOS native field changed). If the version doesn't exist on CocoaPods or there's a transitive conflict, the script exits non-zero with a clear error. A successful run also refreshes `Podfile.lock` and `Pods/` so they land in the change set.
+8. **Validates the Android native version** by running `./gradlew :app:dependencies --refresh-dependencies` in `packages/hmssdk_flutter/example/android` (only if `--android-sdk` changed). Catches non-existent Maven artifacts.
+9. Both native validations are skipped by `--no-install`. On either failure the script aborts; revert with `git checkout .` (the dirty-tree guard ensures the working tree was clean on entry, so the revert is safe and complete).
+10. Runs `node scripts/update-changelog-versions.js` to refresh the version block at the bottom of `ExampleAppChangelog.txt`.
+11. Prints a suggested conventional-commit message.
 
 ## After the script completes
 

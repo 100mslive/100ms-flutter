@@ -124,9 +124,17 @@ Side-effects:
   - sdk-versions.json.flutter is kept in lockstep with hmssdk_flutter's pubspec
     version (the iOS Podspec uses sdk-versions.json.flutter as s.version).
   - After writes, runs flutter pub get in 4 dirs (parallel) to refresh lock files.
+  - Validates iOS native versions by running 'pod install --repo-update' in
+    the iOS example dir (only when iOS native fields actually changed). A
+    successful run refreshes Podfile.lock too.
+  - Validates the Android native version by running
+    './gradlew :app:dependencies --refresh-dependencies' in the Android
+    example dir (only when --android-sdk changed).
+  - Both native validations are skipped by --no-install. If either fails the
+    script aborts with non-zero exit; you can revert with 'git checkout .'
+    since the dirty-tree guard ensures the working tree was clean on entry.
   - Then runs scripts/update-changelog-versions.js to refresh the version
     block at the bottom of ExampleAppChangelog.txt.
-  - Reminds you to 'pod install' if iOS native versions changed.
 EOF
 }
 
@@ -530,6 +538,71 @@ else
   if [[ "$failed" == 1 ]]; then
     err "One or more flutter pub get invocations failed."
     exit 1
+  fi
+fi
+
+# ============================================================================
+# NATIVE VERSION VALIDATION (only when relevant native fields changed)
+# ============================================================================
+#
+# `pod install --repo-update` resolves CocoaPods specs end-to-end against the
+# new sdk-versions.json values; if any iOS HMSSDK pod version doesn't exist
+# on the CocoaPods CDN it fails here. Same idea for gradle on Android: a
+# dependency-resolution pass against Maven catches a wrong android-sdk
+# version. Without these, a typo'd version (e.g. 1.17.2 when latest is
+# 1.17.1) silently writes to disk and only blows up at next build time.
+#
+# Skipped entirely with --no-install. A successful pod install also refreshes
+# Podfile.lock / Pods, which lands in the change set as a side effect.
+
+IOS_NATIVE_CHANGED=false
+ANDROID_NATIVE_CHANGED=false
+[[ "$CURRENT_IOS_SDK"          != "$TARGET_IOS_SDK"          ]] && IOS_NATIVE_CHANGED=true
+[[ "$CURRENT_IOS_BROADCAST"    != "$TARGET_IOS_BROADCAST"    ]] && IOS_NATIVE_CHANGED=true
+[[ "$CURRENT_IOS_HLS"          != "$TARGET_IOS_HLS"          ]] && IOS_NATIVE_CHANGED=true
+[[ "$CURRENT_IOS_NOISE_CANCEL" != "$TARGET_IOS_NOISE_CANCEL" ]] && IOS_NATIVE_CHANGED=true
+[[ "$CURRENT_ANDROID_SDK"      != "$TARGET_ANDROID_SDK"      ]] && ANDROID_NATIVE_CHANGED=true
+
+validation_failed_hint() {
+  err "Source files have already been modified. To revert all changes, run:"
+  err "  git -C \"$ROOT_DIR\" checkout ."
+}
+
+if [[ "$NO_INSTALL" != true && "$IOS_NATIVE_CHANGED" == true ]]; then
+  IOS_DIR="$ROOT_DIR/packages/hmssdk_flutter/example/ios"
+  if [[ -d "$IOS_DIR" ]] && command -v pod >/dev/null 2>&1; then
+    echo
+    info "Validating iOS native versions via pod install --repo-update (this can take a few minutes)..."
+    if ( cd "$IOS_DIR" && pod install --repo-update ); then
+      ok "pod install succeeded — iOS native versions are valid"
+    else
+      err "pod install failed."
+      err "One of the iOS native versions specified isn't available on the CocoaPods trunk,"
+      err "or there's a pod resolution conflict. Check the output above."
+      validation_failed_hint
+      exit 1
+    fi
+  else
+    warn "iOS example dir or pod CLI missing — skipping iOS native validation"
+  fi
+fi
+
+if [[ "$NO_INSTALL" != true && "$ANDROID_NATIVE_CHANGED" == true ]]; then
+  ANDROID_DIR="$ROOT_DIR/packages/hmssdk_flutter/example/android"
+  if [[ -d "$ANDROID_DIR" && -x "$ANDROID_DIR/gradlew" ]]; then
+    echo
+    info "Validating Android native version via gradle dependency resolution..."
+    if ( cd "$ANDROID_DIR" && ./gradlew :app:dependencies --refresh-dependencies --quiet ); then
+      ok "gradle resolution succeeded — Android native version is valid"
+    else
+      err "gradle :app:dependencies failed."
+      err "The Android HMSSDK version specified isn't available on Maven, or there's a"
+      err "dependency conflict. Check the output above."
+      validation_failed_hint
+      exit 1
+    fi
+  else
+    warn "Android example dir or gradlew missing — skipping Android native validation"
   fi
 fi
 
