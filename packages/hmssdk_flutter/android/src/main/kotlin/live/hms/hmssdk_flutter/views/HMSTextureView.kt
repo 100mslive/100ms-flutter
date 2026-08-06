@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import live.hms.video.media.tracks.HMSVideoTrack
 import live.hms.videoview.VideoViewStateChangeListener
 import live.hms.videoview.textureview.HMSTextureRenderer
+import hms.webrtc.SurfaceEglRenderer
 
 class HMSTextureView(
     texture: SurfaceTexture,
@@ -84,11 +85,28 @@ class HMSTextureView(
     fun disposeTextureView() {
         Log.i("HMSTextureView", "disposeTextureView called")
         removeTrack()
+        releaseEglRenderer()
         entry?.release()
         entry = null
         hmsTextureRenderer = null
         this.eventChannel = null
         eventSink = null
+    }
+
+    // HMSTextureRenderer.release() frees only the EGL surface, leaving the render thread alive.
+    private fun releaseEglRenderer() {
+        val textureRenderer = hmsTextureRenderer ?: return
+        val renderer =
+            runCatching {
+                textureRenderer.javaClass
+                    .getDeclaredField("renderer")
+                    .apply { isAccessible = true }
+                    .get(textureRenderer)
+            }.getOrElse {
+                Log.e("HMSTextureView", "EGL_RELEASE_FAILED: renderer field unavailable, render thread leaks: $it")
+                return
+            }
+        (renderer as? SurfaceEglRenderer)?.release()
     }
 
     fun setTextureViewEventChannel(eventChannel: EventChannel) {
