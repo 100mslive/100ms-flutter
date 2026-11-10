@@ -128,7 +128,6 @@ class _PreviewPageState extends State<PreviewPage> {
                   ? (error != null
                       ? Stack(
                           children: [
-                            const HMSLoader(),
                             Positioned(
                               top: Platform.isIOS ? 50 : 35,
                               left: 10,
