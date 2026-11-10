@@ -50,7 +50,10 @@ class HMSPrebuilt extends StatelessWidget {
 
   final Function(String roomId)? onRoomIdAvailable;
 
-  Function(HMSPeer)? onPeerLeft;
+  final Function(HMSPeer)? onPeerLeft;
+
+  ///The callback for errors from 100ms SDK
+  final Function(HMSException error)? onError;
 
   ///The key for the widget
   HMSPrebuilt({
@@ -67,6 +70,7 @@ class HMSPrebuilt extends StatelessWidget {
     this.dialInPopupWidget,
     this.reportIssueWidget,
     this.onPeerLeft,
+    this.onError,
   }) {
     if (roomCode == null && authToken == null) {
       throw ArgumentError.notNull(
@@ -106,6 +110,7 @@ class HMSPrebuilt extends StatelessWidget {
       dialInPopupWidget: dialInPopupWidget,
       reportIssueWidget: reportIssueWidget,
       onPeerLeft: onPeerLeft,
+      onError: onError,
     );
   }
 }

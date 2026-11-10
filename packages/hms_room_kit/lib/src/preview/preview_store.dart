@@ -61,6 +61,8 @@ class PreviewStore extends ChangeNotifier
   @override
   void onHMSError({required HMSException error}) {
     this.error = error;
+    Constant.onError?.call(error);
+    HMSLogger().logError('Preview error: [${error.code?.errorCode}] ${error.description}');
     notifyListeners();
   }
 

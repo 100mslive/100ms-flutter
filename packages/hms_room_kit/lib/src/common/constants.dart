@@ -58,4 +58,7 @@ class Constant {
 
   ///[Constant.onPeerLeft] is the function that you wish to execute when a peer leaves the room
   static Function(HMSPeer)? onPeerLeft;
+
+  ///[Constant.onError] is the function that you wish to execute when an HMSException occurs
+  static Function(HMSException)? onError;
 }

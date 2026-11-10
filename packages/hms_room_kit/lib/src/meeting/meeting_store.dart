@@ -1288,6 +1288,8 @@ class MeetingStore extends ChangeNotifier
     log("onHMSError-> error: ${error.code?.errorCode} ${error.message}");
     hmsException = error;
     Utilities.showNotification(error.message ?? "", "error");
+    Constant.onError?.call(error);
+    HMSLogger().logError('Meeting error: [${error.code?.errorCode}] ${error.description}');
     notifyListeners();
   }
 
