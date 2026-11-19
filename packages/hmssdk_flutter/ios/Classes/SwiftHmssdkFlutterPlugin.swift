@@ -76,6 +76,10 @@ public class SwiftHmssdkFlutterPlugin: NSObject, FlutterPlugin, HMSUpdateListene
                                                 whiteboardEventChannel: whiteboardChannel,
                                                 transcriptionEventChannel: transcriptionChannel)
 
+        // DEM-3564: silent-mic repair + audio-session diagnostics. Registered
+        // at plugin load so audio events between calls are recorded too.
+        HMSAudioSessionHealth.register(with: registrar)
+
         let videoViewFactory = HMSFlutterPlatformViewFactory(plugin: instance)
         registrar.register(videoViewFactory, withId: "HMSFlutterPlatformView")
 

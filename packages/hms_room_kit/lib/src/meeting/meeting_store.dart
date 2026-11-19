@@ -27,6 +27,7 @@ import 'package:hms_room_kit/src/model/rtc_stats.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toast_model.dart';
 import 'package:hms_room_kit/src/widgets/toasts/hms_toasts_type.dart';
 import 'package:hms_room_kit/src/services/hms_logger.dart';
+import 'package:hms_room_kit/src/services/hms_audio_recovery.dart';
 
 ///[MeetingStore] is the store that is used to store the data of the meeting
 ///It takes the following parameters:
@@ -361,6 +362,118 @@ class MeetingStore extends ChangeNotifier
       reason: 'User toggled microphone',
     );
     notifyListeners();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Silent-mic watchdog (DEM-3564)
+  //
+  // Seen in production on iOS: the local audio track is published and unmuted
+  // (remote peers see the mic as "on") but the SDK sends zero audio bytes, so
+  // nobody can hear this peer. Detected from local audio stats: `bytesSent`
+  // not increasing while the track is unmuted (not `bitrate == 0`, which Opus
+  // DTX can report during plain silence). Mute state is read from the track
+  // itself, never from `isMicOn`.
+  //
+  // It never changes mic/track state. On iOS it asks [HMSAudioRecovery] to
+  // restart the platform audio engine in place, every time the mic stalls, so
+  // the user never has to leave, rejoin or restart the app.
+  // No-op on other platforms.
+  // ---------------------------------------------------------------------------
+
+  /// How long bytesSent must stay flat (track unmuted) before reporting.
+  static const Duration _silentMicThreshold = Duration(seconds: 8);
+
+  /// Back-off: once one silent-mic incident has lasted this long, retry less
+  /// often ([_silentMicBackoffThreshold]) to limit audio-unit restarts and log
+  /// volume when nothing is fixing it.
+  static const Duration _silentMicFastRetryWindow = Duration(minutes: 1);
+  static const Duration _silentMicBackoffThreshold = Duration(seconds: 60);
+
+  int? _lastLocalAudioBytesSent;
+  DateTime? _localAudioStalledSince;
+  int _silentMicReports = 0;
+  bool _silentMicReportInFlight = false;
+
+  /// True from a silent-mic report until bytes flow again, so the recovery
+  /// is logged exactly once per incident. [_silentMicReports] counts the
+  /// attempts of the current incident and is reset on recovery.
+  bool _silentMicUnresolved = false;
+
+  /// When the current silent-mic incident was first reported; null when none.
+  DateTime? _silentMicIncidentStart;
+
+  void _checkLocalAudioIsFlowing(HMSLocalAudioStats stats, HMSLocalAudioTrack track) {
+    if (!Platform.isIOS) {
+      return;
+    }
+    final bytesSent = stats.bytesSent;
+    final previous = _lastLocalAudioBytesSent;
+    _lastLocalAudioBytesSent = bytesSent;
+    final isSending = previous != null && bytesSent > previous;
+
+    if (isSending) {
+      if (_silentMicUnresolved && !_silentMicReportInFlight) {
+        _silentMicUnresolved = false;
+        final incidentStart = _silentMicIncidentStart;
+        _silentMicIncidentStart = null;
+        HMSLogger().logAudioHealth('Local audio recovered', data: {
+          'attempts': _silentMicReports,
+          if (incidentStart != null)
+            'silent_for_ms':
+                DateTime.now().difference(incidentStart).inMilliseconds,
+          'bitrate': stats.bitrate,
+        });
+        // Next incident starts again with the lightest repair (attempt 1).
+        _silentMicReports = 0;
+      }
+      _localAudioStalledSince = null;
+      return;
+    }
+
+    // Not expected to send: track muted, reconnecting, or first sample.
+    if (track.isMute || reconnecting || isRoomEnded || previous == null) {
+      _localAudioStalledSince = null;
+      return;
+    }
+
+    final now = DateTime.now();
+    _localAudioStalledSince ??= now;
+    // No cap: keep repairing for as long as the mic stays silent.
+    if (_silentMicReportInFlight) {
+      return;
+    }
+    final stalledFor = now.difference(_localAudioStalledSince!);
+    final incidentStart = _silentMicIncidentStart;
+    final inBackoff = incidentStart != null &&
+        now.difference(incidentStart) >= _silentMicFastRetryWindow;
+    final threshold =
+        inBackoff ? _silentMicBackoffThreshold : _silentMicThreshold;
+    if (stalledFor < threshold) {
+      return;
+    }
+    unawaited(_reportSilentLocalAudio(stats, stalledFor));
+  }
+
+  Future<void> _reportSilentLocalAudio(HMSLocalAudioStats stats, Duration stalledFor) async {
+    _silentMicReportInFlight = true;
+    _silentMicUnresolved = true;
+    _silentMicIncidentStart ??= DateTime.now();
+    _silentMicReports++;
+    final attempt = _silentMicReports;
+    try {
+      // Logging is rate-limited inside HMSAudioRecovery (one combined line
+      // for a few attempts per incident), so nothing is logged here.
+      await HMSAudioRecovery.onSilentMic(attempt, details: {
+        'stalled_ms': stalledFor.inMilliseconds,
+        'bytes_sent': stats.bytesSent,
+        'bitrate': stats.bitrate,
+      });
+    } finally {
+      // Start a fresh observation window after each report.
+      _lastLocalAudioBytesSent = null;
+      _localAudioStalledSince = null;
+      _silentMicReportInFlight = false;
+    }
   }
 
   Future<void> toggleCameraMuteState() async {
@@ -1489,6 +1602,9 @@ class MeetingStore extends ChangeNotifier
       peerId: 'local',
       quality: 'audio',
     );
+    if (track.source == "REGULAR") {
+      _checkLocalAudioIsFlowing(hmsLocalAudioStats, track);
+    }
   }
 
   @override

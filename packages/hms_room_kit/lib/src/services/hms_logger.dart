@@ -6,6 +6,12 @@ class HMSLogger {
   static final HMSLogger _instance = HMSLogger._internal();
 
   late final Logger _logger;
+
+  /// Low-volume audio-health events (mic toggles, silent-mic detection and
+  /// recovery). Kept on a separate logger name from the chatty `100ms` logger
+  /// (10s bitrate polls) so host apps can drop `100ms` while still forwarding
+  /// these to their remote logging.
+  final Logger _audioHealthLogger = Logger('HMSAudioHealth');
   String? _roomId;
   String? _sessionId;
 
@@ -167,7 +173,24 @@ class HMSLogger {
       if (reason != null) 'reason': reason,
     };
     _logger.info('$message - Data: $logData');
+    logAudioHealth(message, data: logData);
     _trackLocalAudioState(isMuted);
+  }
+
+  /// Logs an audio-health event on the `HMSAudioHealth` logger, with the
+  /// current room/session context attached.
+  void logAudioHealth(String message, {Map<String, dynamic>? data, bool warning = false}) {
+    final logData = {
+      if (_roomId != null) 'room_id': _roomId,
+      if (_sessionId != null) 'session_id': _sessionId,
+      if (data != null) ...data,
+    };
+    final line = logData.isEmpty ? message : '$message - Data: $logData';
+    if (warning) {
+      _audioHealthLogger.warning(line);
+    } else {
+      _audioHealthLogger.info(line);
+    }
   }
 
   void _trackLocalAudioState(bool isMuted) {

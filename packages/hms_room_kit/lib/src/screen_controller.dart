@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 ///Project imports
 import 'package:hms_room_kit/hms_room_kit.dart';
+import 'package:hms_room_kit/src/services/hms_audio_recovery.dart';
 import 'package:hms_room_kit/src/common/utility_components.dart';
 import 'package:hms_room_kit/src/hmssdk_interactor.dart';
 import 'package:hms_room_kit/src/layout_api/hms_room_layout.dart';
@@ -173,6 +174,10 @@ class _ScreenControllerState extends State<ScreenController> {
         isLoading = true;
       });
     }
+
+    ///DEM-3564: log the iOS audio state (and reset it if a silent mic was
+    ///seen earlier in this app process) before the preview captures the mic.
+    await HMSAudioRecovery.beforePreview();
 
     _hmsSDKInteractor = HMSSDKInteractor(
       iOSScreenshareConfig: widget.options?.iOSScreenshareConfig,
